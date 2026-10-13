@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BC_ExecutionAnimatic_001 — 2D-аниматик: казнь Пуджа</title>
+<link rel="stylesheet" href="player.css">
+</head>
+<body>
+<header>
+  <h1>2D-аниматик: <span>казнь Пуджа</span></h1>
+  <p>Плоская раскадровка в движении: серые фигуры с контуром, без цветовых подсказок и без FX-заглушек. Тайминг и шоты те же, что в <a href="animatic-3d.html">3D-версии</a> · <a href="index.html">сравнение</a></p>
+  <div class="tags"><span class="tag">7.0 с · 5 шотов</span><span class="tag">9:16</span><span class="tag">без речи</span></div>
+</header>
+<main>
+  <div class="player">
+    <div class="screen"><canvas id="view"></canvas><div class="cap" id="cap"><span id="capt"></span><b id="capn"></b><div id="capd"></div></div></div>
+    <div class="controls"><button id="play">▶ Play</button><button id="prev">◀</button><button id="next">▶▶</button>
+      <select id="speed"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select>
+      <button id="bCap" class="on">Подписи</button><span class="tc" id="tc"></span></div>
+    <div class="timeline" id="timeline"><div class="playhead" id="playhead"></div></div>
+    <div class="hint">Пробел: play/pause · ← →: шоты · клик по таймлайну: перемотка.</div>
+  </div>
+  <div><div class="shots" id="shots"></div></div>
+</main>
+<script src="shots.js"></script>
+<script src="player.js"></script>
+<script>
+const RENDER = new URLSearchParams(location.search).get('render') === '1';
+const RW = RENDER ? 540 : 720, RH = RW * 16 / 9;
+const canvas = document.getElementById('view'); canvas.width = RW; canvas.height = RH;
+const ctx = canvas.getContext('2d');
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v)), lerp = (a, b, t) => a + (b - a) * t, seg = (t, a, b) => clamp((t - a) / (b - a));
+const eio = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, eo = t => 1 - Math.pow(1 - t, 3);
+const {sin, cos, PI} = Math;
+
+// neutral palette: figures differ by shape and value only
+const COL = {sky: '#dde0e4', ground: '#bcb7ad', far: '#a7a39b', house: '#9d9990', roof: '#8a867f', ink: '#2a2a2e',
+  pudge: '#8f9196', miss: '#b2b4b9', knight: '#70747b', wood: '#6c665e', steel: '#cdd1d6', stump: '#7d766c', rope: '#4a4744'};
+const LW = 3;
+function stroke(path, fill, w = LW) { ctx.lineJoin = ctx.lineCap = 'round'; if (fill) { ctx.fillStyle = fill; ctx.fill(path); } ctx.strokeStyle = COL.ink; ctx.lineWidth = w; ctx.stroke(path); }
+function circle(x, y, r, fill) { const p = new Path2D(); p.arc(x, y, r, 0, PI * 2); stroke(p, fill); }
+function ellipse(x, y, rx, ry, fill, rot = 0) { const p = new Path2D(); p.ellipse(x, y, rx, ry, rot, 0, PI * 2); stroke(p, fill); }
+function poly(pts, fill, close = true) { const p = new Path2D(); pts.forEach(([x, y], i) => i ? p.lineTo(x, y) : p.moveTo(x, y)); if (close) p.closePath(); stroke(p, fill); }
+// thick limb with outline: ink pass, then fill pass
+function limb(pts, w, fill) {
+  ctx.lineJoin = ctx.lineCap = 'round';
+  for (const [c, ww] of [[COL.ink, w + LW * 2], [fill, w]]) { ctx.strokeStyle = c; ctx.lineWidth = ww; ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke(); }
+}
+// a = angle from straight down, positive turns toward +x
+const from = (x, y, a, l) => [x + sin(a) * l, y + cos(a) * l];
+
+function backdrop(horizon, houseScale = 1, houseX = 0) {
+  ctx.fillStyle = COL.sky; ctx.fillRect(0, 0, 360, horizon);
+  ctx.fillStyle = COL.ground; ctx.fillRect(0, horizon, 360, 640 - horizon);
+  [[-20, 70, 95], [55, 85, 120], [140, 70, 80], [205, 95, 110], [295, 80, 95]].forEach(([x, w, h]) => {
+    x = x * houseScale + houseX; w *= houseScale; h *= houseScale;
+    poly([[x, horizon], [x, horizon - h], [x + w, horizon - h], [x + w, horizon]], COL.house, true);
+    poly([[x - 4, horizon - h], [x + w / 2, horizon - h - w * .45], [x + w + 4, horizon - h]], COL.roof);
+  });
+}
+function axe(x, y, a, len, s = 1) { // handle from the grip along angle a, blade at the far end
+  const e = from(x, y, a, len);
+  limb([[x, y], e], 6 * s, COL.wood);
+  const n = [cos(a), -sin(a)]; // blade sticks out sideways from the handle
+  const b0 = from(x, y, a, len * .78), b1 = from(x, y, a, len * 1.02);
+  poly([b0, b1, [b1[0] + n[0] * 34 * s, b1[1] + n[1] * 34 * s], [b0[0] + n[0] * 30 * s, b0[1] + n[1] * 30 * s]], COL.steel);
+}
+
+/* front-view knight, feet at (x,y), height h. armsUp: 0 = hanging, 1 = overhead */
+function knightFront(x, y, h, o = {}) {
+  const k = h / 180, hip = y - 92 * k, sh = y - 150 * k;
+  limb([[x - 10 * k, hip], [x - 13 * k, y - 4 * k]], 15 * k, COL.knight); limb([[x + 10 * k, hip], [x + 13 * k, y - 4 * k]], 15 * k, COL.knight);
+  ellipse(x, (hip + sh) / 2 + 4 * k, 26 * k, 38 * k, COL.knight);
+  const hx = x + (o.headX || 0) * k;
+  poly([[hx - 15 * k, sh - 6 * k], [hx - 15 * k, sh - 40 * k], [hx + 15 * k, sh - 40 * k], [hx + 15 * k, sh - 6 * k]], COL.knight);
+  limb([[hx - 11 * k, sh - 25 * k], [hx + 11 * k, sh - 25 * k]], 2.5 * k, COL.ink);
+  for (const s of [-1, 1]) {
+    const target = o.hands?.[s < 0 ? 0 : 1];
+    const sx = x + s * 24 * k, sy = sh + 4 * k;
+    if (target) { const mx = (sx + target[0]) / 2 + s * 8 * k, my = (sy + target[1]) / 2 + 6 * k; limb([[sx, sy], [mx, my], target], 11 * k, COL.knight); }
+    else limb([[sx, sy], [sx + s * 5 * k, sy + 38 * k], [sx + s * 4 * k, sy + 72 * k]], 11 * k, COL.knight);
+  }
+}
+/* front-view Miss Pudge: big head, dress. sob = small vertical shake, bow = head tilt forward */
+function missFront(x, y, h, o = {}) {
+  const k = h / 120, hip = y - 52 * k, sh = y - 80 * k;
+  limb([[x - 6 * k, hip], [x - 7 * k, y - 3 * k]], 8 * k, COL.miss); limb([[x + 6 * k, hip], [x + 7 * k, y - 3 * k]], 8 * k, COL.miss);
+  poly([[x - 12 * k, sh], [x + 12 * k, sh], [x + 24 * k, hip + 14 * k], [x - 24 * k, hip + 14 * k]], COL.miss);
+  for (const s of [-1, 1]) { const a = o.arms ?? .5; limb([[x + s * 11 * k, sh + 4 * k], [x + s * (11 + 26 * sin(a)) * k, sh + (4 + 26 * cos(a)) * k]], 6 * k, COL.miss); }
+  const hy = sh - 24 * k + (o.sob || 0) * k + (o.bow || 0) * 5 * k, hx = x + (o.lean || 0) * k;
+  ctx.save(); ctx.translate(hx, hy); ctx.rotate((o.tilt || 0));
+  circle(0, 0, 24 * k, COL.miss);
+  const hair = new Path2D(); hair.arc(0, -2 * k, 25 * k, PI * 1.05, PI * 1.95); hair.closePath(); stroke(hair, COL.miss);
+  if (o.face) { // crying: shut eyes, open mouth, tears
+    const bow = (o.bow || 0) * 3 * k;
+    ctx.strokeStyle = COL.ink; ctx.lineWidth = 2.5 * k / 1.4; ctx.lineCap = 'round';
+    for (const s of [-1, 1]) { ctx.beginPath(); ctx.arc(s * 9 * k, 3 * k + bow, 4.5 * k, PI * 1.15, PI * 1.85); ctx.stroke(); }
+    ctx.beginPath(); ctx.ellipse(0, 14 * k + bow, 6 * k, 4 * k + (o.sob || 0) * .8 * k, 0, 0, PI * 2); ctx.fillStyle = COL.ink; ctx.fill();
+    ctx.lineWidth = 1.6 * k / 1.4; for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(s * 11 * k, 7 * k + bow); ctx.lineTo(s * 12 * k, 16 * k + bow); ctx.stroke(); }
+  }
+  ctx.restore();
+}
+/* profile Pudge kneeling, facing right, head resting at (hx,hy) */
+function pudgeKneel(hx, hy, r, withHead = true) {
+  const k = r / 20;
+  const knee = [hx - 130 * k, hy + 55 * k], hip = [hx - 105 * k, hy + 5 * k], back = [hx - 60 * k, hy - 32 * k];
+  limb([knee, [hx - 175 * k, hy + 57 * k]], 22 * k, COL.pudge); // shin on the ground
+  limb([hip, knee], 30 * k, COL.pudge);
+  ellipse(hx - 60 * k, hy - 5 * k, 58 * k, 36 * k, COL.pudge, .12); // bent torso + belly
+  limb([[hx - 30 * k, hy - 22 * k], [hx - 14 * k, hy - 6 * k]], 22 * k, COL.pudge); // neck
+  if (withHead) { circle(hx, hy, r, COL.pudge); poly([[hx + r * .9, hy - 3 * k], [hx + r * 1.25, hy + 2 * k], [hx + r * .9, hy + 7 * k]], COL.pudge); }
+  // arms tied behind the back, wrists at the small of the back
+  const sh = [hx - 38 * k, hy - 30 * k], wr = [hx - 92 * k, hy - 28 * k];
+  limb([sh, [hx - 62 * k, hy - 52 * k], wr], 14 * k, COL.pudge);
+  ellipse(wr[0], wr[1], 5 * k, 10 * k, COL.rope, .4);
+}
+function stump(x, y, w, h) { poly([[x - w / 2, y], [x - w / 2 * 1.1, y + h], [x + w / 2 * 1.1, y + h], [x + w / 2, y]], COL.stump); ellipse(x, y, w / 2, w * .14, COL.stump); }
+
+/* side-view executioner facing left; a = arm angle (0 down, PI/2 forward-left, PI overhead), lean forward */
+function execSide(x, y, k, a, lean) {
+  const hip = [x, y], sh = [x - sin(lean) * 120 * k, y - cos(lean) * 120 * k];
+  limb([hip, [x + 10 * k, y + 100 * k], [x + 5 * k, y + 200 * k]], 26 * k, COL.knight);
+  limb([hip, [x - 22 * k, y + 100 * k], [x - 30 * k, y + 200 * k]], 26 * k, COL.knight);
+  limb([hip, sh], 70 * k, COL.knight);
+  const hx = sh[0] - 6 * k, hy = sh[1] - 40 * k;
+  poly([[hx - 26 * k, hy + 26 * k], [hx - 26 * k, hy - 30 * k], [hx + 24 * k, hy - 30 * k], [hx + 24 * k, hy + 26 * k]], COL.knight);
+  limb([[hx - 26 * k, hy - 4 * k], [hx - 6 * k, hy - 4 * k]], 4 * k, COL.ink);
+  const A = -a; // forward = -x
+  const el = from(sh[0], sh[1], A + .25, 62 * k), hand = from(el[0], el[1], A - .1, 58 * k);
+  axe(hand[0], hand[1], A - .1, 200 * k, k * 1.6);
+  limb([sh, el, hand], 22 * k, COL.knight);
+}
+
+/* front-view executioner with axe: r = raise 0..1 (rest → overhead) */
+function execFront(x, y, h, r) {
+  const k = h / 180, sh = y - 150 * k;
+  const a = lerp(.35, PI + .25, r), hy = sh + 4 * k + cos(a) * 62 * k;
+  const grip = [x, hy];
+  const dir = cos(a), len = 120 * k * Math.max(.12, Math.abs(dir)); // foreshortened handle
+  if (dir < 0) axe(grip[0], grip[1], PI, len, k * 1.3); // pointing up, behind the head
+  knightFront(x, y, h, {hands: [[x - 4 * k, hy + 6 * k], [x + 4 * k, hy - 6 * k]]});
+  if (dir >= 0) axe(grip[0], grip[1], 0, len, k * 1.3);
+}
+
+/* ---- shots ---- */
+function shot1(u, t) {
+  const z = lerp(1.22, 1.34, eio(u)); ctx.translate(185, 470); ctx.scale(z, z); ctx.translate(-185, -400);
+  backdrop(300, .8, 10);
+  const sob = sin(t * 19) * 1.2;
+  knightFront(246, 365, 72, {hands: [[262, 334], [262, 330]]}); knightFront(298, 365, 72, {hands: [[282, 330], [282, 334]]});
+  missFront(272, 362, 48, {sob, bow: 1, arms: 1.1, lean: 2});
+  execFront(236, 430, 150, 0);
+  stump(196, 452, 52, 34);
+  pudgeKneel(198, 432, 21);
+}
+function shot2(u, t) {
+  backdrop(330, 1.3, -40);
+  const sob = sin(t * 19) * 3, pull = .5 + .5 * sin(t * 3.1);
+  ctx.translate(sin(t * 23) * 1.5, 0);
+  knightFront(40 - pull * 6, 700, 560, {hands: [[150, 470], [118, 430]], headX: 10});
+  knightFront(330 + pull * 6, 700, 560, {hands: [[248, 430], [212, 470]], headX: -10});
+  missFront(180, 690 - pull * 4, 420, {sob, bow: 1 + pull, face: true, arms: 1.6, tilt: sin(t * 2.3) * .06, lean: pull * 4});
+}
+function shot3(u, t) {
+  ctx.translate(0, lerp(0, 30, eio(u)));
+  backdrop(560, 1.5, -60);
+  const r = eio(seg(t, 2.9, 3.65)) + (t > 3.65 ? sin((t - 3.65) * 9) * .006 : 0);
+  execFront(210, 600, 360, r);
+  stump(68, 590, 150, 90);
+  circle(60, 548, 58, COL.pudge);
+}
+function shot4(u, t) {
+  const k = seg(t, 4.44, 4.5) * sin(t * 90) * 4; ctx.translate(k, k * .6);
+  backdrop(470, 1.6, -80);
+  const s = Math.pow(seg(t, 4.12, 4.45), 2);
+  const a = lerp(PI + .35, .35, s), lean = lerp(-.12, .35, s);
+  execSide(245, 560, 1.05, a, lean);
+}
+function shot5(u, t) {
+  backdrop(450, 1.1, -10);
+  knightFront(70, 462, 92, {hands: [[100, 420], [100, 416]]}); knightFront(150, 462, 92, {hands: [[120, 416], [120, 420]]});
+  missFront(110, 458, 60, {arms: 1.1, sob: sin(t * 19) * 1.5, bow: 1});
+  // head: drops into frame from the left, bounces, rolls toward camera and stops face-on
+  const lt = t - SHOTS[4].start, gy = 610;
+  let x, y, r;
+  if (lt < .28) { const v = lt / .28; x = lerp(-50, 20, v); r = 60; y = lerp(330, gy - r, v * v); }
+  else if (lt < .55) { const v = (lt - .28) / .27; x = lerp(20, 70, v); r = lerp(60, 66, v); y = gy - r - sin(v * PI) * 40; }
+  else { const v = eo(seg(lt, .55, 1.95)); x = lerp(70, 205, v); r = lerp(66, 96, v); y = gy - r; }
+  const roll = (x - 205) / 70 - 1.6 * clamp(1 - lt / .55);
+  const face = eio(seg(lt, 1.3, 2.05)), wob = lt > 1.95 ? sin((lt - 1.95) * 14) * .08 * Math.exp(-(lt - 1.95) * 6) : 0;
+  ellipse(x, gy - 2, r * .9, r * .16, 'rgba(0,0,0,.18)');
+  ctx.save(); ctx.translate(x, y); ctx.rotate(wob);
+  circle(0, 0, r, COL.pudge);
+  // nose travels round the rim while rolling, then turns to the front as the head settles
+  const rimA = roll * (1 - face), nr = r * lerp(.92, .08, face);
+  const nx = sin(rimA) * nr, ny = -cos(rimA) * nr * (1 - face) + face * r * .1;
+  poly([[nx - r * .1, ny - r * .14], [nx + r * .1, ny - r * .14], [nx + r * .13, ny + r * .16], [nx - r * .13, ny + r * .16]], COL.pudge);
+  if (face > .5) { ctx.globalAlpha = (face - .5) * 2; ctx.strokeStyle = COL.ink; ctx.lineWidth = 3; for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(s * r * .28 - 7, -r * .22); ctx.lineTo(s * r * .28 + 7, -r * .22); ctx.stroke(); } ctx.globalAlpha = 1; }
+  ctx.restore();
+}
+const DRAW = [shot1, shot2, shot3, shot4, shot5];
+
+function renderAt(t) {
+  t = clamp(t, 0, TOTAL - 1e-4);
+  const i = shotAt(t), s = SHOTS[i];
+  ctx.setTransform(RW / 360, 0, 0, RH / 640, 0, 0);
+  ctx.save(); DRAW[i]((t - s.start) / s.dur, t); ctx.restore();
+}
+startPlayer(renderAt, canvas);
+</script>
+</body>
+</html>

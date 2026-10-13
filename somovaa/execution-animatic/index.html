@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BC_ExecutionAnimatic_001 — 2D и 3D аниматик</title>
+<link rel="stylesheet" href="player.css">
+<style>
+  .vids{display:flex;gap:20px;flex-wrap:wrap;padding:22px 30px}
+  .vids figure{margin:0} .vids figcaption{color:var(--mute);margin-bottom:6px;font-weight:700}
+  .vids video{width:360px;height:640px;border-radius:14px;border:1px solid var(--line);background:#000}
+  .wrap{padding:0 30px 60px;max-width:900px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Аниматик преролла: <span>казнь Пуджа</span></h1>
+  <p>Тест: сравнить генерацию по тексту и картинкам с генерацией, где аниматик подан как видео-референс. 7.0 с, 5 шотов, 9:16. Интерактивные версии с подписями: <a href="animatic-2d.html">2D</a> · <a href="animatic-3d.html">3D</a></p>
+</header>
+<div class="vids">
+  <figure><figcaption>2D</figcaption><video src="BC_ExecutionAnimatic_2d.mp4" controls loop muted playsinline></video></figure>
+  <figure><figcaption>3D</figcaption><video src="BC_ExecutionAnimatic_3d.mp4" controls loop muted playsinline></video></figure>
+</div>
+<div class="wrap"><div class="shots" id="shots"></div></div>
+<script src="shots.js"></script>
+<script>
+document.getElementById('shots').innerHTML = SHOTS.map(s => `<div class="shot"><div class="head"><span class="num">#${s.n}</span><span class="title">${s.title}</span><span class="time">${s.start.toFixed(1)}–${(s.start + s.dur).toFixed(1)} с</span></div>
+  <div class="grid"><div>Крупность</div><div>${s.frame}</div><div>Камера</div><div>${s.move}</div><div>Действие</div><div>${s.action}</div></div></div>`).join('');
+</script>
+</body>
+</html>

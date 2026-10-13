@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BC_ExecutionAnimatic_001 — 3D-аниматик: казнь Пуджа</title>
+<link rel="stylesheet" href="player.css">
+</head>
+<body>
+<header>
+  <h1>3D-аниматик: <span>казнь Пуджа</span></h1>
+  <p>Серые манекены без цветовых подсказок и без FX-заглушек: аниматик задаёт только камеру, расположение персонажей и тайминг. <a href="animatic-2d.html">2D-версия</a> · <a href="index.html">сравнение</a></p>
+  <div class="tags"><span class="tag">7.0 с · 5 шотов</span><span class="tag">9:16</span><span class="tag">без речи</span></div>
+</header>
+<main>
+  <div class="player">
+    <div class="screen"><canvas id="view"></canvas><div class="cap" id="cap"><span id="capt"></span><b id="capn"></b><div id="capd"></div></div></div>
+    <div class="controls"><button id="play">▶ Play</button><button id="prev">◀</button><button id="next">▶▶</button>
+      <select id="speed"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select>
+      <button id="bCap" class="on">Подписи</button><span class="tc" id="tc"></span></div>
+    <div class="timeline" id="timeline"><div class="playhead" id="playhead"></div></div>
+    <div class="hint">Пробел: play/pause · ← →: шоты · клик по таймлайну: перемотка.</div>
+  </div>
+  <div><div class="shots" id="shots"></div></div>
+</main>
+<script src="vendor/three.min.js"></script>
+<script src="shots.js"></script>
+<script src="player.js"></script>
+<script>
+const RENDER = new URLSearchParams(location.search).get('render') === '1';
+const RW = RENDER ? 540 : 360, RH = RENDER ? 960 : 640;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v)), lerp = (a, b, t) => a + (b - a) * t, seg = (t, a, b) => clamp((t - a) / (b - a));
+const eio = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, eo = t => 1 - Math.pow(1 - t, 3), ei = t => t * t * t;
+const V = (x, y, z) => new THREE.Vector3(x, y, z);
+
+const canvas = document.getElementById('view');
+const renderer = new THREE.WebGLRenderer({canvas, antialias: true, preserveDrawingBuffer: true});
+renderer.setPixelRatio(RENDER ? 1 : Math.min(2, window.devicePixelRatio || 1)); renderer.setSize(RW, RH, false);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xd5d9de); scene.fog = new THREE.Fog(0xd5d9de, 18, 45);
+const cam = new THREE.PerspectiveCamera(45, 9 / 16, .05, 200);
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8478, .5));
+const sun = new THREE.DirectionalLight(0xffffff, .62); sun.position.set(6, 12, 8); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, {left: -9, right: 9, top: 9, bottom: -9, near: 1, far: 40}); scene.add(sun);
+
+// neutral greys only: characters differ by shape and size, not by colour
+const C = {ground: 0xb8b3a9, house: 0x9c988f, roof: 0x85817a, pudge: 0x8e9095, miss: 0xa9abb0, knight: 0x72767d, helm: 0x666a71,
+  wood: 0x6b655d, steel: 0xc9cdd3, rope: 0x4a4744, stump: 0x7c756b};
+const mat = c => new THREE.MeshLambertMaterial({color: c});
+function mesh(geo, c, parent, x = 0, y = 0, z = 0) { const m = new THREE.Mesh(geo, mat(c)); m.castShadow = m.receiveShadow = true; m.position.set(x, y, z); (parent || scene).add(m); return m; }
+const grp = (parent, x = 0, y = 0, z = 0) => { const g = new THREE.Group(); g.position.set(x, y, z); (parent || scene).add(g); return g; };
+const cap = (r, len) => new THREE.CapsuleGeometry(r, Math.max(.001, len - 2 * r), 4, 10);
+
+/* environment: town square */
+const ground = mesh(new THREE.PlaneGeometry(120, 120), C.ground); ground.rotation.x = -Math.PI / 2;
+[[-7, -13, 4, 4.5], [-2.2, -14, 4.5, 6], [3, -13, 4, 4], [8, -14, 5, 5.5], [13, -11, 4, 4.5], [-12, -10, 4, 5]].forEach(([x, z, w, h]) => {
+  mesh(new THREE.BoxGeometry(w, h, 4), C.house, null, x, h / 2, z);
+  const roof = mesh(new THREE.CylinderGeometry(0, w * .72, 2.2, 4, 1), C.roof, null, x, h + 1.1, z); roof.rotation.y = Math.PI / 4; roof.scale.z = .7;
+});
+
+/* humanoid mannequin. Local +z = forward, rotation.x > 0 on spine = bend forward, on limbs = swing back. */
+function humanoid(p, c) {
+  const root = grp(), pelvis = grp(root, 0, p.thigh + p.shin, 0);
+  mesh(new THREE.SphereGeometry(p.hipW * .55, 14, 10), c, pelvis).scale.set(1.25, .8, 1);
+  const spine = grp(pelvis);
+  mesh(cap(p.chest, p.torso), c, spine, 0, p.torso / 2, 0).scale.set(p.chestX || 1.25, 1, p.chestZ || .9);
+  if (p.belly) mesh(new THREE.SphereGeometry(p.belly, 16, 12), c, spine, 0, p.torso * .38, p.belly * .35);
+  const neck = grp(spine, 0, p.torso, 0);
+  const head = grp(neck, 0, p.head + .03, 0);
+  mesh(new THREE.SphereGeometry(p.head, 18, 14), c, head);
+  mesh(new THREE.BoxGeometry(p.head * .3, p.head * .45, p.head * .5), c, head, 0, -p.head * .05, p.head * .9); // nose: shows where the face points
+  const limb = (parent, x, y, l1, l2, r, sideZ = 0) => {
+    const a = grp(parent, x, y, sideZ); mesh(cap(r, l1), c, a, 0, -l1 / 2, 0);
+    const b = grp(a, 0, -l1, 0); mesh(cap(r * .9, l2), c, b, 0, -l2 / 2, 0);
+    const end = grp(b, 0, -l2, 0); return {a, b, end};
+  };
+  const sh = p.torso - p.chest * .6;
+  const armL = limb(spine, p.shoulder, sh, p.upper, p.fore, p.armR), armR = limb(spine, -p.shoulder, sh, p.upper, p.fore, p.armR);
+  const legL = limb(pelvis, p.hipW * .45, 0, p.thigh, p.shin, p.legR), legR = limb(pelvis, -p.hipW * .45, 0, p.thigh, p.shin, p.legR);
+  for (const l of [legL, legR]) mesh(new THREE.BoxGeometry(p.legR * 1.8, p.legR * .9, p.legR * 3), c, l.end, 0, 0, p.legR * .9);
+  for (const a of [armL, armR]) mesh(new THREE.SphereGeometry(p.armR * 1.1, 10, 8), c, a.end);
+  return {root, pelvis, spine, neck, head, armL, armR, legL, legR, p};
+}
+const setLimb = (l, ax, az, bx) => { l.a.rotation.set(ax, 0, az); l.b.rotation.set(bx, 0, 0); };
+
+/* Pudge — big ogre, kneeling, faces +x */
+const PU = humanoid({thigh: .62, shin: .6, torso: 1.0, chest: .5, chestX: 1.35, chestZ: 1.0, belly: .55, head: .3, hipW: .8, shoulder: .78,
+  upper: .55, fore: .5, armR: .17, legR: .2}, C.pudge);
+PU.root.rotation.y = Math.PI / 2;
+PU.pelvis.position.y = .62 + .12;
+setLimb(PU.legL, 0, 0, Math.PI / 2); setLimb(PU.legR, 0, 0, Math.PI / 2);
+PU.legL.end.children[0].rotation.x = Math.PI / 2; PU.legR.end.children[0].rotation.x = Math.PI / 2;
+PU.spine.rotation.x = 1.25; PU.neck.rotation.x = .35;
+// hands tied behind the back
+PU.armL.a.rotation.set(.55, 0, .12); PU.armL.b.rotation.set(.35, 0, -1.25);
+PU.armR.a.rotation.set(.55, 0, -.12); PU.armR.b.rotation.set(.35, 0, 1.25);
+const rope = new THREE.Mesh(new THREE.TorusGeometry(.16, .05, 6, 14), mat(C.rope)); PU.armL.end.add(rope); rope.position.set(-.18, 0, 0); rope.rotation.y = Math.PI / 2;
+scene.updateMatrixWorld(true);
+const HEAD0 = PU.head.getWorldPosition(V(0, 0, 0));
+const HR = PU.p.head;
+
+/* stump under the chin */
+const STUMP = V(HEAD0.x - .05, 0, 0), STUMP_H = HEAD0.y - HR * .95;
+mesh(new THREE.CylinderGeometry(.42, .5, STUMP_H, 14), C.stump, null, STUMP.x, STUMP_H / 2, 0);
+
+/* free head for the roll (shot 5) */
+const freeHead = grp(); const fh = grp(freeHead);
+mesh(new THREE.SphereGeometry(HR, 18, 14), C.pudge, fh);
+mesh(new THREE.BoxGeometry(HR * .45, HR * .5, HR * .3), C.pudge, fh, HR * .9, -HR * .05, 0); // nose → +x
+freeHead.visible = false;
+
+/* knight */
+const KN = {thigh: .46, shin: .45, torso: .6, chest: .2, head: .13, hipW: .32, shoulder: .25, upper: .3, fore: .28, armR: .06, legR: .075};
+function knight(x, z, ry) {
+  const k = humanoid(KN, C.knight); k.root.position.set(x, 0, z); k.root.rotation.y = ry;
+  mesh(new THREE.CylinderGeometry(.15, .15, .3, 14), C.helm, k.head, 0, .03, 0);
+  mesh(new THREE.BoxGeometry(.32, .03, .03), 0x3d4046, k.head, 0, .05, .15); // visor slit
+  return k;
+}
+
+/* executioner: stands beside the stump, faces it (+z) */
+const EX = knight(STUMP.x - .12, -1.38, 0);
+const axe = grp(EX.armR.end);
+mesh(new THREE.CylinderGeometry(.03, .035, 1.15, 8), C.wood, axe, 0, -.42, 0);
+const blade = mesh(new THREE.BoxGeometry(.04, .38, .34), C.steel, axe, 0, -.88, .18);
+// left hand sits on the handle: arms mirror each other and converge
+function poseEx(raise, lean) {
+  for (const [arm, s] of [[EX.armL, 1], [EX.armR, -1]]) { arm.a.rotation.set(raise, 0, s * -.32); arm.b.rotation.set(-.35, 0, s * .1); }
+  EX.spine.rotation.x = lean; EX.legL.a.rotation.x = -.15; EX.legR.a.rotation.x = .2;
+  EX.pelvis.position.y = KN.thigh + KN.shin - Math.max(0, lean) * .12;
+}
+
+/* Miss Pudge between two knights, behind */
+const MP0 = V(STUMP.x + .5, 0, -4.4);
+const MP = humanoid({thigh: .27, shin: .26, torso: .36, chest: .14, head: .19, hipW: .22, shoulder: .17, upper: .18, fore: .17, armR: .045, legR: .055}, C.miss);
+MP.root.position.copy(MP0);
+mesh(new THREE.ConeGeometry(.3, .45, 14, 1, true), C.miss, MP.pelvis, 0, -.15, 0); // skirt
+mesh(new THREE.SphereGeometry(.2, 14, 10, 0, Math.PI * 2, 0, Math.PI * .55), C.miss, MP.head, 0, .03, -.03); // hair cap
+const KL = knight(MP0.x + .62, MP0.z - .25, 0), KR = knight(MP0.x - .62, MP0.z - .25, 0);
+
+function poseBack(t) {
+  const sob = Math.sin(t * 19) * .05, pull = .5 + .5 * Math.sin(t * 3.1);
+  const strain = t > 1.6 ? .25 : .1;
+  MP.spine.rotation.x = .2 + strain * pull + sob; MP.neck.rotation.x = .35 + sob * 1.6;
+  MP.head.rotation.y = Math.sin(t * 2.3) * .15;
+  MP.root.position.z = MP0.z + strain * pull * .25;
+  setLimb(MP.armL, .6, .55, -.2); setLimb(MP.armR, .6, -.55, -.2);
+  for (const [k, s] of [[KL, 1], [KR, -1]]) {
+    k.spine.rotation.x = -.08 - .05 * pull; k.root.position.z = MP0.z - .3 + strain * pull * .18;
+    // inner hand grips Miss Pudge's arm, outer arm on her shoulder from behind
+    const inner = s > 0 ? k.armR : k.armL, outer = s > 0 ? k.armL : k.armR;
+    setLimb(inner, -.9, s * -.15, -.5); setLimb(outer, -.75, s * -.75, -.9);
+    k.head.rotation.y = s * -.25;
+  }
+}
+
+/* executioner timeline: idle → raise (2.9–3.65) → hold → strike (4.0–4.6) → stays down */
+function exAt(t) {
+  let raise = -.55, lean = .05;
+  const r = eio(seg(t, 2.9, 3.65)), s = Math.pow(seg(t, 4.12, 4.45), 2);
+  raise = lerp(-.55, -3.35, r); lean = lerp(.05, -.18, r);
+  if (t > 3.65 && t < 4.12) raise += Math.sin((t - 3.65) * 9) * .02;
+  raise = lerp(raise, -.55, s); lean = lerp(lean, .5, s);
+  poseEx(raise, lean);
+}
+
+/* head after the cut: drops off the stump on the far side and rolls toward the shot-5 camera (+x) */
+const ROLL_END = V(STUMP.x + 3.4, HR, .5);
+function headAt(t) {
+  const T5 = SHOTS[4].start, lt = t - T5; freeHead.visible = t >= T5; PU.head.visible = t < T5;
+  if (!freeHead.visible) return;
+  // it flew off the stump during the cut, so it drops into frame from the left
+  const x0 = ROLL_END.x - 2.1, y0 = 1.0;
+  let x, y, z = .2;
+  if (lt < .28) { const u = lt / .28; x = lerp(x0, x0 + .45, u); y = lerp(y0, HR, u * u); }
+  else if (lt < .55) { const u = (lt - .28) / .27; x = lerp(x0 + .45, x0 + .85, u); y = HR + Math.sin(u * Math.PI) * .2; }
+  else { const u = eo(seg(lt, .55, 1.95)); x = lerp(x0 + .85, ROLL_END.x, u); y = HR; z = lerp(.2, ROLL_END.z, u); }
+  const wob = lt > 1.95 ? Math.sin((lt - 1.95) * 14) * .12 * Math.exp(-(lt - 1.95) * 6) : 0;
+  freeHead.position.set(x, y, z);
+  fh.rotation.z = -(ROLL_END.x - x) / HR - 2.2 * clamp(1 - lt / .55) + wob;
+  freeHead.rotation.y = -Math.PI / 2 * eio(seg(lt, 1.3, 2.05)); // settles with the face toward the camera
+}
+
+/* cameras per shot */
+function camAt(t) {
+  const i = shotAt(t), s = SHOTS[i], u = (t - s.start) / s.dur;
+  let pos, look, fov = 45;
+  if (s.n === 1) { pos = V(STUMP.x + 2.9, 2.1, 6.4).lerp(V(STUMP.x + 2.5, 1.95, 5.6), eio(u)); look = V(STUMP.x - .9, 1.15, -1.9); fov = 50; }
+  else if (s.n === 2) { const j = Math.sin(t * 23) * .006; pos = V(MP0.x + .5 + j, 1.25, MP0.z + 3.0); look = V(MP0.x, .85, MP0.z); fov = 40; }
+  else if (s.n === 3) { pos = V(STUMP.x + 2.0, lerp(.4, .6, u), 2.2); look = V(STUMP.x - .1, lerp(1.45, 1.8, u), -1.2); fov = 50; }
+  else if (s.n === 4) { const k = seg(t, 4.44, 4.5) * Math.sin(t * 90) * .02; pos = V(STUMP.x + 1.5, 1.95 + k, 1.55); look = V(STUMP.x - .12, 2.15 + k, -1.2); fov = 42; }
+  else { pos = V(ROLL_END.x + 1.2, .32, ROLL_END.z + 2.6); look = V(ROLL_END.x - .15, .32, ROLL_END.z); fov = 45; }
+  cam.position.copy(pos); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(look);
+}
+
+function renderAt(t) {
+  t = clamp(t, 0, TOTAL - 1e-4);
+  exAt(t); poseBack(t); headAt(t); camAt(t);
+  renderer.render(scene, cam);
+}
+startPlayer(renderAt, canvas);
+</script>
+</body>
+</html>
