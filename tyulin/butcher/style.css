@@ -215,7 +215,7 @@ h1, h2, h3, .kicker, .eyebrow, .btn, .bam, .levelup, .intro__name, .intro__tag, 
 .intro__tag { font-size: clamp(18px, 2.2vw, 24px); color: var(--sand); }
 
 /* story */
-.story { display: grid; gap: clamp(72px, 14vh, 160px); padding: clamp(72px, 12vh, 140px) var(--gutter) 0 var(--rail); }
+.story { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(72px, 14vh, 160px); padding: clamp(72px, 12vh, 140px) var(--gutter) 0 var(--rail); }
 
 .eyebrow { margin: 0; font-size: 22px; color: var(--teal); }
 
@@ -396,7 +396,7 @@ h1, h2, h3, .kicker, .eyebrow, .btn, .bam, .levelup, .intro__name, .intro__tag, 
 
 .loot__title { margin: 0; font-size: clamp(48px, 7vw, 92px); color: var(--legendary); text-shadow: 5px 5px 0 var(--ink); }
 
-.chest { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 22px; perspective: 900px; }
+.chest { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 22px; perspective: 900px; }
 
 .drop {
   position: relative;
@@ -742,10 +742,18 @@ h1, h2, h3, .kicker, .eyebrow, .btn, .bam, .levelup, .intro__name, .intro__tag, 
   .meathook__chain { width: 18px; background-size: 18px 30px; }
   .meathook__iron { width: 46px; }
   .puller { --w: 110px; }
-  .drag, .drag--crit, .bar { grid-template-columns: 1fr; }
+  .drag, .drag--crit, .bar { grid-template-columns: minmax(0, 1fr); }
+  .owner__shout { max-width: calc(100vw - 190px); font-size: 22px; }
+  .drag h2 { font-size: clamp(28px, 8.4vw, 56px); overflow-wrap: anywhere; }
+  .chest { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .drop { padding: 12px 10px; }
+  .drop h3 { font-size: 20px; }
+  .drop dl { font-size: 13px; gap: 2px 6px; }
   .bar__bubble::after { display: none; }
   .drag--crit .crit { order: 2; }
   .hud__xp { display: none; }
+  .toast { font-size: 18px; padding: 6px 12px; border-width: 3px; box-shadow: 5px 5px 0 var(--blood); }
+  .toast small { font-size: 12px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

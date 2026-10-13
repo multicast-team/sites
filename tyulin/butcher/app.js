@@ -30,7 +30,8 @@ function toast(title, detail = "", kind = "") {
     item.append(small);
   }
   toasts.append(item);
-  while (toasts.children.length > 3) toasts.firstElementChild.remove();
+  const limit = innerWidth <= 820 ? 2 : 3;
+  while (toasts.children.length > limit) toasts.firstElementChild.remove();
   setTimeout(() => {
     item.classList.add("is-leaving");
     item.addEventListener("animationend", () => item.remove(), { once: true });
@@ -65,8 +66,6 @@ function updateHud() {
   if (level >= shownLevel + 10) {
     shownLevel = level - (level % 10);
     toast(`УРОВЕНЬ ПОВЫШЕН! УР. ${level}`);
-  } else if (level < shownLevel) {
-    shownLevel = level - (level % 10);
   }
 }
 
@@ -385,7 +384,7 @@ function updateLootCounter() {
 
 function syncRewards() {
   if (!reeling && owner.classList.contains("is-on") && scrollProgress() < 0.9) owner.classList.remove("is-on");
-  if (footer.getBoundingClientRect().top > innerHeight) unlocked.delete("reader");
+  if (scrollProgress() < 0.8) unlocked.delete("reader");
   if (looted === 0 || lootSection.getBoundingClientRect().top <= innerHeight) return;
   addXp(-60 * looted);
   looted = 0;
@@ -520,6 +519,7 @@ const OWNER_ANGRY = ["ОТДАЙ, ЭТО МОЙ!", "КУПИ СЕБЕ САМ!"];
 const OWNER_TIRED = ["ДА СКОЛЬКО Ж МОЖНО!", "ОПЯТЬ СМАТЫВАТЬ ЭТУ ЖЕЛЕЗЯКУ!"];
 const OWNER_BUSY = ["ОТДАЙ!", "А ТО КИШКИ ВЫПОТРОШУ!"];
 const REEL_DURATION = 2200;
+const MAX_DRAG_RATIO = { mouse: 8, touch: 2.5 };
 let held = null;
 let reeling = false;
 
@@ -561,6 +561,7 @@ function reelBack() {
       requestAnimationFrame(step);
       return;
     }
+    window.scrollTo({ top: 0, behavior: "instant" });
     reeling = false;
     owner.classList.remove("is-on", "is-reeling");
     meathook.classList.remove("is-reeling");
@@ -579,15 +580,15 @@ ownerShout.addEventListener("animationend", (event) => {
 
 iron.addEventListener("pointerdown", (event) => {
   if (reeling) setOwnerLine(OWNER_BUSY);
-  held = { y: event.clientY, scroll: scrollY };
+  held = { y: event.clientY, scroll: scrollY, maxRatio: event.pointerType === "mouse" ? MAX_DRAG_RATIO.mouse : MAX_DRAG_RATIO.touch };
   iron.setPointerCapture(event.pointerId);
   meathook.classList.add("is-held");
   event.preventDefault();
 });
 iron.addEventListener("pointermove", (event) => {
   if (!held) return;
-  const travel = (event.clientY - held.y) / (innerHeight * 0.55);
-  const top = clamp(held.scroll + travel * maxScroll(), 0, maxScroll());
+  const ratio = Math.min(held.maxRatio, maxScroll() / (innerHeight * 0.55));
+  const top = clamp(held.scroll + (event.clientY - held.y) * ratio, 0, maxScroll());
   window.scrollTo({ top, behavior: "instant" });
   if (top >= maxScroll() - 2) summonOwner();
 });
