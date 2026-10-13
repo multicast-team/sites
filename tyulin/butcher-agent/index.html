@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Butcher Hero — Hook'n'Chew</title>
+<meta name="description" content="Фан-концепт Butcher Hero от Multicast в стиле cel-shaded комикса: хватай монстров крюком, жри их силу, становись титаном.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="hero">
+  <img class="hero__art" src="img/hero.jpg" alt="Мясник с гигантским крюком на цепи посреди инопланетной пустоши">
+  <div class="hero__shade" aria-hidden="true"></div>
+  <div class="hook" aria-hidden="true">
+    <div class="hook__chain"></div>
+    <svg class="hook__iron" viewBox="0 0 80 120"><path d="M40 0v40c0 6 4 10 10 10h4c14 0 24 12 24 26 0 24-18 40-40 40S0 100 0 80c0-8 4-14 10-18l10 8c-4 3-6 6-6 10 0 13 12 22 26 22s26-9 26-24c0-8-6-14-14-14h-8C34 64 26 56 26 46V0z"/></svg>
+  </div>
+  <div class="hero__content">
+    <p class="kicker reveal">Multicast представляет</p>
+    <h1 class="title slam">BUTCHER<span>HERO</span></h1>
+    <p class="badge wobble">HOOK'N'CHEW!</p>
+    <p class="hero__lead reveal">Цепляй крюком каждого монстра. Пожирай их силу. Стань титаном, от которого бегут даже боссы.</p>
+    <a class="btn reveal" href="#hook">Хватай крюк</a>
+  </div>
+</header>
+
+<main>
+  <section class="steps" aria-label="Как играть">
+    <article class="panel reveal" style="--tilt:-2deg">
+      <span class="panel__num">01</span>
+      <h2>Хватай</h2>
+      <p>Тяжёлый мясницкий крюк на цепи вытаскивает любого монстра и пришельца прямо к твоему фартуку.</p>
+    </article>
+    <article class="panel reveal" style="--tilt:1.5deg">
+      <span class="panel__num">02</span>
+      <h2>Жри</h2>
+      <p>Каждая туша — постоянный апгрейд: урон, скорость или броня. Выбирай, что прокачать.</p>
+    </article>
+    <article class="panel reveal" style="--tilt:-1deg">
+      <span class="panel__num">03</span>
+      <h2>Эволюционируй</h2>
+      <p>Разные боссы и виды пришельцев открывают разные ветки мутаций. Путь титана у каждого свой.</p>
+    </article>
+  </section>
+
+  <section class="feature" id="hook">
+    <figure class="frame reveal" style="--tilt:-1.5deg">
+      <img src="img/hook.jpg" alt="Мясник цепляет крюком многоглазого инопланетного зверя" loading="lazy">
+      <figcaption class="bubble">ПОПАЛСЯ!</figcaption>
+    </figure>
+    <div class="feature__text reveal">
+      <h2>Крюк решает всё</h2>
+      <p>Бросок — и многоглазая тварь с хитиновой бронёй уже едет к тебе по песку. Тяни, рви, жуй: бой без пауз, мясо без конца.</p>
+      <ul class="stats">
+        <li><b data-count="1000000">0</b><span>скачиваний на Android</span></li>
+        <li><b data-count="3">0</b><span>стата для прокачки</span></li>
+        <li><b>∞</b><span>апгрейдов за монстров</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="feature feature--flip">
+    <div class="feature__text reveal">
+      <h2>Форма титана</h2>
+      <p>Чем больше съел, тем больше стал. Вросшие пластины брони пришельцев, светящиеся вены и тесак размером с дверь: мелочь разбегается сама.</p>
+      <p class="quote">«Ты то, что ты ешь. А ешь ты монстров.»</p>
+    </div>
+    <figure class="frame frame--tall reveal" style="--tilt:2deg">
+      <img src="img/titan.jpg" alt="Мясник в форме титана с бронёй пришельцев и огромным крюком-тесаком" loading="lazy">
+      <figcaption class="bubble bubble--teal">ЭВОЛЮЦИЯ!</figcaption>
+    </figure>
+  </section>
+
+  <section class="cta reveal">
+    <h2>Мясо ждёт</h2>
+    <p>Butcher Hero: Hook'n'Chew RPG уже в магазинах, версия для Steam на подходе.</p>
+    <div class="cta__links">
+      <a class="btn" href="https://play.google.com/store/apps/details?id=com.multicastgames.butcher">Google Play</a>
+      <a class="btn" href="https://apps.apple.com/us/app/butcher-hero-hooknchew-rpg/id6757722046">App Store</a>
+      <a class="btn btn--teal" href="https://store.steampowered.com/app/4744010/Butcher_hero_hooknchew_RPG/">Steam</a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  Фан-концепт лендинга Butcher Hero от <a href="https://multicastgames.com/">Multicast</a> в стиле cel-shaded комикса. Арт сгенерирован, это не официальный материал игры.
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
