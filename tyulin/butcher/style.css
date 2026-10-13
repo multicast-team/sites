@@ -460,7 +460,7 @@ h1, h2, h3, .kicker, .eyebrow, .btn, .bam, .levelup, .intro__name, .intro__tag, 
   border-top: 6px solid var(--ink);
 }
 
-.bar__text { display: grid; gap: 22px; align-self: center; min-width: 0; }
+.bar__text { position: relative; z-index: 4; display: grid; gap: 22px; align-self: center; min-width: 0; }
 
 .bar__sign {
   margin: 0;
