@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BC_MonsterVillage_001 — 3D-блокинг: Монстр-Пудж громит деревню</title>
+<style>
+  :root{--bg:#0b0f17;--panel:#121826;--panel2:#182033;--line:#26314a;--text:#e6ebf5;--mute:#8d99b3;--orange:#f08a2a;--teal:#3fd0d9}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  header{padding:26px 32px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#22160f,#0b0f17)}
+  header h1{margin:0 0 6px;font-size:26px}
+  header h1 span{color:var(--orange)}
+  header p{margin:0;color:var(--mute);max-width:1000px}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .tag{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-size:12px;color:#c9d3e8}
+  .tag b{color:var(--orange)}
+  main{padding:22px 32px 60px;max-width:1500px;margin:0 auto}
+  .top{display:grid;grid-template-columns:380px 1fr;gap:28px;align-items:start}
+  @media(max-width:1000px){.top{grid-template-columns:1fr}}
+  .player{position:sticky;top:12px}
+  .modes{display:flex;gap:0;margin-bottom:8px;border:1px solid var(--orange);border-radius:10px;overflow:hidden;width:360px}
+  .modes button{flex:1;border:0;border-radius:0;padding:9px 6px;font-size:14px;font-weight:700;background:var(--panel2);color:#c9d3e8}
+  .modes button.on{background:var(--orange);color:#1a0e04}
+  .screen{position:relative;width:360px;height:640px;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.5);background:#000}
+  .screen canvas{display:block;width:360px;height:640px}
+  .cap{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.62);padding:7px 12px 9px;pointer-events:none}
+  .cap b{color:#ff9a3c;font-size:15px}.cap div{color:#cfd8ea;font-size:11.5px}.cap span{float:right;color:#8d99b3;font:12px ui-monospace,monospace}
+  .safe{position:absolute;inset:0;pointer-events:none;display:none}
+  .safe i{position:absolute;background:rgba(255,60,60,.2)}
+  .tagov{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.6);color:#ffd36b;font:700 12px system-ui;padding:3px 8px;border-radius:4px;display:none}
+  .maplbl{position:absolute;left:10px;top:136px;color:#fff;font:10px system-ui;text-shadow:0 1px 2px #000;display:none}
+  .controls{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center}
+  button,select{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+  button:hover{border-color:var(--orange)}
+  button.on{background:#3a2412;border-color:var(--orange);color:#ffd2a6}
+  .tc{font-variant-numeric:tabular-nums;color:var(--mute);margin-left:auto;font-size:13px}
+  .timeline{position:relative;margin-top:10px;height:36px;border-radius:8px;overflow:hidden;display:flex;border:1px solid var(--line);cursor:pointer;user-select:none;width:360px}
+  .timeline .seg{height:100%;border-right:1px solid #0b0f17;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0b0f17}
+  .seg.a{background:#e9a35a}.seg.b{background:#ff7a3a}.seg.c{background:#e2483d}
+  .seg.cur{outline:2px solid #fff;outline-offset:-2px}
+  .playhead{position:absolute;top:0;bottom:0;width:2px;background:#fff;box-shadow:0 0 6px #fff;pointer-events:none}
+  .hint{font-size:11.5px;color:var(--mute);margin-top:6px;width:360px}
+  section{margin-bottom:26px}
+  h2{font-size:18px;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+  h2 .n{background:var(--orange);color:#1a0e04;border-radius:6px;padding:0 7px;font-size:13px}
+  .cards2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .card h3{margin:0 0 8px;font-size:15px;color:#ffd2a6}
+  .card p{margin:0 0 8px;color:#cdd5e6}
+  .card ul,.card ol{margin:0;padding-left:18px;color:#cdd5e6}
+  .card li{margin-bottom:4px}
+  .card img{width:100%;max-height:170px;object-fit:contain;background:#fff;border-radius:8px;margin-bottom:8px}
+  .k{color:var(--mute)}
+  .how{background:#10221c;border-color:#2c5a48}
+  .shots{display:grid;gap:14px}
+  .shot{display:grid;grid-template-columns:135px 200px 1fr;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer}
+  .shot:hover,.shot.cur{border-color:var(--orange)}
+  @media(max-width:900px){.shot{grid-template-columns:135px 1fr}.shot .mapc{display:none}}
+  .shot canvas.thumb{width:135px;height:240px;border-radius:8px;border:1px solid var(--line);background:#000}
+  .shot canvas.map{width:200px;height:200px;border-radius:8px;border:1px solid var(--line);background:#000}
+  .shot .head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .shot .num{font-size:22px;font-weight:800;color:var(--orange)}
+  .shot .title{font-size:16px;font-weight:700}
+  .shot .time{color:var(--mute);font-size:12.5px}
+  .pill{font-size:11px;border-radius:6px;padding:1px 7px;border:1px solid var(--line);color:#c9d3e8;background:var(--panel2)}
+  .grid{display:grid;grid-template-columns:100px 1fr;gap:3px 12px;font-size:13px}
+  .grid div:nth-child(odd){color:var(--mute)}
+  .maplegend{font-size:11px;color:var(--mute);margin-top:4px;line-height:1.35}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mute);font-weight:600}
+  code{background:#0e1420;border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:12.5px}
+</style>
+</head>
+<body>
+<header>
+  <h1>3D-блокинг — <span>Монстр-Пудж громит деревню</span></h1>
+  <p>Преролл Butcher Hero. Настоящая 3D-сцена: деревня, Монстр-Пудж, крестьяне и отдельная камера на каждый шот. Над плеером переключается вид: «Кубики» (чистый блокаут, как в примере) или «Отрисовка» (стилизованный вид с контурами, огнём и вечерним светом). Генерации нет.</p>
+  <div class="tags">
+    <span class="tag"><b>10.0 с</b> · 8 шотов</span>
+    <span class="tag">9:16</span>
+    <span class="tag">Seedance 2.0 · звук · 480p (позже)</span>
+    <span class="tag">без речи · рык без слов</span>
+    <span class="tag">UA: <b>сила / power fantasy</b></span>
+  </div>
+</header>
+<main>
+<div class="top">
+  <div class="player">
+    <div class="modes"><button id="mBlock" class="on">▦ Кубики</button><button id="mStyled">✎ Отрисовка</button></div>
+    <div class="screen" id="screen">
+      <canvas id="view" width="360" height="640"></canvas>
+      <div class="safe" id="safeov"><i style="left:0;right:0;top:0;height:70px"></i><i style="left:0;right:0;bottom:0;height:150px"></i><i style="right:0;top:240px;width:62px;bottom:150px"></i></div>
+      <div class="tagov" id="tagov"></div>
+      <div class="maplbl" id="maplbl">карта сверху · ▲ камера</div>
+      <div class="cap" id="cap"><span id="capt">0.00s</span><b id="capn"></b><div id="capd"></div></div>
+    </div>
+    <div class="controls">
+      <button id="play">▶ Play</button><button id="prev">⏮</button><button id="next">⏭</button>
+      <select id="speed"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select>
+      <button id="loop" class="on">Loop шота</button>
+      <span class="tc" id="tc">00.00 / 10.00</span>
+    </div>
+    <div class="controls">
+      <button id="bMap" class="on">Карта сверху</button><button id="bCap" class="on">Подписи</button><button id="bSafe">Safe-зоны</button>
+      <button id="bRec">⏺ Записать видео</button>
+    </div>
+    <div class="timeline" id="timeline"><div class="playhead" id="playhead"></div></div>
+    <div class="hint">Пробел: play/pause · ← →: шоты · клик по таймлайну или карточке: перемотка. «Записать видео» сохраняет чистый блокаут (без подписей и карты) в WebM, его потом можно дать Seedance как референс движения.</div>
+  </div>
+
+  <div>
+    <section>
+      <h2><span class="n">01</span> Как переключать вид</h2>
+      <div class="card how">
+        <p>Над плеером две кнопки:</p>
+        <ul>
+          <li><b>▦ Кубики</b> — чистый 3D-блокаут, как в твоём примере: однотонные блоки, у каждого персонажа свой цвет (Пудж оранжевый, крестьяне синие, жёлтые и фиолетовые), окружение песочное. Огонь — оранжевые кубы.</li>
+          <li><b>✎ Отрисовка</b> — та же сцена и те же камеры, но в мультяшном виде: чёрные контуры, вечерний свет, светящиеся глаза маски, пламя и дым.</li>
+        </ul>
+        <p class="k">Режим меняет и плеер, и все превью в карточках шотов. Кнопка «Карта сверху» показывает в углу вид сверху с конусом текущей камеры.</p>
+      </div>
+    </section>
+    <section>
+      <h2><span class="n">02</span> Концепт</h2>
+      <div class="cards2">
+        <div class="card">
+          <h3>Логлайн</h3>
+          <p>Монстр-Пудж проламывается сквозь дом прямо на камеру. Деревня тонет в огне и панике. Он раскручивает цепи с оружием, сносит повозки, вырывает крюком колокольню. Потом выходит из дыма и рычит прямо в объектив, на весь экран.</p>
+        </div>
+        <div class="card">
+          <h3>Почему остановит скролл</h3>
+          <ul>
+            <li><b>Первый кадр:</b> крестьянин в ужасе бежит на камеру, за ним над крышей нависает силуэт монстра. Дом вот-вот взорвётся.</li>
+            <li><b>Масштаб:</b> Пудж в 4 раза выше людей, цепи с 8 видами оружия.</li>
+            <li><b>Пик:</b> рык в камеру крупным планом, ударная волна бьёт в объектив.</li>
+            <li><b>Мотивация:</b> power fantasy, «стань этим монстром». Оружие на цепях — витрина лута и прокачки.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <img src="references/Pudge_Monster.png" alt="Pudge Monster" onerror="this.remove()">
+          <h3>the Monster Ogre · @image1</h3>
+          <p>Оранжевый гигант, маска-череп с зубастой железной челюстью на груди, зелёный ирокез. Левая рука — когти с шипами, правая — крюк на цепи. Из спины на цепях торчат 8 видов оружия: молоты, топоры, кинжалы, булавы.</p>
+        </div>
+        <div class="card">
+          <h3>Мир и правила</h3>
+          <ul>
+            <li><b>Деревня:</b> площадь с колодцем и повозкой, дома с соломенными крышами, улица на юг, колокольня у улицы.</li>
+            <li><b>Масштаб:</b> Пудж ~7.5 м, крестьяне 1.7 м.</li>
+            <li><b>Направление:</b> Пудж идёт с севера на юг (на камеру), крестьяне бегут от него.</li>
+            <li><b>Без крови:</b> крестьян не убивают, они разбегаются и падают.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<section style="margin-top:34px">
+  <h2><span class="n">03</span> Шот-лист</h2>
+  <p class="k" style="margin:-4px 0 14px">Слева кадр из 3D-сцены (в текущем режиме), посередине вид сверху с конусом камеры. Наведи на превью — шот проиграется.</p>
+  <div class="shots" id="shots"></div>
+</section>
+
+<section>
+  <h2><span class="n">04</span> Звук</h2>
+  <div class="card"><table id="sound"><thead><tr><th>#</th><th>Время</th><th>Звук</th><th>Склейка</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section>
+  <h2><span class="n">05</span> Как это пойдёт в Seedance (после апрува)</h2>
+  <div class="cards2">
+    <div class="card"><h3>Вариант 1: промпт + рефы</h3><p>Одна генерация на 10 с, шоты по таймингу из этого блокинга. Рефы: Монстр-Пудж и стиль локации.</p></div>
+    <div class="card"><h3>Вариант 2: промпт + видео-блокаут</h3><p>Кнопкой «Записать видео» сохраняем чистые кубики и даём их Seedance 2.0 как референс движения и ракурсов, как в твоём примере. Так камера и тайминг повторятся точнее. Модель принимает видео-референсы; конкретный формат проверю по API перед запуском.</p></div>
+    <div class="card"><h3>Риски</h3><ul><li>8 видов оружия на цепях: движок может упростить их число или форму</li><li>Шот 5: крюк, летящий к колокольне, — тонкое действие</li><li>Шот 7: рык должен быть без слов; маска с челюстью на груди, а не на голове</li></ul></div>
+  </div>
+</section>
+</main>
+
+<script src="vendor/three.min.js"></script>
+<script>
+/* ================= utils ================= */
+const W=360,H=640;
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+const eio=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+const eo=t=>1-Math.pow(1-t,3);
+const ei=t=>t*t*t;
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+const L3=(a,b,t)=>V(lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t));
+
+/* ================= renderer / scene ================= */
+const canvas=document.getElementById('view');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});
+const DPR=Math.min(2,window.devicePixelRatio||1);
+renderer.setPixelRatio(DPR);renderer.setSize(W,H,false);
+const scene=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(45,W/H,.1,300);
+const proxy=new THREE.PerspectiveCamera(45,W/H,.5,16);   // short-far copy, drawn as frustum on the map
+const helper=new THREE.Group();scene.add(helper);   // map-only camera marker: view wedge + body
+const wedge=new THREE.Mesh(new THREE.BufferGeometry(),new THREE.MeshBasicMaterial({color:0x3fd0d9,transparent:true,opacity:.45,side:THREE.DoubleSide,depthTest:false}));
+const camDot=new THREE.Mesh(new THREE.CircleGeometry(1.1,16),new THREE.MeshBasicMaterial({color:0x3fd0d9,depthTest:false}));camDot.rotation.x=-Math.PI/2;
+wedge.renderOrder=camDot.renderOrder=999;helper.add(wedge);helper.add(camDot);helper.traverse(o=>o.layers.set(1));
+const mapCam=new THREE.OrthographicCamera(-26,26,26,-26,1,200);mapCam.position.set(0,90,10);mapCam.up.set(0,0,-1);mapCam.lookAt(0,0,10);mapCam.layers.enable(1);
+
+const REG=[];
+const OUTLINE=new THREE.MeshBasicMaterial({color:0x0a0a12,side:THREE.BackSide});
+function mk(geo,cb,cs,o={}){
+  const mb=new THREE.MeshLambertMaterial({color:cb});
+  const ms=new THREE.MeshToonMaterial({color:cs??cb,emissive:o.em??0x000000});
+  const m=new THREE.Mesh(geo,mb);m.userData.mb=mb;m.userData.ms=ms;
+  if(!o.noOutline){const ol=new THREE.Mesh(geo,OUTLINE);ol.scale.setScalar(o.ol||1.07);ol.visible=false;m.add(ol);m.userData.ol=ol;}
+  REG.push(m);return m;
+}
+const Bx=(w,h,d,cb,cs,o)=>mk(new THREE.BoxGeometry(w,h,d),cb,cs,o);
+const Cn=(r,h,seg,cb,cs,o)=>mk(new THREE.ConeGeometry(r,h,seg),cb,cs,o);
+const Cy=(r,h,cb,cs,o)=>mk(new THREE.CylinderGeometry(r,r,h,10),cb,cs,o);
+function at(m,x,y,z,parent){m.position.set(x,y,z);(parent||scene).add(m);return m;}
+
+/* palettes: block = sandy blockout like the example; styled = dusk cartoon */
+const P={
+  ground:[0xdcae74,0x5f7d3f],path:[0xc8955c,0x9c7a4e],wall:[0xe7cfa2,0xe8d6b2],roof:[0xb98352,0xb4482e],wood:[0xa8794c,0x7a4a26],door:[0x8a6440,0x3a2414],
+  stone:[0xcfb898,0x8b8a96],tree:[0xc2b679,0x2f6a46],trunk:[0xa07a50,0x5a3a22],
+  pudge:[0xf26a1b,0xf08a2a],pudgeD:[0xd85512,0xc2581b],shorts:[0x2b4a8a,0x21505e],mask:[0xffffff,0xf3efe3],metal:[0x6a6f7a,0x7c8494],tooth:[0xffffff,0xf5ecd8],
+  claw:[0xf3e7d0,0xf3e3c8],mohawk:[0x2fa36b,0x2f8d6c],red:[0xc0302a,0xb3231f],chain:[0x3a3a44,0x2a2a30],
+  fire1:[0xff8a1a,0xff7a1a],fire2:[0xffc23a,0xffd35a],smoke:[0x9c8a78,0x3a3040],dust:[0xd7c09a,0x9a8a7a],
+};
+const pc=k=>P[k];
+const B2=(w,h,d,k,o)=>Bx(w,h,d,pc(k)[0],pc(k)[1],o);
+
+/* lights */
+const hemi=new THREE.HemisphereLight(0xffffff,0xb08060,.75);scene.add(hemi);
+const amb=new THREE.AmbientLight(0xffffff,.35);scene.add(amb);
+const sun=new THREE.DirectionalLight(0xffffff,.75);sun.position.set(-20,40,25);scene.add(sun);
+const fireLights=[];for(let i=0;i<3;i++){const l=new THREE.PointLight(0xff7a2a,0,16,2);scene.add(l);fireLights.push(l);}
+
+/* ground */
+const ground=mk(new THREE.PlaneGeometry(200,200),pc('ground')[0],pc('ground')[1],{noOutline:true});ground.rotation.x=-Math.PI/2;scene.add(ground);
+const sq=mk(new THREE.CircleGeometry(8,24),pc('path')[0],pc('path')[1],{noOutline:true});sq.rotation.x=-Math.PI/2;at(sq,0,.02,7);
+const street=mk(new THREE.PlaneGeometry(6,40),pc('path')[0],pc('path')[1],{noOutline:true});street.rotation.x=-Math.PI/2;at(street,0,.02,32);
+
+/* houses */
+const HOUSES={};
+function house(id,x,z,w,d,h,rot=0){
+  const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;scene.add(g);
+  const wall=at(B2(w,h,d,'wall'),0,h/2,0,g);
+  const roof=Cn(Math.max(w,d)*.78,h*.7,4,pc('roof')[0],pc('roof')[1]);roof.rotation.y=Math.PI/4;roof.scale.set(w/Math.max(w,d),1,d/Math.max(w,d));at(roof,0,h+h*.35,0,g);
+  at(B2(1,1.8,.15,'door'),0,.9,d/2+.05,g);
+  at(B2(.9,.8,.12,'door'),-w*.3,h*.62,d/2+.05,g);at(B2(.9,.8,.12,'door'),w*.3,h*.62,d/2+.05,g);
+  HOUSES[id]={g,wall,roof,x,z,w,d,h};return HOUSES[id];
+}
+house('H1',0,-1,6,5,3.2);house('H2',-10,1,5,5,4,.2);house('H3',10,1,5,5,4,-.2);
+house('H4',-11,10,5,6,4,Math.PI/2);house('H5',11,10,5,6,4,-Math.PI/2);
+house('H6',-7,18,5,5,4,Math.PI/2);house('H7',7,18,5,5,4,-Math.PI/2);
+house('H8',-7,28,5,5,3.6,Math.PI/2);house('H9',7,30,5,5,3.6,-Math.PI/2);house('H10',-17,4,5,5,3.6,.4);house('H11',17,5,5,5,3.6,-.4);
+// H1 ruin stubs (shown after the burst)
+const ruin=[];{const r=rng(5);for(let i=0;i<6;i++){const m=B2(1+r()*1.4,.6+r()*1.2,.5,'wall');at(m,-2.5+i*1,.5,-1+(r()-.5)*4);m.visible=false;ruin.push(m);}}
+/* well, cart */
+const well=new THREE.Group();scene.add(well);well.position.set(-3.5,0,8);at(Cy(1,1,pc('stone')[0],pc('stone')[1]),0,.5,0,well);at(B2(.2,2,.2,'wood'),-.8,1.5,0,well);at(B2(.2,2,.2,'wood'),.8,1.5,0,well);at(B2(2,.2,.3,'roof'),0,2.5,0,well);
+const cart=new THREE.Group();scene.add(cart);cart.position.set(4.5,0,9);cart.rotation.y=.5;at(B2(2.6,.8,1.5,'wood'),0,1,0,cart);
+for(const[x,z]of[[-1,.8],[1,.8],[-1,-.8],[1,-.8]]){const wh=Cy(.45,.2,pc('door')[0],pc('door')[1]);wh.rotation.x=Math.PI/2;at(wh,x,.45,z,cart);}
+/* bell tower (pivot at base, falls toward +x across the street) */
+const tower=new THREE.Group();tower.position.set(-5.5,0,24);scene.add(tower);
+at(B2(2.4,10,2.4,'stone'),0,5,0,tower);at(B2(3,2.2,3,'wood'),0,11.1,0,tower);
+{const tr=Cn(2.4,2.6,4,pc('roof')[0],pc('roof')[1]);tr.rotation.y=Math.PI/4;at(tr,0,13.5,0,tower);}
+at(B2(1,1,.4,'metal'),0,11,1.55,tower);
+/* trees */
+{const r=rng(9);for(let i=0;i<34;i++){const a=r()*Math.PI*2,rad=26+r()*12,x=Math.cos(a)*rad,z=10+Math.sin(a)*rad;const s=.8+r()*.7;
+  const t=new THREE.Group();t.position.set(x,0,z);scene.add(t);at(Cy(.35*s,1.6*s,pc('trunk')[0],pc('trunk')[1]),0,.8*s,0,t);at(Cn(1.8*s,4.5*s,6,pc('tree')[0],pc('tree')[1]),0,3.8*s,0,t);}}
+/* fences */
+for(let i=0;i<7;i++){at(B2(.2,1,.2,'wood'),-3.4,.5,12+i*2.6);at(B2(.2,1,.2,'wood'),3.4,.5,12+i*2.6);}
+
+/* ================= Monster Pudge ================= */
+const PG=(()=>{
+  const g=new THREE.Group();scene.add(g);
+  const legL=at(B2(1.3,1.6,1.3,'pudgeD'),-1,.8,0,g),legR=at(B2(1.3,1.6,1.3,'pudgeD'),1,.8,0,g);
+  at(B2(3.6,1.2,2.6,'shorts'),0,2,0,g);
+  at(B2(4.2,3.4,3.1,'pudge'),0,4.2,0,g);
+  at(B2(3.6,1.3,2.7,'pudge'),0,6.3,-.25,g);
+  at(B2(1.2,1.1,1.1,'pudge'),0,6.6,.9,g);
+  for(let i=0;i<4;i++){const m=B2(.25,.7,.45,'mohawk');m.rotation.x=-.3;at(m,0,7.3,.4+i*.32,g);}
+  // chest skull mask + iron jaw
+  at(B2(1.7,1.8,.3,'mask'),0,5.3,1.6,g);
+  const eyeMat=[];for(const x of[-.4,.4]){const e=Bx(.46,.34,.1,0x111111,0xffd23a,{em:0xffa000,noOutline:true});at(e,x,5.5,1.78,g);eyeMat.push(e);}
+  at(B2(.9,.13,.06,'red',{noOutline:true}),0,6.0,1.77,g);
+  const mouth=at(Bx(1.4,1.0,.2,0x3a1408,0x2a0804,{noOutline:true}),0,4.45,1.55,g);
+  const jaw=new THREE.Group();jaw.position.set(0,4.45,1.62);g.add(jaw);
+  at(B2(1.8,.55,.4,'metal'),0,-.15,0,jaw);
+  for(let i=0;i<5;i++){const t=Cn(.13,.4,4,pc('tooth')[0],pc('tooth')[1],{noOutline:true});at(t,-.64+i*.32,.3,.1,jaw);}
+  const upTeeth=new THREE.Group();upTeeth.position.set(0,4.9,1.72);g.add(upTeeth);
+  for(let i=0;i<5;i++){const t=Cn(.13,.4,4,pc('tooth')[0],pc('tooth')[1],{noOutline:true});t.rotation.x=Math.PI;at(t,-.64+i*.32,-.15,0,upTeeth);}
+  // shoulder spikes
+  for(const s of[-1,1])for(let i=0;i<2;i++){const c=Cn(.28,1,5,pc('claw')[0],pc('claw')[1]);c.rotation.z=-s*.5;at(c,s*(1.6+i*.5),6.9-i*.2,0,g);}
+  // claw arm (left, screen-right when facing camera)
+  const armL=new THREE.Group();armL.position.set(-2.4,5.6,0);g.add(armL);
+  at(B2(1.4,2.4,1.4,'pudge'),0,-1.2,0,armL);at(B2(1.8,2.4,1.8,'pudge'),0,-3.4,0,armL);
+  for(let i=0;i<2;i++){const c=Cn(.22,.8,5,pc('claw')[0],pc('claw')[1]);c.rotation.z=Math.PI/2;at(c,-1.1,-2.8-i*.8,0,armL);}
+  for(let i=0;i<4;i++){const c=Cn(.24,1.4,5,pc('claw')[0],pc('claw')[1]);c.rotation.x=Math.PI;at(c,-.6+i*.4,-5.1,.3,armL);}
+  // hook arm (right)
+  const armR=new THREE.Group();armR.position.set(2.4,5.6,0);g.add(armR);
+  at(B2(1.2,2.2,1.2,'pudge'),0,-1.1,0,armR);at(B2(1.3,1.8,1.3,'pudge'),0,-2.9,0,armR);at(B2(1.6,.6,1.6,'metal'),0,-3.6,0,armR);
+  const hookInHand=mk(new THREE.TorusGeometry(.6,.18,6,12,Math.PI*1.4),pc('metal')[0],pc('metal')[1]);hookInHand.rotation.z=Math.PI*.7;at(hookInHand,0,-4.5,0,armR);
+  // back weapons on chains
+  const WEAP=[[0xf08a1a,'axe'],[0x9aa0a8,'hammer'],[0x3a6ae8,'hammer'],[0x8a4fd8,'axe'],[0x3fbf4a,'dagger'],[0x3a6ae8,'dagger'],[0x9a5a30,'axe'],[0x9a5ad8,'dagger']];
+  const weapons=WEAP.map(([col,type],i)=>{
+    const w=new THREE.Group();scene.add(w);
+    const sty=col;
+    if(type==='hammer'){at(Bx(1.1,.8,.8,col,sty),0,.0,0,w);at(B2(.2,1.3,.2,'wood'),0,-.9,0,w);}
+    else if(type==='axe'){at(Bx(.25,1.0,1.1,col,sty),0,0,.3,w);at(B2(.2,1.5,.2,'wood'),0,-.6,0,w);}
+    else{const d=Cn(.3,1.5,4,col,sty);at(d,0,.4,0,w);at(B2(.25,.7,.25,'metal'),0,-.6,0,w);}
+    const a=(i/(WEAP.length-1)-.5)*2.6;
+    const anchor=V((i%4-1.5)*.5,5.6+(i>3?.6:0),-1.5);
+    const chain=[];for(let k=0;k<7;k++){const c=B2(.22,.22,.22,'chain',{noOutline:true});scene.add(c);chain.push(c);}
+    return {w,a,anchor,chain};
+  });
+  return {g,armL,armR,jaw,upTeeth,mouth,legL,legR,weapons,eyeMat,hookInHand};
+})();
+// thrown hook (shot 5)
+const hookProj=mk(new THREE.TorusGeometry(.8,.24,6,12,Math.PI*1.4),pc('metal')[0],pc('metal')[1]);scene.add(hookProj);
+const hookChain=[];for(let k=0;k<22;k++){const c=B2(.25,.25,.25,'chain',{noOutline:true});scene.add(c);hookChain.push(c);}
+
+/* ================= peasants ================= */
+const PEAS=[];
+const CLOTH=[[0x2d4fd8,0x5a6fa8],[0xf2c419,0xb08a3a],[0x8a4fd8,0x7a5a8a],[0x1fb5a8,0x4a7a6a],[0xe0483d,0xa04030]];
+function peasant(cfg){
+  const g=new THREE.Group();scene.add(g);const c=CLOTH[cfg.c%CLOTH.length];
+  const lg=at(Bx(.5,.75,.32,0x3a3048,0x3a3040),0,.38,0,g);
+  at(Bx(.62,.8,.42,c[0],c[1]),0,1.15,0,g);
+  at(Bx(.42,.42,.42,0xf0c8a0,0xe8b890),0,1.78,0,g);
+  const aL=at(Bx(.16,.65,.16,c[0],c[1]),-.42,1.75,0,g),aR=at(Bx(.16,.65,.16,c[0],c[1]),.42,1.75,0,g);aL.rotation.z=-.4;aR.rotation.z=.4;
+  const p={g,lg,aL,aR,...cfg};PEAS.push(p);return p;
+}
+// hero peasant (shot 1)
+peasant({c:0,p0:[.8,0,9.5],dir:[.04,0,1],v:4.6,t0:.1,t1:1.3,scale:1});
+// radial scatter around the square
+{const r=rng(21);for(let i=0;i<22;i++){const a=r()*Math.PI*2,rad=2.5+r()*4.5;let p0=[Math.cos(a)*rad,0,7+Math.sin(a)*rad];if(Math.abs(p0[0])<3)p0[0]=(p0[0]<0?-1:1)*(3+r()*2);
+  const dx=p0[0],dz=p0[2]+2,dl=Math.hypot(dx,dz);peasant({c:i,p0,dir:[dx/dl,0,dz/dl],v:3.8+r()*2,t0:.12+r()*.3,t1:99});}}
+// street group: chased in shot 4, dives under the falling tower in shot 6
+{const r=rng(33);for(let i=0;i<7;i++){peasant({c:i+2,p0:[-2+r()*4,0,10.8+r()*1.5],dir:[0,0,1],v:3.9+r()*.4,t0:3.05,t1:99,dive:5.85+r()*.2,side:i%2?1:-1});}}
+// foreground runners (shot 8)
+{const r=rng(44);for(let i=0;i<4;i++){peasant({c:i+1,p0:[-3-i*1.3,0,15.5+r()*1.4],dir:[1,0,.12],v:5,t0:8.55,t1:99});}}
+
+/* ================= debris / fx ================= */
+const BURSTS=[];
+function burst(o,t0,n,seed,kinds,spread){
+  const r=rng(seed),items=[];
+  for(let i=0;i<n;i++){const k=kinds[i%kinds.length];const s=.25+r()*.8;const m=B2(s*(k==='wood'?2.2:1),s*(k==='wood'?.35:1),s,k,{noOutline:k==='dust'});scene.add(m);m.visible=false;
+    const v=V((r()-.5)*spread[0]+spread[3],3+r()*spread[1],(r()-.5)*spread[0]+spread[2]);items.push({m,v,o:V(o[0]+(r()-.5)*2,o[1]+r()*2,o[2]+(r()-.5)*2),rot:V(r()*6,r()*6,r()*6),spin:V(r()*8,r()*8,r()*8)});}
+  BURSTS.push({t0,items});
+}
+burst([0,2,1.5],.5,46,1,['wall','roof','wood','wood'],[10,7,6,0]);      // H1 explodes toward the square
+burst([4.5,1,9],2.85,16,2,['wood','wood','door'],[8,6,2,4]);              // cart smashed by spinning weapons
+burst([-3.5,1,8],2.95,12,3,['stone','stone','wood'],[7,6,0,-3]);          // well smashed
+burst([0,.3,11.5],3.9,22,4,['dust','path','dust'],[9,7,1,0]);              // hammer slam behind the runners
+burst([0,.3,24],6.3,30,6,['dust','stone','wood','dust'],[12,6,0,0]);       // tower impact on the street
+const SMOKEBALLS=[];{const r=rng(12);for(let i=0;i<26;i++){const m=B2(1,1,1,'dust',{noOutline:true});scene.add(m);m.visible=false;SMOKEBALLS.push({m,a:r()*Math.PI*2,s:.6+r()*.9,ph:r()});}}
+/* fire on houses */
+const FIRES=[];
+function fire(id,n,seed){const h=HOUSES[id],r=rng(seed);const items=[];
+  for(let i=0;i<n;i++){const isS=i%3===2;const m=B2(.6,.6,.6,isS?'smoke':(i%2?'fire1':'fire2'),{noOutline:true});if(!isS)m.userData.ms.emissive.setHex(0xff5a00);scene.add(m);
+    items.push({m,isS,ox:(r()-.5)*h.w*.9,oz:(r()-.5)*h.d*.9,ph:r(),sp:.6+r()*.7,s:.5+r()*.9});}
+  FIRES.push({h,items});}
+fire('H2',18,1);fire('H4',18,2);fire('H5',16,3);fire('H6',14,4);fire('H3',14,5);fire('H1',16,6);
+/* roar shockwave rings */
+const rings=[0,1,2].map(()=>{const m=new THREE.Mesh(new THREE.TorusGeometry(1,.08,6,32),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0}));scene.add(m);return m;});
+
+/* ================= world state as a pure function of T ================= */
+const TMP=V(0,0,0);
+function pudgeState(T){
+  let pos=V(0,0,-5),yaw=0,aL=.15,aR=-.15,jaw=0,mode='fan',spin=0,lean=0;
+  if(T<1.3){pos.z=lerp(-5,4,eo(seg(T,.25,1.3)));aL=lerp(.2,1.2,seg(T,.3,.8));aR=-aL;lean=.15;}
+  else if(T<2.4){pos.z=4;const k=seg(T,1.3,2.4);aL=1.2+Math.sin(k*9)*.5;aR=-aL;jaw=.3+.3*Math.sin(k*12);}
+  else if(T<3.4){pos.z=4;spin=eio(seg(T,2.4,3.4))*Math.PI*2;yaw=spin;mode='spin';aL=1.4;aR=-1.4;}
+  else if(T<4.4){pos.z=4;mode='slam';aL=.6;aR=-.5;}
+  else if(T<6.4){pos.z=4;yaw=lerp(0,-.3,eo(seg(T,4.4,4.6)));aL=.4;aR=T<5?lerp(-.4,-2.6,eo(seg(T,4.4,4.6))):lerp(-2.6,-.9,eo(seg(T,5.0,5.3)));lean=T>5?-.12:0;}
+  else if(T<7.6){const k=seg(T,6.4,7.6);pos.z=lerp(4,10,k);yaw=lerp(-.3,0,seg(T,6.4,6.8));aL=.25+Math.sin(k*10)*.2;aR=-.25+Math.sin(k*10)*.2;lean=.08;}
+  else if(T<8.6){pos.z=10;const k=seg(T,7.6,7.9);aL=lerp(.25,1.9,eo(k));aR=-aL;jaw=eo(k);mode='flare';lean=-.1;}
+  else{pos.z=10;aL=lerp(1.9,2.8,eo(seg(T,8.6,9.2)));aR=lerp(-1.9,-1.2,seg(T,8.6,9.2));jaw=lerp(1,.3,seg(T,8.6,9.4));mode='flare';lean=-.05;}
+  return {pos,yaw,aL,aR,jaw,mode,lean};
+}
+function applyWorld(T){
+  const st=pudgeState(T);
+  PG.g.position.copy(st.pos);PG.g.rotation.set(st.lean,st.yaw,0);
+  const stomp=Math.sin(T*9);PG.legL.position.y=.8+Math.max(0,stomp)*.15;PG.legR.position.y=.8+Math.max(0,-stomp)*.15;
+  PG.armL.rotation.z=-st.aL;PG.armR.rotation.z=-st.aR;
+  PG.jaw.position.y=4.45-st.jaw*.75;PG.jaw.rotation.x=st.jaw*.35;PG.mouth.scale.y=.6+st.jaw*1.1;
+  PG.g.updateMatrixWorld(true);
+  // weapons + chains
+  PG.weapons.forEach((wp,i)=>{
+    const an=PG.g.localToWorld(wp.anchor.clone());
+    let local;
+    if(st.mode==='spin'){const a=i/PG.weapons.length*Math.PI*2;local=V(Math.cos(a)*7.5,3.2+Math.sin(T*6+i)*.4,Math.sin(a)*7.5);}
+    else if(st.mode==='flare'){local=V(Math.sin(wp.a)*6.2,7.5+Math.cos(wp.a)*3.2,-2.5+Math.sin(T*8+i)*.3);}
+    else{local=V(Math.sin(wp.a)*4.6,6.8+Math.cos(wp.a)*2.6+Math.sin(T*2+i)*.25,-2.4);}
+    if(st.mode==='slam'&&i===2){const k=seg(T,3.45,3.9);local=k<1?L3([0,11,0],[0,.6,7.5],ei(k)):V(0,.6,7.5);}
+    const wpos=PG.g.localToWorld(local);
+    wp.w.position.copy(wpos);wp.w.lookAt(an);wp.w.rotateX(-Math.PI/2);
+    // sagging chain
+    wp.chain.forEach((c,k)=>{const q=(k+1)/(wp.chain.length+1);c.position.lerpVectors(an,wpos,q);c.position.y-=Math.sin(q*Math.PI)*(st.mode==='spin'?.2:.8);c.rotation.set(T*3+k,k,0);});
+  });
+  // thrown hook toward the tower top
+  const towerAng=T<5.2?0:Math.PI/2*.97*ei(seg(T,5.2,6.3));tower.rotation.z=-towerAng;tower.updateMatrixWorld(true);
+  const hookOn=T>=4.55&&T<6.4;hookProj.visible=hookOn;PG.hookInHand.visible=!hookOn;
+  if(hookOn){const hand=PG.armR.localToWorld(V(0,-4.5,0));const top=tower.localToWorld(V(0,11.5,1.6));
+    const k=eo(seg(T,4.55,5.0));hookProj.position.lerpVectors(hand,top,k);hookProj.rotation.set(T*12*(1-k),T*3,0);
+    hookChain.forEach((c,i)=>{c.visible=true;const q=(i+1)/(hookChain.length+1);c.position.lerpVectors(hand,hookProj.position,q);c.position.y-=Math.sin(q*Math.PI)*(T>5?0.1:1.2);});}
+  else hookChain.forEach(c=>c.visible=false);
+  // H1 bursts
+  const h1=HOUSES.H1;const b1=T>=.5;h1.wall.visible=!b1;h1.roof.visible=!b1;h1.g.children.forEach(c=>{if(c!==h1.wall&&c!==h1.roof)c.visible=!b1;});ruin.forEach(m=>m.visible=b1);
+  cart.visible=T<2.85;well.visible=T<2.95;
+  // bursts
+  for(const b of BURSTS){const dt=T-b.t0;for(const it of b.items){it.m.visible=dt>=0;if(dt<0)continue;
+    const g=14,y0=it.o.y-.2;const tl=(it.v.y+Math.sqrt(it.v.y*it.v.y+2*g*y0))/g;const d=Math.min(dt,tl);
+    it.m.position.set(it.o.x+it.v.x*d,Math.max(.2,it.o.y+it.v.y*d-.5*g*d*d),it.o.z+it.v.z*d);it.m.rotation.set(it.rot.x+it.spin.x*d,it.rot.y+it.spin.y*d,it.rot.z+it.spin.z*d);}}
+  // dust cloud of the tower impact + roar dust
+  SMOKEBALLS.forEach((s,i)=>{const dt=T-6.3;s.m.visible=dt>0&&dt<1.6;if(!s.m.visible)return;const rr=2+Math.min(dt,1)*4*s.s;s.m.position.set(Math.cos(s.a)*rr*.9,.6+dt*1.2*s.ph,24+Math.sin(s.a)*rr*.5);s.m.scale.setScalar((1+dt*1.4*s.s)*(dt>1.2?1-(dt-1.2)/.4:1));});
+  // fires
+  FIRES.forEach((f,fi)=>{const on=f.h===HOUSES.H1?T>=.6:true;const hh=f.h;f.items.forEach((it,i)=>{it.m.visible=on;if(!on)return;
+    const ph=(T*it.sp+it.ph)%1;const base=V(hh.x+it.ox,hh.h+1.2,hh.z+it.oz);if(f.h===HOUSES.H1)base.y=1;
+    if(it.isS){it.m.position.set(base.x,base.y+2+ph*6,base.z);it.m.scale.setScalar(it.s*(1+ph*1.6));}
+    else{it.m.position.set(base.x+Math.sin(T*7+i)*.15,base.y+ph*2.6,base.z);it.m.scale.setScalar(it.s*(1-ph*.8)+.05);}});});
+  fireLights.forEach((l,i)=>{const h=[HOUSES.H2,HOUSES.H4,HOUSES.H6][i];l.position.set(h.x,h.h+3,h.z);l.intensity=MODE==='styled'?.7+Math.sin(T*13+i*2)*.2:0;});
+  // peasants
+  for(const p of PEAS){const dt=clamp(T-p.t0,-1,p.t1-p.t0);const run=dt>0;
+    let x=p.p0[0]+p.dir[0]*p.v*Math.max(0,dt),z=p.p0[2]+p.dir[2]*p.v*Math.max(0,dt),y=0;
+    p.g.rotation.set(0,Math.atan2(p.dir[0],p.dir[2]),0);
+    if(p.dive&&T>p.dive){const k=eo(seg(T,p.dive,p.dive+.4));x+=p.side*2.6*k;z=p.p0[2]+p.dir[2]*p.v*(p.dive-p.t0)+.8*k;p.g.rotation.set(-1.35*k,p.side*-.8,0);}
+    else if(run){y=Math.abs(Math.sin(T*14+p.p0[0]*3))*.14;}
+    p.g.position.set(x,y,z);const sw=run?Math.sin(T*14+p.p0[2])*.5:0;p.aL.rotation.x=sw;p.aR.rotation.x=-sw;p.lg.rotation.x=sw*.6;}
+  // roar rings
+  rings.forEach((m,i)=>{const t0=7.7+i*.22,dt=T-t0;const on=dt>0&&dt<.9&&T<8.7;m.material.opacity=on?(1-dt/.9)*.85:0;m.visible=on;
+    if(on){m.position.set(0,4.6,11.8+dt*5);m.scale.setScalar(.6+dt*4.5);}});
+}
+
+/* ================= shots ================= */
+const SHOTS=[
+{n:1,act:'a',dur:1.3,title:'Прорыв сквозь дом',frame:'Wide, крестьянин на переднем плане',angle:'Низко, на уровне колен, длинный фокус',move:'Static, лёгкий push-in',
+ from:[.7,1.8,21],to:[.7,1.8,19.8],look0:[0,4.8,0],look1:[0,4.8,2.5],fov:[36,34],
+ action:'Крестьянин в ужасе бежит прямо на камеру. За ним над крышей дома нависает силуэт монстра. Монстр проламывается сквозь дом, стены и крыша разлетаются на брёвна к камере.',
+ emotion:'Крестьянин: животный ужас (рот открыт, без крика словами). Пудж: ярость',sfx:'Глухие шаги-удары, треск ломающихся брёвен, взрыв дома',cut:'Smash cut на общий план',
+ note:'ХУК. Первый кадр: лицо в панике плюс тень монстра над крышей. Угроза читается мгновенно.',shake:[[.5,.35]]},
+{n:2,act:'a',dur:1.1,title:'Масштаб хаоса',frame:'Extreme wide',angle:'Сверху, «дрон»',move:'Медленный облёт и опускание',
+ from:[16,42,36],to:[12,36,31],look0:[0,0,7],look1:[0,0,6],fov:[42,42],
+ action:'Сверху видна вся деревня: дома горят, монстр стоит в центре площади и машет когтистыми лапами, крестьяне разбегаются во все стороны, как муравьи.',
+ emotion:'Полный хаос, масштаб катастрофы',sfx:'Гул пожара, далёкие крики без слов, низкий рык',cut:'Cut на средний план',
+ note:'Показывает масштаб и географию: площадь в центре, улица на юг, колокольня у улицы.'},
+{n:3,act:'b',dur:1.0,title:'Цепная мельница',frame:'Wide',angle:'Низко, чуть сбоку',move:'Static, тряска',
+ from:[4.2,3.6,23],to:[2.6,3.6,24],look0:[0,4,4],look1:[0,4,4],fov:[50,50],
+ action:'Пудж раскручивается на месте. Восемь видов оружия на цепях разлетаются по кругу и сносят повозку и колодец, обломки летят во все стороны.',
+ emotion:'Неудержимая разрушительная сила',sfx:'Свист цепей по кругу, звон металла, хруст дерева и камня',cut:'Cut on action',
+ note:'Витрина оружия: все 8 видов видны в одном кадре.',shake:[[2.85,.2],[2.95,.2]]},
+{n:4,act:'b',dur:1.0,title:'Бегство по улице',frame:'Medium',angle:'На уровне глаз, перед бегущими',move:'Tracking назад вместе с крестьянами',
+ from:[2.4,1.8,21],to:[2.4,1.8,24],look0:[0,2.4,10],look1:[0,2.4,13],fov:[52,52],
+ action:'Камера пятится перед бегущей толпой. Сзади на цепи прилетает синий молот и врезается в землю прямо за спинами крестьян, взрывая брусчатку. Вдали монстр на площади.',
+ emotion:'Паника, «не догнал… пока»',sfx:'Топот, тяжёлый свист цепи, БАМ молота в землю',cut:'Cut на Пуджа',
+ note:'Ощущение погони и близкой угрозы.',shake:[[3.9,.3]]},
+{n:5,act:'b',dur:1.0,title:'Крюк',frame:'Wide OTS',angle:'Из-за плеча Пуджа, сверху',move:'Static',
+ from:[7,11,-10],to:[6.4,11.4,-8.8],look0:[-4,7,22],look1:[-4,7,22],fov:[46,46],
+ action:'Пудж разворачивается к колокольне и швыряет крюк на цепи. Крюк впивается в верхушку башни, Пудж рывком тянет на себя.',
+ emotion:'Холодная злоба охотника',sfx:'Свист цепи, лязг крюка о камень, натяжение цепи',cut:'Cut на падение',
+ note:'Фирменная механика Пуджа (крюк). Цепь должна читаться как одна натянутая линия.'},
+{n:6,act:'b',dur:1.0,title:'Колокольня падает',frame:'Wide',angle:'Низко, с улицы',move:'Static, слоу-мо',
+ from:[3,.8,34],to:[3,.75,33],look0:[-2,6,24],look1:[0,2.5,24],fov:[52,52],
+ action:'Колокольня в слоу-мо падает поперёк улицы. Крестьяне в последний момент прыгают в стороны, башня разбивается о землю, поднимая облако пыли.',
+ emotion:'Ужас и чудом спасённые',sfx:'Скрежет камня, звон колокола при падении, мощный удар и обвал',cut:'Cut на дым, из которого выходит Пудж',
+ note:'Крестьян не задевает: они ныряют в стороны.',shake:[[6.3,.4]]},
+{n:7,act:'c',dur:2.2,title:'Рык в камеру',frame:'Wide → ECU маски',angle:'Чуть снизу, фронтально',move:'Push-in до крупного плана, тряска на рыке',
+ from:[0,3.4,21],to:[0,5.1,16.6],look0:[0,4.6,6],look1:[0,5.1,11.6],fov:[40,36],
+ action:'Пудж выходит из дыма и огня прямо на камеру. Останавливается, железная челюсть на груди раскрывается, и он рычит прямо в объектив: глаза маски горят, оружие на цепях взмывает вверх, ударная волна рыка бьёт в камеру.',
+ emotion:'Максимальная злость и угроза',sfx:'Тяжёлые шаги, вдох, чудовищный рык без слов, свист ударной волны, дребезг',cut:'Cut на финал',
+ note:'ПИК ролика. Рык — без слов и без «говорящего» рта. Ударная волна видна кольцами.',shake:[[7.7,.35],[8.0,.3],[8.3,.25]]},
+{n:8,act:'c',dur:1.4,title:'Хозяин деревни',frame:'Wide',angle:'Очень низко',move:'Кран вверх и отъезд',
+ from:[1.2,.7,19.5],to:[2.6,3,21.5],look0:[0,5,10],look1:[0,5.8,10],fov:[46,46],
+ action:'Пудж стоит посреди горящей деревни, вскинув когтистую лапу, оружие на цепях веером над ним. На переднем плане пробегают последние крестьяне.',
+ emotion:'Триумф монстра, «это теперь моё»',sfx:'Финальный рык-эхо, треск огня',cut:'→ геймплей',
+ note:'Финальный постер-кадр под склейку на геймплей.'},
+];
+let acc=0;for(const s of SHOTS){s.start=acc;acc+=s.dur;}const TOTAL=acc;
+function shotAt(T){for(let i=SHOTS.length-1;i>=0;i--)if(T>=SHOTS[i].start)return i;return 0;}
+function setCam(i,T){
+  const s=SHOTS[i],t=clamp((T-s.start)/s.dur),e=eio(t);
+  cam.position.copy(L3(s.from,s.to,e));cam.fov=lerp(s.fov[0],s.fov[1],e);cam.updateProjectionMatrix();
+  cam.lookAt(L3(s.look0,s.look1,e));
+  let sh=0;for(const[t0,a]of(s.shake||[])){const dt=T-t0;if(dt>=0)sh+=a*Math.exp(-dt*6);}
+  if(s.n===7&&T>7.6)sh+=.06;
+  if(sh>0){cam.position.x+=Math.sin(T*91)*sh;cam.position.y+=Math.cos(T*77)*sh;}
+  const fwd=V(0,0,-1).applyQuaternion(cam.quaternion);const yawA=Math.atan2(fwd.x,fwd.z);const hf=Math.atan(Math.tan(cam.fov*Math.PI/360)*cam.aspect);const R=16,y=30;
+  const c=cam.position;const pts=[c.x,y,c.z,c.x+Math.sin(yawA-hf)*R,y,c.z+Math.cos(yawA-hf)*R,c.x+Math.sin(yawA+hf)*R,y,c.z+Math.cos(yawA+hf)*R];
+  wedge.geometry.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));wedge.geometry.computeBoundingSphere();camDot.position.set(c.x,y+.1,c.z);
+}
+
+/* ================= mode ================= */
+let MODE='block';
+function setMode(v){MODE=v;
+  for(const m of REG){m.material=v==='styled'?m.userData.ms:m.userData.mb;if(m.userData.ol)m.userData.ol.visible=v==='styled';}
+  if(v==='styled'){scene.background=new THREE.Color(0x3a2a5a);scene.fog=new THREE.Fog(0x3a2a5a,35,110);hemi.color.setHex(0x9a80e0);hemi.groundColor.setHex(0x5a3a20);hemi.intensity=.5;amb.intensity=.18;sun.color.setHex(0xffd0a0);sun.intensity=.5;}
+  else{scene.background=new THREE.Color(0xf1e6d6);scene.fog=null;hemi.color.setHex(0xffffff);hemi.groundColor.setHex(0xb08060);hemi.intensity=.5;amb.intensity=.22;sun.color.setHex(0xffffff);sun.intensity=.6;}
+  document.getElementById('mBlock').classList.toggle('on',v==='block');document.getElementById('mStyled').classList.toggle('on',v==='styled');
+  refreshThumbs();
+}
+
+/* ================= render ================= */
+const opts={map:true,cap:true};
+function renderAt(T,withMap){
+  const i=shotAt(T);applyWorld(T);setCam(i,T);
+  renderer.setScissorTest(false);renderer.setViewport(0,0,W,H);
+  helper.visible=false;renderer.render(scene,cam);
+  if(withMap){helper.visible=true;const s=128;renderer.setScissorTest(true);renderer.setScissor(8,H-8-s,s,s);renderer.setViewport(8,H-8-s,s,s);
+    renderer.setClearColor(0x000000);renderer.clear();renderer.render(scene,mapCam);renderer.setScissorTest(false);renderer.setViewport(0,0,W,H);helper.visible=false;}
+  return i;
+}
+let T=0,playing=false,speed=1,loopShot=true,lockShot=-1,last=performance.now(),recording=false;
+function draw(){
+  const i=renderAt(T,opts.map&&!recording);const s=SHOTS[i];
+  document.getElementById('capn').textContent=`#${s.n}  ${s.title}`;document.getElementById('capd').textContent=`${s.frame} · ${s.move}`;document.getElementById('capt').textContent=T.toFixed(2)+'s';
+  document.getElementById('cap').style.display=opts.cap&&!recording?'block':'none';
+  document.getElementById('maplbl').style.display=opts.map&&!recording?'block':'none';
+  const tg=document.getElementById('tagov');const slow=s.n===6;tg.style.display=slow&&!recording?'block':'none';tg.textContent='SLOW-MO';
+  document.getElementById('tc').textContent=`${T.toFixed(2).padStart(5,'0')} / ${TOTAL.toFixed(2)}`;
+  document.getElementById('playhead').style.left=(T/TOTAL*100)+'%';
+  document.querySelectorAll('.timeline .seg').forEach((el,j)=>el.classList.toggle('cur',j===i));
+  document.querySelectorAll('.shot').forEach((el,j)=>el.classList.toggle('cur',j===i));
+}
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
+  if(playing){T+=dt*(recording?1:speed);
+    if(recording&&T>=TOTAL){T=TOTAL-.001;stopRec();}
+    else if(lockShot>=0&&loopShot){const s=SHOTS[lockShot];if(T>=s.start+s.dur)T=s.start;}
+    else if(T>=TOTAL)T=0;}
+  draw();hoverThumbs(now);requestAnimationFrame(frame);}
+
+/* ================= UI ================= */
+const playBtn=document.getElementById('play');
+function setPlay(p){playing=p;playBtn.textContent=p?'❚❚ Pause':'▶ Play';}
+playBtn.onclick=()=>setPlay(!playing);
+document.getElementById('speed').onchange=e=>speed=+e.target.value;
+const loopBtn=document.getElementById('loop');loopBtn.onclick=()=>{loopShot=!loopShot;loopBtn.classList.toggle('on',loopShot);if(!loopShot)lockShot=-1;};
+function gotoShot(i,lock=false){i=(i+SHOTS.length)%SHOTS.length;T=SHOTS[i].start+.001;lockShot=lock&&loopShot?i:-1;}
+document.getElementById('prev').onclick=()=>gotoShot(shotAt(T)-1);document.getElementById('next').onclick=()=>gotoShot(shotAt(T)+1);
+document.getElementById('mBlock').onclick=()=>setMode('block');document.getElementById('mStyled').onclick=()=>setMode('styled');
+const tog=(id,key,fn)=>{const b=document.getElementById(id);b.onclick=()=>{opts[key]=!opts[key];b.classList.toggle('on',opts[key]);fn&&fn(opts[key]);};};
+tog('bMap','map');tog('bCap','cap');
+document.getElementById('bSafe').onclick=e=>{const o=document.getElementById('safeov');const on=o.style.display!=='block';o.style.display=on?'block':'none';e.target.classList.toggle('on',on);};
+document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return;if(e.code==='Space'){e.preventDefault();playBtn.click();}
+  if(e.code==='ArrowRight'){e.preventDefault();gotoShot(shotAt(T)+1);}if(e.code==='ArrowLeft'){e.preventDefault();gotoShot(shotAt(T)-1);}});
+const tl=document.getElementById('timeline');
+SHOTS.forEach(s=>{const d=document.createElement('div');d.className='seg '+s.act;d.style.width=(s.dur/TOTAL*100)+'%';d.textContent=s.n;tl.insertBefore(d,tl.lastElementChild);});
+tl.addEventListener('pointerdown',e=>{const r=tl.getBoundingClientRect();T=clamp((e.clientX-r.left)/r.width)*TOTAL*.9999;lockShot=-1;});
+/* recording (clean blockout, no overlays) */
+let rec=null,chunks=[];
+function stopRec(){if(rec&&rec.state!=='inactive')rec.stop();}
+document.getElementById('bRec').onclick=()=>{
+  if(!window.MediaRecorder){alert('Браузер не умеет записывать видео');return;}
+  const stream=canvas.captureStream(30);const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';
+  rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:8e6});chunks=[];
+  rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
+  rec.onstop=()=>{recording=false;setPlay(false);document.getElementById('bRec').textContent='⏺ Записать видео';
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(chunks,{type:'video/webm'}));a.download=`BC_MonsterVillage_blockout_${MODE}.webm`;a.click();};
+  T=0;lockShot=-1;recording=true;document.getElementById('bRec').textContent='● Идёт запись…';rec.start();setPlay(true);
+};
+
+/* ================= shot cards ================= */
+const shotsEl=document.getElementById('shots');const thumbs=[];
+SHOTS.forEach((s,i)=>{
+  const el=document.createElement('div');el.className='shot';
+  el.innerHTML=`<canvas class="thumb" width="270" height="480"></canvas>
+   <div class="mapc"><canvas class="map" width="400" height="400"></canvas><div class="maplegend">▲ конус = камера шота · оранжевый = Пудж</div></div>
+   <div><div class="head"><span class="num">#${s.n}</span><span class="title">${s.title}</span><span class="time">${s.start.toFixed(1)}–${(s.start+s.dur).toFixed(1)} с · ${s.dur.toFixed(1)} с</span></div>
+   <div class="grid"><div>Крупность</div><div>${s.frame}</div><div>Ракурс</div><div>${s.angle}</div><div>Камера</div><div>${s.move}</div>
+   <div>Действие</div><div>${s.action}</div><div>Эмоция</div><div>${s.emotion}</div><div>Звук</div><div>${s.sfx}</div><div>Склейка</div><div>${s.cut}</div>
+   <div>Заметка</div><div style="color:#ffd2a6">${s.note}</div></div></div>`;
+  shotsEl.appendChild(el);
+  const th=el.querySelector('canvas.thumb'),mp=el.querySelector('canvas.map');
+  thumbs.push({el,i,ctx:th.getContext('2d'),mctx:mp.getContext('2d'),hover:false});
+  el.addEventListener('mouseenter',()=>{thumbs[i].hover=true;thumbs[i].t0=performance.now();});
+  el.addEventListener('mouseleave',()=>{thumbs[i].hover=false;drawThumb(thumbs[i],s.start+s.dur*.6);});
+  el.addEventListener('click',()=>{gotoShot(i,true);setPlay(true);window.scrollTo({top:0,behavior:'smooth'});});
+});
+function drawThumb(th,t){
+  const i=renderAt(t,false);th.ctx.drawImage(renderer.domElement,0,0,270,480);
+  // map: render top view into a square region then copy
+  helper.visible=true;const s=360;renderer.setScissorTest(true);renderer.setScissor(0,0,s,s);renderer.setViewport(0,0,s,s);renderer.render(scene,mapCam);renderer.setScissorTest(false);
+  th.mctx.drawImage(renderer.domElement,0,(H-s)*DPR,s*DPR,s*DPR,0,0,400,400);helper.visible=false;
+}
+function refreshThumbs(){thumbs.forEach(th=>drawThumb(th,SHOTS[th.i].start+SHOTS[th.i].dur*.6));}
+function hoverThumbs(now){for(const th of thumbs)if(th.hover){const s=SHOTS[th.i];const lt=((now-th.t0)/1000)%s.dur;drawThumb(th,s.start+lt);}}
+
+/* sound table */
+const tb=document.querySelector('#sound tbody');
+SHOTS.forEach(s=>{const tr=document.createElement('tr');tr.innerHTML=`<td>#${s.n}</td><td style="white-space:nowrap">${s.start.toFixed(1)}–${(s.start+s.dur).toFixed(1)}</td><td>${s.sfx}</td><td>${s.cut}</td>`;tb.appendChild(tr);});
+
+/* ================= sheet mode for review: ?sheet=block|styled ================= */
+const qs=new URLSearchParams(location.search);
+if(qs.get('frame')){setMode(qs.get('mode')||'block');document.body.innerHTML='';document.body.style.margin=0;document.body.appendChild(canvas);renderAt(+qs.get('frame'),qs.get('map')==='1');}
+else if(qs.get('sheet')){
+  setMode(qs.get('sheet'));
+  document.body.innerHTML='';document.body.style.margin=0;const cv=document.createElement('canvas');cv.width=8*135;cv.height=3*240;document.body.appendChild(cv);const c=cv.getContext('2d');
+  [.1,.5,.9].forEach((t,row)=>SHOTS.forEach((s,col)=>{renderAt(s.start+s.dur*t,true);c.drawImage(renderer.domElement,col*135,row*240,135,240);c.fillStyle='#fff';c.font='bold 12px sans-serif';c.fillText(`#${s.n} ${(s.start+s.dur*t).toFixed(2)}`,col*135+4,row*240+236);}));
+}else{setMode('block');requestAnimationFrame(frame);}
+</script>
+</body>
+</html>
