@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BC_FakeWeapon_001 — динамический аниматик «Не тем оружием»</title>
+<style>
+  @font-face{font-family:Londrina;src:url(assets/LondrinaSolid-Black.ttf)}
+  :root{--bg:#0b0f17;--panel:#121826;--panel2:#182033;--line:#26314a;--text:#e6ebf5;--mute:#8d99b3;--orange:#f08a2a}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  header{padding:22px 32px 12px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#1d1424,#0b0f17)}
+  header h1{margin:0 0 6px;font-size:25px} header h1 span{color:var(--orange)} header p{margin:0;color:var(--mute);max-width:1000px}
+  main{padding:20px 32px 60px;max-width:1500px;margin:0 auto;display:grid;grid-template-columns:380px 1fr;gap:28px;align-items:start}
+  @media(max-width:1000px){main{grid-template-columns:1fr}}
+  .player{position:sticky;top:12px}
+  .screen{position:relative;width:360px;height:640px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#000}
+  .screen canvas{display:block;width:360px;height:640px}
+  .cap{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);padding:6px 12px 8px;pointer-events:none}
+  .cap b{color:#ff9a3c;font-size:14px}.cap div{color:#cfd8ea;font-size:11.5px}.cap span{float:right;color:#8d99b3;font:12px ui-monospace,monospace}
+  .controls{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;align-items:center}
+  button,select{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+  button:hover{border-color:var(--orange)} button.on{background:#3a2412;border-color:var(--orange);color:#ffd2a6}
+  .tc{font-variant-numeric:tabular-nums;color:var(--mute);margin-left:auto;font-size:13px}
+  .timeline{position:relative;margin-top:10px;height:32px;border-radius:8px;overflow:hidden;display:flex;border:1px solid var(--line);cursor:pointer;user-select:none;width:360px}
+  .seg{height:100%;border-right:1px solid #0b0f17;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#111;background:#e9a35a}
+  .seg.slow{background:#8fb4ff}.seg.hit{background:#ff7a4a}.seg.cur{outline:2px solid #fff;outline-offset:-2px}
+  .playhead{position:absolute;top:0;bottom:0;width:2px;background:#fff;box-shadow:0 0 6px #fff;pointer-events:none}
+  .hint{font-size:11.5px;color:var(--mute);margin-top:6px;width:360px}
+  .shots{display:grid;gap:10px}
+  .shot{display:grid;grid-template-columns:96px 1fr;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+  .shot:hover,.shot.cur{border-color:var(--orange)} .shot canvas{width:96px;height:171px;border-radius:8px;border:1px solid var(--line)}
+  .shot .head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:3px}.shot .num{font-size:19px;font-weight:800;color:var(--orange)}.shot .title{font-weight:700}.shot .time{color:var(--mute);font-size:12.5px}
+  .grid{display:grid;grid-template-columns:80px 1fr;gap:2px 12px;font-size:13px}.grid div:nth-child(odd){color:var(--mute)}
+  h2{font-size:17px;margin:0 0 10px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Аниматик — <span>«Не тем оружием»</span></h1>
+  <p>Динамический аниматик гибрида: камера работает по шотам (наезды, трекинг, буллет-тайм, вип-пан, облёт, прыжок, импакт). Персонажи — вырезки из рефов, фон игрового ракурса — арена из игры, UI — спрайты и шрифт игры. Это план движения и тайминга для Seedance и монтажа, не финальная картинка.</p>
+</header>
+<main>
+  <div class="player">
+    <div class="screen"><canvas id="view" width="360" height="640"></canvas>
+      <div class="cap" id="cap"><span id="capt">0.00s</span><b id="capn"></b><div id="capd"></div></div></div>
+    <div class="controls"><button id="play">▶ Play</button><button id="prev">◀</button><button id="next">▶▶</button>
+      <select id="speed"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select>
+      <button id="bCap" class="on">Подписи</button><button id="bUI" class="on">UI</button><span class="tc" id="tc">00.00 / 18.00</span></div>
+    <div class="timeline" id="timeline"><div class="playhead" id="playhead"></div></div>
+    <div class="hint">Пробел: play/pause · ← →: шоты · клик по таймлайну или шоту: перемотка. Голубые сегменты — буллет-тайм, красные — импакт. «UI» прячет наложение.</div>
+  </div>
+  <div><h2>Шоты</h2><div class="shots" id="shots"></div></div>
+</main>
+<script>
+const W=360,H=640,cv=document.getElementById('view'),ctx=cv.getContext('2d');const DPR=Math.min(2,devicePixelRatio||1);cv.width=W*DPR;cv.height=H*DPR;ctx.scale(DPR,DPR);
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,seg=(t,a,b)=>clamp((t-a)/(b-a));
+const eio=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2,eo=t=>1-Math.pow(1-t,3),ei=t=>t*t*t,back=t=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const I={};['arena_plate.jpg','loca.jpg','pudge_front.png','pudge_back.png','golem.png','Boss.png','Hp_Bg.png','Enemy_Hp.png','Green_Button.png','CrystalRed.png','Glow_1.png','Level_Up_Icon.png',
+ 'Cutting_type.png','Buckshot_type.png','Stubing_type.png','rarity_Common.png','rarity_Rare.png','rarity_Epic.png','rarity_Legendary.png','rarity_Divine.png',
+ 'icon_axe_epic.png','icon_dagger.png','icon_ham0.png','icon_ham1.png','icon_ham2.png','icon_ham3.png','icon_ham4.png'].forEach(n=>{const i=new Image();i.src='assets/'+n;I[n]=i;});
+const ok=n=>I[n]&&I[n].complete&&I[n].naturalWidth;
+const RAR=['rarity_Common.png','rarity_Rare.png','rarity_Epic.png','rarity_Legendary.png','rarity_Divine.png'];
+
+/* ---------- primitives ---------- */
+// sprite by height, anchored at feet (ax,ay in 0..1 of the sprite)
+function spr(n,x,y,h,o={}){if(!ok(n))return;const im=I[n],w=h*im.naturalWidth/im.naturalHeight;ctx.save();ctx.translate(x,y);if(o.rot)ctx.rotate(o.rot);ctx.scale((o.flip?-1:1)*(o.sx||1),o.sy||1);
+  if(o.alpha!=null)ctx.globalAlpha=o.alpha;if(o.filter)ctx.filter=o.filter;const ax=o.ax??.5,ay=o.ay??1;
+  if(o.crop){const[cx,cy,cw,ch]=o.crop;ctx.drawImage(im,cx*im.naturalWidth,cy*im.naturalHeight,cw*im.naturalWidth,ch*im.naturalHeight,-ax*w*cw,-ay*h*ch,w*cw,h*ch);}
+  else ctx.drawImage(im,-ax*w,-ay*h,w,h);ctx.restore();return w;}
+function img(n,x,y,w,h,a=1){if(!ok(n))return;ctx.save();ctx.globalAlpha=a;ctx.drawImage(I[n],x-w/2,y-h/2,w,h);ctx.restore();}
+function bg(n,zoom=1,cx=.5,cy=.5,filter){if(!ok(n))return;const im=I[n],s=Math.max(W/im.naturalWidth,H/im.naturalHeight)*zoom;const w=im.naturalWidth*s,h=im.naturalHeight*s;ctx.save();if(filter)ctx.filter=filter;ctx.drawImage(im,W/2-cx*w,H/2-cy*h,w,h);ctx.restore();}
+function txt(s,x,y,size,col,stroke=6,rot=0){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.font=size+'px Londrina, system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.lineWidth=stroke;ctx.strokeStyle='#1a1020';ctx.strokeText(s,0,0);ctx.fillStyle=col;ctx.fillText(s,0,0);ctx.restore();}
+function glow(x,y,r,col,a){const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,col.replace('A',a));g.addColorStop(1,col.replace('A',0));ctx.fillStyle=g;ctx.fillRect(x-r,y-r,2*r,2*r);}
+function ring(x,y,t,max,col='#fff',sq=.35,lw=6){if(t<0||t>1)return;ctx.save();ctx.globalAlpha=1-t;ctx.strokeStyle=col;ctx.lineWidth=lw*(1-t)+1;ctx.beginPath();ctx.ellipse(x,y,max*eo(t),max*eo(t)*sq,0,0,7);ctx.stroke();ctx.restore();}
+function sparks(x,y,t,n,seed,len=70,col='#fff3b0'){if(t<0||t>1)return;const r=rng(seed);ctx.save();ctx.strokeStyle=col;ctx.lineCap='round';ctx.globalAlpha=1-t*t;for(let i=0;i<n;i++){const a=r()*6.28,d=8+eo(t)*(len*.5+r()*len);ctx.lineWidth=3*(1-t)+1;ctx.beginPath();ctx.moveTo(x+Math.cos(a)*d*.55,y+Math.sin(a)*d*.55);ctx.lineTo(x+Math.cos(a)*d,y+Math.sin(a)*d);ctx.stroke();}ctx.restore();}
+function speedLines(ang,a,seed=1,n=26,cx=W/2,cy=H/2){if(a<=0)return;const r=rng(seed);ctx.save();ctx.translate(cx,cy);ctx.rotate(ang);ctx.strokeStyle='#fff';for(let i=0;i<n;i++){ctx.globalAlpha=a*(.25+r()*.5);ctx.lineWidth=1+r()*2.5;const y=(r()-.5)*900,x=(r()-.5)*700,l=80+r()*220;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+l,y);ctx.stroke();}ctx.restore();}
+function radial(cx,cy,a,seed=3,n=46){if(a<=0)return;const r=rng(seed);ctx.save();ctx.fillStyle='#fff';for(let i=0;i<n;i++){const an=r()*6.28,r0=110+r()*90,w=.012+r()*.03;ctx.globalAlpha=a*(.4+r()*.6);ctx.beginPath();ctx.moveTo(cx+Math.cos(an)*r0,cy+Math.sin(an)*r0);ctx.lineTo(cx+Math.cos(an-w)*800,cy+Math.sin(an-w)*800);ctx.lineTo(cx+Math.cos(an+w)*800,cy+Math.sin(an+w)*800);ctx.fill();}ctx.restore();}
+function dust(x,y,t,seed,spread=110,col='#9aa2bd'){if(t<0||t>1)return;const r=rng(seed);ctx.save();ctx.globalAlpha=.6*(1-t);ctx.fillStyle=col;for(let i=0;i<14;i++){ctx.beginPath();ctx.arc(x+(r()-.5)*spread*(.4+eo(t)),y-r()*spread*.35*eo(t),6+r()*16*(.5+t),0,7);ctx.fill();}ctx.restore();}
+function vignette(a){const g=ctx.createRadialGradient(W/2,H/2,H*.25,W/2,H/2,H*.7);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,10,'+a+')');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+function fill(col){ctx.fillStyle=col;ctx.fillRect(-50,-50,W+100,H+100);}
+function shakeOff(t0,T,amp,dec=8){if(T<t0)return[0,0];const k=amp*Math.exp(-(T-t0)*dec);return[Math.sin(T*97)*k,Math.cos(T*83)*k];}
+
+/* ---------- world (game view = arena plate space 360x640) ---------- */
+const S=[180,520],A=[180,420],G=[180,292];   // Pudge start / attack mark, golem feet
+const PH=74, GH=205;                          // on-screen heights in the game view
+function cam(cx,cy,zoom,rot=0,sh=[0,0]){ctx.translate(W/2+sh[0],H/2+sh[1]);ctx.rotate(rot);ctx.scale(zoom,zoom);ctx.translate(-cx,-cy);}
+function arena(filter){if(!ok('arena_plate.jpg'))return;ctx.save();if(filter)ctx.filter=filter;ctx.drawImage(I['arena_plate.jpg'],-180,-320,720,1280);ctx.restore();}
+// Pudge with a weapon in the right hand. view: 'back'|'front'; weapon icon name or null; arm swing angle for the weapon
+function pudge(x,y,h,o={}){const view=o.view||'back',n=view==='back'?'pudge_back.png':'pudge_front.png';
+  ctx.save();ctx.translate(x,y);if(o.rot){ctx.translate(0,-h*.45);ctx.rotate(o.rot);ctx.translate(0,h*.45);}
+  ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(0,0,h*.42,h*.1,0,0,7);ctx.fill();
+  if(o.glow)glow(0,-h*.5,h*1.1,'rgba(255,200,90,A)',.6*o.glow);
+  const sx=(o.sx||1),sy=(o.sy||1);
+  const w=spr(n,0,0,h,{sx,sy,filter:o.filter});
+  if(o.weapon){const hx=(view==='back'?1:-1)*w*.36*sx,hy=-h*.26*sy;const ws=h*(o.wscale||.75);ctx.save();ctx.translate(hx,hy);ctx.rotate(o.wrot||0);
+    if(o.wglow)glow(0,-ws*.4,ws*.9,'rgba(255,190,70,A)',o.wglow);
+    if(ok(o.weapon))ctx.drawImage(I[o.weapon],-ws*.28,-ws*.82,ws,ws);ctx.restore();}
+  ctx.restore();}
+function golem(x,y,h,o={}){ctx.save();ctx.translate(x,y);if(o.rot)ctx.rotate(o.rot);ctx.fillStyle='rgba(0,0,0,.35)';ctx.beginPath();ctx.ellipse(0,0,h*.55,h*.12,0,0,7);ctx.fill();
+  if(o.heat)glow(0,-h*.55,h*1.1,'rgba(255,80,30,A)',.45*o.heat);spr('golem.png',0,0,h,{sx:o.sx||1,sy:o.sy||1,filter:o.filter});ctx.restore();}
+// golem broken into tiles flying apart
+function golemShatter(x,y,h,t){if(!ok('golem.png'))return;const im=I['golem.png'],w=h*im.naturalWidth/im.naturalHeight,cols=6,rows=4,r=rng(9);
+  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const u=i/cols,v=j/rows,dx=(u+.5/cols-.5),dy=(v+.5/rows-1);const vx=dx*(260+r()*160),vy=dy*(120+r()*120)-80-r()*80,sp=(r()-.5)*8;
+    const px=x-w/2+(u+.5/cols)*w+vx*t,py=y-h+(v+.5/rows)*h+vy*t+330*t*t;ctx.save();ctx.translate(px,py);ctx.rotate(sp*t);ctx.globalAlpha=1-clamp((t-.7)*3);
+    ctx.drawImage(im,u*im.naturalWidth,v*im.naturalHeight,im.naturalWidth/cols,im.naturalHeight/rows,-w/cols/2,-h/rows/2,w/cols+1,h/rows+1);ctx.restore();}
+  if(t<.6)glow(x,y-h*.5,h,'rgba(255,90,30,A)',.6*(1-t/.6));}
+
+/* ---------- UI (game sprites) ---------- */
+function bossBar(y,hp,s=1){ctx.save();ctx.translate(W/2,y);ctx.scale(s,s);img('Boss.png',-62,-28,30,30);txt('BOSS',12,-28,30,'#ff2d6a',5);img('Hp_Bg.png',0,4,170,24);
+  if(ok('Enemy_Hp.png')){ctx.save();ctx.beginPath();ctx.rect(-82,-8,164*hp,24);ctx.clip();ctx.drawImage(I['Enemy_Hp.png'],-82,-7,164,22);ctx.restore();}
+  txt(hp>.99?'10K':hp>.01?String(Math.round(hp*10000)):'0',0,4,20,'#fff',4);ctx.restore();}
+function card(x,y,s,rar,icon,type,lvl,grey){ctx.save();ctx.translate(x,y);ctx.scale(s,s);if(grey)ctx.filter='grayscale(1) brightness(.55)';img(rar,0,0,84,84);img(icon,0,0,72,72);img(type,-30,-30,22,23);txt(String(lvl),30,30,20,'#fff',4);ctx.restore();}
+function hand(x,y,press){ctx.save();ctx.translate(x+6,y+8);ctx.scale(1.15-.12*press,1.15-.12*press);ctx.rotate(-.35);ctx.fillStyle='#fff';ctx.strokeStyle='#1a1020';ctx.lineWidth=2.5;ctx.lineJoin='round';
+  ctx.beginPath();ctx.moveTo(-4,0);ctx.lineTo(-4,-26);ctx.quadraticCurveTo(0,-32,4,-26);ctx.lineTo(4,-6);ctx.lineTo(8,-8);ctx.quadraticCurveTo(13,-8,13,-3);ctx.lineTo(16,-4);ctx.quadraticCurveTo(21,-3,20,3);ctx.lineTo(22,3);ctx.quadraticCurveTo(26,5,24,12);ctx.lineTo(22,26);ctx.lineTo(-2,26);ctx.lineTo(-10,10);ctx.quadraticCurveTo(-12,4,-6,4);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();}
+function tapAt(T,t,p,from=[70,90]){const d=T-t;if(d<=-.55||d>=.35)return;const k=eio(seg(d,-.55,-.08));const hx=lerp(p[0]+from[0],p[0],k),hy=lerp(p[1]+from[1],p[1],k);
+  if(d>0){ctx.save();ctx.globalAlpha=(1-d/.35)*.9;ctx.strokeStyle='#fff';ctx.lineWidth=4;ctx.beginPath();ctx.arc(p[0],p[1],10+d/.35*34,0,7);ctx.stroke();ctx.restore();}hand(hx,hy,Math.max(0,1-Math.abs(d)/.08));}
+
+/* ---------- timeline ---------- */
+const SH=[
+ {t0:0,t1:1.5,k:'',title:'Хук: кулак в камеру',cam:'Снизу от земли → вип-реверс в игровой ракурс',act:'Голем нависает над камерой, обрушивает кулак, удар с пылью и тряской. Резкий отъезд в игровой вид: крошечный Пудж против огромного босса.',ui:'BOSS влетает с «припечаткой».'},
+ {t0:1.5,t1:3.2,k:'slow',title:'Буллет-тайм: выбор',cam:'Медленный наезд на Пуджа, мир обесцвечен',act:'Время почти остановилось. Пудж дышит в слоу-мо.',ui:'Карточки влетают с отскоком, рука тапает топор, карточка улетает в Пуджа.'},
+ {t0:3.2,t1:4.6,k:'',title:'Рывок с топором',cam:'Трекинг сзади, голландский угол, камера держит Пуджа',act:'Топор вспыхивает в руке, Пудж рвётся к голему.',ui:'Speed lines.'},
+ {t0:4.6,t1:5.6,k:'hit',title:'Топор в камень',cam:'Макро-крупный план, слоу-мо на ударе',act:'Замах, удар по каменной ноге: искры, лезвие разлетается на куски.',ui:'Серое −3, перечёркнутый рубящий урон.'},
+ {t0:5.6,t1:6.2,k:'',title:'«Ой.»',cam:'Крупно голова голема снизу, медленный наезд',act:'Глаза голема разгораются и опускаются на Пуджа. Пауза-юмор.',ui:'—'},
+ {t0:6.2,t1:7.6,k:'hit',title:'Ответка и вип-пан',cam:'Вип-пан за улетающим Пуджем',act:'Голем отмахивается, Пудж кувырком летит прямо в объектив и «впечатывается» в экран мордой.',ui:'Красная вспышка, тряска.'},
+ {t0:7.6,t1:9.2,k:'slow',title:'Буллет-тайм 2: злость',cam:'Крупно маска, медленный наезд, обесцвечено',act:'Глаза маски загораются злостью.',ui:'Карточки: топор серый, над молотом «дробящий ×5», тап по молоту, карточка улетает вверх.'},
+ {t0:9.2,t1:12.4,k:'',title:'Эволюция молота',cam:'Облёт вокруг Пуджа, зум-удар на каждом тапе',act:'Каменный → синий → фиолетовый → оранжевый → Divine. Столбы света, молот растёт.',ui:'Карточка и кнопка вверху, Пудж внизу свободен. 40 → 120 → 360 → 999 → 9999.'},
+ {t0:12.4,t1:13.4,k:'',title:'Прыжок к луне',cam:'Камера взлетает вместе с Пуджем',act:'Пудж прыгает высоко, молот пылает над головой, луна за спиной, зависание в верхней точке.',ui:'—'},
+ {t0:13.4,t1:14.6,k:'hit',title:'ИМПАКТ',cam:'Сверху на голема, импакт-кадр, стоп 0.2 с',act:'Удар молотом в грудь, белый импакт-кадр, манга-линии.',ui:'CRIT! −9999, BOSS в ноль.'},
+ {t0:14.6,t1:16,k:'slow',title:'Голем в щепки',cam:'Слоу-мо, обломки летят в камеру',act:'Голем раскалывается по лаве и разлетается.',ui:'—'},
+ {t0:16,t1:18,k:'',title:'Лут',cam:'Кристалл падает в объектив → отъезд в игровой вид',act:'Кристалл крупно, затем Пудж лицом к нам ликует с молотом.',ui:'Карточка награды +1.'},
+];
+const TOTAL=18,TAP={axe:2.55,ham:8.75,lv:[9.9,10.6,11.3,12.0]};
+let showUI=true;
+
+/* ---------- render ---------- */
+function render(T){
+  ctx.save();ctx.clearRect(0,0,W,H);fill('#05070c');
+  const i=shotAt(T),s=SH[i],t=T-s.t0,d=s.t1-s.t0,k=t/d;
+  ctx.save();
+  [s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11,s12][i](T,t,k);
+  ctx.restore();
+  if(showUI)ui(T);
+  ctx.restore();
+}
+const pal=(T)=>{const p=[];return p;};
+// 1 hook
+function s1(T,t,k){
+  if(t<1.0){const sh=shakeOff(.62,t,9,5);ctx.save();ctx.translate(sh[0],sh[1]);
+    bg('loca.jpg',1.35,.5,.25,'brightness(.55) saturate(1.2)');fill('rgba(10,0,20,.25)');
+    const fall=ei(seg(t,.2,.62));const z=lerp(1,1.25,eio(k*1.4));ctx.translate(W/2,H*.62);ctx.scale(z,z);ctx.translate(-W/2,-H*.62);
+    golem(W/2,lerp(560,760,fall),lerp(620,760,fall),{heat:.6});
+    if(t>.62){ring(W/2,610,seg(t,.62,1),300,'#ffe9c0',.3,10);dust(W/2,620,seg(t,.62,1),4,320);sparks(W/2,600,seg(t,.62,.95),18,2,140);}
+    spr('pudge_front.png',W/2,690,230,{});ctx.restore();
+    if(t>.62&&t<.72)fill('rgba(255,240,220,'+(.7*(1-seg(t,.62,.72)))+')');
+    vignette(.6);}
+  else{const r=eo(seg(t,1.0,1.5));ctx.save();cam(lerp(180,180,r),lerp(330,400,r),lerp(2.4,1,r),lerp(.18,0,r));arena();golem(G[0],G[1],GH,{heat:.4});pudge(S[0],S[1],PH,{});ctx.restore();speedLines(Math.PI/2,(1-r)*.6,5);vignette(.4);}
+}
+// 2 bullet-time choice
+function s2(T,t,k){const z=lerp(1,1.45,eio(k)),cy=lerp(400,470,eio(k));const back=seg(t,1.5,1.7);const f=`saturate(${lerp(.25,1,back)}) brightness(${lerp(.7,1,back)})`;
+  ctx.save();cam(180,cy,z);arena(f);golem(G[0],G[1],GH,{heat:.4,filter:f});const br=1+.02*Math.sin(t*2);
+  pudge(S[0],S[1],PH,{sy:br,filter:f,weapon:t>1.5?'icon_axe_epic.png':null,wrot:-.4,wglow:t>1.5?.8*(1-seg(t,1.55,1.7)):0});ctx.restore();
+  if(t>1.5){glow(W/2,lerp(520,560,eio(k)),120,'rgba(220,150,255,A)',.7*(1-seg(t,1.5,1.7)));}
+  vignette(lerp(.7,.35,back));}
+// 3 tracking run
+function s3(T,t,k){const run=eio(k),py=lerp(S[1],A[1]+8,run);ctx.save();cam(180,py-70,1.55,-.06);arena();golem(G[0],G[1],GH,{heat:.4});
+  const bob=Math.abs(Math.sin(t*16))*4;pudge(S[0],py-bob,PH,{weapon:'icon_axe_epic.png',wrot:-.9+.2*Math.sin(t*16),sx:1+.04*Math.sin(t*16)});ctx.restore();speedLines(-Math.PI/2-.06,.55,7);vignette(.35);}
+// 4 macro impact on the golem's stone leg
+function s4(T,t,k){const hitT=.35;const sl=t<hitT?t:hitT+(t-hitT)*.3;const sh=shakeOff(hitT,t,8,10);ctx.save();ctx.translate(sh[0],sh[1]);
+  bg('loca.jpg',1.6,.3,.75,'brightness(.45)');
+  ctx.save();ctx.translate(W*.72,H*.98);ctx.scale(1,1);spr('golem.png',0,0,900,{crop:[.3,.35,.4,.65],ax:.5,ay:1,filter:'brightness(1.15)'});ctx.restore();   // golem leg crop
+  const swing=t<hitT?lerp(-2.2,.35,ei(seg(t,.05,hitT))):.35+.05*(sl-hitT);
+  const broken=t>=hitT;
+  pudge(W*.33,H*1.02,470,{weapon:broken?null:'icon_axe_epic.png',wscale:.55,wrot:swing});
+  if(broken){const ix=W*.6,iy=H*.52,tt=seg(sl,hitT,hitT+.3);sparks(ix,iy,tt,22,3,150);ring(ix,iy,tt,160,'#fff',1,8);
+    // axe fragments
+    if(ok('icon_axe_epic.png')){const im=I['icon_axe_epic.png'],r=rng(6);for(let j=0;j<6;j++){const a=-Math.PI*(.15+r()*.8),v=180+r()*200,px=ix+Math.cos(a)*v*tt,py=iy+Math.sin(a)*v*tt+300*tt*tt;const u=(j%3)/3,vv=Math.floor(j/3)/2;
+      ctx.save();ctx.translate(px,py);ctx.rotate(tt*8*(r()-.5));ctx.drawImage(im,u*256,vv*256,85,128,-25,-38,50,76);ctx.restore();}}
+    if(sl<hitT+.05)fill('rgba(255,255,255,.75)');}
+  ctx.restore();vignette(.5);}
+// 5 golem reaction
+function s5(T,t,k){const z=lerp(1,1.12,eio(k));ctx.save();ctx.translate(W/2,H*.45);ctx.scale(z,z);ctx.translate(-W/2,-H*.45);bg('loca.jpg',1.4,.6,.2,'brightness(.4)');
+  spr('golem.png',W/2,H*1.15,1500,{crop:[.36,0,.28,.5],ay:1});   // head + chest
+  const e=seg(t,.1,.4);const ex=[W/2-36,W/2+36],ey=H*.43;ex.forEach(x=>glow(x,ey,40+40*e,'rgba(255,170,40,A)',.3+.6*e));
+  dust(W/2,H*.18,seg(t,0,.6),8,240,'#5a5468');ctx.restore();vignette(.6);}
+// 6 backhand + whip-pan + face to lens
+function s6(T,t,k){const hit=.18;
+  if(t<.85){const pan=eio(seg(t,hit,.85));ctx.save();const sh=shakeOff(hit,t,10,8);cam(lerp(180,180,pan),lerp(380,560,pan),lerp(1.35,1.9,pan),lerp(0,-.25,pan),sh);arena();golem(G[0],G[1],GH,{heat:.4,rot:t<hit?-.06*t/hit:-.06+.06*seg(t,hit,.6)});
+    const fl=eo(seg(t,hit,.85));const px=lerp(A[0],S[0]+10,fl),py=lerp(A[1],S[1]+120,fl)-Math.sin(fl*Math.PI)*60;pudge(px,py,PH*(1+fl*1.2),{rot:-fl*Math.PI*3,view:fl>.5?'front':'back'});ctx.restore();
+    ring(W/2,H*.45,seg(t,hit,hit+.4),140,'#fff',1,8);speedLines(.2,seg(t,hit,.4)*(1-seg(t,.6,.85)),9);if(t>hit&&t<hit+.25)fill('rgba(255,40,20,'+(.35*(1-seg(t,hit,hit+.25)))+')');}
+  else{const sq=seg(t,.85,.95),rel=seg(t,.95,1.4);ctx.save();bg('loca.jpg',1.3,.5,.7,'brightness(.5)');
+    pudge(W/2,H*1.18,lerp(900,760,eo(rel)),{view:'front',sx:lerp(1.25,1,eo(rel)),sy:lerp(.8,1,back(rel))});ctx.restore();
+    // "glass" impact cracks
+    ctx.save();ctx.globalAlpha=.8*(1-rel);ctx.strokeStyle='#fff';ctx.lineWidth=2;const r=rng(4);for(let j=0;j<10;j++){const a=r()*6.28;ctx.beginPath();ctx.moveTo(W/2,H*.48);ctx.lineTo(W/2+Math.cos(a)*(60+r()*120),H*.48+Math.sin(a)*(60+r()*120));ctx.stroke();}ctx.restore();
+    if(t<.92)fill('rgba(255,255,255,.4)');}
+  vignette(.45);}
+// 7 bullet-time 2: angry mask close-up
+function s7(T,t,k){const z=lerp(1,1.25,eio(k));const f='saturate(.3) brightness(.75)';ctx.save();ctx.translate(W/2,H*.45);ctx.scale(z,z);ctx.translate(-W/2,-H*.45);bg('loca.jpg',1.3,.5,.6,'brightness(.35) saturate(.4)');
+  spr('pudge_front.png',W/2,H*1.12,720,{filter:f});const e=seg(t,.2,.6);[W/2-34,W/2+34].forEach(x=>glow(x,H*.4,22+22*e,'rgba(255,60,30,A)',.9*e));ctx.restore();vignette(.75);}
+// 8 hammer evolution with orbit around Pudge
+function s8(T,t,k){let lvl=0;TAP.lv.forEach(x=>{if(T>=x)lvl++;});const punch=TAP.lv.reduce((a,x)=>a+(T>=x?.18*Math.exp(-(T-x)*7):0),0);
+  const orbit=t*1.6;ctx.save();ctx.translate(W/2,H*.78);ctx.rotate(orbit);ctx.scale(1.9+punch,1.9+punch);ctx.translate(-S[0],-S[1]);arena();ctx.restore();
+  // light pillars on taps
+  TAP.lv.forEach((x,j)=>{const tt=seg(T,x-.04,x+.7);if(tt>0&&tt<1){const a=Math.sin(tt*Math.PI);const col=['rgba(80,140,255,A)','rgba(190,90,255,A)','rgba(255,170,60,A)','rgba(255,230,120,A)'][j];
+    const g=ctx.createLinearGradient(0,0,0,H*.85);g.addColorStop(0,col.replace('A',0));g.addColorStop(1,col.replace('A',.6*a));ctx.fillStyle=g;ctx.fillRect(W/2-60-30*tt,0,120+60*tt,H*.85);ring(W/2,H*.82,tt,180,'#fff8c0',.3,8);}});
+  const turn=Math.cos(orbit*1.0);const view=turn>0?'back':'front';
+  pudge(W/2,H*.86,PH*2.6*(1+punch*.5),{view,sx:Math.max(.25,Math.abs(turn)),weapon:'icon_ham'+lvl+'.png',wscale:[.6,.66,.72,.8,.95][lvl],wrot:-.35,glow:lvl/4,wglow:lvl>=3?.5+.3*Math.sin(T*12):0});
+  if(lvl===4){radial(W/2,H*.72,.25+.15*Math.sin(T*20),7,30);}
+  vignette(.45);}
+// 9 jump to the moon
+function s9(T,t,k){const up=eio(seg(t,0,.65)),hang=seg(t,.65,1);ctx.save();bg('loca.jpg',1.15,.5,lerp(.85,.2,up),'brightness(.6)');
+  const mx=W*.5,my=H*.3;glow(mx,my,160,'rgba(240,235,200,A)',.35);ctx.fillStyle='#f4ecc8';ctx.beginPath();ctx.arc(mx,my,78,0,7);ctx.fill();
+  const py=lerp(H*1.3,H*.62,up)-6*Math.sin(hang*Math.PI);pudge(W/2,py,250,{weapon:'icon_ham4.png',wscale:1.05,wrot:-2.6+.3*hang,glow:1,wglow:.8});ctx.restore();
+  speedLines(-Math.PI/2,(1-up)*.8,11);vignette(.5);}
+// 10 impact
+function s10(T,t,k){const hit=.22,stop=.2;const dr=ei(seg(t,0,hit));const sh=shakeOff(hit+stop,t,14,7);
+  ctx.save();cam(180,lerp(300,330,dr),1.55,0,sh);arena();golem(G[0],G[1],GH,{heat:t>hit?1:.4});
+  const py=lerp(G[1]-260,G[1]-60,dr);pudge(G[0],py,PH*1.25,{view:'back',weapon:'icon_ham4.png',wscale:1,wrot:lerp(-2.6,.4,dr),glow:1});ctx.restore();
+  if(t>=hit&&t<hit+stop){ // manga impact frame
+    ctx.save();fill('#fff');ctx.filter='brightness(0)';ctx.save();cam(180,330,1.55);golem(G[0],G[1],GH,{});pudge(G[0],G[1]-60,PH*1.25,{view:'back',weapon:'icon_ham4.png',wscale:1,wrot:.4});ctx.restore();ctx.restore();radial(W/2,H*.48,1,3,60);}
+  else if(t>=hit+stop){radial(W/2,H*.48,.6*(1-seg(t,hit+stop,hit+stop+.5)),3,40);sparks(W/2,H*.48,seg(t,hit+stop,hit+stop+.6),26,5,200);ring(W/2,H*.48,seg(t,hit+stop,hit+stop+.6),260,'#fff',1,10);}
+  vignette(.4);}
+// 11 shatter slow-mo
+function s11(T,t,k){const sl=k*.75;ctx.save();cam(180,lerp(250,270,k),lerp(1.35,1.2,eio(k)));arena();golemShatter(G[0],G[1],GH,sl);pudge(A[0],A[1]-30,PH*1.2,{view:'back',weapon:'icon_ham4.png',wrot:.4,glow:.6});ctx.restore();
+  // rocks flying at the camera
+  const r=rng(12);for(let j=0;j<7;j++){const tt=clamp(sl*1.3-r()*.3);if(tt<=0)continue;const a=r()*6.28,dist=tt*tt;const x=W/2+Math.cos(a)*dist*260,y=H*.45+Math.sin(a)*dist*420,s=6+tt*tt*70;
+    ctx.save();ctx.translate(x,y);ctx.rotate(tt*6+j);ctx.fillStyle='#2e2836';ctx.strokeStyle='#ff4a1c';ctx.lineWidth=1.5+tt*2;ctx.beginPath();ctx.moveTo(-s,-s*.6);ctx.lineTo(s*.7,-s);ctx.lineTo(s,s*.5);ctx.lineTo(-s*.4,s);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();}
+  dust(G[0],H*.6,seg(k,0,1),6,300,'#7a7488');vignette(.5);}
+// 12 loot
+function s12(T,t,k){const fall=seg(t,0,.7),pull=eio(seg(t,.7,1.4));
+  ctx.save();cam(180,lerp(360,400,pull),lerp(2.3,1.15,pull));arena();pudge(A[0],A[1],PH,{view:t>.9?'front':'back',weapon:'icon_ham4.png',wrot:t>1.0?-2.9:.4,glow:.7,sy:1+.05*Math.sin(t*14)*seg(t,1,1.3)});ctx.restore();
+  if(t<1.1){const s=lerp(40,420,ei(fall))*(1-seg(t,.8,1.1));const y=lerp(-60,H*.48,eo(fall));ctx.save();ctx.globalAlpha=1-seg(t,.85,1.1);glow(W/2,y,s*.9,'rgba(255,60,90,A)',.6);img('CrystalRed.png',W/2,y,s,s);ctx.restore();}
+  vignette(.35);}
+
+function ui(T){
+  // boss bar
+  const inB=back(seg(T,1.05,1.35)),hideUp=eio(seg(T,9.0,9.3))*(1-eio(seg(T,12.4,12.7)));const hp=1-.0003*(T>=4.95)-.9997*eo(seg(T,13.85,14.3));
+  if(T>1.05&&T<14.9){const slam=T<1.35?lerp(1.6,1,inB):1;bossBar(lerp(-60,60,clamp(inB))-hideUp*140,hp,slam);}
+  // choice cards
+  const home=[[W/2-104,560],[W/2,560],[W/2+104,560]];
+  const defs=[['rarity_Epic.png','icon_axe_epic.png','Cutting_type.png',1],['rarity_Rare.png','icon_dagger.png','Stubing_type.png',1],['rarity_Common.png','icon_ham0.png','Buckshot_type.png',1]];
+  for(let i=0;i<3;i++){let vis=0,x=home[i][0],y=home[i][1],s=1;
+    if(T>=1.6&&T<3.2)vis=back(seg(T,1.6+i*.08,1.95+i*.08))*(1-eio(seg(T,2.8,3.05)));
+    if(T>=7.75&&T<9.3)vis=back(seg(T,7.75+i*.08,8.1+i*.08))*(1-eio(seg(T,9.0,9.25)));
+    if(i===0&&T>=2.62&&T<3.05){const kk=eio(seg(T,2.65,3.0));x=lerp(x,W/2,kk);y=lerp(y,470,kk);s=1-.85*kk;vis=1;}
+    if(i===2&&T>=8.82&&T<9.3){const kk=eio(seg(T,8.85,9.25));x=lerp(x,W/2,kk);y=lerp(y,150,kk);s=lerp(1,1.75,kk);vis=1;}
+    const press=((i===0&&Math.abs(T-TAP.axe)<.08)||(i===2&&Math.abs(T-TAP.ham)<.08))?.1:0;
+    if(vis>0)card(x,y+(1-vis)*220,s*(1-press),...defs[i],i===0&&T>=7.6);}
+  if(T>=8.1&&T<8.95){const bg=back(seg(T,8.1,8.35))*(1-seg(T,8.8,8.95));ctx.save();ctx.translate(home[2][0],home[2][1]-72);ctx.scale(bg*1.2,bg*1.2);img('Buckshot_type.png',-26,0,24,26);img('Level_Up_Icon.png',2,0,22,22);txt('x5',30,0,24,'#4dff7a',4);ctx.restore();}
+  // upgrade panel: card + button in the TOP half, Pudge stays clear at the bottom
+  if(T>=9.25&&T<12.45){let lvl=0;TAP.lv.forEach(x=>{if(T>=x)lvl++;});const out=eio(seg(T,12.2,12.45));const pop=1+.2*TAP.lv.reduce((a,x)=>a+(T>=x?Math.exp(-(T-x)*9):0),0);
+    if(lvl===4){ctx.save();ctx.globalAlpha=(.35+.2*Math.sin(T*10))*(1-out);img('Glow_1.png',W/2,150,230,230);ctx.restore();}
+    card(W/2,lerp(150,90,out),1.75*pop*(1-out),RAR[lvl],'icon_ham'+lvl+'.png','Buckshot_type.png',lvl+1,false);
+    const vals=['40','120','360','999','9999'];txt(vals[lvl],W/2+10,lerp(52,20,out),30*pop*(1-out),lvl===4?'#ffd23a':'#fff',5);img('Buckshot_type.png',W/2-40,lerp(52,20,out),20*(1-out),22*(1-out));
+    const bp=TAP.lv.reduce((a,x)=>Math.max(a,1-Math.abs(T-x)/.08),0),ub=back(seg(T,9.3,9.55))*(1-out);ctx.save();ctx.translate(W/2,262);ctx.scale(ub*(1-.08*Math.max(0,bp)),ub*(1-.08*Math.max(0,bp)));img('Green_Button.png',0,0,110,40);img('Level_Up_Icon.png',0,0,28,28);ctx.restore();}
+  // hand cursor
+  tapAt(T,TAP.axe,home[0]);tapAt(T,TAP.ham,home[2]);TAP.lv.forEach(x=>tapAt(T,x,[W/2,262],[60,70]));
+  // numbers
+  if(T>=4.95&&T<5.6){const d=T-4.95;txt('-3',W*.62,H*.4-d*40,34+20*Math.exp(-d*10),'#b8bcc8',6);img('Cutting_type.png',W*.62+40,H*.4-d*40,26,28);ctx.save();ctx.strokeStyle='#ff3030';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(W*.62+26,H*.4-d*40-14);ctx.lineTo(W*.62+54,H*.4-d*40+14);ctx.stroke();ctx.restore();}
+  if(T>=13.62&&T<15.2){const d=T-13.62,l=Math.max(0,d-.2)*22;txt('CRIT!',W/2,H*.27-l,46*back(seg(d,.02,.22)),'#ff3d2e',7,-.08);txt('-9999',W/2,H*.35-l,66+34*Math.exp(-d*10),'#ffd23a',8,-.05);}
+  if(T>=17.1){const r=back(seg(T,17.1,17.45));ctx.save();ctx.translate(W/2,H*.27);ctx.scale(1.6*r,1.6*r);img('rarity_Epic.png',0,0,84,84);img('CrystalRed.png',0,0,60,60);ctx.restore();txt('+1',W/2,H*.27+82,38*r,'#fff',6);}
+}
+
+/* ---------- player ---------- */
+const shotAt=T=>{for(let i=SH.length-1;i>=0;i--)if(T>=SH[i].t0)return i;return 0;};
+let T=0,playing=false,speed=1,last=performance.now(),showCap=true;
+function draw(){render(T);const i=shotAt(T),s=SH[i];document.getElementById('capn').textContent=`#${i+1} ${s.title}`;document.getElementById('capd').textContent=s.cam;document.getElementById('capt').textContent=T.toFixed(2)+'s';
+  document.getElementById('cap').style.display=showCap?'block':'none';document.getElementById('tc').textContent=`${T.toFixed(2).padStart(5,'0')} / ${TOTAL.toFixed(2)}`;document.getElementById('playhead').style.left=(T/TOTAL*100)+'%';
+  document.querySelectorAll('.seg').forEach((el,j)=>el.classList.toggle('cur',j===i));document.querySelectorAll('.shot').forEach((el,j)=>el.classList.toggle('cur',j===i));}
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;if(playing){T+=dt*speed;if(T>=TOTAL)T=0;}draw();requestAnimationFrame(frame);}
+const qs=new URLSearchParams(location.search);
+if(qs.get('t')){document.body.innerHTML='';document.body.style.margin=0;document.body.appendChild(cv);window.onload=()=>setTimeout(()=>{try{render(+qs.get('t'));}catch(e){document.title='ERR '+e.message;}},500);}
+else if(qs.get('sheet')){document.body.innerHTML='';const c=document.createElement('canvas'),cols=9,cw=150,ch=267,n=36;c.width=cols*cw;c.height=Math.ceil(n/cols)*(ch+14);document.body.appendChild(c);const x2=c.getContext('2d');
+  window.onload=()=>setTimeout(()=>{for(let i=0;i<n;i++){const t=i*.5+.1;render(t);x2.drawImage(cv,(i%cols)*cw,Math.floor(i/cols)*(ch+14),cw,ch);x2.fillStyle='#fff';x2.font='12px sans-serif';x2.fillText(t.toFixed(1)+'s #'+(shotAt(t)+1),(i%cols)*cw+3,Math.floor(i/cols)*(ch+14)+ch+11);}},500);}
+else{
+  const tl=document.getElementById('timeline');SH.forEach((s,i)=>{const d=document.createElement('div');d.className='seg '+s.k;d.style.width=((s.t1-s.t0)/TOTAL*100)+'%';d.textContent=i+1;tl.insertBefore(d,tl.lastElementChild);});
+  tl.addEventListener('pointerdown',e=>{const r=tl.getBoundingClientRect();T=clamp((e.clientX-r.left)/r.width)*TOTAL*.9999;});
+  const pb=document.getElementById('play');const setPlay=p=>{playing=p;pb.textContent=p?'❚❚ Pause':'▶ Play';};pb.onclick=()=>setPlay(!playing);
+  document.getElementById('speed').onchange=e=>speed=+e.target.value;
+  document.getElementById('prev').onclick=()=>{T=SH[(shotAt(T)-1+SH.length)%SH.length].t0;};document.getElementById('next').onclick=()=>{T=SH[(shotAt(T)+1)%SH.length].t0;};
+  document.getElementById('bCap').onclick=e=>{showCap=!showCap;e.target.classList.toggle('on',showCap);};document.getElementById('bUI').onclick=e=>{showUI=!showUI;e.target.classList.toggle('on',showUI);};
+  document.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();pb.click();}if(e.code==='ArrowRight')document.getElementById('next').click();if(e.code==='ArrowLeft')document.getElementById('prev').click();});
+  const box=document.getElementById('shots');const th=[];
+  SH.forEach((s,i)=>{const el=document.createElement('div');el.className='shot';el.innerHTML=`<canvas width="192" height="342"></canvas><div><div class="head"><span class="num">#${i+1}</span><span class="title">${s.title}</span><span class="time">${s.t0.toFixed(1)}–${s.t1.toFixed(1)} с</span></div>
+    <div class="grid"><div>Камера</div><div>${s.cam}</div><div>Действие</div><div>${s.act}</div><div>UI</div><div>${s.ui}</div></div></div>`;box.appendChild(el);th.push(el.querySelector('canvas'));el.onclick=()=>{T=s.t0+.01;setPlay(true);window.scrollTo({top:0,behavior:'smooth'});};});
+  window.addEventListener('load',()=>setTimeout(()=>{SH.forEach((s,i)=>{render(s.t0+(s.t1-s.t0)*.6);th[i].getContext('2d').drawImage(cv,0,0,192,342);});requestAnimationFrame(frame);},400));
+}
+</script>
+</body>
+</html>
