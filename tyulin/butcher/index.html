@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Butcher Hero — Hook'n'Chew</title>
-<meta name="description" content="Фан-концепт Butcher Hero от Multicast в стиле cel-shaded комикса: хватай монстров крюком, жри их силу, становись титаном.">
+<meta name="description" content="Фан-концепт Butcher Hero от Multicast в духе Borderlands: хватай монстров крюком, жри их силу, становись титаном.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
@@ -13,83 +13,139 @@
 <body>
 <div class="grain" aria-hidden="true"></div>
 
+<div class="meathook" aria-hidden="true">
+  <div class="meathook__chain"></div>
+  <img class="meathook__iron" src="img/meathook.png" alt="">
+</div>
+
+<div class="owner" id="owner" aria-live="polite">
+  <span class="owner__body"><img src="img/butcher-peek.png" alt="Разъярённый мясник свешивается сверху"><img class="owner__hook" src="img/meathook.png" alt=""></span>
+  <p class="owner__shout"><span class="owner__line">ОТДАЙ, ЭТО МОЙ!<br>КУПИ СЕБЕ САМ!</span> <a href="#cta" data-bill>В магазин →</a></p>
+</div>
+
 <header class="hero">
-  <img class="hero__art" src="img/hero.jpg" alt="Мясник с гигантским крюком на цепи посреди инопланетной пустоши">
-  <div class="hero__shade" aria-hidden="true"></div>
-  <div class="hook" aria-hidden="true">
-    <div class="hook__chain"></div>
-    <svg class="hook__iron" viewBox="0 0 80 120"><path d="M40 0v40c0 6 4 10 10 10h4c14 0 24 12 24 26 0 24-18 40-40 40S0 100 0 80c0-8 4-14 10-18l10 8c-4 3-6 6-6 10 0 13 12 22 26 22s26-9 26-24c0-8-6-14-14-14h-8C34 64 26 56 26 46V0z"/></svg>
-  </div>
+  <div class="hero__art" aria-hidden="true"></div>
+  <div class="hero__dust" aria-hidden="true"></div>
   <div class="hero__content">
-    <p class="kicker reveal">Multicast представляет</p>
-    <h1 class="title slam">BUTCHER<span>HERO</span></h1>
-    <p class="badge wobble">HOOK'N'CHEW!</p>
-    <p class="hero__lead reveal">Цепляй крюком каждого монстра. Пожирай их силу. Стань титаном, от которого бегут даже боссы.</p>
-    <a class="btn reveal" href="#hook">Хватай крюк</a>
+    <p class="kicker">Multicast представляет</p>
+    <h1 class="title" aria-label="Butcher Hero"><span class="title__row" data-split>BUTCHER</span><span class="title__row title__row--rust" data-split>HERO</span></h1>
+    <div class="intro">
+      <span class="intro__name">МЯСНИК</span>
+      <span class="intro__tag">Любит монстров. Особенно на ужин.</span>
+    </div>
+    <a class="btn btn--sand magnetic" href="#grab">Бросить крюк ↓</a>
   </div>
 </header>
 
-<main>
-  <section class="steps" aria-label="Как играть">
-    <article class="panel reveal" style="--tilt:-2deg">
-      <span class="panel__num">01</span>
-      <h2>Хватай</h2>
-      <p>Тяжёлый мясницкий крюк на цепи вытаскивает любого монстра и пришельца прямо к твоему фартуку.</p>
-    </article>
-    <article class="panel reveal" style="--tilt:1.5deg">
-      <span class="panel__num">02</span>
-      <h2>Жри</h2>
-      <p>Каждая туша — постоянный апгрейд: урон, скорость или броня. Выбирай, что прокачать.</p>
-    </article>
-    <article class="panel reveal" style="--tilt:-1deg">
-      <span class="panel__num">03</span>
-      <h2>Эволюционируй</h2>
-      <p>Разные боссы и виды пришельцев открывают разные ветки мутаций. Путь титана у каждого свой.</p>
-    </article>
+<main class="story">
+  <section class="drag" id="grab" aria-labelledby="grab-title">
+    <div>
+      <p class="eyebrow">Шаг 1 из 3</p>
+      <h2 id="grab-title" data-scramble>Хватай</h2>
+      <p>Тяжёлый мясницкий крюк на цепи летит через всю арену и вытаскивает любого монстра прямо к твоему фартуку. Промахнулся — смотай и бросай снова.</p>
+    </div>
+    <img src="img/hero.jpg" alt="Мясник с гигантским крюком на цепи посреди инопланетной пустоши" loading="lazy">
   </section>
 
-  <section class="feature" id="hook">
-    <figure class="frame reveal" style="--tilt:-1.5deg">
+  <section class="drag drag--crit" aria-labelledby="chew-title">
+    <figure class="crit" id="crit">
       <img src="img/hook.jpg" alt="Мясник цепляет крюком многоглазого инопланетного зверя" loading="lazy">
-      <figcaption class="bubble">ПОПАЛСЯ!</figcaption>
+      <span class="bam" aria-hidden="true">БАМ!</span>
     </figure>
-    <div class="feature__text reveal">
-      <h2>Крюк решает всё</h2>
-      <p>Бросок — и многоглазая тварь с хитиновой бронёй уже едет к тебе по песку. Тяни, рви, жуй: бой без пауз, мясо без конца.</p>
-      <ul class="stats">
-        <li><b data-count="1000000">0</b><span>скачиваний на Android</span></li>
-        <li><b data-count="3">0</b><span>стата для прокачки</span></li>
-        <li><b>∞</b><span>апгрейдов за монстров</span></li>
-      </ul>
+    <div>
+      <p class="eyebrow">Шаг 2 из 3</p>
+      <h2 id="chew-title" data-scramble>Жри</h2>
+      <p>Каждая туша — постоянный апгрейд: урон, скорость или броня. Кликни по монстру, если не веришь в цифры.</p>
     </div>
   </section>
 
-  <section class="feature feature--flip">
-    <div class="feature__text reveal">
-      <h2>Форма титана</h2>
-      <p>Чем больше съел, тем больше стал. Вросшие пластины брони пришельцев, светящиеся вены и тесак размером с дверь: мелочь разбегается сама.</p>
-      <p class="quote">«Ты то, что ты ешь. А ешь ты монстров.»</p>
+  <section class="zillions" aria-label="Зиллионы крюков">
+    <p class="zillions__line"><span>ЗИЛЛИОНЫ</span> <span>КРЮКОВ</span></p>
+    <p class="zillions__sub">Ладно, не зиллионы. Но лута по-настоящему много.</p>
+  </section>
+
+  <section class="loot" aria-labelledby="loot-title">
+    <h2 id="loot-title" class="loot__title" data-scramble>Выпал лут</h2>
+    <p class="loot__hint">Кликни по предмету, чтобы подобрать.</p>
+    <div class="chest">
+      <article class="drop tilt" style="--rarity: var(--common)"><small>Обычное</small><h3>Ржавый крюк</h3><dl><dt>Урон</dt><dd>12</dd><dt>Дальность</dt><dd>4 м</dd></dl><p>Цепляет. Иногда.</p></article>
+      <article class="drop tilt" style="--rarity: var(--uncommon)"><small>Необычное</small><h3>Фартук мясника</h3><dl><dt>Броня</dt><dd>+35</dd><dt>Пятна</dt><dd>100%</dd></dl><p>Не стирать.</p></article>
+      <article class="drop tilt" style="--rarity: var(--rare)"><small>Редкое</small><h3>Цепь «Возврат»</h3><dl><dt>Скорость</dt><dd>+18%</dd><dt>Звон</dt><dd>громкий</dd></dl><p>Всё возвращается. Особенно мясо.</p></article>
+      <article class="drop tilt" style="--rarity: var(--epic)"><small>Эпическое</small><h3>Тесак Пустоши</h3><dl><dt>Урон</dt><dd>404</dd><dt>Крит</dt><dd>x3.5</dd></dl><p>Режет даже хитин.</p></article>
+      <article class="drop tilt" style="--rarity: var(--legendary)"><small>Легендарное</small><h3>Крюк титана</h3><dl><dt>Урон</dt><dd>9999</dd><dt>Поглощение</dt><dd>всё</dd></dl><p>«Ты то, что ты ешь.»</p></article>
     </div>
-    <figure class="frame frame--tall reveal" style="--tilt:2deg">
+  </section>
+
+  <section class="drag drag--titan" aria-labelledby="evolve-title">
+    <div>
+      <p class="eyebrow">Шаг 3 из 3</p>
+      <h2 id="evolve-title" data-scramble>Эволюционируй</h2>
+      <p>Разные боссы и виды пришельцев открывают разные ветки мутаций. Чем больше съел, тем больше стал: броня пришельцев, светящиеся вены и тесак размером с дверь.</p>
+      <div class="levelup">УРОВЕНЬ ПОВЫШЕН!</div>
+    </div>
+    <figure class="titan">
       <img src="img/titan.jpg" alt="Мясник в форме титана с бронёй пришельцев и огромным крюком-тесаком" loading="lazy">
-      <figcaption class="bubble bubble--teal">ЭВОЛЮЦИЯ!</figcaption>
+      <span class="bam bam--teal" aria-hidden="true">ХРУСТ!</span>
     </figure>
   </section>
 
-  <section class="cta reveal">
-    <h2>Мясо ждёт</h2>
+  <section class="bar" aria-labelledby="bar-title">
+    <div class="bar__text">
+      <p class="bar__sign" id="bar-title">Бар <span>«У Мисс Пудж»</span></p>
+      <p class="bar__bubble" id="pudge-line" aria-live="polite">Привет, сладкий. Руки вымыл?</p>
+      <p class="bar__hint">Крути дальше или кликни по хозяйке.</p>
+      <button class="btn btn--pink magnetic" type="button" data-bill>Счёт, пожалуйста</button>
+    </div>
+    <div class="bar__chain" hidden><img src="img/meathook.png" alt=""></div>
+    <button class="bar__host" id="pudge" type="button" data-pose="rest" aria-label="Поболтать с Мисс Пудж">
+      <img class="bar__pose bar__pose--hooked" src="img/miss-pudge-hooked.png" alt="">
+      <img class="bar__pose bar__pose--rest" src="img/miss-pudge.png" alt="Мисс Пудж: тряпичная хозяйка бара с бирюзовыми хвостиками и кружкой в руке" loading="lazy">
+    </button>
+  </section>
+
+  <section class="cta" id="cta" aria-labelledby="cta-title">
+    <h2 id="cta-title" data-scramble>Мясо ждёт</h2>
     <p>Butcher Hero: Hook'n'Chew RPG уже в магазинах, версия для Steam на подходе.</p>
     <div class="cta__links">
-      <a class="btn" href="https://play.google.com/store/apps/details?id=com.multicastgames.butcher">Google Play</a>
-      <a class="btn" href="https://apps.apple.com/us/app/butcher-hero-hooknchew-rpg/id6757722046">App Store</a>
-      <a class="btn btn--teal" href="https://store.steampowered.com/app/4744010/Butcher_hero_hooknchew_RPG/">Steam</a>
+      <a class="btn magnetic" href="https://play.google.com/store/apps/details?id=com.multicastgames.butcher">Google Play</a>
+      <a class="btn magnetic" href="https://apps.apple.com/us/app/butcher-hero-hooknchew-rpg/id6757722046">App Store</a>
+      <a class="btn btn--teal magnetic" href="https://store.steampowered.com/app/4744010/Butcher_hero_hooknchew_RPG/">Steam</a>
     </div>
   </section>
 </main>
 
-<footer class="footer">
-  Фан-концепт лендинга Butcher Hero от <a href="https://multicastgames.com/">Multicast</a> в стиле cel-shaded комикса. Арт сгенерирован, это не официальный материал игры.
+<footer class="footer" id="footer">
+  Фан-концепт лендинга Butcher Hero от <a href="https://multicastgames.com/">Multicast</a> в духе Borderlands: cel-shading, чернильный контур и очень много лута. Арт сгенерирован, это не официальный материал игры. Borderlands — товарный знак Gearbox Software, к ним этот концепт отношения не имеет.
 </footer>
+
+<dialog class="bill" id="bill" aria-labelledby="bill-title">
+  <div class="bill__paper">
+    <p class="bill__head" id="bill-title">Бар «У Мисс Пудж»<small>Счёт № 13 · столик у крюка</small></p>
+    <dl class="bill__items">
+      <div><dt>Чужой крюк, подержать</dt><dd>1 шт.</dd></div>
+      <div><dt>Моральный ущерб мяснику</dt><dd>много</dd></div>
+      <div><dt>Кружка пенного</dt><dd>за счёт заведения</dd></div>
+      <div><dt>Подмигивание хозяйки</dt><dd>бесценно</dd></div>
+      <div><dt>Швы, разошедшиеся от смеха</dt><dd>3 шт.</dd></div>
+    </dl>
+    <p class="bill__total"><span>Итого</span><b>0</b></p>
+    <p class="bill__note">Игра бесплатная, сладкий. Но эридий всё равно занеси.</p>
+    <p class="bill__sign">Мисс Пудж<span class="bill__kiss" aria-hidden="true"></span></p>
+    <div class="bill__stores">
+      <a class="btn" href="https://play.google.com/store/apps/details?id=com.multicastgames.butcher">Google Play</a>
+      <a class="btn" href="https://apps.apple.com/us/app/butcher-hero-hooknchew-rpg/id6757722046">App Store</a>
+      <a class="btn btn--teal" href="https://store.steampowered.com/app/4744010/Butcher_hero_hooknchew_RPG/">Steam</a>
+    </div>
+    <form method="dialog"><button class="bill__close" type="submit">Уйти, не заплатив</button></form>
+  </div>
+</dialog>
+
+<div class="hud" aria-hidden="true">  <span class="hud__level">УР. <b id="hud-level">1</b></span>
+  <div class="hud__bar"><i id="hud-fill"></i></div>
+  <span class="hud__xp"><b id="hud-xp">0</b> / 5000 ОПЫТА</span>
+  <span class="hud__loot" id="hud-loot">ЛУТ 0/5</span>
+</div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
 <script src="app.js"></script>
 </body>
