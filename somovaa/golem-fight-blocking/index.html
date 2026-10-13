@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BC_GolemFight_001 — блокинг: Пудж vs Голем</title>
+<title>BC_GolemFight_002 — блокинг v2: Пудж vs Лавовый голем</title>
 <style>
   :root{
     --bg:#0b0f17; --panel:#121826; --panel2:#182033; --line:#26314a; --text:#e6ebf5; --mute:#8d99b3;
-    --orange:#f08a2a; --lava:#ff8a1e; --teal:#3fd0d9; --red:#e2483d; --green:#47c08a;
+    --orange:#f08a2a; --lava:#ff4a1c; --teal:#3fd0d9; --red:#e2483d; --green:#47c08a;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-  header{padding:28px 32px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#141b2b,#0b0f17)}
+  header{padding:28px 32px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#1a1424,#0b0f17)}
   header h1{margin:0 0 6px;font-size:26px;letter-spacing:.3px}
   header h1 span{color:var(--orange)}
   header p{margin:0;color:var(--mute);max-width:980px}
@@ -32,10 +32,11 @@
   .timeline{position:relative;margin-top:10px;height:38px;border-radius:8px;overflow:hidden;display:flex;border:1px solid var(--line);cursor:pointer;user-select:none}
   .timeline .seg{height:100%;border-right:1px solid #0b0f17;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0b0f17}
   .timeline .seg.actA{background:#e9a35a}.timeline .seg.actB{background:#7a8aa3}.timeline .seg.actC{background:#ff7a3a}
+  .timeline .seg.seam{border-left:3px solid #fff}
   .timeline .seg.cur{outline:2px solid #fff;outline-offset:-2px}
   .playhead{position:absolute;top:0;bottom:0;width:2px;background:#fff;box-shadow:0 0 6px #fff;pointer-events:none}
   .curve{margin-top:6px;width:360px;height:70px;display:block}
-  .legend-acts{display:flex;gap:12px;font-size:11px;color:var(--mute);margin-top:4px}
+  .legend-acts{display:flex;gap:12px;font-size:11px;color:var(--mute);margin-top:4px;flex-wrap:wrap}
   .legend-acts i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
   .hint{font-size:11.5px;color:var(--mute);margin-top:6px}
   section{margin-bottom:26px}
@@ -45,8 +46,10 @@
   .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
   .card h3{margin:0 0 8px;font-size:15px;color:#ffd2a6}
   .card p{margin:0 0 8px;color:#cdd5e6}
-  .card ul{margin:0;padding-left:18px;color:#cdd5e6}
+  .card ul,.card ol{margin:0;padding-left:18px;color:#cdd5e6}
   .card li{margin-bottom:4px}
+  .card img{width:100%;max-height:150px;object-fit:contain;background:#fff;border-radius:8px;margin-bottom:8px}
+  .card img.dark{background:#000}
   .k{color:var(--mute)}
   .acts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
   .act{border-radius:10px;padding:12px;border:1px solid var(--line);background:var(--panel)}
@@ -64,6 +67,7 @@
   .shot .time{font-variant-numeric:tabular-nums;color:var(--mute);font-size:12.5px}
   .pill{font-size:11px;border-radius:6px;padding:1px 7px;border:1px solid var(--line);color:#c9d3e8;background:var(--panel2)}
   .pill.risk-low{border-color:#2f6b4f;color:#8fe0b5}.pill.risk-mid{border-color:#7a6326;color:#f1cf72}.pill.risk-high{border-color:#7a2f2a;color:#ff9a90}
+  .pill.gen{border-color:#5a4a7a;color:#d4c2ff}
   .grid{display:grid;grid-template-columns:110px 1fr;gap:3px 12px;font-size:13px}
   .grid div:nth-child(odd){color:var(--mute)}
   .maplegend{font-size:11px;color:var(--mute);margin-top:4px;line-height:1.35}
@@ -71,26 +75,26 @@
   th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
   th{color:var(--mute);font-weight:600}
   .q{background:#1d1520;border-color:#4a2d4f}
+  .new{background:#2a1a10;border-color:#7a4a1f}
   code{background:#0e1420;border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:12.5px}
 </style>
 </head>
 <body>
 <header>
-  <h1>BC_GolemFight_001 — <span>Пудж против Голема-босса</span></h1>
-  <p>Блокинг преролла для Butcher Hero: раскадровка-аниматик, работа камеры, география сцены и звук. Это не генерация, а схема постановки на апрув. Фигуры условные: они показывают только позиции, масштаб и движение.</p>
+  <h1>Блокинг v2 — <span>Пудж против Лавового голема</span></h1>
+  <p>Преролл Butcher Hero. Раскадровка-аниматик, камера, география, звук. Генерации пока нет. Фигуры условные: они показывают позиции, масштаб и движение. Дизайн берётся из рефов.</p>
   <div class="tags">
-    <span class="tag"><b>15.0 с</b> · 12 шотов</span>
+    <span class="tag"><b>15.0 с</b> · 13 шотов</span>
+    <span class="tag">2 генерации: <b>A 7.4 с</b> + <b>B 7.6 с</b></span>
     <span class="tag">9:16 вертикаль</span>
     <span class="tag">Seedance 2.0 · звук · 480p</span>
     <span class="tag">без речи</span>
-    <span class="tag">UA-мотивация: <b>стать сильнее</b> + <b>реванш</b></span>
-    <span class="tag">структура: удар → поражение → сила → победа</span>
+    <span class="tag">UA: <b>стать сильнее</b> + <b>реванш</b> + <b>лут</b></span>
   </div>
 </header>
 
 <main>
 <div class="top">
-  <!-- PLAYER -->
   <div class="player">
     <div class="screen"><canvas id="screen" width="360" height="640"></canvas></div>
     <div class="controls">
@@ -108,37 +112,37 @@
     </div>
     <div class="timeline" id="timeline"><div class="playhead" id="playhead"></div></div>
     <svg class="curve" id="curve" viewBox="0 0 360 70"></svg>
-    <div class="legend-acts"><span><i style="background:#e9a35a"></i>Акт 1: атака</span><span><i style="background:#7a8aa3"></i>Акт 2: поражение</span><span><i style="background:#ff7a3a"></i>Акт 3: реванш</span></div>
-    <div class="hint">Пробел: play/pause · ← →: шоты · клик по таймлайну или карточке: перемотка. «Loop шота» зацикливает текущий шот, если плеер на паузе выбран через карточку.</div>
+    <div class="legend-acts"><span><i style="background:#e9a35a"></i>Акт 1: топор</span><span><i style="background:#7a8aa3"></i>Акт 2: падение и молот</span><span><i style="background:#ff7a3a"></i>Акт 3: реванш</span><span>│ белая черта: шов A|B</span></div>
+    <div class="hint">Пробел: play/pause · ← →: шоты · клик по таймлайну или карточке шота: перемотка.</div>
   </div>
 
-  <!-- CONCEPT -->
   <div>
     <section>
       <h2><span class="n">01</span> Концепт</h2>
       <div class="cards2">
         <div class="card">
           <h3>Логлайн</h3>
-          <p>Ночью на лесной поляне каменный голем втрое выше Пуджа почти раздавливает его кулаком. Пудж взбегает по руке, прыгает и получает сокрушительный шлепок. Он поднимается с горящей маской, одним ударом пробивает лавовое ядро и стоит на обломках с осколком в руке.</p>
+          <p>Ночью в каньоне лавовый голем втрое выше Пуджа обрушивает на него кулак. Пудж взбегает по руке врага и рубит его топором, но лезвие разлетается о камень. Голем отшвыривает Пуджа в скалу, и от удара из стены вываливается древний молот, блестевший там с начала ролика. Пудж поднимает молот, одним ударом разносит голема в щепки, и из обломков выпадает кристалл.</p>
         </div>
-        <div class="card">
-          <h3>Почему остановит скролл</h3>
-          <ul>
-            <li><b>Первый кадр:</b> маска Пуджа крупно снизу, сверху падает гигантский кулак. Тут сразу угроза и масштаб.</li>
-            <li><b>Обещание:</b> «он же не справится?». Зрителя держит неравенство сил 1 к 3.</li>
-            <li><b>Эмоция:</b> страх → обида от поражения → азарт реванша.</li>
-            <li><b>Мотивация UA:</b> «стать сильнее». Power-up в 8-м шоте показывает прокачку, удар в ядро даёт реванш, осколок закрывает тему лута.</li>
-          </ul>
+        <div class="card new">
+          <h3>Почему Пудж побеждает (логика v2)</h3>
+          <ol>
+            <li><b>Заявка:</b> в шоте 2 на общем плане в скале блестит застрявший молот. Зритель видит его краем глаза.</li>
+            <li><b>Проблема:</b> топор ломается о камень (шот 5). Обычное оружие против голема не работает.</li>
+            <li><b>Ирония:</b> удар, который должен был добить Пуджа, впечатывает его в ту самую скалу. Трещины доходят до молота.</li>
+            <li><b>Оплата:</b> молот падает к ногам Пуджа. Сила приходит из оружия, а не из ниоткуда. В игре это прямой мост к экипировке.</li>
+          </ol>
         </div>
         <div class="card">
           <h3>Голливудские приёмы</h3>
           <ul>
+            <li>Заявка и оплата (Chekhov’s gun) с молотом</li>
             <li>Смена крупности на каждой склейке: ECU ↔ extreme wide</li>
-            <li>Speed ramp: слоу-мо в прыжке (шот 5) и резкий возврат на 100% на ударе</li>
-            <li>Hit-stop: стоп-кадр 0.25 с на пробитии ядра (шот 10)</li>
-            <li>Поражение в середине: героя сбивают, и победа ощущается заслуженной</li>
-            <li>Звук проваливается в тишину перед главными ударами</li>
-            <li>Строгая ось 180°: Пудж всегда атакует слева направо</li>
+            <li>Speed ramp: слоу-мо в прыжке с топором (шот 4)</li>
+            <li>Hit-stop 0.25 с на ударе молотом (шот 11)</li>
+            <li>Подъём молота снизу, как «достать меч из камня»</li>
+            <li>Тишина и звон в ушах перед реваншем</li>
+            <li>Ось 180°: Пудж атакует слева направо</li>
           </ul>
         </div>
       </div>
@@ -147,38 +151,46 @@
     <section>
       <h2><span class="n">02</span> Три акта</h2>
       <div class="acts">
-        <div class="act a"><b>Акт 1 · 0.0–6.4 с</b>Угроза и дерзость. Голем бьёт, Пудж уворачивается, бежит по его руке и прыгает. Шоты 1–5.</div>
-        <div class="act b"><b>Акт 2 · 6.4–10.0 с</b>Поражение и перелом. Шлепок, удар о скалу, потом Пудж поднимается с силой. Шоты 6–8.</div>
-        <div class="act c"><b>Акт 3 · 10.0–15.0 с</b>Реванш. Встречный рывок, удар в ядро, голем рассыпается, герой-кадр. Шоты 9–12.</div>
+        <div class="act a"><b>Акт 1 · 0.0–6.2 с</b>Угроза и дерзость. Кулак, уворот, бег по руке, прыжок, а топор ломается о голову голема. Шоты 1–5.</div>
+        <div class="act b"><b>Акт 2 · 6.2–10.4 с</b>Поражение и находка. Шлепок, удар о скалу, падает молот, Пудж его поднимает. Шоты 6–9.</div>
+        <div class="act c"><b>Акт 3 · 10.4–15.0 с</b>Реванш. Прыжок с молотом, удар, голем в щепки, лут. Шоты 10–13.</div>
       </div>
     </section>
 
     <section>
-      <h2><span class="n">03</span> Персонажи, локация, правила</h2>
+      <h2><span class="n">03</span> Рефы, локация, правила</h2>
       <div class="cards2">
         <div class="card">
-          <h3>the Ogre (Пудж) · @image1</h3>
-          <p>Референс: <code>BC_Execution_001/references/Pudge.png</code>. Оранжевый массивный, белая маска-череп с красными метками, зелёный ирокез, тёмные рваные шорты, крюки на плече, швы-шрамы на спине.</p>
-          <p class="k">Оружия на референсе нет, поэтому дерётся кулаками. Нужен тесак? Это вопрос ниже.</p>
+          <img src="references/Pudge.png" alt="Pudge" onerror="this.remove()">
+          <h3>the Ogre · @image1</h3>
+          <p><code>references/Pudge.png</code>. Маска-череп, зелёный ирокез, крюки на плече, швы на спине.</p>
+          <p class="k">В акте 1 у него в правой руке обычный <b>топор мясника</b> (описывается текстом, отдельный реф не нужен).</p>
         </div>
         <div class="card">
-          <h3>the Golem (босс) · @image2, <span style="color:var(--red)">нужен референс</span></h3>
-          <p>Каменный голем, ровно в 3 раза выше Пуджа. Угловатые сине-серые глыбы, руки длинные, до земли (силуэт гориллы), маленькая голова, светящиеся оранжевые глаза. В груди лавовое ядро с трещинами: это его слабое место и единственный тёплый источник света в сцене.</p>
-          <p class="k">В медиа-индексе голема нет. До видео нужен лист персонажа (Nano Banana 2), иначе дизайн будет плавать между шотами.</p>
+          <img src="references/Red_Golem.png" alt="Golem" onerror="this.remove()">
+          <h3>the Lava Golem · @image2</h3>
+          <p><code>references/Red_Golem.png</code>. Тёмно-фиолетовые каменные блоки, красная лава в швах по всему телу, огромные руки-кувалды, как у гориллы, квадратная челюсть с зубами, оранжевые глаза, шипы на плечах.</p>
+          <p class="k">Ядра нет: светится весь шовный «скелет». Масштаб голем : Пудж = 3 : 1.</p>
         </div>
         <div class="card">
-          <h3>Локация · @image3</h3>
-          <p>Ночная лесная поляна в стиле <code>loca.jpg</code>: сине-бирюзовая палитра, упрощённые ели, голубые светящиеся грибы, камни. Слева скальная стена (о неё ударится Пудж в шоте 7).</p>
-          <p class="k">Свет: холодная луна плюс тёплое лавовое ядро. Когда голем умирает, тёплый свет гаснет.</p>
+          <img class="dark" src="references/Hammer.jpg" alt="Hammer" onerror="this.remove()">
+          <h3>the Hammer · @image3</h3>
+          <p><code>references/Hammer.jpg</code>. Оранжевый боёк, по бокам светлые лезвия-полумесяцы, красная рукоять.</p>
+          <p class="k">Шоты 2 и 7: в скале. Шот 8: падает. С шота 9: в руке Пуджа.</p>
+        </div>
+        <div class="card">
+          <h3>Локация · @image4 = loca.jpg (стиль)</h3>
+          <p>Ночной каньон на краю леса: отвесные сине-фиолетовые скальные стены, по их кромке силуэты елей, на дне голубые светящиеся грибы и камни. Палитра из <code>loca.jpg</code>.</p>
+          <p class="k">Свет: холодная луна плюс тёплое красное свечение лавы голема (главный тёплый источник). С шота 9 к нему добавляется оранжевое свечение молота.</p>
         </div>
         <div class="card">
           <h3>Правила непрерывности</h3>
           <ul>
-            <li><b>Ось 180°:</b> Пудж слева, голем справа. Камера всегда с «южной» стороны (на картах это низ). Исключение: шот 9, камера на оси за спиной Пуджа.</li>
+            <li><b>Ось 180°:</b> Пудж и скала с молотом слева, голем справа. Камера с «южной» стороны.</li>
             <li><b>Направление экрана:</b> атака Пуджа идёт →, отброс ←.</li>
-            <li><b>Масштаб:</b> голем : Пудж = 3 : 1 во всех шотах.</li>
-            <li><b>Ядро</b> всегда в центре груди и светится, пока голем жив.</li>
-            <li><b>Луна</b> служит ориентиром в шотах 5 и 12 (за спиной героя).</li>
+            <li><b>Молот</b> торчит из скалы на одном месте, примерно на 2/3 её высоты.</li>
+            <li><b>Топор:</b> целый в шотах 1–4, после шота 5 обломок, потом исчезает.</li>
+            <li><b>Кристалл</b> впервые появляется только в шоте 12.</li>
           </ul>
         </div>
       </div>
@@ -188,7 +200,7 @@
 
 <section style="margin-top:34px">
   <h2><span class="n">04</span> Шот-лист и карты камер</h2>
-  <p class="k" style="margin:-4px 0 14px">Карта показывает поляну сверху. <span style="color:var(--orange)">●</span> Пудж, <span style="color:#8193ab">⬢</span> голем, <span style="color:var(--teal)">▲</span> камера с конусом обзора, пунктир — ось 180°, стрелки — движение.</p>
+  <p class="k" style="margin:-4px 0 14px">Карта показывает каньон сверху. <span style="color:var(--orange)">●</span> Пудж, <span style="color:#ff6a3a">⬢</span> голем, <span style="color:#ffb562">■</span> молот, <span style="color:var(--teal)">▲</span> камера с конусом обзора, пунктир — ось 180°, стрелки — движение. Слева скальная стена.</p>
   <div class="shots" id="shots"></div>
 </section>
 
@@ -196,30 +208,30 @@
   <h2><span class="n">05</span> Как это превратится в Seedance</h2>
   <div class="cards2">
     <div class="card">
-      <h3>Две генерации по ~7.5 с вместо одной на 15 с</h3>
-      <p>12 шотов в одном запросе — это слишком много: движок начинает сливать действия и терять голема. Предлагаю так:</p>
+      <h3>Две генерации</h3>
       <ul>
-        <li><b>Часть A</b>, шоты 1–6, 7.4 с: от хука до шлепка</li>
-        <li><b>Часть B</b>, шоты 7–12, 7.6 с: от удара о скалу до героя</li>
+        <li><b>A</b>, шоты 1–6, 7.4 с: от кулака до шлепка. @image1 Пудж, @image2 голем, @image3 молот (в скале), @image4 локация.</li>
+        <li><b>B</b>, шоты 7–13, 7.6 с: от удара о скалу до лута. Те же рефы.</li>
       </ul>
-      <p>Шов приходится на склейку по действию (Пудж вылетает из кадра ← и влетает в скалу ←), поэтому он не заметен.</p>
+      <p>Шов проходит по действию: Пудж вылетает из кадра влево в конце A и влетает в скалу в начале B.</p>
     </div>
     <div class="card">
-      <h3>Что делаем в монтаже, а не в промпте</h3>
+      <h3>В монтаже, а не в промпте</h3>
       <ul>
-        <li>Hit-stop в шоте 10: фриз 6 кадров и белый флеш</li>
-        <li>Speed ramp в шотах 5 и 6, если Seedance не выдаст слоу-мо сам</li>
-        <li>Тряску на ударах можно добавить поверх</li>
-        <li>Финальную склейку на геймплей</li>
+        <li>Hit-stop в шоте 11 (фриз 6 кадров и белый флеш)</li>
+        <li>Слоу-мо в шоте 4, если Seedance не даст сам</li>
+        <li>Тряска на ударах</li>
+        <li>Склейка A|B и финальная склейка на геймплей</li>
       </ul>
     </div>
     <div class="card">
       <h3>Рискованные места</h3>
       <ul>
-        <li><b>Шот 3</b>, бег по руке: движок может поставить Пуджа рядом с рукой, а не на неё</li>
-        <li><b>Шот 6</b>, шлепок в воздухе: два персонажа в контакте плюс полёт</li>
-        <li><b>Шот 11</b>, распад: голем может «таять», а не колоться на глыбы</li>
-        <li>Стабильность голема без референса. Поэтому сначала делаем лист персонажа</li>
+        <li><b>Шот 3:</b> бег <i>по</i> руке, а не рядом с ней</li>
+        <li><b>Шот 5:</b> лезвие должно разлететься, а не застрять</li>
+        <li><b>Шот 8:</b> молот должен выпасть из скалы, а не появиться из воздуха. Поэтому он есть в кадре с шота 2 и в шоте 7</li>
+        <li><b>Шот 12:</b> голем раскалывается на глыбы, а не «тает»</li>
+        <li>B — 7 шотов за 7.6 с, это плотно. Если движок начнёт сливать действия, шот 10 уходит первым</li>
       </ul>
     </div>
   </div>
@@ -231,12 +243,10 @@
 </section>
 
 <section>
-  <h2><span class="n">07</span> Нужно решить до промпта</h2>
+  <h2><span class="n">07</span> Осталось уточнить</h2>
   <div class="cards2">
-    <div class="card q"><h3>1. Оружие</h3><p>Кулаки, как на референсе, или тесак мясника? С тесаком удар в ядро (шот 10) будет «рубящим». Тогда тесак станет пропом, но отдельный @image ему не нужен.</p></div>
-    <div class="card q"><h3>2. Длина</h3><p>15 с в двух генерациях, как предлагаю я, или ужать до ~10 с одной генерацией (тогда уберём шоты 4, 7, 9)?</p></div>
-    <div class="card q"><h3>3. Финал</h3><p>Осколок ядра как лут (мотивация «собирай») или просто победный рёв на обломках?</p></div>
-    <div class="card q"><h3>4. Локация</h3><p>Ночной лес из <code>loca.jpg</code>, как в прошлых BC-роликах, или что-то пафоснее: каменные руины или каньон?</p></div>
+    <div class="card q"><h3>1. Цвет кристалла</h3><p>Сейчас он алый, как самоцвет, чтобы отличаться от лавы. Если в игре есть своя валюта или камень (например, гемы), лучше взять их цвет и форму. Есть реф?</p></div>
+    <div class="card q"><h3>2. Финальный кадр</h3><p>Пудж с поднятым молотом над кристаллом, затем склейка на геймплей. Или в конце нужен эндкарт или текст (CTA)? Тогда его добавим в монтаже.</p></div>
   </div>
 </section>
 </main>
@@ -244,9 +254,12 @@
 <script>
 /* ================= utils ================= */
 const W=360,H=640;
-const C={sky1:'#0a1633',sky2:'#112a5c',moon:'#f4ebc8',pineFar:'#134452',pineNear:'#0b2c37',ground:'#10373d',ground2:'#0c2a30',mush:'#6ff6ff',
-  stone:'#5b6b82',stoneD:'#3a4659',stoneL:'#8a9bb3',lava:'#ff8a1e',lavaHot:'#ffd36b',orange:'#f08a2a',orangeD:'#c2581b',orangeL:'#ffb562',
-  teal:'#21505e',tealD:'#173a45',mask:'#f3efe3',red:'#b3231f',green:'#2f8d6c',greenD:'#1f6a50',ink:'#0a0a12',hook:'#5b6890'};
+const C={sky1:'#0a1633',sky2:'#13295a',moon:'#f4ebc8',wallFar:'#1f2c52',wallFarD:'#18213f',wallNear:'#151c36',pine:'#0e2f3a',ground:'#122f3c',ground2:'#0d2530',mush:'#6ff6ff',
+  lava:'#ff4a1c',lavaHot:'#ffb23a',orange:'#f08a2a',orangeD:'#c2581b',orangeL:'#ffb562',teal:'#21505e',mask:'#f3efe3',red:'#b3231f',green:'#2f8d6c',ink:'#0a0a12',hook:'#5b6890',
+  hamHead:'#f07a10',hamHeadD:'#a8480a',hamBlade:'#ffb88a',hamGrip:'#c8202a',wood:'#7a4a26',steel:'#c9d2de',gem:'#ff2d55',gemL:'#ff9db0'};
+const PAL={
+  rock:{base:'#3e4a6a',dark:'#2b3450',light:'#5d6d93',lava:'#ff8a1e'},
+  golem:{base:'#4b4257',dark:'#2c2636',light:'#776b88',lava:'#ff4a1c'}};
 const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
 const lerp=(a,b,t)=>a+(b-a)*t;
 const eio=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
@@ -258,95 +271,141 @@ function poly(ctx,p){ctx.beginPath();ctx.moveTo(p[0],p[1]);for(let i=2;i<p.lengt
 function circle(ctx,x,y,r){ctx.beginPath();ctx.arc(x,y,Math.max(0,r),0,Math.PI*2);}
 function cam(ctx,z,cx=W/2,cy=H/2){ctx.translate(cx,cy);ctx.scale(z,z);ctx.translate(-cx,-cy);}
 function shake(ctx,a,T){if(a>0)ctx.translate(Math.sin(T*97.3)*a,Math.cos(T*83.1)*a);}
-function glow(ctx,x,y,r,a,col='255,138,30'){if(a<=0)return;const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${col},${a})`);g.addColorStop(1,`rgba(${col},0)`);ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2);}
+function glow(ctx,x,y,r,a,col='255,138,30'){if(a<=0||r<=0)return;const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${col},${a})`);g.addColorStop(1,`rgba(${col},0)`);ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2);}
 
-/* ================= background ================= */
-function pines(ctx,base,off,col,h,seed,n=14){const r=rng(seed);ctx.fillStyle=col;const span=W+160;
-  for(let i=0;i<n;i++){const hh=h*(.6+r()*.7);let x=(((i*span/n+off)%span)+span)%span-80;
-    poly(ctx,[x,base-hh,x+hh*.18,base-hh*.55,x+hh*.1,base-hh*.55,x+hh*.32,base,x-hh*.32,base,x-hh*.1,base-hh*.55,x-hh*.18,base-hh*.55]);ctx.fill();}}
+/* ================= background: night canyon ================= */
+function pines(ctx,pts,col){ctx.fillStyle=col;for(const[x,base,hh]of pts){poly(ctx,[x,base-hh,x+hh*.18,base-hh*.55,x+hh*.1,base-hh*.55,x+hh*.32,base,x-hh*.32,base,x-hh*.1,base-hh*.55,x-hh*.18,base-hh*.55]);ctx.fill();}}
+function wall(ctx,side,hz,top,px,col,seed){
+  // jagged canyon wall on one side; returns crest points for pines
+  const r=rng(seed),pts=[],crest=[];const x0=side<0?-300:W+300;
+  pts.push(x0,hz+40);
+  const n=7;for(let i=0;i<=n;i++){const q=i/n;const x=side<0?lerp(-300,W*.38,q):lerp(W+300,W*.62,q);const y=lerp(top,hz-10,Math.pow(q,2.2))+(r()-.5)*24;pts.push(x+px,y);crest.push([x+px,y]);}
+  pts.push((side<0?W*.42:W*.58)+px,hz+40);
+  poly(ctx,pts);ctx.fillStyle=col;ctx.fill();
+  return crest;
+}
 function bg(ctx,o={}){
-  const hz=o.hz??420,px=o.px??0;
-  ctx.fillStyle=C.sky1;ctx.fillRect(-300,-600,W+600,hz+600);
+  const hz=o.hz??420,px=o.px??0,wt=o.wallTop??(hz-260);
+  ctx.fillStyle=C.sky1;ctx.fillRect(-300,-800,W+600,hz+800);
   ctx.fillStyle=C.sky2;ctx.fillRect(-300,hz-170,W+600,170);
   const r=rng(7);ctx.fillStyle='#cfe3ff';
-  for(let i=0;i<70;i++){const x=((r()*W*1.6+px*.1)%(W*1.6)+W*1.6)%(W*1.6)-W*.3,y=r()*(hz-30)-200;ctx.globalAlpha=.25+r()*.6;ctx.fillRect(x,y,1.7,1.7);}
+  for(let i=0;i<70;i++){const x=((r()*W*1.6+px*.1)%(W*1.6)+W*1.6)%(W*1.6)-W*.3,y=r()*(hz-30)-300;ctx.globalAlpha=.25+r()*.6;ctx.fillRect(x,y,1.7,1.7);}
   ctx.globalAlpha=1;
   if(o.moon){const[mx,my,mr]=o.moon;glow(ctx,mx,my,mr*2.2,.18,'244,235,200');ctx.fillStyle=C.moon;circle(ctx,mx,my,mr);ctx.fill();
     ctx.fillStyle='rgba(200,190,150,.35)';circle(ctx,mx-mr*.3,my-mr*.2,mr*.18);ctx.fill();circle(ctx,mx+mr*.25,my+mr*.3,mr*.12);ctx.fill();}
-  pines(ctx,hz+2,px*.3,C.pineFar,60,11,16);
-  pines(ctx,hz+10,px*.6,C.pineNear,95,23,11);
-  ctx.fillStyle=C.ground;ctx.fillRect(-300,hz+8,W+600,H+800);
+  if(!o.noWalls){
+    const cl=wall(ctx,-1,hz,wt,px*.4,C.wallFar,3),cr=wall(ctx,1,hz,wt+30,px*.4,C.wallFar,4);
+    const pr=rng(17),pp=[];for(const c of[...cl,...cr]){if(pr()<.8)pp.push([c[0],c[1]+4,16+pr()*22]);}
+    pines(ctx,pp,C.pine);
+    ctx.fillStyle=C.wallFarD;for(const c of[...cl.slice(2),...cr.slice(2)]){ctx.fillRect(c[0]-1,c[1]+10,2,30);}
+  }
+  ctx.fillStyle=C.ground;ctx.fillRect(-300,hz,W+600,H+900);
   ctx.fillStyle=C.ground2;const g=rng(19);
   for(let i=0;i<10;i++){const x=((g()*W*1.4+px)%(W*1.4)+W*1.4)%(W*1.4)-W*.2,y=hz+20+g()*(H-hz+40);ctx.beginPath();ctx.ellipse(x,y,30+g()*50,6+g()*8,0,0,7);ctx.fill();}
   const m=rng(31);
   for(let i=0;i<9;i++){const x=((m()*W*1.4+px)%(W*1.4)+W*1.4)%(W*1.4)-W*.2,d=m(),y=hz+14+d*(H-hz),s=3+d*7;
     glow(ctx,x,y-s,s*3,.35,'111,246,255');ctx.fillStyle='#d9fbff';ctx.fillRect(x-s*.15,y-s,s*.3,s);ctx.fillStyle=C.mush;ctx.beginPath();ctx.ellipse(x,y-s,s*.7,s*.4,0,Math.PI,0);ctx.fill();}
-  if(o.warm){const[wx,wy,wr,wa]=o.warm;glow(ctx,wx,wy,wr,wa);}
+  if(o.warm){const[wx,wy,wr,wa,col]=o.warm;glow(ctx,wx,wy,wr,wa,col||'255,74,28');}
 }
 
-/* ================= stone pieces ================= */
-function stoneShape(ctx,p,lw,crack,seed){
-  poly(ctx,p);ctx.fillStyle=C.stone;ctx.fill();
+/* ================= stone ================= */
+function stoneShape(ctx,p,lw,crack,seed,pal=PAL.rock){
+  poly(ctx,p);ctx.fillStyle=pal.base;ctx.fill();
   ctx.save();poly(ctx,p);ctx.clip();
   let cx=0,cy=0,n=p.length/2;for(let i=0;i<p.length;i+=2){cx+=p[i];cy+=p[i+1];}cx/=n;cy/=n;
-  ctx.fillStyle=C.stoneD;ctx.beginPath();ctx.ellipse(cx+40,cy+30,90,160,-.3,0,7);ctx.fill();
-  ctx.fillStyle=C.stoneL;ctx.globalAlpha=.55;ctx.beginPath();ctx.ellipse(cx-35,cy-40,30,18,-.4,0,7);ctx.fill();ctx.globalAlpha=1;
-  if(crack>0){const r=rng(seed);ctx.strokeStyle=C.lava;ctx.lineWidth=lw*1.6;ctx.shadowColor=C.lava;ctx.shadowBlur=8;
-    for(let i=0;i<4;i++){let x=cx+(r()-.5)*40,y=cy+(r()-.5)*40;ctx.beginPath();ctx.moveTo(x,y);
-      for(let j=0;j<5;j++){x+=(r()-.5)*70*crack;y+=(r()-.5)*70*crack;ctx.lineTo(x,y);}ctx.stroke();}ctx.shadowBlur=0;}
+  ctx.fillStyle=pal.dark;ctx.beginPath();ctx.ellipse(cx+40,cy+30,90,160,-.3,0,7);ctx.fill();
+  ctx.fillStyle=pal.light;ctx.globalAlpha=.55;ctx.beginPath();ctx.ellipse(cx-35,cy-40,30,18,-.4,0,7);ctx.fill();ctx.globalAlpha=1;
+  if(crack>0){const r=rng(seed);ctx.strokeStyle=pal.lava;ctx.lineWidth=lw*(1.2+crack);ctx.lineCap='round';ctx.shadowColor=pal.lava;ctx.shadowBlur=10;
+    for(let i=0;i<5;i++){let x=cx+(r()-.5)*60,y=cy+(r()-.5)*60;ctx.beginPath();ctx.moveTo(x,y);
+      for(let j=0;j<4;j++){x+=(r()-.5)*80*crack;y+=(r()-.5)*80*crack;ctx.lineTo(x,y);}ctx.stroke();}ctx.shadowBlur=0;}
   ctx.restore();
   poly(ctx,p);ctx.strokeStyle=C.ink;ctx.lineWidth=lw;ctx.lineJoin='round';ctx.stroke();
 }
+/* Lava golem: dark violet stone blocks, red lava seams, ape arms, square toothed jaw, no core */
 function golem(ctx,x,y,s,o={}){
-  const aL=o.aL??.25,aR=o.aR??-.25,eye=o.eye??1,core=o.core??1,crack=o.crack??0,brk=o.brk??0,mouth=o.mouth??0,lean=o.lean||0;
-  const lw=clamp(3*s,2,7)/s;
+  const aL=o.aL??.25,aR=o.aR??-.25,eye=o.eye??1,heat=o.heat??.5,brk=o.brk??0,mouth=o.mouth??0,lean=o.lean||0;
+  const lw=clamp(3*s,2,7)/s,P=PAL.golem;
   ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.rotate(lean);
+  if(brk<.8)glow(ctx,0,-170,260,.22*(1-brk)*(.6+heat),'255,60,20');
   let k=0;
-  const piece=(p,d,rot)=>{k++;ctx.save();if(brk>0){ctx.globalAlpha=1-clamp((brk-.75)*4);ctx.translate(d[0]*brk*110,d[1]*brk*50+brk*brk*260);ctx.rotate(rot*brk);}
-    stoneShape(ctx,p,lw,crack,k*13+1);ctx.restore();};
+  const piece=(p,d,rot)=>{k++;ctx.save();if(brk>0){ctx.globalAlpha=1-clamp((brk-.75)*4);ctx.translate(d[0]*brk*120,d[1]*brk*60+brk*brk*260);ctx.rotate(rot*brk);}
+    stoneShape(ctx,p,lw,heat,k*13+1,P);ctx.restore();};
   const arm=(sx,sy,a,side)=>{ctx.save();ctx.translate(sx,sy);ctx.rotate(a);
-    piece([-28,-14,28,-18,24,110,-26,108],[side,-.4],side*.6);
-    piece([-30,100,30,98,34,200,-32,205],[side*1.3,.1],side*-.8);
-    piece([-44,196,-10,184,40,192,50,232,26,262,-28,264,-50,236],[side*1.6,.4],side*1.2);
+    piece([-34,-18,34,-22,30,110,-30,108],[side,-.4],side*.6);
+    piece([-36,100,36,98,42,200,-38,205],[side*1.3,.1],side*-.8);
+    piece([-54,196,-12,182,48,190,60,236,30,272,-32,274,-60,240],[side*1.6,.4],side*1.2);
     ctx.restore();};
-  piece([-68,-112,-16,-112,-18,0,-74,0],[-.6,.5],-.3);
-  piece([16,-112,66,-112,74,0,18,0],[.6,.5],.3);
-  piece([-74,-132,74,-130,66,-98,-68,-96],[0,.3],.1);
-  if(!o.noArmR&&o.armRBack)arm(108,-246,aR,1);
-  piece([-112,-258,-40,-276,60,-271,116,-252,102,-160,72,-116,-78,-112,-102,-170],[0,-.2],.15);
-  // core
-  if(brk<.9){ctx.save();ctx.globalAlpha=1-clamp(brk*1.4);const cr=26*(1+(core-1)*.3);
-    glow(ctx,0,-195,cr*4*core,.55*core);ctx.fillStyle='#5a1d06';circle(ctx,0,-195,cr+6);ctx.fill();
-    ctx.fillStyle=C.lava;circle(ctx,0,-195,cr);ctx.fill();ctx.fillStyle=C.lavaHot;circle(ctx,-5,-200,cr*.5);ctx.fill();
-    ctx.strokeStyle=C.lava;ctx.lineWidth=lw*1.4;ctx.globalAlpha*=.8;
-    for(let i=0;i<6;i++){const an=i*1.05+.3,l=cr+18+crack*60;ctx.beginPath();ctx.moveTo(Math.cos(an)*cr,-195+Math.sin(an)*cr);ctx.lineTo(Math.cos(an+.2)*l*.6,-195+Math.sin(an+.2)*l*.6);ctx.lineTo(Math.cos(an)*l,-195+Math.sin(an)*l);ctx.stroke();}
-    ctx.restore();}
-  // head
-  piece([-38,-262,38,-264,44,-304,12,-320,-36,-312,-44,-286],[0,-1],.5);
+  // legs with toes
+  piece([-70,-112,-18,-112,-14,-14,-76,-14],[-.6,.5],-.3);
+  piece([18,-112,70,-112,76,-14,14,-14],[.6,.5],.3);
+  piece([-86,-16,-6,-18,-4,0,-90,0],[-.8,.6],-.2);
+  piece([6,-18,86,-16,90,0,4,0],[.8,.6],.2);
+  piece([-60,-136,60,-134,56,-98,-58,-96],[0,.3],.1);
+  piece([-122,-258,-40,-280,40,-280,122,-258,104,-170,64,-126,-64,-126,-104,-170],[0,-.2],.15);
+  // shoulder spikes
+  piece([-128,-262,-96,-276,-112,-320],[-1,-1],-.8);piece([128,-262,96,-276,112,-320],[1,-1],.8);
+  // head + jaw
+  piece([-38,-262,38,-262,42,-300,22,-322,-22,-322,-42,-300],[0,-1],.5);
   if(brk<.6){ctx.save();ctx.globalAlpha=1-clamp(brk*1.8);ctx.translate(0,brk*brk*260-brk*50);
-    if(mouth>0){ctx.fillStyle='#2a0c04';poly(ctx,[-22,-276,22,-276,18,-276+16*mouth,-18,-276+18*mouth]);ctx.fill();
-      glow(ctx,0,-272+6*mouth,26*mouth,.6*mouth);}
-    const ea=clamp(eye,0,2);glow(ctx,-16,-292,28*ea,.5*Math.min(1,ea));glow(ctx,16,-292,28*ea,.5*Math.min(1,ea));
-    ctx.fillStyle=ea>1.2?C.lavaHot:C.lava;poly(ctx,[-28,-296,-8,-294,-9,-286,-27,-288]);ctx.fill();poly(ctx,[8,-294,28,-296,27,-288,9,-286]);ctx.fill();
+    const jd=mouth*16;
+    if(mouth>0){ctx.fillStyle='#2a0804';poly(ctx,[-30,-282,30,-282,30,-266+jd,-30,-266+jd]);ctx.fill();glow(ctx,0,-272+jd/2,30*mouth+10,.7*mouth,'255,74,28');}
+    poly(ctx,[-32,-284+jd,32,-284+jd,30,-262+jd,-30,-262+jd]);ctx.fillStyle=P.dark;ctx.fill();ctx.strokeStyle=C.ink;ctx.lineWidth=lw;ctx.stroke();
+    ctx.fillStyle='#8f86a0';for(let i=0;i<6;i++){ctx.fillRect(-27+i*9.4,-283+jd,7,7);}
+    const ea=clamp(eye,0,2);glow(ctx,-15,-298,24*ea,.55*Math.min(1,ea),'255,140,40');glow(ctx,15,-298,24*ea,.55*Math.min(1,ea),'255,140,40');
+    ctx.fillStyle=ea>1.2?'#ffe08a':'#ff9a2a';poly(ctx,[-24,-302,-8,-298,-9,-293,-23,-296]);ctx.fill();poly(ctx,[8,-298,24,-302,23,-296,9,-293]);ctx.fill();
     ctx.restore();}
-  if(!o.noArmL)arm(-108,-246,aL,-1);
-  if(!o.noArmR&&!o.armRBack)arm(108,-246,aR,1);
+  if(!o.noArmL)arm(-114,-246,aL,-1);
+  if(!o.noArmR)arm(114,-246,aR,1);
   ctx.restore();
 }
 function rockFist(ctx,x,y,r,rot=0){
   ctx.save();ctx.translate(x,y);ctx.rotate(rot);const s=r/50,lw=clamp(3*s,2,7)/s;ctx.scale(s,s);
-  stoneShape(ctx,[-30,-120,30,-122,36,-40,-32,-40],lw,0,3);
-  stoneShape(ctx,[-52,-40,48,-46,58,10,44,48,-40,52,-58,12],lw,.5,5);
+  stoneShape(ctx,[-34,-130,34,-132,40,-40,-36,-40],lw,.5,3,PAL.golem);
+  stoneShape(ctx,[-56,-42,52,-48,62,10,46,50,-42,54,-62,12],lw,.6,5,PAL.golem);
   ctx.strokeStyle=C.ink;ctx.lineWidth=lw;
-  for(const kx of[-28,-6,16]){ctx.beginPath();ctx.moveTo(kx,22);ctx.lineTo(kx+4,48);ctx.stroke();}
+  for(const kx of[-30,-6,18]){ctx.beginPath();ctx.moveTo(kx,22);ctx.lineTo(kx+4,50);ctx.stroke();}
   ctx.restore();
 }
 function rockPalm(ctx,x,y,s){
   ctx.save();ctx.translate(x,y);ctx.scale(s,s);const lw=clamp(3*s,2,7)/s;
-  stoneShape(ctx,[20,-40,180,-50,190,90,40,100,10,40],lw,.3,7);
-  stoneShape(ctx,[-30,30,20,10,40,60,-10,80],lw,0,8);
-  for(let i=0;i<4;i++){const fx=30+i*38;stoneShape(ctx,[fx,-40,fx+32,-44,fx+30,-120+i*8,fx+4,-118+i*8],lw,0,9+i);}
-  stoneShape(ctx,[120,90,190,90,230,140,140,150],lw,0,20);
+  stoneShape(ctx,[20,-40,180,-50,190,90,40,100,10,40],lw,.6,7,PAL.golem);
+  stoneShape(ctx,[-30,30,20,10,40,60,-10,80],lw,.4,8,PAL.golem);
+  for(let i=0;i<4;i++){const fx=30+i*38;stoneShape(ctx,[fx,-40,fx+32,-44,fx+30,-120+i*8,fx+4,-118+i*8],lw,.4,9+i,PAL.golem);}
+  stoneShape(ctx,[120,90,190,90,230,140,140,150],lw,.4,20,PAL.golem);
+  ctx.restore();
+}
+
+/* ================= props ================= */
+// hammer in local units: grip end at origin, handle along +y, head centered at y=88
+function hammerShape(ctx,lw,hot=0){
+  if(hot>0)glow(ctx,0,88,110,.55*hot);
+  ctx.strokeStyle=C.ink;ctx.lineWidth=lw;
+  poly(ctx,[-5,-4,5,-4,5,70,-5,70]);ctx.fillStyle=C.hamGrip;ctx.fill();ctx.stroke();
+  for(const yy of[-6,58,66]){poly(ctx,[-8,yy,8,yy,8,yy+6,-8,yy+6]);ctx.fillStyle=C.hamHeadD;ctx.fill();ctx.stroke();}
+  for(const sd of[-1,1]){poly(ctx,[sd*24,72,sd*44,64,sd*36,80,sd*46,88,sd*36,96,sd*44,112,sd*24,104]);ctx.fillStyle=C.hamBlade;ctx.fill();ctx.stroke();}
+  poly(ctx,[-26,70,26,70,28,106,-28,106]);ctx.fillStyle=C.hamHead;ctx.fill();ctx.stroke();
+  ctx.fillStyle=C.hamHeadD;poly(ctx,[0,90,28,82,28,106,0,106]);ctx.fill();
+  if(hot>.3){ctx.strokeStyle=C.lavaHot;ctx.lineWidth=lw*1.5;poly(ctx,[-26,70,26,70,28,106,-28,106]);ctx.stroke();}
+}
+function hammerProp(ctx,x,y,s,rot,hot=0){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.scale(s,s);hammerShape(ctx,clamp(2.6*s,1.4,6)/s,hot);ctx.restore();}
+function axeShape(ctx,lw,broken){
+  ctx.strokeStyle=C.ink;ctx.lineWidth=lw;
+  poly(ctx,[-4,-4,4,-4,4,broken?52:72,-4,broken?60:72]);ctx.fillStyle=C.wood;ctx.fill();ctx.stroke();
+  if(!broken){poly(ctx,[4,46,30,36,36,62,30,84,4,72]);ctx.fillStyle=C.steel;ctx.fill();ctx.stroke();
+    ctx.strokeStyle='#fff';ctx.lineWidth=lw*.8;ctx.beginPath();ctx.moveTo(32,40);ctx.lineTo(36,62);ctx.stroke();}
+  else{poly(ctx,[4,46,14,42,10,50,16,56,4,58]);ctx.fillStyle=C.steel;ctx.fill();ctx.stroke();}
+}
+function glint(ctx,x,y,r,a){if(a<=0)return;ctx.save();ctx.globalAlpha=a;glow(ctx,x,y,r*2,.6,'255,240,200');ctx.fillStyle='#fff';
+  poly(ctx,[x,y-r,x+r*.15,y-r*.15,x+r,y,x+r*.15,y+r*.15,x,y+r,x-r*.15,y+r*.15,x-r,y,x-r*.15,y-r*.15]);ctx.fill();ctx.restore();}
+function crystal(ctx,x,y,s,rot=0,a=1){ctx.save();ctx.globalAlpha=a;ctx.translate(x,y);ctx.rotate(rot);ctx.scale(s,s);
+  glow(ctx,0,0,70,.7,'255,45,85');ctx.strokeStyle=C.ink;ctx.lineWidth=clamp(2.4*s,1.4,6)/s;
+  poly(ctx,[0,-34,14,-12,12,20,0,32,-12,20,-14,-12]);ctx.fillStyle=C.gem;ctx.fill();ctx.stroke();
+  ctx.fillStyle=C.gemL;poly(ctx,[0,-34,-14,-12,-4,-6,0,-30]);ctx.fill();poly(ctx,[-12,20,-4,-6,0,32]);ctx.globalAlpha*=.6;ctx.fill();ctx.restore();}
+function cliff(ctx,x,y,s,o={}){
+  // left canyon wall face, local units: base at (0,0), extends up to -460 and right to ~170
+  ctx.save();ctx.translate(x,y);ctx.scale(s,s);const lw=clamp(3*s,2,7)/s;
+  stoneShape(ctx,[-200,0,-200,-480,40,-470,120,-380,150,-250,170,-120,190,0],lw,0,55);
+  stoneShape(ctx,[-200,-200,60,-230,110,-160,60,-120,-200,-110],lw,0,56);
   ctx.restore();
 }
 
@@ -363,33 +422,28 @@ function pudge(ctx,x,y,s,o={}){
     case'flex':aL=1.25;aR=-1.25;break;
     case'roar':aL=.75;aR=-2.85;break;
   }
+  if(o.aL!=null)aL=o.aL;if(o.aR!=null)aR=o.aR;
   const lw=clamp(2.6*s,1.4,8)/s;
   ctx.save();ctx.translate(x,y);ctx.scale(s,s);
   if(o.rot){ctx.translate(0,-50);ctx.rotate(o.rot);ctx.translate(0,50);}
   ctx.translate(0,bob);
   ctx.lineJoin='round';ctx.strokeStyle=C.ink;ctx.lineWidth=lw;
-  if(g>0){glow(ctx,0,-55,120,.55*g);}
-  // legs
+  if(g>0){glow(ctx,0,-55,120,.5*g);}
   const leg=(lx,a)=>{ctx.save();ctx.translate(lx,-16);ctx.rotate(a);poly(ctx,[-11,-2,11,-2,12,16,-12,16]);ctx.fillStyle=C.orangeD;ctx.fill();ctx.stroke();ctx.restore();};
   leg(-16,lL);leg(16,lR);
-  // shorts
   poly(ctx,[-36,-34,36,-34,34,-12,27,-5,20,-12,12,-4,4,-12,-4,-4,-12,-12,-20,-5,-28,-12,-34,-12]);ctx.fillStyle=C.teal;ctx.fill();ctx.stroke();
-  // body
   const body=()=>{ctx.beginPath();ctx.moveTo(-36,-26);ctx.quadraticCurveTo(-54,-62,-40,-90);ctx.quadraticCurveTo(0,-108,40,-90);ctx.quadraticCurveTo(54,-62,36,-26);ctx.quadraticCurveTo(0,-16,-36,-26);};
   body();ctx.fillStyle=C.orange;ctx.fill();
   ctx.save();body();ctx.clip();ctx.fillStyle=C.orangeD;ctx.beginPath();ctx.ellipse(back?-34:34,-50,26,70,0,0,7);ctx.fill();
   ctx.fillStyle=C.orangeL;ctx.globalAlpha=.6;ctx.beginPath();ctx.ellipse(back?18:-18,-82,18,8,-.3,0,7);ctx.fill();ctx.globalAlpha=1;
-  if(o.rim){ctx.strokeStyle=C.lavaHot;ctx.lineWidth=lw*2.5;ctx.beginPath();ctx.moveTo(-38,-92);ctx.quadraticCurveTo(0,-110,38,-92);ctx.stroke();}
+  if(o.rim){ctx.strokeStyle=o.rimCol||'#ff7a4a';ctx.lineWidth=lw*2.5;ctx.beginPath();ctx.moveTo(-38,-92);ctx.quadraticCurveTo(0,-110,38,-92);ctx.stroke();}
   ctx.restore();
   body();ctx.strokeStyle=g>.3?'#ffcf6b':C.ink;ctx.lineWidth=lw;ctx.stroke();ctx.strokeStyle=C.ink;
   if(!back){ctx.strokeStyle=C.orangeD;ctx.beginPath();ctx.moveTo(-26,-40);ctx.quadraticCurveTo(0,-30,26,-40);ctx.stroke();ctx.strokeStyle=C.ink;}
-  // hooks on shoulder
   ctx.strokeStyle=C.hook;ctx.lineWidth=lw*1.8;const hx=back?-26:26;
   ctx.beginPath();ctx.arc(hx,-98,5,Math.PI*.9,Math.PI*2.2);ctx.stroke();ctx.beginPath();ctx.arc(hx+8,-91,4,Math.PI*.9,Math.PI*2.2);ctx.stroke();ctx.strokeStyle=C.ink;ctx.lineWidth=lw;
-  // back details
   if(back){ctx.strokeStyle=C.red;ctx.lineWidth=lw*1.6;ctx.beginPath();ctx.moveTo(-20,-46);ctx.lineTo(20,-84);ctx.stroke();ctx.beginPath();ctx.moveTo(-4,-34);ctx.lineTo(22,-52);ctx.stroke();
     ctx.strokeStyle='#7a4a2a';ctx.lineWidth=lw*1.2;for(let i=0;i<4;i++){const t=i/3,px=lerp(-16,16,t),py=lerp(-50,-80,t);ctx.beginPath();ctx.moveTo(px-4,py-4);ctx.lineTo(px+4,py+4);ctx.stroke();}ctx.strokeStyle=C.ink;ctx.lineWidth=lw;}
-  // head / mask
   const mx=turn*9,my=-76+(o.lookUp?-4:0);
   const mohawk=()=>{poly(ctx,[mx-8,my-12,mx-7,my-27,mx-2,my-19,mx+2,my-31,mx+5,my-20,mx+11,my-26,mx+9,my-11]);ctx.fillStyle=C.green;ctx.fill();ctx.stroke();};
   if(back){mohawk();}
@@ -397,161 +451,173 @@ function pudge(ctx,x,y,s,o={}){
     ctx.fillStyle=C.orange;if(turn<.6){circle(ctx,mx-15,my,4.5);ctx.fill();ctx.stroke();}if(turn>-.6){circle(ctx,mx+15,my,4.5);ctx.fill();ctx.stroke();}
     mohawk();
     ctx.beginPath();ctx.ellipse(mx,my,13.5,17,0,0,7);ctx.fillStyle=C.mask;ctx.fill();ctx.stroke();
-    ctx.fillStyle=g>.2?C.lavaHot:'#0c0c12';if(g>.2){ctx.shadowColor=C.lava;ctx.shadowBlur=14;}
+    ctx.fillStyle=g>.2?C.lavaHot:'#0c0c12';if(g>.2){ctx.shadowColor='#ff8a1e';ctx.shadowBlur=14;}
     ctx.beginPath();ctx.ellipse(mx-6,my-3,4.6,3.6,.35,0,7);ctx.fill();ctx.beginPath();ctx.ellipse(mx+6,my-3,4.6,3.6,-.35,0,7);ctx.fill();ctx.shadowBlur=0;
     ctx.strokeStyle=C.red;ctx.lineWidth=lw*1.3;ctx.beginPath();ctx.moveTo(mx-7,my-12);ctx.lineTo(mx,my-9);ctx.lineTo(mx+7,my-12);ctx.stroke();
     ctx.beginPath();ctx.moveTo(mx-7,my+5);ctx.lineTo(mx-5,my+10);ctx.stroke();ctx.beginPath();ctx.moveTo(mx+7,my+5);ctx.lineTo(mx+5,my+10);ctx.stroke();
     ctx.fillStyle='#cdbfa6';poly(ctx,[mx-2,my+3,mx+2,my+3,mx,my+6]);ctx.fill();ctx.strokeStyle=C.ink;ctx.lineWidth=lw;
   }
-  // arms
-  const arm=(sx,a)=>{ctx.save();ctx.translate(sx,-78);ctx.rotate(a);
+  const arm=(sx,a,weapon)=>{ctx.save();ctx.translate(sx,-78);ctx.rotate(a);
+    if(weapon){ctx.save();ctx.translate(0,44);
+      if(weapon==='hammer')hammerShape(ctx,lw,o.hot||0);else axeShape(ctx,lw,weapon==='axeBroken');ctx.restore();}
     poly(ctx,[-12,-6,12,-6,10,50,-10,50]);ctx.fillStyle=C.orange;ctx.fill();ctx.stroke();
     ctx.fillStyle=C.orangeD;circle(ctx,0,58,12);ctx.fill();ctx.stroke();
     if(g>.3){glow(ctx,0,58,30,.6*g);}
     ctx.restore();};
-  arm(-40,aL);arm(40,aR);
-  if(o.shard){ctx.save();ctx.translate(40,-78);ctx.rotate(aR);ctx.translate(0,72);glow(ctx,0,10,60,.8);
-    poly(ctx,[0,-6,10,10,4,34,-6,32,-10,10]);ctx.fillStyle=C.lavaHot;ctx.fill();ctx.stroke();ctx.restore();}
+  arm(-40,aL,o.weaponL);arm(40,aR,o.weapon);
   ctx.restore();
 }
 
 /* ================= FX ================= */
 function ring(ctx,x,y,r,a,col='#ffe2a8',sq=.32){if(a<=0)return;ctx.save();ctx.globalAlpha=a;ctx.strokeStyle=col;ctx.lineWidth=3+7*a;ctx.beginPath();ctx.ellipse(x,y,r,r*sq,0,0,7);ctx.stroke();ctx.restore();}
-function debris(ctx,x,y,t,n,seed,sp=1,col=C.stone){if(t<=0)return;const r=rng(seed);
+function debris(ctx,x,y,t,n,seed,sp=1,pal=PAL.rock,hot=0){if(t<=0)return;const r=rng(seed);
   for(let i=0;i<n;i++){const vx=(r()-.5)*300*sp,vy=-(140+r()*300)*sp,sz=(4+r()*11)*sp,rt=r()*6,px=x+vx*t,py=y+vy*t+520*sp*t*t;
-    ctx.save();ctx.translate(px,py);ctx.rotate(rt+t*7);ctx.fillStyle=col;ctx.strokeStyle=C.ink;ctx.lineWidth=1.5;poly(ctx,[-sz,-sz*.6,sz*.7,-sz,sz,sz*.5,-sz*.4,sz]);ctx.fill();ctx.stroke();ctx.restore();}}
+    ctx.save();ctx.translate(px,py);ctx.rotate(rt+t*7);ctx.fillStyle=pal.base;ctx.strokeStyle=hot&&i%2?pal.lava:C.ink;ctx.lineWidth=1.5;poly(ctx,[-sz,-sz*.6,sz*.7,-sz,sz,sz*.5,-sz*.4,sz]);ctx.fill();ctx.stroke();ctx.restore();}}
+function shards(ctx,x,y,t,n,seed){if(t<=0)return;const r=rng(seed);ctx.save();
+  for(let i=0;i<n;i++){const an=-Math.PI*.9+r()*Math.PI*1.1,v=180+r()*260,px=x+Math.cos(an)*v*t,py=y+Math.sin(an)*v*t+300*t*t,s=5+r()*9;
+    ctx.save();ctx.translate(px,py);ctx.rotate(r()*6+t*10);ctx.fillStyle=C.steel;ctx.strokeStyle=C.ink;ctx.lineWidth=1.4;poly(ctx,[0,-s,s*.5,s*.6,-s*.5,s*.4]);ctx.fill();ctx.stroke();ctx.restore();}ctx.restore();}
+function sparks(ctx,x,y,a,seed=2,n=16){if(a<=0)return;const r=rng(seed);ctx.save();ctx.strokeStyle='#ffe9a8';ctx.lineCap='round';
+  for(let i=0;i<n;i++){const an=r()*Math.PI*2,r0=10+r()*20,r1=r0+30+r()*70;ctx.globalAlpha=a;ctx.lineWidth=2+r()*2;ctx.beginPath();ctx.moveTo(x+Math.cos(an)*r0,y+Math.sin(an)*r0);ctx.lineTo(x+Math.cos(an)*r1,y+Math.sin(an)*r1);ctx.stroke();}ctx.restore();}
 function dust(ctx,x,y,r,a,seed=3){if(a<=0)return;const g=rng(seed);ctx.save();ctx.globalAlpha=a;
-  for(let i=0;i<11;i++){ctx.fillStyle=i%2?'#7f93a8':'#5f7287';circle(ctx,x+(g()-.5)*r*1.8,y-g()*r*.7,r*(.25+g()*.35));ctx.fill();}ctx.restore();}
+  for(let i=0;i<11;i++){ctx.fillStyle=i%2?'#7f8aa8':'#5f6987';circle(ctx,x+(g()-.5)*r*1.8,y-g()*r*.7,r*(.25+g()*.35));ctx.fill();}ctx.restore();}
 function speedLines(ctx,ang,a,seed=5,n=22){if(a<=0)return;const r=rng(seed);ctx.save();ctx.translate(W/2,H/2);ctx.rotate(ang);ctx.strokeStyle='#e8f1ff';
   for(let i=0;i<n;i++){ctx.globalAlpha=a*(.3+r()*.5);ctx.lineWidth=1+r()*2;const y=(r()-.5)*H*1.4,x=(r()-.5)*W*1.4,l=60+r()*160;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+l,y);ctx.stroke();}ctx.restore();}
 function radial(ctx,cx,cy,a,seed=8,n=40){if(a<=0)return;const r=rng(seed);ctx.save();ctx.fillStyle='#fff';
   for(let i=0;i<n;i++){const an=r()*Math.PI*2,r0=120+r()*120,r1=700,w=.01+r()*.025;ctx.globalAlpha=a*(.4+r()*.6);ctx.beginPath();
     ctx.moveTo(cx+Math.cos(an)*r0,cy+Math.sin(an)*r0);ctx.lineTo(cx+Math.cos(an-w)*r1,cy+Math.sin(an-w)*r1);ctx.lineTo(cx+Math.cos(an+w)*r1,cy+Math.sin(an+w)*r1);ctx.fill();}ctx.restore();}
 function flash(ctx,a,col='#fff'){if(a<=0)return;ctx.save();ctx.globalAlpha=clamp(a);ctx.fillStyle=col;ctx.fillRect(-600,-600,W+1200,H+1200);ctx.restore();}
-function embers(ctx,T,a=1,n=26,seed=9,spd=1){const r=rng(seed);ctx.save();
+function embers(ctx,T,a=1,n=26,seed=9,spd=1,hot='#ffb23a',base='#ff4a1c'){const r=rng(seed);ctx.save();
   for(let i=0;i<n;i++){const x0=r()*W,sp=(20+r()*55)*spd,ph=r()*10,al=.4+.6*r();const y=H+20-((T*sp+ph*70)%(H+60));const x=x0+Math.sin(T*2+ph)*12;
-    ctx.globalAlpha=a*al;ctx.fillStyle=i%3?C.lava:C.lavaHot;ctx.fillRect(x,y,3,3);}ctx.restore();}
-function rubble(ctx,cx,cy,w,seed,n=14){const r=rng(seed);for(let i=0;i<n;i++){const x=cx+(r()-.5)*w,y=cy+(r()-.5)*w*.18,s=14+r()*30;
-  stoneShape(ctx,[x-s,y,x-s*.6,y-s*.8,x+s*.5,y-s*.9,x+s,y-s*.2,x+s*.7,y+s*.4,x-s*.7,y+s*.4],2.2,r()>.6?.3:0,i+seed);}}
+    ctx.globalAlpha=a*al;ctx.fillStyle=i%3?base:hot;ctx.fillRect(x,y,3,3);}ctx.restore();}
+function rubble(ctx,cx,cy,w,seed,n=14,pal=PAL.golem){const r=rng(seed);for(let i=0;i<n;i++){const x=cx+(r()-.5)*w,y=cy+(r()-.5)*w*.18,s=14+r()*30;
+  stoneShape(ctx,[x-s,y,x-s*.6,y-s*.8,x+s*.5,y-s*.9,x+s,y-s*.2,x+s*.7,y+s*.4,x-s*.7,y+s*.4],2.2,r()>.5?.35:0,i+seed,pal);}}
 function darken(ctx,a){if(a<=0)return;ctx.fillStyle=`rgba(2,4,14,${a})`;ctx.fillRect(-600,-600,W+1200,H+1200);}
 function tag(ctx,text,x,y,col='#ffd36b'){ctx.save();ctx.font='700 12px system-ui';const w=ctx.measureText(text).width+14;ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(x,y,w,20);ctx.fillStyle=col;ctx.fillText(text,x+7,y+14);ctx.restore();}
 
 /* ================= SHOTS ================= */
+const HAMMER_IN_WALL={x:.09,y:.55};
 const SHOTS=[
-{n:1,act:'A',dur:1.4,title:'Тень кулака',risk:'low',
- frame:'ECU маски Пуджа',angle:'Нижний ракурс, смотрит вверх',move:'Медленный push-in',lens:'Широкий ~18 мм, перспектива усиливает масштаб кулака',
- action:'Старт: маска Пуджа крупно снизу, над ним ночное небо. Сверху в кадр опускается гигантский каменный кулак с лавовыми трещинами, его тень накрывает маску. Конец: кулак заполняет верх кадра.',
- emotion:'Пудж смотрит вверх с холодной яростью, не со страхом',vfx:'Тёплый свет трещин на маске, сыплется мелкая пыль, тень наползает',
- sfx:'Низкий гул, свист воздуха, перед ударом звук обрывается в тишину',cut:'Smash cut на удар',
- note:'ХУК. Первый кадр должен работать как стоп-кадр: маска плюс кулак, падающий сверху. Угроза и масштаб читаются за 0.3 с.',
- map:{P:[.38,.6],G:[.66,.38],cam:[.40,.70],look:[.40,.30],fov:34,note:'низко у земли, объектив вверх'},
+{n:1,act:'A',gen:'A',dur:1.2,title:'Тень кулака',risk:'low',
+ frame:'ECU маски Пуджа',angle:'Нижний ракурс, смотрит вверх',move:'Медленный push-in',lens:'Широкий ~18 мм, перспектива раздувает кулак',
+ action:'Старт: маска Пуджа крупно снизу, над ним ночное небо между стенами каньона. Сверху в кадр опускается гигантский каменный кулак с красными лавовыми швами, тень и красный отсвет накрывают маску. Конец: кулак заполняет верх кадра.',
+ emotion:'Пудж смотрит вверх с холодной яростью, не со страхом',vfx:'Красный отсвет лавы на маске, сыплется пыль, тень наползает',
+ sfx:'Низкий гул и шипение лавы, свист воздуха, перед ударом звук обрывается',cut:'Smash cut на удар',
+ note:'ХУК. Стоп-кадр в ленте: маска плюс кулак, падающий сверху. Угроза и масштаб за 0.3 с.',
+ map:{P:[.40,.6],G:[.66,.38],H:1,cam:[.40,.70],look:[.40,.30],fov:34,note:'низко у земли, объектив вверх'},
  draw(ctx,t,T){
   ctx.save();cam(ctx,lerp(1,1.12,eio(t)),W/2,H*.62);shake(ctx,t>.8?3:0,T);
-  bg(ctx,{hz:640,moon:[292,96,38]});
+  bg(ctx,{hz:640,moon:[292,96,38],wallTop:120});
   const ft=eio(t),fy=lerp(-20,175,ft),fr=lerp(95,190,ft);
-  glow(ctx,200,fy+fr*.3,fr*2.4,.25+.35*t);
+  glow(ctx,200,fy+fr*.3,fr*2.4,.3+.35*t,'255,60,20');
   rockFist(ctx,200,fy,fr,.18);
-  debris(ctx,200,fy+fr*.6,t*.6,8,41,.5,'#7f93a8');
+  debris(ctx,200,fy+fr*.6,t*.6,8,41,.5,PAL.golem);
   pudge(ctx,170,1330,9.2,{lookUp:true,rim:t>.3});
   darken(ctx,.1+.42*ft);
-  glow(ctx,175,430,170,.22*t);
+  glow(ctx,175,430,170,.25*t,'255,60,20');
   ctx.restore();
  }},
-{n:2,act:'A',dur:1.4,title:'Удар · масштаб',risk:'low',
+{n:2,act:'A',gen:'A',dur:1.4,title:'Удар · масштаб · молот в скале',risk:'low',
  frame:'Extreme wide',angle:'Верхний ракурс, кран',move:'Static плюс тряска на ударе, лёгкий отъезд',lens:'Широкий',
- action:'Кулак врезается в землю ровно туда, где стоял Пудж. Пудж в последний момент отпрыгивает влево. Ударная волна, обломки. Впервые виден голем целиком.',
- emotion:'Голем: тупая ярость. Пудж: рывок на рефлексах',vfx:'Плоское кольцо ударной волны, кратер, плоские обломки, клубы пыли',
- sfx:'BOOM с сабвуфером, грохот камня, дребезг',cut:'Cut on action',
- note:'Раскрытие масштаба 3:1. Пудж маленький, но живой: он успел.',
- map:{P:[.38,.6],P2:[.27,.67],G:[.66,.38],cam:[.18,.95],look:[.5,.45],fov:70,note:'высоко, далеко, смотрит вниз'},
+ action:'Кулак врезается в дно каньона туда, где стоял Пудж. Пудж с топором отпрыгивает влево. Ударная волна, обломки. Впервые виден весь голем. Слева в скальной стене поблёскивает застрявший молот.',
+ emotion:'Голем: тупая ярость. Пудж: рывок на рефлексах',vfx:'Плоское кольцо ударной волны, кратер, плоские обломки, пыль. Короткий блик на молоте',
+ sfx:'BOOM с сабвуфером, грохот камня. Тонкий «дзынь» блика на молоте',cut:'Cut on action',
+ note:'ЗАЯВКА МОЛОТА. Блик должен быть заметен, но не отвлекать: молот небольшой, в левой трети кадра.',
+ map:{P:[.40,.6],P2:[.28,.64],G:[.66,.38],H:1,cam:[.22,.95],look:[.5,.45],fov:72,note:'высоко, далеко, смотрит вниз'},
  draw(ctx,t,T){
   const hit=.35,k=seg(t,hit,1);
   ctx.save();if(t>hit)shake(ctx,10*(1-k),T);cam(ctx,lerp(1.07,1,eo(t)),W/2,H/2);
-  bg(ctx,{hz:170,moon:[305,62,20],warm:[260,300,220,.25]});
+  bg(ctx,{hz:200,moon:[305,40,18],wallTop:-60,warm:[270,330,240,.25]});
+  cliff(ctx,0,470,.75);
+  hammerProp(ctx,52,318,.42,2.5);glint(ctx,46,300,9,.5+.5*Math.sin(T*9));
   ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(272,474,95,18,0,0,7);ctx.fill();
-  if(t>hit){ctx.fillStyle='#071c20';ctx.beginPath();ctx.ellipse(98,478,lerp(20,50,eo(k)),12,0,0,7);ctx.fill();}
+  if(t>hit){ctx.fillStyle='#071c20';ctx.beginPath();ctx.ellipse(118,478,lerp(20,50,eo(k)),12,0,0,7);ctx.fill();}
   const aL=t<hit?lerp(2.8,.37,ei(seg(t,0,hit))):.37;
-  golem(ctx,272,472,.9,{aL,aR:-.3,eye:1.2});
-  const jt=seg(t,.16,.62),px=lerp(98,34,eo(jt)),py=482-Math.sin(jt*Math.PI)*60;
-  pudge(ctx,px,py,.38,{pose:jt>0&&jt<1?'leap':'stand',turn:-.6});
-  ring(ctx,98,478,lerp(10,230,eo(k)),t>hit?1-k:0);
-  dust(ctx,98,480,lerp(20,95,eo(k)),t>hit?.75*(1-k*.7):0,4);
-  debris(ctx,98,470,t>hit?k*1.1:0,16,4,.8);
-  flash(ctx,t>hit?.55*(1-seg(t,hit,hit+.1)):0,'#ffe6b8');
+  golem(ctx,290,472,.9,{aL,aR:-.3,eye:1.2,mouth:t>hit?.4:0});
+  const jt=seg(t,.16,.62),px=lerp(118,74,eo(jt)),py=484-Math.sin(jt*Math.PI)*60;
+  pudge(ctx,px,py,.38,{pose:jt>0&&jt<1?'leap':'stand',turn:-.6,weapon:'axe'});
+  ring(ctx,118,478,lerp(10,230,eo(k)),t>hit?1-k:0);
+  dust(ctx,118,480,lerp(20,95,eo(k)),t>hit?.75*(1-k*.7):0,4);
+  debris(ctx,118,470,t>hit?k*1.1:0,16,4,.8,PAL.golem,1);
+  flash(ctx,t>hit?.5*(1-seg(t,hit,hit+.1)):0,'#ffd0b0');
   ctx.restore();
  }},
-{n:3,act:'A',dur:1.2,title:'Бег по руке',risk:'high',
+{n:3,act:'A',gen:'A',dur:1.2,title:'Бег по руке',risk:'high',
  frame:'Medium',angle:'Сбоку, на уровне руки',move:'Tracking параллельно Пуджу слева направо, фон в параллаксе',lens:'Нормальный ~35 мм',
- action:'Кулак голема остаётся в земле, рука лежит наклонной каменной рампой. Пудж бежит вверх по предплечью к плечу голема. Камера держит его в центре.',
- emotion:'Дерзкая решимость, контратака',vfx:'Искры и крошка из-под ног, светятся лавовые трещины руки, speed lines',
- sfx:'Тяжёлый топот по камню, крошится щебень, нарастает ритм',cut:'Cut на реакцию голема',
- note:'Самый рискованный шот для Seedance: в промпте прямо писать «running ON TOP of the golem’s stone forearm like a ramp».',
- map:{P:[.40,.56],P2:[.58,.43],G:[.66,.38],cam:[.40,.76],cam2:[.58,.64],look:[.5,.4],fov:44,note:'tracking параллельно оси'},
+ action:'Кулак голема остаётся в земле, рука лежит наклонной каменной рампой. Пудж с топором бежит вверх по предплечью к плечу голема. Камера держит его в центре.',
+ emotion:'Дерзкая решимость, контратака',vfx:'Крошка из-под ног, светятся лавовые швы руки, speed lines',
+ sfx:'Тяжёлый топот по камню, шипение лавы под ногами, нарастающий ритм',cut:'Cut на прыжок',
+ note:'Самый рискованный шот для Seedance. В промпте прямо писать «running ON TOP of the golem’s stone forearm like a ramp».',
+ map:{P:[.42,.56],P2:[.58,.43],G:[.66,.38],H:1,cam:[.42,.76],cam2:[.58,.64],look:[.5,.4],fov:44,note:'tracking параллельно оси'},
  draw(ctx,t,T){
   const p=lerp(.18,.72,t),A=[-80,660],B=[520,200];
   const d=[B[0]-A[0],B[1]-A[1]],L=Math.hypot(d[0],d[1]),u=[d[0]/L,d[1]/L],nn=[u[1],-u[0]];
   const c=[lerp(A[0],B[0],p),lerp(A[1],B[1],p)],top=[c[0]+nn[0]*52,c[1]+nn[1]*52];
   ctx.save();
-  bg(ctx,{hz:470,px:-p*500,moon:[300,90,26]});
+  bg(ctx,{hz:470,px:-p*500,moon:[300,90,26],wallTop:250});
   ctx.translate(180-top[0],380-top[1]);
-  golem(ctx,B[0]+175,B[1]+370,1.5,{noArmL:true,eye:1.1,aR:-.4});
+  golem(ctx,B[0]+180,B[1]+370,1.5,{noArmL:true,eye:1.1,aR:-.4});
   const ext=200,a0=[A[0]-u[0]*ext,A[1]-u[1]*ext],b0=[B[0]+u[0]*40,B[1]+u[1]*40];
-  stoneShape(ctx,[a0[0]+nn[0]*55,a0[1]+nn[1]*55,b0[0]+nn[0]*48,b0[1]+nn[1]*48,b0[0]-nn[0]*62,b0[1]-nn[1]*62,a0[0]-nn[0]*70,a0[1]-nn[1]*70],3,.7,77);
-  ctx.strokeStyle=C.ink;ctx.lineWidth=3;
+  stoneShape(ctx,[a0[0]+nn[0]*55,a0[1]+nn[1]*55,b0[0]+nn[0]*48,b0[1]+nn[1]*48,b0[0]-nn[0]*62,b0[1]-nn[1]*62,a0[0]-nn[0]*70,a0[1]-nn[1]*70],3,.8,77,PAL.golem);
+  ctx.strokeStyle=C.lava;ctx.lineWidth=4;ctx.shadowColor=C.lava;ctx.shadowBlur=8;
   for(let i=1;i<6;i++){const q=i/6,m=[lerp(a0[0],b0[0],q),lerp(a0[1],b0[1],q)];ctx.beginPath();ctx.moveTo(m[0]+nn[0]*50,m[1]+nn[1]*50);ctx.lineTo(m[0]-nn[0]*60+u[0]*12,m[1]-nn[1]*60+u[1]*12);ctx.stroke();}
-  pudge(ctx,top[0],top[1],1.25,{pose:'run',ph:T*24,turn:.8,rot:-.35});
-  debris(ctx,top[0]-10,top[1],(T*3)%1,5,Math.floor(T*3),.35,'#9fb0c6');
+  ctx.shadowBlur=0;
+  pudge(ctx,top[0],top[1],1.25,{pose:'run',ph:T*24,turn:.8,rot:-.35,weapon:'axe',aR:-2.4});
+  debris(ctx,top[0]-10,top[1],(T*3)%1,5,Math.floor(T*3),.35,PAL.golem);
   ctx.restore();
   speedLines(ctx,Math.atan2(d[1],d[0]),.55,5);
   embers(ctx,T,.8,20,12,1.5);
  }},
-{n:4,act:'A',dur:0.8,title:'Ярость голема',risk:'low',
- frame:'CU головы голема',angle:'Нижний ракурс, примерно точка зрения Пуджа',move:'Короткий push-in плюс тряска',lens:'Длинный ~85 мм, сжатая перспектива',
- action:'Голова голема крупно. Глаза вспыхивают ярче, трещина-челюсть раскрывается в безмолвном рёве, с макушки сыплется щебень.',
- emotion:'Голем в бешенстве: его посмели атаковать',vfx:'Глаза разгораются от оранжевого до жёлто-белого, из пасти идёт лавовый свет',
- sfx:'Каменный рёв, низкий и гулкий (без речи)',cut:'Cut, контраст крупностей: CU → wide',
- note:'Реакционный шот, дающий антагонисту характер. В 10-секундной версии вырезается первым.',
- map:{P:[.56,.45],G:[.66,.38],cam:[.55,.52],look:[.66,.38],fov:22,note:'низко, длинный фокус'},
- draw(ctx,t,T){
-  ctx.save();shake(ctx,2+5*t,T);cam(ctx,lerp(1,1.1,eo(t)),W/2,300);
-  bg(ctx,{hz:720,moon:[52,110,28]});
-  golem(ctx,190,1420,4.1,{eye:lerp(.7,1.9,eo(seg(t,.05,.5))),mouth:eo(seg(t,.2,.65)),aL:.25,aR:-.25});
-  debris(ctx,190,130,t,10,21,.6,'#8a9bb3');
-  ctx.restore();
- }},
-{n:5,act:'A',dur:1.6,title:'Прыжок · слоу-мо',risk:'mid',
+{n:4,act:'A',gen:'A',dur:1.4,title:'Прыжок · слоу-мо',risk:'mid',
  frame:'Wide',angle:'Нижний ракурс',move:'Static. Speed ramp: 100% → 25%',lens:'Широкий',
- action:'Пудж срывается с плеча голема и взмывает высоко над его головой. В верхней точке его силуэт на фоне огромной луны, кулаки занесены для удара.',
- emotion:'Героический азарт, «сейчас я его достану»',vfx:'Лунный контровой свет, медленно летящие угольки и пыль',
- sfx:'Звук уходит в вакуум, одиночный удар сердца, протяжный whoosh',cut:'Резкий возврат скорости = склейка',
- note:'Постер-кадр первого акта. Если Seedance не даст слоу-мо, его можно сделать ретаймом в монтаже.',
- map:{P:[.60,.42],G:[.66,.38],cam:[.52,.82],look:[.62,.38],fov:60,note:'у земли, смотрит вверх'},
+ action:'Пудж срывается с плеча голема и взмывает над его головой. В верхней точке его силуэт на фоне огромной луны, топор занесён над головой двумя руками.',
+ emotion:'Героический азарт, «сейчас я его разрублю»',vfx:'Лунный контровой свет, медленно летящие угольки',
+ sfx:'Звук уходит в вакуум, одиночный удар сердца, протяжный whoosh',cut:'Cut на удар топором, скорость возвращается',
+ note:'Постер-кадр первого акта. Зритель уверен, что сейчас будет победа, и ловит обманутое ожидание.',
+ map:{P:[.60,.42],G:[.66,.38],H:1,cam:[.52,.82],look:[.62,.38],fov:60,note:'у земли, смотрит вверх'},
  draw(ctx,t,T){
   const u=t<.15?t/.15*.45:.45+(t-.15)/.85*.4;
   ctx.save();
-  bg(ctx,{hz:610,moon:[188,175,96]});
+  bg(ctx,{hz:610,moon:[188,175,96],wallTop:260});
   golem(ctx,212,900,1.95,{eye:1.4,aL:.25,aR:-.25});
   const k=u/.85,px=lerp(120,190,eo(k)),py=lerp(440,185,eo(k));
-  pudge(ctx,px,py+70,1.55,{pose:'leap',turn:.3,rim:true});
+  pudge(ctx,px,py+70,1.55,{pose:'leap',turn:.3,rim:true,weapon:'axe',aL:2.9,aR:-2.95});
   speedLines(ctx,-Math.PI/2,t<.15?.6:0,6);
   embers(ctx,T*(t<.15?1:.25),.9,24,14);
   if(t>.15)tag(ctx,'SLOW-MO 25%',12,12);
   ctx.restore();
  }},
-{n:6,act:'B',dur:1.0,title:'Шлепок',risk:'high',
- frame:'Medium',angle:'На уровне Пуджа в воздухе',move:'Static, ладонь влетает справа. Скорость рывком возвращается на 100%',lens:'Нормальный',
- action:'Пудж ещё в воздухе с занесёнными кулаками. Справа в кадр влетает огромная каменная ладонь голема и сбивает его. Пудж, крутясь, улетает влево из кадра.',
- emotion:'Шок. Герой проигрывает, неравенство сил возвращается',vfx:'Импакт-флеш, плоская звезда удара, горизонтальные speed lines',
- sfx:'Хлёсткий каменный шлепок, свист отлёта',cut:'Cut on action: вылет ← / влёт ← (шов генераций A|B)',
- note:'Поворот сюжета. Без поражения победа не будет «голливудской». Здесь проходит шов между генерациями A и B.',
- map:{P:[.60,.42],P2:[.30,.52],G:[.66,.38],cam:[.56,.66],look:[.56,.42],fov:46,note:'на высоте прыжка'},
+{n:5,act:'A',gen:'A',dur:1.0,title:'Топор ломается',risk:'high',
+ frame:'CU головы голема',angle:'Чуть сверху, сбоку',move:'Static, жёсткая тряска на ударе',lens:'Нормальный ~50 мм',
+ action:'Топор Пуджа обрушивается на макушку голема. Сноп искр, и стальное лезвие разлетается на осколки. У Пуджа в руке остаётся обломок рукояти. Голем невредим, его глаза вспыхивают.',
+ emotion:'Пудж: шок, «не берёт!». Голем: злая насмешка',vfx:'Искры, плоские осколки стали, глаза голема разгораются',
+ sfx:'Звонкий металлический «ДЗАНГ», хруст ломающейся стали, низкий рык голема',cut:'Cut на шлепок',
+ note:'НОВОЕ. Объясняет, почему нужен молот: обычное оружие против голема бессильно.',
+ map:{P:[.63,.40],G:[.66,.38],H:1,cam:[.56,.52],look:[.66,.38],fov:26,note:'вплотную, у головы голема'},
+ draw(ctx,t,T){
+  const hit=.35,k=seg(t,hit,1);
+  ctx.save();if(t>hit)shake(ctx,8*(1-k),T);
+  bg(ctx,{hz:760,moon:[60,110,28],wallTop:330});
+  golem(ctx,225,1290,3.2,{eye:t>hit?lerp(1,1.9,eo(k)):1,mouth:t>hit?.35*eo(k):0,heat:.55});
+  const swing=eio(seg(t,0,hit));
+  pudge(ctx,lerp(70,95,swing),lerp(300,330,swing),1.6,{pose:'leap',turn:.6,aL:lerp(2.9,1.2,swing),aR:lerp(-2.9,-.9,swing),weapon:t>hit?'axeBroken':'axe'});
+  if(t>hit){sparks(ctx,205,262,1-k,3,20);shards(ctx,205,262,k*.9,10,5);flash(ctx,.6*(1-seg(t,hit,hit+.1)),'#fff3d6');}
+  ctx.restore();
+ }},
+{n:6,act:'B',gen:'A',dur:1.2,title:'Шлепок',risk:'high',
+ frame:'Medium',angle:'На уровне Пуджа в воздухе',move:'Static, ладонь влетает справа',lens:'Нормальный',
+ action:'Пудж с обломком топора ещё в воздухе. Справа в кадр влетает огромная лавовая ладонь голема и сбивает его. Пудж, крутясь, улетает влево из кадра, обломок отлетает в сторону.',
+ emotion:'Шок. Герой проигрывает, неравенство сил очевидно',vfx:'Импакт-флеш, звезда удара, горизонтальные speed lines',
+ sfx:'Хлёсткий каменный шлепок, свист отлёта',cut:'Cut on action: вылет ←, влёт ← (ШОВ A|B)',
+ note:'Конец генерации A. Последний кадр: Пудж уходит за левый край.',
+ map:{P:[.62,.42],P2:[.26,.54],G:[.66,.38],H:1,cam:[.56,.66],look:[.56,.42],fov:46,note:'на высоте прыжка'},
  draw(ctx,t,T){
   const hit=.4,k=seg(t,hit,1);
   ctx.save();if(t>hit)shake(ctx,9*(1-k),T);
-  bg(ctx,{hz:700,moon:[95,130,42]});
+  bg(ctx,{hz:700,moon:[95,130,42],wallTop:330});
   let px=180,py=390,rot=0,pose='leap';
   if(t>hit){px=lerp(180,-170,eo(k));py=lerp(390,320,k);rot=-k*6;pose='fly';}
-  pudge(ctx,px,py,1.5,{pose,rot,turn:.4});
+  pudge(ctx,px,py,1.5,{pose,rot,turn:.4,weapon:t>hit?null:'axeBroken'});
+  if(t>hit){ctx.save();ctx.translate(lerp(200,260,k),lerp(360,560,k*k));ctx.rotate(k*9);axeShape(ctx,2,true);ctx.restore();}
   const hx=t<hit?lerp(560,232,ei(seg(t,0,hit))):lerp(232,150,eo(k));
   rockPalm(ctx,hx,330,1.25);
   if(t>hit){speedLines(ctx,0,.8*(1-k*.6),15);flash(ctx,.75*(1-seg(t,hit,hit+.12)),'#fff3d6');
@@ -559,125 +625,153 @@ const SHOTS=[
     const r=lerp(30,90,seg(t,hit,hit+.25));poly(ctx,[0,-r,r*.2,-r*.2,r,0,r*.2,r*.2,0,r,-r*.2,r*.2,-r,0,-r*.2,-r*.2]);ctx.fill();ctx.restore();}
   ctx.restore();
  }},
-{n:7,act:'B',dur:1.0,title:'В скалу',risk:'mid',
- frame:'Wide',angle:'Eye-level',move:'Static плюс сильная тряска на ударе',lens:'Широкий',
- action:'Пудж влетает справа налево и врезается в скальную стену. Кратер, трещины по камню, облако пыли. Пудж оседает у подножия. Вдали стоит голем.',
- emotion:'Низшая точка: оглушён, повержен',vfx:'Радиальные трещины в скале, плоские обломки, пыль',
- sfx:'Crash, потом звон в ушах (tinnitus), звук приглушён',cut:'Cut на крупный план, звук держит tinnitus',
- note:'Тишина и звон делают следующий power-up громче.',
- map:{P:[.34,.52],P2:[.20,.56],G:[.66,.38],cam:[.48,.86],look:[.32,.5],fov:66,note:'далеко, смотрит на скалу'},
+{n:7,act:'B',gen:'B',seam:true,dur:0.9,title:'В скалу',risk:'mid',
+ frame:'Wide',angle:'Eye-level',move:'Static плюс сильная тряска',lens:'Широкий',
+ action:'Пудж влетает справа налево и врезается в скальную стену прямо под торчащим молотом. Кратер, трещины бегут вверх по камню к молоту, молот дрожит. Пудж сползает к подножию. Вдали стоит голем.',
+ emotion:'Низшая точка: оглушён, повержен',vfx:'Трещины от кратера к молоту, обломки, пыль',
+ sfx:'Crash, потом звон в ушах (tinnitus), звук приглушён',cut:'Cut на молот, звон держится',
+ note:'Начало генерации B. Молот обязательно в кадре и на том же месте, что в шоте 2.',
+ map:{P:[.30,.54],P2:[.15,.56],G:[.66,.38],H:1,cam:[.42,.86],look:[.18,.55],fov:62,note:'далеко, смотрит на скалу'},
  draw(ctx,t,T){
-  const hit=.28,k=seg(t,hit,1);
+  const hit=.3,k=seg(t,hit,1);
   ctx.save();if(t>hit)shake(ctx,12*(1-k),T);
-  bg(ctx,{hz:470,moon:[300,82,26],warm:[300,330,140,.25]});
-  golem(ctx,300,474,.55,{eye:1.3});
-  stoneShape(ctx,[-40,100,90,150,140,300,150,480,-40,480],3,0,55);
+  bg(ctx,{hz:480,moon:[300,82,26],wallTop:250,warm:[300,340,140,.3]});
+  golem(ctx,300,484,.55,{eye:1.3});
+  cliff(ctx,0,484,1);
   if(t>hit){ctx.save();ctx.strokeStyle=C.ink;ctx.lineWidth=3;const r=rng(3);
-    for(let i=0;i<7;i++){const an=r()*6.28,l=lerp(10,60+r()*40,eo(k));ctx.beginPath();ctx.moveTo(110,330);ctx.lineTo(110+Math.cos(an)*l*.5,330+Math.sin(an)*l*.5+5);ctx.lineTo(110+Math.cos(an)*l,330+Math.sin(an)*l);ctx.stroke();}ctx.restore();}
+    for(let i=0;i<6;i++){const an=r()*6.28,l=lerp(10,50+r()*40,eo(k));ctx.beginPath();ctx.moveTo(110,350);ctx.lineTo(110+Math.cos(an)*l*.5,350+Math.sin(an)*l*.5+5);ctx.lineTo(110+Math.cos(an)*l,350+Math.sin(an)*l);ctx.stroke();}
+    const q=eo(k);ctx.lineWidth=3.5;ctx.beginPath();ctx.moveTo(110,350);ctx.lineTo(lerp(110,95,q),lerp(350,300,q));ctx.lineTo(lerp(110,86,q),lerp(350,250,q));ctx.stroke();ctx.restore();}
+  const wob=t>hit?Math.sin(T*60)*.06*(1-k*.5):0;
+  hammerProp(ctx,90,236,.6,2.6+wob);
   let px,py,rot,pose='fly';
-  if(t<hit){const q=t/hit;px=lerp(440,125,q);py=lerp(220,380,q);rot=-q*4;}
-  else{const q=eo(seg(t,hit+.1,.8));px=lerp(125,118,q);py=lerp(380,486,q);rot=lerp(-1.2,-.5,q);pose=q>.9?'crouch':'fly';}
+  if(t<hit){const q=t/hit;px=lerp(440,125,q);py=lerp(220,400,q);rot=-q*4;}
+  else{const q=eo(seg(t,hit+.1,.85));px=lerp(125,120,q);py=lerp(400,492,q);rot=lerp(-1.2,-.5,q);pose=q>.9?'crouch':'fly';}
   pudge(ctx,px,py,.9,{pose,rot,turn:-.5});
-  dust(ctx,110,360,lerp(30,110,eo(k)),t>hit?.8*(1-k*.6):0,9);
-  debris(ctx,110,330,t>hit?k:0,14,6,.7);
+  dust(ctx,110,380,lerp(30,110,eo(k)),t>hit?.8*(1-k*.6):0,9);
+  debris(ctx,110,350,t>hit?k:0,14,6,.7);
   flash(ctx,t>hit?.45*(1-seg(t,hit,hit+.1)):0);
   ctx.restore();
  }},
-{n:8,act:'B',dur:1.6,title:'Сила',risk:'mid',
- frame:'MCU фронтально',angle:'Чуть снизу',move:'Медленный push-in',lens:'Нормальный ~50 мм',
- action:'Пудж поднимается из обломков. Глазницы маски вспыхивают оранжевым, вокруг загорается аура, мелкие камни поднимаются в воздух, кулаки сжимаются.',
- emotion:'Ярость превращается в силу. «Стать сильнее»',vfx:'Оранжевое свечение глаз и кулаков, левитирующий щебень, плотный поток угольков',
- sfx:'Нарастающий rumble, power-up whoosh, мощный выдох',cut:'Cut на рывок, музыка/ритм стартует',
- note:'Ключ к UA-мотивации «прокачка». Визуально перекликается с апгрейдом героя в игре.',
- map:{P:[.20,.56],G:[.66,.38],cam:[.32,.66],look:[.20,.55],fov:40,note:'перед Пуджем, чуть снизу'},
+{n:8,act:'B',gen:'B',dur:1.1,title:'Молот падает',risk:'high',
+ frame:'Medium, вертикальная композиция',angle:'Снизу вверх по скале',move:'Static, лёгкий tilt-down вслед за молотом',lens:'Широкий',
+ action:'Камень вокруг молота лопается, молот выпадает из стены, переворачивается в воздухе и с грохотом втыкается рукоятью вверх в землю прямо перед оглушённым Пуджем. Вспыхивает оранжевый блик.',
+ emotion:'Пудж медленно поднимает голову: удивление, затем осознание',vfx:'Каменная крошка, пыль от падения, оранжевый блик и свечение на бойке',
+ sfx:'Треск камня, тяжёлый удар металла о землю, звенящий отзвук; tinnitus обрывается',cut:'Cut на руку на рукояти',
+ note:'ОПЛАТА ЗАЯВКИ. Молот вываливается из той же скалы, а не возникает из воздуха.',
+ map:{P:[.16,.57],G:[.66,.38],H:1,H2:[.22,.6],cam:[.32,.72],look:[.14,.52],fov:46,note:'у подножия скалы, смотрит вверх'},
  draw(ctx,t,T){
-  const g=eo(seg(t,.2,.8)),rise=eio(seg(t,0,.6));
-  ctx.save();cam(ctx,lerp(1,1.16,eio(t)),W/2,H*.45);shake(ctx,g*1.5,T);
-  bg(ctx,{hz:560,moon:[290,110,32],warm:[180,420,300,g*.45]});
-  pudge(ctx,180,lerp(760,610,rise),3.6,{pose:t<.45?'crouch':'flex',glow:g,rim:true});
-  const r=rng(77);for(let i=0;i<8;i++){const x=40+r()*280,y0=520+r()*120,s=6+r()*10;const y=y0-g*(30+r()*60)+Math.sin(T*3+i)*4;
-    stoneShape(ctx,[x-s,y,x,y-s,x+s,y-s*.2,x+s*.4,y+s*.6],2,g>.4?.4:0,i+3);}
-  rubble(ctx,180,640,420,5,16);
-  embers(ctx,T,g,40,15,1.6);
+  const fall=seg(t,.12,.6),land=seg(t,.6,1);
+  ctx.save();if(t>.6)shake(ctx,7*(1-land),T);
+  bg(ctx,{hz:600,moon:[300,70,24],wallTop:200});
+  cliff(ctx,-10,640,1.6);
+  ctx.save();ctx.strokeStyle=C.ink;ctx.lineWidth=3.5;ctx.beginPath();ctx.moveTo(140,560);ctx.lineTo(120,400);ctx.lineTo(132,260);ctx.lineTo(118,150);ctx.stroke();ctx.restore();
+  if(t<.12){hammerProp(ctx,128,96,.85,2.6+Math.sin(T*60)*.05);}
+  else{const hx=lerp(128,215,eio(fall)),hy=lerp(96,470,fall*fall),rot=lerp(2.6,Math.PI+6.28,eio(fall));
+    const fy=t<.6?hy:470;hammerProp(ctx,t<.6?hx:215,fy,.85,t<.6?rot:Math.PI,t>.6?(1-land*.4):.3);
+    debris(ctx,128,120,fall*.8,10,13,.5);}
+  if(t>.6){ring(ctx,215,560,lerp(10,140,eo(land)),1-land);dust(ctx,215,560,lerp(20,70,eo(land)),.7*(1-land));glint(ctx,215,410,22,1-land*.6);}
+  pudge(ctx,92,650,1.9,{pose:'crouch',turn:.6,lookUp:t>.6,rot:-.15});
   ctx.restore();
  }},
-{n:9,act:'C',dur:1.2,title:'Встречный рывок',risk:'mid',
- frame:'Wide OTS',angle:'Низко из-за спины Пуджа, на оси',move:'Tracking вперёд вслед за Пуджем',lens:'Широкий',
- action:'Камера за спиной Пуджа (видны шрамы и крюки). Пудж бежит на голема, голем несётся навстречу, земля дрожит. Дистанция стремительно сокращается.',
- emotion:'Оба в ярости, лобовое столкновение неизбежно',vfx:'Пыль из-под ног голема, радиальные speed lines, тряска на каждый шаг',
- sfx:'Шаги голема как удары барабана, ускоряются; рёв нарастает',cut:'Cut on action перед контактом',
- note:'Камера на оси: так мы безопасно «пересекаем» сцену, и ось 180° не ломается.',
- map:{P:[.30,.55],P2:[.44,.49],G:[.66,.38],G2:[.56,.43],cam:[.20,.60],cam2:[.33,.55],look:[.66,.38],fov:56,note:'на оси, за спиной Пуджа'},
+{n:9,act:'B',gen:'B',dur:1.4,title:'Подъём молота',risk:'mid',
+ frame:'MCU фронтально',angle:'Сильно снизу',move:'Медленный push-in',lens:'Нормальный ~50 мм',
+ action:'Пудж хватает рукоять и одним движением вырывает молот из земли, вскидывая его над головой. Боёк вспыхивает оранжевым, глазницы маски загораются, вокруг поднимаются угольки и мелкие камни.',
+ emotion:'Ярость превращается в силу. «Теперь моя очередь»',vfx:'Оранжевое свечение молота и глаз маски, аура, левитирующий щебень',
+ sfx:'Металлический звон, нарастающий rumble, мощный выдох, power-up whoosh',cut:'Cut на прыжок, стартует ритм',
+ note:'Ключ к мотивации «стать сильнее» и мост к экипировке в игре.',
+ map:{P:[.17,.57],G:[.66,.38],cam:[.28,.66],look:[.17,.56],fov:40,note:'перед Пуджем, снизу'},
+ draw(ctx,t,T){
+  const lift=eio(seg(t,.05,.55)),g=eo(seg(t,.3,.9));
+  ctx.save();cam(ctx,lerp(1,1.14,eio(t)),W/2,H*.45);shake(ctx,g*1.5,T);
+  bg(ctx,{hz:600,moon:[290,110,32],wallTop:220,warm:[180,300,320,g*.5,'255,138,30']});
+  pudge(ctx,175,lerp(680,610,lift),2.05,{aL:lerp(.6,2.95,lift),aR:lerp(-.6,-2.95,lift),weapon:'hammer',hot:g,glow:g,rim:true,rimCol:'#ffb23a',lookUp:true});
+  const r=rng(77);for(let i=0;i<8;i++){const x=40+r()*280,y0=540+r()*90,s=6+r()*10;const y=y0-g*(30+r()*60)+Math.sin(T*3+i)*4;
+    stoneShape(ctx,[x-s,y,x,y-s,x+s,y-s*.2,x+s*.4,y+s*.6],2,0,i+3);}
+  rubble(ctx,180,650,420,5,14,PAL.rock);
+  embers(ctx,T,g,40,15,1.6,'#ffd36b','#ff8a1e');
+  ctx.restore();
+ }},
+{n:10,act:'C',gen:'B',dur:0.9,title:'Прыжок с молотом',risk:'mid',
+ frame:'Wide',angle:'Низко, сбоку',move:'Static, Пудж пересекает кадр слева направо',lens:'Широкий',
+ action:'Голем с рёвом несётся на Пуджа справа. Пудж мощно отталкивается и летит ему навстречу слева направо, молот заведён за спину.',
+ emotion:'Оба в ярости, лобовое столкновение',vfx:'Оранжевый шлейф молота, пыль из-под ног голема, speed lines',
+ sfx:'Шаги голема как удары барабана, рёв, гудящий whoosh молота',cut:'Cut on action перед контактом',
+ note:'Если генерации B не хватит длины, этот шот уходит первым.',
+ map:{P:[.22,.56],P2:[.46,.47],G:[.66,.38],G2:[.56,.42],cam:[.36,.84],look:[.45,.45],fov:64,note:'сбоку, южная сторона оси'},
  draw(ctx,t,T){
   const st=Math.pow(Math.abs(Math.sin(T*9)),8);
   ctx.save();shake(ctx,4*st,T);
-  bg(ctx,{hz:420,px:-T*40,moon:[70,92,26]});
-  const gs=lerp(.82,1.3,ei(t));
-  golem(ctx,232,lerp(470,575,ei(t)),gs,{eye:1.6,aL:.7,aR:-1.0,lean:-.06});
-  dust(ctx,232,lerp(470,575,ei(t)),60*gs,.5,Math.floor(T*4));
-  radial(ctx,232,330,.35,8,30);
-  pudge(ctx,lerp(92,128,t),lerp(700,660,t),lerp(2.4,2.15,t),{pose:'run',ph:T*20,back:true,glow:.5});
-  embers(ctx,T,.8,24,16,1.4);
+  bg(ctx,{hz:500,px:-T*30,moon:[70,92,26],wallTop:230});
+  golem(ctx,lerp(330,285,t),505,.95,{eye:1.6,mouth:.8,aL:.9,aR:-1.1,lean:-.1});
+  dust(ctx,lerp(330,285,t),505,60,.5,Math.floor(T*4));
+  const px=lerp(30,160,eo(t)),py=lerp(470,330,eo(t));
+  ctx.save();ctx.globalAlpha=.35;ctx.strokeStyle='#ffb23a';ctx.lineWidth=14;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(px-70,py+40);ctx.lineTo(px-10,py-20);ctx.stroke();ctx.restore();
+  pudge(ctx,px,py,.95,{pose:'leap',turn:.7,weapon:'hammer',hot:.8,aL:2.6,aR:2.5,glow:.4});
+  speedLines(ctx,-.35,.45,7);
   ctx.restore();
  }},
-{n:10,act:'C',dur:1.2,title:'Удар в ядро',risk:'mid',
+{n:11,act:'C',gen:'B',dur:1.0,title:'Удар молотом',risk:'mid',
  frame:'ECU, профиль',angle:'Сбоку, на уровне груди голема',move:'Static. Hit-stop 0.25 с, затем сильная тряска',lens:'Нормальный',
- action:'Пудж в прыжке влетает слева и вбивает светящийся кулак в лавовое ядро в груди голема. Стоп-кадр, белая вспышка. Трещины разбегаются от ядра по всему торсу.',
- emotion:'Кульминация: вся ярость в одном ударе',vfx:'Hit-stop, белый флеш, манга-линии, ударное кольцо, лавовые трещины',
- sfx:'0.2 с полной тишины, затем мощный удар с хрустом камня и шипением лавы',cut:'Cut на wide, звук продолжается',
- note:'Hit-stop и флеш делаются в монтаже, в промпте только сам удар и трещины.',
- map:{P:[.48,.48],G:[.56,.43],cam:[.50,.64],look:[.52,.44],fov:30,note:'сбоку, вплотную'},
+ action:'Пудж в полёте с размаху вбивает пылающий молот в грудь голема. Стоп-кадр, белая вспышка. Лавовые швы по всему телу голема вспыхивают, по камню бегут новые трещины.',
+ emotion:'Кульминация: вся ярость в одном ударе',vfx:'Hit-stop, белый флеш, манга-линии, ударное кольцо, все швы раскаляются',
+ sfx:'0.2 с полной тишины, затем мощный удар с хрустом камня и шипением лавы',cut:'Cut на общий план',
+ note:'Hit-stop и флеш делаются в монтаже, в промпте только удар и вспышка швов.',
+ map:{P:[.48,.47],G:[.56,.42],cam:[.50,.64],look:[.53,.44],fov:30,note:'сбоку, вплотную'},
  draw(ctx,t,T){
-  const hit=.32,hs=.54,k=seg(t,hs,1),inHS=t>=hit&&t<hs;
+  const hit=.3,hs=.55,k=seg(t,hs,1),inHS=t>=hit&&t<hs;
   ctx.save();if(t>=hit)shake(ctx,inHS?2:10*(1-k),T);
-  bg(ctx,{hz:900,moon:[60,120,26]});
-  golem(ctx,330,983,3.4,{eye:1.5,crack:t>=hit?(inHS?.25:lerp(.25,1,eo(k))):.08,core:t>=hit?1.5:1,noArmL:true,aR:-.2});
-  const px=t<hit?lerp(-110,22,ei(seg(t,0,hit))):22-k*14;
-  pudge(ctx,px,494,2.2,{pose:'punch',turn:.7,glow:.85});
+  bg(ctx,{hz:900,moon:[60,120,26],noWalls:true});
+  golem(ctx,330,983,3.4,{eye:1.6,heat:t>=hit?(inHS?.9:lerp(.9,1.3,eo(k))):.5,noArmL:true,aR:-.2,mouth:t>=hit?.6:0});
+  const sw=eio(seg(t,0,hit));
+  pudge(ctx,lerp(-110,-8,sw),437,1.5,{pose:'punch',turn:.7,glow:.7,weapon:'hammer',hot:1,aR:lerp(-3.0,-1.45,sw)});
   if(t>=hit){radial(ctx,250,320,inHS?1:.6*(1-k),8,46);ring(ctx,250,320,inHS?60:lerp(60,320,eo(k)),inHS?1:1-k,'#fff1c9',1);
-    debris(ctx,250,320,t>=hs?k:0,18,8,1,'#7f93a8');flash(ctx,inHS?lerp(.9,.15,seg(t,hit,hs)):0);
+    debris(ctx,250,320,t>=hs?k:0,18,8,1,PAL.golem,1);flash(ctx,inHS?lerp(.9,.15,seg(t,hit,hs)):0);
     if(inHS)tag(ctx,'HIT-STOP 0.25s',12,12,'#fff');}
   ctx.restore();
  }},
-{n:11,act:'C',dur:1.4,title:'Распад',risk:'high',
+{n:12,act:'C',gen:'B',dur:1.2,title:'В щепки',risk:'high',
  frame:'Wide',angle:'Eye-level, Пудж спиной на переднем плане',move:'Static плюс затухающая тряска',lens:'Широкий',
- action:'Голем замирает, по светящимся трещинам проходит волна света, и он раскалывается на плоские глыбы, которые осыпаются вниз. Пудж стоит спиной к камере на переднем плане.',
- emotion:'Триумф, облегчение, мощь',vfx:'Лучи света из трещин, ядро гаснет, обвал глыб, пылевое облако. Тёплый свет уходит из сцены',
- sfx:'Лавина камней, затихающий гул ядра',cut:'Cut на нижний ракурс героя',
- note:'Важно писать «shatters into flat stone chunks», чтобы голем не «таял».',
- map:{P:[.42,.60],G:[.62,.40],cam:[.32,.86],look:[.6,.4],fov:62,note:'за плечом Пуджа, южная сторона'},
+ action:'Голем раскалывается по светящимся швам и рассыпается на плоские каменные глыбы. Из распадающейся груди вылетает сияющий алый кристалл и по дуге летит вперёд. Пудж стоит спиной к камере с молотом в руке.',
+ emotion:'Триумф и мощь',vfx:'Лучи света из швов, обвал глыб, пылевое облако. Красный свет гаснет, остаётся сияние кристалла',
+ sfx:'Лавина камней, затихающее шипение лавы, хрустальный «дзинь» кристалла',cut:'Cut на нижний ракурс героя',
+ note:'Писать «shatters into flat stone chunks», чтобы голем не «таял». Кристалл появляется только здесь.',
+ map:{P:[.40,.58],G:[.56,.42],cam:[.30,.85],look:[.56,.42],fov:62,note:'за плечом Пуджа, южная сторона'},
  draw(ctx,t,T){
-  const b=ei(seg(t,.22,1)),pre=seg(t,0,.22);
+  const b=ei(seg(t,.15,1)),pre=seg(t,0,.15),cr=seg(t,.35,1);
   ctx.save();shake(ctx,5*(1-t),T);
-  bg(ctx,{hz:470,moon:[80,82,26],warm:[225,330,230,.7*(1-b)]});
-  if(b<.4){ctx.save();ctx.globalAlpha=(1-b*2.5)*pre;ctx.strokeStyle=C.lavaHot;ctx.lineWidth=3;const r=rng(4);
-    for(let i=0;i<14;i++){const an=r()*6.28;ctx.beginPath();ctx.moveTo(225,295);ctx.lineTo(225+Math.cos(an)*260,295+Math.sin(an)*260);ctx.stroke();}ctx.restore();}
-  golem(ctx,225,482,.98,{crack:1,brk:b,eye:1-b,core:1.6*(1-b)});
-  dust(ctx,225,482,lerp(40,190,b),.85*b,11);
-  pudge(ctx,88,628,1.8,{back:true,glow:.3*(1-b)});
+  bg(ctx,{hz:480,moon:[80,82,26],wallTop:240,warm:[225,330,240,.7*(1-b)]});
+  if(b<.4){ctx.save();ctx.globalAlpha=(1-b*2.5)*Math.max(pre,.3);ctx.strokeStyle=C.lavaHot;ctx.lineWidth=3;const r=rng(4);
+    for(let i=0;i<14;i++){const an=r()*6.28;ctx.beginPath();ctx.moveTo(225,300);ctx.lineTo(225+Math.cos(an)*260,300+Math.sin(an)*260);ctx.stroke();}ctx.restore();}
+  golem(ctx,225,488,.98,{heat:1.2,brk:b,eye:1-b});
+  dust(ctx,225,488,lerp(40,190,b),.85*b,11);
+  if(cr>0)crystal(ctx,lerp(225,180,cr),300-Math.sin(cr*Math.PI)*80+cr*120,lerp(.6,1.1,cr),cr*8);
+  pudge(ctx,80,630,1.8,{back:true,weapon:'hammer',aR:.5,hot:.5});
   ctx.restore();
  }},
-{n:12,act:'C',dur:1.2,title:'Герой-кадр',risk:'low',
+{n:13,act:'C',gen:'B',dur:1.1,title:'Лут',risk:'low',
  frame:'Medium-wide',angle:'Сильно снизу',move:'Медленный tilt-up / лёгкий отъезд',lens:'Широкий ~20 мм',
- action:'Пудж стоит на груде каменных обломков голема, луна прямо за ним. Он вскидывает руку со светящимся осколком ядра и издаёт безмолвный рёв.',
- emotion:'Победа, «я стал сильнее»',vfx:'Оранжевое свечение осколка, угольки, оседающая пыль',
- sfx:'Финальный удар, эхо, рёв без слов',cut:'→ геймплей / эндкарта',
- note:'Награда (лут) замыкает петлю «победил → получил». Последние 0.3 с можно держать под эндкарту.',
- map:{P:[.62,.40],G:[.62,.40],cam:[.56,.62],look:[.62,.36],fov:58,note:'у подножия груды, смотрит вверх'},
+ action:'Пудж стоит на груде обломков голема, луна за ним, молот победно вскинут вверх. Алый кристалл падает на обломки перед ним и вспыхивает.',
+ emotion:'Победа и награда: «я стал сильнее и получил своё»',vfx:'Сияние кристалла, свечение молота, угольки, оседающая пыль',
+ sfx:'Хрустальный удар кристалла о камень, финальный аккорд, эхо',cut:'→ геймплей / эндкарт',
+ note:'Петля «победил → получил лут» для UA. Последние 0.3 с можно держать под эндкарт.',
+ map:{P:[.50,.46],G:[.56,.42],dead:1,cam:[.46,.68],look:[.50,.44],fov:58,note:'у подножия груды, смотрит вверх'},
  draw(ctx,t,T){
+  const land=seg(t,0,.35);
   ctx.save();cam(ctx,lerp(1.1,1,eo(t)),W/2,H*.55);ctx.translate(0,lerp(30,0,eo(t)));
-  bg(ctx,{hz:620,moon:[176,360,105]});
+  bg(ctx,{hz:620,moon:[176,330,105],wallTop:280});
   rubble(ctx,180,640,460,33,18);
-  pudge(ctx,170,650,2.6,{pose:'roar',glow:.55,shard:true,lookUp:true,rim:true});
+  pudge(ctx,140,640,2.0,{pose:'roar',glow:.4,weapon:'hammer',hot:.9,aR:-3.0,lookUp:true,rim:true,rimCol:'#ffb23a'});
   rubble(ctx,180,700,520,44,10);
-  embers(ctx,T,1,30,19,.8);
+  crystal(ctx,270,lerp(380,580,eio(land)),1.15,land<1?land*6:.2);
+  if(land>=1)glint(ctx,270,550,20,1-seg(t,.35,.6)*.5);
+  embers(ctx,T,1,30,19,.8,'#ffd36b','#ff2d55');
   ctx.restore();
   if(t>.75){ctx.save();ctx.globalAlpha=seg(t,.75,1);ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(0,560,W,44);ctx.fillStyle='#ffd36b';ctx.font='800 15px system-ui';ctx.textAlign='center';ctx.fillText('→ CUT TO GAMEPLAY',W/2,588);ctx.restore();}
  }},
 ];
 let acc=0;for(const s of SHOTS){s.start=acc;acc+=s.dur;}
 const TOTAL=acc;
-const INTENSITY=[7,8,7,8,9,6,4,7,9,10,9,8];
+const INTENSITY=[7,8,7,8,8,7,5,7,8,9,10,9,8];
 
 /* ================= render ================= */
 function shotAt(T){for(let i=SHOTS.length-1;i>=0;i--)if(T>=SHOTS[i].start)return i;return 0;}
@@ -730,7 +824,7 @@ document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return;
   if(e.code==='ArrowLeft'){e.preventDefault();gotoShot(shotAt(T)-1);}});
 
 const tl=document.getElementById('timeline');
-SHOTS.forEach(s=>{const d=document.createElement('div');d.className='seg act'+s.act;d.style.width=(s.dur/TOTAL*100)+'%';d.textContent=s.n;d.title=`#${s.n} ${s.title} · ${s.dur}s`;tl.insertBefore(d,tl.lastElementChild);});
+SHOTS.forEach(s=>{const d=document.createElement('div');d.className='seg act'+s.act+(s.seam?' seam':'');d.style.width=(s.dur/TOTAL*100)+'%';d.textContent=s.n;d.title=`#${s.n} ${s.title} · ${s.dur}s`;tl.insertBefore(d,tl.lastElementChild);});
 tl.addEventListener('pointerdown',e=>{const r=tl.getBoundingClientRect();T=clamp((e.clientX-r.left)/r.width)*TOTAL*.9999;lockShot=-1;});
 
 /* intensity curve */
@@ -750,29 +844,28 @@ function drawMap(cv,m){
   const X=v=>v*S;
   c.fillStyle='#0e1420';c.fillRect(0,0,S,S);
   c.strokeStyle='#1a2336';c.lineWidth=1;for(let i=1;i<10;i++){c.beginPath();c.moveTo(i*S/10,0);c.lineTo(i*S/10,S);c.stroke();c.beginPath();c.moveTo(0,i*S/10);c.lineTo(S,i*S/10);c.stroke();}
-  // cliff & trees
-  c.fillStyle='#2a3445';c.beginPath();c.moveTo(0,X(.4));c.lineTo(X(.14),X(.45));c.lineTo(X(.12),X(.68));c.lineTo(0,X(.72));c.fill();
-  c.fillStyle='#173c46';[[.08,.12],[.25,.07],[.88,.15],[.93,.6],[.82,.9],[.1,.92]].forEach(([x,y])=>{c.beginPath();c.arc(X(x),X(y),7,0,7);c.fill();});
-  // axis
+  // canyon walls (left wall with hammer, right wall far)
+  c.fillStyle='#2b3450';c.beginPath();c.moveTo(0,0);c.lineTo(X(.12),0);c.lineTo(X(.08),X(.3));c.lineTo(X(.12),X(.5));c.lineTo(X(.07),X(.75));c.lineTo(X(.1),S);c.lineTo(0,S);c.fill();
+  c.beginPath();c.moveTo(S,0);c.lineTo(X(.86),0);c.lineTo(X(.9),X(.3));c.lineTo(X(.85),X(.6));c.lineTo(X(.92),S);c.lineTo(S,S);c.fill();
+  c.fillStyle='#173c46';[[.2,.08],[.75,.1],[.8,.85],[.2,.92]].forEach(([x,y])=>{c.beginPath();c.arc(X(x),X(y),6,0,7);c.fill();});
   const P=m.P,G=m.G;const dx=G[0]-P[0],dy=G[1]-P[1],l=Math.hypot(dx,dy)||1;
   c.setLineDash([5,4]);c.strokeStyle='rgba(255,255,255,.35)';c.beginPath();c.moveTo(X(P[0]-dx/l*.6),X(P[1]-dy/l*.6));c.lineTo(X(G[0]+dx/l*.6),X(G[1]+dy/l*.6));c.stroke();c.setLineDash([]);
   c.fillStyle='rgba(63,208,217,.06)';c.beginPath();c.moveTo(X(P[0]-dx/l*.6),X(P[1]-dy/l*.6));c.lineTo(X(G[0]+dx/l*.6),X(G[1]+dy/l*.6));c.lineTo(S,S);c.lineTo(0,S);c.fill();
   const arrow=(a,b,col)=>{c.strokeStyle=col;c.fillStyle=col;c.lineWidth=2;c.beginPath();c.moveTo(X(a[0]),X(a[1]));c.lineTo(X(b[0]),X(b[1]));c.stroke();
     const an=Math.atan2(b[1]-a[1],b[0]-a[0]);c.beginPath();c.moveTo(X(b[0]),X(b[1]));c.lineTo(X(b[0])-9*Math.cos(an-.45),X(b[1])-9*Math.sin(an-.45));c.lineTo(X(b[0])-9*Math.cos(an+.45),X(b[1])-9*Math.sin(an+.45));c.fill();};
-  // golem
+  if(m.H){const h=[HAMMER_IN_WALL.x,HAMMER_IN_WALL.y];c.fillStyle='#ffb562';c.fillRect(X(h[0])-4,X(h[1])-4,8,8);c.strokeStyle='#0a0a12';c.lineWidth=1.5;c.strokeRect(X(h[0])-4,X(h[1])-4,8,8);
+    if(m.H2)arrow(h,m.H2,'#ffb562');}
   const hex=(p,r)=>{c.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3;c.lineTo(X(p[0])+Math.cos(a)*r,X(p[1])+Math.sin(a)*r);}c.closePath();};
-  hex(G,17);c.fillStyle='#5b6b82';c.fill();c.strokeStyle='#0a0a12';c.lineWidth=2;c.stroke();c.fillStyle='#ff8a1e';c.beginPath();c.arc(X(G[0]),X(G[1]),4,0,7);c.fill();
-  if(m.G2){arrow(G,m.G2,'#8193ab');}
-  // pudge
-  c.fillStyle='#f08a2a';c.beginPath();c.arc(X(P[0]),X(P[1]),7,0,7);c.fill();c.strokeStyle='#0a0a12';c.stroke();
+  if(m.dead){c.fillStyle='#4b4257';for(let i=0;i<7;i++){c.beginPath();c.arc(X(G[0])+Math.cos(i*2.4)*12,X(G[1])+Math.sin(i*2.4)*9,4+i%3,0,7);c.fill();}}
+  else{hex(G,17);c.fillStyle='#4b4257';c.fill();c.strokeStyle='#ff4a1c';c.lineWidth=2;c.stroke();if(m.G2)arrow(G,m.G2,'#ff6a3a');}
+  c.fillStyle='#f08a2a';c.beginPath();c.arc(X(P[0]),X(P[1]),7,0,7);c.fill();c.strokeStyle='#0a0a12';c.lineWidth=2;c.stroke();
   if(m.P2)arrow(P,m.P2,'#ffb562');
-  // camera
   const cm=m.cam,lk=m.look,an=Math.atan2(lk[1]-cm[1],lk[0]-cm[0]),fv=m.fov*Math.PI/180/2,R=S*.55;
   c.fillStyle='rgba(63,208,217,.16)';c.beginPath();c.moveTo(X(cm[0]),X(cm[1]));c.lineTo(X(cm[0])+Math.cos(an-fv)*R,X(cm[1])+Math.sin(an-fv)*R);c.lineTo(X(cm[0])+Math.cos(an+fv)*R,X(cm[1])+Math.sin(an+fv)*R);c.fill();
   c.strokeStyle='rgba(63,208,217,.6)';c.lineWidth=1;c.stroke();
   if(m.cam2)arrow(cm,m.cam2,'#3fd0d9');
   c.save();c.translate(X(cm[0]),X(cm[1]));c.rotate(an);c.fillStyle='#3fd0d9';c.beginPath();c.moveTo(10,0);c.lineTo(-7,-7);c.lineTo(-7,7);c.closePath();c.fill();c.restore();
-  c.fillStyle='#8d99b3';c.font='10px system-ui';c.fillText('ось 180°',4,12);
+  c.fillStyle='#8d99b3';c.font='10px system-ui';c.fillText('ось 180°',S-52,12);
 }
 
 /* ================= shot cards ================= */
@@ -786,7 +879,7 @@ SHOTS.forEach((s,i)=>{
    <div>
     <div class="head"><span class="num">#${s.n}</span><span class="title">${s.title}</span>
      <span class="time">${s.start.toFixed(1)}–${(s.start+s.dur).toFixed(1)} с · ${s.dur.toFixed(1)} с</span>
-     <span class="pill">Акт ${{A:1,B:2,C:3}[s.act]}</span><span class="pill risk-${s.risk}">${riskTxt[s.risk]}</span></div>
+     <span class="pill">Акт ${{A:1,B:2,C:3}[s.act]}</span><span class="pill gen">Генерация ${s.gen}</span><span class="pill risk-${s.risk}">${riskTxt[s.risk]}</span></div>
     <div class="grid">
      <div>Крупность</div><div>${s.frame}</div>
      <div>Ракурс</div><div>${s.angle}</div>
