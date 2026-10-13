@@ -120,7 +120,8 @@ mesh(new THREE.BoxGeometry(30, .02, 3.2), C.street, null, S.x, .01, S.z + .4);
 [[-7, 4.2, 4.5], [-2.6, 4, 5], [1.8, 4.2, 4], [6.2, 4.4, 4.5]].forEach(([x, w, h]) => house(S.x + x, S.z + 4.2, w, h));
 const H = V(S.x + .6, HR, S.z + .35);                      // where the head stops on the street
 const DOOR = V(S.x + 3.0, 0, S.z - 1.0);              // workshop door in the house front (z = -1.0)
-const doorPivot = grp(null, DOOR.x - .45, 0, DOOR.z + .02);
+mesh(new THREE.BoxGeometry(.95, 1.75, .04), C.dark, null, DOOR.x, .875, DOOR.z + .02); // dark doorway
+const doorPivot = grp(null, DOOR.x - .47, 0, DOOR.z + .05);
 mesh(new THREE.BoxGeometry(.9, 1.7, .06), C.wood, doorPivot, .45, .85, 0);
 
 const W = V(40, 0, 0);
@@ -157,7 +158,7 @@ const TB = {pick: SHOTS_B[1].start, walk: SHOTS_B[2].start, shop: SHOTS_B[3].sta
 function exAt(t) {
   if (PART !== 'A') return;
   const r = eio(seg(t, TA.raise0, TA.raise1)), s = Math.pow(seg(t, TA.strike0, TA.strike1), 2);
-  let raise = lerp(-.55, -3.35, r), lean = lerp(.05, -.18, r);
+  let raise = lerp(-1.3, -3.35, r), lean = lerp(.0, -.18, r); // axe held up in front from the first frame
   if (t > TA.raise1 && t < TA.strike0) raise += Math.sin((t - TA.raise1) * 9) * .02;
   poseEx(lerp(raise, -.55, s), lerp(lean, .5, s));
 }
@@ -194,7 +195,7 @@ function missAt(t) {
     return;
   }
   if (t < TB.shop) { // carries it to the workshop door and goes in
-    const u = seg(t, TB.walk, TB.shop - .05), a = V(H.x + .5, 0, H.z), b = V(DOOR.x, 0, DOOR.z - .2);
+    const u = seg(t, TB.walk, TB.shop - .05), a = V(H.x + .5, 0, H.z), b = V(DOOR.x, 0, DOOR.z + .12); // stops in the doorway, cut
     MP.root.position.copy(a.lerp(b, u)); MP.root.rotation.y = Math.atan2(b.x - (H.x + .5), b.z - H.z);
     walkLegs(MP, (t - TB.walk) * 14); hugArms(MP); MP.spine.rotation.x = .12; MP.head.rotation.x = .15;
     return;
@@ -285,7 +286,7 @@ function maskAt(t) {
   mask.matrix.compose(handP.lerp(hp, on), held.slerp(hq, on), V(1, 1, 1).lerp(hs, on)); mask.matrixWorldNeedsUpdate = true;
 }
 
-function doorAt(t) { doorPivot.rotation.y = PART === 'B' ? 1.6 * eio(seg(t, TB.walk + .4, TB.walk + .85)) : 0; }
+function doorAt(t) { doorPivot.rotation.y = PART === 'B' ? -1.7 * eio(seg(t, TB.walk + .4, TB.walk + .85)) : 0; }
 
 /* cameras */
 const tmp = V();
@@ -309,9 +310,15 @@ function camAt(t) {
   sun.target.position.copy(look); sun.position.copy(look).add(k === 'A5' || k === 'B1' || k === 'B2' || k === 'B3' ? V(3, 14, 6) : V(6, 12, 8)); // high sun where houses would shade the action
 }
 
+function peasantAt(t) { // scared: trembling, head turned up toward the executioner, flinches at the raise
+  const fl = PART === 'A' ? eio(seg(t, TA.raise0, TA.raise0 + .3)) : 0;
+  PE.spine.rotation.set(1.2 - fl * .08, 0, Math.sin(t * 43) * .025);
+  PE.neck.rotation.x = .4 + Math.sin(t * 37) * .03;
+  PE.head.rotation.set(-.35 - fl * .15, .75, 0);
+}
 function renderAt(t) {
   t = clamp(t, 0, TOTAL - 1e-4);
-  exAt(t); knightsAt(t); missAt(t); bodyAt(t); doorAt(t);
+  peasantAt(t); exAt(t); knightsAt(t); missAt(t); bodyAt(t); doorAt(t);
   scene.updateMatrixWorld(true);
   headAt(t); maskAt(t); camAt(t);
   renderer.render(scene, cam);
