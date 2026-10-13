@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BC_ExecutionAnimatic_002 — 3D-аниматик: казнь крестьянина и рождение Пуджа</title>
+<link rel="stylesheet" href="player.css">
+</head>
+<body>
+<header>
+  <h1>3D-аниматик: <span>казнь крестьянина → рождение Пуджа</span></h1>
+  <p>Серые манекены без цветовых подсказок и без FX-заглушек: аниматик задаёт только камеру, расположение персонажей и тайминг. Без крови.</p>
+  <div class="tags"><span class="tag">15.0 с · 11 шотов</span><span class="tag">9:16</span><span class="tag">без речи</span></div>
+</header>
+<main>
+  <div class="player">
+    <div class="screen"><canvas id="view"></canvas><div class="cap" id="cap"><span id="capt"></span><b id="capn"></b><div id="capd"></div></div></div>
+    <div class="controls"><button id="play">▶ Play</button><button id="prev">◀</button><button id="next">▶▶</button>
+      <select id="speed"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select>
+      <button id="bCap" class="on">Подписи</button><span class="tc" id="tc"></span></div>
+    <div class="timeline" id="timeline"><div class="playhead" id="playhead"></div></div>
+    <div class="hint">Пробел: play/pause · ← →: шоты · клик по таймлайну: перемотка.</div>
+  </div>
+  <div><div class="shots" id="shots"></div></div>
+</main>
+<script src="vendor/three.min.js"></script>
+<script src="shots.js"></script>
+<script src="player.js"></script>
+<script>
+const RENDER = new URLSearchParams(location.search).get('render') === '1';
+const RW = RENDER ? 540 : 360, RH = RENDER ? 960 : 640;
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v)), lerp = (a, b, t) => a + (b - a) * t, seg = (t, a, b) => clamp((t - a) / (b - a));
+const eio = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2, eo = t => 1 - Math.pow(1 - t, 3);
+const V = (x, y, z) => new THREE.Vector3(x, y, z), PI = Math.PI;
+
+const canvas = document.getElementById('view');
+const renderer = new THREE.WebGLRenderer({canvas, antialias: true, preserveDrawingBuffer: true});
+renderer.setPixelRatio(RENDER ? 1 : Math.min(2, window.devicePixelRatio || 1)); renderer.setSize(RW, RH, false);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xd5d9de); scene.fog = new THREE.Fog(0xd5d9de, 18, 45);
+const cam = new THREE.PerspectiveCamera(45, 9 / 16, .03, 200);
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8478, .5));
+const sun = new THREE.DirectionalLight(0xffffff, .62); sun.castShadow = true; scene.add(sun, sun.target);
+sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -.0008; sun.shadow.normalBias = .02; Object.assign(sun.shadow.camera, {left: -7, right: 7, top: 7, bottom: -7, near: 1, far: 40});
+
+// neutral greys only: characters differ by shape and size, not by colour
+const C = {ground: 0xb8b3a9, house: 0x9c988f, roof: 0x85817a, peasant: 0x95979c, miss: 0xa9abb0, knight: 0x72767d, helm: 0x666a71,
+  wood: 0x6b655d, steel: 0xc9cdd3, rope: 0x4a4744, stump: 0x7c756b, wall: 0xa49f96, floor: 0x8f897f, mask: 0xd8d8d5, dark: 0x3d4046};
+const mat = c => new THREE.MeshLambertMaterial({color: c});
+function mesh(geo, c, parent, x = 0, y = 0, z = 0) { const m = new THREE.Mesh(geo, mat(c)); m.castShadow = m.receiveShadow = true; m.position.set(x, y, z); (parent || scene).add(m); return m; }
+const grp = (parent, x = 0, y = 0, z = 0) => { const g = new THREE.Group(); g.position.set(x, y, z); (parent || scene).add(g); return g; };
+const cap = (r, len) => new THREE.CapsuleGeometry(r, Math.max(.001, len - 2 * r), 4, 10);
+
+/* town square */
+const ground = mesh(new THREE.PlaneGeometry(140, 140), C.ground); ground.rotation.x = -PI / 2;
+function house(x, z, w, h, d = 4) {
+  mesh(new THREE.BoxGeometry(w, h, d), C.house, null, x, h / 2, z);
+  const roof = mesh(new THREE.CylinderGeometry(0, w * .72, 2.2, 4, 1), C.roof, null, x, h + 1.1, z); roof.rotation.y = PI / 4; roof.scale.z = d / w * .7;
+}
+[[-7, -13, 4, 4.5], [-2.2, -14, 4.5, 6], [3, -13, 4, 4], [8, -14, 5, 5.5], [13, -11, 4, 4.5], [-12, -10, 4, 5]].forEach(a => house(...a));
+
+/* humanoid mannequin. Local +z = forward; rotation.x > 0 on spine = bend forward, on limbs = swing back. */
+function humanoid(p, c) {
+  const root = grp(), pelvis = grp(root, 0, p.thigh + p.shin, 0), fat = [];
+  mesh(new THREE.SphereGeometry(p.hipW * .55, 14, 10), c, pelvis).scale.set(1.25, .8, 1);
+  const spine = grp(pelvis);
+  const chest = mesh(cap(p.chest, p.torso), c, spine, 0, p.torso / 2, 0); chest.scale.set(p.chestX || 1.25, 1, p.chestZ || .9);
+  const belly = mesh(new THREE.SphereGeometry(1, 16, 12), c, spine, 0, p.torso * .38, 0); belly.scale.setScalar(p.belly || .001);
+  const neck = grp(spine, 0, p.torso, 0);
+  const head = grp(neck, 0, p.head + .03, 0);
+  mesh(new THREE.SphereGeometry(p.head, 18, 14), c, head);
+  mesh(new THREE.BoxGeometry(p.head * .3, p.head * .45, p.head * .5), c, head, 0, -p.head * .05, p.head * .9); // nose shows where the face points
+  const limb = (parent, x, y, l1, l2, r) => {
+    const a = grp(parent, x, y, 0); fat.push(mesh(cap(r, l1), c, a, 0, -l1 / 2, 0));
+    const b = grp(a, 0, -l1, 0); fat.push(mesh(cap(r * .9, l2), c, b, 0, -l2 / 2, 0));
+    const end = grp(b, 0, -l2, 0); return {a, b, end};
+  };
+  const sh = p.torso - p.chest * .6;
+  const armL = limb(spine, p.shoulder, sh, p.upper, p.fore, p.armR), armR = limb(spine, -p.shoulder, sh, p.upper, p.fore, p.armR);
+  const legL = limb(pelvis, p.hipW * .45, 0, p.thigh, p.shin, p.legR), legR = limb(pelvis, -p.hipW * .45, 0, p.thigh, p.shin, p.legR);
+  for (const l of [legL, legR]) mesh(new THREE.BoxGeometry(p.legR * 1.8, p.legR * .9, p.legR * 3), c, l.end, 0, 0, p.legR * .9);
+  for (const a of [armL, armR]) mesh(new THREE.SphereGeometry(p.armR * 1.1, 10, 8), c, a.end);
+  return {root, pelvis, spine, neck, head, armL, armR, legL, legR, chest, belly, fat, p};
+}
+const setLimb = (l, ax, az, bx) => { l.a.rotation.set(ax, 0, az); l.b.rotation.set(bx, 0, 0); };
+
+/* peasant: ordinary human, plain tunic, no helmet */
+const PEA = {thigh: .44, shin: .43, torso: .58, chest: .19, head: .14, hipW: .3, shoulder: .24, upper: .29, fore: .27, armR: .06, legR: .075};
+function peasant() { const r = humanoid(PEA, C.peasant); mesh(new THREE.CylinderGeometry(.2, .27, .32, 14, 1, true), C.peasant, r.pelvis, 0, -.08, 0); return r; }
+const HR = PEA.head;
+
+/* --- execution: peasant kneels facing +x, head on the stump --- */
+const PE = peasant();
+PE.root.rotation.y = PI / 2; PE.pelvis.position.y = PEA.thigh + .07;
+setLimb(PE.legL, 0, 0, PI / 2); setLimb(PE.legR, 0, 0, PI / 2);
+PE.legL.end.children[0].rotation.x = PI / 2; PE.legR.end.children[0].rotation.x = PI / 2;
+PE.spine.rotation.x = 1.2; PE.neck.rotation.x = .4;
+PE.armL.a.rotation.set(.55, 0, .1); PE.armL.b.rotation.set(.35, 0, -1.3);
+PE.armR.a.rotation.set(.55, 0, -.1); PE.armR.b.rotation.set(.35, 0, 1.3);
+const rope = new THREE.Mesh(new THREE.TorusGeometry(.07, .022, 6, 14), mat(C.rope)); PE.armL.end.add(rope); rope.position.set(-.08, 0, 0); rope.rotation.y = PI / 2;
+scene.updateMatrixWorld(true);
+const HEAD0 = PE.head.getWorldPosition(V(0, 0, 0));
+const STUMP = V(HEAD0.x - .02, 0, 0), STUMP_H = HEAD0.y - HR * .95;
+mesh(new THREE.CylinderGeometry(.3, .36, STUMP_H, 14), C.stump, null, STUMP.x, STUMP_H / 2, 0);
+
+/* knights */
+const KN = {thigh: .46, shin: .45, torso: .6, chest: .2, head: .13, hipW: .32, shoulder: .25, upper: .3, fore: .28, armR: .06, legR: .075};
+function knight(x, z, ry) {
+  const k = humanoid(KN, C.knight); k.root.position.set(x, 0, z); k.root.rotation.y = ry;
+  mesh(new THREE.CylinderGeometry(.15, .15, .3, 14), C.helm, k.head, 0, .03, 0);
+  mesh(new THREE.BoxGeometry(.32, .03, .03), C.dark, k.head, 0, .05, .15);
+  return k;
+}
+const EX = knight(STUMP.x - .1, -1.25, 0);
+const axe = grp(EX.armR.end);
+mesh(new THREE.CylinderGeometry(.03, .035, 1.15, 8), C.wood, axe, 0, -.42, 0);
+mesh(new THREE.BoxGeometry(.04, .38, .34), C.steel, axe, 0, -.88, .18);
+function poseEx(raise, lean) {
+  for (const [arm, s] of [[EX.armL, 1], [EX.armR, -1]]) { arm.a.rotation.set(raise, 0, s * -.32); arm.b.rotation.set(-.35, 0, s * .1); }
+  EX.spine.rotation.x = lean; EX.legL.a.rotation.x = -.15; EX.legR.a.rotation.x = .2;
+  EX.pelvis.position.y = KN.thigh + KN.shin - Math.max(0, lean) * .12;
+}
+
+/* Miss Pudge */
+const MP0 = V(STUMP.x + .55, 0, -3.4);
+const MP = humanoid({thigh: .27, shin: .26, torso: .36, chest: .14, head: .19, hipW: .22, shoulder: .17, upper: .18, fore: .17, armR: .045, legR: .055}, C.miss);
+mesh(new THREE.ConeGeometry(.3, .45, 14, 1, true), C.miss, MP.pelvis, 0, -.15, 0);
+mesh(new THREE.SphereGeometry(.2, 14, 10, 0, PI * 2, 0, PI * .55), C.miss, MP.head, 0, .03, -.03);
+const KL = knight(MP0.x + .62, MP0.z - .25, 0), KR = knight(MP0.x - .62, MP0.z - .25, 0);
+const needle = mesh(new THREE.CylinderGeometry(.006, .006, .12, 6), C.steel, MP.armR.end, 0, -.05, .03); needle.rotation.x = .9;
+
+/* free head (cut off → rolled → carried → sewn back), nose on local +x of fh */
+const freeHead = grp(), fh = grp(freeHead);
+mesh(new THREE.SphereGeometry(HR, 18, 14), C.peasant, fh);
+mesh(new THREE.BoxGeometry(HR * .45, HR * .5, HR * .3), C.peasant, fh, HR * .9, -HR * .05, 0);
+const ROLL_END = V(STUMP.x + 2.4, HR, .55);
+
+/* workshop: a house with a door on the square, interior staged far away at W */
+const DOOR = V(STUMP.x + 6.4, 0, 1.6);
+house(DOOR.x + 2, DOOR.z, 4, 3.4);
+const doorPivot = grp(null, DOOR.x - .02, 0, DOOR.z - .45);
+mesh(new THREE.BoxGeometry(.06, 1.6, .9), C.wood, doorPivot, 0, .8, .45);
+const W = V(40, 0, 0);
+mesh(new THREE.BoxGeometry(8, 3.4, .2), C.wall, null, W.x, 1.7, W.z - 2.2);
+mesh(new THREE.BoxGeometry(.2, 3.4, 5), C.wall, null, W.x - 3.2, 1.7, W.z);
+mesh(new THREE.BoxGeometry(8, .02, 6), C.floor, null, W.x, .01, W.z);
+for (const [x, y] of [[-1.8, 1.3], [-1.8, 1.9], [.6, 1.5], [1.9, 1.5]]) mesh(new THREE.BoxGeometry(1.1, .06, .35), C.wood, null, W.x + x, y, W.z - 1.95);
+for (const [x, y, s] of [[-2.1, 1.45, .2], [-1.6, 1.43, .16], [.4, 1.64, .22], [.9, 1.62, .18], [-1.95, 2.05, .2], [2.1, 1.62, .2]]) mesh(new THREE.BoxGeometry(s, s * 1.3, s), C.house, null, W.x + x, y, W.z - 1.95);
+const TBL = {x: W.x - .2, y: .55, len: 2.7, d: .7};
+mesh(new THREE.BoxGeometry(TBL.len, .07, TBL.d), C.wood, null, TBL.x, TBL.y - .035, W.z);
+for (const sx of [-1, 1]) for (const sz of [-1, 1]) mesh(new THREE.BoxGeometry(.07, TBL.y - .07, .07), C.wood, null, TBL.x + sx * (TBL.len / 2 - .1), (TBL.y - .07) / 2, W.z + sz * (TBL.d / 2 - .08));
+
+/* body on the table: on its back, feet at +x end, head toward -x */
+const bodyP = grp(null, W.x + 1.0, TBL.y + .17, W.z); bodyP.rotation.y = PI / 2;
+const PB = peasant(); bodyP.add(PB.root); PB.root.rotation.x = -PI / 2;
+const FAT0 = PB.fat.map(m => m.scale.clone());
+scene.updateMatrixWorld(true);
+const HEADW = PB.head.getWorldPosition(V()); // where the head gets sewn on
+const MPW = V(HEADW.x + .42, 0, W.z - .62);   // Miss Pudge behind the table, beside the neck
+
+/* Pudge mask: half shell over the face (+z of the head) with eye holes */
+const mask = grp(); mask.matrixAutoUpdate = false;
+const shell = mesh(new THREE.SphereGeometry(1, 18, 12, 0, PI, 0, PI), C.mask, mask); shell.material.side = THREE.DoubleSide; shell.scale.setScalar(HR * 1.08);
+for (const x of [-.4, .4]) mesh(new THREE.SphereGeometry(HR * .16, 10, 8), C.dark, mask, x * HR, HR * .2, HR * .98);
+mesh(new THREE.BoxGeometry(HR * .9, HR * .06, HR * .1), C.dark, mask, 0, -HR * .45, HR * .95);
+
+/* ---------- animation ---------- */
+const T = {cut: SHOTS[4].start, pick: SHOTS[5].start, walk: SHOTS[6].start, shop: SHOTS[7].start, mask: SHOTS[8].start, grow: SHOTS[9].start, joy: SHOTS[10].start};
+
+function exAt(t) {
+  const r = eio(seg(t, 2.95, 3.6)), s = Math.pow(seg(t, 3.98, 4.3), 2);
+  let raise = lerp(-.55, -3.35, r), lean = lerp(.05, -.18, r);
+  if (t > 3.6 && t < 3.98) raise += Math.sin((t - 3.6) * 9) * .02;
+  poseEx(lerp(raise, -.55, s), lerp(lean, .5, s));
+}
+function knightsAt(t) {
+  const pull = .5 + .5 * Math.sin(t * 3.1), held = t < T.pick;
+  for (const [k, s] of [[KL, 1], [KR, -1]]) {
+    const inner = s > 0 ? k.armR : k.armL, outer = s > 0 ? k.armL : k.armR;
+    if (held) { k.spine.rotation.x = -.08 - .05 * pull; k.root.position.z = MP0.z - .3 + .1 * pull; setLimb(inner, -.9, s * -.15, -.5); setLimb(outer, -.75, s * -.75, -.9); k.head.rotation.y = s * -.25; }
+    else { k.spine.rotation.x = 0; k.root.position.z = MP0.z - .4; setLimb(inner, 0, s * -.1, -.1); setLimb(outer, 0, s * .1, -.1); k.head.rotation.y = 0; }
+  }
+}
+function legsStand(h) { setLimb(h.legL, 0, 0, 0); setLimb(h.legR, 0, 0, 0); h.pelvis.position.y = h.p.thigh + h.p.shin; h.root.position.y = 0; }
+function walkLegs(h, ph) { const a = Math.sin(ph) * .55; setLimb(h.legL, -a, 0, Math.max(0, a) * .8); setLimb(h.legR, a, 0, Math.max(0, -a) * .8); h.pelvis.position.y = h.p.thigh + h.p.shin - Math.abs(Math.sin(ph)) * .015; }
+function hugArms(h) { setLimb(h.armL, -1.05, -.55, -1.1); setLimb(h.armR, -1.05, .55, -1.1); }
+const chestPoint = () => MP.spine.localToWorld(V(0, .2, .26));
+
+function missAt(t) {
+  MP.root.rotation.set(0, 0, 0); MP.spine.rotation.set(0, 0, 0); MP.neck.rotation.set(0, 0, 0); MP.head.rotation.set(0, 0, 0); legsStand(MP);
+  needle.visible = false;
+  if (t < T.pick) { // held by the knights, sobbing
+    const sob = Math.sin(t * 19) * .05, pull = .5 + .5 * Math.sin(t * 3.1), strain = t > 1.8 ? .25 : .12;
+    MP.spine.rotation.x = .2 + strain * pull + sob; MP.neck.rotation.x = .35 + sob * 1.6; MP.head.rotation.y = Math.sin(t * 2.3) * .15;
+    MP.root.position.set(MP0.x, 0, MP0.z + strain * pull * .25);
+    setLimb(MP.armL, .6, .55, -.2); setLimb(MP.armR, .6, -.55, -.2);
+  } else if (t < T.walk) { // crouch, lift the head, hug it
+    MP.root.position.set(ROLL_END.x, 0, ROLL_END.z - .38);
+    const down = eio(seg(t, T.pick, T.pick + .45)) * (1 - eio(seg(t, T.pick + .7, T.pick + 1.05)));
+    setLimb(MP.legL, -1.3 * down, 0, 1.6 * down); setLimb(MP.legR, -1.3 * down, 0, 1.6 * down);
+    MP.pelvis.position.y = lerp(.53, .3, down); MP.spine.rotation.x = .65 * down; MP.neck.rotation.x = .3 * down;
+    const hug = eio(seg(t, T.pick + .7, T.pick + 1.1));
+    setLimb(MP.armL, lerp(-1.1, -1.05, hug), lerp(-.25, -.55, hug), lerp(-.3, -1.1, hug)); setLimb(MP.armR, lerp(-1.1, -1.05, hug), lerp(.25, .55, hug), lerp(-.3, -1.1, hug));
+    MP.head.rotation.x = .2 * hug; // looks down at the head she holds
+  } else if (t < T.shop) { // walks across the square to the workshop door
+    const u = seg(t, T.walk, T.shop - .05), x = lerp(DOOR.x - 3.0, DOOR.x - .25, u);
+    MP.root.position.set(x, 0, DOOR.z); MP.root.rotation.y = PI / 2; walkLegs(MP, (t - T.walk) * 15); hugArms(MP);
+    MP.spine.rotation.x = .12; MP.head.rotation.x = .15;
+  } else { // workshop: behind the table, facing the camera (+z)
+    MP.root.position.copy(MPW);
+    if (t < T.grow) {
+      MP.spine.rotation.x = .5; MP.neck.rotation.x = .3; MP.head.rotation.x = .2;
+      if (t < T.shop + .7) { const pl = eio(seg(t, T.shop + .1, T.shop + .6)); setLimb(MP.armL, lerp(-1.05, -1.2, pl), lerp(-.55, -.3, pl), lerp(-1.1, -.4, pl)); setLimb(MP.armR, lerp(-1.05, -1.2, pl), lerp(.55, .3, pl), lerp(-1.1, -.4, pl)); }
+      else if (t < T.mask) { needle.visible = true; const st = Math.sin((t - T.shop) * 12); setLimb(MP.armL, -1.15, -.2, -.5); setLimb(MP.armR, -1.25 + st * .25, .25 + st * .12, -.6 - st * .3); }
+      else { const lo = eio(seg(t, T.mask + .35, T.mask + .8)); setLimb(MP.armL, lerp(-1.9, -1.25, lo), -.3, lerp(-.6, -.3, lo)); setLimb(MP.armR, lerp(-1.9, -1.25, lo), .3, lerp(-.6, -.3, lo)); }
+    } else if (t < T.joy) { // steps back, hands to her mouth
+      const b = eio(seg(t, T.grow + .1, T.grow + .6));
+      MP.root.position.z = MPW.z - .45 * b;
+      MP.spine.rotation.x = lerp(.5, -.12, b); setLimb(MP.armL, -2.2 * b, -.5 * b, -2.0 * b); setLimb(MP.armR, -2.2 * b, .5 * b, -2.0 * b);
+      if (t > T.grow + .6) MP.root.position.y = 0;
+    } else { // jumps for joy, then runs round and hugs him
+      const j = t - T.joy, jump = Math.max(0, Math.sin(Math.min(j, .7) / .35 * PI)) * .22 * (j < .7 ? 1 : 0);
+      const go = eio(seg(t, T.joy + .75, T.joy + 1.15));
+      const hugAt = PB.pelvis.localToWorld(V(0, 0, 0)); // hugs him from his left side, off the table
+      MP.root.position.set(lerp(MPW.x, hugAt.x + .1, go), jump, lerp(MPW.z - .45, W.z - .62, go));
+      if (go < .01) { setLimb(MP.armL, -2.9, -.4, -.2); setLimb(MP.armR, -2.9, .4, -.2); setLimb(MP.legL, -.3 * jump * 4, 0, .6 * jump * 4); setLimb(MP.legR, -.3 * jump * 4, 0, .6 * jump * 4); }
+      else { setLimb(MP.armL, -1.4, -.75, -1.2); setLimb(MP.armR, -1.4, .75, -1.2); MP.spine.rotation.x = .15; MP.head.rotation.y = .3; }
+    }
+  }
+}
+
+function bodyAt(t) {
+  // grows from a peasant into Pudge, then sits up
+  const g = eio(seg(t, T.grow + .15, T.grow + 1.15));
+  bodyP.scale.setScalar(lerp(1, 1.42, g));
+  PB.chest.scale.set(lerp(1.25, 1.6, g), 1, lerp(.9, 1.05, g));
+  PB.belly.scale.setScalar(lerp(.001, .27, g)); PB.belly.position.z = .09 * g;
+  PB.fat.forEach((m, i) => m.scale.set(FAT0[i].x * lerp(1, 1.55, g), FAT0[i].y, FAT0[i].z * lerp(1, 1.55, g)));
+  const twitch = t > T.grow + 1.2 && t < T.grow + 1.35 ? Math.sin((t - T.grow - 1.2) * 60) * .06 : 0;
+  const sit = eio(seg(t, T.grow + 1.35, T.joy + .2));
+  PB.spine.rotation.x = sit * PI / 2 + twitch; PB.neck.rotation.x = 0;
+  setLimb(PB.armL, -.05 * sit, .08, 0); setLimb(PB.armR, -.05 * sit, -.08, 0);
+  setLimb(PB.legL, 0, 0, 0); setLimb(PB.legR, 0, 0, 0);
+  PB.head.rotation.y = t > T.joy ? -.5 * eio(seg(t, T.joy + .1, T.joy + .6)) : 0; // turns to Miss Pudge
+  PB.head.visible = t >= T.mask;
+}
+
+function headAt(t) {
+  PE.head.visible = t < T.cut; freeHead.visible = t >= T.cut && t < T.mask;
+  if (!freeHead.visible) return;
+  const lt = t - T.cut;
+  fh.rotation.set(0, 0, 0); freeHead.rotation.set(0, 0, 0);
+  if (t < T.pick) { // drops into frame from the left, rolls, stops face-on to the camera
+    const x0 = ROLL_END.x - 1.0; let x, y, z = .3;
+    if (lt < .22) { const u = lt / .22; x = lerp(x0, x0 + .22, u); y = lerp(.55, HR, u * u); }
+    else if (lt < .42) { const u = (lt - .22) / .2; x = lerp(x0 + .22, x0 + .4, u); y = HR + Math.sin(u * PI) * .09; }
+    else { const u = eo(seg(lt, .42, 1.0)); x = lerp(x0 + .4, ROLL_END.x, u); y = HR; z = lerp(.3, ROLL_END.z, u); }
+    freeHead.position.set(x, y, z);
+    fh.rotation.z = -(ROLL_END.x - x) / HR - 2 * clamp(1 - lt / .42);
+    freeHead.rotation.y = -PI / 2 * eio(seg(lt, .75, 1.15));
+    return;
+  }
+  // after the pickup the head is carried at her chest, face outward, then laid at the neck
+  scene.updateMatrixWorld(true);
+  const q = new THREE.Quaternion();
+  const carryQ = new THREE.Quaternion().setFromUnitVectors(V(1, 0, 0), MP.spine.localToWorld(V(0, 0, 1)).sub(MP.spine.getWorldPosition(V())).normalize());
+  if (t < T.shop + .1) {
+    const lift = eio(seg(t, T.pick + .45, T.pick + 1.0));
+    const groundP = V(ROLL_END.x, HR, ROLL_END.z), groundQ = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -PI / 2, 0));
+    freeHead.position.copy(t < T.walk ? groundP.lerp(chestPoint(), lift) : chestPoint());
+    freeHead.quaternion.copy(t < T.walk ? q.copy(groundQ).slerp(carryQ, lift) : carryQ);
+  } else {
+    const place = eio(seg(t, T.shop + .1, T.shop + .6));
+    const neckP = PB.head.getWorldPosition(V()), upQ = new THREE.Quaternion().setFromUnitVectors(V(1, 0, 0), V(0, 1, 0));
+    freeHead.position.copy(chestPoint().lerp(neckP, place)); freeHead.quaternion.copy(carryQ.clone().slerp(upQ, place));
+  }
+}
+
+function maskAt(t) {
+  mask.visible = t >= T.mask;
+  if (!mask.visible) return;
+  scene.updateMatrixWorld(true);
+  const on = eio(seg(t, T.mask + .35, T.mask + .8));
+  const hp = V(), hq = new THREE.Quaternion(), hs = V();
+  PB.head.matrixWorld.decompose(hp, hq, hs);
+  // held face-down above the head in her hands, then pressed onto the face
+  const handP = MP.armL.end.getWorldPosition(V()).add(MP.armR.end.getWorldPosition(V())).multiplyScalar(.5);
+  const p = handP.lerp(hp, on), qq = new THREE.Quaternion().setFromUnitVectors(V(0, 0, 1), V(0, -1, 0)).slerp(hq, on);
+  mask.matrix.compose(p, qq, V(1, 1, 1).lerp(hs, on)); mask.matrixWorldNeedsUpdate = true;
+}
+
+function doorAt(t) { doorPivot.rotation.y = -1.6 * eio(seg(t, T.walk + .5, T.walk + 1.0)); }
+
+/* cameras */
+const tmpLook = V();
+function camAt(t) {
+  const i = shotAt(t), s = SHOTS[i], u = (t - s.start) / s.dur;
+  let pos, look, fov = 45;
+  switch (s.n) {
+    case 1: pos = V(STUMP.x + .85, .62, 3.4).lerp(V(STUMP.x + .7, .6, 2.75), eio(u)); look = V(STUMP.x - .15, .62, -.6); fov = 50; break;
+    case 2: { const j = Math.sin(t * 23) * .006; pos = V(MP0.x + .45 + j, 1.2, MP0.z + 3.0); look = V(MP0.x, .85, MP0.z); fov = 40; break; }
+    case 3: pos = V(STUMP.x + 1.6, lerp(.3, .45, u), 1.8); look = V(STUMP.x - .1, lerp(1.3, 1.65, u), -1.1); fov = 50; break;
+    case 4: { const k = seg(t, 4.28, 4.35) * Math.sin(t * 90) * .02; pos = V(STUMP.x + 1.5, 1.95 + k, 1.6); look = V(STUMP.x - .1, 2.15 + k, -1.1); fov = 42; break; }
+    case 5: pos = V(ROLL_END.x + .55, .17, ROLL_END.z + 1.25); look = V(ROLL_END.x - .07, .17, ROLL_END.z); fov = 45; break;
+    case 6: pos = V(ROLL_END.x + .55, .55, ROLL_END.z + 2.3); look = V(ROLL_END.x, .42, ROLL_END.z - .3); fov = 45; break;
+    case 7: { const p = MP.root.position; pos = V(p.x - .3, 1.0, p.z + 3.2); look = V(p.x + .55, .6, p.z); fov = 48; break; }
+    case 8: pos = V(HEADW.x + .1, 2.4, W.z + 1.9).lerp(V(HEADW.x + .05, 2.1, W.z + 1.45), eio(u)); look = V(HEADW.x + .1, .6, W.z - .3); fov = 45; break;
+    case 9: { const h = PB.head.getWorldPosition(tmpLook); pos = V(h.x - .1, h.y + .75, h.z + .8); look = V(h.x, h.y + .05, h.z - .05); fov = 40; break; }
+    case 10: pos = V(W.x - .1, 2.1, W.z + 2.5).lerp(V(W.x - .1, 2.2, W.z + 3.1), eio(u)); look = V(W.x - .3, .65, W.z - .2); fov = 48; break;
+    default: { const p = PB.pelvis.getWorldPosition(tmpLook); pos = V(p.x + 3.4, 1.5, W.z - .5); look = V(p.x, 1.0, W.z - .35); fov = 48; }
+  }
+  cam.position.copy(pos); cam.fov = fov; cam.updateProjectionMatrix(); cam.lookAt(look);
+  sun.target.position.copy(look); sun.position.copy(look).add(V(6, 12, 8));
+}
+
+function renderAt(t) {
+  t = clamp(t, 0, TOTAL - 1e-4);
+  exAt(t); knightsAt(t); missAt(t); bodyAt(t); doorAt(t);
+  scene.updateMatrixWorld(true);
+  headAt(t); maskAt(t); camAt(t);
+  renderer.render(scene, cam);
+}
+startPlayer(renderAt, canvas);
+</script>
+</body>
+</html>
