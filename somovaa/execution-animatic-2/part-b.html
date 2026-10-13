@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BC_ExecutionAnimatic_002 — Часть B — мастерская</title>
+<link rel="stylesheet" href="player.css">
+</head>
+<body>
+<header>
+  <h1>3D-аниматик · <span>Часть B — мастерская</span></h1>
+  <p>Голова на улице, Мисс Пудж уносит её, пришивает, надевает маску, крестьянин превращается в Пуджа. 10.0 с. Серые манекены без цветовых подсказок и без FX-заглушек, без крови. <a href="part-a.html">Часть A</a> · <a href="part-b.html">Часть B</a></p>
+  <div class="tags"><span class="tag">10.0 с · 7 шотов</span><span class="tag">9:16</span><span class="tag">без речи</span></div>
+</header>
+<main>
+  <div class="player">
+    <div class="screen"><canvas id="view"></canvas><div class="cap" id="cap"><span id="capt"></span><b id="capn"></b><div id="capd"></div></div></div>
+    <div class="controls"><button id="play">▶ Play</button><button id="prev">◀</button><button id="next">▶▶</button>
+      <select id="speed"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select>
+      <button id="bCap" class="on">Подписи</button><span class="tc" id="tc"></span></div>
+    <div class="timeline" id="timeline"><div class="playhead" id="playhead"></div></div>
+    <div class="hint">Пробел: play/pause · ← →: шоты · клик по таймлайну: перемотка.</div>
+  </div>
+  <div><div class="shots" id="shots"></div></div>
+</main>
+<script src="vendor/three.min.js"></script>
+<script>window.PART = 'B';</script>
+<script src="shots.js"></script>
+<script src="player.js"></script>
+<script src="scene.js"></script>
+</body>
+</html>
