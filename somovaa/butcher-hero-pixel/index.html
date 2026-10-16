@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Butcher Hero — Pixel Heist</title>
+<style>
+  html,body{margin:0;height:100%;background:#0d0a12;color:#eee;font-family:system-ui,sans-serif;overflow:hidden}
+  #wrap{position:relative;height:calc(100vh - 56px);display:flex;justify-content:center;align-items:center}
+  canvas{height:100%;aspect-ratio:9/16;image-rendering:pixelated;image-rendering:crisp-edges;background:#000;box-shadow:0 0 40px #000}
+  #start{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;cursor:pointer}
+  #start span{background:#d8322f;color:#fff;font-weight:800;font-size:22px;padding:16px 28px;border:4px solid #1a1020;box-shadow:6px 6px 0 #1a1020}
+  #bar{height:56px;display:flex;gap:10px;justify-content:center;align-items:center}
+  button{background:#2c2240;color:#fff;border:2px solid #5a4a7a;padding:8px 14px;font-size:14px;cursor:pointer}
+  button:hover{background:#3d2f58}
+  #rec.on{background:#d8322f}
+  #info{font-size:12px;opacity:.6}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="start"><span>▶ СМОТРЕТЬ СО ЗВУКОМ</span></div>
+</div>
+<div id="bar">
+  <button id="restart">↻ Заново</button>
+  <button id="pause">⏸ Пауза</button>
+  <button id="rec">⏺ Скачать видео 1080×1920</button>
+  <span id="info">25 сек · пробел — пауза</span>
+</div>
+<script>
+// ===== Setup =====
+const W = 180, H = 320, S = 6, TOTAL = 25;
+const buf = document.createElement('canvas'); buf.width = W; buf.height = H;
+const g = buf.getContext('2d'); g.imageSmoothingEnabled = false;
+const out = document.getElementById('c'); out.width = W * S; out.height = H * S;
+const o = out.getContext('2d'); o.imageSmoothingEnabled = false;
+
+const PAL = {K:'#1a1020',O:'#e8862a',o:'#b35a1c',W:'#f4f1e8',R:'#d8322f',G:'#43c84f',T:'#1d6f6b',
+  B:'#5aa0ff',b:'#2c5fb0',k:'#000000',S:'#b8c4d0',s:'#6c7886',Y:'#ffd23f',y:'#c99a16',P:'#7b3fb5',
+  F:'#f0c8a0',N:'#9a6234',n:'#6a3f1e'};
+
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, k) => a + (b - a) * k;
+const ease = k => k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+const rnd = n => { const x = Math.sin(n * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+
+// ===== Sprites =====
+function makeSpr(rows) {
+  const w = Math.max(...rows.map(r => r.length)), c = document.createElement('canvas');
+  c.width = w; c.height = rows.length;
+  const x = c.getContext('2d');
+  rows.forEach((r, j) => [...r].forEach((ch, i) => { if (PAL[ch]) { x.fillStyle = PAL[ch]; x.fillRect(i, j, 1, 1); } }));
+  return c;
+}
+const PUDGE_ROWS = [
+  '.........GGG..........',
+  '........GGGGG.....B...',
+  '.......KKKKKKK...BKB..',
+  '......KWWWWWWWK..B.B..',
+  '......KWRWWWRWK..bB...',
+  '......KWkkWkkWK...b...',
+  '......KWkkWkkWK..BbB..',
+  '......KWRWWWRWK..B.B..',
+  '.......KWWWWWK....b...',
+  '.....KKKKWWWKKKKKKb...',
+  '...KKOOOOKKKOOOOOOOKK.',
+  '..KOOOOOOOOOOOOOOOOOOK',
+  '.KOOOoOOOOOOOOOOOoOOOK',
+  '.KOOoKOOOOOOOOOOOKoOOK',
+  '.KOOKKOOOooooOOOOKKOOK',
+  '.KOOK.KOOOOOOOOOK.KOOK',
+  '.KooK.KOOOOOOOOOK.KooK',
+  '..KK..KTTTTTTTTTK..KK.',
+  '......KTTTTTTTTTK.....',
+  '......KTTTKKKTTTK.....',
+  '......KOOK...KOOK.....',
+  '.....KOOOK...KOOOK....',
+  '.....KKKKK...KKKKK....'];
+const SPR = {};
+SPR.pudge = makeSpr(PUDGE_ROWS);
+SPR.pudgeSleep = makeSpr(PUDGE_ROWS.map((r, i) => i === 5 ? r.replace(/kk/g, 'WW') : r));
+const KN = [
+  '.....RR.....',
+  '....KKKK....',
+  '...KSSSSK...',
+  '..KSSSSSSK..',
+  '..KSkkkkSK..',
+  '..KSSSSSSK..',
+  '...KSSSSK...',
+  '..KKKKKKKK..',
+  '.KSSSRRSSSK.',
+  'KSKSSRRSSKSK',
+  'KSKSRRRRSKSK',
+  'KsKSSRRSSKsK',
+  '.K.KSSSSK.K.'];
+SPR.knight1 = makeSpr([...KN, '...KsK.KsK..', '...KsK.KsK..', '...KK...KK..']);
+SPR.knight2 = makeSpr([...KN, '..KsK...KsK.', '..KsK...KsK.', '..KK.....KK.']);
+SPR.king = makeSpr([
+  '...Y..YY..Y...',
+  '...YYYYYYYY...',
+  '...YRYYYYRY...',
+  '...KKKKKKKK...',
+  '...KFFFFFFK...',
+  '...KFkFFkFK...',
+  '...KFFFFFFK...',
+  '...KWWWWWWK...',
+  '....KWWWWK....',
+  '..KKPPPPPPKK..',
+  '.KPPPYPPYPPPK.',
+  '.KPPPPYYPPPPK.',
+  '.KFKPPPPPPKFK.',
+  '..KKPPPPPPKK..',
+  '...KPPPPPPK...',
+  '...KPPKKPPK...',
+  '...KKK..KKK...']);
+SPR.helmet = makeSpr(['..KKKK..', '.KSSSSK.', 'KSSSSSSK', 'KSkkkkSK', 'KSSSSSSK', '.KKKKKK.']);
+SPR.coin = makeSpr(['.YY.', 'YYWy', 'YYyy', '.yy.']);
+SPR.bag = makeSpr(['..KKK..', '...K...', '.KNNNK.', 'KNNYNNK', 'KNYYYNK', 'KNNYNNK', '.KKKKK.']);
+SPR.star = makeSpr(['..Y..', '.YYY.', 'YYYYY', '.YYY.', '.Y.Y.']);
+SPR.hook = makeSpr(['.BB..', 'B..B.', '...B.', 'B..B.', '.BB..']);
+SPR.hand = makeSpr(['..KK....', '.KWWK...', '.KWWK...', '.KWWKKK.', 'KKWWWWWK', 'KWWWWWWK', 'KWWWWWWK', '.KWWWWK.', '..KKKK..']);
+SPR.tree = makeSpr(['..KKK..', '.KGGGK.', 'KGGGGGK', 'KGGGGGK', '.KGGGK.', '..KNK..', '..KNK..']);
+
+function spr(c, x, y, sc = 1, flip = false) {
+  x = Math.round(x); y = Math.round(y);
+  if (flip) { g.save(); g.translate(x + c.width * sc, y); g.scale(-1, 1); g.drawImage(c, 0, 0, c.width * sc, c.height * sc); g.restore(); }
+  else g.drawImage(c, x, y, c.width * sc, c.height * sc);
+}
+function sprRot(c, cx, cy, sc, ang) {
+  g.save(); g.translate(Math.round(cx), Math.round(cy)); g.rotate(ang);
+  g.drawImage(c, -c.width * sc / 2, -c.height * sc / 2, c.width * sc, c.height * sc); g.restore();
+}
+function rect(x, y, w, h, c) { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), w, h); }
+
+// ===== Bitmap font 5x7 =====
+const FD = {
+  A:'.###. #...# #...# ##### #...# #...# #...#', B:'####. #...# #...# ####. #...# #...# ####.',
+  C:'.#### #.... #.... #.... #.... #.... .####', D:'####. #...# #...# #...# #...# #...# ####.',
+  E:'##### #.... #.... ####. #.... #.... #####', F:'##### #.... #.... ####. #.... #.... #....',
+  G:'.#### #.... #.... #.### #...# #...# .###.', H:'#...# #...# #...# ##### #...# #...# #...#',
+  I:'##### ..#.. ..#.. ..#.. ..#.. ..#.. #####', J:'..### ...#. ...#. ...#. ...#. #..#. .##..',
+  K:'#...# #..#. #.#.. ##... #.#.. #..#. #...#', L:'#.... #.... #.... #.... #.... #.... #####',
+  M:'#...# ##.## #.#.# #.#.# #...# #...# #...#', N:'#...# ##..# #.#.# #.#.# #..## #...# #...#',
+  O:'.###. #...# #...# #...# #...# #...# .###.', P:'####. #...# #...# ####. #.... #.... #....',
+  Q:'.###. #...# #...# #...# #.#.# #..#. .##.#', R:'####. #...# #...# ####. #.#.. #..#. #...#',
+  S:'.#### #.... #.... .###. ....# ....# ####.', T:'##### ..#.. ..#.. ..#.. ..#.. ..#.. ..#..',
+  U:'#...# #...# #...# #...# #...# #...# .###.', V:'#...# #...# #...# #...# #...# .#.#. ..#..',
+  W:'#...# #...# #...# #.#.# #.#.# ##.## #...#', X:'#...# #...# .#.#. ..#.. .#.#. #...# #...#',
+  Y:'#...# #...# .#.#. ..#.. ..#.. ..#.. ..#..', Z:'##### ....# ...#. ..#.. .#... #.... #####',
+  0:'.###. #...# #..## #.#.# ##..# #...# .###.', 1:'..#.. .##.. ..#.. ..#.. ..#.. ..#.. .###.',
+  2:'.###. #...# ....# ...#. ..#.. .#... #####', 3:'####. ....# ....# .###. ....# ....# ####.',
+  4:'#...# #...# #...# ##### ....# ....# ....#', 5:'##### #.... ####. ....# ....# #...# .###.',
+  6:'.###. #.... #.... ####. #...# #...# .###.', 7:'##### ....# ...#. ..#.. .#... .#... .#...',
+  8:'.###. #...# #...# .###. #...# #...# .###.', 9:'.###. #...# #...# .#### ....# ....# .###.',
+  '!':'..#.. ..#.. ..#.. ..#.. ..#.. ..... ..#..', '+':'..... ..#.. ..#.. ##### ..#.. ..#.. .....',
+  '?':'.###. #...# ....# ...#. ..#.. ..... ..#..', '.':'..... ..... ..... ..... ..... ..... ..#..',
+  '-':'..... ..... ..... ##### ..... ..... .....', ':':'..... ..#.. ..... ..... ..... ..#.. .....'};
+const FONT = {}; for (const k in FD) FONT[k] = FD[k].split(' ');
+function text(str, x, y, sc = 1, col = '#fff', align = 'center', outline = '#1a1020') {
+  str = String(str).toUpperCase();
+  const w = str.length * 6 * sc - sc;
+  let x0 = Math.round(align === 'center' ? x - w / 2 : align === 'right' ? x - w : x); y = Math.round(y);
+  const pass = (c, grow) => {
+    g.fillStyle = c;
+    [...str].forEach((ch, i) => {
+      const gl = FONT[ch]; if (!gl) return;
+      gl.forEach((row, j) => [...row].forEach((p, k) => {
+        if (p === '#') g.fillRect(x0 + i * 6 * sc + k * sc - grow, y + j * sc - grow, sc + grow * 2, sc + grow * 2);
+      }));
+    });
+  };
+  if (outline) pass(outline, Math.max(1, Math.round(sc / 2)));
+  pass(col, 0);
+}
+
+// ===== Audio =====
+let AC = null, master = null, recDest = null;
+function initAudio() {
+  if (AC) return;
+  AC = new (window.AudioContext || window.webkitAudioContext)();
+  master = AC.createGain(); master.gain.value = .35; master.connect(AC.destination);
+  recDest = AC.createMediaStreamDestination(); master.connect(recDest);
+}
+function tone(f, dur, type = 'square', vol = .2, slide = 0, delay = 0) {
+  if (!AC) return;
+  const t0 = AC.currentTime + delay, os = AC.createOscillator(), ga = AC.createGain();
+  os.type = type; os.frequency.setValueAtTime(f, t0);
+  if (slide) os.frequency.exponentialRampToValueAtTime(Math.max(20, f + slide), t0 + dur);
+  ga.gain.setValueAtTime(vol, t0); ga.gain.exponentialRampToValueAtTime(.001, t0 + dur);
+  os.connect(ga).connect(master); os.start(t0); os.stop(t0 + dur + .02);
+}
+function noise(dur, vol = .3, freq = 800) {
+  if (!AC) return;
+  const n = AC.sampleRate * dur, b = AC.createBuffer(1, n, AC.sampleRate), d = b.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+  const s = AC.createBufferSource(), f = AC.createBiquadFilter(), ga = AC.createGain();
+  s.buffer = b; f.type = 'bandpass'; f.frequency.value = freq;
+  ga.gain.setValueAtTime(vol, AC.currentTime); ga.gain.exponentialRampToValueAtTime(.001, AC.currentTime + dur);
+  s.connect(f).connect(ga).connect(master); s.start();
+}
+const midi = n => 440 * Math.pow(2, (n - 69) / 12);
+const SFX = {
+  bonk() { tone(220, .3, 'square', .4, -160); noise(.2, .6, 400); },
+  hook() { tone(1200, .12, 'sawtooth', .1, -700); },
+  chomp() { noise(.09, .5, 1800); tone(140, .14, 'square', .35, -80); },
+  coin() { tone(988, .06, 'square', .12); tone(1319, .14, 'square', .12, 0, .06); },
+  lvl() { [523, 659, 784, 1047].forEach((f, i) => tone(f, .16, 'square', .18, 0, i * .07)); },
+  alert() { tone(880, .1, 'square', .25); tone(1175, .25, 'square', .25, 0, .1); },
+  laugh() { [420, 360, 420, 360, 420].forEach((f, i) => tone(f, .09, 'square', .13, -60, i * .11)); },
+  whoosh() { noise(.35, .3, 2500); },
+  boss() { tone(90, .8, 'sawtooth', .3, -30); tone(95, .8, 'square', .15, -30); },
+  zzz() { tone(320, .4, 'sine', .08, -120); },
+  fanfare() { [[523, 0], [659, .12], [784, .24], [1047, .36], [784, .5], [1047, .62]].forEach(([f, d]) => tone(f, .22, 'square', .17, 0, d)); }
+};
+let lastStep = -1;
+const SNEAK = [40, 0, 43, 0, 45, 0, 43, 0, 40, 0, 43, 0, 46, 45, 43, 0];
+const BASS = [36, 36, 48, 36, 36, 48, 36, 48, 39, 39, 51, 39, 41, 41, 53, 41];
+const ARP = [60, 63, 67, 72, 67, 63, 60, 67, 63, 67, 70, 75, 65, 69, 72, 77];
+function music(T, step) {
+  const i = step % 16;
+  if (T < 4.4) { if (SNEAK[i] && step % 1 === 0) tone(midi(SNEAK[i] + 12), .09, 'triangle', .22); return; }
+  if (T < 6.5) return;
+  if (T < 9.8) { if (i % 4 === 0) tone(150, .12, 'sine', .45, -110); if (i % 8 === 0) tone(midi(36), .7, 'sawtooth', .07); return; }
+  if (T < 21) {
+    if (i % 4 === 0) tone(150, .12, 'sine', .45, -110);
+    if (i % 4 === 2) noise(.05, .12, 6000);
+    tone(midi(BASS[i]), .09, 'square', .07);
+    if (i % 2 === 0) tone(midi(ARP[i]), .08, 'square', .05);
+    return;
+  }
+  if (i % 2 === 0) tone(midi(ARP[(i + 4) % 16] + 12), .1, 'triangle', .1);
+}
+
+// ===== Shared FX =====
+let shake = 0, flash = 0;
+let parts = [], floats = [];
+function addFloat(x, y, str, col = '#ffd23f', sc = 1, life = .9) { floats.push({ x, y, str, col, sc, life, t: 0 }); }
+function burstCoins(x, y, n, ground) {
+  for (let i = 0; i < n; i++) parts.push({ kind: 'coin', x, y, vx: (Math.random() - .5) * 120, vy: -60 - Math.random() * 90, life: 1.6, t: 0, ground });
+}
+function updFx(dt) {
+  for (const p of parts) {
+    p.t += dt; p.vy += 260 * dt; p.x += p.vx * dt; p.y += p.vy * dt;
+    if (p.ground && p.y > p.ground) { p.y = p.ground; p.vy *= -.4; p.vx *= .6; }
+  }
+  parts = parts.filter(p => p.t < p.life);
+  for (const f of floats) f.t += dt;
+  floats = floats.filter(f => f.t < f.life);
+  shake = Math.max(0, shake - dt * 12); flash = Math.max(0, flash - dt * 4);
+}
+function drawParts() {
+  for (const p of parts) {
+    if (p.kind === 'coin') spr(SPR.coin, p.x - 2, p.y - 4);
+    else if (p.kind === 'helmet') sprRot(SPR.helmet, p.x, p.y, p.sc || 2, p.t * 8);
+    else if (p.kind === 'bag') spr(SPR.bag, p.x - 7, p.y - 14, 2);
+    else rect(p.x, p.y, 2, 2, p.col);
+  }
+}
+function drawFloats() {
+  for (const f of floats) {
+    const k = f.t / f.life;
+    if (k > .8 && Math.floor(f.t * 20) % 2) continue;
+    text(f.str, f.x, f.y - k * 18, f.sc, f.col);
+  }
+}
+
+// ===== Scene 1: lair heist (0 – 6.5) =====
+function torch(x, y, t) {
+  rect(x - 1, y, 3, 14, '#5a3a20');
+  const fl = Math.sin(t * 20 + x) > 0 ? 1 : 0;
+  rect(x - 3, y - 6 - fl, 7, 7, '#ff8a1e'); rect(x - 2, y - 9 - fl, 5, 5, '#ffd23f'); rect(x - 1, y - 10 - fl * 2, 3, 3, '#fff6c0');
+}
+function pile(cx, base, h, t) {
+  if (h < 1) {
+    for (let i = 0; i < 6; i++) spr(SPR.coin, cx - 30 + i * 11 + rnd(i) * 4, base - 3);
+    return;
+  }
+  const wsc = 58 * Math.sqrt(h / 38);
+  for (let yy = 0; yy < h; yy++) {
+    const half = Math.round(wsc * Math.sqrt(1 - Math.pow(yy / h, 2)));
+    rect(cx - half, base - yy, half * 2, 1, '#ffd23f');
+    for (let x = -half; x < half; x++) {
+      const r = rnd(x * 31.7 + yy * 17.3);
+      if (r > .82) rect(cx + x, base - yy, 1, 1, '#c99a16');
+      else if (r > .975 && Math.sin(t * 6 + x) > .6) rect(cx + x, base - yy, 1, 1, '#ffffff');
+    }
+  }
+}
+function knightAt(x, y, t, walking, sc = 2) {
+  spr(walking && Math.floor(t * 8) % 2 ? SPR.knight2 : SPR.knight1, x, y, sc);
+}
+function drawLair(t) {
+  rect(0, 0, W, H, '#1c1526');
+  for (let y = 0; y < 250; y += 10) for (let x = -((y / 10) % 2) * 8; x < W; x += 16)
+    rect(x + 1, y + 1, 14, 8, (Math.abs(x * 7 + y * 3) % 5 === 0) ? '#3a2d48' : '#2c2240');
+  rect(0, 250, W, 70, '#3b2a22');
+  for (let x = 0; x < W; x += 12) rect(x, 252 + (x % 24 ? 0 : 6), 8, 2, '#2a1d17');
+  torch(18, 120, t); torch(162, 120, t);
+
+  const base = 266, h = 38 * (1 - clamp((t - 2.6) / 2.2));
+  pile(90, base, h, t);
+
+  // King (behind)
+  const run = clamp(t - 5.3, 0, 9) * 110;
+  const kx = lerp(200, 148, ease(clamp((t - 1.7) / 1.2))) + run;
+  if (t > 1.7) {
+    spr(SPR.king, kx, base - 34 - (t > 5.3 ? Math.abs(Math.sin(t * 14)) * 3 : 0), 2);
+    if (t > 5.3 && t < 6.4) text('HA HA HA!', Math.min(kx + 14, 150), 196, 1, '#ffd23f');
+  }
+  // Knights
+  const ks = [[0.9, 104, 2.9], [1.1, 122, 3.4], [1.3, 140, 3.9]];
+  const drawKnight = ([st, tx, grab], i) => {
+    if (t < st) return;
+    let x = lerp(200, tx, ease(clamp((t - st) / 1.3))) + run * (1 + i * .1);
+    let y = base - 30;
+    const walking = (t < st + 1.3) || t > 5.3;
+    if (walking) y -= Math.abs(Math.sin(t * 9 + i)) * 2;
+    if (i === 0 && t > 4.75 && t < 5.3) { // jump onto Pudge's head & bonk
+      const k = clamp((t - 4.75) / .2), k2 = clamp((t - 4.95) / .35);
+      x = lerp(tx, 92, k) + k2 * 20; y = lerp(base - 30, base - h - 112, Math.sin(k * Math.PI / 2)) + k2 * k2 * 82;
+    }
+    knightAt(x, y, t, walking);
+    if (i === 0 && t > 4.6 && t < 5.3) { // club
+      const a = t < 4.95 ? -1.2 : 0.9;
+      g.save(); g.translate(Math.round(x + 4), Math.round(y + 16)); g.rotate(a);
+      rect(-1, -18, 3, 18, '#6a3f1e'); rect(-3, -24, 7, 8, '#9a6234'); g.restore();
+    }
+    if (t > grab) spr(SPR.bag, x + 5, y - 13, 2);
+    if (t > grab - .3 && t < grab) { // coins flying to knight
+      const k = (t - (grab - .3)) / .3;
+      for (let c = 0; c < 4; c++) spr(SPR.coin, lerp(80 + c * 6, x + 10, k), lerp(base - h, y - 6, k) - Math.sin(k * Math.PI) * (20 + c * 5));
+    }
+  };
+  const jumping = t > 4.75 && t < 5.3;
+  ks.forEach((k, i) => (i || !jumping) && drawKnight(k, i));
+
+  // Pudge
+  const ly = base - h - 30, cx = 84;
+  if (t < 4.4) {
+    sprRot(SPR.pudgeSleep, cx, ly + (Math.floor(t * 1.5) % 2), 3, -Math.PI / 2);
+    for (let i = 0; i < 3; i++) {
+      const zt = (t * .9 + i / 3) % 1;
+      text('Z', cx - 40 + zt * 14 + Math.sin(zt * 6) * 3, ly - 20 - zt * 30, 1 + (i === 2 ? 1 : 0), '#bcd0ff');
+    }
+  } else if (t < 4.75) {
+    sprRot(SPR.pudge, cx + (Math.floor(t * 30) % 2 ? 1 : -1), ly, 3, -Math.PI / 2);
+    text('!', cx - 34, ly - 50, 3, '#ff4040');
+  } else if (t < 4.95) {
+    spr(SPR.pudge, cx - 33, base - h - 69 + 4, 3);
+  } else {
+    const k = clamp((t - 4.95) / .3);
+    const px = lerp(cx, cx - 6, k), py = lerp(base - h - 34, ly + 2, k);
+    sprRot(SPR.pudgeSleep, px, py, 3, lerp(0, -Math.PI / 2, ease(k)));
+    for (let i = 0; i < 4; i++) {
+      const a = t * 6 + i * Math.PI / 2;
+      spr(SPR.star, px - 40 + Math.cos(a) * 14, py - 8 + Math.sin(a) * 5 - 20);
+    }
+  }
+  if (jumping) drawKnight(ks[0], 0);
+  if (t > 4.95 && t < 5.9) text('BONK!', 90 + (t < 5.2 ? (Math.random() - .5) * 6 : 0), 120, 4, '#ffd23f');
+  if (t > .6 && t < 2.6) text('SHHH...', 90, 50, 2, '#ffffff');
+  if (t > 2.7 && t < 4.4) text('THE KING IS ROBBING', 90, 40, 1, '#ffffff'), text('THE BUTCHER!', 90, 52, 2, '#ff4040');
+}
+
+// ===== Scene 2: map flyover (6.5 – 9.8) =====
+const roadX = y => 90 + Math.sin(y / 55) * 42;
+const TREES = []; for (let i = 0; i < 70; i++) {
+  const y = rnd(i * 3.1) * 640, x = rnd(i * 7.7) * 180;
+  if (Math.abs(x - roadX(y)) > 16 && !(y < 130 && Math.abs(x - 90) < 50)) TREES.push([x, y]);
+}
+function drawMap(t) {
+  const cam = lerp(0, 320, ease(clamp((t - .5) / 2.1)));
+  g.save(); g.translate(0, -Math.round(cam));
+  rect(0, 0, W, 640, '#4e9a3c');
+  for (let i = 0; i < 120; i++) rect(rnd(i * 1.3) * W, rnd(i * 2.9) * 640, 3, 1, '#5fb048');
+  // river
+  for (let y = 0; y < 640; y += 2) rect(150 + Math.sin(y / 30) * 10 - (y > 300 ? (y - 300) / 4 : 0), y, 8, 2, '#3a7fd0');
+  // road + dashed trail
+  for (let y = 100; y < 600; y += 2) rect(roadX(y) - 6, y, 12, 3, '#c9a066');
+  for (let y = 110; y < 590; y += 8) rect(roadX(y) - 1, y, 2, 4, '#d8322f');
+  TREES.sort((a, b) => a[1] - b[1]).forEach(([x, y]) => spr(SPR.tree, x - 7, y - 14, 2));
+  // castle
+  rect(45, 40, 90, 55, '#7c8494'); rect(45, 40, 90, 3, '#5a6070');
+  for (let x = 45; x < 135; x += 10) rect(x, 34, 6, 6, '#7c8494');
+  [40, 120].forEach(x => { rect(x, 18, 22, 77, '#8e96a6'); for (let i = 0; i < 3; i++) rect(x + i * 8, 12, 6, 6, '#8e96a6');
+    rect(x + 10, 0, 2, 12, '#3a3030'); rect(x + 12, 1 + (Math.floor(t * 6) % 2), 8, 5, '#d8322f'); rect(x + 8, 40, 6, 8, '#1a1020'); });
+  rect(78, 65, 24, 30, '#1a1020');
+  // king + cart with gold
+  const cx = 80;
+  rect(cx - 6, 106, 30, 10, '#9a6234'); rect(cx - 6, 106, 30, 2, '#6a3f1e');
+  for (let i = 0; i < 4; i++) spr(SPR.bag, cx - 4 + i * 7, 97 - (i % 2) * 3);
+  rect(cx - 2, 116, 5, 5, '#1a1020'); rect(cx + 16, 116, 5, 5, '#1a1020');
+  spr(SPR.king, cx + 26, 104); knightAt(cx - 18, 106, t, true, 1); knightAt(cx - 30, 106, t + .2, true, 1);
+  // pudge, tiny and knocked
+  sprRot(SPR.pudgeSleep, 90, 585, 1, -Math.PI / 2);
+  for (let i = 0; i < 3; i++) { const a = t * 6 + i * 2.1; spr(SPR.star, 76 + Math.cos(a) * 8, 572 + Math.sin(a) * 3); }
+  g.restore();
+  g.globalAlpha = .35; rect(0, 0, W, 8, '#000'); rect(0, H - 8, W, 8, '#000'); g.globalAlpha = 1;
+  if (t < 1.9) { text('THEY STOLE', 90, 236, 2, '#fff'); text('YOUR GOLD!', 90, 256, 3, '#ffd23f'); }
+  else { text('GET IT', 90, 40, 3, '#fff'); text('BACK!', 90, 66, 4, '#ff4040'); }
+}
+
+// ===== Scene 3: gameplay (9.8 – 21) =====
+const GROUND = 268, PX = 6;
+let G;
+function resetGame() {
+  G = { t: 0, power: 10, shown: 10, sc: 2, knights: [], hook: null, cool: .9, spawnT: .2, n: 0, chomp: 0, boss: false, bossDone: 0, grow: 0 };
+}
+const pudgeFront = () => PX + 20 * G.sc;
+const mouth = () => ({ x: PX + 13 * G.sc, y: GROUND - 23 * G.sc + 8 * G.sc });
+const shoulder = () => ({ x: PX + 18 * G.sc, y: GROUND - 23 * G.sc + 3 * G.sc });
+function stepGame(dt) {
+  G.t += dt;
+  // spawning
+  G.spawnT -= dt;
+  if (!G.boss && G.spawnT <= 0 && G.t < 6.4) {
+    const lv = 1 + G.n * 2; G.n++;
+    G.knights.push({ x: W + 4, lv, sc: 2, state: 'walk', boss: false, ph: Math.random() * 6 });
+    G.spawnT = .58;
+  }
+  if (!G.boss && G.t >= 7.2) {
+    G.boss = true; SFX.boss(); shake = 3;
+    G.knights.push({ x: W + 4, lv: 50, sc: 4, state: 'walk', boss: true, ph: 0 });
+  }
+  // walking with queue
+  G.knights.sort((a, b) => a.x - b.x);
+  let minX = pudgeFront() + 2;
+  for (const k of G.knights) {
+    if (k.state !== 'walk') continue;
+    const sp = k.boss ? 30 : 34;
+    k.x = Math.max(minX, k.x - sp * dt);
+    minX = k.x + 12 * k.sc + 2;
+  }
+  // hook logic
+  G.cool -= dt;
+  const h = G.hook;
+  if (!h && G.cool <= 0) {
+    const tgt = G.knights.find(k => k.state === 'walk' && k.x < W - 14);
+    if (tgt) { G.hook = { ph: 'out', tip: { ...shoulder() }, tgt }; SFX.hook(); }
+  } else if (h) {
+    const s = shoulder();
+    if (h.ph === 'out') {
+      const tx = h.tgt.x + 6 * h.tgt.sc, ty = GROUND - 9 * h.tgt.sc;
+      const dx = tx - h.tip.x, dy = ty - h.tip.y, d = Math.hypot(dx, dy), v = 480 * dt;
+      if (d <= v) { h.ph = 'back'; h.tgt.state = 'hooked'; }
+      else { h.tip.x += dx / d * v; h.tip.y += dy / d * v; }
+    } else {
+      const m = mouth();
+      const dx = m.x - h.tip.x, dy = m.y - h.tip.y, d = Math.hypot(dx, dy), v = (h.tgt.boss ? 220 : 380) * dt;
+      if (d <= v) chomp(h.tgt);
+      else { h.tip.x += dx / d * v; h.tip.y += dy / d * v; }
+    }
+  }
+  // displayed power ticks up
+  G.shown = G.shown + Math.ceil((G.power - G.shown) * Math.min(1, dt * 10));
+  G.chomp = Math.max(0, G.chomp - dt); G.grow = Math.max(0, G.grow - dt);
+}
+function chomp(k) {
+  const m = mouth();
+  G.knights = G.knights.filter(x => x !== k); G.hook = null; G.cool = k.boss ? .3 : .08; G.chomp = .14;
+  const gain = k.boss ? 600 : k.lv * 4 + 5;
+  G.power += gain; SFX.chomp(); setTimeout(SFX.coin, 60); shake = k.boss ? 6 : 2;
+  addFloat(m.x + 10, m.y - 20, '+' + gain, '#7dff6a', k.boss ? 3 : 2);
+  parts.push({ kind: 'helmet', x: m.x, y: m.y, vx: -30 - Math.random() * 40, vy: -120, life: 1.4, t: 0, ground: GROUND - 6, sc: k.sc });
+  burstCoins(m.x, m.y, k.boss ? 18 : 3, GROUND - 2);
+  if (k.boss) {
+    G.bossDone = G.t; flash = 1;
+    for (let i = 0; i < 6; i++) parts.push({ kind: 'bag', x: m.x + 10, y: m.y, vx: 20 + Math.random() * 90, vy: -150 - Math.random() * 80, life: 3, t: 0, ground: GROUND });
+  }
+  const nsc = G.power >= 400 ? 4 : G.power >= 120 ? 3 : 2;
+  if (nsc > G.sc) { G.sc = nsc; G.grow = .9; flash = .7; SFX.lvl(); }
+}
+function drawGame(t) {
+  // sky + background
+  const sky = ['#5ab8f0', '#6ec6ff', '#86d2ff', '#a2deff'];
+  sky.forEach((c, i) => rect(0, i * 50, W, 50, c)); rect(0, 200, W, 30, '#b8e6ff');
+  for (let i = 0; i < 3; i++) {
+    const cx = ((i * 80 + t * 6) % 240) - 40, cy = 40 + i * 30;
+    rect(cx, cy, 30, 6, '#fff'); rect(cx + 6, cy - 4, 16, 4, '#fff');
+  }
+  for (let x = 0; x < W; x++) rect(x, 215 + Math.round(Math.sin(x / 25) * 8 + Math.sin(x / 9) * 2), 1, 60, '#5a9e4a');
+  // distant castle with king
+  rect(140, 186, 30, 24, '#6f7686'); rect(136, 176, 9, 34, '#7c8494'); rect(165, 176, 9, 34, '#7c8494');
+  rect(140, 170, 1, 6, '#3a3030'); rect(141, 170, 5, 3, '#d8322f'); spr(SPR.king, 148, 193 - 17 + 2, 1);
+  rect(0, GROUND, W, H - GROUND, '#7a5230'); rect(0, GROUND, W, 5, '#4c9a3a');
+  for (let i = 0; i < 20; i++) rect(rnd(i) * W, GROUND + 10 + rnd(i * 5) * 40, 4, 2, '#5e3e22');
+
+  g.save(); g.translate(Math.round((Math.random() - .5) * shake), Math.round((Math.random() - .5) * shake));
+  // knights
+  for (const k of G.knights) {
+    if (k.state === 'hooked' && G.hook) {
+      const x = G.hook.tip.x - 6 * k.sc, y = G.hook.tip.y - 6 * k.sc;
+      sprRot(SPR.knight1, x + 6 * k.sc, y + 7 * k.sc, k.sc, Math.sin(G.t * 30) * .3);
+      continue;
+    }
+    const y = GROUND - 15 * k.sc - Math.abs(Math.sin(G.t * 9 + k.ph)) * 2;
+    knightAt(k.x, y, G.t + k.ph, true, k.sc);
+    rect(k.x + 14 * k.sc, y + 4 * k.sc, 1, 9 * k.sc, '#dfe8f0'); // sword
+    text((k.boss ? 'BOSS LV' : 'LV') + k.lv, k.x + 6 * k.sc, y - 10, 1, k.boss ? '#ff4040' : '#fff');
+  }
+  // chain + hook
+  if (G.hook) {
+    const s = shoulder(), tp = G.hook.tip, d = Math.hypot(tp.x - s.x, tp.y - s.y);
+    for (let i = 0; i < d; i += 3) {
+      const k = i / d;
+      rect(lerp(s.x, tp.x, k), lerp(s.y, tp.y, k), 2, 2, (i / 3) % 2 ? '#8d97a6' : '#d6dde6');
+    }
+    spr(SPR.hook, tp.x - 2, tp.y - 2, 2);
+  }
+  // pudge
+  const sq = G.chomp > 0 ? 1 : 0, gw = G.grow > 0 && Math.floor(G.grow * 16) % 2;
+  const pw = 22 * G.sc + sq * 4, ph = 23 * G.sc - sq * 4;
+  if (gw) { g.globalAlpha = .6; }
+  g.drawImage(SPR.pudge, PX - sq * 2, GROUND - ph + Math.round(Math.sin(G.t * 4)), pw, ph);
+  g.globalAlpha = 1;
+  drawParts();
+  g.restore();
+
+  // HUD
+  rect(0, 0, W, 30, '#1a1020'); rect(0, 30, W, 2, '#ffd23f');
+  text('POWER', 8, 6, 1, '#ffb0b0', 'left', null);
+  text(G.shown, 8, 15, 2, '#ffd23f', 'left', null);
+  const next = G.sc === 2 ? 120 : G.sc === 3 ? 400 : 1200, prev = G.sc === 2 ? 0 : G.sc === 3 ? 120 : 400;
+  text('SIZE ' + (G.sc - 1), 172, 6, 1, '#7dff6a', 'right', null);
+  rect(102, 17, 70, 7, '#3a2d48'); rect(102, 17, Math.round(70 * clamp((G.power - prev) / (next - prev))), 7, '#43c84f');
+  drawFloats();
+  if (G.grow > 0) text('SIZE UP!', 90, 80, 3, '#7dff6a');
+  if (t < 1.8) {
+    const tap = Math.floor(t * 4) % 2;
+    spr(SPR.hand, 112, 196 + tap * 4, 3);
+    text('TAP TO HOOK!', 90, 150, 2, '#fff');
+  }
+  if (G.boss && !G.bossDone && G.t < 9.2 && Math.floor(G.t * 5) % 2) text('BOSS!', 90, 70, 4, '#ff4040');
+  if (G.bossDone && G.t - G.bossDone > .2) { text('GOLD', 90, 70, 4, '#ffd23f'); text('IS BACK!', 90, 102, 3, '#fff'); }
+}
+
+// ===== Scene 4: end card (21 – 25) =====
+function drawEnd(t) {
+  rect(0, 0, W, H, '#3a0d12');
+  g.save(); g.translate(90, 190); g.rotate(t * .4);
+  g.fillStyle = '#5c1820';
+  for (let i = 0; i < 12; i++) { g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, 400, i * Math.PI / 6, i * Math.PI / 6 + Math.PI / 12); g.fill(); }
+  g.restore();
+  for (let i = 0; i < 16; i++) { const y = ((t * 70 + rnd(i) * 320) % 340) - 10; spr(SPR.coin, rnd(i * 4.4) * W, y, 2); }
+  const b = Math.round(Math.sin(t * 5) * 2);
+  spr(SPR.pudge, 90 - 44, 132 + b, 4);
+  text('BUTCHER', 90, 34, 4, '#ffffff');
+  text('HERO', 90, 72, 6, '#ffd23f');
+  const p = 1 + Math.max(0, Math.sin(t * 7)) * .08, bw = Math.round(120 * p), bh = Math.round(30 * p);
+  rect(90 - bw / 2 + 3, 250 - bh / 2 + 3, bw, bh, '#1a1020');
+  rect(90 - bw / 2, 250 - bh / 2, bw, bh, '#43c84f'); rect(90 - bw / 2, 250 - bh / 2, bw, 3, '#8af07a');
+  text('PLAY NOW', 90, 244, 2, '#fff');
+  if (t > 1 && Math.floor(t * 2) % 2) spr(SPR.hand, 120, 256, 2);
+  text('FREE', 90, 285, 1, '#ffd23f');
+}
+
+// ===== Main loop =====
+let T = 0, prevT = -1, paused = true, last = performance.now(), recorder = null;
+const at = x => prevT < x && T >= x;
+function restart() { T = 0; prevT = -1; lastStep = -1; parts = []; floats = []; shake = 0; flash = 0; resetGame(); }
+function events() {
+  [.3, 1.6, 2.9].forEach(x => at(x) && SFX.zzz());
+  [2.9, 3.4, 3.9].forEach(x => at(x) && SFX.coin());
+  if (at(4.4)) SFX.alert();
+  if (at(4.75)) SFX.whoosh();
+  if (at(4.95)) { SFX.bonk(); shake = 5; flash = 1; }
+  if (at(5.3)) SFX.laugh();
+  if (at(6.5)) { SFX.whoosh(); flash = .6; parts = []; }
+  if (at(8.2)) SFX.alert();
+  if (at(9.8)) { flash = .8; SFX.lvl(); }
+  if (at(21)) { flash = 1; SFX.fanfare(); }
+}
+function render() {
+  if (T < 6.5) {
+    g.save(); g.translate(Math.round((Math.random() - .5) * shake), Math.round((Math.random() - .5) * shake));
+    drawLair(T); g.restore();
+  } else if (T < 9.8) drawMap(T - 6.5);
+  else if (T < 21) drawGame(T - 9.8);
+  else { drawEnd(T - 21); drawParts(); }
+  if (flash > 0) { g.globalAlpha = flash; rect(0, 0, W, H, '#fff'); g.globalAlpha = 1; }
+  o.drawImage(buf, 0, 0, W * S, H * S);
+}
+function frame(now) {
+  let dt = Math.min(.05, (now - last) / 1000); last = now;
+  if (!paused) {
+    T += dt;
+    if (T >= TOTAL) {
+      if (recorder) { recorder.stop(); recorder = null; paused = true; T = TOTAL - .001; }
+      else restart();
+    }
+    events();
+    const step = Math.floor(T / .1);
+    while (lastStep < step) { lastStep++; music(T, lastStep); }
+    if (T >= 9.8 && T < 21) { const target = T - 9.8; while (G.t < target) stepGame(Math.min(1 / 120, target - G.t + 1e-6)); }
+    updFx(dt);
+    prevT = T;
+  }
+  render();
+  requestAnimationFrame(frame);
+}
+resetGame();
+requestAnimationFrame(frame);
+
+// ===== Controls =====
+const startEl = document.getElementById('start');
+startEl.onclick = () => { initAudio(); AC.resume(); startEl.remove(); restart(); paused = false; };
+document.getElementById('restart').onclick = () => { initAudio(); startEl.remove(); restart(); paused = false; };
+document.getElementById('pause').onclick = () => { paused = !paused; };
+addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); paused = !paused; } });
+document.getElementById('rec').onclick = () => {
+  initAudio(); AC.resume(); startEl.remove();
+  if (recorder) return;
+  const stream = out.captureStream(60);
+  recDest.stream.getAudioTracks().forEach(tr => stream.addTrack(tr));
+  const types = ['video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm'];
+  const mimeType = types.find(m => MediaRecorder.isTypeSupported(m));
+  const chunks = [], btn = document.getElementById('rec');
+  recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 12e6 });
+  recorder.ondataavailable = e => e.data.size && chunks.push(e.data);
+  recorder.onstop = () => {
+    const blob = new Blob(chunks, { type: mimeType }), a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'butcher_hero_pixel.' + (mimeType.includes('mp4') ? 'mp4' : 'webm'); a.click();
+    btn.classList.remove('on'); btn.textContent = '⏺ Скачать видео 1080×1920';
+  };
+  btn.classList.add('on'); btn.textContent = '● Идёт запись…';
+  restart(); paused = false; recorder.start();
+};
+</script>
+</body>
+</html>
