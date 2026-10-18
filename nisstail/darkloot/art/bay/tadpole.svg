@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>tadpole</title>
+  <!-- Static overhead actor. Anchor (32,32); facing -Y; rotate about anchor. -->
+  <g stroke="#142b32" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M28 31Q22 43 32 49Q38 52 31 58Q48 53 40 43L37 31Z" fill="#86ab98"/>
+<circle cx="32" cy="24" r="12" fill="#d1ddce"/>
+<path d="M25 20L28 18M36 18L39 20" fill="none"/>
+<path d="M29 29Q32 31 35 29" fill="none" stroke="#86ab98"/>
+  </g>
+</svg>

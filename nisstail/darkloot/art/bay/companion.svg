@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>companion</title>
+  <!-- Static overhead actor. Anchor (32,32); facing -Y; rotate about anchor. -->
+  <g stroke="#142b32" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M22 24L14 27L13 34L22 36M42 24L50 27L51 34L42 36M23 40L18 47L25 51L30 44M41 40L46 47L39 51L34 44" fill="#839da8"/>
+<path d="M25 21L26 12L32 16L38 12L39 21L35 27H29Z" fill="#d1ddce"/>
+<path d="M21 25L26 21H38L43 25L45 37L40 46H24L19 37Z" fill="#839da8"/>
+<path d="M22 29H42M21 37H43M32 23V44" fill="none" stroke="#d1ddce"/>
+  </g>
+</svg>

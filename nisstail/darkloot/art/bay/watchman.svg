@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>watchman</title>
+  <!-- Static overhead actor. Anchor (32,32); facing -Y; rotate about anchor. -->
+  <g stroke="#142b32" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M24 37L23 51L29 53L32 40L35 53L41 51L40 37" fill="#b6a078"/>
+<path d="M20 23L14 32L22 37L29 31H38L43 27L38 21Z" fill="#b6a078"/>
+<path d="M20 25Q32 19 43 26L41 39H23Z" fill="#b6a078"/>
+<path d="M40 26L46 31L42 36L35 30" fill="#b6a078"/>
+<ellipse cx="30" cy="19" rx="8" ry="8" fill="#d1ddce"/>
+<path d="M43 9H47V29H43Z" fill="#d1ddce"/>
+<path d="M24 15H35" fill="none" stroke="#b6a078"/>
+  </g>
+</svg>

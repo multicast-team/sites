@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>mechanic</title>
+  <!-- Static overhead actor. Anchor (32,32); facing -Y; rotate about anchor. -->
+  <g stroke="#142b32" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M23 37L22 51H29L32 40L35 51H42L40 36" fill="#839da8"/>
+<path d="M20 24L14 32L20 38L26 31M40 24L46 31L41 38L35 30" fill="#839da8"/>
+<path d="M23 23H40L42 40H22Z" fill="#839da8"/>
+<path d="M41 33V28Q46 24 51 28V33" fill="none" stroke="#b6a078"/>
+<path d="M39 32H54V44L49 48H39Z" fill="#b6a078"/>
+<path d="M45 35V43" fill="none"/>
+<circle cx="31" cy="18" r="8" fill="#d1ddce"/>
+<path d="M24 15H38" fill="none" stroke="#b6a078"/>
+  </g>
+</svg>

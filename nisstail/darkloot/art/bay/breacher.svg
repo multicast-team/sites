@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>breacher</title>
+  <!-- Static overhead actor. Anchor (32,32); facing -Y; rotate about anchor. -->
+  <g stroke="#142b32" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M23 39L20 51L28 54L32 42L36 54L44 51L41 39" fill="#b6a078"/>
+<path d="M17 23L11 30L13 40L23 39L27 28M45 22L52 29L50 39L40 37L37 27" fill="#b6a078"/>
+<path d="M39 13H44V34H39Z" fill="#d1ddce"/>
+<path d="M34 10H49V18H34Z" fill="#b6a078"/>
+<path d="M17 25L23 20H41L47 25L42 43H22Z" fill="#b6a078"/>
+<path d="M22 27H42L39 39H25Z" fill="#839da8"/>
+<path d="M40 29L48 31L47 37L39 36Z" fill="#b6a078"/>
+<path d="M25 13Q32 9 39 13L38 23H26Z" fill="#d1ddce"/>
+<path d="M28 17H36" fill="none"/>
+  </g>
+</svg>

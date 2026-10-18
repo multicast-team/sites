@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>hunter</title>
+  <!-- Static overhead actor. Anchor (32,32); facing -Y; rotate about anchor. -->
+  <g stroke="#142b32" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M24 39L19 49L24 53L31 44M40 39L45 49L40 53L33 44" fill="#86ab98"/>
+<path d="M20 24Q17 18 12 15L9 22L11 33L19 38L25 32M44 24Q47 18 52 15L55 22L53 33L45 38L39 32" fill="#d1ddce"/>
+<path d="M21 21Q32 13 43 21L44 34Q42 46 32 47Q22 46 20 34Z" fill="#86ab98"/>
+<path d="M22 23L25 14Q32 10 39 14L42 23L37 29H27Z" fill="#d1ddce"/>
+<path d="M25 20L28 19M36 19L39 20M12 23L17 26M52 23L47 26" fill="none"/>
+  </g>
+</svg>

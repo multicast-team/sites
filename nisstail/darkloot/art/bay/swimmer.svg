@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>swimmer</title>
+  <!-- Static overhead actor. Anchor (32,32); facing -Y; rotate about anchor. -->
+  <g stroke="#142b32" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M24 25L10 33L22 39L28 35M40 25L54 33L42 39L36 35" fill="#86ab98"/>
+<path d="M29 40L23 55L32 51L41 55L35 40" fill="#d1ddce"/>
+<path d="M32 8Q21 15 24 32Q25 43 32 47Q39 43 40 32Q43 15 32 8Z" fill="#86ab98"/>
+<path d="M27 16Q32 12 37 16L38 23L32 28L26 23Z" fill="#d1ddce"/>
+<path d="M28 19H29M35 19H36M32 31V39" fill="none"/>
+  </g>
+</svg>
