@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+    <meta name="theme-color" content="#087BDD">
+    <meta name="piggy-build" content="2026.10.02-continuous13">
+    <meta name="color-scheme" content="dark">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Piggy Payday">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <title>Piggy Payday</title>
+    <link rel="stylesheet" href="TemplateData/style.css">
+  </head>
+  <body>
+    <!-- PIGGY PAYDAY WebGL template: full-window stage, portrait 9:19.5 game frame (letterboxed on desktop,
+         full screen on phones), styled loading screen, error banner. -->
+    <div id="pp-stage" class="pp-stage">
+      <div class="pp-stage-pattern" aria-hidden="true"></div>
+
+      <div id="pp-frame" class="pp-frame">
+        <canvas id="unity-canvas" class="pp-canvas" width=540 height=1170 tabindex="-1"></canvas>
+
+        <div id="pp-loader" class="pp-loader">
+          <div class="pp-loader-glow" aria-hidden="true"></div>
+          <div class="pp-loader-inner">
+
+            <div class="pp-logo">
+              <div class="pp-logo-title"><span class="pp-logo-line pp-logo-line1">PIGGY</span><span class="pp-logo-line pp-logo-line2">PAYDAY</span></div>
+              <div id="pp-subtitle" class="pp-logo-sub">Smash piggies · Pay the bills</div>
+            </div>
+
+            <div class="pp-hero pp-hero-art" aria-hidden="true"></div>
+
+            <div class="pp-progress">
+              <div class="pp-progress-track">
+                <div id="pp-progress-fill" class="pp-progress-fill"><div class="pp-progress-stripes"></div></div>
+              </div>
+              <div id="pp-progress-label" class="pp-progress-label">0%</div>
+            </div>
+
+            <div id="pp-tip" class="pp-tip">Filling up piggy banks…</div>
+            <button id="pp-retry" class="pp-retry" type="button">Try again</button>
+          </div>
+        </div>
+
+        <div id="pp-banner" class="pp-banner" role="alert" aria-live="assertive"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        // ------------------------------------------------------------------ elements & environment
+        var GAME_ASPECT = 9 / 19.5;              // portrait game area (width / height)
+        var stage = document.getElementById("pp-stage");
+        var frame = document.getElementById("pp-frame");
+        var canvas = document.querySelector("#unity-canvas");
+        var loader = document.getElementById("pp-loader");
+        var fill = document.getElementById("pp-progress-fill");
+        var label = document.getElementById("pp-progress-label");
+        var tipEl = document.getElementById("pp-tip");
+        var subtitleEl = document.getElementById("pp-subtitle");
+        var retry = document.getElementById("pp-retry");
+        var banner = document.getElementById("pp-banner");
+
+        var ua = navigator.userAgent || "";
+        var isMobile = /iPhone|iPad|iPod|Android|Mobile|Silk|Kindle|Opera Mini/i.test(ua) ||
+                       (navigator.maxTouchPoints > 1 && /Macintosh/i.test(ua)); // iPadOS reports a Mac UA
+        var lang = (navigator.language || (navigator.languages && navigator.languages[0]) || "en").toLowerCase();
+        var ru = /^(ru|uk|be)/.test(lang);
+        document.documentElement.lang = ru ? "ru" : "en";
+
+        var TEXT = ru ? {
+          subtitle: "Бей копилки · Плати по счетам",
+          retry: "Попробовать снова",
+          failed: "Не удалось загрузить игру.",
+          noWebGL: "Ваш браузер не поддерживает WebGL 2. Обновите браузер или включите аппаратное ускорение.",
+          tips: [
+            "Наполняем копилки…",
+            "Полируем молотки…",
+            "Пересчитываем мелочь…",
+            "Прячем счета под стол…",
+            "Будим Соню…",
+            "Совет: бей без промахов — комбо усиливает удар!",
+            "Совет: собранные монеты сразу попадают в кошелёк.",
+            "Совет: Удираки сбегают — бей их первыми!",
+            "Акуле Сёме лучше не звонить… если только очень надо."
+          ]
+        } : {
+          subtitle: "Smash piggies · Pay the bills",
+          retry: "Try again",
+          failed: "The game failed to load.",
+          noWebGL: "Your browser does not support WebGL 2. Please update it or enable hardware acceleration.",
+          tips: [
+            "Filling up piggy banks…",
+            "Polishing the hammers…",
+            "Counting every last coin…",
+            "Hiding the bills under the desk…",
+            "Waking up Snoozy…",
+            "Tip: don't miss — the combo makes every hit stronger!",
+            "Tip: collected coins go straight into your wallet.",
+            "Tip: Runners escape — smash them first!",
+            "Never call the Loan Shark… unless you really must."
+          ]
+        };
+        subtitleEl.textContent = TEXT.subtitle;
+        retry.textContent = TEXT.retry;
+        tipEl.textContent = TEXT.tips[0];
+
+        // ------------------------------------------------------------------ layout (portrait 9:19.5 game area)
+        function layout() {
+          var vw = Math.max(1, window.innerWidth || document.documentElement.clientWidth);
+          var vh = Math.max(1, window.innerHeight || document.documentElement.clientHeight);
+          // Phones / portrait tablets: use the whole screen (the game adapts its UI); otherwise letterbox.
+          var fullScreen = isMobile && (vw / vh) <= 0.75;
+          var w, h;
+          if (fullScreen) {
+            w = vw; h = vh;
+          } else {
+            h = vh; w = h * GAME_ASPECT;
+            if (w > vw) { w = vw; h = w / GAME_ASPECT; }
+          }
+          w = Math.floor(w); h = Math.floor(h);
+          frame.style.width = w + "px";
+          frame.style.height = h + "px";
+          frame.style.left = Math.floor((vw - w) / 2) + "px";
+          frame.style.top = Math.floor((vh - h) / 2) + "px";
+          frame.classList.toggle("pp-frame-full", fullScreen);
+          // Loader unit: 1u = 1% of the portrait design height that fits the frame.
+          var unit = Math.min(w / GAME_ASPECT, h) / 100;
+          frame.style.setProperty("--u", unit.toFixed(3) + "px");
+        }
+        layout();
+        window.addEventListener("resize", layout);
+        window.addEventListener("orientationchange", function () { setTimeout(layout, 250); });
+        if (window.visualViewport) window.visualViewport.addEventListener("resize", layout);
+
+        // ------------------------------------------------------------------ no scrolling, no zoom, no context menu
+        function prevent(e) { if (e.cancelable) e.preventDefault(); }
+        document.addEventListener("contextmenu", prevent);
+        document.addEventListener("gesturestart", prevent, { passive: false });   // iOS Safari pinch
+        document.addEventListener("gesturechange", prevent, { passive: false });
+        document.addEventListener("gestureend", prevent, { passive: false });
+        document.addEventListener("touchmove", function (e) {
+          if ((e.touches && e.touches.length > 1) || (typeof e.scale === "number" && e.scale !== 1)) prevent(e);
+        }, { passive: false });
+        var lastTouchEnd = 0;
+        document.addEventListener("touchend", function (e) {           // double-tap zoom
+          var now = Date.now();
+          if (now - lastTouchEnd <= 300) prevent(e);
+          lastTouchEnd = now;
+        }, { passive: false });
+        document.addEventListener("wheel", function (e) { if (e.ctrlKey) prevent(e); }, { passive: false }); // trackpad pinch
+        document.addEventListener("dblclick", prevent);
+        canvas.addEventListener("pointerdown", function () { try { canvas.focus({ preventScroll: true }); } catch (err) { canvas.focus(); } });
+
+        // ------------------------------------------------------------------ banner (Unity warnings / errors)
+        function showBanner(msg, type) {
+          var item = document.createElement("div");
+          item.className = "pp-banner-item " + (type === "error" ? "pp-banner-error" : (type === "warning" ? "pp-banner-warning" : "pp-banner-info"));
+          item.textContent = String(msg);
+          banner.appendChild(item);
+          banner.classList.add("pp-banner-visible");
+          function remove() {
+            if (item.parentNode) item.parentNode.removeChild(item);
+            if (!banner.children.length) banner.classList.remove("pp-banner-visible");
+          }
+          item.addEventListener("click", remove);                     // tap to dismiss
+          if (type !== "error") setTimeout(remove, 5000);
+        }
+
+        // ------------------------------------------------------------------ loading screen
+        var shown = 0, target = 0, rafId = 0, tipTimer = 0, tipIndex = 0, finished = false;
+
+        function renderProgress() {
+          rafId = 0;
+          shown += (target - shown) * 0.18;
+          if (Math.abs(target - shown) < 0.002) shown = target;
+          fill.style.width = (6 + 94 * shown).toFixed(2) + "%";   // keep the rounded cap visible at 0%
+          label.textContent = Math.round(shown * 100) + "%";
+          if (shown !== target) rafId = requestAnimationFrame(renderProgress);
+        }
+        function setProgress(p) {
+          target = Math.max(target, Math.min(1, Math.max(0, p || 0)));
+          if (!rafId) rafId = requestAnimationFrame(renderProgress);
+        }
+        setProgress(0);
+
+        function nextTip() {
+          tipEl.classList.add("pp-tip-out");
+          setTimeout(function () {
+            tipIndex = (tipIndex + 1) % TEXT.tips.length;
+            tipEl.textContent = TEXT.tips[tipIndex];
+            tipEl.classList.remove("pp-tip-out");
+          }, 260);
+        }
+        tipTimer = setInterval(nextTip, 2600);
+
+        function hideLoader() {
+          finished = true;
+          clearInterval(tipTimer);
+          setProgress(1);
+          setTimeout(function () {
+            loader.classList.add("pp-loader-hidden");
+            setTimeout(function () { loader.style.display = "none"; }, 600);
+          }, 350);
+        }
+
+        function fail(message) {
+          finished = true;
+          clearInterval(tipTimer);
+          loader.classList.add("pp-loader-failed");
+          tipEl.classList.remove("pp-tip-out");
+          tipEl.textContent = TEXT.failed;
+          showBanner(message, "error");
+        }
+        retry.addEventListener("click", function () { window.location.reload(); });
+
+        function hasWebGL2() {
+          try {
+            var probe = document.createElement("canvas");
+            return !!(window.WebGL2RenderingContext && probe.getContext("webgl2"));
+          } catch (err) {
+            return false;
+          }
+        }
+
+        // ------------------------------------------------------------------ Unity
+        var buildUrl = "Build";
+        var loaderUrl = buildUrl + "/WebGL.loader.js";
+        var config = {
+          arguments: [],
+          dataUrl: buildUrl + "/WebGL.data.unityweb",
+          frameworkUrl: buildUrl + "/WebGL.framework.js.unityweb",
+          codeUrl: buildUrl + "/WebGL.wasm.unityweb",
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "Multicast Games",
+          productName: "Piggy Payday",
+          productVersion: "2.1.1",
+          showBanner: showBanner
+        };
+        // Sharp on high-DPI screens, capped to keep the fill rate sane (MSAA + HDR on phones).
+        config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+        if (!hasWebGL2()) {
+          fail(TEXT.noWebGL);
+          return;
+        }
+
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = function () {
+          createUnityInstance(canvas, config, (progress) => {
+            if (!finished) setProgress(progress);
+          }).then((unityInstance) => {
+            window.unityInstance = unityInstance;
+            hideLoader();
+            try { canvas.focus({ preventScroll: true }); } catch (err) { canvas.focus(); }
+          }).catch((message) => {
+            fail(message);
+          });
+        };
+        script.onerror = function () {
+          fail(TEXT.failed + " (" + loaderUrl + ")");
+        };
+        document.body.appendChild(script);
+      })();
+    </script>
+  </body>
+</html>
