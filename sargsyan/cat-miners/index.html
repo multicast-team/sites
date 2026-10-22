@@ -39,13 +39,13 @@
     const progress = document.getElementById("progress");
     const fullscreen = document.getElementById("fullscreen");
     const config = {
-      dataUrl: "Build/8d5c57ed91c3a800e58b7cd00edd7481.data.unityweb",
+      dataUrl: "Build/727e163132ccd5f5014d2c9b50d97999.data.unityweb",
       frameworkUrl: "Build/83acf18ebb3f9d332fd5d6ffe1cc069a.framework.js.unityweb",
-      codeUrl: "Build/a2f9616aafe48c18dc9c1b0d0783307e.wasm.unityweb",
+      codeUrl: "Build/4c675d4c2a65a30a161c927657ae8ea7.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "CatMiners",
       productName: "Cat Miner: Idle Tycoon",
-      productVersion: "0.1.17",
+      productVersion: "0.1.18",
       autoSyncPersistentDataPath: true,
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
       showBanner: function (message, type) {
@@ -60,7 +60,7 @@
       loading.hidden = false;
     }
     const loader = document.createElement("script");
-    loader.src = "Build/9b00c7163f16cd233558455e9ab06ac1.loader.js";
+    loader.src = "Build/2b130c3f4687a11d32730320a3480ac9.loader.js";
     loader.onerror = function () { showFailure("Unity loader unavailable"); };
     loader.onload = function () {
       createUnityInstance(canvas, config, function (value) { progress.value = value; })
