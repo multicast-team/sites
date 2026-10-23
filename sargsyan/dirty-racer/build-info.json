@@ -1,7 +1,7 @@
 {
-  "build": "six-circuits-2026-10-22",
-  "unity": "6000.6.4f1",
+  "build": "venues-art-2026-10-23",
   "disciplines": 6,
   "laps": 3,
-  "indexSha256": "eaea872348fd35a7237d6f6ab2d66e23fd7019cd04eb858707ed7f6271938d49"
+  "detail": "Distinct venues, detailed vehicles and in-engine selection previews",
+  "indexSha256": "c3b0cdcad912d1e5242bfb5d834977bfe5a893f01c1956e76ba1259901e4fa28"
 }
