@@ -1,5 +1,5 @@
 {
-  "build": "turn85-2026-10-23",
+  "build": "unlock-hints-2026-10-23-v3",
   "maxCornerDegrees": 85,
   "disciplines": 6,
   "lapsPerRace": 3,
@@ -11,5 +11,6 @@
     "Desert Trucks": 8000,
     "Superbike": 2200
   },
-  "indexSha256": "9bde0082fba78191e6409b3d142f7f9897c9e013d0a06a7f0dd31cfda2c5b24d"
+  "indexSha256": "66a9385538b11a385d39a73570c1cb22b4026c698fd8dd3b253474511e42b66a",
+  "upgradeUnlockHints": true
 }
