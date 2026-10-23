@@ -1,7 +1,15 @@
 {
-  "build": "venues-art-2026-10-23",
+  "build": "turn85-2026-10-23",
+  "maxCornerDegrees": 85,
   "disciplines": 6,
-  "laps": 3,
-  "detail": "Distinct venues, detailed vehicles and in-engine selection previews",
-  "indexSha256": "c3b0cdcad912d1e5242bfb5d834977bfe5a893f01c1956e76ba1259901e4fa28"
+  "lapsPerRace": 3,
+  "lapLengthsMeters": {
+    "Formula Racing": 2200,
+    "Dirt Rally": 2400,
+    "NASCAR": 1800,
+    "GT3": 2500,
+    "Desert Trucks": 8000,
+    "Superbike": 2200
+  },
+  "indexSha256": "9bde0082fba78191e6409b3d142f7f9897c9e013d0a06a7f0dd31cfda2c5b24d"
 }

@@ -40,22 +40,20 @@
 </head>
 <body>
   <main id="shell">
-    <header><div class="brand">DIRTY <span>RACER</span></div><button id="fullscreen" type="button" aria-label="Toggle fullscreen">⛶ Fullscreen</button></header>
+    <header><div class="brand">DIRTY <span>RACER</span></div><button id="fullscreen" type="button" aria-label="Toggle fullscreen">↗</button></header>
     <div id="play-area">
       <div id="game">
         <canvas id="unity-canvas" width="540" height="1170" tabindex="0" aria-label="Dirty Racer rally team game"></canvas>
         <div id="loading" role="status" aria-live="polite">
           <div class="track" aria-hidden="true"></div>
-          <div class="tag">YOUR TEAM. EVERY STAGE.</div>
           <h1>DIRTY<br>RACER.</h1>
-          <div id="load-label"><span id="load-text">Loading your rally</span><span id="percent">0%</span></div>
+          <div id="load-label"><span id="load-text"></span><span id="percent">0%</span></div>
           <progress id="progress" max="1" value="0" aria-label="Game loading progress"></progress>
           <p id="error" hidden></p>
           <button id="retry" type="button" hidden>Reload</button>
         </div>
       </div>
     </div>
-    <footer>Drag to explore · Scroll to zoom · Progress saves in this browser</footer>
   </main>
   <noscript>Enable JavaScript to play Dirty Racer.</noscript>
   <script>
@@ -93,9 +91,9 @@
     canvas.addEventListener('wheel', event => event.preventDefault(), {passive:false});
     const config = {
       arguments: [],
-      dataUrl: 'Build/a5942d0be5dfbd9256db7661832cd636.data.unityweb',
+      dataUrl: 'Build/80f02e98d568e7e64eba20153fef07b4.data.unityweb',
       frameworkUrl: 'Build/7fab013521c0c9de9cd99430fc29b3cf.framework.js.unityweb',
-      codeUrl: 'Build/c4a148af4845e4f268d53f602528ea99.wasm.unityweb',
+      codeUrl: 'Build/c7427143603c7f3a469a4f23bcb33357.wasm.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "Dirty Racer Team",
       productName: "Dirty Racer",
@@ -114,13 +112,13 @@
     window.addEventListener('pagehide', () => notifyVisibility(true));
     window.addEventListener('pageshow', () => notifyVisibility(document.hidden));
     const loader = document.createElement('script');
-    loader.src = 'Build/9571e697d84b17250da9a3a22c064777.loader.js';
+    loader.src = 'Build/ff4b82714a7049616c8a9758aec8327d.loader.js';
     loader.onerror = () => showError('The game download failed. Check your connection and reload.');
     loader.onload = () => {
       createUnityInstance(canvas, config, value => {
         progress.value = value;
         percent.textContent = Math.round(value * 100) + '%';
-        if (value >= 0.9) document.getElementById('load-text').textContent = 'Preparing the stage';
+        if (value >= 0.9) document.getElementById('load-text').textContent = '';
       }).then(instance => {
         window.unityInstance = instance;
         loading.hidden = true;
