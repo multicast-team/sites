@@ -1,16 +1,14 @@
 {
-  "build": "unlock-hints-2026-10-23-v3",
-  "maxCornerDegrees": 85,
-  "disciplines": 6,
-  "lapsPerRace": 3,
-  "lapLengthsMeters": {
-    "Formula Racing": 2200,
-    "Dirt Rally": 2400,
-    "NASCAR": 1800,
-    "GT3": 2500,
-    "Desert Trucks": 8000,
-    "Superbike": 2200
-  },
-  "indexSha256": "66a9385538b11a385d39a73570c1cb22b4026c698fd8dd3b253474511e42b66a",
-  "upgradeUnlockHints": true
+  "build": "engine-first-2026-10-24-v1",
+  "unity": "6000.6.4f1",
+  "firstUpgrade": "Speed",
+  "firstCost": 75,
+  "straightPaceParameter": 0.24,
+  "automatedTestsPassed": 222,
+  "builtFiles": {
+    "405407ffc22b10a652108b35d74badc2.data.unityweb": "a911ec072064655640eaf9ca21934cfbe3aea644f0608f8ba66f69be95aef089",
+    "7fab013521c0c9de9cd99430fc29b3cf.framework.js.unityweb": "475a71e1f12ed90e26a5366a52f034aea1f1b63ba553e4270291452f08231613",
+    "872f00f82f291f068af1e5b1cbb07e3b.wasm.unityweb": "6fa27628c7ba9fd4d2f36225b60708d0cc6a2c5ca19c22a98b80799dc2a47b76",
+    "bab8c07af36fdc3b6cc6e036a102b9e0.loader.js": "519e36e3c1b2606d7d261524ffb9da6a9dfe3306fdee665bfb4dbfc01872d1d2"
+  }
 }
