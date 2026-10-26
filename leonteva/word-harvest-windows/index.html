@@ -1,0 +1,108 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Word Harvest — окна на префабах пака, 2026-10-26</title>
+<style>
+:root{--bg:#f4f5f8;--card:#fff;--ink:#1d2330;--mute:#6b7385;--line:#e2e5ec;--q:#b54708;--acc:#1d4fd8}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,Segoe UI,sans-serif}
+.top{position:sticky;top:0;z-index:2;background:var(--card);border-bottom:1px solid var(--line);padding:12px 16px}
+.top h1{margin:0 0 4px;font-size:20px} .top p{margin:0;color:var(--mute);font-size:14px}
+main{padding:16px;max-width:1500px;margin:auto}
+.win{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:18px}
+.win header{display:flex;align-items:center;gap:8px;flex-wrap:wrap} .win h2{font-size:18px;margin:0} .n{color:var(--mute);font-weight:700;font-size:18px}
+.chip{font-size:12px;border-radius:10px;padding:2px 8px;background:#eef0f4;color:var(--mute)} .chip.wait{background:#efe8ff;color:#6b2bd9} .chip.sample{background:#e8f0ff;color:var(--acc)}
+.cap{margin:8px 0} .pack{color:var(--mute);font-size:14px}
+.shots{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;align-items:flex-start}
+figure{margin:0;flex:0 0 auto} figure img{height:520px;width:auto;border-radius:10px;border:1px solid var(--line);cursor:zoom-in;display:block;background:#0b1b28}
+figure.web img{height:520px} figcaption{font-size:12px;color:var(--mute);margin-top:4px;max-width:240px}
+details{margin-top:6px;font-size:14px} summary{cursor:pointer;color:var(--q)} details ul{margin:6px 0 0;padding-left:20px;color:var(--q)} details li{margin:3px 0}
+#zoom{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;z-index:5} #zoom img{max-height:96vh;max-width:96vw}
+@media (max-width:760px){figure img{height:380px}}
+</style></head><body>
+<div class="top"><h1>Word Harvest — окна на префабах пака GUI Pro Super Casual</h1>
+<p>Автономный прогон 2026-10-26: 14 окон, все со статусом «ждёт приёмки». Слева кадр веб-прототипа (было), справа снимки префаба Unity на 1080×2340 и 1080×1920. Клик по снимку — крупно. Вопросы под каждым окном — решения по умолчанию, ждут вашего слова.</p></div>
+<main>
+<section class="win" id="loading">
+  <header><span class="n">1</span><h2>Загрузка</h2><span class="chip">E — экраны</span> <span class="chip sample">образец типа</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Название игры текстом в слоте логотипа пака и полоса загрузки пака с процентом. <span class="pack">Префаб пака: Title_Loading</span></p>
+  <div class="shots"><figure class="unity"><img loading="lazy" src="img/pack_loading.webp" alt=""><figcaption>Unity · 1080×2340 · loading</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_loading_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (3)</summary><ul><li>Фон экранов загрузки и запуска — тёмная подложка пака. Варианты: пейзаж пака Background_01…05 (демо-сцены) или цвет фермы (нет в паке). Что выбрать?</li><li>Название в одну строку (~110 px); в прототипе две строки («Урожай / слов»). Делать две строки?</li><li>Середина экрана пустая (у пака там арт персонажей): нужна своя картинка (APW, ферма / колосья) или оставить?</li></ul></details>
+</section>
+<section class="win" id="launch">
+  <header><span class="n">2</span><h2>Экран запуска</h2><span class="chip">E — экраны</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Название, уровень, большая «Continue» и ссылка «Reset progress»; без соцсетей и без «Farm». <span class="pack">Префаб пака: Title_Login</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_01_launch.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_launch.webp" alt=""><figcaption>Unity · 1080×2340 · launch</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_launch_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (2)</summary><ul><li>Список ожидающего на ферме («harvest: 2 · daily gift · wheel») с экрана запуска убран — вернуть строкой под уровнем (иконки + числа)?</li><li>UIAction «farm» на запуске остался без кнопки: PlayMode-тесты Stage6a / 6b / 7a, нажимающие «farm» с запуска, при прогоне упадут — поправить тесты на путь через уровень?</li></ul></details>
+</section>
+<section class="win" id="reset">
+  <header><span class="n">3</span><h2>Подтверждение сброса</h2><span class="chip">A — простой попап</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Вопрос и одна кнопка «Reset»; крестик — отмена. Пояснение про потерю прогресса убрано. <span class="pack">Префаб пака: Popup_Close</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_02_launch_reset_confirm.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_reset.webp" alt=""><figcaption>Unity · 1080×2340 · reset</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_reset_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (1)</summary><ul><li>Пояснение «…will start over. This can&#x27;t be undone.» убрано по умолчанию (вопрос 64 + Reset + крестик). Вернуть строкой под вопросом?</li></ul></details>
+</section>
+<section class="win" id="ask">
+  <header><span class="n">4</span><h2>Купить подсказку / джокер?</h2><span class="chip">A — простой попап</span> <span class="chip sample">образец типа</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Иконка предмета из пака, название, одна зелёная кнопка с ценой в монетах; крестик — отмена. <span class="pack">Префаб пака: Popup_OtherPopup_01</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_11_ask_hint.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_ask_hint.webp" alt=""><figcaption>Unity · 1080×2340 · ask hint</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_ask_joker.webp" alt=""><figcaption>Unity · 1080×2340 · ask joker</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_ask_hint_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (2)</summary><ul><li>Белая пиктограмма пака (лупа / карта) в слоте картинки на синем окне — читаемо? Иначе цветная иконка APW (2–4 варианта) — по умолчанию пак.</li><li>Подпись-вопрос («Buy a hint?») под заголовком не добавлена: иконка + «🪙 цена» на кнопке считаются подтверждением траты. Вернуть подпись?</li></ul></details>
+</section>
+<section class="win" id="debugPurchase">
+  <header><span class="n">5</span><h2>Подтверждение покупки (debug)</h2><span class="chip">A — простой попап</span> <span class="chip sample">образец типа</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Шапка с названием товара, картинка набора из пака, плитки содержимого как у победы, цена на кнопке. <span class="pack">Префаб пака: Popup_Chest</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_21_buy_confirm.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_purchase_coins.webp" alt=""><figcaption>Unity · 1080×2340 · purchase coins</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_purchase_rescue.webp" alt=""><figcaption>Unity · 1080×2340 · purchase rescue</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_purchase_rescue_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (3)</summary><ul><li>Числа на плитках 38 (как у принятой победы): на плитке 190 это мелко по правилу «не мельчить» — поднять до 52 на всех плитках (победа, покупка, набор)?</li><li>Картинка смешанных наборов (Starter, Booster, Rescue, Grit) — подарок пака Gift_Red по умолчанию; нужна своя картинка (APW) или сундук пака?</li><li>Подпись «Test purchase: no money is charged» убрана — для прототипа отметка о тестовой покупке не нужна?</li></ul></details>
+</section>
+<section class="win" id="video">
+  <header><span class="n">6</span><h2>Видео за награду (заглушка)</h2><span class="chip">A — простой попап</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Тот же попап: иконка видео, награда заголовком, секунды под ним, «Collect» неактивна до конца отсчёта. <span class="pack">Префаб пака: Popup_OtherPopup_01</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_22_ad.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_video_wait.webp" alt=""><figcaption>Unity · 1080×2340 · video wait</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_video_ready.webp" alt=""><figcaption>Unity · 1080×2340 · video ready</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_video_wait_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (2)</summary><ul><li>По умолчанию (лист решений 0b.1): простой попап типа A вместо экрана ожидания Loading_Maching — окна рекламы в паке нет.</li><li>Заголовок — строка награды как в коде («Coins: +1000», без разрядки); вариант «иконка + число» не делали. Нужен?</li></ul></details>
+</section>
+<section class="win" id="starter">
+  <header><span class="n">7</span><h2>Стартовый набор / предложения</h2><span class="chip">B — покупка</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Билет пака: лента с названием, сундук пака, плитки содержимого, цена; крестик — «позже». <span class="pack">Префаб пака: Shop_Pass_PassDetailPopup</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_16_starter_offer.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_starter.webp" alt=""><figcaption>Unity · 1080×2340 · starter</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_start_offer.webp" alt=""><figcaption>Unity · 1080×2340 · start offer</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_starter_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (3)</summary><ul><li>Второй ряд плиток выровнен влево (сетка пака, 3 + 1); центрировать неполный ряд?</li><li>Арт пака (сундук с монетами и самоцветами) один на все наборы и предложения — оставить или свой (APW)?</li><li>Крестик в углу билета перекрывает хвост ленты названия на ~20 px — оставить или сдвинуть?</li></ul></details>
+</section>
+<section class="win" id="levelCoinProducts">
+  <header><span class="n">8</span><h2>Монеты (быстрая покупка)</h2><span class="chip">B — покупка</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Крыша лавки пака с монетами и самоцветами, шесть карточек наборов с картинкой, числом и ценой. <span class="pack">Префаб пака: Shop (раздел Gold Pack)</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_18_shop_coins.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_coin_shop.webp" alt=""><figcaption>Unity · 1080×2340 · coin shop</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_coin_shop_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (2)</summary><ul><li>Полноэкранный Shop с одним разделом — нижняя половина экрана пустая (в паке там другие разделы). Оставить под будущую лавку с вкладками или сделать карточки крупнее (2 в ряд) / окно-попап?</li><li>Тексты карточек — размеры пака (название 30, цена 48): по правилу «не мельчить» поднять? На карточке 322 шире не влезет без 2 строк.</li></ul></details>
+</section>
+<section class="win" id="farm">
+  <header><span class="n">9</span><h2>Ферма: HUD, панель пака, «Играть»</h2><span class="chip">E — экраны</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Поверх 3D-фермы: плашки монет и самоцветов с «+», меню и большая PLAY пака. Боковые кнопки появятся с их окнами. <span class="pack">Префаб пака: Lobby</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_04_farm_early.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="web"><img loading="lazy" src="img/ph390_17_farm_late.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_farm_hud.webp" alt=""><figcaption>Unity · 1080×2340 · farm hud</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_farm_hud_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (4)</summary><ul><li>Окон колеса, заданий, словаря, подарка дня и лавки в Unity нет — боковые кнопки Lobby скрыты до их появления. Собирать эти окна с нуля по мета-API (как в прототипе) или оставить на следующий этап?</li><li>Строка «Созрело: N · ждёт наград: N» и заголовок «Ферма» убраны (маячки у краёв уже показывают созревшее). Вернуть иконками?</li><li>Ярлыки над грядками (готово / растёт / закрыто) — ещё старая вёрстка; перевести на плашки пака (Label_Bubble) отдельным окном?</li><li>Прогресс пака до ящика («до ящика 9», ★ 3/30) на ферме не показан; в Lobby есть рамка с сундуком и полосой (BorderFrame_R20_Gray) — добавить?</li></ul></details>
+</section>
+<section class="win" id="crate">
+  <header><span class="n">10</span><h2>Ящик пака</h2><span class="chip">D — награда</span> <span class="chip sample">образец типа</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Лента с названием ящика, открытый сундук пака по ярусу, звёзды пака и что даёт ящик, плитки наград, «Claim». <span class="pack">Префаб пака: PopupFull_RewardItems</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_31_crate_card.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_crate.webp" alt=""><figcaption>Unity · 1080×2340 · crate</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_crate_wood.webp" alt=""><figcaption>Unity · 1080×2340 · crate wood</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_crate_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (3)</summary><ul><li>Надпись на кнопке — «Claim» вместо прежних «Plant: Garden» / «Build: Barn» (действие перенесено в строку под сундуком). Оставить глагол «Claim»?</li><li>Экран PopupFull_RewardChest («Tap it now») пропущен: ящик уже открывается тапом в 3D. Нужен ли отдельный экран перед наградой?</li><li>Числа на плитках 38 (как у победы) — тот же вопрос, что у покупки: поднять до 52?</li></ul></details>
+</section>
+<section class="win" id="farmLevelUp">
+  <header><span class="n">11</span><h2>Праздник уровня фермы</h2><span class="chip">D — награда</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Новый уровень фермы на значке пака, награды уровня плитками, «Claim». Раньше окна не было. <span class="pack">Префаб пака: PopupFull_LevelUp</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_32_farm_levelup.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_farm_level_up.webp" alt=""><figcaption>Unity · 1080×2340 · farm level up</figcaption></figure></div>
+  <details><summary>Вопросы (3)</summary><ul><li>Уровни фермы, полученные от опыта ящика (CrateResult.FarmLevels), по-прежнему начисляются молча — показывать праздник и после ящика?</li><li>PlayMode-тесты фермы (Stage5bPlayTests, Stage6b) не знают шага farm-level-claim: при прогоне поправить.</li><li>Несколько уровней подряд показываются одним окном с последним уровнем и суммой наград — или по окну на уровень?</li></ul></details>
+</section>
+<section class="win" id="building">
+  <header><span class="n">12</span><h2>Карточка постройки</h2><span class="chip">D — награда</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Название постройки, пиктограмма пака, уровень звёздами, доход строкой, «Upgrade» с ценой в монетах и самоцветах. <span class="pack">Префаб пака: Popup_EquipmentItemInfo01_Blue</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_28_building_card.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_building.webp" alt=""><figcaption>Unity · 1080×2340 · building</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_building_max.webp" alt=""><figcaption>Unity · 1080×2340 · building max</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_building_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (4)</summary><ul><li>Звёзды уровня — размер пака 42×45 (мелко по правилу «не мельчить»); увеличить до размера строки (64)?</li><li>На максимальном уровне нижняя треть карточки пустая (кнопки нет) — оставить или показать «MAX» лентой пака?</li><li>Белые пиктограммы пака вместо картинок построек (3D-арт в UI не используется) — заменить на свои (APW) или снимки 3D-моделей?</li><li>Названия построек в economy.json русские («Коровник») — перевод данных.</li></ul></details>
+</section>
+<section class="win" id="lockedBed">
+  <header><span class="n">13</span><h2>Закрытая грядка</h2><span class="chip">A — простой попап</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Замок пака, название грядки, уровни открытия и «Play». <span class="pack">Префаб пака: Popup_OtherPopup_01</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_05_bed_locked_sad.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="web"><img loading="lazy" src="img/ph390_06_bed_locked_current.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_locked_bed.webp" alt=""><figcaption>Unity · 1080×2340 · locked bed</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_locked_bed_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (2)</summary><ul><li>Названия грядок и паков уровней берутся из economy.json и пока русские («Сад», «Молочная ферма») — перевод данных в процесс словаря?</li><li>Условие открытия показано как «Levels 13–24» (без иконки): достаточно или нужен значок уровня?</li></ul></details>
+</section>
+<section class="win" id="water">
+  <header><span class="n">14</span><h2>Полив</h2><span class="chip">A — простой попап</span><span class="chip wait">ждёт приёмки</span></header>
+  <p class="cap">Капля пака, название грядки, минуты до созревания и цена полива в самоцветах на кнопке. <span class="pack">Префаб пака: Popup_OtherPopup_01</span></p>
+  <div class="shots"><figure class="web"><img loading="lazy" src="img/ph390_29_water.webp" alt=""><figcaption>веб-прототип (было)</figcaption></figure><figure class="unity"><img loading="lazy" src="img/pack_water.webp" alt=""><figcaption>Unity · 1080×2340 · water</figcaption></figure><figure class="unity_1920"><img loading="lazy" src="img/pack_water_1920.webp" alt=""><figcaption>Unity · 1080×1920</figcaption></figure></div>
+  <details><summary>Вопросы (1)</summary><ul><li>Урожай грядки («Harvest: 140 coins») из окна убран (он на ярлыке грядки) — вернуть второй строкой «🪙 140»?</li></ul></details>
+</section></main><div id="zoom"><img alt=""></div>
+<script>const z=document.getElementById('zoom');document.querySelectorAll('figure img').forEach(i=>i.onclick=()=>{z.firstElementChild.src=i.src;z.style.display='flex'});z.onclick=()=>z.style.display='none';</script>
+</body></html>
