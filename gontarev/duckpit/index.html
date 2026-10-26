@@ -56,8 +56,17 @@
       window.addEventListener("resize", fit);
       if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
       canvas.addEventListener("contextmenu", function (e) { e.preventDefault(); });
-      canvas.addEventListener("pointerdown", function () { canvas.focus(); });
+      // keys reach the game only while the canvas has focus: take it back after a click beside the 9:16 column or a window switch
+      document.addEventListener("pointerdown", function () { canvas.focus(); });
+      window.addEventListener("focus", function () { canvas.focus(); });
       document.addEventListener("touchmove", function (e) { e.preventDefault(); }, { passive: false });
+
+      // Page lifecycle -> the game (Core/WebPage.cs): Unity's web player has no pause / quit callback, so a hidden tab
+      // pauses the game and offline income, and every hide / pagehide writes the save.
+      var unity = null;
+      function toGame(method) { if (unity) try { unity.SendMessage("DuckPitWeb", method); } catch (e) {} }
+      document.addEventListener("visibilitychange", function () { toGame(document.hidden ? "PageHidden" : "PageVisible"); });
+      window.addEventListener("pagehide", function () { toGame("PageHide"); });
 
       function showBanner(msg, type) {
         var div = document.createElement("div");
@@ -94,16 +103,39 @@
         createUnityInstance(canvas, config, function (progress) {
           fill.style.width = Math.round(100 * progress) + "%";
           hint.textContent = progress < 0.9 ? "Loading… " + Math.round(100 * progress) + "%" : "Starting…";
-        }).then(function () {
+        }).then(function (instance) {
+          unity = instance;
           loader.classList.add("done");
           canvas.focus();
+          if (document.hidden) toGame("PageHidden");
         }).catch(function (message) {
+          releaseLock();
           hint.textContent = "Could not start: " + message;
           showBanner(String(message), "error");
         });
       };
-      script.onerror = function () { hint.textContent = "Could not load the game files."; };
-      document.body.appendChild(script);
+      script.onerror = function () { releaseLock(); hint.textContent = "Could not load the game files."; };
+
+      // One tab at a time: every tab keeps its own copy of the save files and syncs it to the same IndexedDB, so two
+      // running tabs overwrite each other's progress. A second tab waits until the first one closes (queued lock: a
+      // reload never races its own previous page). A refused lock (opaque origin, site data blocked) plays without it.
+      var started = false, releaseLock = function () {};
+      function start() {
+        if (started) return;
+        started = true;
+        hint.textContent = "Loading…";
+        document.body.appendChild(script);
+      }
+      if (navigator.locks && navigator.locks.request) {
+        var waiting = setTimeout(function () { if (!started) hint.textContent = "DuckPit is open in another tab. Close it to play here."; }, 800);
+        var go = function () { clearTimeout(waiting); start(); };
+        try {
+          navigator.locks.request("duckpit-game", function () {
+            go();
+            return new Promise(function (r) { releaseLock = r; });   // held for the page's lifetime
+          }).catch(go);
+        } catch (e) { go(); }
+      } else start();
     </script>
   </body>
 </html>
