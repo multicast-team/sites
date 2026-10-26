@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>DuckPit</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%86%3C/text%3E%3C/svg%3E">
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none;
+        background: #120A26; color: #F4EEF9; font-family: "Nunito", "Segoe UI", system-ui, sans-serif; }
+      body { display: flex; align-items: center; justify-content: center; }
+      .stage { position: relative; flex: none; }
+      .stage canvas { display: block; width: 100%; height: 100%; background: #120A26; outline: none;
+        touch-action: none; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
+      .loader { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 18px; background: radial-gradient(circle at 50% 42%, #2D2350 0%, #120A26 70%); transition: opacity .35s; }
+      .loader.done { opacity: 0; pointer-events: none; }
+      .duck { font-size: 64px; animation: bob 1.1s ease-in-out infinite; }
+      .title { font-size: 30px; font-weight: 800; letter-spacing: .5px; }
+      .bar { width: 62%; max-width: 280px; height: 14px; border-radius: 7px; background: #2D2350; box-shadow: inset 0 0 0 2px #4A3B7A; overflow: hidden; }
+      .fill { width: 0%; height: 100%; border-radius: 7px; background: linear-gradient(90deg, #FFC93C, #FFE07A); transition: width .2s; }
+      .hint { font-size: 14px; opacity: .7; min-height: 1.2em; text-align: center; padding: 0 16px; }
+      .banner { position: absolute; left: 8px; right: 8px; top: 8px; display: none; font-size: 14px; }
+      .banner div { margin-bottom: 6px; padding: 10px; border-radius: 8px; background: #F2C94C; color: #2D2350; }
+      .banner div.error { background: #E5484D; color: #fff; }
+      @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-10px) rotate(4deg); } }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <canvas id="unity-canvas" tabindex="-1"></canvas>
+      <div class="loader">
+        <div class="duck">🦆</div>
+        <div class="title">DuckPit</div>
+        <div class="bar"><div class="fill"></div></div>
+        <div class="hint">Loading…</div>
+      </div>
+      <div class="banner"></div>
+    </div>
+    <script>
+      var stage = document.querySelector(".stage");
+      var canvas = document.querySelector("canvas");
+      var loader = document.querySelector(".loader");
+      var fill = document.querySelector(".fill");
+      var hint = document.querySelector(".hint");
+      var banner = document.querySelector(".banner");
+
+      // Portrait game (9:16): a 9:16 column on wide screens, the whole screen on phones (the game fits taller views itself).
+      function fit() {
+        var w = window.innerWidth, h = window.innerHeight;
+        var cw = w / h > 9 / 16 ? Math.round(h * 9 / 16) : w;
+        stage.style.width = cw + "px";
+        stage.style.height = h + "px";
+      }
+      fit();
+      window.addEventListener("resize", fit);
+      if (window.visualViewport) window.visualViewport.addEventListener("resize", fit);
+      canvas.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+      canvas.addEventListener("pointerdown", function () { canvas.focus(); });
+      document.addEventListener("touchmove", function (e) { e.preventDefault(); }, { passive: false });
+
+      function showBanner(msg, type) {
+        var div = document.createElement("div");
+        div.textContent = msg;
+        if (type == "error") div.className = "error";
+        banner.appendChild(div);
+        banner.style.display = "block";
+        if (type != "error") setTimeout(function () {
+          banner.removeChild(div);
+          banner.style.display = banner.children.length ? "block" : "none";
+        }, 5000);
+      }
+
+      var buildUrl = "Build";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/Web.data.unityweb",
+        frameworkUrl: buildUrl + "/Web.framework.js.unityweb",
+        codeUrl: buildUrl + "/Web.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DuckPit",
+        productName: "DuckPit",
+        productVersion: "0.1.0",
+        showBanner: showBanner,
+        // saves (Application.persistentDataPath) reach IndexedDB on every write and survive a reload
+        autoSyncPersistentDataPath: true,
+        // retina phones render at most 2x: 3x costs 2.25x the pixels for little visible gain
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+      };
+
+      var script = document.createElement("script");
+      script.src = buildUrl + "/Web.loader.js";
+      script.onload = function () {
+        createUnityInstance(canvas, config, function (progress) {
+          fill.style.width = Math.round(100 * progress) + "%";
+          hint.textContent = progress < 0.9 ? "Loading… " + Math.round(100 * progress) + "%" : "Starting…";
+        }).then(function () {
+          loader.classList.add("done");
+          canvas.focus();
+        }).catch(function (message) {
+          hint.textContent = "Could not start: " + message;
+          showBanner(String(message), "error");
+        });
+      };
+      script.onerror = function () { hint.textContent = "Could not load the game files."; };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
