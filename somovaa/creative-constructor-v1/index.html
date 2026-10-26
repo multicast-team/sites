@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Конструктор креатива: цель → преграда → апгрейд → награда</title>
+<style>
+  :root {
+    --bg: #f6f5f2; --card: #ffffff; --text: #1d1d1f; --muted: #6b6b70; --line: #e4e2dc;
+    --goal: #2f7d4f; --goal-bg: #e7f3ec;
+    --obst: #b3412f; --obst-bg: #f8e9e6;
+    --upg: #2c5fa8; --upg-bg: #e6eef9;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.5 -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 30px; margin: 0 0 6px; }
+  .sub { color: var(--muted); margin: 0 0 28px; }
+  h2 { font-size: 22px; margin: 44px 0 6px; }
+  h2 .n { display: inline-block; width: 30px; height: 30px; border-radius: 50%; text-align: center;
+    line-height: 30px; font-size: 15px; color: #fff; margin-right: 8px; vertical-align: 2px; }
+  .hint { color: var(--muted); margin: 0 0 16px; }
+
+  .formula { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--card);
+    border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .step { padding: 10px 14px; border-radius: 10px; font-weight: 600; }
+  .arrow { color: var(--muted); font-size: 20px; }
+  .g { background: var(--goal-bg); color: var(--goal); }
+  .o { background: var(--obst-bg); color: var(--obst); }
+  .u { background: var(--upg-bg); color: var(--upg); }
+  .rule { margin-top: 12px; background: var(--card); border-left: 4px solid var(--text); padding: 12px 16px; border-radius: 6px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .card h3 { margin: 0 0 8px; font-size: 16px; }
+  .card ul { margin: 0; padding-left: 18px; }
+  .card li { margin: 2px 0; }
+  .card .note { color: var(--muted); font-size: 14px; margin-top: 8px; }
+  .new { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    padding: 1px 6px; border-radius: 4px; background: #fff3c4; color: #7a5c00; margin-left: 4px; vertical-align: 1px; }
+  .goal h3 { color: var(--goal); } .obst h3 { color: var(--obst); } .upg h3 { color: var(--upg); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; overflow: hidden; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+  th.g, th.o, th.u { font-weight: 700; }
+  tr:last-child td { border-bottom: none; }
+  .tw { overflow-x: auto; }
+
+  ol.how { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 16px 16px 36px; margin: 0; }
+  ol.how li { margin: 6px 0; }
+  .legend { color: var(--muted); font-size: 14px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Конструктор креатива</h1>
+<p class="sub">Цель → преграда → апгрейд → проход → награда. Каждый элемент должен считываться в кадре за 1–2 секунды, без текста и диалогов.</p>
+
+<div class="formula">
+  <span class="step g">Видим цель (награду)</span><span class="arrow">→</span>
+  <span class="step o">Упираемся в преграду</span><span class="arrow">→</span>
+  <span class="step u">Делаем апгрейд</span><span class="arrow">→</span>
+  <span class="step o">Проходим преграду</span><span class="arrow">→</span>
+  <span class="step g">Получаем награду</span>
+</div>
+<div class="rule"><b>Главное правило:</b> апгрейд должен быть ключом именно к этой преграде. Зритель видит причину и следствие: «не мог → прокачался → смог».</div>
+
+<!-- 1. ЦЕЛИ -->
+<h2><span class="n" style="background:var(--goal)">1</span>Цель / награда</h2>
+<p class="hint">То, что зритель видит в начале как цель, в конце становится наградой.</p>
+<div class="grid">
+  <div class="card goal">
+    <h3>Материальная</h3>
+    <ul>
+      <li>Сундук</li>
+      <li>Крутое оружие</li>
+      <li>Ресурс (золото, кристаллы)</li>
+      <li>Левел ап с видимым улучшением (размер, количество цепей, урон)</li>
+    </ul>
+  </div>
+  <div class="card goal">
+    <h3>Доступ</h3>
+    <ul>
+      <li>Проход в другую локацию</li>
+      <li>Зона с лутом (например, пещера)</li>
+      <li>Портал</li>
+      <li>Зона апгрейда</li>
+      <li>Босс</li>
+    </ul>
+  </div>
+  <div class="card goal">
+    <h3>Эмоциональная</h3>
+    <ul>
+      <li>Месть</li>
+      <li>Спасение кого-то (пленник в клетке, в лапах врага)</li>
+      <li>Спастись самому: убежать от лавы, обвала, погони <span class="new">новое</span></li>
+    </ul>
+  </div>
+  <div class="card goal">
+    <h3>Силовая</h3>
+    <ul>
+      <li>Контраст «до / после»: раньше бил одного врага три удара, теперь сносит толпу одним</li>
+    </ul>
+    <div class="note">Бонус, выпавший с босса, — это уже материальная награда.</div>
+  </div>
+  <div class="card goal">
+    <h3>Союзник <span class="new">новое</span></h3>
+    <ul>
+      <li>Освобождённый пленник бежит рядом и дерётся</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 2. ПРЕГРАДЫ -->
+<h2><span class="n" style="background:var(--obst)">2</span>Преграда</h2>
+<p class="hint">Что стоит между героем и целью.</p>
+<div class="grid">
+  <div class="card obst">
+    <h3>Персонаж</h3>
+    <ul>
+      <li>Большой враг (босс)</li>
+      <li>Толпа врагов</li>
+      <li>Враг со щитом / в броне: удары отскакивают, падают нули <span class="new">новое</span></li>
+      <li>Стрелки на возвышении <span class="new">новое</span></li>
+      <li>Враг держит пленника <span class="new">новое</span></li>
+    </ul>
+  </div>
+  <div class="card obst">
+    <h3>Объект</h3>
+    <ul>
+      <li>Клетка</li>
+      <li>Забор</li>
+      <li>Стена / ворота, которые надо пробить <span class="new">новое</span></li>
+      <li>Сломанный мост <span class="new">новое</span></li>
+    </ul>
+  </div>
+  <div class="card obst">
+    <h3>Требование</h3>
+    <ul>
+      <li>Уровень: цифра над воротами или врагом («Lv 10» против «Lv 3» у героя)</li>
+      <li>Ценник ресурса</li>
+    </ul>
+  </div>
+  <div class="card obst">
+    <h3>Физические</h3>
+    <ul>
+      <li>Пропасть</li>
+      <li>Лава</li>
+      <li>Яма</li>
+      <li>Шипы</li>
+      <li>Вода</li>
+      <li>Завал из камней</li>
+      <li>Пилы, маятники <span class="new">новое</span></li>
+      <li>Огонь <span class="new">новое</span></li>
+    </ul>
+  </div>
+  <div class="card obst">
+    <h3>Логические</h3>
+    <ul>
+      <li>Выбрать правильное оружие</li>
+      <li>Выбрать правильный путь</li>
+      <li>Выбрать одну из 2–3 дверей <span class="new">новое</span></li>
+    </ul>
+  </div>
+  <div class="card obst">
+    <h3>Таймер <span class="new">новое</span></h3>
+    <ul>
+      <li>Поднимается лава / вода</li>
+      <li>Закрываются ворота</li>
+      <li>Сзади наступает обвал</li>
+    </ul>
+    <div class="note">Держит внимание: зритель досматривает, чтобы узнать, успел ли герой.</div>
+  </div>
+</div>
+
+<!-- 3. АПГРЕЙД -->
+<h2><span class="n" style="background:var(--upg)">3</span>Апгрейд</h2>
+<p class="hint">Какой показать апгрейд и что в итоге меняется у героя.</p>
+<div class="grid">
+  <div class="card upg">
+    <h3>Фейковая кат-сцена</h3>
+    <ul>
+      <li>Кнопка «апгрейд»</li>
+      <li>Эквип перетаскиванием</li>
+      <li>Мердж оружия в меню</li>
+      <li>Выбор типа прокачки (скорость, урон, цепи и т.д.)</li>
+    </ul>
+  </div>
+  <div class="card upg">
+    <h3>Прямо в геймплее</h3>
+    <ul>
+      <li>Панелька с оружием</li>
+      <li>Карточки апгрейда</li>
+    </ul>
+  </div>
+  <div class="card upg">
+    <h3>Получить оружие</h3>
+    <ul>
+      <li>Выбить с врага</li>
+      <li>Подобрать с земли</li>
+      <li>Открыть сундук</li>
+      <li>Победить босса</li>
+    </ul>
+  </div>
+  <div class="card upg">
+    <h3>Купить за ресурс</h3>
+    <ul>
+      <li>Ценник над оружием / апгрейдом, ресурс списывается</li>
+    </ul>
+  </div>
+  <div class="card upg">
+    <h3>Поднять уровень героя</h3>
+    <ul>
+      <li>Бьём врагов, уровень растёт на глазах</li>
+      <li>Рост павера (цифра над героем)</li>
+    </ul>
+  </div>
+</div>
+<div class="card" style="margin-top:12px">
+  <h3>Что видно на герое после апгрейда</h3>
+  Размер · количество цепей / оружия · урон (цифры) · скорость · дальность / радиус удара
+</div>
+
+<!-- 4. ПРИМЕРЫ -->
+<h2><span class="n" style="background:var(--text)">4</span>Готовые связки</h2>
+<p class="hint">Каждая строка — готовый сценарий. Строки можно смешивать.</p>
+<div class="tw">
+<table>
+  <thead>
+    <tr>
+      <th class="o">Преграда</th>
+      <th>Почему не проходим</th>
+      <th class="u">Апгрейд</th>
+      <th class="g">Награда</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Босс со щитом</td><td>Удары дают «0»</td><td>Мердж оружия в кат-сцене → тяжёлое оружие</td><td>Щит разлетается, босс падает + выпадает сундук</td></tr>
+    <tr><td>Толпа</td><td>Бьём по одному, нас окружают</td><td>Мердж оружия → удар по площади</td><td>Толпа разлетается (силовая)</td></tr>
+    <tr><td>Ворота «Lv 10»</td><td>Герой Lv 3</td><td>Бьём мелких врагов, уровень растёт на глазах</td><td>Проход в новую локацию</td></tr>
+    <tr><td>Пропасть</td><td>Цепь / оружие не достаёт</td><td>+дальность (карточка или кнопка апгрейда)</td><td>Зона с лутом на той стороне</td></tr>
+    <tr><td>Пленник в клетке</td><td>Клетка не ломается</td><td>Выбили с врага тяжёлое оружие</td><td>Спасение + пленник становится союзником</td></tr>
+    <tr><td>Поднимается лава</td><td>Не успеваем</td><td>+скорость</td><td>Убежали (таймер на нервах)</td></tr>
+    <tr><td>3 двери</td><td>Неясно, куда идти</td><td>— (выбор)</td><td>За правильной сундук, за неправильной босс</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="legend">Пример смешивания: босс со щитом + пленник за его спиной + оружие, выбитое с врага.</p>
+
+<!-- 5. КАК СОБРАТЬ -->
+<h2><span class="n" style="background:var(--text)">5</span>Как собрать ролик</h2>
+<ol class="how">
+  <li>Выбери <b>цель</b> и покажи её в первом кадре: сундук, пленник, портал.</li>
+  <li>Поставь между героем и целью <b>преграду</b>.</li>
+  <li>Покажи <b>неудачу</b>: удар даёт «0», цепь не достаёт, уровень меньше.</li>
+  <li>Выбери <b>апгрейд</b>, который чинит именно эту неудачу, и <b>способ его показать</b>.</li>
+  <li><b>Проходим</b> преграду с видимой разницей «до / после».</li>
+  <li>Финал — <b>награда</b>, та же, что была целью в первом кадре.</li>
+</ol>
+
+</div>
+</body>
+</html>
