@@ -11,9 +11,10 @@
   },
   "firstResult": "manual Next, persistent",
   "builtFiles": {
-    "3609d3055a5b3e0f42a68e3b296733bf.loader.js": "444a7ae0896d0e51b07d70cc7dd39bf93b42bc37fc3170b281942da388aed7e8",
-    "f0fab5d29a213d385e4236268969778b.wasm.unityweb": "12f8868677a1e5eddfc7298a748c27cd21b21c35bf31c06bb89943c47f9e5790",
-    "5d825b6a87840450bfb72f9190fd468c.data.unityweb": "edaf72947951691e804a24bf8005f14d442600f23e33eb8bd0888d7e4919a79c",
-    "7fab013521c0c9de9cd99430fc29b3cf.framework.js.unityweb": "2b35cc1ea9e634013120f6ec4d265db5e3414651da55cac20d61bbfc85c774f5"
-  }
+    "444a7ae0896d0e51b07d70cc.loader.js": "444a7ae0896d0e51b07d70cc7dd39bf93b42bc37fc3170b281942da388aed7e8",
+    "12f8868677a1e5eddfc7298a.wasm.unityweb": "12f8868677a1e5eddfc7298a748c27cd21b21c35bf31c06bb89943c47f9e5790",
+    "edaf72947951691e804a24bf.data.unityweb": "edaf72947951691e804a24bf8005f14d442600f23e33eb8bd0888d7e4919a79c",
+    "2b35cc1ea9e634013120f6ec.framework.js.unityweb": "2b35cc1ea9e634013120f6ec4d265db5e3414651da55cac20d61bbfc85c774f5"
+  },
+  "assetNaming": "sha256 prefixes for coherent browser cache"
 }
