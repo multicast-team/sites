@@ -1,30 +1,34 @@
 {
-  "build": "readable-ui-2026-10-27-v1",
-  "unity": "6000.6.4f1",
-  "uiTheme": "light",
-  "continuousRacing": true,
-  "firstUpgrade": "Speed",
-  "firstCost": 75,
-  "assets": [
+  "release": "pits-sand-2026-10-27-v1",
+  "built_at_utc": "2026-10-27T19:15:14.111256+00:00",
+  "palette": "sand-graphite",
+  "files": [
     {
-      "name": "444a7ae0896d0e51b07d70cc.loader.js",
-      "sha256": "444a7ae0896d0e51b07d70cc7dd39bf93b42bc37fc3170b281942da388aed7e8",
+      "path": "Build/750bf5dc3dbd2134b6eda15f.wasm.unityweb",
+      "sha256": "750bf5dc3dbd2134b6eda15fe19b1a8b9f495de6af88f5b6012047c6d865d1d2",
+      "bytes": 11634744
+    },
+    {
+      "path": "Build/35a3073e43feb945965e4a7c.framework.js.unityweb",
+      "sha256": "35a3073e43feb945965e4a7c40424d8124fac78fc0efd8d6da0e5bded800a0ad",
+      "bytes": 77241
+    },
+    {
+      "path": "Build/c0b8cede5933e9eb205312bd.loader.js",
+      "sha256": "c0b8cede5933e9eb205312bd07d01d38fb5ae524f15a3639c65671b83613141c",
       "bytes": 48779
     },
     {
-      "name": "b7aaa5b10fa94e63813cd9e0.data.unityweb",
-      "sha256": "b7aaa5b10fa94e63813cd9e0a5995f04cd5878b0c7256f6debfb7df22980bc71",
-      "bytes": 6539723
-    },
-    {
-      "name": "7d925201b35139fa11b48032.wasm.unityweb",
-      "sha256": "7d925201b35139fa11b480324f8f7d3b3c3c340d30cad48b4390a64870264ce0",
-      "bytes": 11610404
-    },
-    {
-      "name": "100f14ed8d34cf39de6f1509.framework.js.unityweb",
-      "sha256": "100f14ed8d34cf39de6f15098ddc899bba103ff818d9c47f05a6bce9846438a0",
-      "bytes": 77241
+      "path": "Build/08b824f15f01fea7e6333465.data.unityweb",
+      "sha256": "08b824f15f01fea7e63334651369333363b5387f20be29347e634a1a0fa4d506",
+      "bytes": 6549828
     }
-  ]
+  ],
+  "source_manifest_sha256": "31dd28d3f239b381294eb6a08fd44bc5fa30e98f3f5969fbf5617e06834ee5e8",
+  "checks": {
+    "unity_playmode": 45,
+    "palette_screens": 12,
+    "domain_regressions": 179,
+    "failed": 0
+  }
 }
