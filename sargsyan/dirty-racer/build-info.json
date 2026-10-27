@@ -1,20 +1,30 @@
 {
-  "build": "anton-onboarding-2026-10-26-v1",
+  "build": "continuous-racing-2026-10-27-v1",
   "unity": "6000.6.4f1",
-  "spec": "09-anton-v1.1",
+  "continuousRacing": true,
+  "transitionWaitSeconds": 0,
+  "firstResult": "automatic, nonblocking",
   "firstUpgrade": "Speed",
-  "firstCost": 75,
-  "introLaps": 1,
-  "introStages": {
-    "default": 2,
-    "disc_desert": 1
-  },
-  "firstResult": "manual Next, persistent",
-  "builtFiles": {
-    "444a7ae0896d0e51b07d70cc.loader.js": "444a7ae0896d0e51b07d70cc7dd39bf93b42bc37fc3170b281942da388aed7e8",
-    "12f8868677a1e5eddfc7298a.wasm.unityweb": "12f8868677a1e5eddfc7298a748c27cd21b21c35bf31c06bb89943c47f9e5790",
-    "edaf72947951691e804a24bf.data.unityweb": "edaf72947951691e804a24bf8005f14d442600f23e33eb8bd0888d7e4919a79c",
-    "2b35cc1ea9e634013120f6ec.framework.js.unityweb": "2b35cc1ea9e634013120f6ec4d265db5e3414651da55cac20d61bbfc85c774f5"
-  },
-  "assetNaming": "sha256 prefixes for coherent browser cache"
+  "assets": [
+    {
+      "name": "073f106dbd428be0aa5de14c.data.unityweb",
+      "sha256": "073f106dbd428be0aa5de14c470edff91284e9de9c6182273b51cbf212998a7f",
+      "bytes": 6539301
+    },
+    {
+      "name": "444a7ae0896d0e51b07d70cc.loader.js",
+      "sha256": "444a7ae0896d0e51b07d70cc7dd39bf93b42bc37fc3170b281942da388aed7e8",
+      "bytes": 48779
+    },
+    {
+      "name": "c372340a90315f0746265ad0.framework.js.unityweb",
+      "sha256": "c372340a90315f0746265ad0f7e6d9dba409dd2db5e92a419d5b894afb65b363",
+      "bytes": 77241
+    },
+    {
+      "name": "076a84acd892548aed58bb00.wasm.unityweb",
+      "sha256": "076a84acd892548aed58bb001765abebc5c2d665c4daf5b4d6606045ff42507a",
+      "bytes": 11608530
+    }
+  ]
 }
