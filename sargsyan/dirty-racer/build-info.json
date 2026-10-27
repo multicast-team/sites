@@ -1,30 +1,30 @@
 {
-  "build": "continuous-racing-2026-10-27-v1",
+  "build": "readable-ui-2026-10-27-v1",
   "unity": "6000.6.4f1",
+  "uiTheme": "light",
   "continuousRacing": true,
-  "transitionWaitSeconds": 0,
-  "firstResult": "automatic, nonblocking",
   "firstUpgrade": "Speed",
+  "firstCost": 75,
   "assets": [
-    {
-      "name": "073f106dbd428be0aa5de14c.data.unityweb",
-      "sha256": "073f106dbd428be0aa5de14c470edff91284e9de9c6182273b51cbf212998a7f",
-      "bytes": 6539301
-    },
     {
       "name": "444a7ae0896d0e51b07d70cc.loader.js",
       "sha256": "444a7ae0896d0e51b07d70cc7dd39bf93b42bc37fc3170b281942da388aed7e8",
       "bytes": 48779
     },
     {
-      "name": "c372340a90315f0746265ad0.framework.js.unityweb",
-      "sha256": "c372340a90315f0746265ad0f7e6d9dba409dd2db5e92a419d5b894afb65b363",
-      "bytes": 77241
+      "name": "b7aaa5b10fa94e63813cd9e0.data.unityweb",
+      "sha256": "b7aaa5b10fa94e63813cd9e0a5995f04cd5878b0c7256f6debfb7df22980bc71",
+      "bytes": 6539723
     },
     {
-      "name": "076a84acd892548aed58bb00.wasm.unityweb",
-      "sha256": "076a84acd892548aed58bb001765abebc5c2d665c4daf5b4d6606045ff42507a",
-      "bytes": 11608530
+      "name": "7d925201b35139fa11b48032.wasm.unityweb",
+      "sha256": "7d925201b35139fa11b480324f8f7d3b3c3c340d30cad48b4390a64870264ce0",
+      "bytes": 11610404
+    },
+    {
+      "name": "100f14ed8d34cf39de6f1509.framework.js.unityweb",
+      "sha256": "100f14ed8d34cf39de6f15098ddc899bba103ff818d9c47f05a6bce9846438a0",
+      "bytes": 77241
     }
   ]
 }

@@ -3,39 +3,40 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#141b19">
+  <meta name="theme-color" content="#e8eef5">
   <meta name="description" content="Build your rally team. Upgrade your cars. Watch every stage in 3D. Play Dirty Racer in your browser.">
   <title>Dirty Racer · Rally Team</title>
   <style>
-    :root { color-scheme:dark; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:#edf0e8; background:#141b19; }
+    :root { color-scheme:light; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:#1d2a3b; background:#e8eef5; }
     * { box-sizing:border-box; }
     html,body { margin:0; width:100%; height:100%; overflow:hidden; }
-    body { background:radial-gradient(ellipse at 50% 30%,#2b3930 0%,#141b19 70%); }
+    body { background:#e8eef5; }
     #shell { height:100dvh; display:flex; flex-direction:column; align-items:center; padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left)); gap:8px; }
     header { width:min(100%,640px); height:32px; flex:none; display:flex; justify-content:space-between; align-items:center; }
     .brand { font-size:12px; font-weight:850; letter-spacing:2px; }
-    .brand span { color:#b7d873; }
-    button { border:1px solid #ffffff29; border-radius:6px; background:#ffffff09; color:#edf0e8; font:inherit; font-size:11px; cursor:pointer; padding:6px 9px; }
+    .brand span { color:#2864de; }
+    button { border:1px solid #ffffff29; border-radius:6px; background:#ffffff09; color:#1d2a3b; font:inherit; font-size:11px; cursor:pointer; padding:6px 9px; }
     button:hover { background:#ffffff18; }
-    button:focus-visible { outline:2px solid #b7d873; outline-offset:3px; }
+    button:focus-visible { outline:2px solid #2864de; outline-offset:3px; }
     #play-area { flex:1; min-height:0; width:100%; display:flex; justify-content:center; align-items:center; }
-    #game { position:relative; height:100%; aspect-ratio:6/13; max-width:100%; overflow:hidden; background:#18231d; box-shadow:0 16px 80px #0007; border-radius:7px; }
+    #game { position:relative; height:100%; aspect-ratio:6/13; max-width:100%; overflow:hidden; background:#f5f7fb; box-shadow:0 16px 80px #172b4d18; border-radius:7px; }
     canvas { width:100%; height:100%; display:block; outline:none; touch-action:none; -webkit-tap-highlight-color:transparent; }
-    #loading { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:32px; gap:18px; background:#18231d; }
+    #loading { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:32px; gap:18px; background:#f5f7fb; }
     #loading[hidden] { display:none; }
-    .tag { color:#b7d873; letter-spacing:3px; font-size:10px; font-weight:700; }
+    .tag { color:#2864de; letter-spacing:3px; font-size:10px; font-weight:700; }
     h1 { font-size:clamp(32px,6vw,48px); line-height:.95; letter-spacing:-2px; margin:0; font-weight:900; }
-    .track { height:42px; width:74px; border:3px solid #b7d873; border-left-color:transparent; border-radius:50% 35% 50% 30%; transform:rotate(-25deg); margin:0 0 16px 4px; }
-    #load-label { display:flex; justify-content:space-between; color:#aab6aa; font-size:12px; gap:8px; }
-    progress { display:block; appearance:none; width:100%; height:4px; border:0; border-radius:4px; overflow:hidden; background:#ffffff16; }
-    progress::-webkit-progress-bar { background:#ffffff16; }
-    progress::-webkit-progress-value { background:#b7d873; transition:width .15s; }
-    progress::-moz-progress-bar { background:#b7d873; }
-    #error { margin:0; font-size:12px; color:#ffb6a2; line-height:1.5; overflow-wrap:anywhere; }
+    .track { height:42px; width:74px; border:3px solid #2864de; border-left-color:transparent; border-radius:50% 35% 50% 30%; transform:rotate(-25deg); margin:0 0 16px 4px; }
+    #load-label { display:flex; justify-content:space-between; color:#52647b; font-size:12px; gap:8px; }
+    progress { display:block; appearance:none; width:100%; height:4px; border:0; border-radius:4px; overflow:hidden; background:#d5dee9; }
+    progress::-webkit-progress-bar { background:#d5dee9; }
+    progress::-webkit-progress-value { background:#2864de; transition:width .15s; }
+    progress::-moz-progress-bar { background:#2864de; }
+    #error { margin:0; font-size:12px; color:#b92436; line-height:1.5; overflow-wrap:anywhere; }
     #retry { align-self:flex-start; }
-    footer { color:#94a393; font-size:10px; text-align:center; flex:none; }
-    #shell:fullscreen { background:#141b19; }
+    footer { color:#64758b; font-size:10px; text-align:center; flex:none; }
+    #shell:fullscreen { background:#e8eef5; }
     @media(max-width:480px) { #shell { gap:4px; padding-left:0; padding-right:0; } header { padding:0 12px; height:28px; } #game { border-radius:0; box-shadow:none; } footer { font-size:9px; } }
+    @media(max-width:620px){#shell{padding:0;gap:0}header{display:none}#game{border-radius:0;box-shadow:none}}
   </style>
 </head>
 <body>
@@ -91,9 +92,9 @@
     canvas.addEventListener('wheel', event => event.preventDefault(), {passive:false});
     const config = {
       arguments: [],
-      dataUrl: 'Build/073f106dbd428be0aa5de14c.data.unityweb',
-      frameworkUrl: 'Build/c372340a90315f0746265ad0.framework.js.unityweb',
-      codeUrl: 'Build/076a84acd892548aed58bb00.wasm.unityweb',
+      dataUrl: 'Build/b7aaa5b10fa94e63813cd9e0.data.unityweb',
+      frameworkUrl: 'Build/100f14ed8d34cf39de6f1509.framework.js.unityweb',
+      codeUrl: 'Build/7d925201b35139fa11b48032.wasm.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "Dirty Racer Team",
       productName: "Dirty Racer",
