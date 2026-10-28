@@ -1,34 +1,35 @@
 {
-  "release": "pits-sand-2026-10-27-v1",
-  "built_at_utc": "2026-10-27T19:15:14.111256+00:00",
+  "release": "anton-feedback-2026-10-28-v1",
+  "built_at_utc": "2026-10-28T15:13:09.975855+00:00",
   "palette": "sand-graphite",
+  "continuous_racing": true,
+  "crew_roles": "discipline-specific",
+  "crowds": true,
   "files": [
     {
-      "path": "Build/750bf5dc3dbd2134b6eda15f.wasm.unityweb",
-      "sha256": "750bf5dc3dbd2134b6eda15fe19b1a8b9f495de6af88f5b6012047c6d865d1d2",
-      "bytes": 11634744
+      "path": "Build/95900d9d152e33ee89088a5d.data.unityweb",
+      "sha256": "95900d9d152e33ee89088a5d7e007f97d03631c75e1101ebb11291f9dd7747d6",
+      "bytes": 6555233
     },
     {
-      "path": "Build/35a3073e43feb945965e4a7c.framework.js.unityweb",
-      "sha256": "35a3073e43feb945965e4a7c40424d8124fac78fc0efd8d6da0e5bded800a0ad",
-      "bytes": 77241
-    },
-    {
-      "path": "Build/c0b8cede5933e9eb205312bd.loader.js",
-      "sha256": "c0b8cede5933e9eb205312bd07d01d38fb5ae524f15a3639c65671b83613141c",
+      "path": "Build/774942034939276999bc6664.loader.js",
+      "sha256": "774942034939276999bc6664fb95da9fd3c68226864b7fdac94dbcc86f0eaab8",
       "bytes": 48779
     },
     {
-      "path": "Build/08b824f15f01fea7e6333465.data.unityweb",
-      "sha256": "08b824f15f01fea7e63334651369333363b5387f20be29347e634a1a0fa4d506",
-      "bytes": 6549828
+      "path": "Build/54556f0aac38062866002b9d.wasm.unityweb",
+      "sha256": "54556f0aac38062866002b9d8a689a0fc2c1833a758ef5ef278ce29f43eed5ac",
+      "bytes": 11648603
+    },
+    {
+      "path": "Build/0f0a889629ce5b5cbd4bafa7.framework.js.unityweb",
+      "sha256": "0f0a889629ce5b5cbd4bafa715d98667db50b02f50549eb44886bebce9994230",
+      "bytes": 77241
     }
   ],
-  "source_manifest_sha256": "31dd28d3f239b381294eb6a08fd44bc5fa30e98f3f5969fbf5617e06834ee5e8",
-  "checks": {
-    "unity_playmode": 45,
-    "palette_screens": 12,
-    "domain_regressions": 179,
+  "unity_checks": {
+    "passed": 13,
     "failed": 0
-  }
+  },
+  "source_manifest_sha256": "2f3cb06239b97d95582c4c1088b473ff343ab94daccbd523fe9bfb3b0b0ab361"
 }
