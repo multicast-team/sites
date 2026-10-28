@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2a1d16">
+  <meta name="description" content="Мир MicroBuilders в словах: крошечные строители, большие здания и стройка куб за кубом.">
+  <title>MicroBuilders — мир в словах</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; background: #2a1d16; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body {
+      font-family: Manrope, system-ui, sans-serif;
+      color: #f3ddb0;
+      background: radial-gradient(ellipse at 50% 47%, #38271b 0, #2a1d16 62%, #221812 100%);
+    }
+    .viewport { position: fixed; inset: 0; overflow: hidden; }
+    .scene {
+      position: absolute; width: 1600px; height: 900px;
+      transform-origin: 0 0; opacity: 0; transition: opacity 450ms ease;
+    }
+    .scene.ready { opacity: 1; }
+    .masthead {
+      position: absolute; left: 36px; right: 36px; top: 26px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; font-weight: 700; letter-spacing: 2.3px;
+      color: #cda77e;
+    }
+    .masthead .edition { color: #a98264; letter-spacing: 1.5px; }
+    .brand-mark { display: inline-block; width: 8px; height: 8px; margin-right: 12px; background: #f2b33a; }
+    #cloud { position: absolute; inset: 0; }
+    .slot { position: absolute; }
+    .word {
+      position: absolute; display: block; width: max-content; margin: 0;
+      padding: 0 1px; white-space: nowrap; line-height: 1.2;
+      font-family: Manrope, system-ui, sans-serif; font-weight: 600;
+      font-synthesis: none; text-rendering: optimizeLegibility;
+      cursor: default; user-select: text;
+      transition: color 160ms ease, text-shadow 160ms ease;
+    }
+    .word.big { font-family: Unbounded, system-ui, sans-serif; font-weight: 700; letter-spacing: -.055em; }
+    .word.title { font-weight: 800; letter-spacing: -.065em; }
+    .slot .word { left: 50%; top: 50%; transform: translate(-50%, -50%); }
+    .slot.vertical .word { transform: translate(-50%, -50%) rotate(90deg); }
+    .word:hover { color: #fff2d5 !important; text-shadow: 0 0 15px #f2b33a60; }
+    .measure { position: fixed; top: 0; left: 0; visibility: hidden; pointer-events: none; }
+    .footer {
+      position: absolute; left: 36px; right: 36px; top: 846px;
+      border-top: 1px solid #f3ddb024; padding-top: 17px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+      font-size: 12px; font-weight: 500; line-height: 1.5; color: #d1ae89;
+    }
+    .footer p { margin: 0; }
+    .footer strong { font-weight: 800; color: #f2b33a; }
+    #word-count { white-space: nowrap; color: #b18c69; font-size: 12px; letter-spacing: 1.2px; }
+    .loading {
+      position: fixed; inset: 0; display: grid; place-items: center;
+      font-size: 15px; color: #f2b33a;
+    }
+    .loading[hidden] { display: none; }
+    noscript { position: fixed; inset: 35%; color: #f3ddb0; font-size: 18px; }
+    @media (prefers-reduced-motion: reduce) { .scene, .word { transition: none; } }
+  </style>
+</head>
+<body>
+  <div class="loading" role="status" id="loading">Собираем мир куб за кубом…</div>
+  <main class="viewport" aria-label="MicroBuilders — облако игровых понятий">
+    <div class="scene" id="scene">
+      <header class="masthead">
+        <span><i class="brand-mark" aria-hidden="true"></i>МАЛЕНЬКИЕ СТРОИТЕЛИ. БОЛЬШИЕ ПЛАНЫ.</span>
+        <span class="edition">МИР ИГРЫ / 01</span>
+      </header>
+      <div id="cloud" role="group" aria-label="Слова о строительстве, бригаде и мире игры"></div>
+      <footer class="footer">
+        <p><strong>MicroBuilders</strong> — строительная стратегия: бригада крошечных строителей возводит здания куб за кубом.</p>
+        <span id="word-count"></span>
+      </footer>
+    </div>
+  </main>
+  <noscript>MicroBuilders — стройка, рабочие, кубы и большие планы. Для облака слов включите JavaScript.</noscript>
+  <script>
+  (() => {
+    'use strict';
+
+    // A standalone vocabulary snapshot from docs/gdd and the story list in levels.js.
+    // These categories only guide loose placement; they do not create separate panels.
+    const core = [
+      ['MicroBuilders', 94, 800, 441],
+      ['Стройка', 62, 612, 338], ['Рабочие', 57, 918, 555],
+      ['Кубы', 53, 1182, 339], ['Бригадиры', 47, 555, 556],
+      ['Штаб', 46, 310, 427], ['Прокачки', 42, 1012, 257],
+      ['Строительная компания', 31, 755, 646],
+      ['Куб за кубом', 31, 881, 177], ['Крошечные строители', 29, 805, 741]
+    ];
+    const systems = {
+      construction: `Граф прокачек|Карьеры|Леса|Лестницы|План работ|Ноша|Воксели|Настилы|Материалы|Высотные работы|Скорость стройки|Укладка кубов|Чертежи|Строительная площадка|Бригада|Грузовые ремни|Сдача объекта|Мини-кубы`,
+      machinery: `Дроны|Погрузчики|Вертолёты|Аэротакси|Парк техники|Гараж|Грузоподъёмность|Площадка сборки|Паттерны|Авиаотряд`,
+      hq: `Техцентр|Главный офис|Капитал|Печати|Жетоны|Биржа|Контракты|Школа бригадиров|Центр персонала|Учебный центр|Снабжение|Редкие ресурсы|Оффлайн-прогресс|Технологии|Улучшения|Обучение`,
+      camp: `Столовая|Городок|Бытовки|Офис продаж|Зона отдыха|Прожекторы|Полевая кухня|Кулинарная книга|Обед в столовой|Крепкий сон`,
+      people: `Разряды|Экспертиза|Карточки бригадиров|Испытания|Дипломы|Каски|Звёзды|Найм|Наставничество|Опыт рабочих`,
+      weather: `День и ночь|Смена сезонов|Голод|Перекур|Усталость|Сон|Погода|Молния|Снег|Дождь|Жара|Шторм`,
+      magic: `Мана|Реактор|Техно-магия|Заклинания`,
+      campaign: `Кампания|Сюжетные здания|Главы|Архитектурные шедевры|Эйфелева башня|Колизей`
+    };
+    const details = {
+      construction: `Скорость набора|Скорость ходьбы|Подъём|Спуск|Горизонталь|Вертикаль|Снижение веса|Планёрка|Инструментальный склад|Маршруты|Такелаж|Деньги за куб|Множитель стройки|Множитель этажа|Сортировка находок|Бесплатная покупка|Шанс удачи|Множитель удачи|Бонусная политика|Премии за куб|Сметные коэффициенты|Продвинутые улучшения|Проходные узлы|Капитализация|Фундамент|Этажи|Кладка|Камень|Стекло|Песчаник|Дерево|Металл|Бетон|Куб материала|Вес ноши|Ходка|Стол с планом|Кирка|Молоток|Опоры|Окна|Двери|Крыша|Фасад|Шпиль|Арки|Купола|Балконы|Деревянный брус|Дощатый настил|Оцинкованные трубы|Бетонные плиты|Синие рамы|Системные леса|Стальной лист|Прочность лесов|Износ|Трещины|Ремонт лесов|Леса и настилы|Высота здания|Последний куб|Объект сдан!|Следующий заказ|Стартовая бригада|Рабочая сила|Экономика|Организация|Бюджет стройки|Монеты за укладку|Удачная ходка|Находка капитала|Золотой куб|Джекпот|Сундуки|Награда за сдачу|Стройка без вас|Постоянный прогресс`,
+      machinery: `Сборщики паттернов|Летающие кладчики|Кладка дроном|Набор дроном|Скорость полёта|Груз дрона|Груз погрузчика|Ковш|Стрела|Высота стрелы|Радиус стрелы|Скорость хода|Скорость стрелы|Груз вертолёта|Ширина груза|Высота груза|Крюк|Трос|Каретка|Кабина|Путь к стоянке|Посадка|Полёт|Высадка|Обратный рейс|Потолок аэротакси|Вертолётная площадка|Стоянка|Жёлтая кабина|Четыре винта|Бортовые огни|Груз на тросе|Двор техники`,
+      hq: `Квартал компании|Бульвар|Участки|Зона расширения|Технологический центр|Отделы офиса|Штат управления|Поиск талантов|Контрактное бюро|Логистический центр|Лаборатория материалов|Агентство субподряда|Клиника|Метеослужба|Склад бустеров|Бустеры снабжения|Биржа старых заказов|Старые заказы|Доска заказов|Вместимость биржи|Поток заказов|Капитал за заказ|Редкая награда|Аванс заказчика|Контракт региона|Лимит времени|Строительный босс|Победа в контракте|Контрактная цепочка|Контрактная валюта|Печать|Казна компании|Мета-прогресс|Новые возможности|Субподряд|Параллельные заказы|Постоянные улучшения|Ресурс за заказ|Жилой ресурс|Промышленный ресурс|Высотный ресурс|Ресурс памятников`,
+      camp: `Каша|Гречка с тушёнкой|Борщ|Макароны по-флотски|Крепкий чай|Блины|Сало с хлебом|Компот|Сытость|Сытные порции|Шеф-повар|Места в столовой|Короче обед|Блюда|Меню|Кафе|Бистро|Ресторан|Гранд-ресторан|Шоурум|Бизнес-центр|Технопарк|Небоскрёб|Менеджеры|Шоу-рум|Реклама|Вагончик|Модульный городок|Общежитие|Гостиница|Хай-тек отель|Двухъярусные койки|Курилка|Беседка|Комната отдыха|Клуб|Развлекательный центр|Скамейки|Дорожки на перекур|Фонарный столб|Прожекторная вышка|Мачта освещения|Стадионная мачта|Световая башня|Мощные прожекторы|Типовые проекты|Освещение|Тёплый обед|Перевёл дух|Выспался`,
+      people: `Мастер кладки|Старший носильщик|Быстрый обходчик|Снабженец|Мастер лесов|Сметчик|Карьерщик|Ночной прораб|Повар артели|Табельщик|Бригадир смены|Вербовщица|Главный геодезист|Оконщица|Изыскатель|Кладовщик|Тяжеловес|Счастливчик|Метеоролог|Подрядчик|Механик|Золотой прораб|Крановщица|Казначей|Обычные карты|Редкие карты|Эпические карты|Легендарные карты|Звёздный уровень|Состав бригадиров|Брифинг|Автоподбор|Приёмная комиссия|Производственная практика|Малый сундук испытания|Золотой век|Обучение на объекте|Высшие разряды|Учебный план|Сила разряда|Стажировка|Подготовленный набор|Лестница разрядов|Опыт центра|Первый разряд|Седьмой разряд|Штатное расписание|Повар|Главный менеджер|Главный учёный|Экипаж меха|Выдвиженец|Набор из училища|Курсы поваров|Лаборанты|Самоучка|Учебная часть|Выносливость|Высотник|Наставник|Мастер-приём|Экзамен`,
+      weather: `Осень|Зима|Весна|Лето|Рассвет|Полдень|Закат|Сумерки|Ночь|Солнце|Луна|Сутки стройки|Холод|Наледь|Мокрый материал|Снежинки|Дождевые капли|Гром|Порывы ветра|Реже перекуры|Короче перекуры|Привычка|Перекур компанией|Отбой|Сон в бытовке|Отдых|Ночной штраф|Выбитые кубы|Ремонт после грозы|Обеденный перерыв`,
+      magic: `Искра|Генератор маны|Резонатор|Сердце мира|Ускорение|Телекинез|Ясное небо|Золотая лихорадка|Эхо|Призыв рабочего|Невесомость|Полуденное солнце|Щедрость|Продление|Второе дыхание|Мгновенные леса|Левитация|Сундук|Зеркало|Знамя|Гравилифт|Радужный мост|Золотая жила|Портал|Благословение артели|Сборка|Небесная ось|Звездопад|Остановка времени|Автокаст|Перегрузка реактора|Связки|Чудеса|Эфир|Школы магии|Круги заклинаний|Заряд Сердца|Попутный ветер|Золотые руки|Конвейер|Радуга после дождя|Отголосок`,
+      campaign: `Маленький дом|Изба|Дом с крыльцом|Дом с трубой|Дом старосты|Жёлтый флигель|Мастерская|Амбар|Цитадель|Собор рудокопов|Рудный мост|Плавильный цех|Маяк старателей|Акведук|Утёсная крепость|Ратуша|Обсерватория|Верфь|Монастырь|Горный дворец|Стекольная мануфактура|Зимняя галерея|Дом гильдии|Четыре двора|Железная переправа|Хрустальный виадук|Королевская биржа|Небесный дворец|Каскадный форум|Призматическая академия|Галерея созвездий|Дом граней|Главное здание МГУ|Саграда Фамилия|Шёлковое веретено|Опера раковин|Чертог колец|Зонты ветра|Кольцо биокуполов|Стеклянный фонарь|Воротный дом|Мостовой двор|Дом кровель|Балочный навес|Башня ферм|Квадратная аркада|Парадный марш|Дом балконов|Поле куполов|Двор фонарей|Каменные бани|Висячие сады|Вантовый мост|Региональные главы|Архитектурный маяк|Рудная долина|Побережье|Северный пояс|Пустыня|Сезоны|Новые регионы|Ступенчатый маяк|Каменный акведук|Куб стихий`
+    };
+
+    // At 1920×1080 the 1.2× fit makes the minimum text 12.6 screen pixels.
+    const WIDTH = 1600, HEIGHT = 900, MIN_FONT = 10.5, GAP = 2.4;
+    const SEED = 0x4d42554c;
+    const scene = document.getElementById('scene');
+    const cloud = document.getElementById('cloud');
+    const countLabel = document.getElementById('word-count');
+    const anchors = {
+      construction: [795, 380], machinery: [1190, 325], hq: [1045, 590],
+      camp: [400, 570], people: [515, 270], weather: [1230, 625],
+      magic: [1120, 730], campaign: [450, 155]
+    };
+    const palette = ['#F2B33A', '#E07A35', '#B85A2A', '#F3DDB0'];
+    const magicAccents = new Set(['Мана', 'Реактор', 'Техно-магия', 'Заклинания', 'Эфир', 'Портал', 'Левитация', 'Звездопад', 'Сердце мира', 'Резонатор', 'Телекинез', 'Зеркало']);
+    let randomState = SEED;
+    function random() {
+      randomState |= 0;
+      randomState = randomState + 0x6D2B79F5 | 0;
+      let n = Math.imul(randomState ^ randomState >>> 15, 1 | randomState);
+      n = n + Math.imul(n ^ n >>> 7, 61 | n) ^ n;
+      return ((n ^ n >>> 14) >>> 0) / 4294967296;
+    }
+    const terms = [];
+    const seen = new Set();
+    function add(text, tier, category, size, anchor) {
+      const key = text.toLocaleLowerCase('ru');
+      if (seen.has(key)) return;
+      seen.add(key);
+      terms.push({ text, tier, category, size, anchor, order: terms.length,
+        phase: random() * Math.PI * 2,
+        rotated: tier === 3 && text.length <= 19 && random() < .09,
+        shade: random(), jitter: [random() - .5, random() - .5] });
+    }
+    core.forEach(([text, size, x, y]) => add(text, 0, 'core', text === 'MicroBuilders' ? 90 : size * .87, [x, y]));
+    for (const [category, list] of Object.entries(systems)) {
+      list.split('|').forEach((text, i) => add(text, 1, category, 17 + (i < 3 ? 3 : 0) + random() * 2));
+    }
+    for (const [category, list] of Object.entries(details)) {
+      list.split('|').forEach(text => add(text, 3, category, MIN_FONT + random() * .9));
+    }
+    // Importance first, with deterministic variation inside each tier.
+    terms.sort((a, b) => a.tier - b.tier || b.size - a.size || a.order - b.order);
+
+    function fit() {
+      const scale = Math.min(window.innerWidth / WIDTH, window.innerHeight / HEIGHT);
+      scene.style.transform = `translate(${(window.innerWidth - WIDTH * scale) / 2}px, ${(window.innerHeight - HEIGHT * scale) / 2}px) scale(${scale})`;
+    }
+    window.addEventListener('resize', fit, { passive: true });
+    fit();
+
+    // A spatial hash makes the greedy search cheap. Placement uses padded AABBs,
+    // including for rotated labels; the final check independently reads the DOM.
+    const CELL = 48;
+    const grid = new Map();
+    const placed = [];
+    function intersects(a, b, gap = 0) {
+      return a.x < b.x + b.w + gap && a.x + a.w + gap > b.x &&
+             a.y < b.y + b.h + gap && a.y + a.h + gap > b.y;
+    }
+    function cells(box, callback, padding = 0) {
+      const x0 = Math.floor((box.x - padding) / CELL);
+      const x1 = Math.floor((box.x + box.w + padding) / CELL);
+      const y0 = Math.floor((box.y - padding) / CELL);
+      const y1 = Math.floor((box.y + box.h + padding) / CELL);
+      for (let x = x0; x <= x1; x++) {
+        for (let y = y0; y <= y1; y++) if (callback(x + y * 64)) return true;
+      }
+      return false;
+    }
+    function inside(box) {
+      if (box.x < 28 || box.y < 72 || box.x + box.w > 1572 || box.y + box.h > 817) return false;
+      // A soft rectangular silhouette, leaving a little air in the four corners.
+      for (const x of [box.x, box.x + box.w]) {
+        for (const y of [box.y, box.y + box.h]) {
+          if (Math.pow(Math.abs(x - 800) / 775, 8) + Math.pow(Math.abs(y - 444.5) / 376, 8) > 1) return false;
+        }
+      }
+      return true;
+    }
+    function available(box) {
+      return inside(box) && !cells(box, key => {
+        const bucket = grid.get(key);
+        return bucket && bucket.some(other => intersects(box, other, GAP));
+      }, GAP);
+    }
+    function insert(box) {
+      placed.push(box);
+      cells(box, key => {
+        if (!grid.has(key)) grid.set(key, []);
+        grid.get(key).push(box);
+        return false;
+      });
+    }
+    // Vogel's spiral: fixed seed, dense candidates, no browser randomness.
+    const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+    const spiral = Array.from({ length: 24000 }, (_, i) => {
+      const r = 3.4 * Math.sqrt(i);
+      return [Math.cos(i * GOLDEN_ANGLE) * r * 1.8, Math.sin(i * GOLDEN_ANGLE) * r];
+    });
+    function findSpace(term, w, h) {
+      const anchor = term.anchor || anchors[term.category];
+      const ax = anchor[0] + (term.tier ? term.jitter[0] * 240 : 0);
+      const ay = anchor[1] + (term.tier ? term.jitter[1] * 160 : 0);
+      const cos = Math.cos(term.phase), sin = Math.sin(term.phase);
+      for (const [sx, sy] of spiral) {
+        const box = {
+          x: Math.round((ax + sx * cos - sy * sin * 1.8 - w / 2) * 2) / 2,
+          y: Math.round((ay + sx * sin / 1.8 + sy * cos - h / 2) * 2) / 2,
+          w, h, term
+        };
+        if (available(box)) return box;
+      }
+      // Exhaustive pixel-spaced fallback catches small pockets missed by the spiral.
+      for (let y = 72; y + h <= 817; y += 4) {
+        for (let x = 28; x + w <= 1572; x += 4) {
+          const box = { x, y, w, h, term };
+          if (available(box)) return box;
+        }
+      }
+      return null;
+    }
+    function colour(term) {
+      if (magicAccents.has(term.text)) return term.shade < .5 ? '#4FE3D2' : '#9B7BFF';
+      if (term.tier === 0) return term.order < 4 ? '#F2B33A' : (term.order % 2 ? '#E07A35' : '#F3DDB0');
+      if (term.tier === 1) return term.shade < .45 ? '#F2B33A' : '#F3DDB0';
+      return palette[term.shade < .2 ? 0 : term.shade < .44 ? 1 : term.shade < .55 ? 2 : 3];
+    }
+
+    async function build() {
+      const started = performance.now();
+      // Explicitly request the faces before fonts.ready: there is no visible text
+      // using Unbounded yet, so ready by itself would not start that download.
+      if (document.fonts) {
+        await Promise.allSettled([
+          document.fonts.load('800 94px Unbounded', 'MicroBuilders'),
+          document.fonts.load('700 62px Unbounded', 'Стройка'),
+          document.fonts.load('600 14px Manrope', 'Строители'),
+          document.fonts.load('700 12px Manrope', 'Мир игры')
+        ]);
+        await document.fonts.ready;
+      }
+      const measure = document.createElement('div');
+      measure.className = 'measure';
+      measure.setAttribute('aria-hidden', 'true');
+      document.body.append(measure);
+      for (const term of terms) {
+        const node = document.createElement(term.order === 0 ? 'h1' : 'span');
+        node.className = 'word' + (term.tier === 0 ? ' big' : '') + (term.order === 0 ? ' title' : '');
+        node.style.fontSize = term.size + 'px';
+        node.style.color = colour(term);
+        node.textContent = term.text;
+        term.node = node;
+        measure.append(node);
+      }
+      // Batch DOM measurements so all boxes use the actual chosen font and shaping.
+      function measureWord(term) {
+        const rect = term.node.getBoundingClientRect();
+        term.width = Math.ceil(rect.width) + 1;
+        term.height = Math.ceil(rect.height) + 1;
+      }
+      terms.forEach(measureWord);
+      const fragment = document.createDocumentFragment();
+      let dropped = 0, shrunk = 0;
+      for (let i = 0; i < terms.length; i++) {
+        const term = terms[i];
+        let box = findSpace(term, term.rotated ? term.height : term.width, term.rotated ? term.width : term.height);
+        if (!box && term.tier > 0 && term.size > MIN_FONT) {
+          term.size = term.tier === 1 ? Math.max(17, term.size * .85) : MIN_FONT;
+          term.node.style.fontSize = term.size + 'px';
+          measureWord(term);
+          box = findSpace(term, term.rotated ? term.height : term.width, term.rotated ? term.width : term.height);
+          if (box) shrunk++;
+        }
+        // Rotation is optional: try the other orientation before dropping a detail.
+        if (!box && term.tier === 3 && term.rotated) {
+          term.rotated = false;
+          box = findSpace(term, term.width, term.height);
+        }
+        if (!box) { term.node.remove(); dropped++; continue; }
+        insert(box);
+        const slot = document.createElement('div');
+        slot.className = 'slot' + (term.rotated ? ' vertical' : '');
+        slot.style.cssText = `left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px`;
+        slot.dataset.word = term.text;
+        slot.dataset.size = term.size.toFixed(2);
+        slot.dataset.rotated = String(term.rotated);
+        slot.append(term.node);
+        fragment.append(slot);
+        // Keep first paint and window resizing responsive during dense searches.
+        if (i % 35 === 34) await new Promise(resolve => requestAnimationFrame(resolve));
+      }
+      cloud.append(fragment);
+      measure.remove();
+      countLabel.textContent = `${placed.length} СЛОВ О МИРЕ ИГРЫ`;
+      cloud.setAttribute('aria-label', `${placed.length} слов и коротких фраз о MicroBuilders`);
+      scene.classList.add('ready');
+      document.getElementById('loading').hidden = true;
+
+      const layoutMs = Math.round(performance.now() - started);
+
+      // Dev API: checks both the layout's padded boxes and independently measured
+      // rendered rectangles, including 90-degree rotation and viewport scaling.
+      function check() {
+        let overlaps = 0, domOverlaps = 0, outOfBounds = 0;
+        const pairs = [];
+        for (let i = 0; i < placed.length; i++) {
+          if (!inside(placed[i])) outOfBounds++;
+          for (let j = i + 1; j < placed.length; j++) {
+            if (intersects(placed[i], placed[j], GAP - .01)) {
+              overlaps++; pairs.push([placed[i].term.text, placed[j].term.text]);
+            }
+          }
+        }
+        const rendered = [...cloud.querySelectorAll('.word')].map(node => {
+          const r = node.getBoundingClientRect();
+          return { x: r.left, y: r.top, w: r.width, h: r.height, text: node.textContent };
+        });
+        for (let i = 0; i < rendered.length; i++) {
+          for (let j = i + 1; j < rendered.length; j++) {
+            if (intersects(rendered[i], rendered[j])) domOverlaps++;
+          }
+        }
+        const report = {
+          seed: SEED, candidates: terms.length, placed: placed.length, dropped, shrunk,
+          rotated: placed.filter(b => b.term.rotated).length,
+          minimumFont: Math.min(...placed.map(b => b.term.size)),
+          overlaps, domOverlaps, outOfBounds, pairs,
+          layoutMs
+        };
+        console.info(`[MicroBuilders] ${report.placed} words; ${overlaps} padded-box overlaps; ${domOverlaps} rendered overlaps; ${outOfBounds} outside cloud.`, report);
+        console.assert(overlaps === 0 && domOverlaps === 0 && outOfBounds === 0, 'Word cloud geometry check failed', report);
+        return report;
+      }
+      window.wordCloud = { check, words: placed.map(b => b.term.text), ready: true, report: check() };
+      document.documentElement.dataset.cloudReady = 'true';
+    }
+    build().catch(error => {
+      console.error('[MicroBuilders] Layout failed', error);
+      document.getElementById('loading').textContent = 'Не удалось собрать облако. Обновите страницу.';
+    });
+  })();
+  </script>
+</body>
+</html>
