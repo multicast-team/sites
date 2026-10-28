@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Butcher Hero · три сценария</title><style>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Butcher Hero · три сценария · V2</title><style>
 @layer defaults{:root{color-scheme:dark;--foreground:#eeece7;--muted-foreground:#9daaaa;--card:#1a2425;--secondary:#253132;--border:#3b4746;--radius:16px;--font-sans:Arial,sans-serif}}
 [data-only=true] .variants{display:none}*{box-sizing:border-box}body{margin:0;color:var(--foreground);font:14px/1.5 var(--font-sans)}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid #ffcc72;outline-offset:3px}button:disabled{cursor:default;opacity:.6}.variants{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:0 0 17px}.variant{text-align:left;padding:13px 12px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--foreground);min-width:0}.variant small{display:block;color:var(--muted-foreground);font-size:10px;letter-spacing:.06em;margin-bottom:6px}.variant strong{display:block;font-size:13px;line-height:1.3}.variant.active{background:#ffce79;color:#292322;border-color:#ffce79}.variant.active small{color:#70552d}.pitch{margin:0 0 17px;color:var(--muted-foreground);font-size:13px}.layout{display:grid;grid-template-columns:minmax(240px,336px) minmax(0,1fr);gap:22px;align-items:start}.viewer{padding:16px;background:var(--card);border-radius:var(--radius)}.screen{position:relative;aspect-ratio:9/16;overflow:hidden;border-radius:10px;background:#5a7842}canvas{display:block;width:100%;height:100%}#screen-play{position:absolute;inset:0;background:transparent;border:0;width:100%}.controls{display:flex;gap:8px;margin-top:13px}#play{flex:1;padding:11px 6px;background:#ffce79;color:#292322;border:0;border-radius:9px;font-weight:800}#reset{width:42px;border:1px solid var(--border);background:transparent;color:var(--foreground);border-radius:9px;font-size:22px}.time{display:flex;justify-content:space-between;margin-top:11px;font-size:12px;color:var(--muted-foreground);font-variant-numeric:tabular-nums}#seek{width:100%;accent-color:#ffce79;margin:9px 0}.subcontrols{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted-foreground)}select{background:var(--secondary);color:var(--foreground);border:0;border-radius:5px;padding:2px}.phase{font-size:10px;color:var(--muted-foreground);letter-spacing:.08em}.shot-title{font-size:23px;line-height:1.22;margin:7px 0 12px;font-weight:800;min-height:57px}#note{color:var(--muted-foreground);margin:0 0 15px;min-height:84px}.beat{padding:12px 14px;border-left:3px solid #ffce79;background:var(--secondary);border-radius:0 9px 9px 0;font-size:12px;margin-bottom:16px}.logic{display:flex;gap:4px;margin:0 0 17px}.logic button{border:0;border-top:3px solid var(--border);background:transparent;padding:8px 3px 0;text-align:left;flex:1;color:var(--muted-foreground);font-size:11px}.logic button.active{border-color:#ffce79;color:var(--foreground)}.shot{display:grid;grid-template-columns:43px 1fr;text-align:left;align-items:center;gap:8px;width:100%;padding:8px 9px;border:1px solid transparent;background:transparent;border-radius:8px;color:var(--muted-foreground);font-size:13px}.shot.active{background:var(--secondary);border-color:var(--border);color:var(--foreground)}.shot:hover{background:var(--secondary)}.shot span:first-child{font-size:11px;font-variant-numeric:tabular-nums}.fineprint{font-size:11px;color:var(--muted-foreground);border-top:1px solid var(--border);padding-top:13px;margin:15px 0 0}.links{display:flex;gap:15px;flex-wrap:wrap;margin-top:12px}.links a{color:#e7b961;font-size:12px;text-decoration:none}details{font-size:12px;color:var(--muted-foreground);margin-top:13px}summary{color:var(--foreground);cursor:pointer}.variant-label{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.08em;color:var(--muted-foreground);margin-bottom:12px}@media(max-width:570px){.variants{gap:6px}.variant{padding:9px 7px}.variant strong{font-size:11px}.variant small{font-size:9px}.layout{grid-template-columns:1fr;gap:20px}.viewer{max-width:370px;width:100%;margin:auto}.shot-title{min-height:0;font-size:21px}#note{min-height:0}#shots{display:grid;grid-template-columns:1fr 1fr}.shot{grid-template-columns:36px 1fr;padding:8px 5px;font-size:12px}.logic button{font-size:11px}}
 </style></head><body data-initial="0">
-<div class="variant-label"><span>BUTCHER HERO · ТРИ ЧЕРНОВИКА</span><span>9:16 · по 30 секунд</span></div>
+<div class="variant-label"><span>BUTCHER HERO · ТРИ ЧЕРНОВИКА · V2</span><span>9:16 · 34–36 секунд</span></div>
 <div class="variants" id="variants" aria-label="Выбор сценария"></div><p class="pitch" id="pitch"></p>
-<div class="layout"><div class="viewer"><div class="screen"><canvas id="film" width="1080" height="1920" role="img" aria-label="Аниматик выбранного сценария"></canvas><button id="screen-play" aria-label="Проиграть или приостановить черновик"></button></div><div class="controls"><button id="play">▶ Смотреть 30 секунд</button><button id="reset" aria-label="В начало">↺</button></div><div class="time"><strong id="clock">00.5 с</strong><span>00:30</span></div><input id="seek" type="range" min="0" max="30" value="0.5" step="0.01" aria-label="Перемотка"><div class="subcontrols"><span>Пробел — пауза · ← → — шаг</span><label>Скорость <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label></div></div><div class="info"><div class="logic" id="logic"></div><div class="phase" id="counter"></div><div class="shot-title" id="title"></div><p id="note"></p><div class="beat" id="beat"></div><div id="shots"></div><p class="fineprint">Условная рисованная графика. Оцениваем историю и монтаж; это не запись из игры. Числа и окна наград иллюстративные, игровые ожидания сокращены. Без звука.</p><details><summary>Подготовка игрового дубля</summary><p id="prep"></p></details><div class="links"><a href="#" id="download">↓ Сохранить все три в HTML</a><a href="#" id="download-one">↓ Только этот вариант</a></div></div></div>
+<div class="layout"><div class="viewer"><div class="screen"><canvas id="film" width="1080" height="1920" role="img" aria-label="Аниматик выбранного сценария"></canvas><button id="screen-play" aria-label="Проиграть или приостановить черновик"></button></div><div class="controls"><button id="play">▶ Смотреть 36 секунд</button><button id="reset" aria-label="В начало">↺</button></div><div class="time"><strong id="clock">00.5 с</strong><span id="duration">00:36</span></div><input id="seek" type="range" min="0" max="36" value="0.5" step="0.01" aria-label="Перемотка"><div class="subcontrols"><span>Пробел — пауза · ← → — шаг</span><label>Скорость <select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select></label></div></div><div class="info"><div class="logic" id="logic"></div><div class="phase" id="counter"></div><div class="shot-title" id="title"></div><p id="note"></p><div class="beat" id="beat"></div><div id="shots"></div><p class="fineprint">Условная рисованная графика. Оцениваем историю и монтаж; это не запись из игры. Числа и окна наград иллюстративные, игровые ожидания сокращены. Без звука.</p><details><summary>Подготовка игрового дубля</summary><p id="prep"></p></details><div class="links"><a href="#" id="download">↓ Сохранить все три в HTML</a><a href="#" id="download-one">↓ Только этот вариант</a></div></div></div>
 <script>(()=>{
 const canvas=document.getElementById('film'),ctx=canvas.getContext('2d');const W=540,H=960,TAU=Math.PI*2;const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));const mix=(a,b,t)=>a+(b-a)*t;const ease=t=>{t=clamp(t);return t*t*(3-2*t)};const rnd=n=>{const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)};function poly(points,fill,stroke='#333038',width=2){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.lineJoin='round';ctx.stroke()}}
 function ellipse(x,y,rx,ry,color){ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,TAU);ctx.fillStyle=color;ctx.fill()}
@@ -52,27 +52,346 @@ function scene5(t){ground('ice',t);platform(270,491,215,174,'ice',t);let prep=cl
 function scene6(t){ground('purple',t);platform(270,447,212,154,'purple',t);lich(270,368,1.18,t);hp(270,173,122,.8,'THE LICH','#df6d97');for(let i=0;i<5;i++){let spawn=.15+i*.42,age=t-spawn;if(age<0)continue;let a=(i-2)*.42,xx=270+Math.sin(a)*145,yy=510+Math.cos(a)*64,scale=i===2?mix(.66,1.35,ease((t-2.2)/.7)):.72;let emerge=ease(age/.35);glow(xx,yy-12,48,'#85efb935');ctx.save();ctx.globalAlpha=emerge;if(t>4.25){ctx.globalAlpha*=1-clamp((t-4.25)/.55)}skeleton(xx,yy+(1-emerge)*35,scale,t+i);ctx.restore();if(age<.7)burst(xx,yy-20,age,'#80e9c2',9,.5);if(i===2&&t>2.2&&t<3.1){ctx.save();ctx.globalAlpha=Math.sin((t-2.2)/.9*Math.PI)*.7;glow(xx,yy-40,85,'#9bffd685');ctx.restore()}}
  pudge(270,735,1.2,t*1.1,'axe');hp(270,550,83,1,'10K');if(t>4.1){let a=(t-4.1)/.9;slash(270,565,a,'#fff1b6',174);burst(270,535,a,'#d7f3b4',32,1.4);glow(270,570,165,'#ffe27b44');if(t>4.35)txt('CRITICAL!',270,425,35,'#ffdc7a')}hud(t,'axe')}
 const films=[
- {id:'rescue',title:'Ключ есть — сил не хватает',kind:'Приключение',pitch:'Спасти Мисс Пудж мешает сильный босс. Кузнец даёт усиление для реванша.',logic:['Ключ есть, босс не пускает','Усилить тот же топор','Вернуться и открыть клетку'],breaks:[0,11,17],prep:'Подготовить историю спасения, ключ и одного босса для двух дублей. У кузнеца обработать обычный топор: показать копии и улучшение. Съёмка обработки — с монтажным пропуском времени. Финал на открытии клетки; дальнейшую историю с проклятием не показываем.',shots:[
-  {s:0,e:3,key:'kidnap',title:'Мисс Пудж похищают',note:'Начинаем с действия: спутница рядом с Пуджем, появляется похититель, вспышка — она оказывается в клетке.',beat:'Цель: спасти Мисс Пудж',label:'Похищение',banner:'RESCUE QUEST!'},
-  {s:3,e:6,key:'keyguard',title:'Охранник отдаёт ключ',note:'Один короткий бой. Ключ крупно поднимается над побеждённым охранником и остаётся в индикаторе цели.',beat:'Ключ получен',label:'Добываем ключ',banner:'GET THE KEY!'},
-  {s:6,e:11,key:'rescueFail',title:'Ключ есть. Пройти нельзя',note:'Клетку видно за спиной босса. Удары Пуджа почти не снимают ему здоровье. Ответный удар и отступление.',beat:'Препятствие: не хватает силы',label:'Неудачный бой',banner:'TOO STRONG!'},
-  {s:11,e:17,key:'forgeLong',title:'Кузнец усиливает топор',note:'Кладём именно тот топор, которым били босса. Пропуск времени → копии → улучшение. Значок ключа остаётся: цель не потерялась.',beat:'Решение: усилить оружие',label:'Кузнец → улучшение',banner:'BLACKSMITH!'},
-  {s:17,e:25,key:'rescueWin',title:'Возвращаемся к тому же боссу',note:'Повторяем композицию первого боя. Теперь полоса здоровья босса заметно падает от каждого удара. Финальный удар освобождает проход.',beat:'Проверка: усиление работает',label:'Реванш',banner:'REMATCH!'},
-  {s:25,e:30,key:'freeCage',title:'Открываем клетку',note:'Ключ подходит к замку. Решётка исчезает, камера приближается к персонажам. Фиксируем достигнутую цель.',beat:'Результат: проход открыт',label:'Ключ → клетка открыта',banner:'UNLOCKED!'}]},
- {id:'crystal',title:'Кристалл не хотел разбиваться',kind:'Приключение',pitch:'Кристалл восстанавливается после ударов. Награда события даёт молот, подходящий для этой цели.',logic:['Кристалл восстанавливается','Получить нужный молот','Разбить тот же кристалл'],breaks:[0,5,18],prep:'Наградой подготовленного события должен быть «Алый гром». Показать добор последних ресурсов, а не прохождение всего события за пару секунд. У молота есть бонус против большого кристалла; в этом сюжете победа не зависит от случайной алой молнии.',shots:[
-  {s:0,e:5,key:'crystalFail',title:'Урон есть — результата нет',note:'Пудж бьёт обычным топором. Здоровье кристалла уменьшается и возвращается. Герой останавливается и отходит.',beat:'Препятствие: регенерация',label:'Кристалл лечится',banner:'CAN’T BREAK IT!'},
-  {s:5,e:7,key:'eventGoal',title:'Нужный молот — в награде события',note:'Коротко показываем шкалу наград события и молот в её конце. Это объясняет, зачем идём к големам.',beat:'План: добыть «Алый гром»',label:'Показываем цель',banner:'EVENT REWARD!'},
-  {s:7,e:14,key:'eventFarm',title:'Добираем ресурсы события',note:'Три быстрых столкновения с големами. Ресурсы летят к шкале, она заполняется до награды с молотом.',beat:'Действие: заполнить шкалу',label:'Големы → ресурс',banner:'EVENT BATTLES!'},
-  {s:14,e:18,key:'hammerClaim',title:'Получаем и надеваем молот',note:'Раскрытие награды, крупный молот, одно нажатие «Экипировать». Сохраняем его цвет и форму в следующем кадре.',beat:'Усиление: новое оружие',label:'Молот получен',banner:'CRIMSON THUNDER!'},
-  {s:18,e:26,key:'crystalWin',title:'Возвращаемся к кристаллу',note:'Та же арена и тот же ракурс, но в руках молот. Каждый удар оставляет трещины и снимает большой кусок здоровья.',beat:'Проверка: подходящее оружие',label:'Повторный бой',banner:'RIGHT WEAPON!'},
-  {s:26,e:30,key:'crystalFinish',title:'Последний удар — разрушение',note:'Крупнее замах, короткая вспышка и разлетающиеся осколки. Оставляем секунду на пустой постамент и результат.',beat:'Результат: кристалл разбит',label:'Разрушение',banner:'CRYSTAL UNLOCKED!'}]},
- {id:'surprise',title:'Сюрприз за сюрпризом',kind:'Нарезка фич',pitch:'Для сравнения: быстрый микс превращений, наград и эффектов. Каждый блок заканчивается новым зрелищем.',logic:['Размножение и находка','Молния и кузнец','Взрыв и открытие портала'],breaks:[0,9,18],prep:'Подготовить деление слизня, красивое открытие жеоды, алую молнию, результат обработки у кузнеца, взрыв краба и последний камень портала. Это отдельные эпизоды: ресурсы между блоками не превращаются друг в друга.',shots:[
-  {s:0,e:5,key:'slimeSplit',title:'Одного победил — стало четверо',note:'Большой слизень лопается на двух, затем на четырёх маленьких. Резко меняется масштаб угрозы.',beat:'Сюрприз: врагов стало больше',label:'Слизень → толпа',banner:'MORE BOSSES!'},
-  {s:5,e:9,key:'geodeReveal',title:'Что спрятано в жеоде?',note:'Удар по оболочке, трещины, пауза перед раскрытием. Затем красивый кристалл крупно.',beat:'Сюрприз: редкая находка',label:'Жеода → кристалл',banner:'CRYSTALS!'},
-  {s:9,e:13,key:'redLightning',title:'Алая молния',note:'Возвращаемся из меню в бой. Замах молотом и яркий разряд; монтаж на попадании.',beat:'Эффект: оружие в действии',label:'Красная молния',banner:'MYTHIC WEAPONS!'},
-  {s:13,e:18,key:'forgeShort',title:'Кузнец готовит усиление',note:'Вещь в слот, пропуск ожидания, копии и короткое улучшение. Визуальная передышка между боями.',beat:'Награда: усиленное оружие',label:'Кузнец → копии',banner:'BLACKSMITH!'},
-  {s:18,e:24,key:'crabBlast',title:'Не стой рядом с крабом',note:'Несколько попаданий, нарастающее предупреждение, отход героя и большой взрыв.',beat:'Сюрприз: опасная ответная атака',label:'Краб взрывается',banner:'WATCH OUT!'},
-  {s:24,e:30,key:'portalOpen',title:'Последний камень открывает портал',note:'Камень взлетает, камера следует за ним, он занимает последнее гнездо. Портал загорается — финальная точка.',beat:'Финал: новая возможность',label:'Камень → портал',banner:'NEW ADVENTURE!'}]}
+  {
+    "id": "rescue",
+    "duration": 36,
+    "title": "Ключ есть — сил не хватает",
+    "kind": "Приключение",
+    "pitch": "Спасение → души и усиление → быстрый реванш → клетка открыта → новый квест у шахтёра.",
+    "logic": [
+      "Босс останавливает",
+      "Здоровье + оружие",
+      "Победа → новый квест"
+    ],
+    "breaks": [
+      0,
+      10,
+      23
+    ],
+    "prep": "Подготовить доступ к амулету и кузнецу для съёмочной сборки. Душами повысить запас здоровья, копиями усилить обычный топор. Первый и повторный бой снять у одной клетки с тем же боссом. После открытия клетки показать переход к следующей цепочке квестов у шахтёра и новую цель — гриб с динамитом. Полноценный режим глубокой шахты не заявляем.",
+    "shots": [
+      {
+        "s": 0,
+        "e": 3,
+        "scene": "kidnap",
+        "title": "Похищение: есть за кем бежать",
+        "label": "Похищение",
+        "note": "Мисс Пудж забирают. Пудж бросается следом; клетка сразу обозначает цель.",
+        "beat": "Цель: освободить спутницу",
+        "banner": "RESCUE QUEST!"
+      },
+      {
+        "s": 3,
+        "e": 6,
+        "scene": "keyguard",
+        "title": "Короткий бой за ключ",
+        "label": "Охранник → ключ",
+        "note": "Два быстрых попадания. Охранник падает, ключ взлетает и остаётся в индикаторе цели.",
+        "beat": "Ключ найден — идём к клетке",
+        "banner": "KEY FOUND!"
+      },
+      {
+        "s": 6,
+        "e": 10,
+        "scene": "rescueFail",
+        "title": "Босс заставляет отступить",
+        "label": "Неудача и отход",
+        "note": "Наши удары почти бесполезны. Ответный удар резко снимает здоровье; Пудж отступает.",
+        "beat": "Нужны живучесть и урон",
+        "banner": "TOO STRONG!"
+      },
+      {
+        "s": 10,
+        "e": 14,
+        "scene": "soulsRun",
+        "title": "Добираем души с простых врагов",
+        "label": "Враги → души",
+        "note": "Три коротких столкновения на пути. Души летят к счётчику — следующий шаг оплачен.",
+        "beat": "Добыча для усиления",
+        "banner": "SOULS!"
+      },
+      {
+        "s": 14,
+        "e": 16,
+        "scene": "healthUpgrade",
+        "title": "Одно нажатие — больше здоровья",
+        "label": "Амулет → здоровье",
+        "note": "Открываем узел здоровья, покупаем. Полоска максимального HP растёт; сразу выходим из меню.",
+        "beat": "Здоровье поможет выдержать удар",
+        "banner": "HEALTH UP!"
+      },
+      {
+        "s": 16,
+        "e": 20,
+        "scene": "forgeRescueV2",
+        "title": "Усиливаем тот же топор",
+        "label": "Кузнец → урон",
+        "note": "Топор в слот → монтажный пропуск ожидания → копии → улучшение. Ключ остаётся в индикаторе.",
+        "beat": "Оружие подготовлено для реванша",
+        "banner": "BLACKSMITH!"
+      },
+      {
+        "s": 20,
+        "e": 23,
+        "scene": "guardsFast",
+        "title": "Первое применение усиления",
+        "label": "Быстро убираем охрану",
+        "note": "На обратном пути Пудж быстро пробивается через оставшихся охранников. Темп после прокачки растёт.",
+        "beat": "Первый результат: дорога свободна",
+        "banner": "POWER UP!"
+      },
+      {
+        "s": 23,
+        "e": 27,
+        "scene": "rescueWinV2",
+        "title": "Реванш короче неудачи",
+        "label": "Три удара → победа",
+        "note": "Повторяем ракурс первого боя. Пудж выдерживает ответ и тремя мощными ударами побеждает босса.",
+        "beat": "Прокачка сработала",
+        "banner": "REMATCH!"
+      },
+      {
+        "s": 27,
+        "e": 31,
+        "scene": "freeCage",
+        "title": "Ключ открывает клетку",
+        "label": "Спасение",
+        "note": "Подходим, используем ключ. Решётка исчезает. Держим результат недолго — впереди продолжение.",
+        "beat": "Победа завершает текущую задачу",
+        "banner": "RESCUED!"
+      },
+      {
+        "s": 31,
+        "e": 36,
+        "scene": "nextQuest",
+        "title": "Спасение открывает следующую историю",
+        "label": "Шахтёр → новый квест",
+        "note": "Появляется новая квестовая цель. Шахтёр, одно нажатие «Принять», короткая встреча с грибом, у которого динамит.",
+        "beat": "Новый контент: следующая цепочка квестов",
+        "banner": "NEW QUEST!"
+      }
+    ]
+  },
+  {
+    "id": "crystal",
+    "duration": 34,
+    "title": "Кристалл не хотел разбиваться",
+    "kind": "Приключение",
+    "pitch": "Неудачные удары → големы и босс события → молот → короткий реванш → новая система кристаллов.",
+    "logic": [
+      "Кристалл лечится",
+      "Добыть подходящий молот",
+      "Разбить → открыть жеоду"
+    ],
+    "breaks": [
+      0,
+      4,
+      25
+    ],
+    "prep": "В наградах подготовленного события должен быть «Алый гром». Показать последние ресурсы до награды: големы дают часть, босс — остаток. Молот наследует урон обычного оружия того же типа — подготовить базовый молот. Разрушение большого кристалла открывает систему; затем открываем заранее подготовленную жеоду в меню, не изображая её прямой добычей из стража.",
+    "shots": [
+      {
+        "s": 0,
+        "e": 4,
+        "scene": "crystalFail",
+        "title": "Два удара — здоровье возвращается",
+        "label": "Кристалл лечится",
+        "note": "Удар → восстановление. Ещё удар → снова восстановление. Пудж прекращает попытку.",
+        "beat": "Препятствие: не хватает подходящего оружия",
+        "banner": "CAN’T BREAK IT!"
+      },
+      {
+        "s": 4,
+        "e": 6,
+        "scene": "eventGoal",
+        "title": "Нужный молот виден в наградах",
+        "label": "Цель события",
+        "note": "Коротко шкала события и молот в конце. Уже почти хватает ресурса — надо добрать.",
+        "beat": "Понятно, зачем идём в событие",
+        "banner": "EVENT REWARD!"
+      },
+      {
+        "s": 6,
+        "e": 11,
+        "scene": "eventFarmV2",
+        "title": "Быстро добираем ресурс",
+        "label": "Големы → ресурс",
+        "note": "Несколько разных попаданий по големам. Последние кристаллы не закрывают шкалу полностью: ещё нужен босс.",
+        "beat": "До молота остался один бой",
+        "banner": "EVENT BATTLES!"
+      },
+      {
+        "s": 11,
+        "e": 16,
+        "scene": "eventBossV2",
+        "title": "Уйти от атаки и добить",
+        "label": "Босс события",
+        "note": "Рыцарь готовит тяжёлый удар → Пудж уходит → возвращается. Победа даёт последний ресурс до награды.",
+        "beat": "Шкала заполнена",
+        "banner": "EVENT BOSS!"
+      },
+      {
+        "s": 16,
+        "e": 19,
+        "scene": "hammerReward",
+        "title": "Молот получен",
+        "label": "Раскрытие награды",
+        "note": "Крупное раскрытие «Алого грома». Короткая фиксация предмета перед экипировкой.",
+        "beat": "Получено нужное оружие",
+        "banner": "MYTHIC REWARD!"
+      },
+      {
+        "s": 19,
+        "e": 21,
+        "scene": "hammerEquip",
+        "title": "Одно нажатие — молот в руках",
+        "label": "Экипировать",
+        "note": "Нажатие на экипировку. Переходим обратно в мир уже с молотом.",
+        "beat": "Оружие готово",
+        "banner": "EQUIP!"
+      },
+      {
+        "s": 21,
+        "e": 25,
+        "scene": "hammerPractice",
+        "title": "Новое оружие работает по дороге",
+        "label": "Пробуем молот",
+        "note": "Пудж пробивается через небольшую группу простых врагов. Новый молот всё время виден в руках.",
+        "beat": "Возвращение продолжается действием",
+        "banner": "TRY IT OUT!"
+      },
+      {
+        "s": 25,
+        "e": 29,
+        "scene": "crystalSmashV2",
+        "title": "Три удара — кристалл разбит",
+        "label": "Короткий реванш",
+        "note": "Тот же ракурс арены. Трещины после каждого попадания, третий удар разрушает кристалл.",
+        "beat": "Победа открывает систему кристаллов",
+        "banner": "CRYSTAL UNLOCKED!"
+      },
+      {
+        "s": 29,
+        "e": 34,
+        "scene": "newCrystalSystem",
+        "title": "Открываем жеоду в новой системе",
+        "label": "Новая фича → награда",
+        "note": "Открыто меню кристаллов. Нажимаем на жеоду, раскалываем её и получаем редкую находку.",
+        "beat": "Ещё одна фича и награда после победы",
+        "banner": "NEW FEATURE: CRYSTALS!"
+      }
+    ]
+  },
+  {
+    "id": "surprise",
+    "duration": 35,
+    "title": "Сюрприз за сюрпризом",
+    "kind": "Нарезка фич",
+    "pitch": "Быстрые находки и удары → ожидание взрыва → полёт камня → новая армия за порталом.",
+    "logic": [
+      "Слизни и новая находка",
+      "Оружие, кузнец, взрыв",
+      "Камень → портал → Лич"
+    ],
+    "breaks": [
+      0,
+      10,
+      22
+    ],
+    "prep": "Подготовить деление слизня, открытие и установку кристалла, алую молнию, копии у кузнеца, взрыв краба. У отдельного врага — последний недостающий камень портала. После открытия показать отдельный вход на арену Лича; выбор босса сокращён монтажом. Это нарезка разных эпизодов, а не цепь обмена ресурсов.",
+    "shots": [
+      {
+        "s": 0,
+        "e": 4,
+        "scene": "slimeSplit",
+        "title": "Один слизень превращается в толпу",
+        "label": "Слизень → четыре",
+        "note": "Сразу добивание, затем новые слизни. На размножении меняем эпизод.",
+        "beat": "Сюрприз: противников стало больше",
+        "banner": "MORE BOSSES!"
+      },
+      {
+        "s": 4,
+        "e": 7,
+        "scene": "geodeFast",
+        "title": "Награда скрывалась внутри",
+        "label": "Открыть жеоду",
+        "note": "Удар, трещины, раскрытие. Кристалл занимает центр кадра.",
+        "beat": "Быстрая находка",
+        "banner": "CRYSTALS!"
+      },
+      {
+        "s": 7,
+        "e": 10,
+        "scene": "equipCrystal",
+        "title": "Установить находку",
+        "label": "Кристалл → слот",
+        "note": "Кристалл перемещается в слот. Видно изменение характеристики и подтверждение установки.",
+        "beat": "Применяем только что полученную награду",
+        "banner": "EQUIP CRYSTAL!"
+      },
+      {
+        "s": 10,
+        "e": 13,
+        "scene": "redLightningV2",
+        "title": "Вспышка алой молнии",
+        "label": "Молния",
+        "note": "Замах → попадание → разряд. Быстрый боевой акцент после меню.",
+        "beat": "Контрастный эффект",
+        "banner": "MYTHIC WEAPONS!"
+      },
+      {
+        "s": 13,
+        "e": 17,
+        "scene": "forgeMixV2",
+        "title": "Короткое усиление у кузнеца",
+        "label": "Кузнец → копии",
+        "note": "Один предмет в обработку, пропуск ожидания, выдача копий и улучшение.",
+        "beat": "Короткая смена действия",
+        "banner": "BLACKSMITH!"
+      },
+      {
+        "s": 17,
+        "e": 22,
+        "scene": "crabBlastV2",
+        "title": "Отойти перед взрывом",
+        "label": "Краб: ожидание → взрыв",
+        "note": "Удары, растущее предупреждение, отход героя. Пауза перед взрывом работает на напряжение.",
+        "beat": "Самый длинный напряжённый эпизод",
+        "banner": "WATCH OUT!"
+      },
+      {
+        "s": 22,
+        "e": 26,
+        "scene": "portalStoneFight",
+        "title": "Добиваем врага с последним камнем",
+        "label": "Враг → камень портала",
+        "note": "Несколько попаданий по противнику. Над ним появляется последний камень; движение продолжается в следующем плане.",
+        "beat": "Переход к открытию портала",
+        "banner": "LAST STONE!"
+      },
+      {
+        "s": 26,
+        "e": 31,
+        "scene": "portalOpenV2",
+        "title": "Камень занимает последнее гнездо",
+        "label": "Полёт → портал",
+        "note": "Камень летит к порталу, гнездо заполняется. Пудж идёт в открывшийся проход.",
+        "beat": "Новая возможность открыта",
+        "banner": "PORTAL OPEN!"
+      },
+      {
+        "s": 31,
+        "e": 35,
+        "scene": "lichArrival",
+        "title": "За порталом — следующая угроза",
+        "label": "Лич поднимает армию",
+        "note": "Пудж оказывается на арене. Лич призывает скелетов, один вырастает. Финал на наступающей группе.",
+        "beat": "Продолжение: ещё один босс",
+        "banner": "NEW BOSS!"
+      }
+    ]
+  }
 ];
 let activeFilm=0;
 const pulse=(t,at,span=.4)=>{const a=(t-at)/span;return a>=0&&a<=1?Math.sin(a*Math.PI):0};
@@ -104,19 +423,39 @@ function slimeSurprise(t){ground('purple',t);platform(270,475,209,153,'purple',t
 function geode(t){ground('purple',t);ctx.fillStyle='#19182dc9';ctx.fillRect(0,160,540,695);const broken=t>2.1;round(71,265,398,475,21,'#483450','#bc91c9');if(!broken){poly([[190,403],[255,354],[332,376],[359,464],[305,553],[212,552],[178,477]],'#9374bc','#342c48',4);poly([[190,403],[255,354],[272,451],[212,552],[178,477]],'#b799d7',null);poly([[272,451],[332,376],[359,464],[305,553]],'#745696',null);if(t>.5)line([[254,366],[242,423],[279,445],[257,492],[274,542]],'#402c58',5);if(t>1.3)line([[242,423],[200,440],[185,471]],'#402c58',5);weapon('hammer',388,473,-.7+Math.sin(t*9)*.25,.77);round(147,641,246,61,11,'#ffc85c','#9b6b48');txt('OPEN',270,672,25);hand(331,687,t)}else{glow(270,460,160,'#e795ed69');burst(270,459,clamp((t-2.1)/1.3),'#e4c3ff',32,1.5);ctx.save();ctx.translate(270,455);ctx.rotate(Math.sin(t*2)*.08);poly([[0,-79],[53,-35],[44,51],[0,80],[-50,42],[-54,-34]],'#ee78a9','#683f69',4);poly([[0,-79],[0,5],[-50,42],[-54,-34]],'#ffd0e7',null);poly([[0,5],[53,-35],[44,51],[0,80]],'#bc3c85',null);ctx.restore();txt('LEGENDARY',270,612,27,'#ffda86');txt('CRYSTAL FOUND',270,658,24,'#f0d9ff')}objective('OPEN · DISCOVER · EQUIP',false)}
 function portal(x,y,s=1,opened=0,t=0){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ellipse(0,48,129,55,'#28334844');poly([[-120,40],[-80,4],[84,4],[126,40],[111,68],[-105,68]],'#858b95','#464455',3);ellipse(0,-50,107,144,'#4a536b');ellipse(0,-50,79,112,'#17263c');for(let i=0;i<10;i++){let a=i*TAU/10;const xx=Math.sin(a)*95,yy=-50+Math.cos(a)*128;ctx.save();ctx.translate(xx,yy);ctx.rotate(-a);poly([[-28,-22],[26,-22],[28,22],[-28,22]],i%2?'#8e9aae':'#a8aabc','#52586e',3);ctx.restore()}if(opened>0){ctx.save();ctx.globalAlpha=opened;glow(0,-48,135,'#57e4e978');ellipse(0,-50,76,108,'#28546e');for(let i=0;i<6;i++){ctx.strokeStyle=i%2?'#72fcf1':'#428ca6';ctx.lineWidth=5;ctx.beginPath();ctx.ellipse(Math.sin(t+i)*4,-50,14+i*11,20+i*16,t*.35+i*.1,0,Math.PI*1.7);ctx.stroke()}ctx.restore()}for(let i=0;i<4;i++){let a=-1.1+i*.73;let xx=Math.sin(a)*93,yy=-50-Math.cos(a)*129;diamond(xx,yy,15,i<3||opened>.4?'#e6afd9':'#423c52')}ctx.restore()}
 function portalFinale(t){ground('forest',t);let fly=ease((t-.55)/2.4),opened=ease((t-3.1)/.8);portal(278,455,1.08,opened,t);pudge(mix(192,260,ease((t-4.5)/1)),mix(747,598,ease((t-4.5)/1)),1.14,t*.6,'axe');if(t<3.2){let x=mix(220,329,fly)+Math.sin(fly*Math.PI*3)*42*(1-fly),y=mix(650,279,fly);glow(x,y,55,'#e8b1ff69');diamond(x,y,23,'#c8a8ff');line([[x-12,y+31],[x-20,y+62],[x-9,y+87]],'#e2b7f080',4)}if(t>3.05&&t<4.05)burst(278,359,t-3.05,'#a1f8f0',28,1.8);objective(t<3.2?'LAST PORTAL STONE':'PORTAL OPEN',false)}
-function drawShot(key,t){switch(key){case 'kidnap':keyKidnap(t);break;case 'keyguard':keyGuard(t);break;case 'rescueFail':rescueFight(t,false);break;case 'forgeLong':forgedCard(t,6,true);break;case 'rescueWin':rescueFight(t,true);break;case 'freeCage':freeCage(t);break;case 'crystalFail':crystalFailed(t);break;case 'eventGoal':eventGoal(t);break;case 'eventFarm':eventGather(t);break;case 'hammerClaim':claimHammer(t);break;case 'crystalWin':crystalRematch(t);break;case 'crystalFinish':crystalPayoff(t);break;case 'slimeSplit':slimeSurprise(t);break;case 'geodeReveal':geode(t);break;case 'redLightning':scene0(t*.72);break;case 'forgeShort':forgedCard(t,5,false);objective('WEAPON COPIES → UPGRADE',false);break;case 'crabBlast':scene5(t*5/6);break;case 'portalOpen':portalFinale(t);break}}
+function soulOrb(x,y,s=1,t=0){ctx.save();ctx.translate(x,y);ctx.scale(s,s);glow(0,0,40,'#bfc8ff66');ctx.beginPath();ctx.moveTo(0,-25);ctx.bezierCurveTo(4,-3,26,-2,18,15);ctx.bezierCurveTo(11,31,-17,28,-19,11);ctx.bezierCurveTo(-21,-1,-2,-8,0,-25);ctx.fillStyle='#a6e7ee';ctx.fill();ctx.strokeStyle='#456f94';ctx.lineWidth=2;ctx.stroke();ellipse(-5,5,2,3,'#3b4679');ellipse(6,5,2,3,'#3b4679');ctx.restore()}
+function heart(x,y,s=1){ctx.save();ctx.translate(x,y);ctx.scale(s,s);poly([[0,25],[-25,0],[-25,-14],[-13,-22],[0,-12],[13,-22],[25,-14],[25,0]],'#ec778a','#77364e',3);poly([[-21,-13],[-13,-18],[-3,-10],[-8,-2],[-21,-2]],'#ffc2bf',null);ctx.restore()}
+function soulRun(t){ground('forest',t);const hits=[.65,1.65,2.7];const px=152+Math.min(t,3.3)*51;for(let i=0;i<3;i++){const x=171+i*88,y=514+(i%2)*46,a=t-hits[i];if(a<.3){ctx.save();ctx.globalAlpha=1-clamp(a/.3);goblin(x,y,1,t);ctx.restore()}if(a>=0&&a<.75){slash(x,y-25,clamp(a/.45),'#ffdd91',68);burst(x,y-28,a,'#ffe0a0',10,.7)}if(a>=0&&a<1.15){const p=ease(a/1.1);soulOrb(mix(x,419,p),mix(y-45,214,p),.8,t)}}pudge(px,697,1.17,t*1.3,'axe');hp(px,511,86,.24,'24');round(337,180,146,63,12,'#293a51ed','#a8c1df');soulOrb(363,211,.48,t);txt('+'+hits.filter(h=>t>=h).length,422,211,24,'#c4f6ff');objective('KEY READY · COLLECT SOULS')}
+function amuletHealth(t){ground('forest',t);ctx.fillStyle='#172432b8';ctx.fillRect(0,160,540,720);round(61,239,418,490,20,'#dcc49c','#825e4c');txt('AMULET',270,276,30,'#fff0bf');const p=ease((t-.55)/.35);line([[270,411],[157,525]],'#8b7056',6);line([[270,411],[383,525]],'#8b7056',6);round(111,485,93,85,12,'#b69c75','#806550');round(337,485,93,85,12,'#b69c75','#806550');heart(157,526,.65);weapon('axe',384,553,0,.37);glow(270,411,100,p?'#99de8650':'#ffe59538');round(210,351,120,120,18,p?'#81a876':'#967688','#65514d');heart(270,411,1.3);soulOrb(215,620,.65,t);txt(t<.8?'1 SOUL → HEALTH':'MAX HEALTH UP',290,620,21,t<.8?'#fff0d0':'#b5ffb6');round(143,663,254,58,11,t<.8?'#ffca6a':'#8dc68e','#805d48');txt(t<.8?'UPGRADE':'UPGRADED',270,693,22);hand(333,702,t);hp(270,780,250,1,Math.round(mix(100,180,p))+' MAX HP');objective('KEY READY · MORE HEALTH')}
+function guardsFast(t){arenaRescue(t);let px=188+t*38;for(let i=0;i<2;i++){const h=.65+i*1.1,a=t-h,x=210+i*106,y=565-i*48;if(a<.28){ctx.save();ctx.globalAlpha=1-clamp(a/.28);goblin(x,y,1.05,t);ctx.restore()}if(a>=0&&a<.65){slash(x,y-30,a/.65,'#ffe59b',106);burst(x,y-42,a,'#ffda85',14);damage(x+15,y-130,'CRIT!',a)}}pudge(px,730-t*18,1.19,t*1.3,'axe');hp(px,547-t*18,92,1,'180');objective('KEY READY · CLEAR THE WAY')}
+function rescueWinFast(t){arenaRescue(t);const hits=[.45,1.65,2.75],count=hits.filter(h=>t>=h).length,last=hits.filter(h=>t>=h).at(-1)??-100,age=t-last;let dead=t>2.95;const bossHit=pulse(t,1,.45);if(!dead){brute(270+Math.sin(t*81)*pulse(t,last,.3)*5,482,1.25,t);hp(270,252,180,Math.max(.02,1-count*.33),Math.max(0,100-count*33)+'%','#e56c83')}else burst(270,418,(t-2.95)/.8,'#ffd3a3',28,1.6);const lunge=pulse(t,last-.1,.38)*23;pudge(244+lunge,689-lunge+bossHit*12,1.23,t*1.25,'axe');hp(244,501,92,t<1.15?1:104/180,t<1.15?'180':'104');if(age>=0&&age<.65){slash(270,450,age/.65,'#fff0aa',118);damage(333,326,'−33%',age);burst(270,435,age,'#ffd793',12,.7)}if(t>1.1&&t<1.6){slash(257,559,(t-1.1)/.5,'#f2876c',107);damage(179,539,'−76',t-1.1,'#ffaaa0')}objective(dead?'KEY READY · PATH CLEAR':'MORE HEALTH + STRONGER AXE');if(dead)miniLabel('VICTORY',270,719,228,'#4c7957')}
+function dwarf(x,y,s=1,t=0){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ellipse(0,15,44,18,'#26352f55');poly([[-28,-4],[-5,-4],[-5,25],[-36,24]],'#584937');poly([[7,-4],[30,-7],[37,23],[7,24]],'#584937');poly([[-36,-72],[-3,-85],[33,-71],[43,-23],[23,7],[-27,6],[-44,-27]],'#487b83','#354348',3);line([[-29,-61],[-48,-27]],'#dca967',18);line([[31,-59],[46,-24]],'#e5b778',18);poly([[-25,-113],[2,-126],[27,-108],[25,-73],[-20,-74]],'#edc08b','#634d41',3);poly([[-28,-91],[24,-92],[31,-64],[4,-39],[-27,-64]],'#e6dfbe','#7c705a',3);poly([[-31,-112],[-19,-137],[20,-139],[36,-110]],'#d7ab49','#68502e',3);round(-36,-113,76,13,5,'#ecc363','#68502e');glow(5,-123,23,'#fff3b667');ellipse(5,-123,10,10,'#fff0aa');line([[50,14],[50,-82]],'#8c6748',8);poly([[22,-88],[58,-95],[84,-74],[55,-82]],'#b5c3cb','#455262',3);ctx.restore()}
+function dynamite(x,y,s=1){ctx.save();ctx.translate(x,y);ctx.scale(s,s);for(let i=0;i<3;i++){round(-22+i*15,-30,14,60,5,i%2?'#c8453c':'#df6951','#753d3a')}line([[-22,-8],[23,-8]],'#d6bd8a',6);line([[-22,13],[23,13]],'#d6bd8a',6);line([[1,-30],[7,-46],[21,-48]],'#d6b77c',3);ellipse(21,-48,4,4,'#ffd46e');ctx.restore()}
+function mushroom(x,y,s=1,t=0){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ellipse(0,17,65,22,'#23333c55');poly([[-23,-52],[25,-52],[32,2],[14,22],[-23,18],[-36,-3]],'#cfc296','#6f6158',3);poly([[-66,-60],[-54,-96],[-24,-124],[24,-126],[59,-92],[71,-59],[20,-40],[-25,-40]],'#c96e68','#5b3e4d',4);poly([[-54,-96],[-24,-124],[24,-126],[12,-91],[-23,-78]],'#eab49a',null);ellipse(-15,-22,5,6,'#4c3e47');ellipse(15,-22,5,6,'#4c3e47');ellipse(-35,-82,13,8,'#f0d8b0');ellipse(34,-79,14,9,'#e7c9a9');dynamite(0,-127,.65);ctx.restore()}
+function nextQuest(t){if(t<1.1){ground('forest',t);dwarf(354,506,1.3,t);pudge(mix(95,219,ease(t/1)),739,1.15,t,'axe');glow(352,297,46,'#ffdf7d47');txt('!',354,298,58,'#ffdf80');miniLabel('NEW QUEST AVAILABLE',270,784,390,'#a7743b')}else if(t<2.65){ground('forest',t);ctx.fillStyle='#172432a8';ctx.fillRect(0,170,540,670);round(70,267,400,449,22,'#d8c49b','#826148');txt('TUNNEL TREASURE',270,310,26,'#fff0bd');dwarf(166,465,.9,t);dynamite(357,421,1.12);txt('FIND THE DYNAMITE',270,541,22,'#f3e1b7');round(141,611,258,65,12,'#ffcc6b','#856239');txt(t>2.15?'ACCEPTED':'ACCEPT',270,644,25);hand(331,651,t)}else{ground('forest',t);poly([[54,310],[493,310],[458,768],[71,768]],'#a48b65',null);for(let i=0;i<6;i++)rock(80+i*76,316,1.2,['#81798a','#60556a','#b3a5a5']);const u=t-2.65;const bounce=Math.abs(Math.sin(u*4))*13;mushroom(325,511-bounce,1.26,t);pudge(mix(130,237,ease(u/1.3)),738-ease(u/1.3)*40,1.18,u,'axe');hp(325,267,148,1,'QUEST TARGET','#de7d8c');if(u>1.45&&u<1.9){slash(326,473,(u-1.45)/.45,'#ffe1a2',75);burst(326,478,u-1.45,'#f7d7a4',10,.6)}}objective('NEXT: THE DYNAMITE MUSHROOM',false)}
+function eventFarmV2(t){ground('event',t);const hits=[.75,2.1,3.5];let px=160+Math.min(t,4.1)*37;for(let i=0;i<3;i++){const x=171+i*93,y=478+(i%2)*47,age=t-hits[i];if(age<.3){ctx.save();ctx.globalAlpha=1-clamp(age/.3);golem(x,y,1.03,i%2?'#ce93be':'#77d5d2',t);ctx.restore()}if(age>=0&&age<.7){slash(x,y-25,age/.7,'#ffe0a6',86);burst(x,y-30,age,'#a9fdeb',16)}if(age>=0&&age<1){const q=ease(age);diamond(mix(x,270,q),mix(y-45,238,q),16,'#ee86cf')}}pudge(px,686,1.18,t*1.3,'axe');const count=hits.filter(h=>t>=h).length;headerMeter((280+count*20)+' / 400',.7+count*.05);objective(count===3?'ONE MORE BATTLE':'EVENT CRYSTALS → HAMMER',false)}
+function eventBossV2(t){ground('event',t);platform(270,465,210,156,'purple',t);const hits=[.55,2.6,3.65],count=hits.filter(h=>t>=h).length;const step=75*ease((t-.9)/.5)*(1-ease((t-2)/.5));const last=hits.filter(h=>t>=h).at(-1)??-100,age=t-last;if(t<3.9){if(t>.7&&t<1.9){ctx.save();ctx.globalAlpha=.25;ellipse(270,580,115,91,'#ff804f');ctx.globalAlpha=.8;ctx.strokeStyle='#ffb66e';ctx.lineWidth=5;ctx.beginPath();ctx.ellipse(270,580,115,91,0,0,TAU);ctx.stroke();ctx.restore()}knight(270,453,1.14,t*.55);hp(270,190,172,Math.max(.02,1-count*.33),'EVENT BOSS','#e77786')}else{burst(270,397,(t-3.9)/.9,'#ffd097',25,1.4);const q=ease((t-4)/.6);diamond(mix(270,400,q),mix(427,231,q),21,'#ee9ada')}pudge(249+step,700,1.17,t,'axe');if(age>=0&&age<.7){slash(270,448,age/.7,'#ffe4a4',101);damage(330,300,'−33%',age)}if(t>1.55&&t<2.05){slash(255,582,(t-1.55)/.5,'#ff9b65',124);burst(255,583,(t-1.55)/.5,'#ffd295',12)}if(t>4.4)miniLabel('400 / 400 · REWARD READY',270,276,402,'#6e4b83');objective('DEFEAT BOSS → CLAIM HAMMER',false)}
+function hammerReward(t){ground('event',t);ctx.fillStyle='#141624ba';ctx.fillRect(0,164,540,677);round(65,258,410,471,21,'#533b62','#e3ba76');txt('MYTHIC REWARD',270,307,27,'#ffe3a7');glow(270,465,150,'#d275b84c');weapon('hammer',270,574,-.22,1.4+ease(t/.45)*.2);for(let i=0;i<12;i++){const a=i*TAU/12+t*.4;diamond(270+Math.cos(a)*151,466+Math.sin(a)*116,4,'#ffe19b')}txt('CRIMSON THUNDER',270,631,26,'#ffdf9b');txt('BONUS VS CRYSTAL',270,678,19,'#c7f7d1');objective('HAMMER CLAIMED',false)}
+function hammerEquip(t){if(t<.9){hammerReward(t);round(138,706,264,64,12,'#ffcb6f','#825c41');txt(t>.5?'EQUIPPED':'EQUIP',270,738,24);hand(333,747,t)}else{ground('event',t);const p=ease((t-.9)/.6);glow(270,568,150,'#ffc9792a');pudge(270,695,1.38,.15,'hammer');miniLabel('EQUIPPED',270,342,259,'#577d5c');for(let i=0;i<5;i++)diamond(212+i*28,743,7,'#ffdc8d');objective('RETURN TO THE CRYSTAL',false)}}
+function hammerPractice(t){ground('forest',t);const hits=[.55,1.6,2.8],px=160+t*41;for(let i=0;i<3;i++){const a=t-hits[i],x=180+i*91,y=507+(i%2)*42;if(a<.3){ctx.save();ctx.globalAlpha=1-clamp(a/.3);goblin(x,y,1.06,t);ctx.restore()}if(a>=0&&a<.6){slash(x,y-29,a/.6,'#ffe4a1',98);burst(x,y-31,a,'#ffda8d',14);damage(x,y-109,'HIT!',a)}}pudge(px,705-t*17,1.19,t*1.2,'hammer');objective('NEW WEAPON · KEEP MOVING',false)}
+function crystalSmashFast(t){ground('purple',t);const hits=[.4,1.4,2.4],count=hits.filter(h=>t>=h).length,last=hits.filter(h=>t>=h).at(-1)??-100,age=t-last;const broken=t>=2.45;crystalRaw(270+Math.sin(t*70)*pulse(t,last,.3)*3,443,t,Math.max(.01,1-count*.33),broken?t-2.45:-1);const lunge=pulse(t,last-.12,.4)*20;pudge(247+lunge,703-lunge,1.2,t<2.6?t:.2,'hammer');if(age>=0&&age<.7){slash(270,416,age/.7,'#efffdf',122);burst(270,390,age,'#bdffef',15);if(!broken)damage(333,286,'−33%',age)}if(t>3.05)miniLabel('CRYSTALS UNLOCKED',270,330,362,'#50847e');objective('BREAK IT → UNLOCK CRYSTALS',false)}
+function newCrystalSystem(t){if(t<1){ground('purple',t);round(63,270,414,452,22,'#473c60','#c6a7d9');txt('CRYSTALS',270,315,33,'#c1fff0');for(let i=0;i<3;i++){round(109+i*116,365,93,100,13,'#302c49','#9385ad');diamond(155+i*116,414,23,i?'#5a526f':'#8ce5e0')}round(145,573,250,63,12,'#ffcf71','#87623e');txt('OPEN GEODE',270,605,24);hand(327,617,t);objective('NEW FEATURE UNLOCKED',false)}else{geode((t-1));}}
+function equipCrystal(t){ground('purple',t);ctx.fillStyle='#1b1d30b0';ctx.fillRect(0,165,540,670);round(61,252,418,489,22,'#4c3c5c','#b994c3');txt('CRYSTAL SLOTS',270,296,28,'#ddfff0');for(let i=0;i<3;i++)round(104+i*117,359,98,108,13,i===1?'#67546f':'#2b2d42','#9b82b3');const q=ease((t-.3)/.9),x=mix(161,270,q),y=mix(585,412,q);glow(x,y,72,'#ee91d53b');poly([[x,y-43],[x+29,y-20],[x+25,y+28],[x,y+44],[x-28,y+23],[x-30,y-19]],'#e989bd','#6d4471',3);poly([[x,y-43],[x,y+3],[x-28,y+23],[x-30,y-19]],'#ffd3ec',null);if(t>1.2){txt('DAMAGE UP',270,562,28,'#b6f5c9');txt('CRYSTAL EQUIPPED',270,610,21,'#e6cef3');burst(270,412,(t-1.2)/1.5,'#e8b8ff',15,.7)}hand(x+40,y+45,t);objective('FOUND → EQUIPPED → STRONGER',false)}
+function portalStoneFight(t){ground('forest',t);const hits=[.55,1.35,2.1],count=hits.filter(h=>t>=h).length,dead=t>2.3,last=hits.filter(h=>t>=h).at(-1)??-100,age=t-last;if(!dead){brute(295,506,1.1,t);hp(295,293,151,Math.max(.01,1-count*.33),'LAST STONE','#e37888')}else{burst(295,454,(t-2.3)/.85,'#ffdbad',20,1.2);const q=ease((t-2.3)/1.4);const x=mix(295,220,q),y=mix(456,650,q);glow(x,y,68,'#e8bdff52');diamond(x,y,23,'#c8a8ff')}pudge(240,713,1.18,t,'axe');if(age>=0&&age<.6){slash(295,469,age/.6,'#ffe8b8',98);damage(348,336,'−33%',age)}objective('ONE STONE LEFT',false)}
+function lichArrival(t){ground('purple',t);platform(270,447,212,155,'purple',t);lich(270,363,1.2,t);hp(270,174,145,1,'THE LICH','#de7e9e');pudge(270,765-ease(t/.9)*35,1.15,t*.45,'axe');for(let i=0;i<5;i++){const age=t-(.4+i*.38);if(age<0)continue;const a=(i-2)*.4,x=270+Math.sin(a)*154,y=535+Math.cos(a)*41;const scale=i===2?mix(.6,1.25,ease((t-2.6)/.6)):.67;glow(x,y-22,39,'#8cecc135');ctx.save();ctx.globalAlpha=ease(age/.3);skeleton(x,y+(1-ease(age/.3))*25,scale,t+i);ctx.restore();if(age<.8)burst(x,y-22,age,'#b9f3d7',8,.5)}objective('ANOTHER BATTLE AWAITS',false)}
+function drawShot(sceneName,t,duration){switch(sceneName){case 'kidnap':keyKidnap(t);break;case 'keyguard':keyGuard(t);break;case 'rescueFail':rescueFight(t*5/4,false);break;case 'soulsRun':soulRun(t);break;case 'healthUpgrade':amuletHealth(t);break;case 'forgeRescueV2':forgedCard(t,4,true);break;case 'guardsFast':guardsFast(t);break;case 'rescueWinV2':rescueWinFast(t);break;case 'freeCage':freeCage(t);break;case 'nextQuest':nextQuest(t);break;case 'crystalFail':crystalFailed(t*1.25);break;case 'eventGoal':eventGoal(t);break;case 'eventFarmV2':eventFarmV2(t);break;case 'eventBossV2':eventBossV2(t);break;case 'hammerReward':hammerReward(t);break;case 'hammerEquip':hammerEquip(t);break;case 'hammerPractice':hammerPractice(t);break;case 'crystalSmashV2':crystalSmashFast(t);break;case 'newCrystalSystem':newCrystalSystem(t);break;case 'slimeSplit':slimeSurprise(t*1.15);break;case 'geodeFast':geode(t*1.35);break;case 'equipCrystal':equipCrystal(t);break;case 'redLightningV2':scene0(t);break;case 'forgeMixV2':forgedCard(t,4,false);objective('WEAPON COPIES → UPGRADE',false);break;case 'crabBlastV2':scene5(t);break;case 'portalStoneFight':portalStoneFight(t);break;case 'portalOpenV2':portalFinale(t*1.2);break;case 'lichArrival':lichArrival(t);break;default:throw new Error('Unknown shot '+sceneName)}}
 
 let time=.5,playing=false,started=false,lastFrame=0,uiShot=-1,rate=1;
 const initialSource='<!doctype html>\n'+document.documentElement.outerHTML;
 const variantBox=document.getElementById('variants'),shotBox=document.getElementById('shots'),logicBox=document.getElementById('logic');
-films.forEach((f,i)=>{const b=document.createElement('button');b.className='variant';b.innerHTML=`<small>0${i+1} · ${f.kind.toUpperCase()}</small><strong>${f.title}</strong>`;b.onclick=()=>selectFilm(i);variantBox.appendChild(b)});
-function selectFilm(i){activeFilm=Math.max(0,Math.min(2,Number(i)));const f=films[activeFilm];time=.5;started=false;playing=false;uiShot=-1;document.getElementById('play').textContent='▶ Смотреть 30 секунд';document.getElementById('pitch').textContent=f.pitch;document.getElementById('prep').textContent=f.prep;[...variantBox.children].forEach((b,j)=>{b.classList.toggle('active',j===activeFilm);b.setAttribute('aria-pressed',j===activeFilm?'true':'false')});shotBox.replaceChildren();f.shots.forEach((s,j)=>{const b=document.createElement('button');b.className='shot';b.innerHTML=`<span>${String(s.s).padStart(2,'0')}–${String(s.e).padStart(2,'0')}</span><span>${s.label}</span>`;b.onclick=()=>seek(s.s+.15);shotBox.appendChild(b)});logicBox.replaceChildren();f.logic.forEach((s,j)=>{const b=document.createElement('button');b.textContent=s;b.onclick=()=>seek(f.breaks[j]+.15);logicBox.appendChild(b)});render()}
-function render(){ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,540,960);const f=films[activeFilm];let index=f.shots.findIndex(s=>time<s.e);if(index<0)index=f.shots.length-1;const shot=f.shots[index],t=time-shot.s;ctx.save();const zoom=1.01+Math.min(t,4)*.004;ctx.translate(270,510);ctx.scale(zoom,zoom);ctx.translate(-270,-510);drawShot(shot.key,t);ctx.restore();storyBanner(shot.banner,time);if(index>0&&t<.12){ctx.fillStyle=`rgba(255,240,207,${(1-t/.12)*.48})`;ctx.fillRect(0,0,540,960)}const grad=ctx.createLinearGradient(0,820,0,960);grad.addColorStop(0,'#18222d00');grad.addColorStop(1,'#18222d33');ctx.fillStyle=grad;ctx.fillRect(0,820,540,140);document.getElementById('clock').textContent=time.toFixed(1).padStart(4,'0')+' с';document.getElementById('seek').value=time;if(uiShot!==index){uiShot=index;document.getElementById('counter').textContent=`ВАРИАНТ ${activeFilm+1} · КАДР ${index+1}/${f.shots.length} · ${shot.s}–${shot.e} С`;document.getElementById('title').textContent=shot.title;document.getElementById('note').textContent=shot.note;document.getElementById('beat').textContent=shot.beat;[...shotBox.children].forEach((b,j)=>b.classList.toggle('active',j===index));let phase=f.breaks.filter(n=>time>=n).length-1;[...logicBox.children].forEach((b,j)=>b.classList.toggle('active',j===phase))}}
-function setPlaying(value){playing=value;lastFrame=performance.now();document.getElementById('play').textContent=playing?'Ⅱ Пауза':time>=30?'↺ Смотреть ещё раз':'▶ Продолжить'}
-function toggle(){if(!started||time>=30){time=0;started=true}setPlaying(!playing);render()}
-function seek(t){time=clamp(t,0,30);started=true;setPlaying(false);render()}
-function download(one){let source=window.__animaticSource||initialSource;if(one){source=source.replace('data-initial="0"','data-initial="'+activeFilm+'" data-only="true"').replace('ТРИ ЧЕРНОВИКА','ЧЕРНОВИК')}const url=URL.createObjectURL(new Blob([source],{type:'text/html;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=one?'butcher-'+films[activeFilm].id+'.html':'butcher-three-drafts.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+films.forEach((f,i)=>{const b=document.createElement('button');b.className='variant';b.innerHTML=`<small>0${i+1} · ${f.kind.toUpperCase()} · ${f.duration} С</small><strong>${f.title}</strong>`;b.onclick=()=>selectFilm(i);variantBox.appendChild(b)});
+function selectFilm(i){activeFilm=Math.max(0,Math.min(2,Number(i)));const f=films[activeFilm];time=.5;started=false;playing=false;uiShot=-1;document.getElementById('play').textContent='▶ Смотреть '+f.duration+(f.duration%10===4?' секунды':' секунд');document.getElementById('duration').textContent='00:'+f.duration;document.getElementById('seek').max=f.duration;document.getElementById('pitch').textContent=f.pitch;document.getElementById('prep').textContent=f.prep;[...variantBox.children].forEach((b,j)=>{b.classList.toggle('active',j===activeFilm);b.setAttribute('aria-pressed',j===activeFilm?'true':'false')});shotBox.replaceChildren();f.shots.forEach((s,j)=>{const b=document.createElement('button');b.className='shot';b.innerHTML=`<span>${String(s.s).padStart(2,'0')}–${String(s.e).padStart(2,'0')}</span><span>${s.label}</span>`;b.onclick=()=>seek(s.s+.15);shotBox.appendChild(b)});logicBox.replaceChildren();f.logic.forEach((s,j)=>{const b=document.createElement('button');b.textContent=s;b.onclick=()=>seek(f.breaks[j]+.15);logicBox.appendChild(b)});render()}
+function render(){ctx.setTransform(2,0,0,2,0,0);ctx.clearRect(0,0,540,960);const f=films[activeFilm];let index=f.shots.findIndex(s=>time<s.e);if(index<0)index=f.shots.length-1;const shot=f.shots[index],t=time-shot.s;ctx.save();const zoom=1.01+Math.min(t,4)*.004;ctx.translate(270,510);ctx.scale(zoom,zoom);ctx.translate(-270,-510);drawShot(shot.scene,t,shot.e-shot.s);ctx.restore();storyBanner(shot.banner,time);if(index>0&&t<.12){ctx.fillStyle=`rgba(255,240,207,${(1-t/.12)*.48})`;ctx.fillRect(0,0,540,960)}const grad=ctx.createLinearGradient(0,820,0,960);grad.addColorStop(0,'#18222d00');grad.addColorStop(1,'#18222d33');ctx.fillStyle=grad;ctx.fillRect(0,820,540,140);document.getElementById('clock').textContent=time.toFixed(1).padStart(4,'0')+' с';document.getElementById('seek').value=time;if(uiShot!==index){uiShot=index;document.getElementById('counter').textContent=`ВАРИАНТ ${activeFilm+1} · КАДР ${index+1}/${f.shots.length} · ${shot.s}–${shot.e} С`;document.getElementById('title').textContent=shot.title;document.getElementById('note').textContent=shot.note;document.getElementById('beat').textContent=shot.beat;[...shotBox.children].forEach((b,j)=>b.classList.toggle('active',j===index));let phase=f.breaks.filter(n=>time>=n).length-1;[...logicBox.children].forEach((b,j)=>b.classList.toggle('active',j===phase))}}
+function setPlaying(value){playing=value;lastFrame=performance.now();document.getElementById('play').textContent=playing?'Ⅱ Пауза':time>=films[activeFilm].duration?'↺ Смотреть ещё раз':'▶ Продолжить'}
+function toggle(){if(!started||time>=films[activeFilm].duration){time=0;started=true}setPlaying(!playing);render()}
+function seek(t){time=clamp(t,0,films[activeFilm].duration);started=true;setPlaying(false);render()}
+function download(one){let source=window.__animaticSource||initialSource;source=source.replace(/data-initial="[0-2]"(?: data-only="true")?/, 'data-initial="0"');if(one){source=source.replace(/data-initial="[0-2]"(?: data-only="true")?/, 'data-initial="'+activeFilm+'" data-only="true"').replace('ТРИ ЧЕРНОВИКА','ЧЕРНОВИК')}const url=URL.createObjectURL(new Blob([source],{type:'text/html;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=one?'butcher-'+films[activeFilm].id+'.html':'butcher-three-drafts.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 variantBox.querySelectorAll('button').forEach(b=>b.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();selectFilm((activeFilm+1)%3);variantBox.children[activeFilm].focus()}if(e.key==='ArrowLeft'){e.preventDefault();selectFilm((activeFilm+2)%3);variantBox.children[activeFilm].focus()}}));document.getElementById('play').onclick=toggle;document.getElementById('screen-play').onclick=toggle;document.getElementById('reset').onclick=()=>seek(0);document.getElementById('seek').oninput=e=>seek(Number(e.target.value));document.getElementById('speed').onchange=e=>rate=Number(e.target.value);document.getElementById('download').onclick=e=>{e.preventDefault();download(false)};document.getElementById('download-one').onclick=e=>{e.preventDefault();download(true)};document.addEventListener('keydown',e=>{if(['INPUT','SELECT','TEXTAREA','BUTTON'].includes(document.activeElement.tagName))return;if(e.code==='Space'){e.preventDefault();toggle()}if(e.code==='ArrowRight'){e.preventDefault();seek(time+1)}if(e.code==='ArrowLeft'){e.preventDefault();seek(time-1)}});
-function frame(now){if(playing){time=Math.min(30,time+Math.min((now-lastFrame)/1000,.15)*rate);render();if(time>=30)setPlaying(false)}lastFrame=now;requestAnimationFrame(frame)}
-window.animatic={select:selectFilm,seek,play:()=>{started=true;setPlaying(true)},pause:()=>setPlaying(false),get time(){return time},get playing(){return playing},get film(){return activeFilm},films};selectFilm(Number(document.body.dataset.initial||0));requestAnimationFrame(frame);console.log('Готово: 3 сценария × 30 секунд, 18 сцен.');
+function frame(now){if(playing){time=Math.min(films[activeFilm].duration,time+Math.min((now-lastFrame)/1000,.15)*rate);render();if(time>=films[activeFilm].duration)setPlaying(false)}lastFrame=now;requestAnimationFrame(frame)}
+window.animatic={select:selectFilm,seek,play:()=>{started=true;setPlaying(true)},pause:()=>setPlaying(false),get time(){return time},get playing(){return playing},get film(){return activeFilm},films};selectFilm(Number(document.body.dataset.initial||0));requestAnimationFrame(frame);console.log('V2: 36 / 34 / 35 секунд; новые сцены, короткие реванши, продолжение после победы.');
 })();</script></body></html>
