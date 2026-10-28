@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Маячки: Last Day on Earth и «Одна Яма»</title>
+<style>
+:root{--bg:#f6f4ef;--ink:#1d1f24;--mut:#5f6470;--card:#fff;--line:#e3dfd6;--acc:#c2410c;--ok:#15803d;--warn:#b45309;--p0:#b91c1c;--p1:#b45309;--p2:#475569}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+main{max-width:1080px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:28px;line-height:1.2;margin:8px 0 6px}
+h2{font-size:22px;margin:40px 0 12px;padding-top:8px;border-top:2px solid var(--line)}
+h3{font-size:17px;margin:0 0 6px}
+p{margin:6px 0}
+.lead{color:var(--mut);max-width:760px}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:1px 7px;border-radius:999px;margin-right:4px;vertical-align:1px}
+.tp{background:#dcfce7;color:var(--ok)}.tq{background:#fef3c7;color:var(--warn)}
+.p0{background:#fee2e2;color:var(--p0)}.p1{background:#ffedd5;color:var(--p1)}.p2{background:#e2e8f0;color:var(--p2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.card img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);background:#222}
+.card .why{color:var(--mut);font-size:14px}
+.num{font-weight:700;color:var(--acc);margin-right:4px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pair figure{margin:0}
+.pair img{width:100%;border-radius:8px;border:1px solid var(--line)}
+figcaption{font-size:13px;color:var(--mut);margin-top:4px}
+table{border-collapse:collapse;width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+th{background:#efece5;font-weight:600}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+ol li,ul li{margin:4px 0}
+.small{font-size:13px;color:var(--mut)}
+.big{font-size:32px;font-weight:700;color:var(--acc);line-height:1}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:12px 0}
+@media (max-width:620px){.pair{grid-template-columns:1fr}h1{font-size:23px}table{font-size:13px}th,td{padding:6px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Маячки: что подсмотреть у Last Day on Earth и что чинить в «Одной Яме»</h1>
+<p class="lead">Разбор 28.10.2026. Повод: по сборке v3 Ямы «как будто хуже стало — маячков нет»; совет — посмотреть, как это сделано у Kefir в Last Day on Earth. <span class="tag tp">П</span> — видно на кадре, в коде или прямо сказано в источнике. <span class="tag tq">??</span> — наш вывод или гипотеза.</p>
+
+<div class="box">
+<b>Маячок</b> — подсказка в мире или в интерфейсе: куда идти и что делать дальше. Стрелка, кольцо на полу, значок над объектом, бейдж на кнопке, табличка цели, силуэт будущей постройки. По сути это постоянный туториал: метка показывает, куда идти, что делать и куда нажимать, и живёт всю игру, а не только в начале.
+</div>
+
+<h2>1. Last Day on Earth: 10 маячков</h2>
+<p class="small">Живой первой сессии нет: в эмуляторе игра не запускается (собрана только под ARM). Кадры — из официальной справки Kefir и со страницы игры в Google Play. Красные стрелки на кадрах справки нарисовала поддержка Kefir, в игре их нет.</p>
+<div class="grid">
+ <div class="card"><img src="img/ldoe-path-chapters.jpg" alt="Survivor's Path: главы с картинками"><h3><span class="num">1</span>Путь из глав с картинкой награды <span class="tag tp">П</span></h3><p>Каждая глава показывает, <i>что откроется</i>: дом, собака, оружие. Галочки, полоса, награды за шаги.</p><p class="why">Игрок видит не «квест 3/7», а то, ради чего стараться.</p></div>
+ <div class="card"><img src="img/ldoe-path-button.jpg" alt="Кнопка Пути с восклицательным знаком"><h3><span class="num">2</span>Цель всегда на экране <span class="tag tp">П</span></h3><p>Вход в Путь — одна кнопка с «!» (на кадре). Текущая задача всегда видна слева в HUD — по словам гайда Level Winner, кадра с этой строкой у нас нет.</p><p class="why">Ответ на «что дальше?» не надо искать в меню.</p></div>
+ <div class="card"><img src="img/ldoe-map-task.jpg" alt="Глобальная карта с текстом задачи"><h3><span class="num">3</span>Тап по цели — показ места <span class="tag tp">П</span></h3><p>Текст задачи в углу карты; тап — игра показывает нужное место.</p><p class="why">Заблудился — один тап, а не постоянная стрелка.</p></div>
+ <div class="card"><h3><span class="num">4</span>Подсвечено одно место из многих <span class="tag tp">П</span></h3><p>На карте подсвечены только локации главных задач; у них жёлтое имя, у остальных белое (справка Kefir).</p><p class="why">Выбора нет — ошибиться нельзя.</p></div>
+ <div class="card"><img src="img/ldoe-radar.jpg" alt="Радар с отметкой задачи"><h3><span class="num">5</span>Радар ведёт на месте <span class="tag tp">П</span></h3><p>Справа сверху: «куда идти, что собрать, с кем говорить». Отметка «!» — задача.</p><p class="why">Цель за краем экрана видна всегда.</p></div>
+ <div class="card"><img src="img/ldoe-hud.jpg" alt="HUD LDoE с легендой"><h3><span class="num">6</span>Бейджи-числа и таймеры в HUD <span class="tag tp">П</span></h3><p>Числа на кнопках — сколько ждёт; акция «%» с обратным отсчётом (всё на кадре). «!» над объектом базы — только по вики из выдачи поиска, кадра нет <span class="tag tq">??</span>.</p><p class="why">Сигнал «пора» без текста.</p></div>
+ <div class="card"><img src="img/ldoe-store-chest-ring.jpg" alt="Кольцо под ящиком"><h3><span class="num">7</span>Кольцо под тем, с чем можно действовать</h3><p>Цель охоты обведена кольцом — кадр справки <span class="tag tp">П</span>. Ящик с кольцом на этом кадре — рекламный кадр стора, так ли в игре, не проверено <span class="tag tq">??</span>.</p><p class="why">Читается за долю секунды. В Яме кольца уже есть — это наш язык.</p></div>
+ <div class="card"><img src="img/ldoe-store-ghost.jpg" alt="Призрак мебели"><h3><span class="num">8</span>Призрак будущей постройки <span class="tag tq">??</span></h3><p>Голубой силуэт мебели там, где она встанет. Кадр рекламный — так ли в игре, не проверено.</p><p class="why">Будущее показано на месте и в масштабе.</p></div>
+ <div class="card"><h3><span class="num">9</span>Срочное: знак + таймер + направление</h3><p>Знак + таймер: акция «%» с отсчётом в HUD — на кадре (карточка 6) <span class="tag tp">П</span>. Направление: орда на карте — череп, таймер и линия к базе, только по гайдам игроков, кадра нет <span class="tag tq">??</span>.</p><p class="why">Угроза видна заранее, без чтения.</p></div>
+ <div class="card"><h3><span class="num">10</span>Отказ ведёт к шагу <span class="tag tp">П</span></h3><p>«Нужен транспорт» — тап сразу открывает его крафт.</p><p class="why">Тупик превращается в следующую цель. Для нас это ключ к стене.</p></div>
+ <div class="card"><img src="img/ldoe-blood.jpg" alt="Следы крови"><h3>Ещё: подсказки, вписанные в мир <span class="tag tp">П</span></h3><p>В ивенте охоты — следы крови, палка-приманка, значок ивентового предмета и кнопка «Дневник», которая «всегда подскажет, что делать дальше».</p></div>
+ <div class="card"><img src="img/ldoe-bait.jpg" alt="Палка-приманка"><h3>Ещё: ресурс появляется под задачу <span class="tag tp">П</span></h3><p>Особые материалы появляются в локациях только после того, как задача выдана, — до этого не отвлекают.</p></div>
+</div>
+<div class="box" style="margin-top:14px">
+<b>Рецепт Kefir</b> <span class="tag tq">??</span>
+<ol>
+<li>Одна цель за раз.</li>
+<li>Три слоя: строка цели всегда видна → тап показывает место → на месте ведёт радар или кольцо.</li>
+<li>Цель показывает картинкой, <i>что</i> откроется.</li>
+<li>Отказ ведёт к шагу.</li>
+</ol>
+<span class="small">Интересно: в 2017 у LDoE подсказок почти не было: игру сознательно делали «хардкорной» <span class="tag tp">П</span>. Этот слой добавили позже.</span>
+</div>
+
+<h2>2. «Одна Яма»: почему v3 кажется хуже</h2>
+<p class="small">Кадры и числа ниже — по одному прогону бота на версию (1 сид), это иллюстрация, а не среднее.</p>
+<p>По коду маячков в v3 даже больше: стрелка к Яме у края экрана, строка цели, которая не пустеет, шкала и комбо над Ямой <span class="tag tp">П</span>. Темп по боту почти тот же: первая покупка на 31 с, мотор на 4-й минуте в обеих версиях <span class="tag tp">П</span>. Пропала картинка.</p>
+<div class="pair">
+ <figure><img src="img/yama-v2-0005.jpg" alt="Яма v2, 0:05"><figcaption>v2, 0:05 — Яма в центре, лампы портов, шторы будущих зон (кадр без HUD) <span class="tag tp">П</span></figcaption></figure>
+ <figure><img src="img/yama-v3-0005.jpg" alt="Яма v3, 0:05"><figcaption>v3, 0:05 — Яма краем под плашками, середина экрана — пустой пол <span class="tag tp">П</span></figcaption></figure>
+ <figure><img src="img/yama-v2-newgoal-0231.jpg" alt="v2 новая цель 2:31"><figcaption>v2, 2:31 — первая новая цель в мире (кружок пушки) <span class="tag tp">П</span></figcaption></figure>
+ <figure><img src="img/yama-v3-newgoal-0341.jpg" alt="v3 новая цель 3:41"><figcaption>v3, 3:41 — первая новая цель (кружок мотора), хотя у игрока уже $646 из $800 <span class="tag tp">П</span></figcaption></figure>
+ <figure><img src="img/yama-v3-0031.jpg" alt="v3 0:31"><figcaption>v3, 0:31 — цель только текстом «Дальше: Мотор · $800» <span class="tag tp">П</span></figcaption></figure>
+ <figure><img src="img/yama-v3-0301.jpg" alt="v3 3:01"><figcaption>v3, 3:01 — тот же кадр: в мире 2,5 минуты ничего нового <span class="tag tp">П</span></figcaption></figure>
+</div>
+<div class="stats">
+ <div class="box"><div class="big">189 с</div>без новой цели в мире в v3 (0:31–3:40); в v2 — 118 с; 1 сид на версию <span class="tag tp">П</span></div>
+ <div class="box"><div class="big">17 м</div>от сборщика до Ямы в v3 (в v2 — 8 м); камера только на герое <span class="tag tp">П</span></div>
+ <div class="box"><div class="big">3 vs 11</div>срочных заказов до 15-й минуты, v3 против v2; 1 сид на версию <span class="tag tp">П</span></div>
+</div>
+<p><b>Гипотезы</b> <span class="tag tq">??</span>:</p>
+<ol>
+<li>Поле ×2, камера на герое и плашки сверху выкинули из кадра главный маячок — саму Яму.</li>
+<li>Подсказки ушли в текст сверху, а на игру смотрят глазами.</li>
+<li>Стрелка к Яме мелкая, включается только при полных руках и не видит, что Яму закрыли плашки.</li>
+<li>Пол пустой: будущее не анонсировано.</li>
+<li>Кружки появляются по таймеру, а не когда набралась сумма.</li>
+</ol>
+
+<h2>3. Что предлагаем на первые 15 минут</h2>
+<p class="small">Это план итерации 8г: она начнётся после текущей итерации. Ничего из таблицы ещё не сделано. Сдвиг кадра (первая строка) — только после согласия геймдизайнера: решено, что камера следует только за игроком.</p>
+<table>
+<tr><th>Когда</th><th>Маячок</th><th>Приоритет</th></tr>
+<tr><td>0:00–0:30</td><td>Яма видна с первой секунды: камера по-прежнему на герое, но он в нижней трети кадра, плашки сверху ужаты</td><td><span class="tag p0">P0</span></td></tr>
+<tr><td>с 0:20</td><td>«Компас у ног» — стрелка на полу к цели рейса: к Яме, когда руки заполнены; к кружку, когда хватает денег. Крупная метка у края экрана, если цель не видна</td><td><span class="tag p0">P0</span></td></tr>
+<tr><td>0:30–4:00</td><td>Кружок мотора появляется жёлтым, когда набрано ~половина цены, а не по таймеру на 3:40. Так же — следующие кружки</td><td><span class="tag p0">P0</span></td></tr>
+<tr><td>любая</td><td>Подсказка простоя называет верное место; цену на кружке не закрывает модель</td><td><span class="tag p0">P0</span></td></tr>
+<tr><td>с 0:30</td><td>Красная точка на «Прокачках» только когда хватает денег; тап по строке цели на секунду показывает место (как в LDoE)</td><td><span class="tag p1">P1</span></td></tr>
+<tr><td>с 4:00</td><td>Посылка за ролик — маячок: свет и кольцо в мире, метка у края экрана с таймером, кнопка с подписью награды</td><td><span class="tag p1">P1</span></td></tr>
+<tr><td>норма</td><td>Норма как «орда» LDoE: сколько, сколько времени, что откроет. Отстаёшь — красная и ролик-ускорение. Провал ведёт к нужной прокачке</td><td><span class="tag p1">P1</span></td></tr>
+<tr><td>позже</td><td>Столб света над Ямой; виджет главы с картинкой награды, как Путь у LDoE</td><td><span class="tag p2">P2</span></td></tr>
+</table>
+<p class="small">Открытый вопрос геймдизайнеру: показывать ли один полупрозрачный «призрак» ближайшей покупки? Сейчас закрытые кружки скрыты — так решено на плейтесте.</p>
+<div class="box" style="margin-top:12px">
+<b>Как проверяем — ферма ботов, 8 сидов, первые 15 минут</b> (пороги наши <span class="tag tq">??</span>)
+<ul>
+<li>время от появления цели до действия: медиана ≤ 60 с;</li>
+<li>отрезок без новой цели в мире ≤ 90 с (сейчас 189 с);</li>
+<li>пустые минуты — минуты без покупки, открытия, выплаты комбо, коробки или посылки: 0 у новичка;</li>
+<li>Яма в кадре, когда руки полны, ≥ 70 % времени;</li>
+<li>темп не ускорился: мотор — на 4–6-й минуте.</li>
+</ul>
+</div>
+
+<h2>4. Зачем это трём целям игры</h2>
+<div class="grid">
+ <div class="card"><h3>Каждую минуту есть дело</h3><p>Пауза — это не только «нечего купить», но и «не вижу, что делать». Компас и кружки по сумме убирают слепые 30–60 секунд, когда деньги уже есть, а цели не видно.</p></div>
+ <div class="card"><h3>Ролики жмут</h3><p>Предложение ролика само должно быть маячком: видно в мире, с таймером и наградой. Считаем, сколько предложений игрок <i>увидел</i>.</p></div>
+ <div class="card"><h3>Стена, у которой хочется нажать</h3><p>Стена работает, если цель за ней видна и желанна. Провал нормы ведёт к шагу: прокачке или ролику-ускорению, а не в тупик.</p></div>
+</div>
+
+<h2>5. Коротко: что рассказать</h2>
+<ol>
+<li>У Kefir главное — не стрелки, а одна цель за раз: по справке и гайдам она всегда видна, а тапом по ней игра показывает, где она (живых кадров первой сессии у нас нет).</li>
+<li>Цели показывают картинкой, что получишь: дом, собаку, оружие. В Яме предлагаем показывать, что даёт покупка, — делать в 8г, после согласия геймдизайнера.</li>
+<li>v3 хуже, потому что поле выросло, камера на герое — и Яма ушла из кадра под плашки. Темп тот же, пропала картинка.</li>
+<li>Предлагаем в 8г (после согласия геймдизайнера): Яма всегда видна, стрелка на полу к текущей цели, крупная метка у края экрана, кружки — по накопленной сумме.</li>
+<li>Отказ ведёт к шагу: провал нормы — к нужной прокачке или ролику-ускорению. Это наша стена.</li>
+<li>Посылка за ролик — тоже маячок: видна в мире и у края экрана, с таймером.</li>
+<li>Меряем ботами: секунды от появления цели до действия и пустые минуты. Цель — ноль пустых минут.</li>
+</ol>
+
+<p class="small" style="margin-top:32px">Источники кадров LDoE: kefirgames.helpshift.com (раздел Last Day on Earth: Game interface, Survivor's Path, Hunter's Instinct) и страница игры в Google Play. Last Day on Earth — игра Kefir; кадры приведены для разбора. Кадры «Ямы» — собственные сборки v2 (978af66) и v3 (3cf76f9), портрет 9:16.</p>
+</main>
+</body>
+</html>
