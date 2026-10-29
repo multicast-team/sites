@@ -1,35 +1,39 @@
 {
-  "release": "anton-feedback-2026-10-28-v1",
-  "built_at_utc": "2026-10-28T15:13:09.975855+00:00",
-  "palette": "sand-graphite",
-  "continuous_racing": true,
-  "crew_roles": "discipline-specific",
-  "crowds": true,
+  "release": "audio-ambient-2026-10-29-v1",
+  "built_at_utc": "2026-10-29T21:22:57.067330+00:00",
+  "audio": {
+    "music": [
+      "mus_ambient_sunset",
+      "mus_ambient_morning"
+    ],
+    "clips": 15,
+    "doc": "Docs/Audio/AUDIO.md"
+  },
   "files": [
     {
-      "path": "Build/95900d9d152e33ee89088a5d.data.unityweb",
-      "sha256": "95900d9d152e33ee89088a5d7e007f97d03631c75e1101ebb11291f9dd7747d6",
-      "bytes": 6555233
-    },
-    {
-      "path": "Build/774942034939276999bc6664.loader.js",
-      "sha256": "774942034939276999bc6664fb95da9fd3c68226864b7fdac94dbcc86f0eaab8",
+      "path": "Build/102c20d691096f482494e09735a1e930.loader.js",
+      "sha256": "7df15819535f8bdc5bb8eceac9902931b2c8d4c79ff4b67ebab3f7d1ca67b4d0",
       "bytes": 48779
     },
     {
-      "path": "Build/54556f0aac38062866002b9d.wasm.unityweb",
-      "sha256": "54556f0aac38062866002b9d8a689a0fc2c1833a758ef5ef278ce29f43eed5ac",
-      "bytes": 11648603
+      "path": "Build/51373af0f160eee15e8ccac95ebc440c.wasm.unityweb",
+      "sha256": "19c5c4f23f59971e83e04766161b18ac46e6c3e875fa853c16f8e5567468322f",
+      "bytes": 11663182
     },
     {
-      "path": "Build/0f0a889629ce5b5cbd4bafa7.framework.js.unityweb",
-      "sha256": "0f0a889629ce5b5cbd4bafa715d98667db50b02f50549eb44886bebce9994230",
-      "bytes": 77241
+      "path": "Build/61cf0088712bb29693d8a1a56835b0c8.data.unityweb",
+      "sha256": "d59a5e0250e6f5861da422011e1fc57228ae283c0101cacfb12bf62a57f6343a",
+      "bytes": 13664964
+    },
+    {
+      "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
+      "sha256": "eb3d2d1a97a21cc73b9ae27c42abfce65191a519d9bf294873740969c7152cb0",
+      "bytes": 77286
     }
   ],
-  "unity_checks": {
-    "passed": 13,
-    "failed": 0
-  },
-  "source_manifest_sha256": "2f3cb06239b97d95582c4c1088b473ff343ab94daccbd523fe9bfb3b0b0ab361"
+  "checks": {
+    "unity_playmode_audio_crowd": "4/4 passed",
+    "unity_playmode_ui_suite": "36/41 passed (5 stale tests, unrelated to audio)",
+    "browser_smoke": "loads, audio flows ~-20 dBFS, hidden tab suspends/resumes"
+  }
 }

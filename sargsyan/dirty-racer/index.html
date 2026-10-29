@@ -92,9 +92,9 @@
     canvas.addEventListener('wheel', event => event.preventDefault(), {passive:false});
     const config = {
       arguments: [],
-      dataUrl: 'Build/95900d9d152e33ee89088a5d.data.unityweb',
-      frameworkUrl: 'Build/0f0a889629ce5b5cbd4bafa7.framework.js.unityweb',
-      codeUrl: 'Build/54556f0aac38062866002b9d.wasm.unityweb',
+      dataUrl: 'Build/61cf0088712bb29693d8a1a56835b0c8.data.unityweb',
+      frameworkUrl: 'Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb',
+      codeUrl: 'Build/51373af0f160eee15e8ccac95ebc440c.wasm.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "Dirty Racer Team",
       productName: "Dirty Racer",
@@ -106,14 +106,42 @@
         else console.warn(message);
       }
     };
+    // Sound: Unity's own unlock listens only to mousedown/touchstart, and nothing pauses its loops in a hidden tab.
+    // Track the page's audio contexts, resume them on any real gesture, suspend them while the tab is hidden.
+    const audioContexts = [];
+    const NativeAudioContext = window.AudioContext || window.webkitAudioContext;
+    if (NativeAudioContext) {
+      try {
+        const Tracked = class extends NativeAudioContext {
+          constructor(options) { super(options); audioContexts.push(this); }
+        };
+        window.AudioContext = Tracked;
+        if (window.webkitAudioContext) window.webkitAudioContext = Tracked;
+      } catch (error) { console.warn('Audio context tracking unavailable:', error.message); }
+    }
+    if (navigator.audioSession) { try { navigator.audioSession.type = 'ambient'; } catch (error) {} }
+    let pageHidden = document.hidden;
+    function resumeAudio() {
+      if (pageHidden) return;
+      audioContexts.forEach(context => {
+        if (context.state !== 'running' && context.state !== 'closed') context.resume().catch(() => {});
+      });
+    }
+    function suspendAudio() {
+      audioContexts.forEach(context => { if (context.state === 'running') context.suspend().catch(() => {}); });
+    }
+    ['pointerup', 'touchend', 'click', 'keydown'].forEach(type =>
+      window.addEventListener(type, resumeAudio, {capture: true, passive: true}));
     function notifyVisibility(hidden) {
+      pageHidden = hidden;
+      if (hidden) suspendAudio(); else resumeAudio();
       if (window.unityInstance) window.unityInstance.SendMessage('GameRoot', 'BrowserVisibility', hidden ? '1' : '0');
     }
     document.addEventListener('visibilitychange', () => notifyVisibility(document.hidden));
     window.addEventListener('pagehide', () => notifyVisibility(true));
     window.addEventListener('pageshow', () => notifyVisibility(document.hidden));
     const loader = document.createElement('script');
-    loader.src = 'Build/774942034939276999bc6664.loader.js';
+    loader.src = 'Build/102c20d691096f482494e09735a1e930.loader.js';
     loader.onerror = () => showError('The game download failed. Check your connection and reload.');
     loader.onload = () => {
       createUnityInstance(canvas, config, value => {
