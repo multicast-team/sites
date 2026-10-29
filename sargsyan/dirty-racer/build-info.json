@@ -1,6 +1,10 @@
 {
-  "release": "audio-ambient-2026-10-29-v1",
-  "built_at_utc": "2026-10-29T21:22:57.067330+00:00",
+  "release": "look-polish-2026-10-29-v1",
+  "built_at_utc": "2026-10-29T23:41:46.323375+00:00",
+  "graphics": {
+    "doc": "Docs/Impl/LOOK_POLISH.md",
+    "summary": "smooth terrain colour, procedural ground detail (lawn stripes, tarmac grain, gravel, sand), venue greenery and landmarks, hoardings and tyre walls, closer camera, clear-coat paint, thin own-car ring, softer shadows, re-baked selection cards"
+  },
   "audio": {
     "music": [
       "mus_ambient_sunset",
@@ -16,24 +20,24 @@
       "bytes": 48779
     },
     {
-      "path": "Build/51373af0f160eee15e8ccac95ebc440c.wasm.unityweb",
-      "sha256": "19c5c4f23f59971e83e04766161b18ac46e6c3e875fa853c16f8e5567468322f",
-      "bytes": 11663182
-    },
-    {
-      "path": "Build/61cf0088712bb29693d8a1a56835b0c8.data.unityweb",
-      "sha256": "d59a5e0250e6f5861da422011e1fc57228ae283c0101cacfb12bf62a57f6343a",
-      "bytes": 13664964
+      "path": "Build/7240f745eea072bb5b931f38b25fe2fa.data.unityweb",
+      "sha256": "7bf4fca5e57db775c9768a93b1d1999942217508bf97e7fd2c74a805f2d9842f",
+      "bytes": 13773785
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
-      "sha256": "eb3d2d1a97a21cc73b9ae27c42abfce65191a519d9bf294873740969c7152cb0",
+      "sha256": "a7fb2f3844fde39b3cc24b262c5f7f378d9e76b679c6a2535bccbde65e9a4ee2",
       "bytes": 77286
+    },
+    {
+      "path": "Build/ce9c914944cc437bde72b20d68ba3ab9.wasm.unityweb",
+      "sha256": "d2257f0cc3b65124d5dfa931a2ddaad00b8acf32b5f78ceb5e603ee37066e765",
+      "bytes": 11676637
     }
   ],
   "checks": {
-    "unity_playmode_audio_crowd": "4/4 passed",
-    "unity_playmode_ui_suite": "36/41 passed (5 stale tests, unrelated to audio)",
-    "browser_smoke": "loads, audio flows ~-20 dBFS, hidden tab suspends/resumes"
+    "unity_playmode_stage_suite": "59/59 passed",
+    "lookdev": "Tools/shots/gfx_look.json, 25 shots, 0 errors",
+    "browser_smoke": "loads at Mid tier, selector and Superbike stage render"
   }
 }
