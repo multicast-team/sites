@@ -1,23 +1,27 @@
 {
-  "release": "shop-tab-2026-10-31-v2",
-  "built_at_utc": "2026-10-30T21:39:31.957630+00:00",
-  "shop": {
-    "tab": "always in the menu from the first race",
-    "doc": "Docs/Impl/SHOP.md"
-  },
+  "release": "cars-2026-10-31-v1",
+  "built_at_utc": "2026-10-30T23:08:11.272576+00:00",
+  "fixes": [
+    "cars stay visible after Reset progress from the garage (StageViewRoot showroom visibility)",
+    "open races always have crew and car; a save with an empty slot is repaired instead of starting a new profile"
+  ],
+  "docs": [
+    "Docs/Impl/RACE_UNLOCKS.md"
+  ],
   "checks": {
-    "unity_garage_packs_shop_tab": "2/2"
+    "unity_garage_experience": "5/5",
+    "domain_players_day_fuzz": "4/4 (2 inline as WebGL)"
   },
   "files": [
     {
-      "path": "Build/2b2f24050065f8d7a7d52a977d517c95.data.unityweb",
-      "bytes": 15184224,
-      "sha256": "c2916ee4720cf3b87ace53fd82c68e4765c6a4640968ca8a14c191b654ca0a89"
+      "path": "Build/1b6af70bf402c9466bcad9d053f0c14b.data.unityweb",
+      "bytes": 15185808,
+      "sha256": "21e88c03b10813e4e6d466a2540d8a3284271fb400c6fea34eeefbd946470130"
     },
     {
-      "path": "Build/40a47525f25745e923ccf581116fc6a9.wasm.unityweb",
-      "bytes": 11708101,
-      "sha256": "13ee23295e931a3aa171224fba03c82b64008b2c031d11a30bc3b2ab8f30d0d4"
+      "path": "Build/1fc5e7a2ece876b7cded3e76c979d3fb.wasm.unityweb",
+      "bytes": 11712146,
+      "sha256": "43041360f1fa4b81a1564ea873886c188e11a3e4462e43489bcb076872320587"
     },
     {
       "path": "Build/9eb93e8ded5e97bfd46bfe3585438173.loader.js",
@@ -27,7 +31,7 @@
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "a9438be753a96454681ebc527675d2817ee451238d497835108bdcc4dfa84bd0"
+      "sha256": "035a7258c1ce4e483b0a97d99d4706ed13c9040d802781acc05963d57747c7b0"
     }
   ]
 }
