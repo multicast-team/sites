@@ -448,3 +448,16 @@ html[dir="rtl"] { --serif:Tahoma,Arial,sans-serif;--sans:Tahoma,Arial,sans-serif
 .number-item { min-width:0;overflow-wrap:anywhere; }
 [dir="rtl"] .number-item h2 { font-size:13px;line-height:1.6; }
 [dir="rtl"] .number { letter-spacing:0; }
+.photo-cover .cover-photo { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 52%; }
+.photo-cover::before { z-index:1;border-color:#ffffff88;pointer-events:none; }
+.album-strip { display:grid;grid-auto-flow:column;grid-auto-columns:minmax(240px,32%);gap:20px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:thin;padding-bottom:16px; }
+.album-strip:focus-visible { outline:2px solid var(--coral);outline-offset:6px; }
+.album-strip figure { min-width:0;scroll-snap-align:start; }
+.album-strip a { display:block;border-radius:14px;overflow:hidden;background:var(--sage); }
+.album-strip img { display:block;width:100%;height:360px;object-fit:contain; }
+.album-strip figcaption { padding-top:13px;font-size:15px;line-height:1.5; }
+.cat-album { margin-top:35px; }
+.cat-album a { background:#596052; }
+.puppy-video { margin-top:45px;border-top:1px solid #73806e; }
+.puppy-video video { aspect-ratio:16/9;max-height:none; }
+@media(max-width:600px){.album-strip{grid-auto-columns:85%;gap:16px}.album-strip img{height:340px}}
