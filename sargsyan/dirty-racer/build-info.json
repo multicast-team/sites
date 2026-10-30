@@ -1,17 +1,18 @@
 {
-  "release": "look-polish-2026-10-29-v1",
-  "built_at_utc": "2026-10-29T23:41:46.323375+00:00",
-  "graphics": {
-    "doc": "Docs/Impl/LOOK_POLISH.md",
-    "summary": "smooth terrain colour, procedural ground detail (lawn stripes, tarmac grain, gravel, sand), venue greenery and landmarks, hoardings and tyre walls, closer camera, clear-coat paint, thin own-car ring, softer shadows, re-baked selection cards"
-  },
+  "release": "racing-music-2026-10-30-v1",
+  "built_at_utc": "2026-10-30T10:46:01.288260+00:00",
   "audio": {
     "music": [
-      "mus_ambient_sunset",
-      "mus_ambient_morning"
+      "mus_race_drive",
+      "mus_race_rush",
+      "mus_race_flow"
     ],
-    "clips": 15,
+    "style": "electro house 124 BPM, liquid drum & bass 162 BPM, half-time breakbeat 92 BPM; seamless bar-aligned loops",
+    "clips": 16,
     "doc": "Docs/Audio/AUDIO.md"
+  },
+  "graphics": {
+    "doc": "Docs/Impl/LOOK_POLISH.md"
   },
   "files": [
     {
@@ -20,24 +21,24 @@
       "bytes": 48779
     },
     {
-      "path": "Build/7240f745eea072bb5b931f38b25fe2fa.data.unityweb",
-      "sha256": "7bf4fca5e57db775c9768a93b1d1999942217508bf97e7fd2c74a805f2d9842f",
-      "bytes": 13773785
+      "path": "Build/63f5b4030d08ec4b022c4213eef572b1.data.unityweb",
+      "sha256": "ce0accf7ea769573d330479a93e5ba32b398fd8cc988d82879132eeb81c3500a",
+      "bytes": 15174353
+    },
+    {
+      "path": "Build/65f38168376bf916797eb6c27933f3fc.wasm.unityweb",
+      "sha256": "d0b499f447712c23235f352924c9567f491f2c0e8a095fbd4966a0466f16f07a",
+      "bytes": 11676006
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
-      "sha256": "a7fb2f3844fde39b3cc24b262c5f7f378d9e76b679c6a2535bccbde65e9a4ee2",
+      "sha256": "dbe5855fd3b3331a375d18ca298d45f579c0ebde7bc05ea340b6f57999d55470",
       "bytes": 77286
-    },
-    {
-      "path": "Build/ce9c914944cc437bde72b20d68ba3ab9.wasm.unityweb",
-      "sha256": "d2257f0cc3b65124d5dfa931a2ddaad00b8acf32b5f78ceb5e603ee37066e765",
-      "bytes": 11676637
     }
   ],
   "checks": {
-    "unity_playmode_stage_suite": "59/59 passed",
-    "lookdev": "Tools/shots/gfx_look.json, 25 shots, 0 errors",
-    "browser_smoke": "loads at Mid tier, selector and Superbike stage render"
+    "unity_playmode_audio": "3/3 passed",
+    "webgl_aac_loop": "Chrome decodeAudioData length = source, offset 0 at both ends",
+    "browser_smoke": "loads, audio context running"
   }
 }
