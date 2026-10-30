@@ -364,6 +364,16 @@ details[open] .summary-sign { transform: rotate(45deg); }
 .social-pair span { font:23px var(--serif);margin-right:12px; }
 .social-pair a { font-size:12px; }
 .cat-stories { max-width:680px;font-size:14px;line-height:1.85;margin-top:30px;color:#e0e6d9; }
+.cat-habits { max-width:780px;margin:36px 0 28px;font-size:16px;line-height:1.8;color:#e0e6d9; }
+.cat-profiles { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-bottom:22px; }
+.cat-profile { min-width:0;padding:26px;border:1px solid #73806e;border-radius:18px;background:#ffffff08; }
+.cat-profile-heading { display:flex;align-items:center;flex-wrap:wrap;gap:12px; }
+.cat-profile h3 { margin:0;font:40px/1.25 var(--serif); }
+.cat-age { padding:7px 12px;border-radius:30px;background:#d6ac8a;color:#233025;font:600 13px/1.4 var(--sans); }
+.cat-hobbies-label { margin:22px 0 12px;color:#c9d1bf;font-size:12px; }
+.cat-profile ul { margin:0;padding-inline-start:18px;font-size:14px;line-height:1.8;color:#e0e6d9; }
+.cat-profile li + li { margin-top:8px; }
+@media(max-width:760px){.cat-profiles{grid-template-columns:1fr;gap:16px}.cat-profile{padding:23px}.cat-profile h3{font-size:36px}}
 .language-switch { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding-top:28px; }
 .language-option { display:grid;grid-template-columns:44px minmax(0,1fr) 22px;align-items:center;gap:18px;min-height:108px;padding:22px 25px;background:#ece7dc;border:1px solid #c4c6b7;border-radius:17px;text-decoration:none;transition:transform .18s,background .18s,box-shadow .18s; }
 .language-option.is-current { background:#dce5d6;border-color:#6f8267;box-shadow:inset 0 0 0 1px #6f8267; }
