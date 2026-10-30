@@ -1,14 +1,18 @@
-// Ссылки на сноски раскрывают каталог и сохраняют обычную навигацию по якорю.
-const catalog = document.querySelector('.source-catalog');
-
-function revealSource(hash) {
-  if (catalog && hash.startsWith('#source-')) catalog.open = true;
-}
-
 document.addEventListener('click', (event) => {
-  const link = event.target.closest('a[href^="#source-"]');
-  if (link) revealSource(link.hash);
+  const trigger = event.target.closest('[data-open]');
+  if (!trigger) return;
+  const dialog = document.getElementById(trigger.dataset.open);
+  if (dialog instanceof HTMLDialogElement && !dialog.open) dialog.showModal();
 });
 
-window.addEventListener('hashchange', () => revealSource(window.location.hash));
-revealSource(window.location.hash);
+document.querySelectorAll('dialog').forEach((dialog) => {
+  dialog.addEventListener('close', () => {
+    if (!dialog.open) dialog.querySelectorAll('video').forEach((video) => video.pause());
+  });
+  dialog.addEventListener('click', (event) => {
+    if (event.target !== dialog) return;
+    const bounds = dialog.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right ||
+        event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+  });
+});
