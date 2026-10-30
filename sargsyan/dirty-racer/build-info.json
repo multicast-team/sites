@@ -1,39 +1,33 @@
 {
-  "release": "welcome-back-2026-10-31-v1",
-  "built_at_utc": "2026-10-30T21:32:47.844103+00:00",
-  "welcome_back": "title, subtitle, cash illustration, amount, offline time vs limit, ad x2 and collect",
+  "release": "shop-tab-2026-10-31-v2",
+  "built_at_utc": "2026-10-30T21:39:31.957630+00:00",
   "shop": {
+    "tab": "always in the menu from the first race",
     "doc": "Docs/Impl/SHOP.md"
   },
-  "crew": {
-    "doc": "Docs/Impl/CREW_PACKS.md"
-  },
-  "garage": {
-    "doc": "Docs/Impl/GARAGE.md"
-  },
   "checks": {
-    "unity_reward_offers_and_stock_return": "passed"
+    "unity_garage_packs_shop_tab": "2/2"
   },
   "files": [
+    {
+      "path": "Build/2b2f24050065f8d7a7d52a977d517c95.data.unityweb",
+      "bytes": 15184224,
+      "sha256": "c2916ee4720cf3b87ace53fd82c68e4765c6a4640968ca8a14c191b654ca0a89"
+    },
+    {
+      "path": "Build/40a47525f25745e923ccf581116fc6a9.wasm.unityweb",
+      "bytes": 11708101,
+      "sha256": "13ee23295e931a3aa171224fba03c82b64008b2c031d11a30bc3b2ab8f30d0d4"
+    },
     {
       "path": "Build/9eb93e8ded5e97bfd46bfe3585438173.loader.js",
       "bytes": 48779,
       "sha256": "3ee0c8d1bb2c07c2504ad10540feee32c1fee9711d408b82c9ab9ef4ec3ae8aa"
     },
     {
-      "path": "Build/b8267b2310b345d8aca058ec1e07d088.data.unityweb",
-      "bytes": 15186476,
-      "sha256": "da8d31edc000847f685b0e91f3170aec603a8daa71893b67f3e97634822c6068"
-    },
-    {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "4362a1fdabc114811a6ca83b0b44a052f84533bb6fae5bdd703d50be38ffa87f"
-    },
-    {
-      "path": "Build/dbd8a2aaf39949d6ee4725f32ca1d2a0.wasm.unityweb",
-      "bytes": 11708101,
-      "sha256": "66c6f9721e20ca89b0219b7044a790866fe4078e5f6db06343d70d3fe432bce4"
+      "sha256": "a9438be753a96454681ebc527675d2817ee451238d497835108bdcc4dfa84bd0"
     }
   ]
 }
