@@ -1,44 +1,41 @@
 {
-  "release": "sponsor-offline-2026-10-30-v1",
-  "built_at_utc": "2026-10-30T19:20:18.570139+00:00",
-  "sponsor": {
-    "tap_window_s": 5,
-    "reward_income_seconds": 300,
-    "first_eligible_active_s": 60,
-    "cooldown_s": 300
+  "release": "position-fix-2026-10-30-v1",
+  "built_at_utc": "2026-10-30T19:48:45.022503+00:00",
+  "position": {
+    "unresolved_ties": "unranked",
+    "finish": "actual simulated classification",
+    "empty_seasons": "unranked, no crown"
   },
-  "offline": {
-    "max_unclaimed_seconds": 10800,
-    "collect_manually": true,
-    "rewarded_cash_multiplier": 2
-  },
-  "ads": "development preview adapter; no network SDK",
+  "offline_max_seconds": 10800,
+  "sponsor_income_seconds": 300,
   "volume_sliders": true,
   "checks": {
-    "focused_logic_passed": 28,
-    "unity_playmode_passed": 6
+    "focused_domain_passed": 29,
+    "unity_position_passed": 5,
+    "stock_return_rallies": 90,
+    "stock_return_wins": 0,
+    "stock_return_seed": 81
   },
   "files": [
     {
       "path": "Build/102c20d691096f482494e09735a1e930.loader.js",
-      "sha256": "7df15819535f8bdc5bb8eceac9902931b2c8d4c79ff4b67ebab3f7d1ca67b4d0",
-      "bytes": 48779
-    },
-    {
-      "path": "Build/4b2e9f4d2c44783ba5a7506955a69a0d.data.unityweb",
-      "sha256": "14496864ef64603c192778000b4859cff342cbce300ef7f56dda85ccca0c20c8",
-      "bytes": 15175929
-    },
-    {
-      "path": "Build/6842a1758051dfbef9432443795b7395.wasm.unityweb",
-      "sha256": "7cc3818bc3ea827829ed20e0af5b5695f6fd53e68305982dde5c69c129c44f44",
-      "bytes": 11685516
+      "bytes": 48779,
+      "sha256": "7df15819535f8bdc5bb8eceac9902931b2c8d4c79ff4b67ebab3f7d1ca67b4d0"
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
-      "sha256": "2ea5fd70272222431036dbbb4372fc77548e12cf1cfdd91e88ab9e8ab03fa421",
-      "bytes": 77286
+      "bytes": 77286,
+      "sha256": "ff6cd4729154f19a5c52d089e3a289db1f269ba4795e375715037d1a3529bce2"
+    },
+    {
+      "path": "Build/d06fff88735f0d102ede88a27c3fcbd6.wasm.unityweb",
+      "bytes": 11684109,
+      "sha256": "e11f1607de24325af64d2f33e1e92dbc6840ce6046583d3a1b864cbcf32c102b"
+    },
+    {
+      "path": "Build/ef3217e6d11ceb40ae1f364f227715e9.data.unityweb",
+      "bytes": 15176323,
+      "sha256": "3433387769d89ba827100095aa00921804b826ab87cc939190fc45c5d7bb44aa"
     }
-  ],
-  "review": "cash confirmation sound, formatted toast and dialog recovery fixed; rechecked6Unitytests"
+  ]
 }
