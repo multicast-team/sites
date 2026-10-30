@@ -1,22 +1,22 @@
 {
-  "release": "volume-sliders-2026-10-30-v1",
-  "built_at_utc": "2026-10-30T18:29:55.887555+00:00",
-  "settings": {
-    "sounds": "independent 0–100% slider for UI, rewards and world",
-    "music": "independent 0–100% slider",
-    "live": true,
-    "persisted": true,
-    "legacy_mute_migration": true
+  "release": "sponsor-offline-2026-10-30-v1",
+  "built_at_utc": "2026-10-30T19:20:18.570139+00:00",
+  "sponsor": {
+    "tap_window_s": 5,
+    "reward_income_seconds": 300,
+    "first_eligible_active_s": 60,
+    "cooldown_s": 300
   },
-  "races": {
-    "first_pick": "free",
-    "unlock_ladder_cash": [
-      1000000.0,
-      1000000000.0,
-      250000000000.0,
-      5000000000000.0,
-      30000000000000.0
-    ]
+  "offline": {
+    "max_unclaimed_seconds": 10800,
+    "collect_manually": true,
+    "rewarded_cash_multiplier": 2
+  },
+  "ads": "development preview adapter; no network SDK",
+  "volume_sliders": true,
+  "checks": {
+    "focused_logic_passed": 28,
+    "unity_playmode_passed": 6
   },
   "files": [
     {
@@ -25,27 +25,20 @@
       "bytes": 48779
     },
     {
-      "path": "Build/33406177b537cebf639c416422226a6e.data.unityweb",
-      "sha256": "f57e870c73039420c690fa604fc203ff1b514416c049c2a4df6b66a79435c7ef",
-      "bytes": 15172123
+      "path": "Build/4b2e9f4d2c44783ba5a7506955a69a0d.data.unityweb",
+      "sha256": "14496864ef64603c192778000b4859cff342cbce300ef7f56dda85ccca0c20c8",
+      "bytes": 15175929
+    },
+    {
+      "path": "Build/6842a1758051dfbef9432443795b7395.wasm.unityweb",
+      "sha256": "7cc3818bc3ea827829ed20e0af5b5695f6fd53e68305982dde5c69c129c44f44",
+      "bytes": 11685516
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
-      "sha256": "69cf43b6315c55e6987ba67f7cb75caa5257f42c7e97d01421860f4c80e2d636",
+      "sha256": "2ea5fd70272222431036dbbb4372fc77548e12cf1cfdd91e88ab9e8ab03fa421",
       "bytes": 77286
-    },
-    {
-      "path": "Build/e8767bc538bc1cead6cfc9d2719e1130.wasm.unityweb",
-      "sha256": "b57bf969298d53a9215ad910a4b1cfbfa3af62333b9242d00033fd16efea4b5b",
-      "bytes": 11679605
     }
   ],
-  "checks": {
-    "audio_settings_tests": "3 passed",
-    "unity_audio_experience_tests": "4 passed",
-    "mobile_screens": [
-      "320x640",
-      "360x780"
-    ]
-  }
+  "review": "cash confirmation sound, formatted toast and dialog recovery fixed; rechecked6Unitytests"
 }
