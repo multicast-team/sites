@@ -1,20 +1,26 @@
 {
-  "release": "position-fix-2026-10-30-v1",
-  "built_at_utc": "2026-10-30T19:48:45.022503+00:00",
-  "position": {
-    "unresolved_ties": "unranked",
-    "finish": "actual simulated classification",
-    "empty_seasons": "unranked, no crown"
+  "release": "garage-2026-10-31-v1",
+  "built_at_utc": "2026-10-30T20:34:24.651397+00:00",
+  "garage": {
+    "cars_per_race": 4,
+    "slots": [
+      "stock",
+      "500 carbon",
+      "$9.99 (test store, no payment)",
+      "Premium $4.99/30 days (placeholder)"
+    ],
+    "bonus": [
+      0,
+      0.04,
+      0.08,
+      0.12
+    ],
+    "doc": "Docs/Impl/GARAGE.md"
   },
-  "offline_max_seconds": 10800,
-  "sponsor_income_seconds": 300,
-  "volume_sliders": true,
   "checks": {
-    "focused_domain_passed": 29,
-    "unity_position_passed": 5,
-    "stock_return_rallies": 90,
-    "stock_return_wins": 0,
-    "stock_return_seed": 81
+    "domain_garage": "5/5",
+    "unity_garage_experience": "passed",
+    "localization": "passed"
   },
   "files": [
     {
@@ -23,19 +29,19 @@
       "sha256": "7df15819535f8bdc5bb8eceac9902931b2c8d4c79ff4b67ebab3f7d1ca67b4d0"
     },
     {
+      "path": "Build/6f953eb9721d21ae5d1fda9046dcd718.data.unityweb",
+      "bytes": 15175515,
+      "sha256": "baf4f624ef0917d1819d1229a312e4b65c2ce5765c86d74f55251449d4cd6bc4"
+    },
+    {
+      "path": "Build/b34735f83ed9d54304c2e35c6aa64cdd.wasm.unityweb",
+      "bytes": 11685786,
+      "sha256": "152557084049070909952919b063db36518315b799736003b5682c1c1223f7f1"
+    },
+    {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "ff6cd4729154f19a5c52d089e3a289db1f269ba4795e375715037d1a3529bce2"
-    },
-    {
-      "path": "Build/d06fff88735f0d102ede88a27c3fcbd6.wasm.unityweb",
-      "bytes": 11684109,
-      "sha256": "e11f1607de24325af64d2f33e1e92dbc6840ce6046583d3a1b864cbcf32c102b"
-    },
-    {
-      "path": "Build/ef3217e6d11ceb40ae1f364f227715e9.data.unityweb",
-      "bytes": 15176323,
-      "sha256": "3433387769d89ba827100095aa00921804b826ab87cc939190fc45c5d7bb44aa"
+      "sha256": "ca2aeb280d42032d7f01ca29713e8c80a0dce5af5f283ea593ef7a790c15f3e5"
     }
   ]
 }
