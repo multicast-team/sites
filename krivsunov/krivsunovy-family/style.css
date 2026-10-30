@@ -89,3 +89,6 @@ html[dir=rtl]{--serif:Tahoma,Arial,sans-serif;--sans:Tahoma,Arial,sans-serif}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 @page{size:A4 landscape;margin:9mm}
 @media print{html,body{background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{max-width:none;margin:0;padding:0}.languages,dialog,.no-print{display:none!important}.sheet{padding:0;border:0;border-radius:0;box-shadow:none;break-inside:avoid}.masthead{margin-bottom:12px}.identity{grid-template-columns:1.08fr 1fr 1fr}.couple{grid-column:auto;height:185px;min-height:185px}.person{padding:12px}.metrics{margin-top:10px}.lifestyle{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:7px}.pets{margin-top:7px;padding-top:10px}.pet-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.pet:last-child{display:block;grid-column:auto}.pet-image,.pet:last-child .pet-image{height:105px;min-height:0}.sheet button{display:none!important}.footnote{margin-top:9px}.tiny{margin-top:5px}a{color:inherit;text-decoration:none}.games{font-size:9px}}
+
+.game-platform-group{display:flex;flex-direction:column;gap:4px}
+.mobile-stores{display:flex;gap:8px;flex-wrap:wrap;font-size:10px}
