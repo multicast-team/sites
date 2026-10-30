@@ -1,0 +1,134 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Word Harvest — ферма: было и стало</title>
+<style>
+:root{--bg:#f4f5f8;--card:#fff;--ink:#1d2330;--mute:#6b7385;--line:#e2e5ec;--q:#b54708}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,Segoe UI,sans-serif}
+.top{position:sticky;top:0;z-index:2;background:var(--card);border-bottom:1px solid var(--line);padding:12px 16px}
+.top h1{margin:0 0 4px;font-size:20px} .top p{margin:0 0 8px;color:var(--mute)}
+button{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:4px 12px;margin:0 4px 4px 0;cursor:pointer}
+button.on{background:var(--ink);color:#fff}
+main{padding:16px;max-width:1400px;margin:auto}
+.intro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+.intro h2{font-size:16px;margin:4px 0} .intro ul{margin:4px 0 8px;padding-left:20px} .intro .warn li{color:var(--q)}
+.win{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+.win header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.win h2{font-size:17px;margin:0} .n{color:var(--mute);font-weight:600}
+.chip{font-size:12px;border-radius:10px;padding:2px 8px;background:#eef0f4;color:var(--mute)}
+.st-changed{background:#e6f6ec;color:#16794a} .st-issue{background:#fff4e5;color:#9a5b00} .st-same{background:#eef0f4}
+.note{margin:8px 0}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.cols>div:last-child h3{color:#16794a}
+.cols h3{font-size:13px;margin:0 0 6px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+.shots{display:flex;gap:8px;overflow-x:auto}
+figure{margin:0;flex:0 0 auto;width:150px} figure img{width:150px;border-radius:8px;border:1px solid var(--line);cursor:zoom-in;display:block}
+figcaption{font-size:11px;color:var(--mute)}
+.none{color:var(--mute);font-style:italic}
+#zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:5}
+#zoom img{max-height:94vh;max-width:94vw}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+</style></head><body>
+<div class="top"><h1>Word Harvest — ферма и экраны: как было и как стало</h1><p>13 сравнений · изменилось: 7 · есть замечания: 2 · без изменений: 4</p>
+<button data-f="all" class="on">все</button><button data-f="changed">изменилось</button><button data-f="issue">есть замечания</button><button data-f="same">без изменений</button></div>
+<main>
+<div class="intro">
+<p>Снимки из автотестов Unity, три прогона: вечер 29.10, 30.10 в 14:50 (до правок вида фермы) и 30.10 в 18:25 (сейчас, после правок). Нажмите на снимок, чтобы увеличить.</p>
+<h2>Что поменялось 30.10</h2>
+<ul><li>Ферма стоит на ровном поле, без острова; трава с текстурой, у моделей тонкий контур.</li>
+<li>Дорожка вьётся, от неё ветки к амбару и мельнице, дальше идёт между нижними грядками.</li>
+<li>Новые модели Tripo: дом с синей крышей, жёлтая пекарня, сцена, чёрно-белая корова, деревянная тачка. Колодца, виноградника и улья нет ни на одном снимке: колодец в тестах ещё закрыт, виноградник и улей на снимках не нашлись.</li>
+<li>Декор на продажу — пунктирное кольцо с ценой; спелая грядка — монета с красной точкой.</li>
+<li>Загрузка и экран запуска: фон фермы и логотип вместо тёмного фона и надписи.</li></ul>
+<h2>Замечания</h2>
+<ul class="warn"><li>Сцену почти целиком закрывают кнопки PLAY и Collect all (снимок 4).</li>
+<li>Лопасти мельницы заходят на пекарню (снимок 4).</li>
+<li>На экране запуска «Level 12» лежит на свинье (снимок 11).</li>
+<li>Автотест экрана запуска ищет надпись с названием игры и падает: надпись заменена логотипом.</li></ul>
+</div>
+
+<section class="win" data-status="changed">
+  <header><span class="n">1</span><h2>Ферма — общий вид</h2>
+    <span class="chip st-changed">изменилось</span><span class="chip">Ферма</span></header>
+  <p class="note">Ферма. 29.10 → 14:50: надписи на грядках заменены замками и таймерами, появилась кнопка Cheats, уровень фермы — зелёная звезда. 14:50 → сейчас: остров убран, ферма стоит на ровном поле; у дома синяя крыша (модель Tripo); дорожка вьётся и ветвится к амбару и мельнице; трава с текстурой; у моделей тонкий контур; декор на продажу — пунктирное кольцо с ценой в самоцветах.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><figure><img loading="lazy" src="img/r1029/note20_farm.webp" alt=""><figcaption>Note20 · farm</figcaption></figure><figure><img loading="lazy" src="img/r1029/pixel2_farm.webp" alt=""><figcaption>Pixel 2 · farm</figcaption></figure></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/note20_farm.webp" alt=""><figcaption>Note20 · farm</figcaption></figure><figure><img loading="lazy" src="img/r1030a/pixel2_farm.webp" alt=""><figcaption>Pixel 2 · farm</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/note20_farm.webp" alt=""><figcaption>Note20 · farm</figcaption></figure><figure><img loading="lazy" src="img/r1030b/pixel2_farm.webp" alt=""><figcaption>Pixel 2 · farm</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="changed">
+  <header><span class="n">2</span><h2>Ферма — телефон и планшет</h2>
+    <span class="chip st-changed">изменилось</span><span class="chip">Ферма</span></header>
+  <p class="note">То же на телефоне и планшете (временный тест FarmShotsTemp, 29.10 его ещё не было). Колодец у амбара — только замок: он закрыт до 3-го уровня фермы, поэтому модели не видно. Тачка справа — кольцо с ценой «3».</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><p class=none>нет снимка</p></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/phone_farm.webp" alt=""><figcaption>телефон · farm</figcaption></figure><figure><img loading="lazy" src="img/r1030a/tablet_farm.webp" alt=""><figcaption>планшет · farm</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/phone_farm.webp" alt=""><figcaption>телефон · farm</figcaption></figure><figure><img loading="lazy" src="img/r1030b/tablet_farm.webp" alt=""><figcaption>планшет · farm</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="changed">
+  <header><span class="n">3</span><h2>Ферма — урожай готов</h2>
+    <span class="chip st-changed">изменилось</span><span class="chip">Ферма</span></header>
+  <p class="note">Спелая грядка: вместо плашки «Ready +20 coins» — монета с красной точкой. В прогоне 14:50 этого снимка нет.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><figure><img loading="lazy" src="img/r1029/note20_farm_ready.webp" alt=""><figcaption>Note20 · farm ready</figcaption></figure><figure><img loading="lazy" src="img/r1029/pixel2_farm_ready.webp" alt=""><figcaption>Pixel 2 · farm ready</figcaption></figure></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><p class=none>нет снимка</p></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/note20_farm_ready.webp" alt=""><figcaption>Note20 · farm ready</figcaption></figure><figure><img loading="lazy" src="img/r1030b/pixel2_farm_ready.webp" alt=""><figcaption>Pixel 2 · farm ready</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="issue">
+  <header><span class="n">4</span><h2>Все постройки</h2>
+    <span class="chip st-issue">есть замечания</span><span class="chip">Ферма</span></header>
+  <p class="note">Пекарня стала жёлтой, с кренделем (модель Tripo). Внизу появилась сцена со ступенями к камере. Замечания: сцену почти целиком закрывают кнопки PLAY и Collect all; лопасти мельницы заходят на пекарню.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><figure><img loading="lazy" src="img/r1029/6b_all_buildings.webp" alt=""><figcaption>6b all buildings</figcaption></figure></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/6b_all_buildings.webp" alt=""><figcaption>6b all buildings</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/6b_all_buildings.webp" alt=""><figcaption>6b all buildings</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="changed">
+  <header><span class="n">5</span><h2>Уровни фермы</h2>
+    <span class="chip st-changed">изменилось</span><span class="chip">Ферма</span></header>
+  <p class="note">Корова у коровника — новая чёрно-белая модель (в 14:50 была рыжая); на снимке она светлая, пятна видны слабо. Шатёр, сад и грядки — без изменений, кроме общего вида фермы.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><figure><img loading="lazy" src="img/r1029/6b_building_level_1.webp" alt=""><figcaption>6b building level 1</figcaption></figure><figure><img loading="lazy" src="img/r1029/6b_building_level_3.webp" alt=""><figcaption>6b building level 3</figcaption></figure><figure><img loading="lazy" src="img/r1029/6b_building_level_6.webp" alt=""><figcaption>6b building level 6</figcaption></figure></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/6b_building_level_1.webp" alt=""><figcaption>6b building level 1</figcaption></figure><figure><img loading="lazy" src="img/r1030a/6b_building_level_3.webp" alt=""><figcaption>6b building level 3</figcaption></figure><figure><img loading="lazy" src="img/r1030a/6b_building_level_6.webp" alt=""><figcaption>6b building level 6</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/6b_building_level_1.webp" alt=""><figcaption>6b building level 1</figcaption></figure><figure><img loading="lazy" src="img/r1030b/6b_building_level_3.webp" alt=""><figcaption>6b building level 3</figcaption></figure><figure><img loading="lazy" src="img/r1030b/6b_building_level_6.webp" alt=""><figcaption>6b building level 6</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="same">
+  <header><span class="n">6</span><h2>Уровень и закрытая грядка</h2>
+    <span class="chip st-same">без изменений</span><span class="chip">Ферма</span></header>
+  <p class="note">Поле уровня и окно закрытой грядки — без изменений. Корзина «Пасека» сверху сменила цвет ещё к 14:50; сейчас она немного светлее.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><figure><img loading="lazy" src="img/r1029/6a_level.webp" alt=""><figcaption>6a level</figcaption></figure><figure><img loading="lazy" src="img/r1029/6a_ripe_stage.webp" alt=""><figcaption>6a ripe stage</figcaption></figure><figure><img loading="lazy" src="img/r1029/6a_locked_bed.webp" alt=""><figcaption>6a locked bed</figcaption></figure></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/6a_level.webp" alt=""><figcaption>6a level</figcaption></figure><figure><img loading="lazy" src="img/r1030a/6a_ripe_stage.webp" alt=""><figcaption>6a ripe stage</figcaption></figure><figure><img loading="lazy" src="img/r1030a/6a_locked_bed.webp" alt=""><figcaption>6a locked bed</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/6a_level.webp" alt=""><figcaption>6a level</figcaption></figure><figure><img loading="lazy" src="img/r1030b/6a_ripe_stage.webp" alt=""><figcaption>6a ripe stage</figcaption></figure><figure><img loading="lazy" src="img/r1030b/6a_locked_bed.webp" alt=""><figcaption>6a locked bed</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="changed">
+  <header><span class="n">7</span><h2>Декор</h2>
+    <span class="chip st-changed">изменилось</span><span class="chip">Декор</span></header>
+  <p class="note">Корова слева от коровника: рыжая → чёрно-белая. Тачка — кольцо с ценой, колодец — замок у амбара.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><figure><img loading="lazy" src="img/r1029/6a_decor.webp" alt=""><figcaption>6a decor</figcaption></figure></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/6a_decor.webp" alt=""><figcaption>6a decor</figcaption></figure><figure><img loading="lazy" src="img/r1030a/phone_decor.webp" alt=""><figcaption>телефон · decor</figcaption></figure><figure><img loading="lazy" src="img/r1030a/tablet_decor.webp" alt=""><figcaption>планшет · decor</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/6a_decor.webp" alt=""><figcaption>6a decor</figcaption></figure><figure><img loading="lazy" src="img/r1030b/phone_decor.webp" alt=""><figcaption>телефон · decor</figcaption></figure><figure><img loading="lazy" src="img/r1030b/tablet_decor.webp" alt=""><figcaption>планшет · decor</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="changed">
+  <header><span class="n">8</span><h2>Декор куплен и закрыт</h2>
+    <span class="chip st-changed">изменилось</span><span class="chip">Декор</span></header>
+  <p class="note">Купленная тачка: тонкая серая → деревянная модель Tripo, небольшая, по цвету не темнее остальных. Окно закрытого колодца — прежняя картинка-иконка; модель колодца в сцене пока не видна ни на одном снимке.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><p class=none>нет снимка</p></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/phone_decor_bought.webp" alt=""><figcaption>телефон · decor bought</figcaption></figure><figure><img loading="lazy" src="img/r1030a/phone_decor_locked_popup.webp" alt=""><figcaption>телефон · decor locked popup</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/phone_decor_bought.webp" alt=""><figcaption>телефон · decor bought</figcaption></figure><figure><img loading="lazy" src="img/r1030b/phone_decor_locked_popup.webp" alt=""><figcaption>телефон · decor locked popup</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="same">
+  <header><span class="n">9</span><h2>Полоса роста и читы</h2>
+    <span class="chip st-same">без изменений</span><span class="chip">Декор</span></header>
+  <p class="note">Полоса роста — как на общем виде фермы. Окно читов без изменений.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><p class=none>нет снимка</p></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/phone_bar_minutes.webp" alt=""><figcaption>телефон · bar minutes</figcaption></figure><figure><img loading="lazy" src="img/r1030a/phone_cheats.webp" alt=""><figcaption>телефон · cheats</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/phone_bar_minutes.webp" alt=""><figcaption>телефон · bar minutes</figcaption></figure><figure><img loading="lazy" src="img/r1030b/phone_cheats.webp" alt=""><figcaption>телефон · cheats</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="changed">
+  <header><span class="n">10</span><h2>Загрузка</h2>
+    <span class="chip st-changed">изменилось</span><span class="chip">Экраны</span></header>
+  <p class="note">Тёмный фон и надпись → фон фермы и логотип WORD HARVEST. Полоса загрузки прежняя.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><figure><img loading="lazy" src="img/r1029/note20_7b2_loading_normal.webp" alt=""><figcaption>Note20 · loading</figcaption></figure><figure><img loading="lazy" src="img/r1029/pixel2_7b2_loading_normal.webp" alt=""><figcaption>Pixel 2 · loading</figcaption></figure></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/note20_7b2_loading_normal.webp" alt=""><figcaption>Note20 · loading</figcaption></figure><figure><img loading="lazy" src="img/r1030a/pixel2_7b2_loading_normal.webp" alt=""><figcaption>Pixel 2 · loading</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/note20_7b2_loading_normal.webp" alt=""><figcaption>Note20 · loading</figcaption></figure><figure><img loading="lazy" src="img/r1030b/pixel2_7b2_loading_normal.webp" alt=""><figcaption>Pixel 2 · loading</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="issue">
+  <header><span class="n">11</span><h2>Экран запуска</h2>
+    <span class="chip st-issue">есть замечания</span><span class="chip">Экраны</span></header>
+  <p class="note">Тёмный фон и надпись → фон фермы и логотип. Замечание: надпись «Level 12» лежит прямо на свинье. Тест BootCameraTests ищет здесь надпись с названием игры и теперь падает — его нужно поправить на логотип.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><figure><img loading="lazy" src="img/r1029/note20_7b2_launch_normal.webp" alt=""><figcaption>Note20 · launch</figcaption></figure><figure><img loading="lazy" src="img/r1029/pixel2_7b2_launch_normal.webp" alt=""><figcaption>Pixel 2 · launch</figcaption></figure><figure><img loading="lazy" src="img/r1029/stage5b_launch.webp" alt=""><figcaption>тест 5b · launch</figcaption></figure></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/note20_7b2_launch_normal.webp" alt=""><figcaption>Note20 · launch</figcaption></figure><figure><img loading="lazy" src="img/r1030a/pixel2_7b2_launch_normal.webp" alt=""><figcaption>Pixel 2 · launch</figcaption></figure><figure><img loading="lazy" src="img/r1030a/stage5b_launch.webp" alt=""><figcaption>тест 5b · launch</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/note20_7b2_launch_normal.webp" alt=""><figcaption>Note20 · launch</figcaption></figure><figure><img loading="lazy" src="img/r1030b/pixel2_7b2_launch_normal.webp" alt=""><figcaption>Pixel 2 · launch</figcaption></figure><figure><img loading="lazy" src="img/r1030b/stage5b_launch.webp" alt=""><figcaption>тест 5b · launch</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="same">
+  <header><span class="n">12</span><h2>Поле уровня</h2>
+    <span class="chip st-same">без изменений</span><span class="chip">Уровень</span></header>
+  <p class="note">Поле уровня и окно старта уровня — без изменений. Сверху видна ферма в новом виде; корзины над полем стали светлее.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><figure><img loading="lazy" src="img/r1029/note20_7b2_hud_normal.webp" alt=""><figcaption>Note20 · hud</figcaption></figure><figure><img loading="lazy" src="img/r1029/note20_7b2_start-normal_normal.webp" alt=""><figcaption>Note20 · start-normal</figcaption></figure></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/note20_7b2_hud_normal.webp" alt=""><figcaption>Note20 · hud</figcaption></figure><figure><img loading="lazy" src="img/r1030a/note20_7b2_start-normal_normal.webp" alt=""><figcaption>Note20 · start-normal</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/note20_7b2_hud_normal.webp" alt=""><figcaption>Note20 · hud</figcaption></figure><figure><img loading="lazy" src="img/r1030b/note20_7b2_start-normal_normal.webp" alt=""><figcaption>Note20 · start-normal</figcaption></figure></div></div></div>
+</section>
+<section class="win" data-status="same">
+  <header><span class="n">13</span><h2>Победа</h2>
+    <span class="chip st-same">без изменений</span><span class="chip">Уровень</span></header>
+  <p class="note">Без изменений. Старая мелочь: название категории «Единицы измерения» ломается по слогам и заезжает под звезду.</p>
+  <div class="cols"><div><h3>29.10, вечер</h3><div class="shots"><figure><img loading="lazy" src="img/r1029/note20_7b2_victory_normal.webp" alt=""><figcaption>Note20 · victory</figcaption></figure></div></div><div><h3>30.10, 14:50 — до правок вида</h3><div class="shots"><figure><img loading="lazy" src="img/r1030a/note20_7b2_victory_normal.webp" alt=""><figcaption>Note20 · victory</figcaption></figure></div></div><div><h3>30.10, 18:25 — сейчас</h3><div class="shots"><figure><img loading="lazy" src="img/r1030b/note20_7b2_victory_normal.webp" alt=""><figcaption>Note20 · victory</figcaption></figure></div></div></div>
+</section>
+</main><div id="zoom"><img alt=""></div>
+<script>
+const z=document.getElementById('zoom');
+document.querySelectorAll('figure img').forEach(i=>i.onclick=()=>{z.firstElementChild.src=i.src;z.style.display='flex'});
+z.onclick=()=>z.style.display='none';
+document.querySelectorAll('.top button').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('.top button').forEach(x=>x.classList.toggle('on',x===b));
+ const f=b.dataset.f;document.querySelectorAll('.win').forEach(w=>w.style.display=f==='all'||w.dataset.status===f?'':'none')});
+</script></body></html>
