@@ -1,44 +1,44 @@
 {
-  "release": "racing-music-2026-10-30-v1",
-  "built_at_utc": "2026-10-30T10:46:01.288260+00:00",
-  "audio": {
-    "music": [
-      "mus_race_drive",
-      "mus_race_rush",
-      "mus_race_flow"
+  "release": "race-unlocks-2026-10-30-v1",
+  "built_at_utc": "2026-10-30T15:16:09.846858+00:00",
+  "races": {
+    "first_pick": "free, the only open race",
+    "unlock_ladder_usd": [
+      1000000.0,
+      1000000000.0,
+      250000000000.0,
+      5000000000000.0,
+      30000000000000.0
     ],
-    "style": "electro house 124 BPM, liquid drum & bass 162 BPM, half-time breakbeat 92 BPM; seamless bar-aligned loops",
-    "clips": 16,
-    "doc": "Docs/Audio/AUDIO.md"
-  },
-  "graphics": {
-    "doc": "Docs/Impl/LOOK_POLISH.md"
+    "rule": "price by the number of open races, any order; open races switch free",
+    "doc": "Docs/Impl/RACE_UNLOCKS.md"
   },
   "files": [
+    {
+      "path": "Build/06e050d4b5f6d4abc9a754a989c37d7f.data.unityweb",
+      "sha256": "ffe60bfc8ad194e153547d955c1fc2f3dfb7923d6213527d6bf2d508a6997dba",
+      "bytes": 15173379
+    },
     {
       "path": "Build/102c20d691096f482494e09735a1e930.loader.js",
       "sha256": "7df15819535f8bdc5bb8eceac9902931b2c8d4c79ff4b67ebab3f7d1ca67b4d0",
       "bytes": 48779
     },
     {
-      "path": "Build/63f5b4030d08ec4b022c4213eef572b1.data.unityweb",
-      "sha256": "ce0accf7ea769573d330479a93e5ba32b398fd8cc988d82879132eeb81c3500a",
-      "bytes": 15174353
-    },
-    {
-      "path": "Build/65f38168376bf916797eb6c27933f3fc.wasm.unityweb",
-      "sha256": "d0b499f447712c23235f352924c9567f491f2c0e8a095fbd4966a0466f16f07a",
-      "bytes": 11676006
+      "path": "Build/5d84e224bfc1caba7844daf2037c752b.wasm.unityweb",
+      "sha256": "105f9387d7a84115715bd2d0d3fc75cc16ed9760c2876cddd2f81fcbcf2fad9c",
+      "bytes": 11681547
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
-      "sha256": "dbe5855fd3b3331a375d18ca298d45f579c0ebde7bc05ea340b6f57999d55470",
+      "sha256": "83eb3438320c3d649c21a5f80f1365680063969d89a2114bb517e4974e9507f2",
       "bytes": 77286
     }
   ],
   "checks": {
+    "domain_race_tests": "42/42 passed",
+    "unity_playmode_all_six_circuits": "passed",
     "unity_playmode_audio": "3/3 passed",
-    "webgl_aac_loop": "Chrome decodeAudioData length = source, offset 0 at both ends",
-    "browser_smoke": "loads, audio context running"
+    "browser_smoke": "first-launch window, first pick starts the race, Races window shows the other five at 1M"
   }
 }
