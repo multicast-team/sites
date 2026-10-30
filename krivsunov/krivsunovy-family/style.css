@@ -330,3 +330,39 @@ details[open] .summary-sign { transform: rotate(45deg); }
 .cat-asterisk { margin-left:auto;color:#d6ac8a; }
 @media(max-width:600px){.cat-gallery{grid-template-columns:1fr;gap:30px}.cat-gallery figcaption{font-size:30px}.cat-photo-wrap{aspect-ratio:4/4.5}}
 @media(prefers-reduced-motion:reduce){.cat-gallery img{transition:none}.cat-gallery figure:hover img{transform:none}}
+
+/* Личные истории дополняют существующую журнальную композицию. */
+.career-notes { list-style:none;padding:0;margin:24px 0 10px;border-top:1px solid var(--line); }
+.career-notes li { display:grid;grid-template-columns:84px 1fr;gap:16px;padding:13px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.7; }
+.career-notes li>span { color:var(--coral);font-family:var(--serif);font-size:16px; }
+.interest-grid { display:grid;grid-template-columns:1fr 1fr;gap:70px; }
+.interest-profile { border-top:1px solid var(--ink);padding-top:24px; }
+.interest-profile h3 { font:36px/1.15 var(--serif);letter-spacing:-.04em;margin:18px 0 28px; }
+.interest-profile dl { display:grid;grid-template-columns:125px 1fr;gap:20px 18px;font-size:14px;line-height:1.75;margin:0; }
+.interest-profile dt { font-size:11px;letter-spacing:.04em;color:var(--coral);padding-top:3px; }
+.interest-profile dd { margin:0; }
+.shared-note { display:flex;align-items:center;gap:35px;border-top:1px solid var(--line);margin-top:48px;padding-top:28px; }
+.shared-note>span { font:italic 90px/1 var(--serif);color:var(--coral); }
+.shared-note p { font-size:15px;line-height:1.85;max-width:800px; }
+.personal-stories { background:#e8e1d5; }
+.journal-grid { display:grid;grid-template-columns:1fr 1fr;gap:48px 70px; }
+.journal-grid article { position:relative;border-top:1px solid #b8b8a8;padding-top:26px;min-width:0; }
+.journal-no { position:absolute;right:0;top:22px;font:22px var(--serif);color:var(--coral); }
+.journal-grid h3 { font:35px/1.13 var(--serif);letter-spacing:-.04em;margin:18px 0; }
+.journal-grid article>p:not(.eyebrow) { font-size:14px;line-height:1.8;max-width:440px; }
+.journal-grid .text-link { margin-top:22px; }
+.geography-grid { display:grid;grid-template-columns:1fr 1fr;gap:70px; }
+.geography-grid h3 { font:30px/1.2 var(--serif);margin-bottom:18px;letter-spacing:-.03em; }
+.geography-grid p { font-size:14px;line-height:1.85;margin-bottom:18px; }
+.city-list { list-style:none;padding:0;margin:27px 0 0;display:flex;flex-wrap:wrap;gap:9px; }
+.city-list li { border:1px solid var(--line);padding:5px 12px;border-radius:30px;font-size:11px; }
+.family-quote { margin:60px 0 35px;padding:40px 0;border-block:1px solid var(--line); }
+.family-quote blockquote { margin:0;max-width:1000px;font:italic clamp(29px,3.8vw,49px)/1.25 var(--serif);color:var(--coral);letter-spacing:-.04em; }
+.family-quote figcaption { margin-top:20px;font-size:11px;color:var(--muted); }
+.social-pair { display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap; }
+.social-pair>div { display:flex;align-items:center;gap:22px; }
+.social-pair span { font:23px var(--serif);margin-right:12px; }
+.social-pair a { font-size:12px; }
+.cat-stories { max-width:680px;font-size:14px;line-height:1.85;margin-top:30px;color:#e0e6d9; }
+@media(max-width:850px){.interest-grid,.geography-grid,.journal-grid{gap:38px}.interest-profile dl{grid-template-columns:1fr;gap:6px}.interest-profile dd{margin-bottom:16px}.journal-grid h3{font-size:30px}}
+@media(max-width:600px){.interest-grid,.geography-grid,.journal-grid{grid-template-columns:1fr;gap:40px}.interest-profile h3{font-size:32px}.shared-note{gap:20px;align-items:flex-start}.shared-note>span{font-size:60px}.shared-note p{font-size:14px}.family-quote{margin-top:36px;padding-block:30px}.social-pair{gap:25px}.social-pair>div{gap:18px}.social-pair span{min-width:100px;margin-right:0}.career-notes li{grid-template-columns:78px 1fr;gap:12px}.journal-grid h3{font-size:31px}}
