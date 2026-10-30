@@ -1,67 +1,40 @@
 {
-  "release": "crew-packs-2026-10-31-v1",
-  "built_at_utc": "2026-10-30T21:06:11.175681+00:00",
-  "crew": {
-    "packs": {
-      "pack_pro": {
-        "cost": [
-          10,
-          100
-        ],
-        "pct": [
-          40,
-          30,
-          20,
-          10,
-          0
-        ],
-        "pity": "All-Star in 15"
-      },
-      "pack_allstar": {
-        "cost": [
-          30,
-          300
-        ],
-        "pct": [
-          0,
-          40,
-          30,
-          20,
-          10
-        ],
-        "pity": "Legend in 15"
+  "release": "shop-2026-10-31-v1",
+  "built_at_utc": "2026-10-30T21:19:44.350669+00:00",
+  "shop": {
+    "carbon": {
+      "ad": "10 x3/day",
+      "iap": {
+        "100": 1.99,
+        "255": 5.99,
+        "520": 11.99,
+        "1100": 22.99,
+        "2750": 59.99
       }
     },
-    "strength_vs_current": [
-      0.7,
-      0.95,
-      1.3,
-      2,
-      5
-    ],
-    "store_driver": {
-      "price_usd": 9.99,
-      "stats": 150,
-      "store": "test, no payment"
+    "cash_for_carbon": {
+      "10": "1900 s income",
+      "30": "7630 s",
+      "50": "15200 s"
     },
-    "avatars": "helmets",
+    "store": "test, no payment",
+    "doc": "Docs/Impl/SHOP.md"
+  },
+  "crew": {
     "doc": "Docs/Impl/CREW_PACKS.md"
   },
   "garage": {
     "doc": "Docs/Impl/GARAGE.md"
   },
   "checks": {
-    "domain_crew_packs": "4/4",
-    "domain_garage": "5/5",
-    "unity_garage_and_packs": "2/2",
-    "unity_localization": "passed",
-    "unity_six_circuits": "passed"
+    "domain_shop_garage_packs_config": "49/49",
+    "unity_garage_and_packs": "2/2"
   },
   "files": [
     {
-      "path": "Build/70008fc9b9a31fb2cd3dc1df8e081ffe.data.unityweb",
-      "bytes": 15185955,
-      "sha256": "40ad20091e636ea2faa02253ea5e6394324ab3fdce23d4e88696d6e85de23c74"
+      "path": "Build/36db3327da483fb466836a4fe9eba603.data.unityweb",
+      "bytes": 15182317,
+      "sha256": "7d66acff3076fd5b5a11b35283559599746deff88a965b162589e6a6870f9e44"
     },
     {
       "path": "Build/9eb93e8ded5e97bfd46bfe3585438173.loader.js",
@@ -69,14 +42,14 @@
       "sha256": "3ee0c8d1bb2c07c2504ad10540feee32c1fee9711d408b82c9ab9ef4ec3ae8aa"
     },
     {
-      "path": "Build/ba0f5657cb26aa4eeee37ac57cf400d3.wasm.unityweb",
-      "bytes": 11698943,
-      "sha256": "bac5c4d7ced24cd13ce944fd936c2efef98e9dab40e870aa59474d259bbeab72"
-    },
-    {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "80ae35d3c5d936803005a5fc365fdd3ab30b1f130b585d9a2db84400f16e8381"
+      "sha256": "7f55789e82bfe6ddf1bb6d2187c14b5cfe3ac7d28d71070aa734dda743684cdd"
+    },
+    {
+      "path": "Build/e95fc296c3c6252fdeb3b05589a556a4.wasm.unityweb",
+      "bytes": 11709215,
+      "sha256": "fe7a82d727377a70bd480baa779bd4924ff6b295efe87aedad912ecf18c5bf94"
     }
   ]
 }
