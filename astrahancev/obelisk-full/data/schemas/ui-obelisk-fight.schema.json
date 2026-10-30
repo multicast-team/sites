@@ -1,0 +1,199 @@
+{
+ "$id": "ui-obelisk-fight",
+ "title": "Меню обелиска: вкладка Fight и сцена боя (data/ui/obelisk-fight.json, этап 6.15)",
+ "description": "Вёрстка из листьев-компонентов кита (sprite, stretched, text, rect с colors, circle). Координаты — px комнаты 500×960, сняты с кадров O (ui.obfight615 в oracle/sources.json). Листья с id и поля привязок — для ui/screens/obelisk-fight.mjs. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "comment",
+  "kitStyles",
+  "format",
+  "tab",
+  "scene",
+  "clockRound",
+  "nanText",
+  "infText"
+ ],
+ "properties": {
+  "$schema": {
+   "const": "ui-obelisk-fight"
+  },
+  "screen": {
+   "const": "obelisk-fight"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "kitStyles": {
+   "type": "object",
+   "required": [
+    "panel"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "panel": {
+     "type": "string"
+    }
+   }
+  },
+  "format": {
+   "type": "object",
+   "required": [
+    "short"
+   ],
+   "properties": {
+    "short": {
+     "type": "object"
+    }
+   }
+  },
+  "tab": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "frame",
+    "head",
+    "statsRow",
+    "rewardsBox",
+    "rewardRow",
+    "attack",
+    "warning",
+    "tabs",
+    "dot",
+    "pickaxeWeakColor",
+    "pickaxeColor",
+    "attackCooldownColor"
+   ],
+   "properties": {
+    "frame": {
+     "type": "object"
+    },
+    "head": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "statsRow": {
+     "type": "object"
+    },
+    "rewardsBox": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "rewardRow": {
+     "type": "object"
+    },
+    "attack": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "warning": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "tabs": {
+     "type": "object"
+    },
+    "dot": {
+     "type": "object"
+    },
+    "pickaxeWeakColor": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "pickaxeColor": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "attackCooldownColor": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    }
+   }
+  },
+  "scene": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "shadow",
+    "obelisk",
+    "top",
+    "armor",
+    "warning",
+    "time",
+    "health",
+    "panels",
+    "panelText",
+    "frameCycle"
+   ],
+   "properties": {
+    "shadow": {
+     "type": "object"
+    },
+    "obelisk": {
+     "type": "object"
+    },
+    "top": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "armor": {
+     "type": "object"
+    },
+    "warning": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "time": {
+     "type": "object"
+    },
+    "health": {
+     "type": "object"
+    },
+    "panels": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "panelText": {
+     "type": "object"
+    },
+    "frameCycle": {
+     "type": "integer",
+     "minimum": 1
+    }
+   }
+  },
+  "clockRound": {
+   "enum": [
+    "ceil",
+    "floor",
+    "round"
+   ]
+  },
+  "nanText": {
+   "type": "string"
+  },
+  "infText": {
+   "type": "string"
+  }
+ }
+}

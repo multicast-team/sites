@@ -1,0 +1,342 @@
+{
+ "$schema": "systems/rng",
+ "system": "rng",
+ "version": "2.2.50",
+ "constants": {
+  "items.generator": 3,
+  "items.rarityDie": 501,
+  "items.pickDie": 29,
+  "items.tutorialUntil": 3,
+  "items.tutorialWords": 2,
+  "relics.generator": 0,
+  "relics.rarityDie": 100000,
+  "generators.count": 45,
+  "menu.items.open.x0": 170,
+  "menu.items.open.x1": 330,
+  "menu.items.open.y0": 650,
+  "menu.items.open.y1": 730,
+  "menu.items.open.count": 1,
+  "log.category": 0,
+  "log.colour": 16777215,
+  "log.height": -1,
+  "log.wrapWidth": -1,
+  "log.prefix": "[sprChest] ",
+  "log.textKey": "t.opened_item_chest"
+ },
+ "tables": {
+  "itemRarity": {
+   "columns": [
+    "rarity",
+    "weight"
+   ],
+   "rows": [
+    [
+     "common",
+     240
+    ],
+    [
+     "rare",
+     150
+    ],
+    [
+     "epic",
+     75
+    ],
+    [
+     "legendary",
+     35
+    ],
+    [
+     "mythic",
+     1
+    ]
+   ]
+  },
+  "itemTutorial": {
+   "columns": [
+    "opened",
+    "item"
+   ],
+   "rows": [
+    [
+     0,
+     3
+    ],
+    [
+     1,
+     11
+    ],
+    [
+     2,
+     2
+    ]
+   ]
+  },
+  "relicRarity": {
+   "columns": [
+    "rarity",
+    "weight"
+   ],
+   "rows": [
+    [
+     "divine",
+     4
+    ],
+    [
+     "mythic",
+     1000
+    ],
+    [
+     "legendary",
+     7000
+    ],
+    [
+     "epic",
+     14000
+    ],
+    [
+     "rare",
+     30000
+    ],
+    [
+     "common",
+     47996
+    ]
+   ]
+  },
+  "generators": {
+   "columns": [
+    "id",
+    "name",
+    "state0"
+   ],
+   "rows": [
+    [
+     0,
+     "Relics",
+     12202
+    ],
+    [
+     1,
+     "Statues",
+     60937
+    ],
+    [
+     2,
+     "Artifacts",
+     64930
+    ],
+    [
+     3,
+     "Items",
+     59336
+    ],
+    [
+     4,
+     "Freebie",
+     47913
+    ],
+    [
+     5,
+     "Contracts",
+     39109
+    ],
+    [
+     6,
+     "Bomb_Rolls",
+     44716
+    ],
+    [
+     7,
+     "Lootbug",
+     6502
+    ],
+    [
+     8,
+     "Crab",
+     65058
+    ],
+    [
+     9,
+     "Dwarf",
+     12260
+    ],
+    [
+     10,
+     "Duck",
+     63660
+    ],
+    [
+     11,
+     "Rabbit",
+     45613
+    ],
+    [
+     12,
+     "Penguin",
+     56116
+    ],
+    [
+     13,
+     "Goat",
+     47699
+    ],
+    [
+     14,
+     "Whale",
+     42187
+    ],
+    [
+     15,
+     "Golem",
+     45985
+    ],
+    [
+     16,
+     "Happybot",
+     3390
+    ],
+    [
+     17,
+     "Leprechaun",
+     12909
+    ],
+    [
+     18,
+     "Starfish",
+     810
+    ],
+    [
+     19,
+     "Dino",
+     37043
+    ],
+    [
+     20,
+     "Shark",
+     62924
+    ],
+    [
+     21,
+     "Medusa",
+     44586
+    ],
+    [
+     22,
+     "Butterfly",
+     62633
+    ],
+    [
+     23,
+     "Rhino",
+     36800
+    ],
+    [
+     24,
+     "Triple_Lootbug",
+     43358
+    ],
+    [
+     25,
+     "Stargazing",
+     37950
+    ],
+    [
+     26,
+     "Founder_Supply_Drop",
+     65150
+    ],
+    [
+     27,
+     "Crackers",
+     25785
+    ],
+    [
+     28,
+     "Notice_0",
+     62826
+    ],
+    [
+     29,
+     "Notice_1",
+     52464
+    ],
+    [
+     30,
+     "Notice_2",
+     22269
+    ],
+    [
+     31,
+     "Fishing_General",
+     38231
+    ],
+    [
+     32,
+     "Fishing_Reward",
+     49162
+    ],
+    [
+     33,
+     "Common_Idol",
+     48405
+    ],
+    [
+     34,
+     "Rare_Idol",
+     49770
+    ],
+    [
+     35,
+     "Epic_Idol",
+     64842
+    ],
+    [
+     36,
+     "Legendary_Idol",
+     31623
+    ],
+    [
+     37,
+     "Mythic_Idol",
+     26481
+    ],
+    [
+     38,
+     "Lucky_Token",
+     59697
+    ],
+    [
+     39,
+     "fish_card_regular",
+     13228
+    ],
+    [
+     40,
+     "fish_card_lego",
+     2508
+    ],
+    [
+     41,
+     "fish_lego_roll",
+     46094
+    ],
+    [
+     42,
+     "divine_relic_roll",
+     64167
+    ],
+    [
+     43,
+     "Legendary Dock 0",
+     33664
+    ],
+    [
+     44,
+     "Legendary Dock 1",
+     45187
+    ]
+   ]
+  }
+ }
+}

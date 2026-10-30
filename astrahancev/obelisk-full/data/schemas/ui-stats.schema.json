@@ -1,0 +1,111 @@
+{
+ "$id": "ui-stats",
+ "title": "Окно Stat Pages (data/ui/stats.json, этап 6.28)",
+ "description": "Содержимое окна Stat Pages: страницы → секции (колонка, заголовок, места строк, шаг) → строки (значок, подпись, привязка значения к клетке сводки или входу сессии, условие показа). Координаты — px комнаты 500×960 от верха окна (кит window.stats). Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": ["$schema", "screen", "version", "styles"],
+ "properties": {
+  "$schema": {"const": "ui-stats"},
+  "screen": {"const": "stats"},
+  "version": {"$ref": "common#/$defs/version"},
+  "room": {"type": "object", "additionalProperties": false, "required": ["w", "h"], "properties": {"w": {"const": 500}, "h": {"const": 960}}},
+  "comment": {"type": "string"},
+  "styles": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": ["stats.section", "stats.format", "stats.pages", "stats.currencies"],
+   "properties": {
+    "stats.section": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": ["columns", "title", "row", "empty", "separator"],
+     "properties": {
+      "columns": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "object", "additionalProperties": false, "required": ["x1", "x2"],
+       "properties": {"x1": {"$ref": "common#/$defs/num"}, "x2": {"$ref": "common#/$defs/num"}}}},
+      "title": {"type": "object", "additionalProperties": false, "required": ["font", "color", "backing", "sy", "firstRowDy", "hidden"],
+       "properties": {"font": {"$ref": "common#/$defs/skinKey"}, "color": {"$ref": "#/$defs/color"}, "backing": {"$ref": "common#/$defs/skinKey"},
+        "sy": {"$ref": "common#/$defs/num"}, "firstRowDy": {"$ref": "common#/$defs/num"}, "hidden": {"$ref": "common#/$defs/stringKey"}}},
+      "row": {"type": "object", "additionalProperties": false, "required": ["font", "fills", "alpha", "iconDx", "textDx", "color", "iconColor"],
+       "properties": {"font": {"$ref": "common#/$defs/skinKey"}, "fills": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/color"}},
+        "alpha": {"type": "number", "minimum": 0, "maximum": 1}, "iconDx": {"$ref": "common#/$defs/num"}, "textDx": {"$ref": "common#/$defs/num"},
+        "color": {"$ref": "#/$defs/color"}, "iconColor": {"$ref": "#/$defs/color"}}},
+      "empty": {"type": "object", "additionalProperties": false, "required": ["icon", "color", "text"],
+       "properties": {"icon": {"$ref": "common#/$defs/skinKey"}, "color": {"$ref": "#/$defs/color"}, "text": {"$ref": "common#/$defs/stringKey"}}},
+      "separator": {"$ref": "common#/$defs/stringKey"}
+     }
+    },
+    "stats.format": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": ["per", "over", "plus", "percent", "time"],
+     "properties": {"per": {"type": "string"}, "over": {"type": "string"}, "plus": {"$ref": "common#/$defs/stringKey"}, "percent": {"type": "string"},
+      "time": {"type": "object", "additionalProperties": false, "required": ["d", "h", "m"], "properties": {"d": {"type": "string"}, "h": {"type": "string"}, "m": {"type": "string"}}}}
+    },
+    "stats.pages": {"type": "array", "minItems": 1, "items": {"type": "array", "items": {"$ref": "#/$defs/section"}}},
+    "stats.currencies": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": ["rows", "font", "color", "ores", "chests"],
+     "properties": {
+      "rows": {"type": "object", "additionalProperties": false, "required": ["x1", "x2", "dy1", "dy2", "dy", "pitch", "fill"],
+       "properties": {"x1": {"$ref": "common#/$defs/num"}, "x2": {"$ref": "common#/$defs/num"}, "dy1": {"$ref": "common#/$defs/num"},
+        "dy2": {"$ref": "common#/$defs/num"}, "dy": {"$ref": "common#/$defs/num"}, "pitch": {"$ref": "common#/$defs/num"}, "fill": {"$ref": "#/$defs/color"}}},
+      "font": {"$ref": "common#/$defs/skinKey"},
+      "color": {"$ref": "#/$defs/color"},
+      "ores": {"type": "object", "additionalProperties": false, "required": ["names", "nameX", "ore", "bar"],
+       "properties": {"names": {"type": "array", "minItems": 1, "items": {"$ref": "common#/$defs/stringKey"}}, "nameX": {"$ref": "common#/$defs/num"},
+        "ore": {"$ref": "#/$defs/walletIcon"}, "bar": {"$ref": "#/$defs/walletIcon"}}},
+      "chests": {"type": "object", "additionalProperties": false, "required": ["tab", "rows", "iconX", "textX", "show", "items"],
+       "properties": {"tab": {"$ref": "common#/$defs/count"}, "rows": {"$ref": "common#/$defs/count"}, "iconX": {"$ref": "common#/$defs/num"},
+        "textX": {"$ref": "common#/$defs/num"}, "show": {"enum": ["chestsUnlocked"]},
+        "items": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["icon", "label", "value"],
+         "properties": {"icon": {"$ref": "common#/$defs/skinKey"}, "label": {"$ref": "common#/$defs/stringKey"},
+          "value": {"enum": ["chests", "relicChests", "mythicChests", "divineChests", "dronePoints", "skillPoints"]}}}}}}
+     }
+    }
+   }
+  }
+ },
+ "$defs": {
+  "color": {"type": "string", "pattern": "^#[0-9a-f]{6}$"},
+  "walletIcon": {"type": "object", "additionalProperties": false, "required": ["icon", "x", "textX"],
+   "properties": {"icon": {"$ref": "common#/$defs/skinKey"}, "x": {"$ref": "common#/$defs/num"}, "textX": {"$ref": "common#/$defs/num"}}},
+  "section": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": ["title", "col", "dy", "cx", "sx", "rows", "pitch", "up", "down", "items"],
+   "properties": {
+    "title": {"oneOf": [{"$ref": "common#/$defs/stringKey"}, {"type": "null"}]},
+    "col": {"enum": [0, 1]},
+    "dy": {"$ref": "common#/$defs/num"}, "cx": {"$ref": "common#/$defs/num"}, "textDx": {"$ref": "common#/$defs/num"},
+    "sx": {"$ref": "common#/$defs/num"}, "rows": {"$ref": "common#/$defs/count"}, "pitch": {"$ref": "common#/$defs/num"},
+    "up": {"$ref": "common#/$defs/num"}, "down": {"$ref": "common#/$defs/num"},
+    "items": {"type": "array", "items": {"$ref": "#/$defs/item"}}
+   }
+  },
+  "item": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": ["slot", "icon", "label", "value", "show"],
+   "properties": {
+    "slot": {"$ref": "common#/$defs/count"},
+    "icon": {"$ref": "common#/$defs/skinKey"},
+    "label": {"$ref": "common#/$defs/stringKey"},
+    "color": {"$ref": "#/$defs/color"},
+    "value": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "cell": {"type": "string", "pattern": "^stat\\.[A-Za-z0-9]+$"},
+      "input": {"enum": ["completion", "gameplaySeconds", "offlineSeconds", "prestigeSeconds", "itemsInChests"]},
+      "suffix": {"type": "string"}, "suffixKey": {"$ref": "common#/$defs/stringKey"}, "prefix": {"$ref": "common#/$defs/stringKey"},
+      "per": {"$ref": "common#/$defs/num"}, "mul": {"$ref": "common#/$defs/num"}, "over": {"$ref": "common#/$defs/num"}, "time": {"const": true}
+     }
+    },
+    "show": {"oneOf": [{"const": "always"}, {"type": "object", "additionalProperties": false, "required": ["cell", "gt"],
+     "properties": {"cell": {"type": "string", "pattern": "^stat\\.[A-Za-z0-9]+$"}, "gt": {"$ref": "common#/$defs/num"}}}]}
+   }
+  }
+ }
+}

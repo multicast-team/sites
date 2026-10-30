@@ -1,0 +1,20 @@
+{
+ "$schema": "systems/boot",
+ "system": "boot",
+ "version": "2.2.50",
+ "constants": {
+  "frameNs": 16666667,
+  "clockPhaseNs": 333,
+  "startFrame": 25,
+  "secondPeriod": 60,
+  "freebieReset": 600,
+  "cloudReset": 300,
+  "founderMark": 39758,
+  "offlineFirst": 360,
+  "offlinePeriod": 180,
+  "offlineStep": 3,
+  "saleFirst": 179,
+  "salePeriod": 360,
+  "starPeriod": 1000
+ }
+}

@@ -1,0 +1,21 @@
+{
+ "$id": "systems/offline",
+ "title": "Офлайн ч. 1: секунды офлайна и поляна (data/systems/offline.json, этап 5.18)",
+ "description": "Константы спеки oracle/specs/offline.md: порог окна и кап секунд, доли первой руды, деление с защитой от нуля, ярусы крита, поляна дронов (ширины, кадры в секунду, делитель 1.42, масштаб 1.25), экранов в минуту; частичное округление (шкала шанса 10000) и число слов встроенного ГСЧ до броска зачисток события (56, этап 5.18 раунд исправлений); бомбы в поляне — число слотов 13, слот цепи 1, базовый урон бомбы 50 (этап 5.19); кадров в секунду тика рыбалки 60, период обмена волшебников 7200 с, секунд на единицу маны 60 (этап 5.20); переполнение рыбы — граница 1e18 и замена 1e13 (5.20, раунд исправлений). Сняты с O (oracle/sources.json, группы offline-w1, offline-w2, offline-w3, offline-w4 и data.offline518).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants"],
+   "properties": {
+    "system": {"const": "offline"},
+    "constants": {
+     "required": ["window.minSeconds", "cap.seconds", "share.firstEven", "share.firstOddExtra", "percent", "safeDiv.epsilon", "safeDiv.big",
+                  "crit.topTier", "drone.tripleMulti", "drone.rapidMulti", "drone.gapWidth", "drone.spanWidth", "drone.framesPerSecond",
+                  "drone.minHitTime", "drone.oresDivisor", "drone.scale", "clears.screensPerMinute", "clears.secondsPerMinute",
+                  "partial.scale", "event.rngWordsBeforeClears", "bomb.count", "bomb.chainSlot", "bomb.baseDamage",
+                  "fish.framesPerSecond", "wizard.exchangeSeconds", "mana.secondsPerPoint", "fish.overflowAbove", "fish.overflowValue"]
+    }
+   }
+  }
+ ]
+}

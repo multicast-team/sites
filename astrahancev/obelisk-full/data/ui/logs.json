@@ -1,0 +1,261 @@
+{
+ "$schema": "ui-logs",
+ "screen": "logs",
+ "version": "2.2.50",
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Экран «Журнал» (этап 6.27): фон меню (стиль кита panel.menu), панель, поверхность списка, ползунок, нижние вкладки Logs/Debug, фильтры журнала. Числа — записи O группы logs каталога (oracle/sources.json → ui.logs627); черновик 6.4 data/ui/drafts/logs.json разложен на компоненты.",
+ "styles": {
+  "logs.backdrop": {
+   "style": "panel.menu"
+  },
+  "logs.panel": {
+   "sprite": "sprite.patch_backing_brownish_with_desc",
+   "x": 250,
+   "y": 480,
+   "sx": 25,
+   "sy": 40
+  },
+  "logs.surface": {
+   "x": 60,
+   "y": 175,
+   "w": 380,
+   "h": 610
+  },
+  "logs.empty": {
+   "text": "t.no_events_yet",
+   "font": "font.size24",
+   "x": 190,
+   "y": 305,
+   "halign": "center",
+   "valign": "middle",
+   "color": "#c0c0c0"
+  },
+  "logs.debug": {
+   "font": "font.size12",
+   "x1": 4,
+   "x2": 374,
+   "top": 8,
+   "gap": 11,
+   "text": {
+    "dx": 1,
+    "dy": 2,
+    "sep": 18,
+    "width": 370,
+    "pad": 4
+   },
+   "row": {
+    "colors": [
+     "#808080",
+     "#000000"
+    ],
+    "alpha": 0.5
+   },
+   "levels": {
+    "info": "#ffffff",
+    "warning": "#ffa040"
+   }
+  },
+  "logs.scrollbar": {
+   "track": {
+    "x1": 440,
+    "x2": 445,
+    "color": "#808080",
+    "alpha": 0.3
+   },
+   "thumb": {
+    "x1": 441,
+    "x2": 444,
+    "color": "#ffffff",
+    "alpha": 0.8
+   },
+   "y1": 175,
+   "y2": 785
+  },
+  "logs.tabs": {
+   "font": "font.size12",
+   "y1": 797,
+   "edges": [
+    52,
+    126,
+    200
+   ],
+   "labels": [
+    "t.logs",
+    "t.debug"
+   ],
+   "selected": {
+    "bottom": 835,
+    "fill": "#101318",
+    "line": "#665355",
+    "textDy": 19,
+    "color": "#ffffff"
+   },
+   "idle": {
+    "bottom": 827,
+    "fill": "#22191a",
+    "line": "#46393a",
+    "top": "#665355",
+    "textDy": 15,
+    "color": "#c0c0c0"
+   },
+   "shadow": {
+    "dx": 1,
+    "dy": 1,
+    "color": "#000000"
+   }
+  },
+  "logs.filters": {
+   "x": 98,
+   "y": 141,
+   "step": 76,
+   "button": {
+    "sprite": "sprite.patch_button",
+    "sx": 4.22222233,
+    "sy": 1.79999995
+   },
+   "font": "font.size10",
+   "labels": [
+    "t.all_2",
+    "t.milestones",
+    "t.general",
+    "t.gem_spend",
+    "t.gift_loot"
+   ],
+   "groups": [
+    "all",
+    "milestone",
+    "general",
+    "gemSpend",
+    "giftLoot"
+   ],
+   "selectedColor": "#808080",
+   "color": "#ffffff",
+   "text": {
+    "dx": 0,
+    "dy": -1
+   },
+   "shadow": {
+    "dx": 1,
+    "dy": 0,
+    "color": "#000000"
+   }
+  },
+  "logs.entries": {
+   "comment": "Строки журнала игрока на поверхности (раунд исправлений 6.27, записи record627: ev1-*, ev4-*). Строка: заливка x1…x2 высотой height + (строк текста − 1)·lineStep, без зазора; цвета чередуются с чёрного; значок группы; у записи со значком первая строка текста с x iconX = 27, следующие с 0 (ev1-long5g); iconIndent = 3 пробела отступа первой строки при переносе — ?? предположение (27 = 3 пробела по 9 px), на числе строк проб не проверено; текст записи — Scribble Jr (кит его не рисует: в L1 вершины O, раскладка сверяется отдельно); подпись времени — draw_text с обводкой.",
+   "x1": 0,
+   "x2": 374,
+   "top": 2,
+   "height": 49,
+   "lineStep": 18,
+   "row": {
+    "colors": [
+     "#000000",
+     "#808080"
+    ],
+    "alpha": 0.5
+   },
+   "icon": {
+    "dx": 14,
+    "dy": 17,
+    "sprites": {
+     "gemSpend": "sprite.gem",
+     "giftLoot": "sprite.gift_with_outline"
+    }
+   },
+   "text": {
+    "font": "font.scribble_jr_default_font",
+    "dx": 5,
+    "dy": 8,
+    "iconX": 27,
+    "iconIndent": 3,
+    "width": 370,
+    "outline": [
+     [
+      1,
+      1
+     ],
+     [
+      -1,
+      -1
+     ],
+     [
+      1,
+      -1
+     ],
+     [
+      -1,
+      1
+     ]
+    ]
+   },
+   "age": {
+    "font": "font.size10",
+    "dx": 5,
+    "dy": 31,
+    "color": "#c0c0c0",
+    "outline": {
+     "color": "#000000",
+     "offsets": [
+      [
+       1,
+       1
+      ],
+      [
+       -1,
+       -1
+      ],
+      [
+       1,
+       -1
+      ],
+      [
+       -1,
+       1
+      ]
+     ]
+    },
+    "dateGroups": [
+     "milestone"
+    ],
+    "months": [
+     "t.january",
+     "t.february",
+     "t.march",
+     "t.april",
+     "t.may",
+     "t.june",
+     "t.july",
+     "t.august",
+     "t.september",
+     "t.october",
+     "t.november",
+     "t.december"
+    ],
+    "rules": [
+     {
+      "below": 60,
+      "text": "t.just_now"
+     },
+     {
+      "below": 3600,
+      "div": 60,
+      "suffix": "t.m_ago"
+     },
+     {
+      "below": 86400,
+      "div": 3600,
+      "suffix": "t.h_ago"
+     },
+     {
+      "div": 86400,
+      "suffix": "t.d_ago"
+     }
+    ],
+    "note": "П: < 60 с — «just now», 60…180 с — «Nm ago» (probe627 age-general-*: 58,3 с, 60, 61,7, 63,3, 121,7, 125, 180 с); дата вехи «October 27 00:00» (age-milestone-*). ?? Часы и дни (h ago, d ago) — по аналогии со строками t.h_ago/t.d_ago, пробой не сняты; ?? месяцы кроме October не видны."
+   }
+  }
+ }
+}

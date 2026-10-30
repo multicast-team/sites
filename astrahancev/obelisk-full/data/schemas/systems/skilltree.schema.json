@@ -1,0 +1,141 @@
+{
+ "$id": "systems/skilltree",
+ "title": "Дерево навыков (data/systems/skilltree.json, этап 2.6)",
+ "description": "70 узлов: заголовок, текст, кап, базовая цена, позиция, родитель, особый, корень, требование обелиска; цена base·growth^L с режимом округления по обелиску; эффекты узлов на клетки сводки. Числа сняты с O (oracle/sources.json, группа data.skilltree26); правила — ?? до спеки системы. Тексты — ключи strings.json (null — текст O собирается из частей, спека 5.2), иконки — ключи skin.",
+ "allOf": [
+  {
+   "$ref": "system"
+  },
+  {
+   "required": [
+    "constants",
+    "tables"
+   ],
+   "properties": {
+    "system": {
+     "const": "skilltree"
+    },
+    "constants": {
+     "required": [
+      "count",
+      "cost.growth",
+      "cost.highModeFromObelisk",
+      "slot.normal",
+      "slot.special"
+     ]
+    },
+    "tables": {
+     "required": [
+      "nodes",
+      "effects"
+     ],
+     "properties": {
+      "nodes": {
+       "properties": {
+        "columns": {
+         "const": [
+          "id",
+          "title",
+          "text",
+          "cap",
+          "cost",
+          "x",
+          "y",
+          "parent",
+          "special",
+          "root",
+          "obeliskReq"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": [
+             "string",
+             "null"
+            ],
+            "pattern": "^t(?:\\.[a-z0-9_]+)+$",
+            "x-stringKey": true,
+            "description": "Ключ текста strings.json или null (текст O собирается из частей — спека 5.2)"
+           },
+           {
+            "type": [
+             "string",
+             "null"
+            ],
+            "pattern": "^t(?:\\.[a-z0-9_]+)+$",
+            "x-stringKey": true,
+            "description": "Ключ текста strings.json или null (текст O собирается из частей — спека 5.2)"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/nonneg"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "boolean"
+           },
+           {
+            "type": "boolean"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "effects": {
+       "properties": {
+        "columns": {
+         "const": [
+          "node",
+          "cell",
+          "perLevel",
+          "linear"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "string",
+            "pattern": "^stat\\.[a-z0-9][A-Za-z0-9]*$"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "type": "boolean"
+           }
+          ]
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

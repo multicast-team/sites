@@ -1,0 +1,29 @@
+{
+ "$id": "systems/mining",
+ "title": "Этажи и руда мира 1 (data/systems/mining.json — этап 5.7)",
+ "description": "Таблица floors: этаж 1..42 → базовая руда броска и зона. Таблица ores: руда 0..25 → прочность (hp), опыт (xp), цена продажи (sell). constants — числа правил спеки floors (oracle/specs/floors.md). Имена наши; соответствие оригиналу — oracle/names.json. Числа сняты с O (oracle/sources.json, группа data.mining57).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "system": {"const": "mining"},
+    "tables": {
+     "required": ["floors", "ores", "picks", "columns"],
+     "properties": {
+      "floors": {"properties": {
+       "columns": {"const": ["floor", "baseOre", "zone"]},
+       "rows": {"minItems": 1, "items": {"prefixItems": [{"$ref": "common#/$defs/count"}, {"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0}]}}
+      }},
+      "ores": {"properties": {
+       "columns": {"const": ["ore", "hp", "xp", "sell"]},
+       "rows": {"minItems": 1, "items": {"prefixItems": [{"type": "integer", "minimum": 0}, {"$ref": "common#/$defs/nonneg"}, {"$ref": "common#/$defs/nonneg"}, {"$ref": "common#/$defs/nonneg"}]}}
+      }},
+      "picks": {"properties": {"columns": {"const": ["parity", "shift"]}, "rows": {"minItems": 1, "items": {"prefixItems": [{"enum": ["odd", "even"]}, {"type": "integer"}]}}}},
+      "columns": {"properties": {"columns": {"const": ["parity", "column"]}, "rows": {"minItems": 1, "items": {"prefixItems": [{"enum": ["odd", "even"]}, {"type": "integer", "minimum": 0}]}}}}
+     }
+    }
+   }
+  }
+ ]
+}

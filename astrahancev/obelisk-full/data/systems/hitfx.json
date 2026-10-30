@@ -1,0 +1,27 @@
+{
+ "$schema": "systems/fx",
+ "system": "fx",
+ "version": "2.2.50",
+ "constants": {
+  "hit.ringLife": 10,
+  "hit.ringStep": 0.004,
+  "hit.ringRadius": 220.5,
+  "hit.ringColor": "#ffffff",
+  "hit.ringBoostColor": "#ffff00",
+  "hit.boostMax": 10,
+  "hit.boostAlphaDiv": 20,
+  "hit.shakeHit": 7,
+  "hit.shakeSpawn": 2,
+  "hit.labelStart": 5,
+  "hit.labelFrames": 18,
+  "hit.labelStyleKey": "text.rock.label",
+  "hit.labelFont": "font.size12",
+  "hit.labelHalign": "center",
+  "hit.labelValign": "middle",
+  "hit.labelColor": "#ffffff",
+  "hit.labelSnap": true,
+  "hit.labelShadowDx": 1,
+  "hit.labelShadowDy": 1,
+  "hit.labelShadowColor": "#000000"
+ }
+}

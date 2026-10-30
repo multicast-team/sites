@@ -1,0 +1,933 @@
+{
+ "$schema": "ui-draft",
+ "screen": "monuments",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Постройки: монументы» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 492,
+    "y": 127,
+    "children": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 10,
+      "y2": 303.055939,
+      "color": "#c0c0c0",
+      "alpha": 0.349999994
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_magma",
+      "x": -242,
+      "y": 303,
+      "sx": 30,
+      "sy": 30
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": -122,
+      "y": 503,
+      "sx": 6,
+      "sy": 3,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -122,
+      "y": 502,
+      "text": "t.build_2",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_magma_with_desc",
+      "x": -242,
+      "y": 103,
+      "sx": 12,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -242,
+      "y": 103,
+      "text": "t.world_2_monument",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.world2_statue",
+      "frame": 1,
+      "x": -242,
+      "y": 233,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_magma_with_desc",
+      "x": -362,
+      "y": 404,
+      "sx": 14,
+      "sy": 7
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -429,
+      "y": 339,
+      "text": "t.recommendation",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -430,
+      "y": 338,
+      "text": "t.recommendation",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -442,
+      "y": 372,
+      "value": "Obelisk Level: 75/24",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 37,
+    "y": 499,
+    "step": {
+     "x": 0,
+     "y": 30
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.obelisk_icon",
+      "x": 0,
+      "y": 0
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 13,
+      "y": 30,
+      "value": "Statues Built: 0/9",
+      "valign": "middle",
+      "color": "#808080"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "sprite": "sprite.statue16x16"
+      },
+      "1": {
+       "value": "Challenges: 0/40"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 37,
+    "y": 559,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.challenge_coin",
+      "x": 0,
+      "y": 0
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_magma_with_desc",
+      "x": 333,
+      "y": -29,
+      "sx": 14,
+      "sy": 7
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 276,
+      "y": -94,
+      "text": "t.build_cost",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 275,
+      "y": -95,
+      "text": "t.build_cost",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.veins",
+      "x": 263,
+      "y": -65
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 320,
+    "y": 494,
+    "step": {
+     "x": 0,
+     "y": 25
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "0/2000",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.veins",
+      "frame": 1,
+      "x": -20,
+      "y": 25
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "frame": 2
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 320,
+    "y": 544,
+    "children": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "0/2000",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.gem",
+      "x": -20,
+      "y": 25
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 25,
+      "value": "1.00m/2000",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_green",
+      "x": -70,
+      "y": 386,
+      "sx": 30,
+      "sy": 30
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 50,
+      "y": 586,
+      "sx": 6,
+      "sy": 3,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 50,
+      "y": 585,
+      "text": "t.build_2",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_green_with_desc",
+      "x": -70,
+      "y": 186,
+      "sx": 12,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -70,
+      "y": 186,
+      "text": "t.world_3_monument",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.world3_statue",
+      "frame": 1,
+      "x": -70,
+      "y": 316,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_green_with_desc",
+      "x": -188,
+      "y": 502,
+      "sx": 14.6000004,
+      "sy": 9
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -257,
+      "y": 422,
+      "text": "t.recommendation",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -258,
+      "y": 421,
+      "text": "t.recommendation",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 50,
+    "y": 996,
+    "step": {
+     "x": 0,
+     "y": 25
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "Plat Statues: 0/9",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.statue_platinum16x16",
+      "x": -13,
+      "y": 0
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "value": "Challenges: 0/68"
+      },
+      "1": {
+       "sprite": "sprite.challenge_coin"
+      }
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 50,
+    "y": 1046,
+    "step": {
+     "x": 0,
+     "y": 25
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "Pisces Star: 0/4",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.star_signs16x16",
+      "frame": 11,
+      "x": -13,
+      "y": 0
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "value": "Elixir Grade: 0/25"
+      },
+      "1": {
+       "sprite": "sprite.drone16x16_strip",
+       "frame": 6
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 50,
+    "y": 1096,
+    "children": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "Fuel Generator: 1/20",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.generator",
+      "x": -13,
+      "y": 0,
+      "sx": 0.5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_green_with_desc",
+      "x": 320,
+      "y": -66,
+      "sx": 14,
+      "sy": 7
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 263,
+      "y": -131,
+      "text": "t.build_cost",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 262,
+      "y": -132,
+      "text": "t.build_cost",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 300,
+    "y": 994,
+    "step": {
+     "x": 0,
+     "y": 25
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.veins",
+      "frame": 8,
+      "x": 0,
+      "y": 0
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 20,
+      "y": 0,
+      "value": "0/750k",
+      "valign": "middle",
+      "color": "#808080"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "frame": 9
+      }
+     },
+     {
+      "0": {
+       "frame": 10
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "group",
+      "x": 300,
+      "y": 1069,
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.gem",
+        "x": 0,
+        "y": 0
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 20,
+        "y": 0,
+        "value": "1.00m/7500",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_purple",
+        "x": -50,
+        "y": 361,
+        "sx": 30,
+        "sy": 30
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 70,
+        "y": 561,
+        "sx": 6,
+        "sy": 3,
+        "color": "#808080"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 70,
+        "y": 560,
+        "text": "t.build_2",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_purple_with_desc",
+        "x": -50,
+        "y": 161,
+        "sx": 12,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -50,
+        "y": 161,
+        "text": "t.world_4_monument",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.world4_statue",
+        "frame": 1,
+        "x": -50,
+        "y": 291,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_purple_with_desc",
+        "x": -168,
+        "y": 477,
+        "sx": 14.6000004,
+        "sy": 9
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -237,
+        "y": 397,
+        "text": "t.recommendation",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -238,
+        "y": 396,
+        "text": "t.recommendation",
+        "valign": "middle"
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 45,
+      "y": 1496,
+      "children": [
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 0,
+        "value": "Butterfly Pet: 0/5",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.pet_head_icons",
+        "frame": 14,
+        "x": -13,
+        "y": 0
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 25,
+        "value": "Fuel Generator: 1/30",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.generator",
+        "x": -13,
+        "y": 25,
+        "sx": 0.5,
+        "sy": 0.5
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 50,
+        "value": "First 4 Inf Legns: 0/4",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.infernal_lego_fish_card",
+        "x": -13,
+        "y": 50
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 75,
+        "value": "Tier 2 Tributes: 0/9",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.fish_tribute_ranks",
+        "frame": 2,
+        "x": -13,
+        "y": 75
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 100,
+        "value": "Black Hole: 0/14",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.black_hole16x16",
+        "x": -13,
+        "y": 100
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_purple_with_desc",
+        "x": 325,
+        "y": 34,
+        "sx": 14,
+        "sy": 7
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 268,
+        "y": -31,
+        "text": "t.build_cost",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 267,
+        "y": -32,
+        "text": "t.build_cost",
+        "valign": "middle"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 300,
+    "y": 1494,
+    "step": {
+     "x": 0,
+     "y": 25
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.veins",
+      "frame": 13,
+      "x": 0,
+      "y": 0
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 20,
+      "y": 0,
+      "value": "0/1.00q",
+      "valign": "middle",
+      "color": "#808080"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "frame": 14
+      }
+     },
+     {
+      "0": {
+       "frame": 15
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 300,
+    "y": 1569,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.gem",
+      "x": 0,
+      "y": 0
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 20,
+      "y": 0,
+      "value": "1.00m/1.00m",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -300,
+      "y1": -752,
+      "x2": 200,
+      "y2": -679,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -300,
+      "y1": -751,
+      "x2": 200,
+      "y2": -679,
+      "color": "#695051"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 120,
+    "y": 838,
+    "step": {
+     "x": 130,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.vein_up",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 30,
+      "sx": 5,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 30,
+      "text": "t.research",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "sprite": "sprite.statue16x16"
+      },
+      "3": {
+       "text": "t.statues"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 380,
+    "y": 838,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.world2_statue16x16",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 30,
+      "sx": 5,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 30,
+      "text": "t.monuments",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   }
+  ]
+ }
+}

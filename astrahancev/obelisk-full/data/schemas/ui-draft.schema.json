@@ -1,0 +1,422 @@
+{
+ "$id": "ui-draft",
+ "title": "Черновик вёрстки экрана из записи O (data/ui/drafts/<экран>.json, этап 6.4)",
+ "description": "Разовый конвертер oracle/ui64/draft64.mjs (§10.1 п.2а): команды события Draw записи O разложены на компоненты — листья sprite/text/rect/line, ряды repeat с шагом, блоки group с якорем. Привязок к ядру нет. Рисует ui/kit/table.mjs. Команд рисования нет: лишние поля запрещены.",
+ "type": "object",
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "draft",
+  "root"
+ ],
+ "additionalProperties": false,
+ "properties": {
+  "$schema": {
+   "const": "ui-draft"
+  },
+  "screen": {
+   "$ref": "common#/$defs/id"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "draft": {
+   "const": true
+  },
+  "room": {
+   "type": "object",
+   "required": [
+    "w",
+    "h"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "w": {
+     "const": 500
+    },
+    "h": {
+     "const": 960
+    }
+   }
+  },
+  "comment": {
+   "type": "string"
+  },
+  "root": {
+   "$ref": "#/$defs/node"
+  }
+ },
+ "$defs": {
+  "node": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "component": {
+     "enum": [
+      "group",
+      "repeat",
+      "sprite",
+      "text",
+      "rect",
+      "line",
+      "todo"
+     ]
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "y1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "y2": {
+     "$ref": "common#/$defs/num"
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "frame": {
+     "$ref": "common#/$defs/count"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "colors": {
+     "type": "array",
+     "minItems": 2,
+     "maxItems": 4,
+     "items": {
+      "type": "string",
+      "pattern": "^#[0-9a-f]{6}$"
+     }
+    },
+    "alpha": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "value": {
+     "type": "string",
+     "description": "Текст кадра записи, которого нет в strings.json (числа, имена): в экране станет привязкой к ядру"
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "snap": {
+     "type": "boolean"
+    },
+    "xscale": {
+     "$ref": "common#/$defs/num"
+    },
+    "yscale": {
+     "$ref": "common#/$defs/num"
+    },
+    "sep": {
+     "$ref": "common#/$defs/num"
+    },
+    "width": {
+     "$ref": "common#/$defs/num"
+    },
+    "outline": {
+     "type": "boolean"
+    },
+    "w": {
+     "$ref": "common#/$defs/num"
+    },
+    "h": {
+     "$ref": "common#/$defs/num"
+    },
+    "left": {
+     "$ref": "common#/$defs/num"
+    },
+    "top": {
+     "$ref": "common#/$defs/num"
+    },
+    "angle": {
+     "$ref": "common#/$defs/num"
+    },
+    "what": {
+     "enum": [
+      "spritePart",
+      "spriteRotated",
+      "textRotated",
+      "rectGradient",
+      "surface",
+      "clear",
+      "noKey",
+      "unknown"
+     ],
+     "description": "Что кит пока не рисует"
+    },
+    "children": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/node"
+     }
+    },
+    "step": {
+     "type": "object",
+     "required": [
+      "x",
+      "y"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "count": {
+     "type": "integer",
+     "minimum": 2
+    },
+    "item": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "$ref": "#/$defs/node"
+     }
+    },
+    "items": {
+     "type": "array",
+     "description": "Замены полей у копий ряда: номер ребёнка шаблона → поля (без координат: место даёт шаг)",
+     "items": {
+      "type": "object",
+      "propertyNames": {
+       "pattern": "^[0-9]+$"
+      },
+      "additionalProperties": {
+       "$ref": "#/$defs/over"
+      }
+     }
+    }
+   },
+   "allOf": [
+    {
+     "if": {
+      "properties": {
+       "component": {
+        "const": "group"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "children"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "component": {
+        "const": "repeat"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "x",
+       "y",
+       "step",
+       "count",
+       "item"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "component": {
+        "const": "sprite"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "sprite",
+       "x",
+       "y"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "component": {
+        "const": "text"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "font",
+       "x",
+       "y"
+      ],
+      "oneOf": [
+       {
+        "required": [
+         "text"
+        ]
+       },
+       {
+        "required": [
+         "value"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "component": {
+        "enum": [
+         "rect",
+         "line"
+        ]
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "x1",
+       "y1",
+       "x2",
+       "y2"
+      ]
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "component": {
+        "const": "todo"
+       }
+      }
+     },
+     "then": {
+      "required": [
+       "what"
+      ]
+     }
+    }
+   ]
+  },
+  "over": {
+   "type": "object",
+   "minProperties": 1,
+   "additionalProperties": false,
+   "properties": {
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "frame": {
+     "$ref": "common#/$defs/count"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "colors": {
+     "type": "array",
+     "minItems": 2,
+     "maxItems": 4,
+     "items": {
+      "type": "string",
+      "pattern": "^#[0-9a-f]{6}$"
+     }
+    },
+    "alpha": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "value": {
+     "type": "string",
+     "description": "Текст кадра записи, которого нет в strings.json (числа, имена): в экране станет привязкой к ядру"
+    },
+    "sep": {
+     "$ref": "common#/$defs/num"
+    },
+    "width": {
+     "$ref": "common#/$defs/num"
+    },
+    "w": {
+     "$ref": "common#/$defs/num"
+    },
+    "h": {
+     "$ref": "common#/$defs/num"
+    },
+    "left": {
+     "$ref": "common#/$defs/num"
+    },
+    "top": {
+     "$ref": "common#/$defs/num"
+    },
+    "angle": {
+     "$ref": "common#/$defs/num"
+    },
+    "xscale": {
+     "$ref": "common#/$defs/num"
+    },
+    "yscale": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  }
+ }
+}

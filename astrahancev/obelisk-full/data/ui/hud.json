@@ -1,0 +1,128 @@
+{
+ "$schema": "ui-hud",
+ "screen": "hud",
+ "version": "2.2.50",
+ "comment": "HUD главного экрана (этап 6.5): верхняя и нижняя полосы, навыки, опыт, плашки руды, уровень, монеты и самоцветы, значки окон, кнопки хаба / выхода / магазина / обелиска, плашка этажа, колбы сундуков, подарки, версия. Координаты — пиксели комнаты 500×960 (GUI); блок с shift: true сдвигается вниз на tasksShift, пока над экраном панель заданий NPE. Стили текста и полос — data/ui/kit.json. Источники чисел — oracle/sources.json → ui.hud65.",
+ "tasksShift": 64,
+ "bands": {
+  "shift": true,
+  "rects": [
+   {"x1": 0, "y1": 0, "x2": 500, "y2": 60, "color": "@frame.dark", "grow": true},
+   {"x1": 0, "y1": 882, "x2": 500, "y2": 990, "color": "@frame.dark", "grow": false}
+  ]
+ },
+ "gifts": {
+  "shift": true,
+  "parts": [
+   {"sprite": "sprite.patch_backing_brownish_with_desc", "x": 40, "y": 240, "sx": 2.9, "sy": 1.6},
+   {"sprite": "sprite.patch_backing_brownish_ml", "x": 0, "y": 270, "sx": 4, "sy": 2.8},
+   {"sprite": "sprite.patch_button", "x": 40, "y": 270, "sx": 2.2, "sy": 2.2}
+  ],
+  "icon": {"sprite": "sprite.christmas_cracker16x16", "x": 40, "y": 268, "sx": 2, "sy": 2},
+  "iconShadow": {"color": "@black", "alpha": 0.5, "offsets": [[-1, 1], [1, 1], [1, 1], [-1, -1]]},
+  "text": {"style": "text.hud.center", "x": 40, "y": 240}
+ },
+ "skill": {
+  "shift": true,
+  "bar": {"sprite": "sprite.patch_desc_ml", "x": 32, "y": 14, "sx": 11.4, "sy": 1.2},
+  "icon": {"sprite": "sprite.prestige_point", "x": 17, "y": 14, "sx": 1, "sy": 1},
+  "text": {"style": "text.hud", "x": 36, "y": 14}
+ },
+ "xp": {
+  "shift": true,
+  "bar": {"sprite": "sprite.patch_desc_ml", "x": 70, "y": 36, "sx": 9, "sy": 1.2},
+  "icon": {"sprite": "sprite.xp_only", "x": 56, "y": 36, "sx": 1, "sy": 1},
+  "text": {"style": "text.hud", "x": 74, "y": 36, "cappedX": 76}, "cappedLabel": "t.level_capped"
+ },
+ "plates": {
+  "shift": true,
+  "box": "box.frame",
+  "y": 79,
+  "step": 28,
+  "dy1": -12,
+  "dy2": 11,
+  "x2": 499,
+  "textX": 460,
+  "charWidth": 9.6,
+  "pad": 8,
+  "icon": {"sprite": "sprite.rock_test", "x": 475, "sx": 1, "sy": 1},
+  "text": "text.hud.right"
+ },
+ "level": {
+  "shift": true,
+  "progress": "progress.xp",
+  "x": 38,
+  "y": 48,
+  "icon": {"sprite": "sprite.lvl_back", "x": 31, "y": 44, "sx": 2, "sy": 2},
+  "text": {"style": "text.hud.level", "x": 18, "y": 46}
+ },
+ "wallet": {
+  "shift": true,
+  "rows": [
+   {"bar": {"sprite": "sprite.patch_desc", "x": 328, "y": 13, "sx": 7, "sy": 1.2}, "icon": {"sprite": "sprite.coin", "x": 371, "y": 13, "sx": 1, "sy": 1}, "text": {"style": "text.hud.right", "x": 358, "y": 13}},
+   {"bar": {"sprite": "sprite.patch_desc", "x": 328, "y": 35, "sx": 7, "sy": 1.2}, "icon": {"sprite": "sprite.gem", "x": 371, "y": 35, "sx": 1, "sy": 1}, "text": {"style": "text.hud.right", "x": 358, "y": 35}}
+  ]
+ },
+ "currenciesIcon": {"shift": true, "sprite": "sprite.carts_new2", "x": 462, "y": 32, "sx": 2, "sy": 2},
+ "hubButton": {
+  "shift": false,
+  "body": {"sprite": "sprite.patch_button", "x": 250, "y": 908, "sx": 2.6, "sy": 2.4},
+  "icon": {"sprite": "sprite.hub_icon", "x": 250, "y": 907, "sx": 2.2, "sy": 2.2},
+  "dot": {"x": 228, "y": 888, "r": 6, "color": "#ffff00"}
+ },
+ "exitButton": {
+  "shift": false,
+  "body": {"sprite": "sprite.patch_button", "x": 310, "y": 908, "sx": 2.6, "sy": 2.4},
+  "icon": {"sprite": "sprite.exit", "x": 309, "y": 906, "sx": 2.2, "sy": 2.2}
+ },
+ "obeliskButton": {
+  "shift": true,
+  "shadow": {"sprite": "sprite.patch_desc", "x": 466, "y": 276, "sx": 2.5, "sy": 3.4, "color": "@black", "alpha": 0.5},
+  "body": {"sprite": "sprite.patch_button", "x": 466, "y": 265, "sx": 2.2, "sy": 2.4},
+  "icon": {"sprite": "sprite.obelisk_mini_strip", "x": 466, "y": 264, "sx": 2, "sy": 2},
+  "dot": {"x": 446, "y": 243, "r": 6, "color": "#ffff00"},
+  "timer": {"style": "text.hud.timer", "x": 466, "y": 296}
+ },
+ "shopButton": {
+  "shift": false,
+  "body": {"sprite": "sprite.patch_button", "x": 420, "y": 908, "sx": 3.6, "sy": 2.4},
+  "fill": {"progress": "progress.shop", "x": 450, "y": 928},
+  "icon": {"sprite": "sprite.shop_test2", "x": 420, "y": 907, "sx": 2, "sy": 2}
+ },
+ "floorPanel": {
+  "shift": true,
+  "shadow": {"sprite": "sprite.patch_desc", "x": 466, "y": 459, "sx": 2.6, "sy": 9.6, "color": "@black", "alpha": 0.3},
+  "shadowEarlySy": 5.6,
+  "toggle": {
+   "body": {"sprite": "sprite.patch_button", "x": 466, "y": 397, "sx": 2, "sy": 1.4},
+   "arrows": [
+    {"sprite": "sprite.small_arrow", "frame": 1, "x": 459, "y": 395, "sx": 1, "sy": 1},
+    {"sprite": "sprite.small_arrow", "frame": 3, "x": 473, "y": 395, "sx": 1, "sy": 1}
+   ]
+  },
+  "up": {
+   "body": {"sprite": "sprite.patch_button", "x": 466, "y": 435, "sx": 2, "sy": 2},
+   "arrow": {"sprite": "sprite.small_arrow", "frame": 1, "x": 466, "y": 432, "sx": 2, "sy": 2}
+  },
+  "down": {
+   "body": {"sprite": "sprite.patch_button", "x": 466, "y": 483, "sx": 2, "sy": 2},
+   "arrow": {"sprite": "sprite.small_arrow", "frame": 3, "x": 466, "y": 481, "sx": 2, "sy": 2},
+   "counter": {"style": "text.hud.center", "x": 466, "y": 483}
+  },
+  "auto": {
+   "body": {"sprite": "sprite.patch_button", "x": 466, "y": 522, "sx": 2, "sy": 1.4},
+   "text": {"style": "text.hud.auto", "x": 466, "y": 521},
+   "label": "t.auto"
+  },
+  "lockedTint": "#404040"
+ },
+ "gauges": {
+  "shift": true,
+  "rows": [
+   {"progress": "progress.chest", "x": 34, "y": 212, "highlight": {"sprite": "sprite.chest_hl", "frame": 0, "x": 34, "y": 104, "sx": 2, "sy": 2}, "icon": {"sprite": "sprite.chest", "x": 34, "y": 104, "sx": 2, "sy": 2}},
+   {"progress": "progress.relic", "x": 34, "y": 433, "highlight": {"sprite": "sprite.chest_hl", "frame": 1, "x": 34, "y": 325, "sx": 2, "sy": 2}, "icon": {"sprite": "sprite.chest_relic", "x": 34, "y": 325, "sx": 2, "sy": 2}}
+  ]
+ },
+ "statsIcon": {"shift": true, "sprite": "sprite.skill_bar", "x": 412, "y": 32, "sx": 2, "sy": 2},
+ "versionLabel": {"shift": false, "style": "text.hud.version", "x": 466, "y": 20, "alpha": 0.03, "prefix": "v"}
+}

@@ -1,0 +1,788 @@
+{
+ "$id": "ui-logs",
+ "title": "Экран «Журнал» (data/ui/logs.json, этап 6.27)",
+ "description": "Вёрстка экрана журнала из примитивов кита: фон меню (стиль кита), панель (nine-slice), поверхность списка, раскладка строк журнала отладки, ползунок, нижние вкладки, фильтры журнала игрока. Координаты — px комнаты 500×960 (поверхность — свои 0…w × 0…h) и обязаны совпасть с O. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "styles"
+ ],
+ "properties": {
+  "$schema": {
+   "const": "ui-logs"
+  },
+  "screen": {
+   "const": "logs"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "room": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "w",
+    "h"
+   ],
+   "properties": {
+    "w": {
+     "const": 500
+    },
+    "h": {
+     "const": 960
+    }
+   }
+  },
+  "comment": {
+   "type": "string"
+  },
+  "styles": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "logs.backdrop",
+    "logs.panel",
+    "logs.surface",
+    "logs.empty",
+    "logs.debug",
+    "logs.scrollbar",
+    "logs.tabs",
+    "logs.filters",
+    "logs.entries"
+   ],
+   "properties": {
+    "logs.backdrop": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "style"
+     ],
+     "properties": {
+      "style": {
+       "type": "string"
+      }
+     }
+    },
+    "logs.panel": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "sprite",
+      "x",
+      "y",
+      "sx",
+      "sy"
+     ],
+     "properties": {
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "x": {
+       "type": "number"
+      },
+      "y": {
+       "type": "number"
+      },
+      "sx": {
+       "type": "number"
+      },
+      "sy": {
+       "type": "number"
+      }
+     }
+    },
+    "logs.surface": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "x",
+      "y",
+      "w",
+      "h"
+     ],
+     "properties": {
+      "x": {
+       "type": "number"
+      },
+      "y": {
+       "type": "number"
+      },
+      "w": {
+       "type": "number"
+      },
+      "h": {
+       "type": "number"
+      }
+     }
+    },
+    "logs.empty": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "text",
+      "font",
+      "x",
+      "y",
+      "halign",
+      "valign",
+      "color"
+     ],
+     "properties": {
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "x": {
+       "type": "number"
+      },
+      "y": {
+       "type": "number"
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      }
+     }
+    },
+    "logs.debug": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "font",
+      "x1",
+      "x2",
+      "top",
+      "gap",
+      "text",
+      "row",
+      "levels"
+     ],
+     "properties": {
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "x1": {
+       "type": "number"
+      },
+      "x2": {
+       "type": "number"
+      },
+      "top": {
+       "type": "number"
+      },
+      "gap": {
+       "type": "number"
+      },
+      "text": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "dx",
+        "dy",
+        "sep",
+        "width",
+        "pad"
+       ],
+       "properties": {
+        "dx": {
+         "type": "number"
+        },
+        "dy": {
+         "type": "number"
+        },
+        "sep": {
+         "type": "number"
+        },
+        "width": {
+         "type": "number"
+        },
+        "pad": {
+         "type": "number"
+        }
+       }
+      },
+      "row": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "colors",
+        "alpha"
+       ],
+       "properties": {
+        "colors": {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "string",
+          "pattern": "^#[0-9a-f]{6}$"
+         }
+        },
+        "alpha": {
+         "type": "number"
+        }
+       }
+      },
+      "levels": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "info",
+        "warning"
+       ],
+       "properties": {
+        "info": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "warning": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        }
+       }
+      }
+     }
+    },
+    "logs.scrollbar": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "track",
+      "thumb",
+      "y1",
+      "y2"
+     ],
+     "properties": {
+      "track": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "x1",
+        "x2",
+        "color",
+        "alpha"
+       ],
+       "properties": {
+        "x1": {
+         "type": "number"
+        },
+        "x2": {
+         "type": "number"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "type": "number"
+        }
+       }
+      },
+      "thumb": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "x1",
+        "x2",
+        "color",
+        "alpha"
+       ],
+       "properties": {
+        "x1": {
+         "type": "number"
+        },
+        "x2": {
+         "type": "number"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "type": "number"
+        }
+       }
+      },
+      "y1": {
+       "type": "number"
+      },
+      "y2": {
+       "type": "number"
+      }
+     }
+    },
+    "logs.tabs": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "font",
+      "y1",
+      "edges",
+      "labels",
+      "selected",
+      "idle",
+      "shadow"
+     ],
+     "properties": {
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "y1": {
+       "type": "number"
+      },
+      "edges": {
+       "type": "array",
+       "items": {
+        "type": "number"
+       },
+       "minItems": 2
+      },
+      "labels": {
+       "type": "array",
+       "items": {
+        "$ref": "common#/$defs/stringKey"
+       }
+      },
+      "selected": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "bottom",
+        "fill",
+        "line",
+        "textDy",
+        "color"
+       ],
+       "properties": {
+        "bottom": {
+         "type": "number"
+        },
+        "fill": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "line": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "textDy": {
+         "type": "number"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        }
+       }
+      },
+      "idle": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "bottom",
+        "fill",
+        "line",
+        "top",
+        "textDy",
+        "color"
+       ],
+       "properties": {
+        "bottom": {
+         "type": "number"
+        },
+        "fill": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "line": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "top": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "textDy": {
+         "type": "number"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        }
+       }
+      },
+      "shadow": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "dx",
+        "dy",
+        "color"
+       ],
+       "properties": {
+        "dx": {
+         "type": "number"
+        },
+        "dy": {
+         "type": "number"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        }
+       }
+      }
+     }
+    },
+    "logs.filters": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "x",
+      "y",
+      "step",
+      "button",
+      "font",
+      "labels",
+      "groups",
+      "selectedColor",
+      "color",
+      "text",
+      "shadow"
+     ],
+     "properties": {
+      "x": {
+       "type": "number"
+      },
+      "y": {
+       "type": "number"
+      },
+      "step": {
+       "type": "number"
+      },
+      "button": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "sprite",
+        "sx",
+        "sy"
+       ],
+       "properties": {
+        "sprite": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "sx": {
+         "type": "number"
+        },
+        "sy": {
+         "type": "number"
+        }
+       }
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "labels": {
+       "type": "array",
+       "items": {
+        "$ref": "common#/$defs/stringKey"
+       }
+      },
+      "groups": {
+       "type": "array",
+       "items": {
+        "enum": [
+         "all",
+         "milestone",
+         "general",
+         "gemSpend",
+         "giftLoot"
+        ]
+       }
+      },
+      "selectedColor": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "text": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "dx",
+        "dy"
+       ],
+       "properties": {
+        "dx": {
+         "type": "number"
+        },
+        "dy": {
+         "type": "number"
+        }
+       }
+      },
+      "shadow": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "dx",
+        "dy",
+        "color"
+       ],
+       "properties": {
+        "dx": {
+         "type": "number"
+        },
+        "dy": {
+         "type": "number"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        }
+       }
+      }
+     }
+    },
+    "logs.entries": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "x1",
+      "x2",
+      "top",
+      "height",
+      "lineStep",
+      "row",
+      "icon",
+      "text",
+      "age"
+     ],
+     "properties": {
+      "comment": {
+       "type": "string"
+      },
+      "x1": {
+       "type": "number"
+      },
+      "x2": {
+       "type": "number"
+      },
+      "top": {
+       "type": "number"
+      },
+      "height": {
+       "type": "number"
+      },
+      "lineStep": {
+       "type": "number"
+      },
+      "row": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "colors",
+        "alpha"
+       ],
+       "properties": {
+        "colors": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^#[0-9a-f]{6}$"
+         },
+         "minItems": 1
+        },
+        "alpha": {
+         "type": "number"
+        }
+       }
+      },
+      "icon": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "dx",
+        "dy",
+        "sprites"
+       ],
+       "properties": {
+        "dx": {
+         "type": "number"
+        },
+        "dy": {
+         "type": "number"
+        },
+        "sprites": {
+         "type": "object",
+         "additionalProperties": {
+          "$ref": "common#/$defs/skinKey"
+         }
+        }
+       }
+      },
+      "text": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "font",
+        "dx",
+        "dy",
+        "iconX",
+        "iconIndent",
+        "width",
+        "outline"
+       ],
+       "properties": {
+        "font": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "dx": {
+         "type": "number"
+        },
+        "dy": {
+         "type": "number"
+        },
+        "iconIndent": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "iconX": {
+         "type": "number"
+        },
+        "width": {
+         "type": "number"
+        },
+        "outline": {
+         "type": "array",
+         "items": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+         }
+        }
+       }
+      },
+      "age": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "font",
+        "dx",
+        "dy",
+        "color",
+        "outline",
+        "dateGroups",
+        "months",
+        "rules"
+       ],
+       "properties": {
+        "font": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "dx": {
+         "type": "number"
+        },
+        "dy": {
+         "type": "number"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "outline": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "color",
+          "offsets"
+         ],
+         "properties": {
+          "color": {
+           "type": "string",
+           "pattern": "^#[0-9a-f]{6}$"
+          },
+          "offsets": {
+           "type": "array",
+           "items": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+           }
+          }
+         }
+        },
+        "note": {
+         "type": "string"
+        },
+        "dateGroups": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "months": {
+         "type": "array",
+         "minItems": 12,
+         "maxItems": 12,
+         "items": {
+          "$ref": "common#/$defs/stringKey"
+         }
+        },
+        "rules": {
+         "type": "array",
+         "minItems": 1,
+         "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+           "below": {
+            "type": "number"
+           },
+           "div": {
+            "type": "number"
+           },
+           "text": {
+            "$ref": "common#/$defs/stringKey"
+           },
+           "suffix": {
+            "$ref": "common#/$defs/stringKey"
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

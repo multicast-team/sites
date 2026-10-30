@@ -1,0 +1,591 @@
+{
+ "$schema": "ui-draft",
+ "screen": "pets",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Питомцы» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 492,
+    "y": 163,
+    "children": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 10,
+      "y2": 123.66009500000001,
+      "color": "#c0c0c0",
+      "alpha": 0.349999994
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc",
+      "x": -174,
+      "y": 107,
+      "sx": 20,
+      "sy": 10
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc",
+      "x": -408,
+      "y": 107,
+      "sx": 8,
+      "sy": 10
+     },
+     {
+      "component": "rect",
+      "x1": -472,
+      "y1": 58,
+      "x2": -12,
+      "y2": 217,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -473,
+      "y1": 59,
+      "x2": -11,
+      "y2": 218,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -472,
+      "y1": 59,
+      "x2": -12,
+      "y2": 217,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -472,
+      "y1": 59,
+      "x2": -12,
+      "y2": 217,
+      "color": "#0000ff",
+      "alpha": 0.100000001
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -174,
+      "y": 45,
+      "text": "t.crab",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#ffff00"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": -306,
+      "y": 127,
+      "sx": 17.6000004,
+      "sy": 6
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -306,
+      "y": 127,
+      "value": "Bomb Capacity +3%,\nBomb Recharge Rate +1%",
+      "halign": "center",
+      "valign": "middle",
+      "sep": 18,
+      "width": 280
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 50,
+    "y": 231,
+    "step": {
+     "x": 30,
+     "y": 0
+    },
+    "count": 10,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.star",
+      "x": 0,
+      "y": 0,
+      "color": "#000000"
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 250,
+    "y": 360,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 28,
+      "sy": 1.79999995
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 1,
+      "y": 1,
+      "value": "Level Up: 1/5000 chance when firing a Basic Bomb",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "value": "Level Up: 1/5000 chance when firing a Basic Bomb",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": -198,
+      "y": -152,
+      "sx": 3,
+      "sy": 1.39999998
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.info_icon",
+      "x": -212,
+      "y": -154
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": -190,
+      "y": -153,
+      "text": "t.info",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 170,
+      "y": -116,
+      "sx": 2.4000001,
+      "sy": 2.4000001
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.pet_head_icons",
+      "x": 170,
+      "y": -116,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 170,
+      "y": -60,
+      "sx": 5,
+      "sy": 2.79999995
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.gem",
+      "x": 170,
+      "y": -71
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 170,
+      "y": -52,
+      "text": "t.1",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 250,
+    "y": 540,
+    "step": {
+     "x": 0,
+     "y": 240
+    },
+    "count": 15,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish",
+      "x": 0,
+      "y": 0,
+      "sx": 28,
+      "sy": 10,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 20,
+      "sy": 2.4000001,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "0/1 Total Pet Levels To Unlock",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "2": {
+       "value": "0/5 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/12 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/18 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/28 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/40 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/56 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/75 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/90 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/100 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/140 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/180 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/235 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/310 Total Pet Levels To Unlock"
+      }
+     },
+     {
+      "2": {
+       "value": "0/340 Total Pet Levels To Unlock"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 126,
+      "x2": 500,
+      "y2": 161,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 126,
+      "x2": 500,
+      "y2": 159,
+      "color": "#695051"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 250,
+      "y": 144,
+      "value": "Total Pet Levels: 0",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#c0c0c0"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 460,
+      "y": 144,
+      "sx": 2,
+      "sy": 1.79999995
+     },
+     {
+      "component": "rect",
+      "x1": 450,
+      "y1": 133,
+      "x2": 470,
+      "y2": 153,
+      "color": "#462814"
+     },
+     {
+      "component": "rect",
+      "x1": 452,
+      "y1": 135,
+      "x2": 468,
+      "y2": 151,
+      "color": "#d6aa3c"
+     },
+     {
+      "component": "todo",
+      "what": "rectGradient",
+      "x": 455,
+      "y": 138,
+      "x2": 465,
+      "y2": 148,
+      "colors": [
+       "#4696be",
+       "#4696be",
+       "#7850aa",
+       "#7850aa"
+      ]
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.pet_head_icons",
+      "x": 460,
+      "y": 142
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 28,
+      "y": 144,
+      "sx": 1.60000002,
+      "sy": 1.79999995
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 20,
+    "y": 135,
+    "step": {
+     "x": 0,
+     "y": 6
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 15,
+      "y2": 2
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 0,
+    "y": 817,
+    "children": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 500,
+      "y2": 73,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 1,
+      "x2": 500,
+      "y2": 73,
+      "color": "#695051"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 120,
+      "y": 21,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.pet_menu_icon",
+      "x": 120,
+      "y": 20,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 120,
+    "y": 868,
+    "step": {
+     "x": 130,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.pets",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 130,
+      "y": -30,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.pet_skin_icon",
+      "x": 130,
+      "y": -31,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.skins"
+      },
+      "3": {
+       "sprite": "sprite.pet_quest_icon"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 380,
+    "y": 868,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.quests",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   }
+  ]
+ }
+}

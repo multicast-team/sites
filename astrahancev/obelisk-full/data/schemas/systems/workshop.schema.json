@@ -1,0 +1,51 @@
+{
+ "$id": "systems/workshop",
+ "title": "Workshop (data/systems/workshop.json, этап 4.2)",
+ "description": "37 строк улучшений за бары: цена база·рост^L, капы, пороги, тексты, клетки эффектов. Правила — oracle/specs/workshop.md; числа сняты с O (источники — oracle/sources.json, группа workshop). Тексты — ключи strings.json.",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "system": {"const": "workshop"},
+    "constants": {
+     "required": ["rowCount", "barCount", "price.highModeFromObelisk", "price.bigFrom", "price.bigStep", "afford.epsilon",
+      "capByObelisk.row", "capByObelisk.perObelisk", "capByObelisk.offset", "capByObelisk.max", "capBonus.minCap", "bombs.alwaysOpen"]
+    },
+    "tables": {
+     "required": ["rows", "texts", "cells", "effects"],
+     "properties": {
+      "rows": {"properties": {
+       "columns": {"const": ["row", "place", "barA", "barB", "barC", "baseA", "baseB", "baseC", "growth", "obeliskReq", "worldReq", "cap", "prevRow", "prevName"]},
+       "rows": {"minItems": 1, "items": {"prefixItems": [
+        {"$ref": "common#/$defs/count"}, {"$ref": "common#/$defs/count"},
+        {"$ref": "common#/$defs/count"}, {"$ref": "common#/$defs/count"}, {"$ref": "common#/$defs/count"},
+        {"$ref": "common#/$defs/nonneg"}, {"$ref": "common#/$defs/nonneg"}, {"$ref": "common#/$defs/nonneg"},
+        {"type": "number", "exclusiveMinimum": 0},
+        {"$ref": "common#/$defs/count"}, {"$ref": "common#/$defs/count"}, {"$ref": "common#/$defs/count"},
+        {"type": "integer", "minimum": -1},
+        {"type": "string", "pattern": "^(?:|t(?:\\.[a-z0-9_]+)+)$"}
+       ]}}
+      }},
+      "texts": {"properties": {
+       "columns": {"const": ["row", "line", "unit", "nextSign", "done", "doneUnit", "valueBase", "valueStep", "decimals"]},
+       "rows": {"minItems": 1, "items": {"prefixItems": [
+        {"$ref": "common#/$defs/count"}, {"$ref": "common#/$defs/textKeyName"}, {"enum": ["", "x", "%"]}, {"enum": ["", "+"]},
+        {"$ref": "common#/$defs/textKeyName"}, {"enum": ["", "x", "%"]}, {"$ref": "common#/$defs/num"}, {"$ref": "common#/$defs/num"},
+        {"enum": [0, 2, 3]}
+       ]}}
+      }},
+      "cells": {"properties": {
+       "columns": {"const": ["cell", "combine", "base"]},
+       "rows": {"minItems": 1, "items": {"prefixItems": [{"$ref": "common#/$defs/id"}, {"enum": ["sum", "product", "level"]}, {"$ref": "common#/$defs/num"}]}}
+      }},
+      "effects": {"properties": {
+       "columns": {"const": ["row", "cell", "perLevel"]},
+       "rows": {"minItems": 1, "items": {"prefixItems": [{"$ref": "common#/$defs/count"}, {"$ref": "common#/$defs/id"}, {"$ref": "common#/$defs/num"}]}}
+      }}
+     }
+    }
+   }
+  }
+ ]
+}

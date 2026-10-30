@@ -1,0 +1,3644 @@
+{
+ "$schema": "ui-draft",
+ "screen": "arcana",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Аркана» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 517,
+    "step": {
+     "x": 0,
+     "y": 114
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 436,
+      "y2": 93,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -1,
+      "y1": 1,
+      "x2": 437,
+      "y2": 94,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 1,
+      "x2": 436,
+      "y2": 93,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": 48,
+      "y1": 7,
+      "x2": 333,
+      "y2": 87,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 386,
+      "y": 60,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_rune",
+      "x": 386,
+      "y": 42,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 386,
+      "y": 73,
+      "value": "0/\n1000",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 386,
+      "y": 72,
+      "value": "0/\n1000",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_menu_tabs",
+      "x": 25,
+      "y": 47,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 193,
+      "y": 32,
+      "text": "t.unlock_next_essence_mine",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 193,
+      "y": 67,
+      "value": "Soft > Dense",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": 341,
+      "y1": 3,
+      "x2": 430,
+      "y2": 24,
+      "color": "#0f1419"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 386,
+      "y": 15,
+      "value": "0/4",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "5": {
+       "sprite": "sprite.arcana_orb"
+      },
+      "6": {
+       "value": "0/\n1"
+      },
+      "7": {
+       "value": "0/\n1"
+      },
+      "8": {
+       "sprite": "sprite.pickaxe_damage"
+      },
+      "9": {
+       "text": "t.flat_damage_plus_1"
+      },
+      "10": {
+       "value": "+0 > +1"
+      },
+      "12": {
+       "value": "0/25"
+      }
+     },
+     {
+      "5": {
+       "sprite": "sprite.arcana_orb"
+      },
+      "6": {
+       "value": "0/\n10"
+      },
+      "7": {
+       "value": "0/\n10"
+      },
+      "8": {
+       "sprite": "sprite.arcana_essence_plus"
+      },
+      "9": {
+       "text": "t.soft_essence_max_loot_plus_1"
+      },
+      "10": {
+       "value": "+0 > +1"
+      },
+      "12": {
+       "value": "0/3"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 32,
+    "y": 745,
+    "children": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 436,
+      "y2": 93,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -1,
+      "y1": 1,
+      "x2": 437,
+      "y2": 94,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 1,
+      "x2": 436,
+      "y2": 93,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 1,
+      "x2": 436,
+      "y2": 93,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "rect",
+      "x1": 80,
+      "y1": 31,
+      "x2": 356,
+      "y2": 63,
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 218,
+      "y": 47,
+      "value": "Need 3 of Previous Upgrade",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 393,
+      "y": 47,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 114,
+      "x2": 436,
+      "y2": 207,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -1,
+      "y1": 115,
+      "x2": 437,
+      "y2": 208,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 115,
+      "x2": 436,
+      "y2": 207,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": 48,
+      "y1": 121,
+      "x2": 333,
+      "y2": 201,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 386,
+      "y": 174,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_orb",
+      "x": 386,
+      "y": 156,
+      "sx": 2,
+      "sy": 2
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 418,
+    "y": 932,
+    "step": {
+     "x": 0,
+     "y": 114
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "0/\n3",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -1,
+      "value": "0/\n3",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcanist_shiny_chance",
+      "x": -361,
+      "y": -26,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -193,
+      "y": -41,
+      "text": "t.shiny_chance_plus_0_30_pct",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -193,
+      "y": -6,
+      "value": "+0% > +0.30%",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -45,
+      "y1": -70,
+      "x2": 44,
+      "y2": -49,
+      "color": "#0f1419"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -58,
+      "value": "0/25",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -73,
+      "x2": 50,
+      "y2": 20,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -387,
+      "y1": -72,
+      "x2": 51,
+      "y2": 21,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -72,
+      "x2": 50,
+      "y2": 20,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -72,
+      "x2": 50,
+      "y2": 20,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "rect",
+      "x1": -306,
+      "y1": -42,
+      "x2": -30,
+      "y2": -10,
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -168,
+      "y": -26,
+      "value": "Need 1 of Previous Upgrade",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 7,
+      "y": -26,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": 41,
+      "x2": 50,
+      "y2": 134,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -387,
+      "y1": 42,
+      "x2": 51,
+      "y2": 135,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": 42,
+      "x2": 50,
+      "y2": 134,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -338,
+      "y1": 48,
+      "x2": -53,
+      "y2": 128,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 101,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_orb",
+      "frame": 1,
+      "x": 0,
+      "y": 83,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "value": "0/\n2"
+      },
+      "1": {
+       "value": "0/\n2"
+      },
+      "2": {
+       "sprite": "sprite.pickaxe_crit_chance"
+      },
+      "3": {
+       "text": "t.crit_chance_plus_0_25_pct_crit_damage_plus_1_pct"
+      },
+      "4": {
+       "value": "+0%/+0% > +0.25%/+1%"
+      },
+      "12": {
+       "value": "Need 3 of Previous Upgrade"
+      }
+     },
+     {
+      "2": {
+       "sprite": "sprite.arcanist_brittle_chance"
+      },
+      "3": {
+       "text": "t.flat_damage_plus_1_brittle_chance_plus_0_15_pct"
+      },
+      "4": {
+       "value": "+0/+0% > +1/+0.15%"
+      },
+      "12": {
+       "value": "Need 5 of Previous Upgrade"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 418,
+    "y": 1274,
+    "children": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "0/\n10",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -1,
+      "value": "0/\n10",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_essence_plus",
+      "frame": 1,
+      "x": -361,
+      "y": -26,
+      "sx": 2,
+      "sy": 2
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 225,
+    "y": 1233,
+    "step": {
+     "x": 0,
+     "y": 114
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "text": "t.dense_essence_max_loot_plus_1",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 35,
+      "value": "+0 > +1",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": 148,
+      "y1": -29,
+      "x2": 237,
+      "y2": -8,
+      "color": "#0f1419"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 193,
+      "y": -17,
+      "value": "0/3",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -32,
+      "x2": 243,
+      "y2": 61,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -194,
+      "y1": -31,
+      "x2": 244,
+      "y2": 62,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -31,
+      "x2": 243,
+      "y2": 61,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -31,
+      "x2": 243,
+      "y2": 61,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "rect",
+      "x1": -113,
+      "y1": -1,
+      "x2": 163,
+      "y2": 31,
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 25,
+      "y": 15,
+      "value": "Need 5 of Previous Upgrade",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 200,
+      "y": 15,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": 82,
+      "x2": 243,
+      "y2": 175,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -194,
+      "y1": 83,
+      "x2": 244,
+      "y2": 176,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": 83,
+      "x2": 243,
+      "y2": 175,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -145,
+      "y1": 89,
+      "x2": 140,
+      "y2": 169,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 193,
+      "y": 142,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_orb",
+      "frame": 2,
+      "x": 193,
+      "y": 124,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 193,
+      "y": 155,
+      "value": "0/\n5",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 193,
+      "y": 154,
+      "value": "0/\n5",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.obelisk_armor_down",
+      "x": -168,
+      "y": 129,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "text": "t.essence_armor_pen_plus_1_attack_speed_plus_1_pct"
+      },
+      "1": {
+       "value": "+0/+0% > +1/+1%"
+      },
+      "3": {
+       "value": "0/5"
+      },
+      "9": {
+       "value": "Need 1 of Previous Upgrade"
+      },
+      "19": {
+       "sprite": "sprite.arch_super_crit_chance"
+      }
+     },
+     {
+      "0": {
+       "text": "t.super_crit_chance_plus_0_50_pct_super_crit"
+      },
+      "1": {
+       "value": "+0%/+0% > +0.50%/+1%"
+      },
+      "3": {
+       "value": "0/20"
+      },
+      "9": {
+       "value": "Need 3 of Previous Upgrade"
+      },
+      "17": {
+       "value": "0/\n8"
+      },
+      "18": {
+       "value": "0/\n8"
+      },
+      "19": {
+       "sprite": "sprite.stun_block"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 225,
+    "y": 1575,
+    "children": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "text": "t.flat_damage_plus_1_stun_negate_chance_plus_2_pct",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 35,
+      "value": "+0/+0% > +1/+2%",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": 148,
+      "y1": -29,
+      "x2": 237,
+      "y2": -8,
+      "color": "#0f1419"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 193,
+      "y": -17,
+      "value": "0/10",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -32,
+      "x2": 243,
+      "y2": 61,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -194,
+      "y1": -31,
+      "x2": 244,
+      "y2": 62,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -31,
+      "x2": 243,
+      "y2": 61,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -31,
+      "x2": 243,
+      "y2": 61,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "rect",
+      "x1": -113,
+      "y1": -1,
+      "x2": 163,
+      "y2": 31,
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 25,
+      "y": 15,
+      "value": "Need 2 of Previous Upgrade",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 200,
+      "y": 15,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": 82,
+      "x2": 243,
+      "y2": 175,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -194,
+      "y1": 83,
+      "x2": 244,
+      "y2": 176,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": 83,
+      "x2": 243,
+      "y2": 175,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -145,
+      "y1": 89,
+      "x2": 140,
+      "y2": 169,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 193,
+      "y": 142,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_orb",
+      "x": 193,
+      "y": 124,
+      "sx": 2,
+      "sy": 2
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 418,
+    "y": 1730,
+    "step": {
+     "x": 0,
+     "y": 114
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "0/\n3",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -1,
+      "value": "0/\n3",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arch_damage_multi",
+      "x": -361,
+      "y": -26,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -193,
+      "y": -41,
+      "text": "t.flat_damage_plus_2_pct",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -193,
+      "y": -6,
+      "value": "+0% > +2%",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -45,
+      "y1": -70,
+      "x2": 44,
+      "y2": -49,
+      "color": "#0f1419"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -58,
+      "value": "0/20",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -73,
+      "x2": 50,
+      "y2": 20,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -387,
+      "y1": -72,
+      "x2": 51,
+      "y2": 21,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -72,
+      "x2": 50,
+      "y2": 20,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -72,
+      "x2": 50,
+      "y2": 20,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "rect",
+      "x1": -306,
+      "y1": -42,
+      "x2": -30,
+      "y2": -10,
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -168,
+      "y": -26,
+      "value": "Need 2 of Previous Upgrade",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 7,
+      "y": -26,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": 41,
+      "x2": 50,
+      "y2": 134,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -387,
+      "y1": 42,
+      "x2": 51,
+      "y2": 135,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": 42,
+      "x2": 50,
+      "y2": 134,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -338,
+      "y1": 48,
+      "x2": -53,
+      "y2": 128,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 101,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_orb",
+      "frame": 1,
+      "x": 0,
+      "y": 83,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "value": "0/\n15"
+      },
+      "1": {
+       "value": "0/\n15"
+      },
+      "2": {
+       "sprite": "sprite.arcanist_shiny_multi"
+      },
+      "3": {
+       "text": "t.shiny_essence_loot_plus_1"
+      },
+      "4": {
+       "value": "+0 > +1"
+      },
+      "6": {
+       "value": "0/3"
+      },
+      "12": {
+       "value": "Need 5 of Previous Upgrade"
+      },
+      "19": {
+       "frame": 2
+      }
+     },
+     {
+      "0": {
+       "value": "0/\n20"
+      },
+      "1": {
+       "value": "0/\n20"
+      },
+      "2": {
+       "sprite": "sprite.arcanist_shiny_chance"
+      },
+      "3": {
+       "text": "t.shiny_chance_plus_1_pct_brittle_chance_plus_1"
+      },
+      "4": {
+       "value": "+0%/+0% > +1%/+1%"
+      },
+      "6": {
+       "value": "0/3"
+      },
+      "12": {
+       "value": "Need 1 of Previous Upgrade"
+      },
+      "19": {
+       "frame": 3
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "group",
+      "x": 418,
+      "y": 2072,
+      "children": [
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 0,
+        "value": "0/\n3",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": -1,
+        "value": "0/\n3",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_crit_chance",
+        "x": -361,
+        "y": -26,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -193,
+        "y": -41,
+        "text": "t.crit_chance_plus_0_35_pct_super_crit_chance",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -193,
+        "y": -6,
+        "value": "+0%/+0% > +0.35%/+0.25%",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "rect",
+        "x1": -45,
+        "y1": -70,
+        "x2": 44,
+        "y2": -49,
+        "color": "#0f1419"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": -58,
+        "value": "0/20",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -73,
+        "x2": 50,
+        "y2": 20,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -387,
+        "y1": -72,
+        "x2": 51,
+        "y2": 21,
+        "color": "#503738"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -72,
+        "x2": 50,
+        "y2": 20,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -72,
+        "x2": 50,
+        "y2": 20,
+        "color": "#000000",
+        "alpha": 0.5
+       },
+       {
+        "component": "rect",
+        "x1": -306,
+        "y1": -42,
+        "x2": -30,
+        "y2": -10,
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -168,
+        "y": -26,
+        "value": "Need 1 of Previous Upgrade",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.lock_only",
+        "x": 7,
+        "y": -26,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": 41,
+        "x2": 50,
+        "y2": 134,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -387,
+        "y1": 42,
+        "x2": 51,
+        "y2": 135,
+        "color": "#503738"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": 42,
+        "x2": 50,
+        "y2": 134,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": -338,
+        "y1": 48,
+        "x2": -53,
+        "y2": 128,
+        "color": "#0f1419"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 0,
+        "y": 101,
+        "sx": 5,
+        "sy": 3.70000005,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arcana_orb",
+        "x": 0,
+        "y": 83,
+        "sx": 2,
+        "sy": 2
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 418,
+      "y": 2186,
+      "children": [
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 0,
+        "value": "0/\n20",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": -1,
+        "value": "0/\n20",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arcana_essence_plus",
+        "frame": 2,
+        "x": -361,
+        "y": -26,
+        "sx": 2,
+        "sy": 2
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 225,
+    "y": 2145,
+    "step": {
+     "x": 0,
+     "y": 114
+    },
+    "count": 7,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "text": "t.jagged_essence_min_loot_plus_1_jagged_essence",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 35,
+      "value": "+0/+0 > +1/+1",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": 148,
+      "y1": -29,
+      "x2": 237,
+      "y2": -8,
+      "color": "#0f1419"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 193,
+      "y": -17,
+      "value": "0/2",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -32,
+      "x2": 243,
+      "y2": 61,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -194,
+      "y1": -31,
+      "x2": 244,
+      "y2": 62,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -31,
+      "x2": 243,
+      "y2": 61,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -31,
+      "x2": 243,
+      "y2": 61,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "rect",
+      "x1": -113,
+      "y1": -1,
+      "x2": 163,
+      "y2": 31,
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 25,
+      "y": 15,
+      "value": "Need 3 of Previous Upgrade",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 200,
+      "y": 15,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": 82,
+      "x2": 243,
+      "y2": 175,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -194,
+      "y1": 83,
+      "x2": 244,
+      "y2": 176,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": 83,
+      "x2": 243,
+      "y2": 175,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -145,
+      "y1": 89,
+      "x2": 140,
+      "y2": 169,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 193,
+      "y": 142,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_orb",
+      "frame": 1,
+      "x": 193,
+      "y": 124,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 193,
+      "y": 155,
+      "value": "0/\n15",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 193,
+      "y": 154,
+      "value": "0/\n15",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_essence_regen_down_v2",
+      "x": -168,
+      "y": 129,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "text": "t.regeneration_minus_1_essence_respawn_time_minus"
+      },
+      "1": {
+       "value": "-0/-0s > -1/-1s"
+      },
+      "3": {
+       "value": "0/3"
+      },
+      "9": {
+       "value": "Need 1 of Previous Upgrade"
+      },
+      "16": {
+       "frame": 2
+      },
+      "17": {
+       "value": "0/\n3"
+      },
+      "18": {
+       "value": "0/\n3"
+      },
+      "19": {
+       "sprite": "sprite.arcanist_super_shiny_chance"
+      }
+     },
+     {
+      "0": {
+       "text": "t.super_shiny_chance_plus_0_30_pct"
+      },
+      "1": {
+       "value": "+0% > +0.30%"
+      },
+      "3": {
+       "value": "0/25"
+      },
+      "9": {
+       "value": "Need 1 of Previous Upgrade"
+      },
+      "16": {
+       "frame": 3
+      },
+      "17": {
+       "value": "0/\n8"
+      },
+      "18": {
+       "value": "0/\n8"
+      },
+      "19": {
+       "sprite": "sprite.weaken_block"
+      }
+     },
+     {
+      "0": {
+       "text": "t.flat_damage_plus_1_weaken_negate_chance_plus_2"
+      },
+      "1": {
+       "value": "+0/+0% > +1/+2%"
+      },
+      "3": {
+       "value": "0/10"
+      },
+      "9": {
+       "value": "Need 5 of Previous Upgrade"
+      },
+      "16": {
+       "frame": 4
+      },
+      "17": {
+       "value": "0/\n30"
+      },
+      "18": {
+       "value": "0/\n30"
+      },
+      "19": {
+       "sprite": "sprite.arcana_essence_all_max_loot"
+      }
+     },
+     {
+      "0": {
+       "text": "t.all_essence_max_loot_plus_1"
+      },
+      "1": {
+       "value": "+0 > +1"
+      },
+      "17": {
+       "value": "0/\n5"
+      },
+      "18": {
+       "value": "0/\n5"
+      },
+      "19": {
+       "sprite": "sprite.arcanist_brittle_chance"
+      }
+     },
+     {
+      "0": {
+       "text": "t.flat_damage_plus_1_50_pct_brittle_chance_plus_0"
+      },
+      "1": {
+       "value": "+0%/+0% > +1.50%/+0.15%"
+      },
+      "3": {
+       "value": "0/15"
+      },
+      "9": {
+       "value": "Need 1 of Previous Upgrade"
+      },
+      "16": {
+       "frame": 2
+      },
+      "17": {
+       "value": "0/\n25"
+      },
+      "18": {
+       "value": "0/\n25"
+      },
+      "19": {
+       "sprite": "sprite.arcanist_super_shiny_multi"
+      }
+     },
+     {
+      "0": {
+       "text": "t.super_shiny_essence_loot_plus_2"
+      },
+      "1": {
+       "value": "+0 > +2"
+      },
+      "9": {
+       "value": "Need 5 of Previous Upgrade"
+      },
+      "16": {
+       "frame": 4
+      },
+      "17": {
+       "value": "0/\n3"
+      },
+      "18": {
+       "value": "0/\n3"
+      },
+      "19": {
+       "sprite": "sprite.pickaxe_ultra_crit_chance"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 225,
+    "y": 2943,
+    "children": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "text": "t.crit_chance_plus_0_35_pct_ultra_crit_chance",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 35,
+      "value": "+0%/+0% > +0.35%/+0.25%",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": 148,
+      "y1": -29,
+      "x2": 237,
+      "y2": -8,
+      "color": "#0f1419"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 193,
+      "y": -17,
+      "value": "0/20",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -32,
+      "x2": 243,
+      "y2": 61,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -194,
+      "y1": -31,
+      "x2": 244,
+      "y2": 62,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -31,
+      "x2": 243,
+      "y2": 61,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": -31,
+      "x2": 243,
+      "y2": 61,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "rect",
+      "x1": -113,
+      "y1": -1,
+      "x2": 163,
+      "y2": 31,
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 25,
+      "y": 15,
+      "value": "Need 1 of Previous Upgrade",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 200,
+      "y": 15,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": 82,
+      "x2": 243,
+      "y2": 175,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -194,
+      "y1": 83,
+      "x2": 244,
+      "y2": 176,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -193,
+      "y1": 83,
+      "x2": 243,
+      "y2": 175,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -145,
+      "y1": 89,
+      "x2": 140,
+      "y2": 169,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 193,
+      "y": 142,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_orb",
+      "x": 193,
+      "y": 124,
+      "sx": 2,
+      "sy": 2
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 418,
+    "y": 3098,
+    "step": {
+     "x": 0,
+     "y": 114
+    },
+    "count": 6,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "0/\n12",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -1,
+      "value": "0/\n12",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.pickaxe_crit_damage",
+      "x": -361,
+      "y": -26,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -193,
+      "y": -41,
+      "text": "t.crit_damage_plus_2_pct_attack_speed_plus_0_50",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -193,
+      "y": -6,
+      "value": "+0%/+0% > +2%/+0.50%",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -45,
+      "y1": -70,
+      "x2": 44,
+      "y2": -49,
+      "color": "#0f1419"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -58,
+      "value": "0/10",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -73,
+      "x2": 50,
+      "y2": 20,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -387,
+      "y1": -72,
+      "x2": 51,
+      "y2": 21,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -72,
+      "x2": 50,
+      "y2": 20,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -72,
+      "x2": 50,
+      "y2": 20,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "rect",
+      "x1": -306,
+      "y1": -42,
+      "x2": -30,
+      "y2": -10,
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -168,
+      "y": -26,
+      "value": "Need 5 of Previous Upgrade",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 7,
+      "y": -26,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": 41,
+      "x2": 50,
+      "y2": 134,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -387,
+      "y1": 42,
+      "x2": 51,
+      "y2": 135,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": 42,
+      "x2": 50,
+      "y2": 134,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -338,
+      "y1": 48,
+      "x2": -53,
+      "y2": 128,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 101,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_orb",
+      "frame": 3,
+      "x": 0,
+      "y": 83,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "value": "0/\n50"
+      },
+      "1": {
+       "value": "0/\n50"
+      },
+      "2": {
+       "sprite": "sprite.arcana_essence_all_min_loot"
+      },
+      "3": {
+       "text": "t.all_essence_min_loot_plus_1"
+      },
+      "4": {
+       "value": "+0 > +1"
+      },
+      "6": {
+       "value": "0/2"
+      },
+      "12": {
+       "value": "Need 3 of Previous Upgrade"
+      },
+      "19": {
+       "frame": 5
+      }
+     },
+     {
+      "0": {
+       "value": "0/\n5"
+      },
+      "1": {
+       "value": "0/\n5"
+      },
+      "2": {
+       "sprite": "sprite.all_debuff_negate"
+      },
+      "3": {
+       "text": "t.flat_damage_plus_2_all_debuff_negate_chance"
+      },
+      "4": {
+       "value": "+0/+0% > +2/+0.35%"
+      },
+      "6": {
+       "value": "0/15"
+      },
+      "12": {
+       "value": "Need 1 of Previous Upgrade"
+      },
+      "19": {
+       "frame": 1
+      }
+     },
+     {
+      "0": {
+       "value": "0/\n40"
+      },
+      "1": {
+       "value": "0/\n40"
+      },
+      "2": {
+       "sprite": "sprite.pickaxe_crit_chance"
+      },
+      "3": {
+       "text": "t.crit_chance_plus_4_pct_respawn_time_minus_1s"
+      },
+      "4": {
+       "value": "+0%/-0s > +4%/-1s"
+      },
+      "6": {
+       "value": "0/2"
+      },
+      "19": {
+       "frame": 2
+      }
+     },
+     {
+      "2": {
+       "sprite": "sprite.daze_block"
+      },
+      "3": {
+       "text": "t.super_crit_damage_plus_3_pct_daze_negate_chance"
+      },
+      "4": {
+       "value": "+0/+0% > +3/+2%"
+      },
+      "12": {
+       "value": "Need 1 of Previous Upgrade"
+      },
+      "19": {
+       "frame": 4
+      }
+     },
+     {
+      "0": {
+       "value": "0/\n10"
+      },
+      "1": {
+       "value": "0/\n10"
+      },
+      "2": {
+       "sprite": "sprite.arcanist_ultra_shiny_chance"
+      },
+      "3": {
+       "text": "t.shiny_chance_plus_0_30_pct_ultra_shiny_chance"
+      },
+      "4": {
+       "value": "+0%/+0% > +0.30%/+0.40%"
+      },
+      "6": {
+       "value": "0/20"
+      },
+      "12": {
+       "value": "Need 3 of Previous Upgrade"
+      },
+      "19": {
+       "frame": 5
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 418,
+    "y": 3782,
+    "children": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "0/\n30",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -1,
+      "value": "0/\n30",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcanist_all_shiny_multi",
+      "x": -361,
+      "y": -26,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -193,
+      "y": -41,
+      "text": "t.all_shiny_essence_loot_plus_1",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -193,
+      "y": -6,
+      "value": "+0 > +1",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -45,
+      "y1": -70,
+      "x2": 44,
+      "y2": -49,
+      "color": "#0f1419"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -58,
+      "value": "0/3",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -73,
+      "x2": 50,
+      "y2": 20,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -387,
+      "y1": -72,
+      "x2": 51,
+      "y2": 21,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -72,
+      "x2": 50,
+      "y2": 20,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -72,
+      "x2": 50,
+      "y2": 20,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "rect",
+      "x1": -306,
+      "y1": -42,
+      "x2": -30,
+      "y2": -10,
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -168,
+      "y": -26,
+      "value": "Need 5 of Previous Upgrade",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 7,
+      "y": -26,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": 41,
+      "x2": 50,
+      "y2": 134,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -387,
+      "y1": 42,
+      "x2": 51,
+      "y2": 135,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": 42,
+      "x2": 50,
+      "y2": 134,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -338,
+      "y1": 48,
+      "x2": -53,
+      "y2": 128,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 101,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_orb",
+      "x": 0,
+      "y": 83,
+      "sx": 2,
+      "sy": 2
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 418,
+    "y": 3896,
+    "step": {
+     "x": 0,
+     "y": 114
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "0/\n20",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -1,
+      "value": "0/\n20",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.obelisk_armor_down",
+      "x": -361,
+      "y": -26,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -193,
+      "y": -41,
+      "text": "t.flat_damage_plus_3_pct_essence_armor_pen_plus_2",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -193,
+      "y": -6,
+      "value": "+0%/+0 > +3%/+2",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -45,
+      "y1": -70,
+      "x2": 44,
+      "y2": -49,
+      "color": "#0f1419"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -58,
+      "value": "0/5",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -73,
+      "x2": 50,
+      "y2": 20,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -387,
+      "y1": -72,
+      "x2": 51,
+      "y2": 21,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -72,
+      "x2": 50,
+      "y2": 20,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -72,
+      "x2": 50,
+      "y2": 20,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "rect",
+      "x1": -306,
+      "y1": -42,
+      "x2": -30,
+      "y2": -10,
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -168,
+      "y": -26,
+      "value": "Need 1 of Previous Upgrade",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 7,
+      "y": -26,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": 41,
+      "x2": 50,
+      "y2": 134,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -387,
+      "y1": 42,
+      "x2": 51,
+      "y2": 135,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": 42,
+      "x2": 50,
+      "y2": 134,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -338,
+      "y1": 48,
+      "x2": -53,
+      "y2": 128,
+      "color": "#0f1419"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 101,
+      "sx": 5,
+      "sy": 3.70000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_orb",
+      "frame": 3,
+      "x": 0,
+      "y": 83,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "value": "0/\n10"
+      },
+      "1": {
+       "value": "0/\n10"
+      },
+      "2": {
+       "sprite": "sprite.stun_block"
+      },
+      "3": {
+       "text": "t.super_crit_damage_plus_4_pct_stun_negate_chance"
+      },
+      "4": {
+       "value": "+0%/+0% > +4%/+1.50%"
+      },
+      "6": {
+       "value": "0/15"
+      },
+      "12": {
+       "value": "Need 2 of Previous Upgrade"
+      },
+      "19": {
+       "frame": 5
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "group",
+      "x": 418,
+      "y": 4124,
+      "children": [
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 0,
+        "value": "0/\n20",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": -1,
+        "value": "0/\n20",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.pickaxe_super_crit_chance",
+        "x": -361,
+        "y": -26,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -193,
+        "y": -41,
+        "text": "t.flat_damage_plus_4_super_crit_chance_plus_2_pct",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -193,
+        "y": -6,
+        "value": "+0/+0% > +4/+2%",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "rect",
+        "x1": -45,
+        "y1": -70,
+        "x2": 44,
+        "y2": -49,
+        "color": "#0f1419"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": -58,
+        "value": "0/5",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -73,
+        "x2": 50,
+        "y2": 20,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -387,
+        "y1": -72,
+        "x2": 51,
+        "y2": 21,
+        "color": "#503738"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -72,
+        "x2": 50,
+        "y2": 20,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -72,
+        "x2": 50,
+        "y2": 20,
+        "color": "#000000",
+        "alpha": 0.5
+       },
+       {
+        "component": "rect",
+        "x1": -306,
+        "y1": -42,
+        "x2": -30,
+        "y2": -10,
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -168,
+        "y": -26,
+        "value": "Need 5 of Previous Upgrade",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.lock_only",
+        "x": 7,
+        "y": -26,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": 41,
+        "x2": 50,
+        "y2": 134,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -387,
+        "y1": 42,
+        "x2": 51,
+        "y2": 135,
+        "color": "#503738"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": 42,
+        "x2": 50,
+        "y2": 134,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": -338,
+        "y1": 48,
+        "x2": -53,
+        "y2": 128,
+        "color": "#0f1419"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 0,
+        "y": 101,
+        "sx": 5,
+        "sy": 3.70000005,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arcana_orb",
+        "x": 0,
+        "y": 83,
+        "sx": 2,
+        "sy": 2
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 418,
+      "y": 4238,
+      "children": [
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 0,
+        "value": "0/\n15",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": -1,
+        "value": "0/\n15",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.pickaxe_ultra_crit_chance",
+        "x": -361,
+        "y": -26,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -193,
+        "y": -41,
+        "text": "t.crit_damage_plus_2_50_pct_ultra_crit_chance",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -193,
+        "y": -6,
+        "value": "+0%/+0% > +2.50%/+0.25%",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "rect",
+        "x1": -45,
+        "y1": -70,
+        "x2": 44,
+        "y2": -49,
+        "color": "#0f1419"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": -58,
+        "value": "0/20",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -73,
+        "x2": 50,
+        "y2": 20,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -387,
+        "y1": -72,
+        "x2": 51,
+        "y2": 21,
+        "color": "#503738"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -72,
+        "x2": 50,
+        "y2": 20,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -72,
+        "x2": 50,
+        "y2": 20,
+        "color": "#000000",
+        "alpha": 0.5
+       },
+       {
+        "component": "rect",
+        "x1": -306,
+        "y1": -42,
+        "x2": -30,
+        "y2": -10,
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -168,
+        "y": -26,
+        "value": "Need 2 of Previous Upgrade",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.lock_only",
+        "x": 7,
+        "y": -26,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": 41,
+        "x2": 50,
+        "y2": 134,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -387,
+        "y1": 42,
+        "x2": 51,
+        "y2": 135,
+        "color": "#503738"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": 42,
+        "x2": 50,
+        "y2": 134,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": -338,
+        "y1": 48,
+        "x2": -53,
+        "y2": 128,
+        "color": "#0f1419"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 0,
+        "y": 101,
+        "sx": 5,
+        "sy": 3.70000005,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arcana_orb",
+        "frame": 5,
+        "x": 0,
+        "y": 83,
+        "sx": 2,
+        "sy": 2
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 418,
+      "y": 4352,
+      "children": [
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 0,
+        "value": "0/\n8",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": -1,
+        "value": "0/\n8",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arcanist_super_shiny_chance",
+        "x": -361,
+        "y": -26,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -193,
+        "y": -41,
+        "text": "t.super_shiny_chance_plus_0_40_pct_attack_speed",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -193,
+        "y": -6,
+        "value": "+0%/+0% > +0.40%/+0.20%",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "rect",
+        "x1": -45,
+        "y1": -70,
+        "x2": 44,
+        "y2": -49,
+        "color": "#0f1419"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": -58,
+        "value": "0/20",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -73,
+        "x2": 50,
+        "y2": 20,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -387,
+        "y1": -72,
+        "x2": 51,
+        "y2": 21,
+        "color": "#503738"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -72,
+        "x2": 50,
+        "y2": 20,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": -386,
+        "y1": -72,
+        "x2": 50,
+        "y2": 20,
+        "color": "#000000",
+        "alpha": 0.5
+       },
+       {
+        "component": "rect",
+        "x1": -306,
+        "y1": -42,
+        "x2": -30,
+        "y2": -10,
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": -168,
+        "y": -26,
+        "value": "Need 5 of Previous Upgrade",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.lock_only",
+        "x": 7,
+        "y": -26,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arcanist_essence_backgrounds",
+        "x": -168,
+        "y": -4113,
+        "sx": 2,
+        "sy": 2,
+        "color": "#c0c0c0"
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 180,
+      "y": 279,
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#118a6b"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 1,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#5b0712"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 2,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#0c906f"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 3,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#efb0df"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 4,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#c25646"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 5,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#10ee44"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 6,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#734d9d"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 7,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#1d0e40"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 8,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#4753ed"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 9,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#e8b1eb"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 10,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#a422e6"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 11,
+        "x": 0,
+        "y": 0,
+        "sx": 2,
+        "sy": 2,
+        "color": "#df6660"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 70,
+        "y": -102,
+        "sx": 9,
+        "sy": 1.39999998,
+        "alpha": 0.300000012
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 70,
+        "y": -102,
+        "text": "t.soft_essence_block",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc_ml",
+        "x": -134,
+        "y": -97,
+        "sx": 4,
+        "sy": 2,
+        "alpha": 0.300000012
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arcana_essence",
+        "x": -134,
+        "y": -97,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": -114,
+        "y": -97,
+        "text": "t.0",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.card_backing",
+        "x": -108,
+        "y": -47,
+        "sx": 2,
+        "sy": 2,
+        "color": "#404040",
+        "alpha": 0.5
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arcana_essence",
+        "x": -108,
+        "y": -47,
+        "sx": 2,
+        "sy": 2,
+        "color": "#404040",
+        "alpha": 0.5
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.essence_block",
+        "x": 70,
+        "y": -21,
+        "sx": 2,
+        "sy": 2,
+        "color": "#404040"
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 250,
+      "y": 335,
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 0,
+        "y": 0,
+        "sx": 8,
+        "sy": 1.39999998,
+        "alpha": 0.300000012
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 0,
+        "y": 0,
+        "value": "Respawn: 8",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": -160,
+        "y": -6,
+        "sx": 5,
+        "sy": 2.20000005
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": -146,
+        "y": -7,
+        "text": "t.player_stats",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.skill_bar",
+        "x": -190,
+        "y": -6,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 160,
+        "y": -6,
+        "sx": 5,
+        "sy": 2.20000005
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 146,
+        "y": -7,
+        "text": "t.essence_stats",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.skill_bari_os",
+        "x": 190,
+        "y": -6,
+        "sx": -2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 140,
+        "y": -126,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.small_arrow",
+        "frame": 2,
+        "x": 140,
+        "y": -128,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 190,
+        "y": -126,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.small_arrow",
+        "x": 190,
+        "y": -128,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "rect",
+        "x1": -250,
+        "y1": -209,
+        "x2": 250,
+        "y2": -174,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -250,
+        "y1": -209,
+        "x2": 250,
+        "y2": -176,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": 242,
+        "y1": 14,
+        "x2": 252,
+        "y2": 105.22778299999999,
+        "color": "#c0c0c0",
+        "alpha": 0.349999994
+       },
+       {
+        "component": "rect",
+        "x1": -250,
+        "y1": 482,
+        "x2": 250,
+        "y2": 555,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -250,
+        "y1": 483,
+        "x2": 250,
+        "y2": 555,
+        "color": "#695051"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": -186,
+        "y": 503,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arcana_menu_tabs",
+        "x": -186,
+        "y": 502,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 64,
+    "y": 868,
+    "step": {
+     "x": 100,
+     "y": 0
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.essence",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 100,
+      "y": -30,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arcana_menu_tabs",
+      "frame": 1,
+      "x": 100,
+      "y": -31,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.altars"
+      },
+      "3": {
+       "frame": 2
+      }
+     },
+     {
+      "1": {
+       "text": "t.spells"
+      },
+      "3": {
+       "frame": 3
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 364,
+    "y": 868,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.exchange",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 104,
+      "y": -724,
+      "sx": 1.60000002,
+      "sy": 1.79999995
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.info_icon",
+      "x": 104,
+      "y": -725
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": -336,
+      "y": -724,
+      "sx": 1.60000002,
+      "sy": 1.79999995
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 20,
+    "y": 135,
+    "step": {
+     "x": 0,
+     "y": 6
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 15,
+      "y2": 2
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 455,
+    "y": 848,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 4.13999987,
+      "sy": 2.79999995
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.satchel",
+      "x": 0,
+      "y": -11,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 1,
+      "y": 14,
+      "text": "t.satchel",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 13,
+      "text": "t.satchel",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   }
+  ]
+ }
+}

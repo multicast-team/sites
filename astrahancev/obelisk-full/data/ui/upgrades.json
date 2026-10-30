@@ -1,0 +1,749 @@
+{
+ "$schema": "ui-upgrades",
+ "screen": "upgrades",
+ "version": "2.2.50",
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Экран Upgrades (этап 6.9): секции миров (заголовок, ряды строк), ползунок, полоса ☰, нижняя полоса с Buy All. Сгенерирован oracle/upgrades69/mkdata69.mjs из записей O и разложен на компоненты кита; координаты = O (oracle/sources.json → ui.upgrades69).",
+ "panel": {
+  "style": "panel.menu"
+ },
+ "header": {
+  "style": "header.section"
+ },
+ "list": {
+  "rowCount": 93,
+  "x": 250,
+  "y": 160,
+  "headerToRow": 80,
+  "rowStep": 104,
+  "rowToHeader": 84,
+  "drawBelow": 1160
+ },
+ "sections": [
+  {
+   "world": 1,
+   "color": "#e1c3b9",
+   "frame": "box.frame",
+   "badge": "sprite.patch_backing_brownish",
+   "lockBacking": "sprite.patch_backing_brownish"
+  },
+  {
+   "world": 2,
+   "color": "#f5788c",
+   "backing": "sprite.patch_backing_magma",
+   "badge": "sprite.patch_backing_magma"
+  },
+  {
+   "world": 3,
+   "color": "#78d77d",
+   "backing": "sprite.patch_backing_green",
+   "badge": "sprite.patch_backing_green"
+  },
+  {
+   "world": 4,
+   "color": "#c38cfa",
+   "backing": "sprite.patch_backing_purple",
+   "badge": "sprite.patch_backing_purple"
+  }
+ ],
+ "row": {
+  "frame": {
+   "dx1": -231,
+   "dy1": -31,
+   "dx2": 228,
+   "dy2": 35
+  },
+  "backing": {
+   "dx": 0,
+   "dy": 2,
+   "sx": 29,
+   "sy": 4.25
+  },
+  "desc": {
+   "dx1": -183,
+   "dy1": -25,
+   "dx2": 134,
+   "dy2": 29,
+   "color": "#0f1419"
+  },
+  "icon": {
+   "dx": -208,
+   "dy": 0,
+   "sx": 2,
+   "sy": 2
+  },
+  "badge": {
+   "style": "upgrades.badge",
+   "dx": 182,
+   "dy": -43
+  },
+  "button": {
+   "style": "upgrades.buy",
+   "dx": 182,
+   "dy": 2
+  },
+  "maxed": {
+   "button": "upgrades.maxed",
+   "text": {
+    "style": "text.done",
+    "dx": -25,
+    "dy": 0
+   }
+  },
+  "extra": {
+   "style": "upgrades.extra",
+   "dx": 0,
+   "dy": -45,
+   "rows": [
+    32,
+    36,
+    43,
+    50
+   ]
+  },
+  "title": {
+   "style": "upgrades.title",
+   "smallStyle": "upgrades.titleSmall",
+   "fitWidth": 320,
+   "dx": -25,
+   "dy": -12
+  },
+  "cost": {
+   "style": "text.cost",
+   "smallStyle": "upgrades.costSmall",
+   "fitWidth": 112,
+   "textDy": 16,
+   "colorYes": "#ffffff",
+   "colorNo": "#808080",
+   "barSprite": "sprite.bar",
+   "goldSprite": "sprite.coin",
+   "icon": {
+    "dy": 12,
+    "sx": 2,
+    "sy": 2
+   },
+   "columns": [
+    [
+     {
+      "textDx": -34,
+      "iconDx": -52
+     }
+    ],
+    [
+     {
+      "textDx": -143,
+      "iconDx": -161
+     },
+     {
+      "textDx": 2,
+      "iconDx": -16
+     }
+    ]
+   ]
+  },
+  "lock": {
+   "parts": [
+    {
+     "dx": 0,
+     "dy": 2,
+     "sx": 29,
+     "sy": 4.4,
+     "color": "#808080"
+    },
+    {
+     "sprite": "sprite.patch_desc",
+     "dx": 0,
+     "dy": 0,
+     "sx": 19,
+     "sy": 3,
+     "color": "#808080"
+    }
+   ],
+   "label": "text.lock"
+  },
+  "lockFrame": {
+   "parts": [
+    {
+     "dx": 0,
+     "dy": 2,
+     "sx": 29,
+     "sy": 4.4,
+     "color": "#808080"
+    },
+    {
+     "sprite": "sprite.patch_desc",
+     "dx": 0,
+     "dy": 0,
+     "sx": 19,
+     "sy": 3,
+     "color": "#808080"
+    }
+   ],
+   "label": "text.lock"
+  }
+ },
+ "scroll": {
+  "style": "scroll.menu",
+  "track": {
+   "top": 99,
+   "bottom": 850,
+   "viewBottom": 930,
+   "maxScroll": 9705
+  },
+  "drag": {
+   "divisor": 15,
+   "repeatEvery": 12
+  }
+ },
+ "bar": {
+  "rects": [
+   {
+    "x1": 0,
+    "y1": 62,
+    "x2": 500,
+    "y2": 97,
+    "color": "#957c7d"
+   },
+   {
+    "x1": 0,
+    "y1": 62,
+    "x2": 500,
+    "y2": 95,
+    "color": "#695051"
+   }
+  ]
+ },
+ "menu": {
+  "style": "button.menu",
+  "x": 28,
+  "y": 80,
+  "optionsStyle": "menu.options",
+  "padRight": 23
+ },
+ "bottom": {
+  "box": "box.frame",
+  "frame": [
+   0,
+   839,
+   500,
+   881
+  ],
+  "button": {
+   "sprite": "sprite.patch_button",
+   "dx": 428,
+   "dy": 860,
+   "sx": 4.4,
+   "sy": 2
+  },
+  "label": "upgrades.buyAll",
+  "labelX": 428,
+  "labelY": 859
+ },
+ "texts": {
+  "sectionPrefix": "t.world_5",
+  "sectionSuffix": "t.upgrades_2",
+  "buy": "t.buy",
+  "maxed": "t.maxed",
+  "costSep": "t.per",
+  "lockWorldPrefix": "t.reach_world",
+  "lockWorldSuffix": "t.to_unlock",
+  "lockLevelPrefix": "t.unlock_at_level",
+  "buyAll": "t.buy_all",
+  "menuCaption": "t.menu_options",
+  "hideMaxed": "t.hide_maxed_upgrades",
+  "extraPrefix": "t.plus",
+  "extraSuffix": "t.pct"
+ },
+ "styles": {
+  "upgrades.badge": {
+   "parts": [
+    {
+     "sprite": "sprite.patch_backing_brownish",
+     "dx": 0,
+     "dy": 0,
+     "sx": 5.2,
+     "sy": 1.5
+    },
+    {
+     "sprite": "sprite.patch_desc",
+     "dx": 0,
+     "dy": 0,
+     "sx": 4.7,
+     "sy": 1.1
+    }
+   ],
+   "label": "text.badge"
+  },
+  "upgrades.buy": {
+   "body": {
+    "sprite": "sprite.patch_button",
+    "dx": 0,
+    "dy": 0,
+    "sx": 4.4,
+    "sy": 3.1
+   },
+   "label": "text.button",
+   "labelDx": 0,
+   "labelDy": -2,
+   "enabled": {
+    "tint": "#ffffff",
+    "text": "#ffffff"
+   },
+   "disabled": {
+    "tint": "#808080",
+    "text": "#808080"
+   }
+  },
+  "upgrades.maxed": {
+   "body": {
+    "sprite": "sprite.patch_button_green",
+    "dx": 0,
+    "dy": 0,
+    "sx": 4.4,
+    "sy": 3.1
+   },
+   "label": "text.button",
+   "labelDx": 0,
+   "labelDy": -2,
+   "enabled": {
+    "tint": "#ffffff",
+    "text": "#ffffff"
+   },
+   "disabled": {
+    "tint": "#808080",
+    "text": "#808080"
+   }
+  },
+  "upgrades.extra": {
+   "parts": [
+    {
+     "sprite": "sprite.patch_backing_brownish",
+     "dx": 0,
+     "dy": 0,
+     "sx": 5,
+     "sy": 1.5
+    },
+    {
+     "sprite": "sprite.patch_desc",
+     "dx": 0,
+     "dy": 0,
+     "sx": 4.2,
+     "sy": 1.1
+    }
+   ],
+   "label": "upgrades.extraText"
+  },
+  "upgrades.extraText": {
+   "font": "font.size12",
+   "halign": "center",
+   "valign": "middle",
+   "color": "#ffffff",
+   "snap": true
+  },
+  "upgrades.costSmall": {
+   "font": "font.size10",
+   "halign": "left",
+   "valign": "middle",
+   "color": "#808080",
+   "snap": true
+  },
+  "upgrades.title": {
+   "font": "font.size12",
+   "halign": "center",
+   "valign": "middle",
+   "color": "#ffffff",
+   "snap": true
+  },
+  "upgrades.titleSmall": {
+   "font": "font.size10",
+   "halign": "center",
+   "valign": "middle",
+   "color": "#ffffff",
+   "snap": true
+  },
+  "upgrades.buyAll": {
+   "font": "font.size12",
+   "halign": "center",
+   "valign": "middle",
+   "color": "#ffffff",
+   "snap": false
+  }
+ },
+ "icons": [
+  {
+   "row": 0,
+   "icon": "sprite.pickaxe_upgrade"
+  },
+  {
+   "row": 1,
+   "icon": "sprite.pickaxe_radius"
+  },
+  {
+   "row": 2,
+   "icon": "sprite.pickaxe_crit_chance"
+  },
+  {
+   "row": 3,
+   "icon": "sprite.double_craft_chance"
+  },
+  {
+   "row": 4,
+   "icon": "sprite.multi_rock_chance"
+  },
+  {
+   "row": 5,
+   "icon": "sprite.bomb_damage"
+  },
+  {
+   "row": 6,
+   "icon": "sprite.ore_sell_price"
+  },
+  {
+   "row": 7,
+   "icon": "sprite.pickaxe_crit_damage"
+  },
+  {
+   "row": 8,
+   "icon": "sprite.pickaxe_damage"
+  },
+  {
+   "row": 9,
+   "icon": "sprite.free_bomb_chance"
+  },
+  {
+   "row": 10,
+   "icon": "sprite.upgrade_price_discount"
+  },
+  {
+   "row": 11,
+   "icon": "sprite.pickaxe_crit_chance"
+  },
+  {
+   "row": 12,
+   "icon": "sprite.pickaxe_damage"
+  },
+  {
+   "row": 13,
+   "icon": "sprite.pickaxe_attack_speed"
+  },
+  {
+   "row": 14,
+   "icon": "sprite.pickaxe_crit_damage"
+  },
+  {
+   "row": 15,
+   "icon": "sprite.bomb_recharge_rate"
+  },
+  {
+   "row": 16,
+   "icon": "sprite.pickaxe_damage"
+  },
+  {
+   "row": 17,
+   "icon": "sprite.bomb_damage"
+  },
+  {
+   "row": 18,
+   "icon": "sprite.bomb_crit_damage"
+  },
+  {
+   "row": 19,
+   "icon": "sprite.pickaxe_super_crit_chance"
+  },
+  {
+   "row": 20,
+   "icon": "sprite.pickaxe_attack_speed"
+  },
+  {
+   "row": 21,
+   "icon": "sprite.cap_up"
+  },
+  {
+   "row": 22,
+   "icon": "sprite.pickaxe_damage"
+  },
+  {
+   "row": 23,
+   "icon": "sprite.bomb_crit_damage"
+  },
+  {
+   "row": 24,
+   "icon": "sprite.pickaxe_super_crit_damage"
+  },
+  {
+   "row": 25,
+   "icon": "sprite.pickaxe_crit_chance"
+  },
+  {
+   "row": 26,
+   "icon": "sprite.pickaxe_damage"
+  },
+  {
+   "row": 27,
+   "icon": "sprite.obelisk_armor_down"
+  },
+  {
+   "row": 28,
+   "icon": "sprite.pickaxe_ultra_crit_chance"
+  },
+  {
+   "row": 29,
+   "icon": "sprite.chest_meter_rate"
+  },
+  {
+   "row": 30,
+   "icon": "sprite.bomb_ultra_crit_chance"
+  },
+  {
+   "row": 31,
+   "icon": "sprite.triple_craft_chance"
+  },
+  {
+   "row": 32,
+   "icon": "sprite.card_damage"
+  },
+  {
+   "row": 33,
+   "icon": "sprite.bomb_damage"
+  },
+  {
+   "row": 34,
+   "icon": "sprite.pickaxe_super_crit_chance"
+  },
+  {
+   "row": 35,
+   "icon": "sprite.golden_vein"
+  },
+  {
+   "row": 36,
+   "icon": "sprite.pickaxe_damage_statue"
+  },
+  {
+   "row": 37,
+   "icon": "sprite.xp"
+  },
+  {
+   "row": 38,
+   "icon": "sprite.pickaxe_ultra_crit_chance"
+  },
+  {
+   "row": 39,
+   "icon": "sprite.bar2x"
+  },
+  {
+   "row": 40,
+   "icon": "sprite.omega_crit_chance"
+  },
+  {
+   "row": 41,
+   "icon": "sprite.bomb_ultra_crit_chance"
+  },
+  {
+   "row": 42,
+   "icon": "sprite.lootbug_loot_multi"
+  },
+  {
+   "row": 43,
+   "icon": "sprite.pickaxe_damage_statue"
+  },
+  {
+   "row": 44,
+   "icon": "sprite.cap_up"
+  },
+  {
+   "row": 45,
+   "icon": "sprite.pickaxe_damage"
+  },
+  {
+   "row": 46,
+   "icon": "sprite.bomb_damage"
+  },
+  {
+   "row": 47,
+   "icon": "sprite.contract_triple_points"
+  },
+  {
+   "row": 48,
+   "icon": "sprite.star_super10x_chance"
+  },
+  {
+   "row": 49,
+   "icon": "sprite.fuel_save_chance"
+  },
+  {
+   "row": 50,
+   "icon": "sprite.card_damage_poly"
+  },
+  {
+   "row": 51,
+   "icon": "sprite.rainbow_vein_chance"
+  },
+  {
+   "row": 52,
+   "icon": "sprite.rainbow_floor_multi"
+  },
+  {
+   "row": 53,
+   "icon": "sprite.pickaxe_damage"
+  },
+  {
+   "row": 54,
+   "icon": "sprite.bomb_damage"
+  },
+  {
+   "row": 55,
+   "icon": "sprite.golden_floor_multi"
+  },
+  {
+   "row": 56,
+   "icon": "sprite.pet_luck"
+  },
+  {
+   "row": 57,
+   "icon": "sprite.10x_craft_chance"
+  },
+  {
+   "row": 58,
+   "icon": "sprite.bomb_omega_crit_chance"
+  },
+  {
+   "row": 59,
+   "icon": "sprite.golden_vein_multi"
+  },
+  {
+   "row": 60,
+   "icon": "sprite.galactic_floor_chance"
+  },
+  {
+   "row": 61,
+   "icon": "sprite.pickaxe_and_bomb_damage"
+  },
+  {
+   "row": 62,
+   "icon": "sprite.golden_ore_multi"
+  },
+  {
+   "row": 63,
+   "icon": "sprite.star_supergiant_chance"
+  },
+  {
+   "row": 64,
+   "icon": "sprite.game_speed2x"
+  },
+  {
+   "row": 65,
+   "icon": "sprite.fish_drone_base_power"
+  },
+  {
+   "row": 66,
+   "icon": "sprite.fuel_duration"
+  },
+  {
+   "row": 67,
+   "icon": "sprite.star_super_supergiant_multi"
+  },
+  {
+   "row": 68,
+   "icon": "sprite.rainbow_vein_multi"
+  },
+  {
+   "row": 69,
+   "icon": "sprite.pet_head_icons_skinset1"
+  },
+  {
+   "row": 70,
+   "icon": "sprite.poly_shard"
+  },
+  {
+   "row": 71,
+   "icon": "sprite.100x_craft_chance"
+  },
+  {
+   "row": 72,
+   "icon": "sprite.freebie_cooldown"
+  },
+  {
+   "row": 73,
+   "icon": "sprite.pickaxe_damage"
+  },
+  {
+   "row": 74,
+   "icon": "sprite.bomb_damage"
+  },
+  {
+   "row": 75,
+   "icon": "sprite.galactic_floor_chance"
+  },
+  {
+   "row": 76,
+   "icon": "sprite.vein_income_multi"
+  },
+  {
+   "row": 77,
+   "icon": "sprite.star_supergiant_multi"
+  },
+  {
+   "row": 78,
+   "icon": "sprite.portal_rainbow_multi"
+  },
+  {
+   "row": 79,
+   "icon": "sprite.frog_loot_multi"
+  },
+  {
+   "row": 80,
+   "icon": "sprite.stonks_super_crit_chance"
+  },
+  {
+   "row": 81,
+   "icon": "sprite.pickaxe_and_bomb_damage"
+  },
+  {
+   "row": 82,
+   "icon": "sprite.portal_gold_chance"
+  },
+  {
+   "row": 83,
+   "icon": "sprite.prismatic_floor_chance"
+  },
+  {
+   "row": 84,
+   "icon": "sprite.prismatic_floor_multi"
+  },
+  {
+   "row": 85,
+   "icon": "sprite.pickaxe_and_bomb_damage"
+  },
+  {
+   "row": 86,
+   "icon": "sprite.frog_big_chance"
+  },
+  {
+   "row": 87,
+   "icon": "sprite.rainbow_floor_multi"
+  },
+  {
+   "row": 88,
+   "icon": "sprite.portal_small_chance"
+  },
+  {
+   "row": 89,
+   "icon": "sprite.star_radiant_chance"
+  },
+  {
+   "row": 90,
+   "icon": "sprite.galactic_floor_multi"
+  },
+  {
+   "row": 91,
+   "icon": "sprite.stonks_ultra_crit_chance"
+  },
+  {
+   "row": 92,
+   "icon": "sprite.portal_all_portal_multi"
+  }
+ ]
+}

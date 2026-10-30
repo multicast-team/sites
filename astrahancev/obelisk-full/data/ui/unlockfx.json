@@ -1,0 +1,9 @@
+{
+ "$schema": "ui-unlockfx",
+ "screen": "unlockfx",
+ "version": "2.2.50",
+ "comment": "Анимация открытия запертого обелиском меню в хабе (этап 6.8, spec unlock-fx): пока идёт анимация ядра (spec npe правило 2) прогресс a от 1 убывает на deltaUs / progress.durationUs за кадр (с кадра касания), кнопка белеет (синий канал round(B0 + (255 − B0)·(1 − a)), B0 — цвет пульса), замок растёт (× (1 + lockGrow·(1 − a))) и дрожит (сдвиг — вход вида); после открытия над кнопкой плитки гаснет свечение: альфа от 1 убывает на fadePerSecond в секунду по delta кадра, масштаб scaleStart + scaleGain·(1 − альфа), режим смешивания blend (1 — сложение). Источники чисел — oracle/sources.json → ui.unlockfx68.",
+ "lockGrow": 0.3,
+ "progress": {"durationUs": 900000},
+ "glow": {"sprite": "sprite.circle", "color": "#ffff00", "blend": 1, "scaleStart": 1.5, "scaleGain": 2.25, "fadePerSecond": 2.5, "usPerSecond": 1000000}
+}

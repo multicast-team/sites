@@ -1,0 +1,497 @@
+{
+ "$id": "ui-prestige",
+ "title": "Меню престижа и артефактов (data/ui/prestige.json, этап 6.24)",
+ "description": "Вёрстка меню престижа из компонентов: шапка (очки за престиж, кнопка Prestige), блоки ярусов 1–4 (Summon, счётчики, замок), строки открытых артефактов (уровень/кап, эффект, цена или Maxed), плашка PP, ползунок, полоса подсказки. Поля шаблонов с id — привязки экрана (ui/screens/prestige.mjs). Тексты — части (t.* — ключ strings.json, {имя} — значение, прочее как есть). Координаты — px комнаты 500×960 при прокрутке 0 и обязаны совпасть с O. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "disabledColor",
+  "dimColor",
+  "bg",
+  "header",
+  "headerTexts",
+  "list",
+  "block",
+  "blockTexts",
+  "lock",
+  "row",
+  "rowPrice",
+  "rowMaxed",
+  "rowTexts",
+  "tiers",
+  "badge",
+  "thumb",
+  "topBar"
+ ],
+ "$defs": {
+  "leaf": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "type": "string",
+     "pattern": "^[a-zA-Z]+$"
+    },
+    "component": {
+     "enum": [
+      "sprite",
+      "text",
+      "rect"
+     ]
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "y1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "y2": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "sep": {
+     "$ref": "common#/$defs/num"
+    },
+    "width": {
+     "$ref": "common#/$defs/num"
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "frame": {
+     "$ref": "common#/$defs/count"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "snap": {
+     "type": "boolean"
+    },
+    "count": {
+     "$ref": "common#/$defs/count"
+    },
+    "step": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  }
+ },
+ "properties": {
+  "$schema": {
+   "const": "ui-prestige"
+  },
+  "screen": {
+   "const": "prestige"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "disabledColor": {
+   "type": "string",
+   "pattern": "^#[0-9a-f]{6}$"
+  },
+  "dimColor": {
+   "type": "string",
+   "pattern": "^#[0-9a-f]{6}$"
+  },
+  "bg": {
+   "type": "object",
+   "required": [
+    "fill",
+    "noise"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "fill": {
+     "$ref": "#/$defs/leaf"
+    },
+    "noise": {
+     "$ref": "#/$defs/leaf"
+    }
+   }
+  },
+  "header": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 16,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "headerTexts": {
+   "type": "object",
+   "required": [
+    "gain",
+    "pp",
+    "confirm"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "gain": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "pp": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "confirm": {
+     "$ref": "common#/$defs/stringKey"
+    }
+   }
+  },
+  "list": {
+   "type": "object",
+   "required": [
+    "block0",
+    "firstRow",
+    "rowStep",
+    "nextBlock",
+    "section2Below"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "block0": {
+     "$ref": "common#/$defs/num"
+    },
+    "firstRow": {
+     "$ref": "common#/$defs/num"
+    },
+    "rowStep": {
+     "$ref": "common#/$defs/num"
+    },
+    "nextBlock": {
+     "$ref": "common#/$defs/num"
+    },
+    "section2Below": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "block": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 12,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "blockTexts": {
+   "type": "object",
+   "required": [
+    "maxed",
+    "confirm",
+    "owned",
+    "levels",
+    "allOwnedButton",
+    "armedButton"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "maxed": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "confirm": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "owned": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "levels": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "allOwnedButton": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "armedButton": {
+     "$ref": "common#/$defs/skinKey"
+    }
+   }
+  },
+  "lock": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 4,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "row": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 12,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "rowPrice": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 4,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "rowMaxed": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 4,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "rowTexts": {
+   "type": "object",
+   "required": [
+    "level",
+    "cappedButton",
+    "statue"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "level": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "cappedButton": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "statue": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "tiers": {
+   "type": "array",
+   "minItems": 4,
+   "maxItems": 4,
+   "items": {
+    "type": "object",
+    "required": [
+     "tier",
+     "backing",
+     "owned",
+     "levels",
+     "lock",
+     "plateSx",
+     "rows"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "tier": {
+      "enum": [
+       1,
+       2,
+       3,
+       4
+      ]
+     },
+     "backing": {
+      "type": "object",
+      "required": [
+       "sprite"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "sprite": {
+        "$ref": "common#/$defs/skinKey"
+       },
+       "frame": {
+        "$ref": "common#/$defs/count"
+       }
+      }
+     },
+     "owned": {
+      "$ref": "common#/$defs/stringKey"
+     },
+     "levels": {
+      "$ref": "common#/$defs/stringKey"
+     },
+     "lock": {
+      "anyOf": [
+       {
+        "$ref": "common#/$defs/stringKey"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "plateSx": {
+      "$ref": "common#/$defs/num"
+     },
+     "rows": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 10,
+      "items": {
+       "type": "object",
+       "required": [
+        "icon",
+        "desc",
+        "unit"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "icon": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "desc": {
+         "$ref": "common#/$defs/stringKey"
+        },
+        "step": {
+         "$ref": "common#/$defs/num"
+        },
+        "perStatue": {
+         "$ref": "common#/$defs/num"
+        },
+        "unit": {
+         "enum": [
+          "%",
+          ""
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "badge": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 6,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "thumb": {
+   "type": "object",
+   "required": [
+    "x1",
+    "x2",
+    "top",
+    "view",
+    "ratio",
+    "color",
+    "alpha"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "top": {
+     "$ref": "common#/$defs/num"
+    },
+    "view": {
+     "$ref": "common#/$defs/num"
+    },
+    "ratio": {
+     "type": "array",
+     "minItems": 2,
+     "maxItems": 2,
+     "items": {
+      "$ref": "common#/$defs/count"
+     }
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    }
+   }
+  },
+  "topBar": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 10,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  }
+ }
+}

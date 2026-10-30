@@ -1,0 +1,18 @@
+{
+ "$id": "systems/boot",
+ "title": "Шаг кадра и таймеры новой игры (data/systems/boot.json, этап 5.4)",
+ "description": "Константы спеки oracle/specs/tick.md: шаг и фаза часов O, кадр старта, периоды и шаги таймеров. Сняты с O (oracle/sources.json, группа tick.o54).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants"],
+   "properties": {
+    "system": {"const": "boot"},
+    "constants": {
+     "required": ["frameNs", "clockPhaseNs", "startFrame", "secondPeriod", "freebieReset", "cloudReset", "founderMark", "offlineFirst", "offlinePeriod", "offlineStep", "saleFirst", "salePeriod", "starPeriod"],
+     "additionalProperties": {"type": "integer", "minimum": 0}
+    }
+   }
+  }
+ ]
+}

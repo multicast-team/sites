@@ -1,0 +1,1675 @@
+{
+ "$schema": "ui-draft",
+ "screen": "options",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Настройки» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 492,
+    "y": 127,
+    "children": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 10,
+      "y2": 221.500671,
+      "color": "#c0c0c0",
+      "alpha": 0.349999994
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": -492,
+      "y": 91,
+      "sx": 20,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.music",
+      "x": -417,
+      "y": 91,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -391,
+      "y": 92,
+      "text": "t.sound",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -392,
+      "y": 91,
+      "text": "t.sound",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 40,
+    "y": 258,
+    "step": {
+     "x": 0,
+     "y": 40
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 32,
+      "y": 0,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 40,
+      "y": 0,
+      "text": "t.mute_all_music",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "3": {
+       "text": "t.mute_all_sound_effects"
+      }
+     },
+     {
+      "3": {
+       "text": "t.mute_all_bomb_sounds"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 0,
+    "y": 398,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 20,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.option_cog",
+      "x": 75,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 101,
+      "y": 1,
+      "text": "t.numbers",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 100,
+      "y": 0,
+      "text": "t.numbers",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 40,
+      "y": 40,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 40,
+      "y": 39,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.auto_bomber_no_bomb",
+      "x": 39,
+      "y": 39,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 72,
+      "y": 40,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 80,
+      "y": 40,
+      "value": "Notation: Standard (123m 1.23b)",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 40,
+      "y": 80,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 40,
+      "y": 79,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.auto_bomber_no_bomb",
+      "x": 39,
+      "y": 79,
+      "sx": 2,
+      "sy": 2
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 72,
+    "y": 478,
+    "step": {
+     "x": 0,
+     "y": 140
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 8,
+      "y": 0,
+      "text": "t.extra_notation_digits_plus_0",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": -72,
+      "y": 60,
+      "sx": 20,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.save_icon",
+      "x": 3,
+      "y": 60,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 29,
+      "y": 61,
+      "text": "t.saving_and_battery",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 28,
+      "y": 60,
+      "text": "t.saving_and_battery",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": -32,
+      "y": 100,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": -32,
+      "y": 99,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 0,
+      "y": 100,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 8,
+      "y": 100,
+      "text": "t.popup_when_the_game_locally_saves",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": -32,
+      "y": 140,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": -32,
+      "y": 139,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.turn_on_battery_saver_screen"
+      },
+      "3": {
+       "sprite": "sprite.bomb_basic"
+      },
+      "4": {
+       "text": "t.bombs_and_items"
+      },
+      "5": {
+       "text": "t.bombs_and_items"
+      },
+      "9": {
+       "text": "t.hold_to_rapid_fire_items_and_bombs"
+      }
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 72,
+    "y": 758,
+    "step": {
+     "x": 0,
+     "y": 40
+    },
+    "count": 5,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 8,
+      "y": 0,
+      "text": "t.show_fire_slow_per_fire_all_toggle",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": -32,
+      "y": 40,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": -32,
+      "y": 39,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.chain_bomb_ignores_floor_pausing"
+      }
+     },
+     {
+      "1": {
+       "text": "t.show_use_10x_per_100x_items"
+      }
+     },
+     {
+      "1": {
+       "text": "t.make_transmuter_bomb_do_no_damage"
+      }
+     },
+     {
+      "1": {
+       "text": "t.bomb_cooldown_shows_time_to_cap_or_run_out"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 72,
+    "y": 958,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 8,
+      "y": 0,
+      "text": "t.disable_confirmation_on_fire_all_bombs",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": -72,
+      "y": 60,
+      "sx": 20,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lootbug16x16",
+      "x": 3,
+      "y": 60,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 29,
+      "y": 61,
+      "text": "t.lootbugs_and_freebies",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 28,
+      "y": 60,
+      "text": "t.lootbugs_and_freebies",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 40,
+    "y": 1058,
+    "step": {
+     "x": 0,
+     "y": 40
+    },
+    "count": 5,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 32,
+      "y": 0,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 40,
+      "y": 0,
+      "text": "t.auto_loot_free_lootbug_offerings",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "3": {
+       "text": "t.remove_lootbug_gem_confirmation"
+      }
+     },
+     {
+      "3": {
+       "text": "t.enable_loot_all_banked_lootbugs"
+      }
+     },
+     {
+      "3": {
+       "text": "t.tap_any_lootbug_to_loot_all"
+      }
+     },
+     {
+      "3": {
+       "text": "t.one_click_claim_all_banked_freebies"
+      }
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 0,
+    "y": 1278,
+    "step": {
+     "x": 0,
+     "y": 180
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 20,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.eye_line_through",
+      "x": 75,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 101,
+      "y": 1,
+      "text": "t.popups_and_tooltips",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 100,
+      "y": 0,
+      "text": "t.popups_and_tooltips",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 40,
+      "y": 40,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 40,
+      "y": 39,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 72,
+      "y": 40,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 80,
+      "y": 40,
+      "text": "t.disable_ore_damage_popups",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 40,
+      "y": 80,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 40,
+      "y": 79,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 72,
+      "y": 80,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 80,
+      "y": 80,
+      "text": "t.more_compact_text_popups",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 40,
+      "y": 120,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 40,
+      "y": 119,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 72,
+      "y": 120,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 80,
+      "y": 120,
+      "text": "t.disable_bomb_bag_per_drone_pause_tooltips",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "sprite": "sprite.hourglass"
+      },
+      "2": {
+       "text": "t.timers_and_interface"
+      },
+      "3": {
+       "text": "t.timers_and_interface"
+      },
+      "7": {
+       "text": "t.timers_show_true_time_after_game_speed"
+      },
+      "11": {
+       "text": "t.show_miner_at_top_of_ui"
+      },
+      "15": {
+       "text": "t.foldable_left_side_buffs"
+      }
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 0,
+    "y": 1638,
+    "step": {
+     "x": 0,
+     "y": 100
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 20,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.christmas_cracker16x16",
+      "x": 75,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 101,
+      "y": 1,
+      "text": "t.gifts",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 100,
+      "y": 0,
+      "text": "t.gifts",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 40,
+      "y": 40,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 40,
+      "y": 39,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 72,
+      "y": 40,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 80,
+      "y": 40,
+      "text": "t.disable_opening_gifts",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "sprite": "sprite.eye"
+      },
+      "2": {
+       "text": "t.graphics"
+      },
+      "3": {
+       "text": "t.graphics"
+      },
+      "7": {
+       "text": "t.consistent_ore_position"
+      }
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 40,
+    "y": 1818,
+    "step": {
+     "x": 0,
+     "y": 40
+    },
+    "count": 7,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 32,
+      "y": 0,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 40,
+      "y": 0,
+      "text": "t.minimize_mining_effects_to_stop_flashing",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "3": {
+       "text": "t.smoother_frame_pacing_uses_more_battery"
+      }
+     },
+     {
+      "3": {
+       "text": "t.disable_all_bomb_animations"
+      }
+     },
+     {
+      "3": {
+       "text": "t.hide_golden_floor_effects"
+      }
+     },
+     {
+      "3": {
+       "text": "t.hide_rainbow_floor_effects"
+      }
+     },
+     {
+      "3": {
+       "text": "t.cloud_zone_brightness_reduction"
+      }
+     },
+     {
+      "3": {
+       "text": "t.disable_drone_radius_display_2"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 0,
+    "y": 2118,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 20,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.offline_hourglass",
+      "x": 75,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 101,
+      "y": 1,
+      "text": "t.offline_progress",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 100,
+      "y": 0,
+      "text": "t.offline_progress",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 40,
+    "y": 2158,
+    "step": {
+     "x": 0,
+     "y": 40
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 32,
+      "y": 0,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 40,
+      "y": 0,
+      "text": "t.consume_buff_timers_and_items_buffs_offline",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "3": {
+       "text": "t.consume_drone_fuel_timers_offline"
+      }
+     },
+     {
+      "3": {
+       "text": "t.show_last_offline_results_unavailable"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 0,
+    "y": 2298,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 20,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.freebie_full",
+      "x": 75,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 101,
+      "y": 1,
+      "text": "t.notifications",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 100,
+      "y": 0,
+      "text": "t.notifications",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 40,
+      "y": 40,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "frame": 1,
+      "x": 40,
+      "y": 39,
+      "sx": 2,
+      "sy": 2
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 72,
+    "y": 2338,
+    "step": {
+     "x": 0,
+     "y": 40
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 8,
+      "y": 0,
+      "text": "t.notify_when_offline_timer_caps",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": -32,
+      "y": 40,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": -32,
+      "y": 39,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.notify_when_banked_freebies_full"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 72,
+    "y": 2418,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 8,
+      "y": 0,
+      "text": "t.notify_when_banked_lootbugs_full",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": -72,
+      "y": 60,
+      "sx": 20,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.drone_icon",
+      "x": 3,
+      "y": 60,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 29,
+      "y": 61,
+      "text": "t.drones",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 28,
+      "y": 60,
+      "text": "t.drones",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 40,
+    "y": 2518,
+    "step": {
+     "x": 0,
+     "y": 40
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 32,
+      "y": 0,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 40,
+      "y": 0,
+      "text": "t.hide_maxed_drone_upgrades",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "3": {
+       "text": "t.make_drones_invisible"
+      }
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 0,
+    "y": 2618,
+    "step": {
+     "x": 0,
+     "y": 100
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 20,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.prestige_point",
+      "x": 75,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 101,
+      "y": 1,
+      "text": "t.artifacts",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 100,
+      "y": 0,
+      "text": "t.artifacts",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 40,
+      "y": 40,
+      "sx": 5,
+      "sy": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "x": 40,
+      "y": 39,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+      "x": 72,
+      "y": 40,
+      "sx": 25,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 80,
+      "y": 40,
+      "text": "t.hide_maxed_artifact_upgrades",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "sprite": "sprite.shop_test2"
+      },
+      "2": {
+       "text": "t.store"
+      },
+      "3": {
+       "text": "t.store"
+      },
+      "7": {
+       "text": "t.hide_maxed_store_upgrades"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 250,
+    "y": 2798,
+    "children": [
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "value": "More options unlock at Obelisk Level 2",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#c0c0c0"
+     },
+     {
+      "component": "rect",
+      "x1": -250,
+      "y1": -2672,
+      "x2": 250,
+      "y2": -2611,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -250,
+      "y1": -2671,
+      "x2": 250,
+      "y2": -2612,
+      "color": "#695051"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 55,
+    "y": 156,
+    "step": {
+     "x": 78,
+     "y": 0
+    },
+    "count": 6,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_green",
+      "x": 0,
+      "y": 0,
+      "sx": 4,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 1,
+      "y": 0,
+      "text": "t.all_2",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000",
+      "snap": false
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": -1,
+      "text": "t.all_2",
+      "halign": "center",
+      "valign": "middle",
+      "snap": false
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "sprite": "sprite.patch_button"
+      },
+      "1": {
+       "text": "t.general"
+      },
+      "2": {
+       "text": "t.general"
+      }
+     },
+     {
+      "0": {
+       "sprite": "sprite.patch_button"
+      },
+      "1": {
+       "text": "t.gameplay"
+      },
+      "2": {
+       "text": "t.gameplay"
+      }
+     },
+     {
+      "0": {
+       "sprite": "sprite.patch_button"
+      },
+      "1": {
+       "text": "t.display"
+      },
+      "2": {
+       "text": "t.display"
+      }
+     },
+     {
+      "0": {
+       "sprite": "sprite.patch_button"
+      },
+      "1": {
+       "text": "t.offline"
+      },
+      "2": {
+       "text": "t.offline"
+      }
+     },
+     {
+      "0": {
+       "sprite": "sprite.patch_button"
+      },
+      "1": {
+       "text": "t.menus"
+      },
+      "2": {
+       "text": "t.menus"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 0,
+    "y": 768,
+    "children": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 500,
+      "y2": 118,
+      "color": "#000000"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 250,
+      "y": 60,
+      "sx": 28,
+      "sy": 7
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 250,
+      "y": 38,
+      "sx": 4,
+      "sy": 3
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.gift_with_outline",
+      "x": 250,
+      "y": 37,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 251,
+      "y": 75,
+      "text": "t.codes_2",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 250,
+      "y": 74,
+      "text": "t.codes_2",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#ffff00"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 70,
+    "y": 806,
+    "step": {
+     "x": 270,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 3
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.discord",
+      "x": 1,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 1,
+      "y": 36,
+      "text": "t.discord",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 35,
+      "text": "t.discord",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 90,
+      "y": 0,
+      "sx": 3,
+      "sy": 3
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.reddit",
+      "x": 91,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 91,
+      "y": 36,
+      "text": "t.reddit",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 90,
+      "y": 35,
+      "text": "t.reddit",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "sprite": "sprite.credits_icon"
+      },
+      "2": {
+       "text": "t.credits"
+      },
+      "3": {
+       "text": "t.credits"
+      },
+      "5": {
+       "sprite": "sprite.obelisk_icon"
+      },
+      "6": {
+       "text": "t.wiki"
+      },
+      "7": {
+       "text": "t.wiki"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 180,
+    "y": 870,
+    "children": [
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.privacy_policy_2",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#c0c0c0"
+     },
+     {
+      "component": "line",
+      "x1": -49,
+      "y1": 7,
+      "x2": 49,
+      "y2": 7,
+      "color": "#c0c0c0"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 140,
+      "y": 0,
+      "value": "Play Store",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#c0c0c0"
+     },
+     {
+      "component": "line",
+      "x1": 105,
+      "y1": 7,
+      "x2": 175,
+      "y2": 7,
+      "color": "#c0c0c0"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": -2780,
+      "y": 0,
+      "text": "t.restore_purchases",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#c0c0c0"
+     },
+     {
+      "component": "line",
+      "x1": -2839.5,
+      "y1": 7,
+      "x2": -2720.5,
+      "y2": 7,
+      "color": "#c0c0c0"
+     }
+    ]
+   }
+  ]
+ }
+}

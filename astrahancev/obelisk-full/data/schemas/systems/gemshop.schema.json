@@ -1,0 +1,23 @@
+{
+ "$id": "systems/gemshop",
+ "title": "Gem shop мира 1 (система gemshop): улучшения и открытия за самоцветы, паки ресурсов, Freebie с случайной частью (data/systems/gemshop.json — этап 5.17 и раунд исправлений)",
+ "description": "constants и таблицы правил spec gemshop (oracle/specs/gemshop.md): upgrades — улучшение (номер = индекс уровня в сейве), строка экрана, цена в самоцветах, базовый кап; unlocks — открытие, цена, кап; packs — пак ресурсов за самоцветы (номер позиции раздела Resource Packs: 1 Resource, 2 Large, 3 Skill Point), цена, что даёт (сундуки предметов, сундуки реликвий, очки престижа, очки навыков) и обелиск, с которого пак есть в меню. constants freebie.* — броски Freebie на генераторе игры 4 (правила 14–20 спеки): шансы реликвии и кусочка, обелиски для кусочка, гарантии и лишнего броска, джекпот (U mod jackpotMod < jackpotScale · шанс клетки, раз jackpotTimes), модуль бросков, число хвостовых бросков, номер предмета кусочка и слова встроенного ГСЧ (unit · (base + relic + shard + jackpot)). Эффекты улучшений и открытий в сводке — в statrules.json (источники gemUpgrades, gemUnlocks). Числа сняты с O (oracle/sources.json, группа data.gemshop517).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "system": {"const": "gemshop"},
+    "constants": {"required": ["confirmTaps", "freebie.claimTaps", "freebie.claimCost", "freebie.chestsBase", "freebie.relicChance", "freebie.shardChance", "freebie.shardMinObelisk", "freebie.guaranteedMinObelisk", "freebie.extraRollMinObelisk", "freebie.jackpotTimes", "freebie.jackpotMod", "freebie.jackpotScale", "freebie.rollMod", "freebie.tailRolls", "freebie.shardItem", "freebie.builtinWordsUnit", "freebie.builtinBase", "freebie.builtinRelic", "freebie.builtinShard", "freebie.builtinJackpot"]},
+    "tables": {
+     "required": ["upgrades", "unlocks", "packs"],
+     "properties": {
+      "upgrades": {"properties": {"columns": {"const": ["id", "row", "price", "cap"]}, "rows": {"minItems": 1, "items": {"prefixItems": [{"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0}, {"type": "number", "minimum": 0}, {"type": "integer", "minimum": 1}]}}}},
+      "unlocks": {"properties": {"columns": {"const": ["id", "price", "cap"]}, "rows": {"minItems": 1, "items": {"prefixItems": [{"type": "integer", "minimum": 0}, {"type": "number", "minimum": 0}, {"type": "integer", "minimum": 1}]}}}},
+      "packs": {"properties": {"columns": {"const": ["id", "price", "chests", "relicChests", "pp", "skillPoints", "minObelisk"]}, "rows": {"minItems": 1, "items": {"prefixItems": [{"type": "integer", "minimum": 1}, {"type": "number", "minimum": 0}, {"type": "number", "minimum": 0}, {"type": "number", "minimum": 0}, {"type": "number", "minimum": 0}, {"type": "number", "minimum": 0}, {"type": "integer", "minimum": 0}]}}}}
+     }
+    }
+   }
+  }
+ ]
+}

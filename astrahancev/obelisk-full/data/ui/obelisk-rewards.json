@@ -1,0 +1,324 @@
+{
+ "$schema": "ui-obelisk-rewards",
+ "screen": "obelisk-rewards",
+ "version": "2.2.50",
+ "comment": "Этап 6.16: вкладка Rewards меню обелиска. Координаты — px комнаты 500×960, сняты с кадров O (oracle/obrew616, ui.obrew616 в oracle/sources.json). Ряд — компоненты от верха ряда (y заголовка), список прокручивается: y = list.y + (L − 1)·list.step − прокрутка. perkText.fit: если самая широкая строка текста шрифтом font шире maxWidth px — шрифт fit.font (граница между 99 и 108 по записям O, 100 — ??). format.amount: количество — целое с разделителем групп (записи O: 1x…8,500,000x; дробных количеств в таблице нет).",
+ "kitStyles": {
+  "panel": "panel.menu"
+ },
+ "panelFrame": {
+  "component": "sprite",
+  "sprite": "sprite.patch9c",
+  "x": 0,
+  "y": 0,
+  "sx": 31.25,
+  "sy": 58.125,
+  "color": "#00ffff",
+  "alpha": 0.5
+ },
+ "format": {
+  "amount": {
+   "groupDigits": 3,
+   "separator": ","
+  }
+ },
+ "amountSuffix": "x",
+ "title": {
+  "component": "text",
+  "font": "font.size24",
+  "x": 250,
+  "y": 110,
+  "text": "t.obelisk_rewards",
+  "halign": "center",
+  "valign": "middle"
+ },
+ "list": {
+  "y": 158,
+  "step": 130,
+  "cullAbove": -130,
+  "cullBelow": 938
+ },
+ "row": {
+  "info": {
+   "button": {
+    "component": "stretched",
+    "sprite": "sprite.patch_button",
+    "x": 30,
+    "y": 0,
+    "w": 22,
+    "h": 22
+   },
+   "icon": {
+    "component": "sprite",
+    "sprite": "sprite.info_icon",
+    "x": 41,
+    "y": 11
+   }
+  },
+  "tab": {
+   "component": "stretched",
+   "sprite": "sprite.patch_backing_brownish",
+   "x": 56,
+   "y": 0,
+   "h": 30,
+   "pad": 16
+  },
+  "panel": {
+   "component": "stretched",
+   "sprite": "sprite.patch_backing_brownish",
+   "x": 20,
+   "y": 22,
+   "w": 360,
+   "h": 90
+  },
+  "tabInner": {
+   "component": "stretched",
+   "sprite": "sprite.patch_desc_ml",
+   "x": 59,
+   "y": 3,
+   "h": 18,
+   "inset": 6
+  },
+  "title": {
+   "component": "text",
+   "font": "font.size12",
+   "y": 12,
+   "halign": "center",
+   "valign": "middle",
+   "text": "t.obelisk_4",
+   "shadow": [
+    1,
+    1
+   ],
+   "shadowColor": "#000000"
+  },
+  "cell": {
+   "component": "stretched",
+   "sprite": "sprite.patch_desc_ml",
+   "x": 26,
+   "y": 26,
+   "w": 108,
+   "h": 82,
+   "step": 120
+  },
+  "item": {
+   "component": "sprite",
+   "x": 80,
+   "y": 50,
+   "sx": 2,
+   "sy": 2
+  },
+  "amount": {
+   "component": "text",
+   "font": "font.size12",
+   "x": 80,
+   "y": 90,
+   "halign": "center",
+   "valign": "middle"
+  },
+  "perkText": {
+   "component": "text",
+   "font": "font.size12",
+   "x": 80,
+   "y": 90,
+   "halign": "center",
+   "valign": "middle",
+   "fit": {
+    "maxWidth": 100,
+    "font": "font.size10"
+   }
+  },
+  "unknown": {
+   "component": "text",
+   "font": "font.size24",
+   "x": 80,
+   "y": 67,
+   "text": "t.q",
+   "halign": "center",
+   "valign": "middle"
+  },
+  "claim": {
+   "glow": {
+    "component": "sprite",
+    "sprite": "sprite.circle",
+    "x": 425,
+    "y": 67,
+    "color": "#ffff00"
+   },
+   "button": {
+    "component": "stretched",
+    "sprite": "sprite.patch_button",
+    "x": 425,
+    "y": 67,
+    "w": 70,
+    "h": 36
+   },
+   "text": {
+    "component": "text",
+    "font": "font.size12",
+    "x": 425,
+    "y": 66,
+    "text": "t.claim",
+    "halign": "center",
+    "valign": "middle"
+   }
+  },
+  "lock": {
+   "component": "sprite",
+   "sprite": "sprite.lock_only",
+   "x": 425,
+   "y": 67,
+   "sx": 2,
+   "sy": 2
+  },
+  "check": {
+   "component": "sprite",
+   "sprite": "sprite.checked",
+   "x": 425,
+   "y": 67,
+   "sx": 2,
+   "sy": 2
+  },
+  "revealAhead": 3,
+  "styles": {
+   "next": {
+    "frame": 2,
+    "color": "#ffffff",
+    "innerAlpha": 0.6,
+    "text": "#ffffff",
+    "alpha": 1
+   },
+   "claimed": {
+    "frame": 0,
+    "color": "#c0c0c0",
+    "innerAlpha": 0.2,
+    "text": "#ffffff",
+    "alpha": 0.449999988
+   },
+   "locked": {
+    "frame": 0,
+    "color": "#808080",
+    "innerAlpha": 0.2,
+    "text": "#808080",
+    "alpha": 0.699999988
+   }
+  }
+ },
+ "itemIcons": {
+  "gems": {
+   "sprite": "sprite.gem"
+  },
+  "chest": {
+   "sprite": "sprite.chest"
+  },
+  "relicChest": {
+   "sprite": "sprite.chest_relic"
+  },
+  "cracker": {
+   "sprite": "sprite.christmas_cracker16x16"
+  },
+  "talentPoint": {
+   "sprite": "sprite.talent_point"
+  },
+  "fuel": {
+   "sprite": "sprite.fuel"
+  },
+  "item": {
+   "sprite": "sprite.items",
+   "frameFromSub": true
+  },
+  "sticker": {
+   "sprite": "sprite.stickers",
+   "frameFromSub": true
+  },
+  "mythicChest": {
+   "sprite": "sprite.mythic_chest16x16"
+  },
+  "divineChest": {
+   "sprite": "sprite.divine_chest16x16"
+  },
+  "luckyToken": {
+   "sprite": "sprite.arch_lucky_token"
+  }
+ },
+ "scrollbar": {
+  "component": "rect",
+  "x1": 492,
+  "x2": 502,
+  "color": "#c0c0c0",
+  "alpha": 0.349999994
+ },
+ "tabs": {
+  "rects": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 817,
+    "x2": 500,
+    "y2": 890,
+    "color": "#957c7d"
+   },
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 818,
+    "x2": 500,
+    "y2": 890,
+    "color": "#695051"
+   }
+  ],
+  "x": 130,
+  "step": 120,
+  "selectedColor": "#808080",
+  "button": {
+   "component": "sprite",
+   "sprite": "sprite.patch_button",
+   "x": 0,
+   "y": 838,
+   "sx": 2,
+   "sy": 2
+  },
+  "icon": {
+   "component": "sprite",
+   "sprite": "sprite.pickaxe_damage",
+   "x": 0,
+   "y": 837,
+   "sx": 2,
+   "sy": 2
+  },
+  "caption": {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 0,
+   "y": 868,
+   "sx": 5,
+   "sy": 1.20000005
+  },
+  "label": {
+   "component": "text",
+   "font": "font.size10",
+   "x": 0,
+   "y": 868,
+   "halign": "center",
+   "valign": "middle"
+  },
+  "icons": [
+   "sprite.pickaxe_damage",
+   "sprite.chest_relic",
+   "sprite.lock_unlock"
+  ],
+  "labels": [
+   "t.fight",
+   "t.rewards",
+   "t.unlocks_2"
+  ],
+  "selected": 1
+ },
+ "dot": {
+  "component": "circle",
+  "x": 232,
+  "y": 820,
+  "r": 6,
+  "color": "#ffff00"
+ }
+}

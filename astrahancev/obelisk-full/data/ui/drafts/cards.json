@@ -1,0 +1,901 @@
+{
+ "$schema": "ui-draft",
+ "screen": "cards",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Карты» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 492,
+    "y": 324,
+    "children": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 10,
+      "y2": 74.70098899999999,
+      "color": "#c0c0c0",
+      "alpha": 0.349999994
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": -492,
+      "y": 74,
+      "sx": 10,
+      "sy": 1.79999995
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -411,
+      "y": 75,
+      "text": "t.ores",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -412,
+      "y": 74,
+      "text": "t.ores",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": -442,
+      "y": 144,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "x": -442,
+      "y": 144,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 100,
+    "y": 468,
+    "step": {
+     "x": 0,
+     "y": 75
+    },
+    "count": 6,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "frame": 1,
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 50,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "frame": 2,
+      "x": 50,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 100,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "frame": 3,
+      "x": 100,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 150,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "frame": 4,
+      "x": 150,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 200,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "frame": 5,
+      "x": 200,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 250,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "frame": 6,
+      "x": 250,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 300,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "frame": 7,
+      "x": 300,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 350,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "frame": 8,
+      "x": 350,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": -50,
+      "y": 75,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "frame": 9,
+      "x": -50,
+      "y": 75,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "frame": 10
+      },
+      "3": {
+       "frame": 11
+      },
+      "5": {
+       "frame": 12
+      },
+      "7": {
+       "frame": 13
+      },
+      "9": {
+       "frame": 14
+      },
+      "11": {
+       "frame": 15
+      },
+      "13": {
+       "frame": 16
+      },
+      "15": {
+       "frame": 17
+      },
+      "17": {
+       "frame": 18
+      }
+     },
+     {
+      "1": {
+       "frame": 19
+      },
+      "3": {
+       "frame": 20
+      },
+      "5": {
+       "frame": 21
+      },
+      "7": {
+       "frame": 22
+      },
+      "9": {
+       "frame": 23
+      },
+      "11": {
+       "frame": 24
+      },
+      "13": {
+       "frame": 25
+      },
+      "15": {
+       "frame": 26
+      },
+      "17": {
+       "frame": 27
+      }
+     },
+     {
+      "1": {
+       "frame": 28
+      },
+      "3": {
+       "frame": 29
+      },
+      "5": {
+       "frame": 30
+      },
+      "7": {
+       "frame": 31
+      },
+      "9": {
+       "frame": 32
+      },
+      "11": {
+       "frame": 33
+      },
+      "13": {
+       "frame": 34
+      },
+      "15": {
+       "frame": 35
+      },
+      "17": {
+       "frame": 36
+      }
+     },
+     {
+      "1": {
+       "frame": 37
+      },
+      "3": {
+       "frame": 38
+      },
+      "5": {
+       "frame": 39
+      },
+      "7": {
+       "frame": 40
+      },
+      "9": {
+       "frame": 41
+      },
+      "11": {
+       "frame": 42
+      },
+      "13": {
+       "frame": 43
+      },
+      "15": {
+       "frame": 44
+      },
+      "17": {
+       "frame": 45
+      }
+     },
+     {
+      "1": {
+       "frame": 46
+      },
+      "3": {
+       "frame": 47
+      },
+      "5": {
+       "frame": 48
+      },
+      "7": {
+       "frame": 49
+      },
+      "9": {
+       "frame": 50
+      },
+      "11": {
+       "frame": 51
+      },
+      "13": {
+       "frame": 52
+      },
+      "15": {
+       "frame": 53
+      },
+      "17": {
+       "frame": 54
+      }
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 100,
+    "y": 918,
+    "step": {
+     "x": 50,
+     "y": 0
+    },
+    "count": 8,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.rock_test",
+      "frame": 55,
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2,
+      "color": "#000000",
+      "alpha": 0.5
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "frame": 56
+      }
+     },
+     {
+      "1": {
+       "frame": 57
+      }
+     },
+     {
+      "1": {
+       "frame": 58
+      }
+     },
+     {
+      "1": {
+       "frame": 59
+      }
+     },
+     {
+      "1": {
+       "frame": 60
+      }
+     },
+     {
+      "1": {
+       "frame": 61
+      }
+     },
+     {
+      "1": {
+       "frame": 62
+      }
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 0,
+    "y": 1014,
+    "step": {
+     "x": 0,
+     "y": 66
+    },
+    "count": 13,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 10,
+      "sy": 1.79999995
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 81,
+      "y": 1,
+      "text": "t.bars_2",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 80,
+      "y": 0,
+      "text": "t.bars_2",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.bombs"
+      },
+      "2": {
+       "text": "t.bombs"
+      }
+     },
+     {
+      "1": {
+       "text": "t.drones"
+      },
+      "2": {
+       "text": "t.drones"
+      }
+     },
+     {
+      "1": {
+       "text": "t.pets"
+      },
+      "2": {
+       "text": "t.pets"
+      }
+     },
+     {
+      "1": {
+       "text": "t.veins"
+      },
+      "2": {
+       "text": "t.veins"
+      }
+     },
+     {
+      "1": {
+       "text": "t.stars"
+      },
+      "2": {
+       "text": "t.stars"
+      }
+     },
+     {
+      "1": {
+       "text": "t.archaeology"
+      },
+      "2": {
+       "text": "t.archaeology"
+      }
+     },
+     {
+      "1": {
+       "text": "t.fish"
+      },
+      "2": {
+       "text": "t.fish"
+      }
+     },
+     {
+      "1": {
+       "text": "t.legendary_fish"
+      },
+      "2": {
+       "text": "t.legendary_fish"
+      }
+     },
+     {
+      "1": {
+       "text": "t.essences"
+      },
+      "2": {
+       "text": "t.essences"
+      }
+     },
+     {
+      "1": {
+       "text": "t.runes"
+      },
+      "2": {
+       "text": "t.runes"
+      }
+     },
+     {
+      "1": {
+       "text": "t.spells"
+      },
+      "2": {
+       "text": "t.spells"
+      }
+     },
+     {
+      "1": {
+       "text": "t.orbs"
+      },
+      "2": {
+       "text": "t.orbs"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "group",
+      "x": 0,
+      "y": 137,
+      "children": [
+       {
+        "component": "rect",
+        "x1": 0,
+        "y1": 0,
+        "x2": 500,
+        "y2": 221,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -1,
+        "y1": 1,
+        "x2": 501,
+        "y2": 222,
+        "color": "#503738"
+       },
+       {
+        "component": "rect",
+        "x1": 0,
+        "y1": 1,
+        "x2": 500,
+        "y2": 221,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": 0,
+        "y1": 174,
+        "x2": 500,
+        "y2": 175,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -1,
+        "y1": 175,
+        "x2": 501,
+        "y2": 176,
+        "color": "#503738"
+       },
+       {
+        "component": "rect",
+        "x1": 0,
+        "y1": 175,
+        "x2": 500,
+        "y2": 175,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": 6,
+        "y1": 35,
+        "x2": 495,
+        "y2": 166,
+        "color": "#0f1419"
+       },
+       {
+        "component": "rect",
+        "x1": 8,
+        "y1": 37,
+        "x2": 493,
+        "y2": 164,
+        "color": "#9d2f41"
+       },
+       {
+        "component": "rect",
+        "x1": 0,
+        "y1": 680,
+        "x2": 500,
+        "y2": 753,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": 0,
+        "y1": 681,
+        "x2": 500,
+        "y2": 753,
+        "color": "#695051"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 170,
+        "y": 701,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.ace_of_spades",
+        "x": 170,
+        "y": 700,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 170,
+        "y": 731,
+        "sx": 5,
+        "sy": 1.20000005
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 170,
+        "y": 731,
+        "text": "t.cards",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 330,
+        "y": 701,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.lock_only",
+        "x": 330,
+        "y": 700,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 330,
+        "y": 731,
+        "sx": 5,
+        "sy": 1.20000005
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 330,
+        "y": 731,
+        "text": "t.q_q_q_q_q",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 0,
+      "y": 126,
+      "children": [
+       {
+        "component": "rect",
+        "x1": 0,
+        "y1": 0,
+        "x2": 500,
+        "y2": 35,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": 0,
+        "y1": 0,
+        "x2": 500,
+        "y2": 33,
+        "color": "#695051"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 28,
+        "y": 18,
+        "sx": 1.60000002,
+        "sy": 1.79999995
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 20,
+    "y": 135,
+    "step": {
+     "x": 0,
+     "y": 6
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 15,
+      "y2": 2
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 468,
+    "y": 144,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 1.60000002,
+      "sy": 1.79999995
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.info_icon",
+      "x": 0,
+      "y": -1
+     }
+    ]
+   }
+  ]
+ }
+}

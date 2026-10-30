@@ -1,0 +1,807 @@
+{
+ "$schema": "ui-stats",
+ "screen": "stats",
+ "version": "2.2.50",
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Содержимое окна Stat Pages (этап 6.28): 3 страницы по 4 секции; рамка окна и вкладки страниц — кит (window.stats, этап 6.3). Геометрия — записи O окна (oracle/stats628/rec628.json и каталог 3.9), привязки строк — клетки сводки ядра (core/stats) и входы сессии; источник каждого числа — oracle/sources.json → ui.stats628. Строки без привязки в мире 1 не видны (заглушка «?» и тире); у закрытых секций заголовок «?????». stats.currencies — содержимое окна Currencies (рамка и вкладки — кит window.currencies): строки руд и слитков и вкладка сундуков и очков; значения — кошелёк сессии.",
+ "styles": {
+  "stats.section": {
+   "columns": [
+    {
+     "x1": 48,
+     "x2": 244
+    },
+    {
+     "x1": 270,
+     "x2": 466
+    }
+   ],
+   "title": {
+    "font": "font.size12",
+    "color": "#ffffff",
+    "backing": "sprite.patch_desc",
+    "sy": 1.6,
+    "firstRowDy": 25,
+    "hidden": "t.q_q_q_q_q"
+   },
+   "row": {
+    "font": "font.size10",
+    "fills": [
+     "#404040",
+     "#000000"
+    ],
+    "alpha": 0.4,
+    "iconDx": -10,
+    "textDx": 6,
+    "color": "#ffffff",
+    "iconColor": "#ffffff"
+   },
+   "empty": {
+    "icon": "sprite.question_mark_darker",
+    "color": "#404040",
+    "text": "t.sym.2d_2d_2d_2d_2d_2d_2d_2d_2d_2d_2d_2d_2d_2d_2d_2d_2d_2d_2d_2d"
+   },
+   "separator": "t.sym.3a_20"
+  },
+  "stats.format": {
+   "per": "деление: per / клетка",
+   "over": "«+» и round((клетка / база − 1) · 100) «%»",
+   "plus": "t.plus",
+   "percent": "%",
+   "time": {
+    "d": "d",
+    "h": "h",
+    "m": "m"
+   }
+  },
+  "stats.pages": [
+   [
+    {
+     "title": "t.pickaxe_stats",
+     "col": 0,
+     "dy": 75,
+     "cx": 112,
+     "sx": 8,
+     "rows": 11,
+     "pitch": 22,
+     "up": 11,
+     "down": 10,
+     "items": [
+      {
+       "slot": 0,
+       "icon": "sprite.pickaxe",
+       "label": "t.pickaxe_damage",
+       "value": {
+        "cell": "stat.pickaxeDamage"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 1,
+       "icon": "sprite.pickaxe_attack_speed",
+       "label": "t.attack_speed",
+       "value": {
+        "cell": "stat.attackSpeed",
+        "suffixKey": "t.p_per_s",
+        "per": 60
+       },
+       "show": "always"
+      },
+      {
+       "slot": 2,
+       "icon": "sprite.pickaxe_radius",
+       "label": "t.radius",
+       "value": {
+        "cell": "stat.clickRadius",
+        "over": 50
+       },
+       "show": {
+        "cell": "stat.clickRadius",
+        "gt": 50
+       }
+      },
+      {
+       "slot": 3,
+       "icon": "sprite.pickaxe_crit_chance",
+       "label": "t.crit_chance",
+       "value": {
+        "cell": "stat.critChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.critChance",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 4,
+       "icon": "sprite.pickaxe_crit_damage",
+       "label": "t.crit_damage",
+       "value": {
+        "cell": "stat.critDamage",
+        "suffix": "x"
+       },
+       "show": {
+        "cell": "stat.critChance",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 5,
+       "icon": "sprite.pickaxe_super_crit_chance",
+       "label": "t.super_crit_chance",
+       "value": {
+        "cell": "stat.superCritChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.superCritChance",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 6,
+       "icon": "sprite.pickaxe_super_crit_damage",
+       "label": "t.super_crit_damage",
+       "value": {
+        "cell": "stat.superCritDamage",
+        "suffix": "x"
+       },
+       "show": {
+        "cell": "stat.superCritChance",
+        "gt": 0
+       }
+      }
+     ]
+    },
+    {
+     "title": "t.bomb_stats",
+     "col": 1,
+     "dy": 75,
+     "cx": 334,
+     "sx": 8,
+     "rows": 11,
+     "pitch": 22,
+     "up": 11,
+     "down": 10,
+     "items": [
+      {
+       "slot": 0,
+       "icon": "sprite.bomb_damage",
+       "label": "t.bomb_damage",
+       "value": {
+        "cell": "stat.bombDamageMulti",
+        "suffix": "x",
+        "mul": 50
+       },
+       "show": "always"
+      },
+      {
+       "slot": 1,
+       "icon": "sprite.bomb_recharge_rate",
+       "label": "t.recharge_rate",
+       "value": {
+        "cell": "stat.bombRechargeSpeedMulti",
+        "suffix": "x"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 2,
+       "icon": "sprite.free_bomb_chance",
+       "label": "t.free_bomb_chance",
+       "value": {
+        "cell": "stat.freeBombChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.freeBombChance",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 3,
+       "icon": "sprite.bomb_crit_chance",
+       "label": "t.crit_chance",
+       "value": {
+        "cell": "stat.bombCritChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.bombCritChance",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 4,
+       "icon": "sprite.bomb_crit_damage",
+       "label": "t.crit_damage",
+       "value": {
+        "cell": "stat.bombCritDamage",
+        "suffix": "x"
+       },
+       "show": {
+        "cell": "stat.bombCritChance",
+        "gt": 0
+       }
+      }
+     ]
+    },
+    {
+     "title": "t.drone_stats",
+     "col": 0,
+     "dy": 355,
+     "cx": 112,
+     "sx": 8,
+     "rows": 18,
+     "pitch": 19,
+     "up": 11,
+     "down": 10,
+     "items": [
+      {
+       "slot": 0,
+       "icon": "sprite.drone_icon",
+       "label": "t.drone_count",
+       "value": {
+        "cell": "stat.droneCount"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 1,
+       "icon": "sprite.drone_damage",
+       "label": "t.drone_damage",
+       "value": {
+        "cell": "stat.droneMulti",
+        "suffix": "x"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 2,
+       "icon": "sprite.drone_radius",
+       "label": "t.drone_radius",
+       "value": {
+        "cell": "stat.droneRadius",
+        "over": 75
+       },
+       "show": {
+        "cell": "stat.droneCount",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 3,
+       "icon": "sprite.drone_movespeed",
+       "label": "t.drone_movespeed",
+       "value": {
+        "cell": "stat.droneMovespeed",
+        "over": 3
+       },
+       "show": {
+        "cell": "stat.droneCount",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 4,
+       "icon": "sprite.drone_attack_speed",
+       "label": "t.drone_attack_speed",
+       "value": {
+        "cell": "stat.droneAttackSpeed",
+        "over": 1.25
+       },
+       "show": {
+        "cell": "stat.droneCount",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 5,
+       "icon": "sprite.drone_triple_damage_chance",
+       "label": "t.drone_triple_damage",
+       "value": {
+        "cell": "stat.drone3xChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.drone3xChance",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 6,
+       "icon": "sprite.drone_rapid_fire",
+       "label": "t.drone_rapid_fire",
+       "value": {
+        "cell": "stat.droneRapidFireChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.droneRapidFireChance",
+        "gt": 0
+       }
+      }
+     ]
+    },
+    {
+     "title": "t.misc_stats",
+     "col": 1,
+     "dy": 355,
+     "cx": 334,
+     "sx": 8,
+     "rows": 11,
+     "pitch": 22,
+     "up": 11,
+     "down": 10,
+     "items": [
+      {
+       "slot": 0,
+       "icon": "sprite.checked",
+       "label": "t.game_completion",
+       "value": {
+        "input": "completion",
+        "suffix": "%"
+       },
+       "show": "always",
+       "color": "#ffff00"
+      },
+      {
+       "slot": 1,
+       "icon": "sprite.hourglass",
+       "label": "t.gameplay_time",
+       "value": {
+        "input": "gameplaySeconds",
+        "time": true
+       },
+       "show": "always"
+      },
+      {
+       "slot": 2,
+       "icon": "sprite.snooze",
+       "label": "t.offline_time",
+       "value": {
+        "input": "offlineSeconds",
+        "time": true
+       },
+       "show": "always"
+      },
+      {
+       "slot": 3,
+       "icon": "sprite.hourglass",
+       "label": "t.this_prestige",
+       "value": {
+        "input": "prestigeSeconds",
+        "time": true
+       },
+       "show": "always"
+      },
+      {
+       "slot": 4,
+       "icon": "sprite.game_speed2x",
+       "label": "t.game_speed",
+       "value": {
+        "cell": "stat.gameSpeed",
+        "suffix": "x"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 5,
+       "icon": "sprite.xp",
+       "label": "t.experience_gain_2",
+       "value": {
+        "cell": "stat.expGainMulti",
+        "suffix": "x"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 6,
+       "icon": "sprite.prestige_point_gain",
+       "label": "t.prestige_point_gain",
+       "value": {
+        "cell": "stat.ppGainMulti",
+        "suffix": "x"
+       },
+       "show": {
+        "cell": "stat.ppGainMulti",
+        "gt": 1
+       }
+      },
+      {
+       "slot": 7,
+       "icon": "sprite.item_duration",
+       "label": "t.item_duration",
+       "value": {
+        "cell": "stat.itemDurationMulti",
+        "suffix": "x"
+       },
+       "show": {
+        "cell": "stat.itemDurationMulti",
+        "gt": 1
+       }
+      }
+     ]
+    }
+   ],
+   [
+    {
+     "title": "t.ore_stats",
+     "col": 0,
+     "dy": 75,
+     "cx": 112,
+     "sx": 8,
+     "rows": 17,
+     "pitch": 22,
+     "up": 11,
+     "down": 10,
+     "items": [
+      {
+       "slot": 0,
+       "icon": "sprite.ore_income_multi",
+       "label": "t.ore_income_multi",
+       "value": {
+        "cell": "stat.oreIncomeMultiplier",
+        "suffix": "x"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 1,
+       "icon": "sprite.ore_sell_price",
+       "label": "t.ore_sell_price",
+       "value": {
+        "cell": "stat.oreSellPriceMulti",
+        "suffix": "x"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 2,
+       "icon": "sprite.multi_rock_chance",
+       "label": "t.triple_rock_chance",
+       "value": {
+        "cell": "stat.multiRockChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.multiRockChance",
+        "gt": 0
+       }
+      }
+     ]
+    },
+    {
+     "title": "t.crafting_stats",
+     "col": 1,
+     "dy": 75,
+     "cx": 350,
+     "sx": 10,
+     "rows": 10,
+     "pitch": 22,
+     "up": 11,
+     "down": 10,
+     "items": [
+      {
+       "slot": 0,
+       "icon": "sprite.bar2x",
+       "label": "t.bar_output_multi",
+       "value": {
+        "cell": "stat.barOutputMultiplier",
+        "suffix": "x"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 1,
+       "icon": "sprite.free_craft_chance",
+       "label": "t.free_craft_chance",
+       "value": {
+        "cell": "stat.freeCraftChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.freeCraftChance",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 2,
+       "icon": "sprite.double_craft_chance",
+       "label": "t.double_craft_chance",
+       "value": {
+        "cell": "stat.doubleCraftChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.doubleCraftChance",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 3,
+       "icon": "sprite.triple_craft_chance",
+       "label": "t.triple_craft_chance_2",
+       "value": {
+        "cell": "stat.tripleCraftChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.tripleCraftChance",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 4,
+       "icon": "sprite.5x_craft_chance",
+       "label": "t.5x_craft_chance",
+       "value": {
+        "cell": "stat.5xCraftChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.5xCraftChance",
+        "gt": 0
+       }
+      }
+     ]
+    },
+    {
+     "title": null,
+     "col": 0,
+     "dy": 491,
+     "cx": 112,
+     "sx": 8,
+     "rows": 8,
+     "pitch": 22,
+     "up": 11,
+     "down": 10,
+     "items": []
+    },
+    {
+     "title": null,
+     "col": 1,
+     "dy": 327,
+     "cx": 350,
+     "sx": 10,
+     "rows": 21,
+     "pitch": 18,
+     "up": 9,
+     "down": 9,
+     "items": []
+    }
+   ],
+   [
+    {
+     "title": "t.lootbug_stats",
+     "col": 0,
+     "dy": 75,
+     "cx": 112,
+     "sx": 8,
+     "rows": 7,
+     "pitch": 22,
+     "up": 11,
+     "down": 10,
+     "items": [
+      {
+       "slot": 0,
+       "icon": "sprite.lootbug_spawn_rate",
+       "label": "t.lootbug_spawn_rate_2",
+       "value": {
+        "cell": "stat.lootbugSpawnRate",
+        "suffix": "x"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 1,
+       "icon": "sprite.lootbug_loot_multi",
+       "label": "t.lootbug_loot_multi",
+       "value": {
+        "cell": "stat.lootbugLootMult",
+        "suffix": "x"
+       },
+       "show": "always"
+      }
+     ]
+    },
+    {
+     "title": null,
+     "col": 1,
+     "dy": 75,
+     "cx": 340,
+     "textDx": -1,
+     "sx": 8.6,
+     "rows": 12,
+     "pitch": 22,
+     "up": 11,
+     "down": 10,
+     "items": []
+    },
+    {
+     "title": "t.chest_stats",
+     "col": 0,
+     "dy": 275,
+     "cx": 112,
+     "sx": 8,
+     "rows": 14,
+     "pitch": 22,
+     "up": 11,
+     "down": 10,
+     "items": [
+      {
+       "slot": 0,
+       "icon": "sprite.chest_multi",
+       "label": "t.chance_for_2x_chests",
+       "value": {
+        "cell": "stat.multiChestChance",
+        "suffix": "%"
+       },
+       "show": {
+        "cell": "stat.multiChestChance",
+        "gt": 0
+       }
+      },
+      {
+       "slot": 1,
+       "icon": "sprite.chest_meter_rate",
+       "label": "t.chest_meter_multi",
+       "value": {
+        "cell": "stat.chestMeterGainMulti",
+        "suffix": "x"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 2,
+       "icon": "sprite.chest_rare",
+       "label": "t.items_in_chests",
+       "value": {
+        "input": "itemsInChests",
+        "prefix": "t.plus"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 3,
+       "icon": "sprite.gems_bonus_gems_freebie_pack",
+       "label": "t.gems_from_freebie_pack",
+       "value": {
+        "cell": "stat.bonusGemsFreebieChest"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 4,
+       "icon": "sprite.gems_banked",
+       "label": "t.banked_freebie_cap",
+       "value": {
+        "cell": "stat.bankFreebieCap"
+       },
+       "show": "always"
+      },
+      {
+       "slot": 5,
+       "icon": "sprite.freebie_cooldown",
+       "label": "t.freebie_cooldown",
+       "value": {
+        "cell": "stat.freebieTimerSeconds",
+        "suffix": "s"
+       },
+       "show": "always"
+      }
+     ]
+    },
+    {
+     "title": null,
+     "col": 1,
+     "dy": 367,
+     "cx": 350,
+     "sx": 10,
+     "rows": 17,
+     "pitch": 20,
+     "up": 9,
+     "down": 9,
+     "items": []
+    }
+   ]
+  ],
+  "stats.currencies": {
+   "rows": {
+    "x1": 40,
+    "x2": 420,
+    "dy1": 69,
+    "dy2": 87,
+    "dy": 78,
+    "pitch": 20,
+    "fill": "#0f1419"
+   },
+   "font": "font.size12",
+   "color": "#ffffff",
+   "ores": {
+    "names": [
+     "t.tin",
+     "t.copper",
+     "t.mithril",
+     "t.adamant",
+     "t.runite",
+     "t.citrine",
+     "t.amethyst",
+     "t.topaz",
+     "t.obsidian",
+     "t.demonite",
+     "t.vr_tin",
+     "t.vr_amethyst",
+     "t.vr_demonite",
+     "t.vr_error",
+     "t.lunarium",
+     "t.earth_c_137",
+     "t.meteorite",
+     "t.singularity",
+     "t.halium",
+     "t.blasphemite",
+     "t.angelite",
+     "t.elysium",
+     "t.enemite",
+     "t.beepboopium",
+     "t.radion_73",
+     "t.cranium"
+    ],
+    "nameX": 50,
+    "ore": {
+     "icon": "sprite.rock_test",
+     "x": 165,
+     "textX": 182
+    },
+    "bar": {
+     "icon": "sprite.bar",
+     "x": 275,
+     "textX": 292
+    }
+   },
+   "chests": {
+    "tab": 0,
+    "rows": 27,
+    "iconX": 110,
+    "textX": 126,
+    "show": "chestsUnlocked",
+    "items": [
+     {
+      "icon": "sprite.chest",
+      "label": "t.item_chests",
+      "value": "chests"
+     },
+     {
+      "icon": "sprite.chest_relic",
+      "label": "t.relic_chests",
+      "value": "relicChests"
+     },
+     {
+      "icon": "sprite.mythic_chest16x16",
+      "label": "t.mythic_chests",
+      "value": "mythicChests"
+     },
+     {
+      "icon": "sprite.divine_chest16x16",
+      "label": "t.divine_chests",
+      "value": "divineChests"
+     },
+     {
+      "icon": "sprite.drone_point",
+      "label": "t.drone_points",
+      "value": "dronePoints"
+     },
+     {
+      "icon": "sprite.talent_point",
+      "label": "t.skill_points_2",
+      "value": "skillPoints"
+     }
+    ]
+   }
+  }
+ }
+}

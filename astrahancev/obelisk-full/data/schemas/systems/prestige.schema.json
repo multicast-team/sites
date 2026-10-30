@@ -1,0 +1,41 @@
+{
+ "$id": "systems/prestige",
+ "title": "Престиж (data/systems/prestige.json, этап 5.12) и артефакты ярусов 1–4 (data/systems/artifacts.json, этап 5.13)",
+ "description": "Два вида файла системы prestige. prestige.json: начисление очков престижа (порог уровня, база, рост, сдвиг, надбавка выше уровня overLevel) и сброс состояния при престиже: поля, которые получают значение (resetValues), массивы, которые заполняются значением (resetArrays), отдельные элементы массивов (resetIndices); источники — группа data.prestige512, спека oracle/specs/prestige.md. artifacts.json: ярусы (число артефактов, первая строка сквозной нумерации, база цены призыва, требование обелиска), артефакты (сквозной номер = строка источника artifacts в statrules.json, ярус, номер в ярусе, база и рост цены улучшения, кап), принудительный выбор при призыве, константы (порог режима округления цены, рост цены призыва, база счётчика levelCost); источники — группа data.artifacts513, спека oracle/specs/artifacts.md. Числа сняты с O.",
+ "allOf": [
+  {"$ref": "system"},
+  {"properties": {"system": {"const": "prestige"}}},
+  {
+   "anyOf": [
+    {
+     "required": ["constants", "tables"],
+     "properties": {
+      "constants": {"required": ["gain.minLevel", "gain.base", "gain.growth", "gain.offset", "gain.overLevel", "gain.overStep", "task.id", "nameChanges.step", "prestiges.step"]},
+      "tables": {
+       "required": ["resetValues", "resetArrays", "resetIndices"],
+       "properties": {
+        "resetValues": {"properties": {"columns": {"const": ["field", "value"]}}},
+        "resetArrays": {"properties": {"columns": {"const": ["field", "value"]}}},
+        "resetIndices": {"properties": {"columns": {"const": ["field", "index", "value"]}}}
+       }
+      }
+     }
+    },
+    {
+     "required": ["constants", "tables"],
+     "properties": {
+      "constants": {"required": ["price.roundUpFrom", "summon.growth", "levelCost.base"]},
+      "tables": {
+       "required": ["tiers", "artifacts", "summonForce"],
+       "properties": {
+        "tiers": {"properties": {"columns": {"const": ["tier", "count", "firstRow", "summonBase", "obeliskReq"]}}},
+        "artifacts": {"properties": {"columns": {"const": ["row", "tier", "index", "base", "growth", "cap"]}}},
+        "summonForce": {"properties": {"columns": {"const": ["tier", "index", "minOwned"]}}}
+       }
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,36 @@
+{
+ "$id": "systems/ui",
+ "title": "Хаб и кнопки NPE (data/systems/hub.json, этап 5.16)",
+ "description": "Спека oracle/specs/npe.md: прямоугольники плиток хаба (экран, x1, x2, y1, y2 включительно, наименьшее задание), кнопок (hub, close, task, obelisk, attack) и константы NPE. Сняты с O (oracle/sources.json, группа data.hub516).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "system": {"const": "ui"},
+    "constants": {
+     "required": ["unlockFrames", "obeliskButtonTask", "fightCooldown", "noScreen", "obeliskScreen"],
+     "additionalProperties": {"type": "integer"}
+    },
+    "tables": {
+     "required": ["tiles", "buttons"],
+     "properties": {
+      "tiles": {
+       "properties": {
+        "columns": {"const": ["screen", "x1", "x2", "y1", "y2", "minTask"]},
+        "rows": {"minItems": 1, "items": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "integer"}}}
+       }
+      },
+      "buttons": {
+       "properties": {
+        "columns": {"const": ["name", "x1", "x2", "y1", "y2"]},
+        "rows": {"minItems": 1, "items": {"type": "array", "minItems": 5, "maxItems": 5,
+          "prefixItems": [{"enum": ["hub", "close", "task", "obelisk", "attack"]}, {"type": "integer"}, {"type": "integer"}, {"type": "integer"}, {"type": "integer"}]}}
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,865 @@
+{
+ "$schema": "ui-options",
+ "screen": "options",
+ "version": "2.2.50",
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Экран «Настройки» (этап 6.26): вкладки All/General/Gameplay/Display/Offline/Menus. Вёрстка — из черновика 6.4 и записей O, разложена на компоненты: секции со строками-флажками, шаги списка, ползунок, ряд вкладок кита (tabs.options), нижняя панель ссылок. Привязки: вкладка, уровень обелиска (пороги строк), отмеченные флажки, нотация, панель заданий. Источники — oracle/sources.json → ui.options626.",
+ "top": {
+  "tasksPanel": 64
+ },
+ "backdrop": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   }
+  ]
+ },
+ "scroll": {
+  "x1": 492,
+  "x2": 502,
+  "trackTop": 63,
+  "trackBottom": 880,
+  "view": 930,
+  "pad": 170,
+  "color": "#c0c0c0",
+  "alpha": 0.349999994
+ },
+ "list": {
+  "y": 154,
+  "headerToRow": 40,
+  "rowStep": 40,
+  "rowToHeader": 60,
+  "footerAfter": 40
+ },
+ "header": {
+  "component": "group",
+  "children": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_brownish_ml",
+    "x": 0,
+    "y": 0,
+    "sx": 20,
+    "sy": 1.60000002
+   },
+   {
+    "component": "sprite",
+    "sprite": "@icon",
+    "x": 75,
+    "y": 0,
+    "sx": 2,
+    "sy": 2
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 101,
+    "y": 1,
+    "text": "@label",
+    "valign": "middle",
+    "color": "#000000"
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 100,
+    "y": 0,
+    "text": "@label",
+    "valign": "middle"
+   }
+  ]
+ },
+ "row": {
+  "component": "group",
+  "children": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_brownish_ml",
+    "x": 40,
+    "y": 0,
+    "sx": 5,
+    "sy": 0.5
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.unchecked_checked",
+    "frame": "@checked",
+    "x": 40,
+    "y": -1,
+    "sx": 2,
+    "sy": 2
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.auto_bomber_no_bomb",
+    "x": 39,
+    "y": -1,
+    "sx": 2,
+    "sy": 2,
+    "only": "cycle"
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_brownish_with_desc_ml",
+    "x": 72,
+    "y": 0,
+    "sx": 25,
+    "sy": 2
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 80,
+    "y": 0,
+    "text": "@text",
+    "valign": "middle"
+   }
+  ]
+ },
+ "footer": {
+  "component": "text",
+  "font": "font.size10",
+  "x": 250,
+  "y": 0,
+  "text": "t.more_options_unlock_at_obelisk_level",
+  "halign": "center",
+  "valign": "middle",
+  "color": "#c0c0c0"
+ },
+ "tabs": {
+  "style": "tabs.options",
+  "x": 0,
+  "y": 92,
+  "ids": [
+   "all",
+   "general",
+   "gameplay",
+   "display",
+   "offline",
+   "menus"
+  ],
+  "labels": [
+   "t.all_2",
+   "t.general",
+   "t.gameplay",
+   "t.display",
+   "t.offline",
+   "t.menus"
+  ]
+ },
+ "notation": {
+  "names": [
+   "t.notation_standard",
+   "t.notation_scientific",
+   "t.notation_engineering",
+   "t.notation_no"
+  ],
+  "samples": [
+   "123m 1.23b)"
+  ],
+  "digits": [
+   "t.extra_notation_digits_plus_0",
+   "t.extra_notation_digits_plus_1",
+   "t.extra_notation_digits_plus_2",
+   "t.extra_notation_digits_plus_3"
+  ]
+ },
+ "bottom": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 768,
+    "x2": 500,
+    "y2": 886,
+    "color": "#000000"
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_grey",
+    "x": 250,
+    "y": 828,
+    "sx": 28,
+    "sy": 7
+   },
+   {
+    "component": "group",
+    "x": 250,
+    "y": 806,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 4,
+      "sy": 3
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.gift_with_outline",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 1,
+      "y": 37,
+      "text": "t.codes_2",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 36,
+      "text": "t.codes_2",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#ffff00"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 70,
+    "y": 806,
+    "step": {
+     "x": 90,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 3
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.discord",
+      "x": 1,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 1,
+      "y": 36,
+      "text": "t.discord",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 35,
+      "text": "t.discord",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "sprite": "sprite.reddit"
+      },
+      "2": {
+       "text": "t.reddit"
+      },
+      "3": {
+       "text": "t.reddit"
+      }
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 340,
+    "y": 806,
+    "step": {
+     "x": 90,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 3
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.discord",
+      "x": 1,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 1,
+      "y": 36,
+      "text": "t.discord",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 35,
+      "text": "t.discord",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {
+      "1": {
+       "sprite": "sprite.credits_icon"
+      },
+      "2": {
+       "text": "t.credits"
+      },
+      "3": {
+       "text": "t.credits"
+      }
+     },
+     {
+      "1": {
+       "sprite": "sprite.obelisk_icon"
+      },
+      "2": {
+       "text": "t.wiki"
+      },
+      "3": {
+       "text": "t.wiki"
+      }
+     }
+    ]
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 180,
+    "y": 870,
+    "text": "t.privacy_policy_2",
+    "halign": "center",
+    "valign": "middle",
+    "color": "#c0c0c0"
+   },
+   {
+    "component": "line",
+    "x1": 131,
+    "y1": 877,
+    "x2": 229,
+    "y2": 877,
+    "color": "#c0c0c0"
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 320,
+    "y": 870,
+    "value": "Play Store",
+    "halign": "center",
+    "valign": "middle",
+    "color": "#c0c0c0"
+   },
+   {
+    "component": "line",
+    "x1": 285,
+    "y1": 877,
+    "x2": 355,
+    "y2": 877,
+    "color": "#c0c0c0"
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": -2600,
+    "y": 870,
+    "text": "t.restore_purchases",
+    "halign": "center",
+    "valign": "middle",
+    "color": "#c0c0c0"
+   },
+   {
+    "component": "line",
+    "x1": -2659.5,
+    "y1": 877,
+    "x2": -2540.5,
+    "y2": 877,
+    "color": "#c0c0c0"
+   }
+  ]
+ },
+ "sections": [
+  {
+   "id": "sound",
+   "tab": "general",
+   "icon": "sprite.music",
+   "label": "t.sound",
+   "rows": [
+    {
+     "id": "muteMusic",
+     "text": "t.mute_all_music"
+    },
+    {
+     "id": "muteSfx",
+     "text": "t.mute_all_sound_effects"
+    },
+    {
+     "id": "muteBombSounds",
+     "text": "t.mute_all_bomb_sounds"
+    }
+   ]
+  },
+  {
+   "id": "numbers",
+   "tab": "general",
+   "icon": "sprite.option_cog",
+   "label": "t.numbers",
+   "rows": [
+    {
+     "id": "notation",
+     "kind": "notation"
+    },
+    {
+     "id": "notationDigits",
+     "kind": "digits"
+    }
+   ]
+  },
+  {
+   "id": "saving",
+   "tab": "general",
+   "icon": "sprite.save_icon",
+   "label": "t.saving_and_battery",
+   "rows": [
+    {
+     "id": "savePopup",
+     "text": "t.popup_when_the_game_locally_saves"
+    },
+    {
+     "id": "batterySaver",
+     "text": "t.turn_on_battery_saver_screen"
+    }
+   ]
+  },
+  {
+   "id": "bombs",
+   "tab": "gameplay",
+   "icon": "sprite.bomb_basic",
+   "label": "t.bombs_and_items",
+   "rows": [
+    {
+     "id": "holdRapidFire",
+     "text": "t.hold_to_rapid_fire_items_and_bombs"
+    },
+    {
+     "id": "fireSlowToggle",
+     "text": "t.show_fire_slow_per_fire_all_toggle"
+    },
+    {
+     "id": "chainIgnoresPause",
+     "text": "t.chain_bomb_ignores_floor_pausing"
+    },
+    {
+     "id": "use10x100x",
+     "text": "t.show_use_10x_per_100x_items"
+    },
+    {
+     "id": "transmuterNoDamage",
+     "text": "t.make_transmuter_bomb_do_no_damage"
+    },
+    {
+     "id": "bombCooldownToCap",
+     "text": "t.bomb_cooldown_shows_time_to_cap_or_run_out"
+    },
+    {
+     "id": "noFireAllConfirm",
+     "text": "t.disable_confirmation_on_fire_all_bombs"
+    }
+   ]
+  },
+  {
+   "id": "lootbugs",
+   "tab": "gameplay",
+   "icon": "sprite.lootbug16x16",
+   "label": "t.lootbugs_and_freebies",
+   "rows": [
+    {
+     "id": "autoLootOfferings",
+     "text": "t.auto_loot_free_lootbug_offerings"
+    },
+    {
+     "id": "noLootbugGemConfirm",
+     "text": "t.remove_lootbug_gem_confirmation"
+    },
+    {
+     "id": "lootAllBanked",
+     "text": "t.enable_loot_all_banked_lootbugs"
+    },
+    {
+     "id": "tapAnyLootAll",
+     "text": "t.tap_any_lootbug_to_loot_all"
+    },
+    {
+     "id": "claimAllFreebies",
+     "text": "t.one_click_claim_all_banked_freebies"
+    }
+   ]
+  },
+  {
+   "id": "popups",
+   "tab": "display",
+   "icon": "sprite.eye_line_through",
+   "label": "t.popups_and_tooltips",
+   "rows": [
+    {
+     "id": "noOreDamagePopups",
+     "text": "t.disable_ore_damage_popups"
+    },
+    {
+     "id": "compactPopups",
+     "text": "t.more_compact_text_popups"
+    },
+    {
+     "id": "noBagDroneTooltips",
+     "text": "t.disable_bomb_bag_per_drone_pause_tooltips"
+    }
+   ]
+  },
+  {
+   "id": "timers",
+   "tab": "display",
+   "icon": "sprite.hourglass",
+   "label": "t.timers_and_interface",
+   "rows": [
+    {
+     "id": "trueTimeTimers",
+     "text": "t.timers_show_true_time_after_game_speed"
+    },
+    {
+     "id": "minerAtTop",
+     "text": "t.show_miner_at_top_of_ui"
+    },
+    {
+     "id": "foldableBuffs",
+     "text": "t.foldable_left_side_buffs"
+    },
+    {
+     "id": "noFloorButtons",
+     "text": "t.disable_floor_movement_buttons",
+     "minObelisk": 10
+    }
+   ]
+  },
+  {
+   "id": "gifts",
+   "tab": "display",
+   "icon": "sprite.christmas_cracker16x16",
+   "label": "t.gifts",
+   "rows": [
+    {
+     "id": "noOpeningGifts",
+     "text": "t.disable_opening_gifts"
+    }
+   ]
+  },
+  {
+   "id": "pets",
+   "tab": "display",
+   "icon": "sprite.pet_menu_icon",
+   "label": "t.pets",
+   "rows": [
+    {
+     "id": "petsInvisible",
+     "text": "t.make_pets_invisible",
+     "minObelisk": 17
+    },
+    {
+     "id": "petFreeRoam",
+     "text": "t.enable_pet_free_roam",
+     "minObelisk": 17
+    },
+    {
+     "id": "petNicknames",
+     "text": "t.always_show_pet_nicknames_above_pets",
+     "minObelisk": 17
+    },
+    {
+     "id": "hideMaxPetsCards",
+     "text": "t.hide_max_level_pets_with_cards_complete",
+     "minObelisk": 17
+    },
+    {
+     "id": "hideMaxPetQuests",
+     "text": "t.hide_max_level_pet_quests",
+     "minObelisk": 17
+    }
+   ]
+  },
+  {
+   "id": "graphics",
+   "tab": "display",
+   "icon": "sprite.eye",
+   "label": "t.graphics",
+   "rows": [
+    {
+     "id": "consistentOre",
+     "text": "t.consistent_ore_position"
+    },
+    {
+     "id": "minimizeEffects",
+     "text": "t.minimize_mining_effects_to_stop_flashing"
+    },
+    {
+     "id": "smootherFrames",
+     "text": "t.smoother_frame_pacing_uses_more_battery"
+    },
+    {
+     "id": "noBombAnimations",
+     "text": "t.disable_all_bomb_animations"
+    },
+    {
+     "id": "hideGoldenFloor",
+     "text": "t.hide_golden_floor_effects"
+    },
+    {
+     "id": "hideRainbowFloor",
+     "text": "t.hide_rainbow_floor_effects"
+    },
+    {
+     "id": "cloudBrightness",
+     "text": "t.cloud_zone_brightness_reduction"
+    },
+    {
+     "id": "noDroneRadius",
+     "text": "t.disable_drone_radius_display_2"
+    }
+   ]
+  },
+  {
+   "id": "offline",
+   "tab": "offline",
+   "icon": "sprite.offline_hourglass",
+   "label": "t.offline_progress",
+   "rows": [
+    {
+     "id": "offlineBuffTimers",
+     "text": "t.consume_buff_timers_and_items_buffs_offline"
+    },
+    {
+     "id": "offlineFuelTimers",
+     "text": "t.consume_drone_fuel_timers_offline"
+    },
+    {
+     "id": "lastOfflineResults",
+     "text": "t.show_last_offline_results_unavailable"
+    }
+   ]
+  },
+  {
+   "id": "notifications",
+   "tab": "offline",
+   "icon": "sprite.freebie_full",
+   "label": "t.notifications",
+   "rows": [
+    {
+     "id": "notifyOfflineCap",
+     "text": "t.notify_when_offline_timer_caps"
+    },
+    {
+     "id": "notifyFreebiesFull",
+     "text": "t.notify_when_banked_freebies_full"
+    },
+    {
+     "id": "notifyLootbugsFull",
+     "text": "t.notify_when_banked_lootbugs_full"
+    }
+   ]
+  },
+  {
+   "id": "drones",
+   "tab": "menus",
+   "icon": "sprite.drone_icon",
+   "label": "t.drones",
+   "rows": [
+    {
+     "id": "hideMaxedDrone",
+     "text": "t.hide_maxed_drone_upgrades"
+    },
+    {
+     "id": "dronesInvisible",
+     "text": "t.make_drones_invisible"
+    }
+   ]
+  },
+  {
+   "id": "artifacts",
+   "tab": "menus",
+   "icon": "sprite.prestige_point",
+   "label": "t.artifacts",
+   "rows": [
+    {
+     "id": "hideMaxedArtifact",
+     "text": "t.hide_maxed_artifact_upgrades"
+    }
+   ]
+  },
+  {
+   "id": "challenges",
+   "tab": "menus",
+   "icon": "sprite.challenge_coin",
+   "label": "t.challenges",
+   "rows": [
+    {
+     "id": "hideMaxedChallenge",
+     "text": "t.hide_maxed_challenge_upgrades",
+     "minObelisk": 10
+    }
+   ]
+  },
+  {
+   "id": "workshop",
+   "tab": "menus",
+   "icon": "sprite.workshop",
+   "label": "t.workshop",
+   "rows": [
+    {
+     "id": "hideMaxedWorkshop",
+     "text": "t.hide_maxed_workshop_upgrades",
+     "minObelisk": 2
+    }
+   ]
+  },
+  {
+   "id": "upgrades",
+   "tab": "menus",
+   "icon": "sprite.pickaxe_damage_no_red",
+   "label": "t.upgrades",
+   "rows": [
+    {
+     "id": "hideMaxedUpgrades",
+     "text": "t.hide_maxed_upgrades",
+     "minObelisk": 2
+    }
+   ]
+  },
+  {
+   "id": "store",
+   "tab": "menus",
+   "icon": "sprite.shop_test2",
+   "label": "t.store",
+   "rows": [
+    {
+     "id": "hideMaxedStore",
+     "text": "t.hide_maxed_store_upgrades"
+    }
+   ]
+  },
+  {
+   "id": "crafting",
+   "tab": "menus",
+   "icon": "sprite.anvil",
+   "label": "t.crafting",
+   "rows": [
+    {
+     "id": "hideCraftingPopups",
+     "text": "t.hide_crafting_popups",
+     "minObelisk": 2
+    }
+   ]
+  },
+  {
+   "id": "contracts",
+   "tab": "menus",
+   "icon": "sprite.contract_icon",
+   "label": "t.contracts",
+   "rows": [
+    {
+     "id": "hideMaxedContract",
+     "text": "t.hide_maxed_contract_upgrades",
+     "minObelisk": 12
+    },
+    {
+     "id": "bulkContracts",
+     "text": "t.enable_bulk_contract_auto_complete",
+     "minObelisk": 12
+    }
+   ]
+  },
+  {
+   "id": "cards",
+   "tab": "menus",
+   "icon": "sprite.ace_of_spades",
+   "label": "t.cards",
+   "rows": [
+    {
+     "id": "hideUnownedCards",
+     "text": "t.hide_unowned_cards",
+     "minObelisk": 15
+    },
+    {
+     "id": "hideMaxedCards",
+     "text": "t.hide_maxed_cards",
+     "minObelisk": 15
+    }
+   ]
+  }
+ ],
+ "verifiedObelisk": 15
+}

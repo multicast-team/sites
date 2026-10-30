@@ -1,0 +1,358 @@
+{
+ "$id": "ui-chests",
+ "title": "Меню сундуков предметов (data/ui/chests.json, этап 6.13)",
+ "description": "Вёрстка меню сундуков из компонентов: шкалы сундуков, кнопка Open, выбор количества, сетка выпавших предметов, подпись. Поля шаблонов с id — привязки экрана (ui/screens/chests.mjs). Тексты кнопки и шкал — части (t.* — ключ strings.json, {имя} — значение, прочее как есть). Координаты — px комнаты 500×960 и обязаны совпасть с O. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "kitStyles",
+  "disabledColor",
+  "meters",
+  "meterTexts",
+  "open",
+  "confirmSprite",
+  "openTexts",
+  "selector",
+  "loot",
+  "footer"
+ ],
+ "$defs": {
+  "leaf": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "type": "string",
+     "pattern": "^[a-zA-Z]+$"
+    },
+    "component": {
+     "enum": [
+      "sprite",
+      "text",
+      "rect"
+     ]
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "y1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "y2": {
+     "$ref": "common#/$defs/num"
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "frame": {
+     "$ref": "common#/$defs/count"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "snap": {
+     "type": "boolean"
+    }
+   }
+  }
+ },
+ "properties": {
+  "$schema": {
+   "const": "ui-chests"
+  },
+  "screen": {
+   "const": "chests"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "kitStyles": {
+   "type": "object",
+   "required": [
+    "panel"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "panel": {
+     "type": "string"
+    }
+   }
+  },
+  "disabledColor": {
+   "type": "string",
+   "pattern": "^#[0-9a-f]{6}$"
+  },
+  "meters": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 12,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "meterTexts": {
+   "type": "object",
+   "required": [
+    "item",
+    "relic",
+    "pct"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "item": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "relic": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "pct": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "open": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 8,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "confirmSprite": {
+   "$ref": "common#/$defs/skinKey"
+  },
+  "openTexts": {
+   "type": "object",
+   "required": [
+    "one",
+    "many",
+    "all",
+    "confirm"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "one": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "many": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "all": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "confirm": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "selector": {
+   "type": "object",
+   "required": [
+    "backing",
+    "x",
+    "y",
+    "step",
+    "selectedFrame",
+    "item",
+    "allLabel"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "backing": {
+     "$ref": "#/$defs/leaf"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "step": {
+     "$ref": "common#/$defs/num"
+    },
+    "selectedFrame": {
+     "$ref": "common#/$defs/count"
+    },
+    "item": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 4,
+     "items": {
+      "$ref": "#/$defs/leaf"
+     }
+    },
+    "allLabel": {
+     "$ref": "common#/$defs/stringKey"
+    }
+   }
+  },
+  "loot": {
+   "type": "object",
+   "required": [
+    "x",
+    "y",
+    "cols",
+    "dx",
+    "dy",
+    "item",
+    "countPrefix",
+    "rarityColor"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "cols": {
+     "$ref": "common#/$defs/count"
+    },
+    "dx": {
+     "$ref": "common#/$defs/num"
+    },
+    "dy": {
+     "$ref": "common#/$defs/num"
+    },
+    "item": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 6,
+     "items": {
+      "$ref": "#/$defs/leaf"
+     }
+    },
+    "countPrefix": {
+     "type": "string"
+    },
+    "rarityColor": {
+     "type": "object",
+     "required": [
+      "common",
+      "rare",
+      "epic",
+      "legendary",
+      "mythic"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "common": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "rare": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "epic": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "legendary": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "mythic": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      }
+     }
+    }
+   }
+  },
+  "footer": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 4,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  }
+ }
+}

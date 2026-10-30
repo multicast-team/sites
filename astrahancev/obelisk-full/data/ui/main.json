@@ -1,0 +1,33 @@
+{
+ "$schema": "ui-main",
+ "screen": "main",
+ "version": "2.2.50",
+ "comment": "Страница игры (этап 6.33): какие экраны собраны в игру, привязки состояния экранов к ключам сейва (внешний формат INI), зоны касания кнопок Buy, ключ хранилища. Номера экранов — data/systems/hub.json → tiles.screen. Зоны Buy с O не снимались (??): прямоугольник спрайта кнопки (patch_button 18×18 × масштаб стиля) вокруг её точки.",
+ "storageKey": "obelisk-full.save.v1",
+ "layer": [500, 960],
+ "screens": {"workshop": 9, "upgrades": 1},
+ "save": {
+  "obelisk": "single_vars/obeliskLvl",
+  "worlds": "single_vars/lvlWorld",
+  "lvl": "single_vars/lvl",
+  "task": "single_vars/taskID",
+  "gold": "single_vars/gold",
+  "gems": "single_vars/gems",
+  "bars": {"prefix": "currencies/bar_", "count": 86},
+  "workshop": {"prefix": "workshop_upgrades/workshopUpg_", "count": 37},
+  "upgrades": {"prefix": "core_upgrades/coreUpg_", "count": 93},
+  "visited": {"prefix": "obelisk_menus/isObeliskLockedMenuVisited_", "count": 11},
+  "artifacts": [
+   {"prefix": "artifacts/artifact_", "count": 10},
+   {"prefix": "artifacts2/artifact2_", "count": 5},
+   {"prefix": "artifacts3/artifact3_", "count": 5},
+   {"prefix": "artifacts4/artifact4_", "count": 5}
+  ]
+ },
+ "buy": {
+  "workshop": {"dx": 193, "dy": 0, "halfW": 37.8, "halfH": 27},
+  "upgrades": {"dx": 182, "dy": 2, "halfW": 37.8, "halfH": 27}
+ },
+ "scroll": {"wheelStep": 60, "dragThreshold": 8},
+ "hud": {"clock": "12:00", "battery": 100}
+}

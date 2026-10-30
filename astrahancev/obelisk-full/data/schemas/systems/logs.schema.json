@@ -1,0 +1,16 @@
+{
+ "$id": "systems/logs",
+ "title": "Журналы: журнал игрока (группы фильтров) и журнал отладки сессии (data/systems/logs.json, этап 6.27)",
+ "description": "Данные спеки oracle/specs/logs.md: строки журнала отладки при запуске сессии (уровень, условие, текст), строки попыток связи wss (каждые wss.periodSeconds секунд, не больше wss.maxRetries попыток), разовые строки по времени сессии, группы журнала игрока и значения фильтра, бюджет записей группы. Сняты с O (oracle/sources.json, группа data.logs627).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "system": {"const": "logs"},
+    "constants": {"required": ["wss.periodSeconds", "wss.maxRetries", "player.groupBudget"]},
+    "tables": {"required": ["debugBoot", "debugWss", "debugOnce", "playerGroups"]}
+   }
+  }
+ ]
+}

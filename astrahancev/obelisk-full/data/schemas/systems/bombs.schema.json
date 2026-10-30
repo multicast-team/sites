@@ -1,0 +1,20 @@
+{
+ "$id": "systems/bombs",
+ "title": "Бомбы: перезарядка 13 слотов и цепь (data/systems/bombs.json, этап 5.11)",
+ "description": "Константы спеки oracle/specs/bombs.md: секунды перезарядки слотов, слот без капа по клетке ёмкости, порог цепи в кадрах, кадров в секунде, эпсилон сравнения, значения новой игры. Сняты с O (oracle/sources.json, группы bombs и data.bombs511).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "system": {"const": "bombs"},
+    "constants": {
+     "required": ["slots", "uncappedSlot", "chainFrames", "framesPerSecond", "epsilon", "newGame.capacity", "newGame.uncappedCapacity", "newGame.rechargeMulti"]
+    },
+    "tables": {
+     "required": ["slots"]
+    }
+   }
+  }
+ ]
+}

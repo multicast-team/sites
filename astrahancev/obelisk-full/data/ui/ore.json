@@ -1,0 +1,380 @@
+{
+ "$schema": "ui-ore",
+ "screen": "ore",
+ "version": "2.2.50",
+ "comment": "Экран Sell (руда, этап 6.12): вёрстка из компонентов — шаблон ряда руды с якорем в центре ряда, заголовок мира, нижняя полоса (замки всех строк, режим продажи, Toggle, Sell All), ползунок. Координаты — px комнаты 500×960 и обязаны совпасть с O; поля шаблонов с id — привязки (кадр значка = номер руды, тексты чисел, оттенок «нельзя продать», кадр замка). Источники — oracle/sources.json → ui.ore612.",
+ "kitStyles": {
+  "panel": "panel.menu",
+  "thumb": "scroll.menu"
+ },
+ "tasksShift": 64,
+ "disabledColor": "#808080",
+ "header": {
+  "y": 170,
+  "x": 250,
+  "font": "font.size12",
+  "color": "#e1c3b9",
+  "texts": [
+   "t.world_5",
+   "t.ores_2"
+  ],
+  "shadow": {
+   "dx": 1,
+   "dy": 1,
+   "color": "#000000"
+  },
+  "line": {
+   "x1": 25,
+   "x2": 475,
+   "gap": 14,
+   "w": 2,
+   "color": "#e1c3b9",
+   "alpha": 0.600000024
+  }
+ },
+ "list": {
+  "rowY": 70,
+  "rowStep": 80
+ },
+ "row": [
+  {
+   "component": "sprite",
+   "id": "backing",
+   "sprite": "sprite.patch_backing_white",
+   "x": 250,
+   "y": 0,
+   "sx": 27,
+   "sy": 4,
+   "color": "#695051"
+  },
+  {
+   "component": "sprite",
+   "id": "desc",
+   "sprite": "sprite.patch_desc",
+   "x": 255,
+   "y": 0,
+   "sx": 13,
+   "sy": 3.0999999
+  },
+  {
+   "component": "sprite",
+   "id": "sellButton",
+   "sprite": "sprite.patch_button",
+   "x": 412,
+   "y": 0,
+   "sx": 4.19999981,
+   "sy": 3
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "id": "sellLabel",
+   "x": 412,
+   "y": 0,
+   "text": "t.sell",
+   "halign": "center",
+   "valign": "middle",
+   "snap": false
+  },
+  {
+   "component": "sprite",
+   "id": "oreBacking",
+   "sprite": "sprite.patch_desc_ml",
+   "x": 40,
+   "y": -14,
+   "sx": 6.4000001,
+   "sy": 1.39999998
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "id": "oreCount",
+   "x": 64,
+   "y": -14,
+   "valign": "middle",
+   "snap": false
+  },
+  {
+   "component": "sprite",
+   "id": "oreIcon",
+   "sprite": "sprite.rock_test",
+   "x": 54,
+   "y": -15
+  },
+  {
+   "component": "sprite",
+   "id": "valueBacking",
+   "sprite": "sprite.patch_desc_ml",
+   "x": 40,
+   "y": 14,
+   "sx": 6.4000001,
+   "sy": 1.39999998
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "id": "value",
+   "x": 64,
+   "y": 14,
+   "valign": "middle",
+   "snap": false
+  },
+  {
+   "component": "sprite",
+   "id": "valueCoin",
+   "sprite": "sprite.coin",
+   "x": 54,
+   "y": 14
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "id": "title",
+   "x": 255,
+   "y": -11,
+   "halign": "center",
+   "valign": "middle"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "id": "price",
+   "x": 235,
+   "y": 11,
+   "valign": "middle"
+  },
+  {
+   "component": "sprite",
+   "id": "priceCoin",
+   "sprite": "sprite.coin",
+   "x": 221,
+   "y": 11
+  },
+  {
+   "id": "shade",
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_brownish",
+   "x": 250,
+   "y": 0,
+   "sx": 27,
+   "sy": 4,
+   "color": "#404040",
+   "alpha": 0.800000012
+  },
+  {
+   "component": "sprite",
+   "id": "lock",
+   "sprite": "sprite.lock_unlock",
+   "x": 28,
+   "y": 0,
+   "sx": 2,
+   "sy": 2
+  }
+ ],
+ "title": [
+  "t.sell_2",
+  "t.for_2"
+ ],
+ "lockFrame": {
+  "open": 0,
+  "locked": 1
+ },
+ "backingBelow": 1240,
+ "backingIds": [
+  "backing",
+  "desc"
+ ],
+ "thumb": {
+  "top": 63,
+  "bottom": 850,
+  "view": 930,
+  "unit": 48,
+  "extra": 60
+ },
+ "bottom": {
+  "y": 855,
+  "parts": [
+   {
+    "component": "sprite",
+    "id": "backing",
+    "sprite": "sprite.patch_backing_brownish_ml",
+    "x": 0,
+    "y": -1,
+    "sx": 31.25,
+    "sy": 3.5
+   },
+   {
+    "component": "sprite",
+    "id": "lockAllButton",
+    "sprite": "sprite.patch_button",
+    "x": 80,
+    "y": 0,
+    "sx": 2.4000001,
+    "sy": 2.4000001
+   },
+   {
+    "component": "sprite",
+    "id": "lockAllIcon",
+    "sprite": "sprite.lock_unlock",
+    "frame": 1,
+    "x": 80,
+    "y": 0,
+    "sx": 2,
+    "sy": 2
+   },
+   {
+    "component": "sprite",
+    "id": "unlockAllButton",
+    "sprite": "sprite.patch_button",
+    "x": 140,
+    "y": 0,
+    "sx": 2.4000001,
+    "sy": 2.4000001
+   },
+   {
+    "component": "sprite",
+    "id": "unlockAllIcon",
+    "sprite": "sprite.lock_unlock",
+    "x": 140,
+    "y": 0,
+    "sx": 2,
+    "sy": 2
+   },
+   {
+    "component": "sprite",
+    "id": "modeDesc",
+    "sprite": "sprite.patch_desc",
+    "x": 290,
+    "y": 10,
+    "sx": 6,
+    "sy": 1.39999998
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "id": "modeLabel",
+    "x": 290,
+    "y": 10,
+    "halign": "center",
+    "valign": "middle"
+   },
+   {
+    "component": "sprite",
+    "id": "toggleButton",
+    "sprite": "sprite.patch_button",
+    "x": 290,
+    "y": -15,
+    "sx": 4,
+    "sy": 1.29999995
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "id": "toggleLabel",
+    "x": 290,
+    "y": -16,
+    "text": "t.toggle_2",
+    "halign": "center",
+    "valign": "middle",
+    "snap": false
+   },
+   {
+    "component": "sprite",
+    "id": "sellAllButton",
+    "sprite": "sprite.patch_button",
+    "x": 390,
+    "y": 0,
+    "sx": 5,
+    "sy": 2.4000001
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "id": "sellAllLabel",
+    "x": 390,
+    "y": -1,
+    "halign": "center",
+    "valign": "middle",
+    "snap": false
+   }
+  ],
+  "currency": "t.usd_2"
+ },
+ "modes": {
+  "columns": [
+   "label",
+   "share"
+  ],
+  "rows": [
+   [
+    "t.sell_all",
+    1
+   ],
+   [
+    "t.sell_10_pct",
+    0.1
+   ],
+   [
+    "t.sell_25_pct",
+    0.25
+   ],
+   [
+    "t.sell_50_pct",
+    0.5
+   ]
+  ]
+ },
+ "noiseScroll": 1,
+ "format": {
+  "short": {
+   "plainBelow": 100000,
+   "plainFloorFrom": 100,
+   "plainDecimals": 2,
+   "groupDigits": 3,
+   "suffixes": [
+    "k",
+    "m",
+    "b",
+    "t",
+    "q",
+    "qi",
+    "sx",
+    "sp",
+    "oc",
+    "no",
+    "dc",
+    "udc",
+    "ddc",
+    "tdc",
+    "qadc",
+    "qidc",
+    "sxdc",
+    "spdc",
+    "ocdc",
+    "nvdc"
+   ],
+   "sciPrefix": "e",
+   "decimals": [
+    [
+     10,
+     2
+    ],
+    [
+     100,
+     1
+    ],
+    [
+     1000,
+     0
+    ]
+   ],
+   "digits": 15,
+   "rounding": "floorSignificant"
+  },
+  "priceDecimals": 2
+ },
+ "lockedOnly": [
+  "shade"
+ ],
+ "lockedColor": "#808080"
+}

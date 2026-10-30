@@ -1,0 +1,754 @@
+{
+ "$schema": "ui-prestige",
+ "screen": "prestige",
+ "version": "2.2.50",
+ "comment": "Меню престижа и артефактов ярусов 1–4 (этап 6.24): шапка (очки за престиж, кнопка Prestige с подтверждением), блоки ярусов (Summon Artifact с подтверждением, счётчики, замок обелиска), строки открытых артефактов (уровень/кап, эффект, цена улучшения или Maxed), плашка PP, ползунок, полоса подсказки с ☰. Координаты — px комнаты 500×960 при прокрутке 0 и обязаны совпасть с O. Поля шаблонов с id — привязки экрана (ui/screens/prestige.mjs). Тексты — части: ключ t.*, {имя} — значение, прочее — как есть. Источники — oracle/sources.json → ui.prestige624.",
+ "disabledColor": "#808080",
+ "dimColor": "#404040",
+ "bg": {
+  "fill": {
+   "component": "rect",
+   "x1": 0,
+   "y1": 0,
+   "x2": 500,
+   "y2": 930,
+   "color": "#000000",
+   "alpha": 0.850000024
+  },
+  "noise": {
+   "component": "sprite",
+   "sprite": "sprite.noise_test",
+   "x": 32,
+   "y": 0,
+   "sx": 6,
+   "sy": 6,
+   "alpha": 0.150000006,
+   "count": 12,
+   "step": 784
+  }
+ },
+ "header": [
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_fishing_enhance_full_size",
+   "x": 250,
+   "y": 290
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 250,
+   "y": 248,
+   "sx": 26,
+   "sy": 4
+  },
+  {
+   "component": "text",
+   "font": "font.size10",
+   "x": 250,
+   "y": 230,
+   "text": "t.earn_prestige_points_pp_at_level_20_plus",
+   "halign": "center",
+   "valign": "middle"
+  },
+  {
+   "component": "text",
+   "font": "font.size10",
+   "x": 250,
+   "y": 248,
+   "text": "t.this_resets_your_level_gold_ores_bars",
+   "halign": "center",
+   "valign": "middle"
+  },
+  {
+   "component": "text",
+   "font": "font.size10",
+   "x": 250,
+   "y": 266,
+   "text": "t.and_all_upgrades_in_the_this_prestige_category",
+   "halign": "center",
+   "valign": "middle"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 250,
+   "y": 302,
+   "sx": 12,
+   "sy": 2.5
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 245,
+   "y": 292,
+   "color": "#ffff00",
+   "halign": "center",
+   "valign": "middle",
+   "id": "gain"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.prestige_point",
+   "x": 244,
+   "y": 292,
+   "id": "gainIcon"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 250,
+   "y": 312,
+   "color": "#c0c0c0",
+   "halign": "center",
+   "valign": "middle",
+   "id": "pp"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_button",
+   "x": 250,
+   "y": 345,
+   "sx": 9,
+   "sy": 2.20000005,
+   "id": "button"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 250,
+   "y": 344,
+   "text": "t.prestige",
+   "color": "#ffffff",
+   "alpha": 1,
+   "snap": false,
+   "halign": "center",
+   "valign": "middle",
+   "id": "label"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.prestige_point",
+   "x": 120,
+   "y": 320,
+   "sx": 2,
+   "sy": 2,
+   "id": "icon"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.prestige_point",
+   "x": 380,
+   "y": 320,
+   "sx": 2,
+   "sy": 2,
+   "id": "icon"
+  }
+ ],
+ "headerTexts": {
+  "gain": [
+   "+",
+   "{n}"
+  ],
+  "pp": [
+   "t.sym.28",
+   "{a}",
+   " > ",
+   "{b}",
+   "t.sym.29"
+  ],
+  "confirm": "t.confirm_q"
+ },
+ "list": {
+  "block0": 527,
+  "firstRow": 143,
+  "rowStep": 80,
+  "nextBlock": 240,
+  "section2Below": 960
+ },
+ "block": [
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_grey",
+   "x": 250,
+   "y": 0,
+   "sx": 30,
+   "sy": 7.19999981,
+   "id": "backing"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 400,
+   "y": -30,
+   "sx": 5,
+   "sy": 2.79999995
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 400,
+   "y": -30,
+   "text": "t.summon_artifact",
+   "halign": "center",
+   "valign": "middle",
+   "id": "title"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 180,
+   "y": 0,
+   "sx": 18,
+   "sy": 6.5
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_button",
+   "x": 400,
+   "y": 23,
+   "sx": 5,
+   "sy": 3.20000005,
+   "id": "button"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.prestige_point",
+   "x": 400,
+   "y": 10,
+   "id": "costIcon"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 400,
+   "y": 31,
+   "color": "#ffffff",
+   "alpha": 1,
+   "snap": false,
+   "halign": "center",
+   "valign": "middle",
+   "id": "cost"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 180,
+   "y": -22,
+   "halign": "center",
+   "valign": "middle",
+   "id": "owned"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 180,
+   "y": 17,
+   "halign": "center",
+   "valign": "middle",
+   "id": "levels"
+  }
+ ],
+ "blockTexts": {
+  "maxed": "t.maxed",
+  "confirm": "t.confirm_q",
+  "owned": [
+   "{title}",
+   "{n}",
+   "t.per",
+   "{all}"
+  ],
+  "levels": [
+   "{title}",
+   "{n}",
+   "t.per",
+   "{all}"
+  ],
+  "allOwnedButton": "sprite.patch_button_green",
+  "armedButton": "sprite.patch_button_orange"
+ },
+ "lock": [
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_grey",
+   "x": 250,
+   "y": 0,
+   "sx": 30,
+   "sy": 7.19999981,
+   "color": "#808080",
+   "id": "backing"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 250,
+   "y": 3,
+   "sx": 20,
+   "sy": 5,
+   "color": "#808080"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 250,
+   "y": 3,
+   "color": "#808080",
+   "halign": "center",
+   "valign": "middle",
+   "id": "text",
+   "sep": 26,
+   "width": 1000
+  }
+ ],
+ "row": [
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_grey",
+   "x": 250,
+   "y": 0,
+   "sx": 30,
+   "sy": 4,
+   "id": "backing"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_button",
+   "x": 445,
+   "y": 0,
+   "sx": 4.19999981,
+   "sy": 3,
+   "id": "button"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.pickaxe_damage",
+   "x": 38,
+   "y": 0,
+   "sx": 2,
+   "sy": 2,
+   "id": "icon"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 369,
+   "y": -13,
+   "sx": 4,
+   "sy": 1.39999998,
+   "id": "plate"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 369,
+   "y": 13,
+   "sx": 4,
+   "sy": 1.39999998,
+   "id": "plate"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 369,
+   "y": -13,
+   "snap": false,
+   "halign": "center",
+   "valign": "middle",
+   "id": "level"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 369,
+   "y": 13,
+   "halign": "center",
+   "valign": "middle",
+   "id": "effect"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 200,
+   "y": 0,
+   "sx": 16.5,
+   "sy": 3
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 201,
+   "y": 0,
+   "halign": "center",
+   "valign": "middle",
+   "id": "desc"
+  }
+ ],
+ "rowPrice": [
+  {
+   "component": "sprite",
+   "sprite": "sprite.prestige_point",
+   "x": 445,
+   "y": -12,
+   "id": "icon"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 446,
+   "y": 10,
+   "color": "#000000",
+   "snap": false,
+   "halign": "center",
+   "valign": "middle",
+   "id": "shadow"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 445,
+   "y": 9,
+   "snap": false,
+   "halign": "center",
+   "valign": "middle",
+   "id": "price"
+  }
+ ],
+ "rowMaxed": [
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 446,
+   "y": 1,
+   "text": "t.maxed",
+   "color": "#000000",
+   "snap": false,
+   "halign": "center",
+   "valign": "middle"
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 445,
+   "y": 0,
+   "text": "t.maxed",
+   "snap": false,
+   "halign": "center",
+   "valign": "middle"
+  }
+ ],
+ "rowTexts": {
+  "level": [
+   "{n}",
+   "t.per",
+   "{cap}"
+  ],
+  "cappedButton": "sprite.patch_button_green",
+  "statue": [
+   "{key}",
+   "{n}",
+   "t.pct_2"
+  ]
+ },
+ "tiers": [
+  {
+   "tier": 1,
+   "backing": {
+    "sprite": "sprite.patch_backing_grey"
+   },
+   "owned": "t.tier_1_artifacts",
+   "levels": "t.tier_1_levels",
+   "lock": null,
+   "plateSx": 4,
+   "rows": [
+    {
+     "icon": "sprite.pickaxe_damage",
+     "desc": "t.pickaxe_damage_plus_10_pct",
+     "step": 10,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.pickaxe_upgrade",
+     "desc": "t.pickaxe_cost_minus_3_bars",
+     "step": -3,
+     "unit": ""
+    },
+    {
+     "icon": "sprite.xp",
+     "desc": "t.experience_gain_plus_10_pct",
+     "step": 10,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.free_craft_chance",
+     "desc": "t.free_craft_chance_plus_2_pct",
+     "step": 2,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.triple_craft_chance",
+     "desc": "t.triple_craft_chance_plus_2_pct",
+     "step": 2,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.pickaxe_radius",
+     "desc": "t.pickaxe_radius_plus_12_pct",
+     "step": 12,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.ore_sell_price",
+     "desc": "t.ore_sell_price_plus_12_pct",
+     "step": 12,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.item_duration",
+     "desc": "t.item_duration_plus_6_pct",
+     "step": 6,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.bomb_damage",
+     "desc": "t.bomb_damage_plus_30_pct",
+     "step": 30,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.obelisk_fight_length",
+     "desc": "t.obelisk_cooldown_minus_3_pct",
+     "step": -3,
+     "unit": "%"
+    }
+   ]
+  },
+  {
+   "tier": 2,
+   "backing": {
+    "sprite": "sprite.patch_backing_magma"
+   },
+   "owned": "t.tier_2_artifacts_2",
+   "levels": "t.tier_2_levels",
+   "lock": "t.obelisk_level_8_to_unlock_tier_2_artifacts",
+   "plateSx": 4,
+   "rows": [
+    {
+     "icon": "sprite.pickaxe_damage",
+     "desc": "t.pickaxe_damage_plus_25_pct",
+     "step": 25,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.bomb_damage",
+     "desc": "t.bomb_damage_plus_50_pct",
+     "step": 50,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.prestige_point_gain",
+     "desc": "t.prestige_point_gain_plus_5_pct",
+     "step": 5,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.pickaxe_super_crit_chance",
+     "desc": "t.pickaxe_super_crit_chance_plus_1_pct",
+     "step": 1,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.floor_clear_req",
+     "desc": "t.floor_clear_requirement_minus_5_pct",
+     "step": -5,
+     "unit": "%"
+    }
+   ]
+  },
+  {
+   "tier": 3,
+   "backing": {
+    "sprite": "sprite.patch_backing_blue",
+    "frame": 1
+   },
+   "owned": "t.tier_3_artifacts_2",
+   "levels": "t.tier_3_levels",
+   "lock": "t.obelisk_level_14_to_unlock_tier_3_artifacts",
+   "plateSx": 4,
+   "rows": [
+    {
+     "icon": "sprite.pickaxe_damage",
+     "desc": "t.pickaxe_damage_plus_60_pct",
+     "step": 60,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.bomb_damage",
+     "desc": "t.bomb_damage_plus_80_pct",
+     "step": 80,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.bomb_super_crit_chance",
+     "desc": "t.bomb_super_crit_chance_plus_2_pct",
+     "step": 2,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.obelisk_armor_down",
+     "desc": "t.obelisk_armor_minus_2_pct",
+     "step": -2,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.bomb_capacity",
+     "desc": "t.bomb_capacity_plus_3",
+     "step": 3,
+     "unit": ""
+    }
+   ]
+  },
+  {
+   "tier": 4,
+   "backing": {
+    "sprite": "sprite.patch_backing_blue"
+   },
+   "owned": "t.tier_4_artifacts",
+   "levels": "t.tier_4_levels",
+   "lock": "t.obelisk_level_19_to_unlock_tier_4_artifacts",
+   "plateSx": 4.19999981,
+   "rows": [
+    {
+     "icon": "sprite.pickaxe_damage_statue",
+     "desc": "t.pickaxe_damage_plus_10_pct_per_statue_owned",
+     "perStatue": 10,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.bomb_damage_statue",
+     "desc": "t.bomb_damage_plus_15_pct_per_statue_owned",
+     "perStatue": 15,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.omega_crit_chance",
+     "desc": "t.pickaxe_omega_crit_chance_plus_1_pct",
+     "step": 1,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.bar2x",
+     "desc": "t.bar_output_multiplier_plus_0_40_pct",
+     "step": 0.4,
+     "unit": "%"
+    },
+    {
+     "icon": "sprite.vein_spawn_rate",
+     "desc": "t.vein_spawn_rate_plus_4_pct",
+     "step": 4,
+     "unit": "%"
+    }
+   ]
+  }
+ ],
+ "badge": [
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_brownish_mr",
+   "x": 500,
+   "y": 120,
+   "sx": 6.5999999,
+   "sy": 1.5
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc_mr",
+   "x": 498,
+   "y": 120,
+   "sx": 5,
+   "sy": 1.10000002
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 423,
+   "y": 120,
+   "valign": "middle",
+   "id": "pp"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.prestige_point",
+   "x": 407,
+   "y": 120
+  }
+ ],
+ "thumb": {
+  "x1": 492,
+  "x2": 502,
+  "top": 99,
+  "view": 930,
+  "ratio": [
+   29,
+   140
+  ],
+  "color": "#c0c0c0",
+  "alpha": 0.349999994
+ },
+ "topBar": [
+  {
+   "component": "rect",
+   "x1": 0,
+   "y1": 62,
+   "x2": 500,
+   "y2": 97,
+   "color": "#957c7d"
+  },
+  {
+   "component": "rect",
+   "x1": 0,
+   "y1": 62,
+   "x2": 500,
+   "y2": 95,
+   "color": "#695051"
+  },
+  {
+   "component": "text",
+   "font": "font.size10",
+   "x": 250,
+   "y": 80,
+   "text": "t.higher_level_cap_the_more_pp_you_can_gain_per_run_ex",
+   "color": "#c0c0c0",
+   "halign": "center",
+   "valign": "middle"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_button",
+   "x": 28,
+   "y": 80,
+   "sx": 1.60000002,
+   "sy": 1.79999995
+  },
+  {
+   "component": "rect",
+   "x1": 20,
+   "y1": 71,
+   "x2": 35,
+   "y2": 73
+  },
+  {
+   "component": "rect",
+   "x1": 20,
+   "y1": 77,
+   "x2": 35,
+   "y2": 79
+  },
+  {
+   "component": "rect",
+   "x1": 20,
+   "y1": 83,
+   "x2": 35,
+   "y2": 85
+  }
+ ]
+}

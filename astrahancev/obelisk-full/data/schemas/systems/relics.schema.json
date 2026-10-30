@@ -1,0 +1,211 @@
+{
+ "$id": "systems/relics",
+ "title": "Реликвии (data/systems/relics.json, этап 2.6)",
+ "description": "Редкости (шанс, цвет, заголовок), 31 реликвия (редкость, слот уровня, кап, требования, иконка), таблицы выпадения, эффекты слотов на клетки сводки. Числа сняты с O (oracle/sources.json, группа data.relics26); правила — ?? до спеки системы. Тексты — ключи strings.json (null — текст O собирается из частей, спека 5.2), иконки — ключи skin.",
+ "allOf": [
+  {
+   "$ref": "system"
+  },
+  {
+   "required": [
+    "constants",
+    "tables"
+   ],
+   "properties": {
+    "system": {
+     "const": "relics"
+    },
+    "constants": {
+     "required": [
+      "count"
+     ]
+    },
+    "tables": {
+     "required": [
+      "rarities",
+      "relics",
+      "dropTables",
+      "effects"
+     ],
+     "properties": {
+      "rarities": {
+       "properties": {
+        "columns": {
+         "const": [
+          "rarity",
+          "chance",
+          "color",
+          "title"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "enum": [
+             "common",
+             "rare",
+             "epic",
+             "legendary",
+             "mythic",
+             "divine"
+            ]
+           },
+           {
+            "$ref": "common#/$defs/nonneg"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": [
+             "string",
+             "null"
+            ],
+            "pattern": "^t(?:\\.[a-z0-9_]+)+$",
+            "x-stringKey": true,
+            "description": "Ключ текста strings.json или null (текст O собирается из частей — спека 5.2)"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "relics": {
+       "properties": {
+        "columns": {
+         "const": [
+          "id",
+          "key",
+          "rarity",
+          "slot",
+          "text",
+          "cap",
+          "obeliskReq",
+          "rarityOwnedReq",
+          "icon"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+           },
+           {
+            "enum": [
+             "common",
+             "rare",
+             "epic",
+             "legendary",
+             "mythic",
+             "divine"
+            ]
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": [
+             "string",
+             "null"
+            ],
+            "pattern": "^t(?:\\.[a-z0-9_]+)+$",
+            "x-stringKey": true,
+            "description": "Ключ текста strings.json или null (текст O собирается из частей — спека 5.2)"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/skinKey"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "dropTables": {
+       "properties": {
+        "columns": {
+         "const": [
+          "rarity",
+          "position",
+          "relic"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "enum": [
+             "common",
+             "rare",
+             "epic",
+             "legendary",
+             "mythic",
+             "divine"
+            ]
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "effects": {
+       "properties": {
+        "columns": {
+         "const": [
+          "slot",
+          "cell",
+          "perLevel",
+          "linear"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "string",
+            "pattern": "^stat\\.[a-z0-9][A-Za-z0-9]*$"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "type": "boolean"
+           }
+          ]
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

@@ -1,0 +1,136 @@
+{
+ "$schema": "systems/tasks",
+ "system": "tasks",
+ "version": "2.2.50",
+ "constants": {
+  "count": 19,
+  "firstId": 1,
+  "reward": 2
+ },
+ "tables": {
+  "tasks": {
+   "columns": [
+    "id",
+    "text",
+    "goal",
+    "icon"
+   ],
+   "rows": [
+    [
+     1,
+     "t.mine_15_tin_hold_to_mine",
+     15,
+     "sprite.rock_test"
+    ],
+    [
+     2,
+     "t.craft_3_tin_bars",
+     3,
+     "sprite.anvil"
+    ],
+    [
+     3,
+     "t.upgrade_your_pickaxe",
+     1,
+     "sprite.pickaxe_upgrade"
+    ],
+    [
+     4,
+     "t.fire_5_bombs_bomb_bag_bottom_right",
+     5,
+     "sprite.bomb_basic"
+    ],
+    [
+     5,
+     "t.go_to_floor_2_arrows_middle_right",
+     2,
+     "sprite.floor_down"
+    ],
+    [
+     6,
+     "t.upgrade_pickaxe_to_level_3",
+     3,
+     "sprite.pickaxe_upgrade"
+    ],
+    [
+     7,
+     "t.open_2_item_chests",
+     2,
+     "sprite.chest"
+    ],
+    [
+     8,
+     "t.use_2_items_inventory_bottom_right",
+     2,
+     "sprite.bag16x16"
+    ],
+    [
+     9,
+     "t.open_a_relic_chest",
+     1,
+     "sprite.chest_relic"
+    ],
+    [
+     10,
+     "t.go_to_floor_3_arrows_middle_right",
+     3,
+     "sprite.floor_down"
+    ],
+    [
+     11,
+     "t.mine_25_mithril_hold_to_mine",
+     25,
+     "sprite.mithril_rock"
+    ],
+    [
+     12,
+     "t.upgrade_pickaxe_to_level_5",
+     5,
+     "sprite.pickaxe_upgrade"
+    ],
+    [
+     13,
+     "t.fight_the_obelisk_right_side",
+     1,
+     "sprite.obelisk_icon"
+    ],
+    [
+     14,
+     "t.sell_ore_and_earn_1_gold",
+     1,
+     "sprite.sell_menu_icon"
+    ],
+    [
+     15,
+     "t.buy_a_drone_point_and_drone",
+     1,
+     "sprite.drone_icon"
+    ],
+    [
+     16,
+     "t.reach_level_20_top_left",
+     20,
+     "sprite.xp_only"
+    ],
+    [
+     17,
+     "t.prestige_via_the_prestige_menu",
+     1,
+     "sprite.prestige_point"
+    ],
+    [
+     18,
+     "t.summon_2_artifacts_prestige_menu",
+     2,
+     "sprite.prestige_point_gain"
+    ],
+    [
+     19,
+     "t.set_your_own_goals_and_enjoy_ex_3",
+     1337,
+     "sprite.gem"
+    ]
+   ]
+  }
+ }
+}

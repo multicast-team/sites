@@ -1,0 +1,83 @@
+{
+ "$id": "systems/drones",
+ "title": "Дроны и топливо мира 1 (data/systems/drones.json, этап 5.14)",
+ "description": "Улучшения дрона (7 строк: клетка сводки, рост цены, кап, требование обелиска), строки угля мира 1 (0–5: клетка сводки); вид шага и коэффициенты клеток — в statrules.json (источники drones, coal; этап 5.25), костюмы (база опыта до следующего грейда и база топлива), константы цены строк и очков дронов, генератора угля, грейда и слотов. Источники — группы drones-w1 и data.drones514 в oracle/sources.json, спека oracle/specs/drones.md. Числа сняты с O.",
+ "allOf": [
+  {
+   "$ref": "system"
+  },
+  {
+   "properties": {
+    "system": {
+     "const": "drones"
+    }
+   }
+  },
+  {
+   "required": [
+    "constants",
+    "tables"
+   ],
+   "properties": {
+    "constants": {
+     "required": [
+      "upgrade.costBase",
+      "upgrade.unlockCost",
+      "upgrade.levelReq",
+      "upgrade.levelReqUntilTask",
+      "points.base",
+      "points.step",
+      "coal.generatorSeconds",
+      "coal.capPerLevel",
+      "suit.fuelPerGrade",
+      "suit.gradeCap",
+      "slots.count"
+     ]
+    },
+    "tables": {
+     "required": [
+      "upgrades",
+      "coal",
+      "suits"
+     ],
+     "properties": {
+      "upgrades": {
+       "properties": {
+        "columns": {
+         "const": [
+          "row",
+          "cell",
+          "growth",
+          "cap",
+          "obeliskReq"
+         ]
+        }
+       }
+      },
+      "coal": {
+       "properties": {
+        "columns": {
+         "const": [
+          "row",
+          "cell"
+         ]
+        }
+       }
+      },
+      "suits": {
+       "properties": {
+        "columns": {
+         "const": [
+          "suit",
+          "expBase",
+          "fuelBase"
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

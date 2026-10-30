@@ -1,0 +1,316 @@
+{
+ "$schema": "ui-obelisk-unlocks",
+ "screen": "obelisk-unlocks",
+ "version": "2.2.50",
+ "comment": "Этап 6.17: вкладка Unlocks меню обелиска. Координаты — px комнаты 500×960, сняты с кадров O (oracle/obunl617, ui.obunl617 в oracle/sources.json). Список — группы открытий по уровням обелиска 1…уровень игрока (уровни без открытий пропускаются) и одна закрытая группа следующего уровня открытия («?»). Группа: ярлык «Obelisk L» (ширина по тексту), панель на cols = min(n, 3) ячеек и rows = ⌈n/3⌉ рядов, x панели = 250 − cols·cell.step.x/2; y ярлыка следующей группы = y + panel.y + panel.h + (rows − 1)·cell.step.y + gap. Ячейки — по порядку видов kindOrder. Ячейка: значок (масштаб s = icon.fitSize / большая сторона спрайта × вариант строки, если он не 0; середина рамки спрайта — в (icon.x, icon.y): к позиции + (начало − размер/2)·s), текст по ширине (шрифт text.fit.font, если текстом шрифта text.font при ширине text.width строк больше fit.maxLines — ?? правило по записям O), плашка вида. Прокрутка и ползунок — входы из кадра O (как 6.16).",
+ "kitStyles": {
+  "panel": "panel.menu"
+ },
+ "panelFrame": {
+  "component": "sprite",
+  "sprite": "sprite.patch9c",
+  "x": 0,
+  "y": 0,
+  "sx": 31.25,
+  "sy": 58.125,
+  "color": "#00ffff",
+  "alpha": 0.5
+ },
+ "title": {
+  "component": "text",
+  "font": "font.size24",
+  "x": 250,
+  "y": 110,
+  "text": "t.unlocks_2",
+  "halign": "center",
+  "valign": "middle",
+  "shadow": [
+   1,
+   1
+  ]
+ },
+ "list": {
+  "y": 200,
+  "cullAbove": 0,
+  "cullBelow": 936
+ },
+ "group": {
+  "gap": 34,
+  "tab": {
+   "component": "stretched",
+   "sprite": "sprite.patch_backing_brownish",
+   "x": 10,
+   "y": 0,
+   "h": 30,
+   "pad": 16
+  },
+  "tabInner": {
+   "component": "stretched",
+   "sprite": "sprite.patch_desc_ml",
+   "x": 13,
+   "y": 3,
+   "h": 18,
+   "inset": 6,
+   "alpha": 0.35
+  },
+  "title": {
+   "component": "text",
+   "font": "font.size12",
+   "y": 12,
+   "halign": "center",
+   "valign": "middle",
+   "text": "t.obelisk_4",
+   "shadow": [
+    1,
+    1
+   ]
+  },
+  "panel": {
+   "component": "stretched",
+   "sprite": "sprite.patch_backing_brownish",
+   "x": 0,
+   "y": 22,
+   "h": 120
+  },
+  "centerX": 250,
+  "maxCols": 3,
+  "cell": {
+   "component": "stretched",
+   "sprite": "sprite.patch_desc_ml",
+   "x": 7,
+   "y": 32,
+   "w": 126,
+   "h": 100,
+   "alpha": 0.35,
+   "step": {
+    "x": 140,
+    "y": 104
+   }
+  },
+  "icon": {
+   "component": "sprite",
+   "x": 63,
+   "y": 22,
+   "fitSize": 32
+  },
+  "text": {
+   "component": "text",
+   "font": "font.size12",
+   "x": 63,
+   "y": 61,
+   "halign": "center",
+   "valign": "middle",
+   "sep": -1,
+   "width": 116,
+   "shadow": [
+    1,
+    1
+   ],
+   "fit": {
+    "maxLines": 2,
+    "font": "font.size10"
+   }
+  },
+  "label": {
+   "component": "rect",
+   "x1": 0,
+   "y1": 82,
+   "x2": 125,
+   "y2": 99
+  },
+  "labelText": {
+   "component": "text",
+   "font": "font.size10",
+   "x": 63,
+   "y": 91,
+   "halign": "center",
+   "valign": "middle"
+  }
+ },
+ "hidden": {
+  "color": "#808080",
+  "text": "#c0c0c0",
+  "mark": {
+   "component": "text",
+   "font": "font.size24",
+   "x": 63,
+   "y": 22,
+   "text": "t.q",
+   "halign": "center",
+   "valign": "middle",
+   "shadow": [
+    1,
+    1
+   ]
+  },
+  "caption": {
+   "component": "text",
+   "font": "font.size12",
+   "x": 63,
+   "y": 61,
+   "text": "t.q_q_q",
+   "halign": "center",
+   "valign": "middle",
+   "shadow": [
+    1,
+    1
+   ]
+  }
+ },
+ "kinds": {
+  "menu": {
+   "text": "t.new_menu_ex",
+   "color": "#d6242c",
+   "textColor": "#ffffff"
+  },
+  "mechanic": {
+   "text": "t.new_mechanic_ex",
+   "color": "#d6242c",
+   "textColor": "#ffffff"
+  },
+  "world": {
+   "text": "t.new_world_ex",
+   "color": "#d6242c",
+   "textColor": "#ffffff"
+  },
+  "prestige": {
+   "text": "t.prestige",
+   "color": "#fa8022",
+   "textColor": "#281e1e"
+  },
+  "drones": {
+   "text": "t.drones",
+   "color": "#fa8022",
+   "textColor": "#281e1e"
+  },
+  "skilltree": {
+   "text": "t.skill_tree_3",
+   "color": "#fa8022",
+   "textColor": "#281e1e"
+  },
+  "workshop": {
+   "text": "t.workshop",
+   "color": "#b2de27",
+   "textColor": "#281e1e"
+  },
+  "craft": {
+   "text": "t.craft_2",
+   "color": "#b2de27",
+   "textColor": "#281e1e"
+  },
+  "archaeology": {
+   "text": "t.archaeology",
+   "color": "#fa8022",
+   "textColor": "#281e1e"
+  },
+  "contracts": {
+   "text": "t.contracts",
+   "color": "#b2de27",
+   "textColor": "#281e1e"
+  },
+  "gifts": {
+   "text": "t.gifts",
+   "color": "#b2de27",
+   "textColor": "#281e1e"
+  },
+  "items": {
+   "text": "t.items",
+   "color": "#b2de27",
+   "textColor": "#281e1e"
+  }
+ },
+ "kindOrder": [
+  "menu",
+  "mechanic",
+  "archaeology",
+  "world",
+  "prestige",
+  "drones",
+  "skilltree",
+  "workshop",
+  "contracts",
+  "craft",
+  "gifts",
+  "items"
+ ],
+ "scrollbar": {
+  "component": "rect",
+  "x1": 492,
+  "x2": 502,
+  "color": "#c0c0c0",
+  "alpha": 0.349999994
+ },
+ "tabs": {
+  "rects": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 817,
+    "x2": 500,
+    "y2": 890,
+    "color": "#957c7d"
+   },
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 818,
+    "x2": 500,
+    "y2": 890,
+    "color": "#695051"
+   }
+  ],
+  "x": 130,
+  "step": 120,
+  "selectedColor": "#808080",
+  "button": {
+   "component": "sprite",
+   "sprite": "sprite.patch_button",
+   "x": 0,
+   "y": 838,
+   "sx": 2,
+   "sy": 2
+  },
+  "icon": {
+   "component": "sprite",
+   "sprite": "sprite.pickaxe_damage",
+   "x": 0,
+   "y": 837,
+   "sx": 2,
+   "sy": 2
+  },
+  "caption": {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 0,
+   "y": 868,
+   "sx": 5,
+   "sy": 1.20000005
+  },
+  "label": {
+   "component": "text",
+   "font": "font.size10",
+   "x": 0,
+   "y": 868,
+   "halign": "center",
+   "valign": "middle"
+  },
+  "icons": [
+   "sprite.pickaxe_damage",
+   "sprite.chest_relic",
+   "sprite.lock_unlock"
+  ],
+  "labels": [
+   "t.fight",
+   "t.rewards",
+   "t.unlocks_2"
+  ],
+  "selected": 2
+ },
+ "dot": {
+  "component": "circle",
+  "x": 232,
+  "y": 820,
+  "r": 6,
+  "color": "#ffff00"
+ }
+}

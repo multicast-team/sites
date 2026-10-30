@@ -1,0 +1,259 @@
+{
+ "$schema": "ui-draft",
+ "screen": "cloud",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Облачное сохранение» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 250,
+    "y": 174,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "frame": 1,
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 3
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc",
+      "x": 0,
+      "y": 70,
+      "sx": 26,
+      "sy": 6
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 70,
+      "text": "t.checkbox_accounts_are_the_recommended_way_of",
+      "halign": "center",
+      "valign": "middle",
+      "alpha": 0.850000024,
+      "sep": 18,
+      "width": 400
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_tc",
+      "x": 0,
+      "y": 250,
+      "sx": 20,
+      "sy": 18
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_with_desc",
+      "x": 0,
+      "y": 250,
+      "sx": 14,
+      "sy": 1.79999995
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 250,
+      "text": "t.login_per_create_account",
+      "halign": "center",
+      "valign": "middle",
+      "alpha": 0.850000024
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 250,
+    "y": 514,
+    "step": {
+     "x": 0,
+     "y": 110
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 8,
+      "sy": 3
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -1,
+      "text": "t.google",
+      "halign": "center",
+      "valign": "middle",
+      "alpha": 0.850000024
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.discord"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 250,
+    "y": 844,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish",
+      "x": 0,
+      "y": 0,
+      "sx": 31.25,
+      "sy": 6.0999999
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": -120,
+      "y": -16,
+      "sx": 3,
+      "sy": 3,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.unchecked_checked",
+      "frame": 1,
+      "x": -120,
+      "y": -18,
+      "sx": 3,
+      "sy": 3,
+      "color": "#808080"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 130,
+    "y": 869,
+    "step": {
+     "x": 120,
+     "y": -87
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 10.5,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "text": "t.checkbox_account_2",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "sprite": "sprite.patch_backing_brownish_with_desc",
+       "sx": 16,
+       "sy": 1.60000002
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 370,
+    "y": 828,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 3
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.cloud",
+      "x": 0,
+      "y": -2,
+      "sx": 3,
+      "sy": 3
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 41,
+      "sx": 11.625,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 41,
+      "value": "Google Play Backup",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   }
+  ]
+ }
+}

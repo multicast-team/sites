@@ -1,0 +1,391 @@
+{
+ "$id": "ui-options",
+ "title": "Экран «Настройки» (data/ui/options.json, этап 6.26)",
+ "description": "Вкладки All/General/Gameplay/Display/Offline/Menus: фон, ползунок, шаги списка с секциями, шаблоны заголовка секции и строки-флажка, строка «More options unlock…», ряд вкладок кита, нижняя панель ссылок, секции со строками (id, ключ текста, вид, порог уровня обелиска). Координаты — px комнаты 500×960. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "room",
+  "top",
+  "backdrop",
+  "scroll",
+  "list",
+  "header",
+  "row",
+  "footer",
+  "tabs",
+  "notation",
+  "bottom",
+  "sections",
+  "verifiedObelisk"
+ ],
+ "$defs": {
+  "tmpl": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "additionalProperties": false,
+   "description": "Шаблон листа вёрстки (как ui-draft node); строковые поля «@имя» подставляет экран из состояния строки, only — лист только для вида строки",
+   "properties": {
+    "component": {
+     "enum": [
+      "group",
+      "sprite",
+      "text",
+      "rect"
+     ]
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "sprite": {
+     "type": "string",
+     "pattern": "^(@[a-z][A-Za-z]*|sprite\\.[a-z0-9_]+)$"
+    },
+    "frame": {
+     "oneOf": [
+      {
+       "$ref": "common#/$defs/count"
+      },
+      {
+       "type": "string",
+       "pattern": "^@[a-z][A-Za-z]*$"
+      }
+     ]
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "type": "string",
+     "pattern": "^(@[a-z][A-Za-z]*|t\\.[a-z0-9_]+)$"
+    },
+    "label": {
+     "type": "string"
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "only": {
+     "enum": [
+      "check",
+      "cycle"
+     ]
+    },
+    "children": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/tmpl"
+     }
+    }
+   }
+  }
+ },
+ "properties": {
+  "$schema": {
+   "const": "ui-options"
+  },
+  "screen": {
+   "const": "options"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "room": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "w",
+    "h"
+   ],
+   "properties": {
+    "w": {
+     "const": 500
+    },
+    "h": {
+     "const": 960
+    }
+   }
+  },
+  "top": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "tasksPanel"
+   ],
+   "properties": {
+    "tasksPanel": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "backdrop": {
+   "$ref": "ui-draft#/$defs/node"
+  },
+  "scroll": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "x1",
+    "x2",
+    "trackTop",
+    "trackBottom",
+    "view",
+    "pad",
+    "color",
+    "alpha"
+   ],
+   "properties": {
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "trackTop": {
+     "$ref": "common#/$defs/num"
+    },
+    "trackBottom": {
+     "$ref": "common#/$defs/num"
+    },
+    "view": {
+     "$ref": "common#/$defs/num"
+    },
+    "pad": {
+     "$ref": "common#/$defs/num"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    }
+   }
+  },
+  "list": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "y",
+    "headerToRow",
+    "rowStep",
+    "rowToHeader",
+    "footerAfter"
+   ],
+   "properties": {
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "headerToRow": {
+     "$ref": "common#/$defs/num"
+    },
+    "rowStep": {
+     "$ref": "common#/$defs/num"
+    },
+    "rowToHeader": {
+     "$ref": "common#/$defs/num"
+    },
+    "footerAfter": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "header": {
+   "$ref": "#/$defs/tmpl"
+  },
+  "row": {
+   "$ref": "#/$defs/tmpl"
+  },
+  "footer": {
+   "$ref": "ui-draft#/$defs/node"
+  },
+  "tabs": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "style",
+    "x",
+    "y",
+    "ids",
+    "labels"
+   ],
+   "properties": {
+    "style": {
+     "$ref": "common#/$defs/id"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "ids": {
+     "type": "array",
+     "minItems": 6,
+     "maxItems": 6,
+     "items": {
+      "enum": [
+       "all",
+       "general",
+       "gameplay",
+       "display",
+       "offline",
+       "menus"
+      ]
+     }
+    },
+    "labels": {
+     "type": "array",
+     "minItems": 6,
+     "maxItems": 6,
+     "items": {
+      "$ref": "common#/$defs/stringKey"
+     }
+    }
+   }
+  },
+  "notation": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "names",
+    "samples",
+    "digits"
+   ],
+   "properties": {
+    "names": {
+     "type": "array",
+     "items": {
+      "$ref": "common#/$defs/stringKey"
+     }
+    },
+    "samples": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "digits": {
+     "type": "array",
+     "items": {
+      "$ref": "common#/$defs/stringKey"
+     }
+    }
+   }
+  },
+  "bottom": {
+   "$ref": "ui-draft#/$defs/node"
+  },
+  "sections": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 40,
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "id",
+     "tab",
+     "icon",
+     "label",
+     "rows"
+    ],
+    "properties": {
+     "tab": {
+      "enum": [
+       "general",
+       "gameplay",
+       "display",
+       "offline",
+       "menus"
+      ]
+     },
+     "icon": {
+      "$ref": "common#/$defs/skinKey"
+     },
+     "label": {
+      "$ref": "common#/$defs/stringKey"
+     },
+     "rows": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "id"
+       ],
+       "properties": {
+        "id": {
+         "$ref": "common#/$defs/id"
+        },
+        "text": {
+         "$ref": "common#/$defs/stringKey"
+        },
+        "kind": {
+         "enum": [
+          "notation",
+          "digits"
+         ]
+        },
+        "minObelisk": {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 75
+        }
+       }
+      }
+     },
+     "id": {
+      "$ref": "common#/$defs/id"
+     }
+    }
+   }
+  },
+  "verifiedObelisk": {
+   "type": "integer",
+   "minimum": 1,
+   "maximum": 75
+  }
+ }
+}

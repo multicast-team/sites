@@ -1,0 +1,38 @@
+{
+ "$id": "systems/stats",
+ "title": "Сводка статов (data/systems/stats.json — этап 2.5; data/systems/statrules.json — этап 5.5)",
+ "description": "stats.json: клетки сводки статов (то, что пересчитывает сводка после покупок) и их значения в новой игре. statrules.json: декларации «источник → клетка» для стат-движка (core/stats.mjs, спека oracle/specs/stats.md правило 2): одна строка — один шаг или одно слагаемое шага, строки клетки подряд, порядок клеток = порядок прохода. Имена клеток — наши (stat.<имя>); соответствие клеткам оригинала — только в oracle/data25/map25.json. Числа сняты с O (oracle/sources.json, группы data.stats25 и data.statrules55; дополнения 5.15 — data.statrules515, 5.13 — data.artifacts513: источник artifacts, шаг scaleUntilTask; 5.17 — data.gemshop517: источники gemUpgrades и gemUnlocks, шаг mulPow; 5.25 — data.statrules525: источники drones и coal).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["tables"],
+   "properties": {
+    "system": {"const": "stats"},
+    "tables": {
+     "anyOf": [{"required": ["cells"]}, {"required": ["rules"]}],
+     "properties": {
+      "cells": {"properties": {
+       "columns": {"const": ["cell", "base"]},
+       "rows": {"minItems": 1, "items": {"prefixItems": [
+        {"type": "string", "pattern": "^stat\\.[a-z0-9][A-Za-z0-9]*$"},
+        {"$ref": "common#/$defs/num"}
+       ]}}
+      }},
+      "rules": {"properties": {
+       "columns": {"const": ["cell", "step", "op", "source", "row", "value", "ref"]},
+       "rows": {"minItems": 1, "items": {"prefixItems": [
+        {"type": "string", "pattern": "^stat\\.[a-z0-9][A-Za-z0-9]*$"},
+        {"type": "integer", "minimum": 0},
+        {"enum": ["start", "add", "addDiv", "mulTerm", "mulSum", "mulChain", "mulInvChain", "tri", "mulCell", "round", "scale", "mulCellTerm", "scaleUntilTask", "mulPow"]},
+        {"enum": ["upgrades", "workshop", "skilltree", "artifacts", "gemUpgrades", "gemUnlocks", "drones", "coal", null]},
+        {"type": ["integer", "null"], "minimum": 0},
+        {"type": ["number", "null"]},
+        {"type": ["string", "null"], "pattern": "^stat\\.[a-z0-9][A-Za-z0-9]*$"}
+       ]}}
+      }}
+     }
+    }
+   }
+  }
+ ]
+}

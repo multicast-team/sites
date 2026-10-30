@@ -1,0 +1,222 @@
+{
+ "$id": "systems/obelisk",
+ "title": "Обелиск: уровни боя (data/systems/obelisk.json)",
+ "description": "Таблица levels: по строке на уровень обелиска 0..80 (??: диапазон и набор колонок подтвердит спека obelisk по O). Колонки — наши имена. Второй файл системы — data/systems/obelisk-rewards.json (этап 6.16): награды уровней 1…75 (rewardItems: тройки «предмет, подвид, количество» по ячейкам; rewardPerks: нематериальная награда — значок skin, текст, бафф). Третий файл — data/systems/obelisk-unlocks.json (этап 6.17): список открытий вкладки Unlocks (unlockList: уровень, значок skin, кадр, текст, вид, вариант — порядок строк = порядок O).",
+ "allOf": [
+  {
+   "$ref": "system"
+  },
+  {
+   "required": [
+    "tables"
+   ],
+   "properties": {
+    "system": {
+     "const": "obelisk"
+    },
+    "tables": {
+     "properties": {
+      "levels": {
+       "properties": {
+        "columns": {
+         "allOf": [
+          {
+           "prefixItems": [
+            {
+             "const": "level"
+            }
+           ]
+          },
+          {
+           "contains": {
+            "const": "hp"
+           }
+          },
+          {
+           "contains": {
+            "const": "armor"
+           }
+          },
+          {
+           "contains": {
+            "const": "gems"
+           }
+          },
+          {
+           "contains": {
+            "const": "timeLimit"
+           }
+          }
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           }
+          ],
+          "items": {
+           "$ref": "common#/$defs/nonneg"
+          }
+         }
+        }
+       }
+      },
+      "rewardItems": {
+       "properties": {
+        "columns": {
+         "const": [
+          "level",
+          "slot",
+          "item",
+          "sub",
+          "amount"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "string"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/nonneg"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "rewardPerks": {
+       "properties": {
+        "columns": {
+         "const": [
+          "level",
+          "icon",
+          "text",
+          "buff",
+          "buffMinutes"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "string",
+            "pattern": "^sprite\\."
+           },
+           {
+            "type": "string",
+            "pattern": "^t\\."
+           },
+           {
+            "type": [
+             "number",
+             "null"
+            ]
+           },
+           {
+            "type": [
+             "number",
+             "null"
+            ]
+           }
+          ]
+         }
+        }
+       }
+      },
+      "unlockList": {
+       "properties": {
+        "columns": {
+         "const": [
+          "level",
+          "icon",
+          "frame",
+          "text",
+          "kind",
+          "variant"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "string",
+            "pattern": "^sprite\\."
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "string",
+            "pattern": "^t\\."
+           },
+           {
+            "enum": [
+             "menu",
+             "mechanic",
+             "prestige",
+             "world",
+             "archaeology",
+             "drones",
+             "skilltree",
+             "workshop",
+             "contracts",
+             "craft",
+             "gifts",
+             "items"
+            ]
+           },
+           {
+            "$ref": "common#/$defs/count"
+           }
+          ],
+          "items": false
+         }
+        }
+       }
+      }
+     },
+     "anyOf": [
+      {
+       "required": [
+        "levels"
+       ]
+      },
+      {
+       "required": [
+        "rewardItems",
+        "rewardPerks"
+       ]
+      },
+      {
+       "required": [
+        "unlockList"
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

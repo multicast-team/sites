@@ -1,0 +1,943 @@
+{
+ "$schema": "ui-obelisk-fight",
+ "screen": "obelisk-fight",
+ "version": "2.2.50",
+ "comment": "Этап 6.15: вкладка Fight меню обелиска и сцена боя. Координаты — px комнаты 500×960, сняты с кадров O (oracle/obfight615, ui.obfight615 в oracle/sources.json). Листья с id — привязки экрана ui/screens/obelisk-fight.mjs.",
+ "kitStyles": {
+  "panel": "panel.menu"
+ },
+ "format": {
+  "short": {
+   "plainBelow": 100000,
+   "plainFloorFrom": 1000,
+   "plainDecimals": 2,
+   "groupDigits": 3,
+   "suffixes": [
+    "k",
+    "m",
+    "b",
+    "t",
+    "q",
+    "qi",
+    "sx",
+    "sp",
+    "oc",
+    "no",
+    "dc",
+    "udc",
+    "ddc",
+    "tdc",
+    "qadc",
+    "qidc",
+    "sxdc",
+    "spdc",
+    "ocdc",
+    "nvdc"
+   ],
+   "sciPrefix": "e",
+   "decimals": [
+    [
+     10,
+     2
+    ],
+    [
+     100,
+     1
+    ],
+    [
+     1000,
+     0
+    ]
+   ],
+   "digits": 15,
+   "rounding": "floorSignificant"
+  }
+ },
+ "tab": {
+  "frame": {
+   "component": "sprite",
+   "sprite": "sprite.patch9c",
+   "x": 0,
+   "y": 0,
+   "sx": 31.25,
+   "sy": 58.125,
+   "color": "#00ffff",
+   "alpha": 0.5
+  },
+  "head": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_blue_with_desc",
+    "x": 238,
+    "y": 100,
+    "sx": 12,
+    "sy": 2
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.obelisk_icon",
+    "x": 138,
+    "y": 100,
+    "sx": 2,
+    "sy": 2
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 238,
+    "y": 100,
+    "halign": "center",
+    "valign": "middle",
+    "id": "level",
+    "text": "t.obelisk_level_3"
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_blue_with_desc",
+    "x": 417,
+    "y": 100,
+    "sx": 9.125,
+    "sy": 2.5999999
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.pickaxe_damage",
+    "x": 364,
+    "y": 100,
+    "sx": 2,
+    "sy": 2
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 435,
+    "y": 91,
+    "text": "t.pickaxe_damage",
+    "halign": "center",
+    "valign": "middle",
+    "color": "#c0c0c0"
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 435,
+    "y": 108,
+    "halign": "center",
+    "valign": "middle",
+    "id": "pickaxe"
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_button",
+    "x": 70,
+    "y": 170,
+    "sx": 1.79999995,
+    "sy": 1.79999995
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.info_icon",
+    "x": 70,
+    "y": 169
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.obelisk",
+    "x": 328,
+    "y": 210,
+    "color": "#000000",
+    "alpha": 0.200000003,
+    "id": "obeliskShadow"
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.obelisk",
+    "x": 328,
+    "y": 210,
+    "id": "obelisk"
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_blue_with_desc",
+    "x": 202,
+    "y": 163,
+    "sx": 10,
+    "sy": 1.79999995
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 202,
+    "y": 163,
+    "text": "t.obelisk_stats",
+    "halign": "center",
+    "valign": "middle"
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_blue",
+    "x": 253,
+    "y": 261,
+    "sx": 16,
+    "sy": 10.1000004,
+    "color": "#404040"
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_blue",
+    "x": 250,
+    "y": 258,
+    "sx": 16,
+    "sy": 10.1000004
+   }
+  ],
+  "statsRow": {
+   "y": 200,
+   "step": 40,
+   "icon": {
+    "component": "sprite",
+    "sprite": "sprite.obelisk_mini_strip",
+    "x": 148,
+    "y": 0,
+    "sx": 2,
+    "sy": 2
+   },
+   "backing": {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc_ml",
+    "x": 171,
+    "y": 0,
+    "sx": 12.6000004,
+    "sy": 2
+   },
+   "text": {
+    "component": "text",
+    "font": "font.size12",
+    "x": 180,
+    "y": 0,
+    "valign": "middle"
+   },
+   "icons": [
+    "sprite.obelisk_mini_strip",
+    "sprite.obelisk_health_strip",
+    "sprite.obelisk_armor_strip",
+    "sprite.hourglass"
+   ],
+   "iconFrameIsLevel": [
+    true,
+    true,
+    true,
+    false
+   ],
+   "labels": [
+    "t.obelisk_2",
+    "t.hp_3",
+    "t.armor",
+    "t.fight_duration"
+   ]
+  },
+  "rewardsBox": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_blue",
+    "x": 253,
+    "y": 491,
+    "frame": 1,
+    "sx": 16,
+    "sy": 10.1000004,
+    "color": "#404040"
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_blue",
+    "x": 250,
+    "y": 488,
+    "frame": 1,
+    "sx": 16,
+    "sy": 10.1000004
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_blue",
+    "x": 202,
+    "y": 393,
+    "frame": 1,
+    "sx": 10,
+    "sy": 1.79999995
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 202,
+    "y": 393,
+    "sx": 9.60000038,
+    "sy": 1.39999998
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 202,
+    "y": 393,
+    "text": "t.rewards",
+    "halign": "center",
+    "valign": "middle"
+   }
+  ],
+  "rewardRow": {
+   "y": 430,
+   "step": 40,
+   "backing": {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc_ml",
+    "x": 171,
+    "y": 0,
+    "sx": 12.6000004,
+    "sy": 2
+   },
+   "icon": {
+    "component": "sprite",
+    "sprite": "sprite.obelisk_icon",
+    "x": 148,
+    "y": 0,
+    "sx": 2,
+    "sy": 2
+   },
+   "text": {
+    "component": "text",
+    "font": "font.size12",
+    "x": 180,
+    "y": 0,
+    "valign": "middle"
+   },
+   "sep": " > ",
+   "capStep": 5,
+   "rows": [
+    {
+     "icon": "sprite.obelisk_icon",
+     "kind": "level",
+     "text": "t.obelisk_lvl"
+    },
+    {
+     "icon": "sprite.xp_only",
+     "kind": "cap",
+     "text": "t.level_cap"
+    },
+    {
+     "icon": "sprite.chest_relic",
+     "kind": "fixed",
+     "text": "t.unlocks_rewards"
+    },
+    {
+     "icon": "sprite.lock_unlock",
+     "kind": "reward"
+    }
+   ]
+  },
+  "attack": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_button",
+    "x": 250,
+    "y": 640,
+    "sx": 10,
+    "sy": 5,
+    "id": "attackButton",
+    "cooldownGray": true
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 250,
+    "y": 625,
+    "text": "t.attack_obelisk",
+    "halign": "center",
+    "valign": "middle",
+    "cooldownGray": true
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 258,
+    "y": 655,
+    "halign": "center",
+    "valign": "middle",
+    "id": "cooldown"
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.hourglass",
+    "x": 220,
+    "y": 655
+   }
+  ],
+  "warning": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_brownish_with_desc",
+    "x": 416,
+    "y": 670,
+    "sx": 8.39999962,
+    "sy": 10
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 416,
+    "y": 670,
+    "text": "t.warning_pickaxe_damage_is_lower_than_obelisk",
+    "halign": "center",
+    "valign": "middle",
+    "color": "#ff0000",
+    "sep": 20,
+    "width": 120
+   }
+  ],
+  "tabs": {
+   "rects": [
+    {
+     "component": "rect",
+     "x1": 0,
+     "y1": 817,
+     "x2": 500,
+     "y2": 890,
+     "color": "#957c7d"
+    },
+    {
+     "component": "rect",
+     "x1": 0,
+     "y1": 818,
+     "x2": 500,
+     "y2": 890,
+     "color": "#695051"
+    }
+   ],
+   "x": 130,
+   "step": 120,
+   "selectedColor": "#808080",
+   "button": {
+    "component": "sprite",
+    "sprite": "sprite.patch_button",
+    "x": 0,
+    "y": 838,
+    "sx": 2,
+    "sy": 2
+   },
+   "icon": {
+    "component": "sprite",
+    "sprite": "sprite.pickaxe_damage",
+    "x": 0,
+    "y": 837,
+    "sx": 2,
+    "sy": 2
+   },
+   "caption": {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 0,
+    "y": 868,
+    "sx": 5,
+    "sy": 1.20000005
+   },
+   "label": {
+    "component": "text",
+    "font": "font.size10",
+    "x": 0,
+    "y": 868,
+    "halign": "center",
+    "valign": "middle"
+   },
+   "icons": [
+    "sprite.pickaxe_damage",
+    "sprite.chest_relic",
+    "sprite.lock_unlock"
+   ],
+   "labels": [
+    "t.fight",
+    "t.rewards",
+    "t.unlocks_2"
+   ]
+  },
+  "dot": {
+   "component": "circle",
+   "x": 232,
+   "y": 820,
+   "r": 6,
+   "color": "#ffff00"
+  },
+  "pickaxeWeakColor": "#ff0000",
+  "pickaxeColor": "#ffffff",
+  "attackCooldownColor": "#808080"
+ },
+ "scene": {
+  "shadow": {
+   "component": "sprite",
+   "sprite": "sprite.obelisk_shadow",
+   "x": 250,
+   "y": 665,
+   "sx": 2,
+   "sy": 2,
+   "alpha": 0.5
+  },
+  "obelisk": {
+   "component": "sprite",
+   "sprite": "sprite.obelisk",
+   "x": 250,
+   "y": 480,
+   "sx": 2,
+   "sy": 2
+  },
+  "top": [
+   {
+    "component": "stretched",
+    "sprite": "sprite.patch_backing_brownish",
+    "x": 117,
+    "y": 153,
+    "w": 266,
+    "h": 116
+   },
+   {
+    "component": "stretched",
+    "sprite": "sprite.patch_desc_ml",
+    "x": 121,
+    "y": 157,
+    "w": 258,
+    "h": 108,
+    "alpha": 0.6
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 187.5,
+    "y": 168,
+    "text": "t.armor_2",
+    "halign": "center",
+    "color": "#000000",
+    "valign": "middle"
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 314.5,
+    "y": 168,
+    "text": "t.time_left",
+    "halign": "center",
+    "color": "#000000",
+    "valign": "middle"
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 264,
+    "y": 218,
+    "text": "t.obelisk_health",
+    "halign": "center",
+    "color": "#000000",
+    "valign": "middle"
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 186.5,
+    "y": 167,
+    "text": "t.armor_2",
+    "halign": "center",
+    "color": "#ebdcbe",
+    "valign": "middle"
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 313.5,
+    "y": 167,
+    "text": "t.time_left",
+    "halign": "center",
+    "color": "#ebdcbe",
+    "valign": "middle"
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 263,
+    "y": 217,
+    "text": "t.obelisk_health",
+    "halign": "center",
+    "color": "#ebdcbe",
+    "valign": "middle"
+   }
+  ],
+  "armor": {
+   "backing": {
+    "component": "stretched",
+    "sprite": "sprite.patch_backing_brownish",
+    "x": 127,
+    "y": 175,
+    "w": 119,
+    "h": 30
+   },
+   "icon": {
+    "component": "sprite",
+    "sprite": "sprite.obelisk_armor_strip",
+    "x": 145,
+    "y": 190,
+    "sx": 2,
+    "sy": 2
+   },
+   "weakIconColor": "#ff8c8c",
+   "bar": {
+    "component": "rect",
+    "x1": 161,
+    "y1": 182,
+    "x2": 238,
+    "y2": 197,
+    "colors": [
+     "#4a80c4",
+     "#4a80c4",
+     "#1e3a76",
+     "#1e3a76"
+    ]
+   },
+   "shine": {
+    "component": "rect",
+    "x1": 161,
+    "y1": 184,
+    "x2": 238,
+    "y2": 187,
+    "alpha": 0.219999999
+   },
+   "shadow": {
+    "component": "text",
+    "font": "font.size10",
+    "x": 201,
+    "y": 191,
+    "halign": "center",
+    "color": "#000000",
+    "valign": "middle"
+   },
+   "text": {
+    "component": "text",
+    "font": "font.size10",
+    "x": 200,
+    "y": 190,
+    "halign": "center",
+    "valign": "middle"
+   },
+   "weakTextColor": "#ff4646"
+  },
+  "warning": [
+   {
+    "component": "stretched",
+    "sprite": "sprite.patch_backing_brownish",
+    "x": 105,
+    "y": 275,
+    "w": 290,
+    "h": 28
+   },
+   {
+    "component": "stretched",
+    "sprite": "sprite.patch_desc_ml",
+    "x": 109,
+    "y": 279,
+    "w": 282,
+    "h": 20
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 251,
+    "y": 290,
+    "text": "t.damage_is_below_obelisk_armor_ex",
+    "halign": "center",
+    "color": "#000000",
+    "valign": "middle"
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 250,
+    "y": 289,
+    "text": "t.damage_is_below_obelisk_armor_ex",
+    "halign": "center",
+    "color": "#ff0000",
+    "valign": "middle"
+   }
+  ],
+  "time": {
+   "backing": {
+    "component": "stretched",
+    "sprite": "sprite.patch_backing_brownish",
+    "x": 254,
+    "y": 175,
+    "w": 119,
+    "h": 30
+   },
+   "icon": {
+    "component": "sprite",
+    "sprite": "sprite.hourglass",
+    "x": 272,
+    "y": 190,
+    "frame": 1,
+    "sx": 2,
+    "sy": 2
+   },
+   "track": {
+    "component": "rect",
+    "x1": 288,
+    "y1": 182,
+    "x2": 365,
+    "y2": 197,
+    "color": "#000000",
+    "alpha": 0.75
+   },
+   "bar": {
+    "component": "rect",
+    "x1": 288,
+    "y1": 182,
+    "x2": 365,
+    "y2": 197,
+    "colors": [
+     "#ffd65a",
+     "#ffd65a",
+     "#c47612",
+     "#c47612"
+    ]
+   },
+   "shine": {
+    "component": "rect",
+    "x1": 288,
+    "y1": 184,
+    "x2": 365,
+    "y2": 187,
+    "alpha": 0.219999999
+   },
+   "shadow": {
+    "component": "text",
+    "font": "font.size10",
+    "x": 328,
+    "y": 191,
+    "halign": "center",
+    "color": "#000000",
+    "valign": "middle"
+   },
+   "text": {
+    "component": "text",
+    "font": "font.size10",
+    "x": 327,
+    "y": 190,
+    "halign": "center",
+    "valign": "middle"
+   }
+  },
+  "health": {
+   "backing": {
+    "component": "stretched",
+    "sprite": "sprite.patch_backing_brownish",
+    "x": 153,
+    "y": 225,
+    "w": 220,
+    "h": 34
+   },
+   "track": {
+    "component": "rect",
+    "x1": 159,
+    "y1": 231,
+    "x2": 366,
+    "y2": 252,
+    "color": "#000000",
+    "alpha": 0.75
+   },
+   "bar": {
+    "component": "rect",
+    "x1": 159,
+    "y1": 231,
+    "x2": 366,
+    "y2": 252,
+    "colors": [
+     "#ff5c54",
+     "#ff5c54",
+     "#961220",
+     "#961220"
+    ]
+   },
+   "shine": {
+    "component": "rect",
+    "x1": 159,
+    "y1": 233,
+    "x2": 366,
+    "y2": 238.699997,
+    "alpha": 0.219999999
+   },
+   "ticks": {
+    "count": 9,
+    "x": 159,
+    "step": 20.8,
+    "y1": 234,
+    "y2": 249,
+    "color": "#000000",
+    "alpha": 0.300000012
+   },
+   "icon": {
+    "component": "sprite",
+    "sprite": "sprite.obelisk_health_strip",
+    "x": 151,
+    "y": 242,
+    "sx": 3,
+    "sy": 3
+   },
+   "shadow": {
+    "component": "text",
+    "font": "font.size10",
+    "x": 264,
+    "y": 243,
+    "halign": "center",
+    "color": "#000000",
+    "valign": "middle"
+   },
+   "text": {
+    "component": "text",
+    "font": "font.size10",
+    "x": 263,
+    "y": 242,
+    "halign": "center",
+    "valign": "middle"
+   },
+   "pct": {
+    "x": 151,
+    "y": 242,
+    "outline": [
+     [
+      -1,
+      -1
+     ],
+     [
+      -1,
+      0
+     ],
+     [
+      -1,
+      1
+     ],
+     [
+      0,
+      -1
+     ],
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      -1
+     ],
+     [
+      1,
+      0
+     ],
+     [
+      1,
+      1
+     ]
+    ],
+    "font": "font.size10",
+    "color": "#000000",
+    "textColor": "#ffffff"
+   }
+  },
+  "panels": [
+   {
+    "x": 24,
+    "backing": {
+     "component": "stretched",
+     "sprite": "sprite.patch_backing_brownish",
+     "x": 24,
+     "y": 58,
+     "w": 168,
+     "h": 44
+    },
+    "desc": {
+     "component": "stretched",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 28,
+     "y": 62,
+     "w": 160,
+     "h": 36,
+     "alpha": 0.6
+    },
+    "icon": {
+     "component": "sprite",
+     "sprite": "sprite.pickaxe_damage",
+     "x": 46,
+     "y": 80,
+     "sx": 2,
+     "sy": 2
+    },
+    "label": "t.damage_dealt"
+   },
+   {
+    "x": 306,
+    "backing": {
+     "component": "stretched",
+     "sprite": "sprite.patch_backing_brownish",
+     "x": 306,
+     "y": 58,
+     "w": 168,
+     "h": 44
+    },
+    "desc": {
+     "component": "stretched",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 310,
+     "y": 62,
+     "w": 160,
+     "h": 36,
+     "alpha": 0.6
+    },
+    "icon": {
+     "component": "sprite",
+     "sprite": "sprite.pickaxe_attack_speed",
+     "x": 328,
+     "y": 80,
+     "sx": 2,
+     "sy": 2
+    },
+    "label": "t.damage_per_sec"
+   }
+  ],
+  "panelText": {
+   "labelShadow": {
+    "component": "text",
+    "font": "font.size10",
+    "x": 45,
+    "y": 15,
+    "color": "#000000",
+    "valign": "middle"
+   },
+   "label": {
+    "component": "text",
+    "font": "font.size10",
+    "x": 44,
+    "y": 14,
+    "color": "#ebdcbe",
+    "valign": "middle"
+   },
+   "valueShadow": {
+    "component": "text",
+    "font": "font.size12",
+    "x": 45,
+    "y": 32,
+    "color": "#000000",
+    "valign": "middle"
+   },
+   "value": {
+    "component": "text",
+    "font": "font.size12",
+    "x": 44,
+    "y": 31,
+    "valign": "middle"
+   }
+  },
+  "frameCycle": 15
+ },
+ "clockRound": "ceil",
+ "nanText": "-nan",
+ "infText": "inf"
+}

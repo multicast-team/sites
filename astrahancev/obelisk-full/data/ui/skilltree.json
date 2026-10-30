@@ -1,0 +1,134 @@
+{
+ "$schema": "ui-skilltree",
+ "screen": "skilltree",
+ "version": "2.2.50",
+ "comment": "Экран дерева навыков (этап 6.22): вёрстка из компонентов — фон (панель кита, космос с параллаксом), линии узлов к родителю, узлы по состояниям, нижняя панель описания выбранного узла с кнопкой покупки, правая панель очков и битов, ползунок, полоса подсказки. Позиции, родители, капы и требования обелиска узлов — data/systems/skilltree.json; цена, доступность, замок — ядро core/skilltree.mjs. Координаты — px комнаты 500×960 и обязаны совпасть с O. Этап 6.23: панель описания (попап) — «Lvl: L/кап» у узлов с капом больше 1, панель запертого узла, собираемые описания descs (куски STRG и числа: уровень × P или счётчик другой системы), добавочные строки STRG texts, прокрутка открытия openScroll. Источники — oracle/sources.json → ui.skilltree622 и ui.skilltree623.",
+ "kitStyles": {
+  "panel": "panel.menu",
+  "thumb": "scroll.menu"
+ },
+ "noiseScroll": 1,
+ "space": {
+  "sprite": "sprite.space",
+  "frame": 3,
+  "xs": [0, 896],
+  "y": 0,
+  "step": 1152,
+  "count": 4,
+  "scale": 2,
+  "color": "#808080",
+  "scroll": 0.25
+ },
+ "line": {
+  "under": [
+   {"w": 6, "color": "#000000"},
+   {"w": 4, "color": "#000000"}
+  ],
+  "w": 4,
+  "alpha": 0.850000024,
+  "tone": ["#404040", "#808080", "#ffffff"]
+ },
+ "node": {
+  "scale": 2,
+  "icon": "sprite.skilltree",
+  "multi": "sprite.talent_multinode",
+  "levelFrame": 5,
+  "selectedFrame": 3,
+  "multiSelectedFrom": 3,
+  "disabledColor": "#404040",
+  "lock": {
+   "color": "#808080",
+   "frame": 4,
+   "selectedFrame": 5,
+   "digits": "sprite.purplenumbers",
+   "dx": [-5, 5],
+   "dy": {"normal": 4, "special": 5}
+  }
+ },
+ "desc": {
+  "backing": {"component": "sprite", "sprite": "sprite.patch_backing_brownish_ml", "x": 0, "y": 820, "sx": 31.25, "sy": 8},
+  "box": {"component": "sprite", "sprite": "sprite.patch_desc", "x": 198, "y": 820, "sx": 24, "sy": 7},
+  "icons": [
+   {"component": "sprite", "sprite": "sprite.skilltree", "x": 368, "y": 783, "sx": 2, "sy": 2, "alpha": 0.349999994},
+   {"component": "sprite", "sprite": "sprite.skilltree", "x": 28, "y": 783, "sx": -2, "sy": 2, "alpha": 0.349999994}
+  ],
+  "title": {"font": "font.size12", "x": 198, "y": 780, "color": "#ffff00", "outline": [[-1, -1], [1, 1], [-1, 1], [1, -1]], "outlineColor": "#000000"},
+  "text": {"component": "text", "font": "font.size12", "x": 198, "y": 830, "halign": "center", "valign": "middle", "sep": 18, "width": 380},
+  "button": {"component": "sprite", "sprite": "sprite.patch_button", "x": 446, "y": 830, "sx": 5.30000019, "sy": 4.0999999},
+  "armedFrame": 1,
+  "point": {"component": "sprite", "sprite": "sprite.talent_point", "x": 446, "y": 813, "sx": 2, "sy": 2},
+  "cost": {"component": "text", "font": "font.size24", "x": 446, "y": 847, "halign": "center", "valign": "middle"},
+  "disabledColor": "#808080",
+  "unavailableColor": "#404040",
+  "maxed": {
+   "button": {"component": "sprite", "sprite": "sprite.patch_button_green", "x": 446, "y": 830, "sx": 5.30000019, "sy": 4.0999999},
+   "shadow": {"component": "text", "font": "font.size12", "x": 447, "y": 830, "text": "t.maxed", "halign": "center", "valign": "middle", "color": "#000000"},
+   "label": {"component": "text", "font": "font.size12", "x": 446, "y": 829, "text": "t.maxed", "halign": "center", "valign": "middle"}
+  },
+  "level": {
+   "box": {"component": "sprite", "sprite": "sprite.patch_desc", "x": 446, "y": 777, "sx": 6, "sy": 1.60000002},
+   "label": {"component": "text", "font": "font.size12", "x": 446, "y": 777, "halign": "center", "valign": "middle"},
+   "parts": ["t.lvl", {"n": "level"}, "t.per", {"n": "cap"}]
+  },
+  "locked": {"title": "t.q_q_q_q_q_q_q_q_q_q", "parts": ["t.unlocked_at_obelisk_level", {"n": "req"}]}
+ },
+ "side": {
+  "head": [
+   {"component": "sprite", "sprite": "sprite.patch_backing_brownish", "x": 480, "y": 130, "sx": 6, "sy": 3},
+   {"component": "sprite", "sprite": "sprite.patch_button", "x": 460, "y": 130, "sx": 2.4000001, "sy": 2.4000001},
+   {"component": "sprite", "sprite": "sprite.talent_point_get", "x": 460, "y": 128, "sx": 2, "sy": 2}
+  ],
+  "textFrom": 1000,
+  "rows": [
+   {"y": 0, "label": "t.skill_points_2", "icon": "sprite.talent_point", "value": "skillPoints"},
+   {"y": 55, "label": "t.skill_bits", "icon": "sprite.skill_shard", "value": "skillBits"}
+  ],
+  "row": [
+   {"component": "sprite", "sprite": "sprite.patch_desc_mr", "x": 500, "y": 196, "sx": 6.5999999, "sy": 2},
+   {"id": "label", "component": "text", "font": "font.size10", "x": 448, "y": 202, "halign": "center", "valign": "middle"},
+   {"component": "sprite", "sprite": "sprite.patch_backing_brownish_mr", "x": 500, "y": 180, "sx": 6.5999999, "sy": 1.5},
+   {"component": "sprite", "sprite": "sprite.patch_desc_mr", "x": 498, "y": 180, "sx": 5, "sy": 1.10000002},
+   {"id": "value", "component": "text", "font": "font.size12", "x": 423, "y": 180, "valign": "middle"},
+   {"id": "icon", "component": "sprite", "x": 407, "y": 180}
+  ]
+ },
+ "thumb": {
+  "top": 83,
+  "bottom": 756,
+  "view": 930,
+  "maxScroll": 4500
+ },
+ "banner": [
+  {"component": "sprite", "sprite": "sprite.patch_backing_brownish_ml", "x": 0, "y": 76, "sx": 31.25, "sy": 2, "color": "#c0c0c0"},
+  {"component": "text", "font": "font.size10", "x": 250, "y": 77, "text": "t.use_skill_points_to_unlock_permanent_perks_ex", "halign": "center", "valign": "middle", "color": "#c0c0c0"}
+ ],
+ "openScroll": {"below": 300},
+ "texts": {
+  "st.x": "x",
+  "st.saving_for_a_rainy_day": "Saving For A Rainy Day",
+  "st.pct_gilded_2_cards_poly_3_cards": "%)\n(Gilded = 2 Cards, Poly = 3 Cards)",
+  "st.bonus_plus": " | Bonus: +"
+ },
+ "titles": {"34": "st.saving_for_a_rainy_day"},
+ "descs": {
+  "14": ["t.pickaxe_damage_per_relic_chest_opened_plus_0_1", {"n": "relicChests", "k": 0.1, "fmt": 1}, "t.pct_2"],
+  "18": ["t.freebie_pack_relic_chance_plus_1_pct_freebie", {"n": "relicChests", "div": 250}, "t.pct_2"],
+  "19": ["t.bomb_crit_damage_per_bomb_crit_chance_plus_0_50", {"n": "bombCritChance", "k": 0.5}, "t.pct_bomb_super_crit_chance_plus_20_pct_free"],
+  "28": ["t.rainbow_floor_chance_plus_1_pct_gives", {"n": "rainbowFloorMulti"}, "t.x_ores_3"],
+  "41": ["t.pickaxe_damage_per_poly_card_plus_0_03x_ore", {"n": "polyCardMulti"}, "t.x_2"],
+  "42": ["t.fishing_drones_plus_5_plus", {"n": "level", "k": 5}, "t.fishing_drone_power_plus_10_pct_plus", {"n": "level", "k": 10}, "t.pct_fish_multiplier_plus_3_pct_plus", {"n": "level", "k": 3}, "t.pct_2"],
+  "43": ["t.tier_2_items_from_expert_notices_plus_2_plus", {"n": "level", "k": 2}, "t.item_duration_plus_15_pct_plus", {"n": "level", "k": 15}, "t.pct_notice_fish_req_minus_10_pct", {"n": "level", "k": 10}, "t.pct_2"],
+  "45": ["t.fish_multi_per_fish_card_plus_1_pct_plus", {"n": "fishCards", "k": 1}, "t.pct_shiny_chance_per_fish_card_plus_0_1_pct_plus", {"n": "fishCards", "k": 0.1}, "st.pct_gilded_2_cards_poly_3_cards"],
+  "48": ["t.contract_upgrade_refunds_per_prestige_plus", {"n": "level", "k": 1}, "t.10x_contract_point_chance_plus_0_25_pct_plus", {"n": "level", "k": 0.25}, "t.pct_2"],
+  "49": ["t.vein_polychrome_card_multi_plus_1x_plus", {"n": "level", "k": 1}, "t.x_rainbow_vein_multi_plus_6_pct_plus", {"n": "level", "k": 6}, "t.pct_2"],
+  "50": ["t.orion_star_cap_plus_2_plus", {"n": "level", "k": 2}, "t.star_supernova_multi_plus_6_pct_plus", {"n": "level", "k": 6}, "t.pct_super_star_10x_chance_plus_1_pct_plus", {"n": "level", "k": 1}, "t.pct_2"],
+  "51": ["t.rod_multiplier_plus_10_pct_plus", {"n": "level", "k": 10}, "t.pct_abyss_dock_tick_req_minus_2", {"n": "level", "k": 2}, "t.tier_2_dock_tick_req_minus_1", {"n": "level", "k": 1}, "t.fishing_drones_plus_5_plus_2", {"n": "level", "k": 5}, "t.sym.29"],
+  "52": ["t.per_legendary_fish_found", {"n": "legendaryFish"}, "t.tier_2_dock_power_plus_3_pct_plus", {"n": "level", "k": 3}, "t.pct_7", {"n": "legendaryFish", "k": 3}, "t.pct_fishing_drone_power_plus_2_pct_plus", {"n": "level", "k": 2}, "t.pct_7", {"n": "legendaryFish", "k": 2}, "t.pct_super_shiny_fish_chance_plus_1_pct_plus", {"n": "level", "k": 1}, "t.pct_7", {"n": "legendaryFish", "k": 1}, "t.pct_4"],
+  "56": ["t.banked_lootbug_cap_plus_3_plus", {"n": "level", "k": 3}, "t.lootbug_loot_multi_plus_4_pct_plus", {"n": "level", "k": 4}, "t.pct_2"],
+  "57": ["t.void_portal_base_multi_plus_5_pct_plus", {"n": "level", "k": 5}, "t.pct_void_drone_grade_cap_plus_4_plus", {"n": "level", "k": 4}, "t.sym.29"],
+  "58": ["t.golden_frog_multiplier_plus_0_001x_per_golden", {"n": "goldenFrogs"}, "st.bonus_plus", {"n": "goldenFrogs", "k": 0.001, "fmt": 3}, "st.x"],
+  "59": ["t.frogger_drone_grade_cap_plus_2_plus", {"n": "level", "k": 2}, "t.sym.29_a", "t.triple_lootfrog_chance_plus_1_pct_plus", {"n": "level", "k": 1}, "t.pct_8", "t.frog_capacity_plus_1_plus", {"n": "level", "k": 1}, "t.sym.29"],
+  "61": ["t.novagiant_combo_multi_plus_5_pct_plus", {"n": "level", "k": 5}, "t.pct_8", "t.star_supergiant_chance_plus_1_pct_plus", {"n": "level", "k": 1}, "t.pct_8", "t.capricorn_star_cap_plus_3_plus", {"n": "level", "k": 3}, "t.sym.29_a", "t.gemini_star_cap_plus_2_plus", {"n": "level", "k": 2}, "t.sym.29"],
+  "62": ["t.golden_void_portal_chance_plus_2_pct_plus", {"n": "level", "k": 2}, "t.pct_8", "t.galactic_floor_chance_plus_2_pct_plus", {"n": "level", "k": 2}, "t.pct_8", "t.golden_ore_chance_plus_1_pct_plus", {"n": "level", "k": 1}, "t.pct_8", "t.chain_drone_cap_plus_5_plus", {"n": "level", "k": 5}, "t.sym.29"]
+ }
+}

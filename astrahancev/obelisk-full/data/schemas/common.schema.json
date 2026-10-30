@@ -1,0 +1,88 @@
+{
+ "$id": "common",
+ "title": "Общие определения схем data/ (этап 2.4)",
+ "description": "Типы, на которые ссылаются схемы систем, текстов и экранов. Формы curve/condition/effect — каркас (??): уточняются спеками систем (oracle/specs/), когда числа сняты с O.",
+ "$defs": {
+  "id": {"type": "string", "pattern": "^[a-z][A-Za-z0-9]*(?:[._-][a-z0-9][A-Za-z0-9]*)*$", "description": "Наш идентификатор: латиница/цифры, начало строчное (camelCase можно), разделители . _ -"},
+  "textKeyName": {"type": "string", "pattern": "^t(?:\\.[a-z0-9_]+)+$", "description": "Имя ключа текста в strings.json: t.<слаг>"},
+  "stringKey": {"$ref": "#/$defs/textKeyName", "x-stringKey": true, "description": "Ссылка на текст: ключ обязан быть в data/strings.json"},
+  "skinKey": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:\\.[a-z0-9_]+)+$", "description": "Наш ключ ассета skin (icon.pickaxe, font.size12); число запрещено"},
+  "version": {"const": "2.2.50"},
+  "num": {"type": "number", "description": "Конечное double (JSON не хранит NaN/Infinity)"},
+  "int": {"type": "integer"},
+  "nonneg": {"type": "number", "minimum": 0},
+  "count": {"type": "integer", "minimum": 0},
+  "chance": {"type": "number", "minimum": 0, "maximum": 1},
+  "scalar": {"type": ["number", "string", "boolean", "null"]},
+  "table": {
+   "type": "object",
+   "description": "Таблица баланса: колонки — наши имена, строки — значения по колонкам",
+   "required": ["columns", "rows"],
+   "additionalProperties": false,
+   "x-rowsMatchColumns": true,
+   "properties": {
+    "columns": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "rows": {"type": "array", "items": {"type": "array", "items": {"$ref": "#/$defs/scalar"}}}
+   }
+  },
+  "curve": {
+   "description": "Как число зависит от уровня L (??: набор видов уточняют спеки систем)",
+   "oneOf": [
+    {"type": "object", "required": ["kind", "value"], "additionalProperties": false,
+     "properties": {"kind": {"const": "const"}, "value": {"$ref": "#/$defs/num"}}},
+    {"type": "object", "required": ["kind", "base", "step"], "additionalProperties": false,
+     "properties": {"kind": {"const": "linear"}, "base": {"$ref": "#/$defs/num"}, "step": {"$ref": "#/$defs/num"}}},
+    {"type": "object", "required": ["kind", "base", "growth"], "additionalProperties": false,
+     "properties": {"kind": {"const": "geometric"}, "base": {"$ref": "#/$defs/num"}, "growth": {"type": "number", "exclusiveMinimum": 0},
+      "round": {"enum": ["none", "floor", "ceil", "round"]}}},
+    {"type": "object", "required": ["kind", "segments"], "additionalProperties": false,
+     "properties": {"kind": {"const": "piecewise"},
+      "segments": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["from", "curve"], "additionalProperties": false,
+       "properties": {"from": {"$ref": "#/$defs/count"}, "curve": {"$ref": "#/$defs/curve"}}}}}},
+    {"type": "object", "required": ["kind", "table", "column"], "additionalProperties": false,
+     "properties": {"kind": {"const": "table"}, "table": {"$ref": "#/$defs/id"}, "column": {"$ref": "#/$defs/id"}}}
+   ]
+  },
+  "condition": {
+   "description": "Условие открытия (??)",
+   "oneOf": [
+    {"type": "object", "required": ["kind", "stat", "atLeast"], "additionalProperties": false,
+     "properties": {"kind": {"const": "stat"}, "stat": {"$ref": "#/$defs/id"}, "atLeast": {"$ref": "#/$defs/num"}}},
+    {"type": "object", "required": ["kind", "flag"], "additionalProperties": false,
+     "properties": {"kind": {"const": "flag"}, "flag": {"$ref": "#/$defs/id"}}},
+    {"type": "object", "required": ["kind", "of"], "additionalProperties": false,
+     "properties": {"kind": {"enum": ["all", "any"]}, "of": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/condition"}}}}
+   ]
+  },
+  "effect": {
+   "type": "object",
+   "description": "Что даёт уровень: к какой величине и как (??)",
+   "required": ["target", "op", "perLevel"],
+   "additionalProperties": false,
+   "properties": {
+    "target": {"$ref": "#/$defs/id"},
+    "op": {"enum": ["add", "mul", "set"]},
+    "base": {"$ref": "#/$defs/num"},
+    "perLevel": {"$ref": "#/$defs/num"}
+   }
+  },
+  "item": {
+   "type": "object",
+   "description": "Сущность системы: улучшение, предмет, реликвия, статуя…",
+   "required": ["id"],
+   "additionalProperties": false,
+   "properties": {
+    "id": {"$ref": "#/$defs/id"},
+    "name": {"$ref": "#/$defs/stringKey"},
+    "desc": {"$ref": "#/$defs/stringKey"},
+    "icon": {"$ref": "#/$defs/skinKey"},
+    "currency": {"$ref": "#/$defs/id"},
+    "cost": {"$ref": "#/$defs/curve"},
+    "maxLevel": {"oneOf": [{"$ref": "#/$defs/count"}, {"type": "null"}]},
+    "effects": {"type": "array", "items": {"$ref": "#/$defs/effect"}},
+    "unlock": {"$ref": "#/$defs/condition"},
+    "params": {"type": "object", "propertyNames": {"$ref": "#/$defs/id"}, "additionalProperties": {"$ref": "#/$defs/scalar"}}
+   }
+  }
+ }
+}

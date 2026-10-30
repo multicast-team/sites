@@ -1,0 +1,408 @@
+{
+ "$id": "ui-screen",
+ "title": "Экран из компонентов UI-кита (data/ui/<экран>.json)",
+ "description": "Декларативная вёрстка (§1.1, §10.1 п.2а): дерево компонентов с якорем, размером, ключами skin и текстов, привязками к состоянию. Повторы — repeat с шагом ряда. Команд рисования нет: лишние поля запрещены. Координаты — в пикселях комнаты 500×960 и обязаны совпасть с O.",
+ "type": "object",
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "root"
+ ],
+ "additionalProperties": false,
+ "properties": {
+  "$schema": {
+   "const": "ui-screen"
+  },
+  "screen": {
+   "$ref": "common#/$defs/id"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "room": {
+   "type": "object",
+   "required": [
+    "w",
+    "h"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "w": {
+     "const": 500
+    },
+    "h": {
+     "const": 960
+    }
+   }
+  },
+  "styles": {
+   "type": "object",
+   "propertyNames": {
+    "$ref": "common#/$defs/id"
+   },
+   "additionalProperties": {
+    "$ref": "#/$defs/style"
+   }
+  },
+  "root": {
+   "$ref": "#/$defs/node"
+  },
+  "format": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "short"
+   ],
+   "properties": {
+    "short": {
+     "type": "object",
+     "required": [
+      "plainBelow",
+      "plainFloorFrom",
+      "plainDecimals",
+      "groupDigits",
+      "suffixes",
+      "sciPrefix",
+      "decimals",
+      "digits",
+      "rounding"
+     ],
+     "additionalProperties": false,
+     "description": "Короткий вывод чисел (ui/format/number.mjs): |x| < plainFloorFrom — целое как есть, дробное с plainDecimals знаками; до plainBelow — целая часть вниз; иначе группа k = ⌊⌊log10|x|⌋/groupDigits⌋, суффикс k (после последнего — sciPrefix + степень), знаков по величине (decimals), вниз от числа, округлённого до digits значащих цифр",
+     "properties": {
+      "plainBelow": {
+       "$ref": "common#/$defs/nonneg"
+      },
+      "plainFloorFrom": {
+       "$ref": "common#/$defs/nonneg"
+      },
+      "plainDecimals": {
+       "$ref": "common#/$defs/count"
+      },
+      "groupDigits": {
+       "$ref": "common#/$defs/count"
+      },
+      "suffixes": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 40,
+       "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z]{1,4}$"
+       }
+      },
+      "sciPrefix": {
+       "type": "string",
+       "pattern": "^[A-Za-z]{1,4}$"
+      },
+      "decimals": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 4,
+       "items": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": {
+         "type": "number"
+        }
+       }
+      },
+      "digits": {
+       "$ref": "common#/$defs/count"
+      },
+      "rounding": {
+       "enum": [
+        "floorSignificant"
+       ]
+      }
+     }
+    }
+   }
+  },
+  "comment": {
+   "type": "string"
+  },
+  "top": {
+   "type": "object",
+   "required": [
+    "tasksPanel"
+   ],
+   "additionalProperties": false,
+   "description": "Сдвиг всего интерфейса меню вниз, px: tasksPanel — пока над меню панель заданий NPE",
+   "properties": {
+    "tasksPanel": {
+     "$ref": "common#/$defs/nonneg"
+    }
+   }
+  }
+ },
+ "$defs": {
+  "style": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "$ref": "common#/$defs/chance"
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "scale": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    }
+   }
+  },
+  "node": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "component": {
+     "enum": [
+      "group",
+      "panel",
+      "button",
+      "buyRow",
+      "tabs",
+      "scroll",
+      "progress",
+      "text",
+      "image",
+      "list",
+      "header",
+      "subtitleBar",
+      "menuButton"
+     ]
+    },
+    "id": {
+     "$ref": "common#/$defs/id"
+    },
+    "anchor": {
+     "enum": [
+      "topLeft",
+      "top",
+      "topRight",
+      "left",
+      "center",
+      "right",
+      "bottomLeft",
+      "bottom",
+      "bottomRight"
+     ]
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "w": {
+     "$ref": "common#/$defs/nonneg"
+    },
+    "h": {
+     "$ref": "common#/$defs/nonneg"
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "frame": {
+     "$ref": "common#/$defs/count"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "style": {
+     "$ref": "common#/$defs/id"
+    },
+    "bind": {
+     "type": "string",
+     "pattern": "^[a-z][A-Za-z0-9]*(?:\\.[a-z][A-Za-z0-9]*)*$",
+     "description": "Путь к величине состояния core/ (наши имена)"
+    },
+    "visibleIf": {
+     "type": "string",
+     "pattern": "^!?[a-z][A-Za-z0-9]*(?:\\.[a-z][A-Za-z0-9]*)*$"
+    },
+    "action": {
+     "$ref": "common#/$defs/id"
+    },
+    "repeat": {
+     "type": "object",
+     "required": [
+      "count",
+      "step"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "count": {
+       "oneOf": [
+        {
+         "$ref": "common#/$defs/count"
+        },
+        {
+         "type": "string",
+         "pattern": "^[a-z][A-Za-z0-9.]*$"
+        }
+       ]
+      },
+      "step": {
+       "type": "object",
+       "required": [
+        "x",
+        "y"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "x": {
+         "$ref": "common#/$defs/num"
+        },
+        "y": {
+         "$ref": "common#/$defs/num"
+        }
+       }
+      }
+     }
+    },
+    "children": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/node"
+     }
+    },
+    "gaps": {
+     "type": "object",
+     "required": [
+      "headerToRow",
+      "rowStep",
+      "rowToHeader"
+     ],
+     "additionalProperties": false,
+     "description": "Шаги списка с секциями: заголовок → первая строка, строка → строка, последняя строка → заголовок следующей секции",
+     "properties": {
+      "headerToRow": {
+       "$ref": "common#/$defs/num"
+      },
+      "rowStep": {
+       "$ref": "common#/$defs/num"
+      },
+      "rowToHeader": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "header": {
+     "$ref": "#/$defs/node"
+    },
+    "item": {
+     "$ref": "#/$defs/node"
+    },
+    "texts": {
+     "type": "object",
+     "propertyNames": {
+      "$ref": "common#/$defs/id"
+     },
+     "additionalProperties": {
+      "$ref": "common#/$defs/stringKey"
+     }
+    },
+    "sections": {
+     "type": "array",
+     "maxItems": 8,
+     "items": {
+      "type": "object",
+      "required": [
+       "world",
+       "color",
+       "backing"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "world": {
+        "$ref": "common#/$defs/count"
+       },
+       "color": {
+        "type": "string",
+        "pattern": "^#[0-9a-f]{6}$"
+       },
+       "backing": {
+        "$ref": "common#/$defs/skinKey"
+       }
+      }
+     }
+    },
+    "items": {
+     "type": "array",
+     "maxItems": 200,
+     "description": "Данные строк списка без координат: место даёт шаг ряда (страж 6)",
+     "items": {
+      "type": "object",
+      "required": [
+       "row",
+       "icon"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "row": {
+        "$ref": "common#/$defs/count"
+       },
+       "icon": {
+        "$ref": "common#/$defs/skinKey"
+       },
+       "overlay": {
+        "$ref": "common#/$defs/skinKey"
+       }
+      }
+     }
+    },
+    "track": {
+     "type": "object",
+     "required": [
+      "top",
+      "bottom",
+      "viewBottom",
+      "maxScroll"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "top": {
+       "$ref": "common#/$defs/num"
+      },
+      "bottom": {
+       "$ref": "common#/$defs/num"
+      },
+      "viewBottom": {
+       "$ref": "common#/$defs/num"
+      },
+      "maxScroll": {
+       "$ref": "common#/$defs/nonneg"
+      }
+     },
+     "description": "Ползунок прокрутки: дорожка top…bottom (top — без сдвига top экрана), низ видимой части списка viewBottom, предел прокрутки maxScroll"
+    }
+   }
+  }
+ }
+}

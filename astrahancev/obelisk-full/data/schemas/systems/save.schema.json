@@ -1,0 +1,374 @@
+{
+ "$id": "systems/save",
+ "title": "Сейв: словарь новой игры и раскладка INI (data/systems/save.json, этапы 5.4, 5.21, 5.22, 5.23)",
+ "description": "newGame: ключ INI «секция/ключ» (внешний формат сейва) → вид и значение в памяти игры на кадре старта новой игры (группа tick.o54). noGlobal: 194 ключа сейва без глобала — вид и значение новой игры по сейву O (группа save.ini521). iniLayout: порядок секций INI и ключей в них, строка — пара (секция, ключ) в порядке файла (секции 1–22, этап 5.21). constants: знаков после точки у real, число секций файла и секций, описанных в iniLayout. Этап 5.22: iniLayoutPart2 — порядок секций 23–44 и ключей в них; iniFormats — ключи с особым видом записи (numText — «текст числа», zList — список «префикс~base64(zlib(…))»); iniListFields — поля записи списка в порядке записи (empty — значение, которое пишется пустым полем); iniListLoadDefaults — поля записи после загрузки, которых нет в тексте; константы iniPart2From/To, iniNumText*, iniList*. Этап 5.23: iniLayoutPart3 — порядок секций 45–47 (arcana, rng_buffers, stats) и ключей в них, presence: always — ключ есть и в сейве новой игры, afterLoad — появляется в сейве после первой загрузки файла; iniLoadDefaults — значение ключа после загрузки, если его нет в файле (вид и значение); iniSectionFormats — секции с особым видом значения (b64buf — буфер фиксированной длины bytes в base64); константы iniPart3From/To.",
+ "allOf": [
+  {
+   "$ref": "system"
+  },
+  {
+   "required": [
+    "tables"
+   ],
+   "properties": {
+    "system": {
+     "const": "save"
+    },
+    "constants": {
+     "properties": {
+      "iniDecimals": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "iniSections": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "iniPartSections": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "iniPart2From": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "iniPart2To": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "iniNumTextDecimals": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "iniNumTextIntLimit": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "iniListPrefixSep": {
+       "type": "string",
+       "minLength": 1
+      },
+      "iniListEntrySep": {
+       "type": "string",
+       "minLength": 1
+      },
+      "iniListFieldSep": {
+       "type": "string",
+       "minLength": 1
+      },
+      "iniListEnd": {
+       "type": "string"
+      },
+      "iniPart3From": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "iniPart3To": {
+       "type": "integer",
+       "minimum": 1
+      }
+     }
+    },
+    "tables": {
+     "required": [
+      "newGame"
+     ],
+     "properties": {
+      "newGame": {
+       "properties": {
+        "columns": {
+         "const": [
+          "key",
+          "kind",
+          "value"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "type": "string",
+            "pattern": "^[a-z_0-9]+/[A-Za-z_0-9]+$"
+           },
+           {
+            "enum": [
+             "real",
+             "bool",
+             "string",
+             "list"
+            ]
+           }
+          ]
+         }
+        }
+       }
+      },
+      "noGlobal": {
+       "properties": {
+        "columns": {
+         "const": [
+          "key",
+          "kind",
+          "value"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "type": "string",
+            "pattern": "^[a-z_0-9]+/[A-Za-z_0-9 ]+$"
+           },
+           {
+            "enum": [
+             "real",
+             "string"
+            ]
+           }
+          ]
+         }
+        }
+       }
+      },
+      "iniLayout": {
+       "properties": {
+        "columns": {
+         "const": [
+          "section",
+          "key"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "type": "string",
+            "pattern": "^[a-z_0-9]+$"
+           },
+           {
+            "type": "string",
+            "pattern": "^[A-Za-z_0-9 ]+$"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "iniLayoutPart2": {
+       "properties": {
+        "columns": {
+         "const": [
+          "section",
+          "key"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "type": "string",
+            "pattern": "^[a-z_0-9]+$"
+           },
+           {
+            "type": "string",
+            "pattern": "^[A-Za-z_0-9 ]+$"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "iniFormats": {
+       "properties": {
+        "columns": {
+         "const": [
+          "key",
+          "format",
+          "prefix"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "type": "string",
+            "pattern": "^[a-z_0-9]+/[A-Za-z_0-9 ]+$"
+           },
+           {
+            "enum": [
+             "numText",
+             "zList"
+            ]
+           },
+           {
+            "type": [
+             "string",
+             "null"
+            ]
+           }
+          ]
+         }
+        }
+       }
+      },
+      "iniListFields": {
+       "properties": {
+        "columns": {
+         "const": [
+          "field",
+          "kind",
+          "empty"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "type": "string",
+            "pattern": "^[a-z_]+$"
+           },
+           {
+            "enum": [
+             "real",
+             "string"
+            ]
+           },
+           {
+            "type": [
+             "number",
+             "null"
+            ]
+           }
+          ]
+         }
+        }
+       }
+      },
+      "iniListLoadDefaults": {
+       "properties": {
+        "columns": {
+         "const": [
+          "field",
+          "value"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "type": "string",
+            "pattern": "^[a-z_]+$"
+           },
+           {
+            "type": [
+             "number",
+             "boolean"
+            ]
+           }
+          ]
+         }
+        }
+       }
+      },
+      "iniLayoutPart3": {
+       "properties": {
+        "columns": {
+         "const": [
+          "section",
+          "key",
+          "presence"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "type": "string",
+            "pattern": "^[a-z_0-9]+$"
+           },
+           {
+            "type": "string",
+            "pattern": "^[A-Za-z_0-9 ]+$"
+           },
+           {
+            "enum": [
+             "always",
+             "afterLoad"
+            ]
+           }
+          ]
+         }
+        }
+       }
+      },
+      "iniLoadDefaults": {
+       "properties": {
+        "columns": {
+         "const": [
+          "key",
+          "kind",
+          "value"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "type": "string",
+            "pattern": "^[a-z_0-9]+/[A-Za-z_0-9 ]+$"
+           },
+           {
+            "enum": [
+             "real",
+             "bool",
+             "string"
+            ]
+           },
+           {
+            "type": [
+             "number",
+             "string",
+             "boolean"
+            ]
+           }
+          ]
+         }
+        }
+       }
+      },
+      "iniSectionFormats": {
+       "properties": {
+        "columns": {
+         "const": [
+          "section",
+          "format",
+          "bytes"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "type": "string",
+            "pattern": "^[a-z_0-9]+$"
+           },
+           {
+            "enum": [
+             "b64buf"
+            ]
+           },
+           {
+            "type": "integer",
+            "minimum": 1
+           }
+          ]
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

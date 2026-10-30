@@ -1,0 +1,74 @@
+{
+ "$schema": "systems/tasks",
+ "system": "tasks",
+ "version": "2.2.50",
+ "constants": {
+  "final.gems": 50,
+  "final.dronePoints": 50,
+  "final.item": 10,
+  "final.itemCount": 10,
+  "final.freebieCountdown": 120
+ },
+ "tables": {
+  "onStart": {
+   "columns": [
+    "task",
+    "counter"
+   ],
+   "rows": [
+    [
+     3,
+     "pickaxeLevel"
+    ],
+    [
+     4,
+     "bombsFired"
+    ],
+    [
+     5,
+     "floor"
+    ],
+    [
+     6,
+     "pickaxeLevel"
+    ],
+    [
+     7,
+     "itemChests"
+    ],
+    [
+     8,
+     "itemsUsed"
+    ],
+    [
+     9,
+     "relicsOwned"
+    ],
+    [
+     10,
+     "floor"
+    ],
+    [
+     12,
+     "pickaxeLevel"
+    ],
+    [
+     15,
+     "droneLevel"
+    ],
+    [
+     16,
+     "level"
+    ],
+    [
+     17,
+     "prestiges"
+    ],
+    [
+     18,
+     "artifactsOwned"
+    ]
+   ]
+  }
+ }
+}

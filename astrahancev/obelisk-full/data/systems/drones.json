@@ -1,0 +1,176 @@
+{
+ "$schema": "systems/drones",
+ "system": "drones",
+ "version": "2.2.50",
+ "constants": {
+  "upgrade.costBase": 5,
+  "upgrade.unlockCost": 1,
+  "upgrade.levelReq": 420,
+  "upgrade.levelReqUntilTask": 19,
+  "points.base": 1,
+  "points.step": 0.5,
+  "coal.generatorSeconds": 90,
+  "coal.capPerLevel": 1000,
+  "suit.fuelPerGrade": 0.05,
+  "suit.gradeCap": 10,
+  "slots.count": 5
+ },
+ "tables": {
+  "upgrades": {
+   "columns": [
+    "row",
+    "cell",
+    "growth",
+    "cap",
+    "obeliskReq"
+   ],
+   "rows": [
+    [
+     0,
+     "stat.droneCount",
+     null,
+     1,
+     0
+    ],
+    [
+     1,
+     "stat.droneMulti",
+     1.45,
+     10,
+     0
+    ],
+    [
+     2,
+     "stat.droneRadius",
+     1.45,
+     10,
+     0
+    ],
+    [
+     3,
+     "stat.droneMovespeed",
+     1.45,
+     10,
+     0
+    ],
+    [
+     4,
+     "stat.droneAttackSpeed",
+     1.45,
+     10,
+     0
+    ],
+    [
+     5,
+     "stat.drone3xChance",
+     1.6,
+     15,
+     1
+    ],
+    [
+     6,
+     "stat.droneRapidFireChance",
+     1.7,
+     15,
+     2
+    ]
+   ]
+  },
+  "coal": {
+   "columns": [
+    "row",
+    "cell"
+   ],
+   "rows": [
+    [
+     0,
+     "stat.coalTimerReduc"
+    ],
+    [
+     1,
+     "stat.coalFuelDuration"
+    ],
+    [
+     2,
+     "stat.coalChanceToNotConsumeFuel"
+    ],
+    [
+     3,
+     "stat.coalDroneExpGain"
+    ],
+    [
+     4,
+     "stat.droneSuitCap"
+    ],
+    [
+     5,
+     "stat.coalCapacityMulti"
+    ]
+   ]
+  },
+  "suits": {
+   "columns": [
+    "suit",
+    "expBase",
+    "fuelBase"
+   ],
+   "rows": [
+    [
+     0,
+     2000,
+     240
+    ],
+    [
+     1,
+     2500,
+     220
+    ],
+    [
+     2,
+     3000,
+     200
+    ],
+    [
+     3,
+     3500,
+     180
+    ],
+    [
+     4,
+     4000,
+     160
+    ],
+    [
+     5,
+     4500,
+     140
+    ],
+    [
+     6,
+     5000,
+     210
+    ],
+    [
+     7,
+     5500,
+     180
+    ],
+    [
+     8,
+     22500,
+     120
+    ],
+    [
+     9,
+     255000,
+     70
+    ],
+    [
+     10,
+     765000,
+     65
+    ]
+   ]
+  }
+ }
+}

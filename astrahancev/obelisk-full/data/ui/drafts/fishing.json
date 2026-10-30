@@ -1,0 +1,1542 @@
+{
+ "$schema": "ui-draft",
+ "screen": "fishing",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Рыбалка» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 250,
+    "y": 504,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.docks",
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#118a6b"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 1,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#5b0712"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 2,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#0c906f"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 3,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#efb0df"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 4,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#c25646"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 5,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#10ee44"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 6,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#734d9d"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 7,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#1d0e40"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 8,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#4753ed"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 9,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#e8b1eb"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 10,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#a422e6"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fisher_blanket_male",
+      "frame": 11,
+      "x": -166,
+      "y": 12,
+      "sx": 2,
+      "sy": 2,
+      "color": "#df6660"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fishing_rod",
+      "x": -140,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "rect",
+      "x1": -224,
+      "y1": 95,
+      "x2": 224,
+      "y2": 220,
+      "color": "#17354a"
+     },
+     {
+      "component": "rect",
+      "x1": -224,
+      "y1": -125,
+      "x2": 223,
+      "y2": -97,
+      "color": "#17354a"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_fishin_with_desc",
+      "x": -183,
+      "y": -111,
+      "sx": 5,
+      "sy": 1.60000002
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -183,
+      "y": -111,
+      "text": "t.lake",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 181,
+    "y": 393,
+    "step": {
+     "x": 130,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_fishin_with_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 9,
+      "sy": 1.60000002
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "Power: 10",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "0": {
+       "sx": 7
+      },
+      "1": {
+       "value": "Drones: 0"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 456,
+    "y": 393,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": 0,
+      "y": 0,
+      "sx": 1.60000002,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.minus",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_fishin_with_desc",
+      "x": -316,
+      "y": 231,
+      "sx": 5,
+      "sy": 1.60000002
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -316,
+      "y": 231,
+      "text": "t.drones",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": -402,
+      "y": 266,
+      "sx": 1.60000002,
+      "sy": 1.60000002,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.minus",
+      "x": -405,
+      "y": 262,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.minus",
+      "x": -399,
+      "y": 268,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 109,
+    "y": 659,
+    "step": {
+     "x": 62,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": 0,
+      "y": 0,
+      "sx": 2.20000005,
+      "sy": 2.20000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.minus",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "sprite": "sprite.plus"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 226,
+    "y": 659,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": 0,
+      "y": 0,
+      "sx": 1.60000002,
+      "sy": 1.60000002,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.plus",
+      "x": -3,
+      "y": -3,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.plus",
+      "x": 3,
+      "y": 1,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": -84,
+      "y": 40,
+      "sx": 7,
+      "sy": 1.79999995,
+      "color": "#404040"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -85,
+      "y": 38,
+      "text": "t.assign_fisher",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -83,
+      "y": 40,
+      "text": "t.assign_fisher",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -85,
+      "y": 40,
+      "text": "t.assign_fisher",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -83,
+      "y": 38,
+      "text": "t.assign_fisher",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -84,
+      "y": 39,
+      "text": "t.assign_fisher",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#404040"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish_backing",
+      "x": 46,
+      "y": -21,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish",
+      "x": 46,
+      "y": -21,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 46,
+      "y": 39,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish",
+      "x": 46,
+      "y": 39,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 46,
+      "y": 10,
+      "value": "10%",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish_backing",
+      "x": 99,
+      "y": -21,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish",
+      "frame": 1,
+      "x": 99,
+      "y": -21,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 99,
+      "y": 39,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish",
+      "frame": 1,
+      "x": 99,
+      "y": 39,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 99,
+      "y": 10,
+      "text": "t.6_pct",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 378,
+    "y": 638,
+    "step": {
+     "x": 53,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish_backing",
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish",
+      "frame": 2,
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 0,
+      "y": 60,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish",
+      "frame": 2,
+      "x": 0,
+      "y": 60,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 31,
+      "value": "3%",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "frame": 3
+      },
+      "3": {
+       "frame": 3
+      },
+      "4": {
+       "value": "2%"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish_meter",
+      "frame": 1,
+      "x": 26,
+      "y": 594,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "todo",
+      "what": "spritePart",
+      "left": 0,
+      "top": 0,
+      "w": 0,
+      "h": 6,
+      "x": 26,
+      "y": 594,
+      "sx": 2,
+      "sy": 2,
+      "angle": 0
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 425,
+      "y": 603,
+      "value": "0/5",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 427,
+      "y": 605,
+      "value": "0/5",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 425,
+      "y": 605,
+      "value": "0/5",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 427,
+      "y": 603,
+      "value": "0/5",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 426,
+      "y": 604,
+      "value": "0/5",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.docks",
+      "frame": 1,
+      "x": 250,
+      "y": 884,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "rect",
+      "x1": 26,
+      "y1": 979,
+      "x2": 474,
+      "y2": 1104,
+      "color": "#17354a"
+     },
+     {
+      "component": "rect",
+      "x1": 26,
+      "y1": 759,
+      "x2": 473,
+      "y2": 787,
+      "color": "#17354a"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_fishin_with_desc",
+      "x": 140,
+      "y": 1004,
+      "sx": 5,
+      "sy": 1.60000002
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 140,
+      "y": 1004,
+      "text": "t.drones",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": 54,
+      "y": 1039,
+      "sx": 1.60000002,
+      "sy": 1.60000002,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.minus",
+      "x": 51,
+      "y": 1035,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.minus",
+      "x": 57,
+      "y": 1041,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 109,
+    "y": 1039,
+    "step": {
+     "x": 62,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": 0,
+      "y": 0,
+      "sx": 2.20000005,
+      "sy": 2.20000005,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.minus",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "sprite": "sprite.plus"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 226,
+    "y": 1039,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": 0,
+      "y": 0,
+      "sx": 1.60000002,
+      "sy": 1.60000002,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.plus",
+      "x": -3,
+      "y": -3,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.plus",
+      "x": 3,
+      "y": 1,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": -84,
+      "y": 40,
+      "sx": 7,
+      "sy": 1.79999995
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -85,
+      "y": 38,
+      "text": "t.assign_fisher",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -83,
+      "y": 40,
+      "text": "t.assign_fisher",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -85,
+      "y": 40,
+      "text": "t.assign_fisher",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -83,
+      "y": 38,
+      "text": "t.assign_fisher",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -84,
+      "y": 39,
+      "text": "t.assign_fisher",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 272,
+    "y": 1018,
+    "step": {
+     "x": 53,
+     "y": 0
+    },
+    "count": 4,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish_backing",
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish",
+      "frame": 4,
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.card_backing",
+      "x": 0,
+      "y": 60,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.question_mark",
+      "x": 0,
+      "y": 60,
+      "color": "#404040",
+      "alpha": 0.5
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 31,
+      "text": "t.0_pct",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "frame": 5
+      }
+     },
+     {
+      "1": {
+       "frame": 6
+      }
+     },
+     {
+      "1": {
+       "frame": 7
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "group",
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.fish_meter",
+        "frame": 1,
+        "x": 26,
+        "y": 974,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "todo",
+        "what": "spritePart",
+        "left": 0,
+        "top": 0,
+        "w": 0,
+        "h": 6,
+        "x": 26,
+        "y": 974,
+        "sx": 2,
+        "sy": 2,
+        "angle": 0
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 425,
+        "y": 983,
+        "value": "0/8",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 427,
+        "y": 985,
+        "value": "0/8",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 425,
+        "y": 985,
+        "value": "0/8",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 427,
+        "y": 983,
+        "value": "0/8",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 426,
+        "y": 984,
+        "value": "0/8",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "rect",
+        "x1": 26,
+        "y1": 786,
+        "x2": 474,
+        "y2": 1104,
+        "color": "#17354a"
+       },
+       {
+        "component": "rect",
+        "x1": 26,
+        "y1": 786,
+        "x2": 474,
+        "y2": 1104,
+        "color": "#000000",
+        "alpha": 0.600000024
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_fishin_with_desc",
+        "x": 250,
+        "y": 954,
+        "sx": 20,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.lock_only",
+        "x": 250,
+        "y": 904,
+        "sx": 2,
+        "sy": 2,
+        "color": "#808080"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 250,
+        "y": 954,
+        "value": "Required: Boat Level 1",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "line",
+        "x1": 25,
+        "y1": 1147,
+        "x2": 182,
+        "y2": 1147,
+        "w": 2,
+        "color": "#cd96ff",
+        "alpha": 0.600000024
+       },
+       {
+        "component": "line",
+        "x1": 318,
+        "y1": 1147,
+        "x2": 475,
+        "y2": 1147,
+        "w": 2,
+        "color": "#cd96ff",
+        "alpha": 0.600000024
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 251,
+        "y": 1148,
+        "text": "t.tier_2_docks",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 250,
+        "y": 1147,
+        "text": "t.tier_2_docks",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#cd96ff"
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 16,
+      "y": 159,
+      "children": [
+       {
+        "component": "rect",
+        "x1": 0,
+        "y1": 0,
+        "x2": 468,
+        "y2": 40,
+        "color": "#17354a"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_fishin_with_desc",
+        "x": 234,
+        "y": 25,
+        "sx": 13,
+        "sy": 1.60000002
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 234,
+        "y": 25,
+        "value": "Unassigned Drones: 0",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.button_fishing_log_toggle",
+        "x": 64,
+        "y": 25
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 63,
+        "y": 23,
+        "text": "t.toggle_log",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 65,
+        "y": 25,
+        "text": "t.toggle_log",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 63,
+        "y": 25,
+        "text": "t.toggle_log",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 65,
+        "y": 23,
+        "text": "t.toggle_log",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 64,
+        "y": 24,
+        "text": "t.toggle_log",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.button_unassign_all_drones",
+        "x": 404,
+        "y": 25,
+        "color": "#808080"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 403,
+        "y": 23,
+        "text": "t.unassign_all",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 405,
+        "y": 25,
+        "text": "t.unassign_all",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 403,
+        "y": 25,
+        "text": "t.unassign_all",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 405,
+        "y": 23,
+        "text": "t.unassign_all",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 404,
+        "y": 24,
+        "text": "t.unassign_all",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "rect",
+        "x1": 0,
+        "y1": 40,
+        "x2": 468,
+        "y2": 135,
+        "color": "#17354a"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 23,
+    "y": 277,
+    "step": {
+     "x": 0,
+     "y": -18
+    },
+    "count": 5,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.sym.2d_2d_2d_2d_2d",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": -1,
+      "y": -1,
+      "text": "t.sym.2d_2d_2d_2d_2d"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.nothing",
+      "x": 58,
+      "y": 6
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.fish_meter2",
+      "frame": 1,
+      "x": 26,
+      "y": 154,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "todo",
+      "what": "spritePart",
+      "left": 0,
+      "top": 0,
+      "w": 7.911666666666682,
+      "h": 6,
+      "x": 47,
+      "y": 160,
+      "sx": 2,
+      "sy": 2,
+      "angle": 0
+     },
+     {
+      "component": "rect",
+      "x1": 492,
+      "y1": 127,
+      "x2": 502,
+      "y2": 257.475342,
+      "color": "#c0c0c0",
+      "alpha": 0.349999994
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_fishin_ml",
+      "x": 0,
+      "y": 850,
+      "sx": 31.25,
+      "sy": 4.0999999
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": 50,
+      "y": 838,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fishing_tabs",
+      "x": 50,
+      "y": 837,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 50,
+    "y": 867,
+    "step": {
+     "x": 80,
+     "y": 0
+    },
+    "count": 5,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 4.0999999,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.docks",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": 80,
+      "y": -29,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.fishing_tabs",
+      "frame": 1,
+      "x": 80,
+      "y": -30,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.notices"
+      },
+      "3": {
+       "frame": 2
+      }
+     },
+     {
+      "1": {
+       "text": "t.upgrades"
+      },
+      "3": {
+       "frame": 3
+      }
+     },
+     {
+      "1": {
+       "text": "t.enhance"
+      },
+      "3": {
+       "frame": 4
+      }
+     },
+     {
+      "1": {
+       "text": "t.aquarium"
+      },
+      "3": {
+       "frame": 5
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 450,
+    "y": 867,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 4.0999999,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.legendary",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_fishin_ml",
+      "x": -450,
+      "y": -723.5,
+      "sx": 31.25,
+      "sy": 2.1875
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_fishin_with_desc",
+      "x": -200,
+      "y": -723,
+      "sx": 18,
+      "sy": 1.60000002
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -200,
+      "y": -723,
+      "value": "1 Fishing Tick = 60 Seconds",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": 18,
+      "y": -723,
+      "sx": 1.60000002,
+      "sy": 1.79999995
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.info_icon",
+      "x": 18,
+      "y": -724
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button_fishing",
+      "x": -422,
+      "y": -723,
+      "sx": 1.60000002,
+      "sy": 1.79999995
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 20,
+    "y": 135,
+    "step": {
+     "x": 0,
+     "y": 6
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 15,
+      "y2": 2
+     }
+    ]
+   }
+  ]
+ }
+}

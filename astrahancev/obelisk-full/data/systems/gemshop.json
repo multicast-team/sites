@@ -1,0 +1,144 @@
+{
+ "$schema": "systems/gemshop",
+ "system": "gemshop",
+ "version": "2.2.50",
+ "constants": {
+  "confirmTaps": 2,
+  "freebie.claimTaps": 1,
+  "freebie.claimCost": 1,
+  "freebie.chestsBase": 1,
+  "freebie.relicChance": 10,
+  "freebie.shardChance": 10,
+  "freebie.shardMinObelisk": 4,
+  "freebie.guaranteedMinObelisk": 4,
+  "freebie.extraRollMinObelisk": 15,
+  "freebie.jackpotTimes": 5,
+  "freebie.jackpotMod": 1000,
+  "freebie.jackpotScale": 10,
+  "freebie.rollMod": 100,
+  "freebie.tailRolls": 4,
+  "freebie.shardItem": 12,
+  "freebie.builtinWordsUnit": 11,
+  "freebie.builtinBase": 5,
+  "freebie.builtinRelic": 2,
+  "freebie.builtinShard": 2,
+  "freebie.builtinJackpot": 4
+ },
+ "tables": {
+  "upgrades": {
+   "columns": [
+    "id",
+    "row",
+    "price",
+    "cap"
+   ],
+   "rows": [
+    [
+     0,
+     0,
+     200,
+     10
+    ],
+    [
+     1,
+     3,
+     300,
+     2
+    ],
+    [
+     2,
+     4,
+     650,
+     5
+    ],
+    [
+     3,
+     5,
+     850,
+     2
+    ],
+    [
+     4,
+     1,
+     225,
+     10
+    ],
+    [
+     5,
+     2,
+     250,
+     2
+    ]
+   ]
+  },
+  "unlocks": {
+   "columns": [
+    "id",
+    "price",
+    "cap"
+   ],
+   "rows": [
+    [
+     0,
+     250,
+     1
+    ],
+    [
+     1,
+     500,
+     1
+    ],
+    [
+     2,
+     750,
+     1
+    ],
+    [
+     3,
+     1000,
+     1
+    ]
+   ]
+  },
+  "packs": {
+   "columns": [
+    "id",
+    "price",
+    "chests",
+    "relicChests",
+    "pp",
+    "skillPoints",
+    "minObelisk"
+   ],
+   "rows": [
+    [
+     1,
+     150,
+     10,
+     3,
+     18,
+     0,
+     0
+    ],
+    [
+     2,
+     375,
+     30,
+     10,
+     55,
+     0,
+     0
+    ],
+    [
+     3,
+     125,
+     0,
+     0,
+     0,
+     1,
+     4
+    ]
+   ]
+  }
+ }
+}

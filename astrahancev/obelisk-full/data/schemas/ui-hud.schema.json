@@ -1,0 +1,793 @@
+{
+ "$id": "ui-hud",
+ "title": "HUD главного экрана (data/ui/hud.json, этап 6.5)",
+ "description": "Вёрстка HUD из частей кита: спрайты (ключ skin, точка, масштаб), тексты (стиль data/ui/kit.json, точка), полосы, круги-точки. Координаты — px комнаты 500×960 (GUI) и обязаны совпасть с O. shift — блок сдвигается вниз на tasksShift при панели заданий NPE. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "tasksShift",
+  "bands",
+  "gifts",
+  "skill",
+  "xp",
+  "plates",
+  "level",
+  "wallet",
+  "currenciesIcon",
+  "hubButton",
+  "exitButton",
+  "obeliskButton",
+  "shopButton",
+  "floorPanel",
+  "gauges",
+  "statsIcon",
+  "versionLabel"
+ ],
+ "properties": {
+  "$schema": {
+   "const": "ui-hud"
+  },
+  "screen": {
+   "const": "hud"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "tasksShift": {
+   "$ref": "common#/$defs/num"
+  },
+  "bands": {
+   "type": "object",
+   "required": [
+    "shift",
+    "rects"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "rects": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 4,
+     "items": {
+      "type": "object",
+      "required": [
+       "x1",
+       "y1",
+       "x2",
+       "y2",
+       "color",
+       "grow"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "x1": {
+        "$ref": "common#/$defs/num"
+       },
+       "y1": {
+        "$ref": "common#/$defs/num"
+       },
+       "x2": {
+        "$ref": "common#/$defs/num"
+       },
+       "y2": {
+        "$ref": "common#/$defs/num"
+       },
+       "color": {
+        "$ref": "#/$defs/color"
+       },
+       "grow": {
+        "type": "boolean",
+        "description": "низ полосы растёт на сдвиг"
+       }
+      }
+     }
+    }
+   }
+  },
+  "gifts": {
+   "type": "object",
+   "required": [
+    "shift",
+    "parts",
+    "icon",
+    "iconShadow",
+    "text"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "parts": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 8,
+     "items": {
+      "$ref": "#/$defs/sprite"
+     }
+    },
+    "icon": {
+     "$ref": "#/$defs/sprite"
+    },
+    "iconShadow": {
+     "type": "object",
+     "required": [
+      "color",
+      "alpha",
+      "offsets"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "color": {
+       "$ref": "#/$defs/color"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/chance"
+      },
+      "offsets": {
+       "type": "array",
+       "maxItems": 8,
+       "items": {
+        "type": "array",
+        "items": {
+         "$ref": "common#/$defs/num"
+        },
+        "minItems": 2,
+        "maxItems": 2
+       }
+      }
+     }
+    },
+    "text": {
+     "$ref": "#/$defs/text"
+    }
+   }
+  },
+  "skill": {
+   "type": "object",
+   "required": [
+    "shift",
+    "bar",
+    "icon",
+    "text"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "bar": {
+     "$ref": "#/$defs/sprite"
+    },
+    "icon": {
+     "$ref": "#/$defs/sprite"
+    },
+    "text": {
+     "$ref": "#/$defs/text"
+    }
+   }
+  },
+  "xp": {
+   "type": "object",
+   "required": [
+    "shift",
+    "bar",
+    "icon",
+    "text",
+    "cappedLabel"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "bar": {
+     "$ref": "#/$defs/sprite"
+    },
+    "icon": {
+     "$ref": "#/$defs/sprite"
+    },
+    "text": {
+     "$ref": "#/$defs/text"
+    },
+    "cappedLabel": {
+     "$ref": "common#/$defs/stringKey"
+    }
+   }
+  },
+  "plates": {
+   "type": "object",
+   "required": [
+    "shift",
+    "box",
+    "y",
+    "step",
+    "dy1",
+    "dy2",
+    "x2",
+    "textX",
+    "charWidth",
+    "pad",
+    "icon",
+    "text"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "box": {
+     "$ref": "#/$defs/style"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "step": {
+     "$ref": "common#/$defs/num"
+    },
+    "dy1": {
+     "$ref": "common#/$defs/num"
+    },
+    "dy2": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "textX": {
+     "$ref": "common#/$defs/num"
+    },
+    "charWidth": {
+     "$ref": "common#/$defs/num"
+    },
+    "pad": {
+     "$ref": "common#/$defs/num"
+    },
+    "icon": {
+     "type": "object",
+     "required": [
+      "sprite",
+      "x",
+      "sx",
+      "sy"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "text": {
+     "$ref": "#/$defs/style"
+    }
+   },
+   "description": "Плашки руды сверху справа: k-я плашка в y + k·step; рамка-фаска от textX − pad − charWidth·символов до x2"
+  },
+  "level": {
+   "type": "object",
+   "required": [
+    "shift",
+    "progress",
+    "x",
+    "y",
+    "icon",
+    "text"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "progress": {
+     "$ref": "#/$defs/style"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "icon": {
+     "$ref": "#/$defs/sprite"
+    },
+    "text": {
+     "$ref": "#/$defs/text"
+    }
+   }
+  },
+  "wallet": {
+   "type": "object",
+   "required": [
+    "shift",
+    "rows"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "rows": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 4,
+     "items": {
+      "type": "object",
+      "required": [
+       "bar",
+       "icon",
+       "text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "bar": {
+        "$ref": "#/$defs/sprite"
+       },
+       "icon": {
+        "$ref": "#/$defs/sprite"
+       },
+       "text": {
+        "$ref": "#/$defs/text"
+       }
+      }
+     }
+    }
+   }
+  },
+  "currenciesIcon": {
+   "$ref": "#/$defs/placedSprite"
+  },
+  "hubButton": {
+   "type": "object",
+   "required": [
+    "shift",
+    "body",
+    "icon",
+    "dot"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "body": {
+     "$ref": "#/$defs/sprite"
+    },
+    "icon": {
+     "$ref": "#/$defs/sprite"
+    },
+    "dot": {
+     "$ref": "#/$defs/circle"
+    }
+   }
+  },
+  "exitButton": {
+   "type": "object",
+   "required": [
+    "shift",
+    "body",
+    "icon"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "body": {
+     "$ref": "#/$defs/sprite"
+    },
+    "icon": {
+     "$ref": "#/$defs/sprite"
+    }
+   }
+  },
+  "obeliskButton": {
+   "type": "object",
+   "required": [
+    "shift",
+    "shadow",
+    "body",
+    "icon",
+    "dot",
+    "timer"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "shadow": {
+     "$ref": "#/$defs/sprite"
+    },
+    "body": {
+     "$ref": "#/$defs/sprite"
+    },
+    "icon": {
+     "$ref": "#/$defs/sprite"
+    },
+    "dot": {
+     "$ref": "#/$defs/circle"
+    },
+    "timer": {
+     "$ref": "#/$defs/text"
+    }
+   }
+  },
+  "shopButton": {
+   "type": "object",
+   "required": [
+    "shift",
+    "body",
+    "fill",
+    "icon"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "body": {
+     "$ref": "#/$defs/sprite"
+    },
+    "fill": {
+     "type": "object",
+     "required": [
+      "progress",
+      "x",
+      "y"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "progress": {
+       "$ref": "#/$defs/style"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "icon": {
+     "$ref": "#/$defs/sprite"
+    }
+   }
+  },
+  "floorPanel": {
+   "type": "object",
+   "required": [
+    "shift",
+    "shadow",
+    "shadowEarlySy",
+    "toggle",
+    "up",
+    "down",
+    "auto",
+    "lockedTint"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "shadow": {
+     "$ref": "#/$defs/sprite"
+    },
+    "shadowEarlySy": {
+     "$ref": "common#/$defs/num"
+    },
+    "toggle": {
+     "type": "object",
+     "required": [
+      "body",
+      "arrows"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "body": {
+       "$ref": "#/$defs/sprite"
+      },
+      "arrows": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 4,
+       "items": {
+        "$ref": "#/$defs/sprite"
+       }
+      }
+     }
+    },
+    "up": {
+     "type": "object",
+     "required": [
+      "body",
+      "arrow"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "body": {
+       "$ref": "#/$defs/sprite"
+      },
+      "arrow": {
+       "$ref": "#/$defs/sprite"
+      }
+     }
+    },
+    "down": {
+     "type": "object",
+     "required": [
+      "body",
+      "arrow",
+      "counter"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "body": {
+       "$ref": "#/$defs/sprite"
+      },
+      "arrow": {
+       "$ref": "#/$defs/sprite"
+      },
+      "counter": {
+       "$ref": "#/$defs/text"
+      }
+     }
+    },
+    "auto": {
+     "type": "object",
+     "required": [
+      "body",
+      "text",
+      "label"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "body": {
+       "$ref": "#/$defs/sprite"
+      },
+      "text": {
+       "$ref": "#/$defs/text"
+      },
+      "label": {
+       "$ref": "common#/$defs/stringKey"
+      }
+     }
+    },
+    "lockedTint": {
+     "$ref": "#/$defs/color"
+    }
+   },
+   "description": "Плашка этажа справа: полная (переключатель, вверх, вниз, Auto) и ранняя (вверх и счётчик закрыты, тень короче)"
+  },
+  "gauges": {
+   "type": "object",
+   "required": [
+    "shift",
+    "rows"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "rows": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 4,
+     "items": {
+      "type": "object",
+      "required": [
+       "progress",
+       "x",
+       "y",
+       "highlight",
+       "icon"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "progress": {
+        "$ref": "#/$defs/style"
+       },
+       "x": {
+        "$ref": "common#/$defs/num"
+       },
+       "y": {
+        "$ref": "common#/$defs/num"
+       },
+       "highlight": {
+        "$ref": "#/$defs/sprite"
+       },
+       "icon": {
+        "$ref": "#/$defs/sprite"
+       }
+      }
+     }
+    }
+   }
+  },
+  "statsIcon": {
+   "$ref": "#/$defs/placedSprite"
+  },
+  "versionLabel": {
+   "type": "object",
+   "required": [
+    "shift",
+    "style",
+    "x",
+    "y",
+    "alpha",
+    "prefix"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "style": {
+     "$ref": "#/$defs/style"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "alpha": {
+     "$ref": "common#/$defs/chance"
+    },
+    "prefix": {
+     "type": "string",
+     "maxLength": 4
+    }
+   }
+  }
+ },
+ "$defs": {
+  "color": {
+   "type": "string",
+   "pattern": "^(#[0-9a-f]{6}|@[a-z][A-Za-z0-9.]*)$",
+   "description": "#rrggbb или @имя из palette data/ui/kit.json"
+  },
+  "style": {
+   "$ref": "common#/$defs/id"
+  },
+  "sprite": {
+   "type": "object",
+   "required": [
+    "sprite",
+    "x",
+    "y",
+    "sx",
+    "sy"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "frame": {
+     "$ref": "common#/$defs/count"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "color": {
+     "$ref": "#/$defs/color"
+    },
+    "alpha": {
+     "$ref": "common#/$defs/chance"
+    }
+   }
+  },
+  "placedSprite": {
+   "type": "object",
+   "required": [
+    "shift",
+    "sprite",
+    "x",
+    "y",
+    "sx",
+    "sy"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "shift": {
+     "type": "boolean"
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "frame": {
+     "$ref": "common#/$defs/count"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "text": {
+   "type": "object",
+   "required": [
+    "style",
+    "x",
+    "y"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "style": {
+     "$ref": "#/$defs/style"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "cappedX": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "circle": {
+   "type": "object",
+   "required": [
+    "x",
+    "y",
+    "r",
+    "color"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "r": {
+     "$ref": "common#/$defs/nonneg"
+    },
+    "color": {
+     "$ref": "#/$defs/color"
+    }
+   }
+  }
+ }
+}

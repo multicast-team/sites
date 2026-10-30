@@ -1,0 +1,2444 @@
+{
+ "$id": "ui-obelisk-rewards",
+ "title": "Меню обелиска: вкладка Rewards (data/ui/obelisk-rewards.json, этап 6.16)",
+ "description": "Вёрстка вкладки Rewards из листьев-компонентов кита (sprite, stretched, text, rect, circle). Координаты — px комнаты 500×960, сняты с кадров O (ui.obrew616 в oracle/sources.json). Ряд награды — листья от верха ряда; список прокручивается. Награды уровней — data/systems/obelisk-rewards.json. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "comment",
+  "kitStyles",
+  "panelFrame",
+  "format",
+  "amountSuffix",
+  "title",
+  "list",
+  "row",
+  "itemIcons",
+  "scrollbar",
+  "tabs",
+  "dot"
+ ],
+ "properties": {
+  "$schema": {
+   "const": "ui-obelisk-rewards"
+  },
+  "screen": {
+   "const": "obelisk-rewards"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "kitStyles": {
+   "type": "object",
+   "required": [
+    "panel"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "panel": {
+     "type": "string"
+    }
+   }
+  },
+  "panelFrame": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "properties": {
+    "component": {
+     "enum": [
+      "sprite",
+      "stretched",
+      "text",
+      "rect",
+      "circle"
+     ]
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "$ref": "common#/$defs/num"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "w": {
+     "$ref": "common#/$defs/num"
+    },
+    "h": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "frame": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "y1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "y2": {
+     "$ref": "common#/$defs/num"
+    },
+    "r": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "title": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "properties": {
+    "component": {
+     "enum": [
+      "sprite",
+      "stretched",
+      "text",
+      "rect",
+      "circle"
+     ]
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "$ref": "common#/$defs/num"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "w": {
+     "$ref": "common#/$defs/num"
+    },
+    "h": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "frame": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "y1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "y2": {
+     "$ref": "common#/$defs/num"
+    },
+    "r": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "scrollbar": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "properties": {
+    "component": {
+     "enum": [
+      "sprite",
+      "stretched",
+      "text",
+      "rect",
+      "circle"
+     ]
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "$ref": "common#/$defs/num"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "w": {
+     "$ref": "common#/$defs/num"
+    },
+    "h": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "frame": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "y1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "y2": {
+     "$ref": "common#/$defs/num"
+    },
+    "r": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "dot": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "properties": {
+    "component": {
+     "enum": [
+      "sprite",
+      "stretched",
+      "text",
+      "rect",
+      "circle"
+     ]
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "$ref": "common#/$defs/num"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "w": {
+     "$ref": "common#/$defs/num"
+    },
+    "h": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "frame": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "y1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "y2": {
+     "$ref": "common#/$defs/num"
+    },
+    "r": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "format": {
+   "type": "object",
+   "required": [
+    "amount"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "amount": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "groupDigits",
+      "separator"
+     ],
+     "properties": {
+      "groupDigits": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "separator": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "amountSuffix": {
+   "type": "string"
+  },
+  "list": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "y",
+    "step",
+    "cullAbove",
+    "cullBelow"
+   ],
+   "properties": {
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "step": {
+     "$ref": "common#/$defs/num"
+    },
+    "cullAbove": {
+     "$ref": "common#/$defs/num"
+    },
+    "cullBelow": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "row": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "info",
+    "tab",
+    "panel",
+    "tabInner",
+    "title",
+    "cell",
+    "item",
+    "amount",
+    "perkText",
+    "unknown",
+    "claim",
+    "lock",
+    "check",
+    "revealAhead",
+    "styles"
+   ],
+   "properties": {
+    "info": {
+     "type": "object",
+     "required": [
+      "button",
+      "icon"
+     ],
+     "properties": {
+      "button": {
+       "type": "object",
+       "required": [
+        "component"
+       ],
+       "properties": {
+        "component": {
+         "enum": [
+          "sprite",
+          "stretched",
+          "text",
+          "rect",
+          "circle"
+         ]
+        },
+        "sprite": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "font": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "text": {
+         "$ref": "common#/$defs/stringKey"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "$ref": "common#/$defs/num"
+        },
+        "x": {
+         "$ref": "common#/$defs/num"
+        },
+        "y": {
+         "$ref": "common#/$defs/num"
+        },
+        "w": {
+         "$ref": "common#/$defs/num"
+        },
+        "h": {
+         "$ref": "common#/$defs/num"
+        },
+        "sx": {
+         "$ref": "common#/$defs/num"
+        },
+        "sy": {
+         "$ref": "common#/$defs/num"
+        },
+        "frame": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "halign": {
+         "enum": [
+          "left",
+          "center",
+          "right"
+         ]
+        },
+        "valign": {
+         "enum": [
+          "top",
+          "middle",
+          "bottom"
+         ]
+        },
+        "x1": {
+         "$ref": "common#/$defs/num"
+        },
+        "y1": {
+         "$ref": "common#/$defs/num"
+        },
+        "x2": {
+         "$ref": "common#/$defs/num"
+        },
+        "y2": {
+         "$ref": "common#/$defs/num"
+        },
+        "r": {
+         "$ref": "common#/$defs/num"
+        }
+       }
+      },
+      "icon": {
+       "type": "object",
+       "required": [
+        "component"
+       ],
+       "properties": {
+        "component": {
+         "enum": [
+          "sprite",
+          "stretched",
+          "text",
+          "rect",
+          "circle"
+         ]
+        },
+        "sprite": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "font": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "text": {
+         "$ref": "common#/$defs/stringKey"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "$ref": "common#/$defs/num"
+        },
+        "x": {
+         "$ref": "common#/$defs/num"
+        },
+        "y": {
+         "$ref": "common#/$defs/num"
+        },
+        "w": {
+         "$ref": "common#/$defs/num"
+        },
+        "h": {
+         "$ref": "common#/$defs/num"
+        },
+        "sx": {
+         "$ref": "common#/$defs/num"
+        },
+        "sy": {
+         "$ref": "common#/$defs/num"
+        },
+        "frame": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "halign": {
+         "enum": [
+          "left",
+          "center",
+          "right"
+         ]
+        },
+        "valign": {
+         "enum": [
+          "top",
+          "middle",
+          "bottom"
+         ]
+        },
+        "x1": {
+         "$ref": "common#/$defs/num"
+        },
+        "y1": {
+         "$ref": "common#/$defs/num"
+        },
+        "x2": {
+         "$ref": "common#/$defs/num"
+        },
+        "y2": {
+         "$ref": "common#/$defs/num"
+        },
+        "r": {
+         "$ref": "common#/$defs/num"
+        }
+       }
+      }
+     }
+    },
+    "tab": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "panel": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "tabInner": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "title": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "cell": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "item": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "amount": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "perkText": {
+     "allOf": [
+      {
+       "type": "object",
+       "required": [
+        "component"
+       ],
+       "properties": {
+        "component": {
+         "enum": [
+          "sprite",
+          "stretched",
+          "text",
+          "rect",
+          "circle"
+         ]
+        },
+        "sprite": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "font": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "text": {
+         "$ref": "common#/$defs/stringKey"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "$ref": "common#/$defs/num"
+        },
+        "x": {
+         "$ref": "common#/$defs/num"
+        },
+        "y": {
+         "$ref": "common#/$defs/num"
+        },
+        "w": {
+         "$ref": "common#/$defs/num"
+        },
+        "h": {
+         "$ref": "common#/$defs/num"
+        },
+        "sx": {
+         "$ref": "common#/$defs/num"
+        },
+        "sy": {
+         "$ref": "common#/$defs/num"
+        },
+        "frame": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "halign": {
+         "enum": [
+          "left",
+          "center",
+          "right"
+         ]
+        },
+        "valign": {
+         "enum": [
+          "top",
+          "middle",
+          "bottom"
+         ]
+        },
+        "x1": {
+         "$ref": "common#/$defs/num"
+        },
+        "y1": {
+         "$ref": "common#/$defs/num"
+        },
+        "x2": {
+         "$ref": "common#/$defs/num"
+        },
+        "y2": {
+         "$ref": "common#/$defs/num"
+        },
+        "r": {
+         "$ref": "common#/$defs/num"
+        }
+       }
+      },
+      {
+       "required": [
+        "fit"
+       ],
+       "properties": {
+        "fit": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "maxWidth",
+          "font"
+         ],
+         "properties": {
+          "maxWidth": {
+           "$ref": "common#/$defs/num"
+          },
+          "font": {
+           "$ref": "common#/$defs/skinKey"
+          }
+         }
+        }
+       }
+      }
+     ]
+    },
+    "unknown": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "claim": {
+     "type": "object",
+     "required": [
+      "glow",
+      "button",
+      "text"
+     ],
+     "properties": {
+      "glow": {
+       "type": "object",
+       "required": [
+        "component"
+       ],
+       "properties": {
+        "component": {
+         "enum": [
+          "sprite",
+          "stretched",
+          "text",
+          "rect",
+          "circle"
+         ]
+        },
+        "sprite": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "font": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "text": {
+         "$ref": "common#/$defs/stringKey"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "$ref": "common#/$defs/num"
+        },
+        "x": {
+         "$ref": "common#/$defs/num"
+        },
+        "y": {
+         "$ref": "common#/$defs/num"
+        },
+        "w": {
+         "$ref": "common#/$defs/num"
+        },
+        "h": {
+         "$ref": "common#/$defs/num"
+        },
+        "sx": {
+         "$ref": "common#/$defs/num"
+        },
+        "sy": {
+         "$ref": "common#/$defs/num"
+        },
+        "frame": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "halign": {
+         "enum": [
+          "left",
+          "center",
+          "right"
+         ]
+        },
+        "valign": {
+         "enum": [
+          "top",
+          "middle",
+          "bottom"
+         ]
+        },
+        "x1": {
+         "$ref": "common#/$defs/num"
+        },
+        "y1": {
+         "$ref": "common#/$defs/num"
+        },
+        "x2": {
+         "$ref": "common#/$defs/num"
+        },
+        "y2": {
+         "$ref": "common#/$defs/num"
+        },
+        "r": {
+         "$ref": "common#/$defs/num"
+        }
+       }
+      },
+      "button": {
+       "type": "object",
+       "required": [
+        "component"
+       ],
+       "properties": {
+        "component": {
+         "enum": [
+          "sprite",
+          "stretched",
+          "text",
+          "rect",
+          "circle"
+         ]
+        },
+        "sprite": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "font": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "text": {
+         "$ref": "common#/$defs/stringKey"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "$ref": "common#/$defs/num"
+        },
+        "x": {
+         "$ref": "common#/$defs/num"
+        },
+        "y": {
+         "$ref": "common#/$defs/num"
+        },
+        "w": {
+         "$ref": "common#/$defs/num"
+        },
+        "h": {
+         "$ref": "common#/$defs/num"
+        },
+        "sx": {
+         "$ref": "common#/$defs/num"
+        },
+        "sy": {
+         "$ref": "common#/$defs/num"
+        },
+        "frame": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "halign": {
+         "enum": [
+          "left",
+          "center",
+          "right"
+         ]
+        },
+        "valign": {
+         "enum": [
+          "top",
+          "middle",
+          "bottom"
+         ]
+        },
+        "x1": {
+         "$ref": "common#/$defs/num"
+        },
+        "y1": {
+         "$ref": "common#/$defs/num"
+        },
+        "x2": {
+         "$ref": "common#/$defs/num"
+        },
+        "y2": {
+         "$ref": "common#/$defs/num"
+        },
+        "r": {
+         "$ref": "common#/$defs/num"
+        }
+       }
+      },
+      "text": {
+       "type": "object",
+       "required": [
+        "component"
+       ],
+       "properties": {
+        "component": {
+         "enum": [
+          "sprite",
+          "stretched",
+          "text",
+          "rect",
+          "circle"
+         ]
+        },
+        "sprite": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "font": {
+         "$ref": "common#/$defs/skinKey"
+        },
+        "text": {
+         "$ref": "common#/$defs/stringKey"
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "$ref": "common#/$defs/num"
+        },
+        "x": {
+         "$ref": "common#/$defs/num"
+        },
+        "y": {
+         "$ref": "common#/$defs/num"
+        },
+        "w": {
+         "$ref": "common#/$defs/num"
+        },
+        "h": {
+         "$ref": "common#/$defs/num"
+        },
+        "sx": {
+         "$ref": "common#/$defs/num"
+        },
+        "sy": {
+         "$ref": "common#/$defs/num"
+        },
+        "frame": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "halign": {
+         "enum": [
+          "left",
+          "center",
+          "right"
+         ]
+        },
+        "valign": {
+         "enum": [
+          "top",
+          "middle",
+          "bottom"
+         ]
+        },
+        "x1": {
+         "$ref": "common#/$defs/num"
+        },
+        "y1": {
+         "$ref": "common#/$defs/num"
+        },
+        "x2": {
+         "$ref": "common#/$defs/num"
+        },
+        "y2": {
+         "$ref": "common#/$defs/num"
+        },
+        "r": {
+         "$ref": "common#/$defs/num"
+        }
+       }
+      }
+     }
+    },
+    "lock": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "check": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "revealAhead": {
+     "type": "integer",
+     "minimum": 0
+    },
+    "styles": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "next",
+      "claimed",
+      "locked"
+     ],
+     "properties": {
+      "next": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "frame",
+        "color",
+        "innerAlpha",
+        "text",
+        "alpha"
+       ],
+       "properties": {
+        "frame": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "innerAlpha": {
+         "$ref": "common#/$defs/num"
+        },
+        "text": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "$ref": "common#/$defs/num"
+        }
+       }
+      },
+      "claimed": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "frame",
+        "color",
+        "innerAlpha",
+        "text",
+        "alpha"
+       ],
+       "properties": {
+        "frame": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "innerAlpha": {
+         "$ref": "common#/$defs/num"
+        },
+        "text": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "$ref": "common#/$defs/num"
+        }
+       }
+      },
+      "locked": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "frame",
+        "color",
+        "innerAlpha",
+        "text",
+        "alpha"
+       ],
+       "properties": {
+        "frame": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "color": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "innerAlpha": {
+         "$ref": "common#/$defs/num"
+        },
+        "text": {
+         "type": "string",
+         "pattern": "^#[0-9a-f]{6}$"
+        },
+        "alpha": {
+         "$ref": "common#/$defs/num"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "itemIcons": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "sprite"
+    ],
+    "properties": {
+     "sprite": {
+      "$ref": "common#/$defs/skinKey"
+     },
+     "frameFromSub": {
+      "type": "boolean"
+     }
+    }
+   }
+  },
+  "tabs": {
+   "type": "object",
+   "required": [
+    "rects",
+    "x",
+    "step",
+    "button",
+    "icon",
+    "caption",
+    "label",
+    "icons",
+    "labels",
+    "selected"
+   ],
+   "properties": {
+    "rects": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "component"
+      ],
+      "properties": {
+       "component": {
+        "enum": [
+         "sprite",
+         "stretched",
+         "text",
+         "rect",
+         "circle"
+        ]
+       },
+       "sprite": {
+        "$ref": "common#/$defs/skinKey"
+       },
+       "font": {
+        "$ref": "common#/$defs/skinKey"
+       },
+       "text": {
+        "$ref": "common#/$defs/stringKey"
+       },
+       "color": {
+        "type": "string",
+        "pattern": "^#[0-9a-f]{6}$"
+       },
+       "alpha": {
+        "$ref": "common#/$defs/num"
+       },
+       "x": {
+        "$ref": "common#/$defs/num"
+       },
+       "y": {
+        "$ref": "common#/$defs/num"
+       },
+       "w": {
+        "$ref": "common#/$defs/num"
+       },
+       "h": {
+        "$ref": "common#/$defs/num"
+       },
+       "sx": {
+        "$ref": "common#/$defs/num"
+       },
+       "sy": {
+        "$ref": "common#/$defs/num"
+       },
+       "frame": {
+        "type": "integer",
+        "minimum": 0
+       },
+       "halign": {
+        "enum": [
+         "left",
+         "center",
+         "right"
+        ]
+       },
+       "valign": {
+        "enum": [
+         "top",
+         "middle",
+         "bottom"
+        ]
+       },
+       "x1": {
+        "$ref": "common#/$defs/num"
+       },
+       "y1": {
+        "$ref": "common#/$defs/num"
+       },
+       "x2": {
+        "$ref": "common#/$defs/num"
+       },
+       "y2": {
+        "$ref": "common#/$defs/num"
+       },
+       "r": {
+        "$ref": "common#/$defs/num"
+       }
+      }
+     }
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "step": {
+     "$ref": "common#/$defs/num"
+    },
+    "selectedColor": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "button": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "icon": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "caption": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "label": {
+     "type": "object",
+     "required": [
+      "component"
+     ],
+     "properties": {
+      "component": {
+       "enum": [
+        "sprite",
+        "stretched",
+        "text",
+        "rect",
+        "circle"
+       ]
+      },
+      "sprite": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "font": {
+       "$ref": "common#/$defs/skinKey"
+      },
+      "text": {
+       "$ref": "common#/$defs/stringKey"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "$ref": "common#/$defs/num"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "h": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      },
+      "frame": {
+       "type": "integer",
+       "minimum": 0
+      },
+      "halign": {
+       "enum": [
+        "left",
+        "center",
+        "right"
+       ]
+      },
+      "valign": {
+       "enum": [
+        "top",
+        "middle",
+        "bottom"
+       ]
+      },
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "y1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "y2": {
+       "$ref": "common#/$defs/num"
+      },
+      "r": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "icons": {
+     "type": "array",
+     "items": {
+      "$ref": "common#/$defs/skinKey"
+     }
+    },
+    "labels": {
+     "type": "array",
+     "items": {
+      "$ref": "common#/$defs/stringKey"
+     }
+    },
+    "selected": {
+     "type": "integer",
+     "minimum": 0
+    }
+   }
+  }
+ }
+}

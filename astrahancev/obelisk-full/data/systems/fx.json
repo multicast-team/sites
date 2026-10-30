@@ -1,0 +1,12 @@
+{
+ "$schema": "systems/fx",
+ "system": "fx",
+ "version": "2.2.50",
+ "constants": {
+  "damagePopup.speed": 120,
+  "damagePopup.alphaStart": 1.5,
+  "damagePopup.fadePerSecond": 1.8,
+  "damagePopup.msPerSecond": 1000,
+  "clock.nsPerMs": 1000000
+ }
+}

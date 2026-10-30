@@ -1,0 +1,326 @@
+{
+ "$id": "ui-tasks",
+ "title": "Панель Intro Tasks (data/ui/tasks.json, этап 6.7)",
+ "description": "Вёрстка панели заданий NPE из частей кита: спрайты (ключ skin, точка, масштаб), тексты (стиль data/ui/kit.json, точка), полоса прогресса (стиль кита). y частей — смещения от верха панели; верх = base + безопасная зона + въезд. Задания, цели, значки — data/systems/tasks.json. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "base",
+  "slide",
+  "header",
+  "body",
+  "icons",
+  "title",
+  "desc",
+  "descText",
+  "final",
+  "progress",
+  "complete"
+ ],
+ "properties": {
+  "$schema": {
+   "const": "ui-tasks"
+  },
+  "screen": {
+   "const": "tasks"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "base": {
+   "$ref": "common#/$defs/num"
+  },
+  "slide": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "from",
+    "perFrame"
+   ],
+   "properties": {
+    "from": {
+     "$ref": "common#/$defs/num"
+    },
+    "perFrame": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "header": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "sprite",
+    "x",
+    "y",
+    "sx",
+    "sy"
+   ],
+   "properties": {
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "body": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "sprite",
+    "x",
+    "y",
+    "sx",
+    "sy"
+   ],
+   "properties": {
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "icons": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 4,
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "x",
+     "y",
+     "sx",
+     "sy"
+    ],
+    "properties": {
+     "x": {
+      "$ref": "common#/$defs/num"
+     },
+     "y": {
+      "$ref": "common#/$defs/num"
+     },
+     "sx": {
+      "$ref": "common#/$defs/num"
+     },
+     "sy": {
+      "$ref": "common#/$defs/num"
+     }
+    }
+   }
+  },
+  "title": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "style",
+    "x",
+    "y",
+    "color",
+    "prefix",
+    "suffix"
+   ],
+   "properties": {
+    "style": {
+     "$ref": "common#/$defs/id"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^(#[0-9a-f]{6}|@[a-z][A-Za-z0-9.]*)$"
+    },
+    "prefix": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "suffix": {
+     "type": "string"
+    }
+   }
+  },
+  "desc": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "sprite",
+    "x",
+    "y",
+    "sx",
+    "sy"
+   ],
+   "properties": {
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "descText": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "style",
+    "x",
+    "y"
+   ],
+   "properties": {
+    "style": {
+     "$ref": "common#/$defs/id"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "final": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "color",
+    "progressIsGoal"
+   ],
+   "properties": {
+    "color": {
+     "type": "string",
+     "pattern": "^(#[0-9a-f]{6}|@[a-z][A-Za-z0-9.]*)$"
+    },
+    "progressIsGoal": {
+     "type": "boolean"
+    }
+   }
+  },
+  "progress": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "style",
+    "x",
+    "y"
+   ],
+   "properties": {
+    "style": {
+     "$ref": "common#/$defs/id"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "complete": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "parts",
+    "text"
+   ],
+   "properties": {
+    "parts": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 4,
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "sprite",
+       "x",
+       "y",
+       "sx",
+       "sy"
+      ],
+      "properties": {
+       "sprite": {
+        "$ref": "common#/$defs/skinKey"
+       },
+       "x": {
+        "$ref": "common#/$defs/num"
+       },
+       "y": {
+        "$ref": "common#/$defs/num"
+       },
+       "sx": {
+        "$ref": "common#/$defs/num"
+       },
+       "sy": {
+        "$ref": "common#/$defs/num"
+       }
+      }
+     }
+    },
+    "text": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "style",
+      "x",
+      "y",
+      "key"
+     ],
+     "properties": {
+      "style": {
+       "$ref": "common#/$defs/id"
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "key": {
+       "$ref": "common#/$defs/stringKey"
+      }
+     }
+    }
+   }
+  }
+ }
+}

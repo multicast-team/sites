@@ -1,0 +1,537 @@
+{
+ "$id": "ui-ore",
+ "title": "Экран Sell — руда (data/ui/ore.json, этап 6.12)",
+ "description": "Вёрстка меню Sell из компонентов: шаблон ряда руды (якорь — центр ряда, x — от левого края комнаты), заголовок мира, нижняя полоса (замки всех строк, режим продажи, Toggle, Sell All), ползунок. Поля шаблонов с id — привязки экрана (ui/screens/ore.mjs). Координаты — px комнаты 500×960 и обязаны совпасть с O. Стили панели и ползунка — из data/ui/kit.json. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "kitStyles",
+  "tasksShift",
+  "disabledColor",
+  "header",
+  "list",
+  "row",
+  "title",
+  "lockFrame",
+  "backingBelow",
+  "backingIds",
+  "thumb",
+  "bottom",
+  "modes",
+  "noiseScroll",
+  "format",
+  "lockedOnly",
+  "lockedColor"
+ ],
+ "properties": {
+  "$schema": {
+   "const": "ui-ore"
+  },
+  "screen": {
+   "const": "ore"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "kitStyles": {
+   "type": "object",
+   "required": [
+    "panel",
+    "thumb"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "panel": {
+     "type": "string"
+    },
+    "thumb": {
+     "type": "string"
+    }
+   }
+  },
+  "tasksShift": {
+   "$ref": "common#/$defs/num"
+  },
+  "disabledColor": {
+   "type": "string",
+   "pattern": "^#[0-9a-f]{6}$"
+  },
+  "noiseScroll": {
+   "enum": [
+    0,
+    1
+   ]
+  },
+  "header": {
+   "type": "object",
+   "required": [
+    "y",
+    "x",
+    "font",
+    "color",
+    "texts",
+    "shadow",
+    "line"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "texts": {
+     "type": "array",
+     "minItems": 2,
+     "maxItems": 2,
+     "items": {
+      "$ref": "common#/$defs/stringKey"
+     }
+    },
+    "shadow": {
+     "type": "object",
+     "required": [
+      "dx",
+      "dy",
+      "color"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "dx": {
+       "$ref": "common#/$defs/num"
+      },
+      "dy": {
+       "$ref": "common#/$defs/num"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      }
+     }
+    },
+    "line": {
+     "type": "object",
+     "required": [
+      "x1",
+      "x2",
+      "gap",
+      "w",
+      "color",
+      "alpha"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "gap": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      },
+      "alpha": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      }
+     }
+    }
+   }
+  },
+  "list": {
+   "type": "object",
+   "required": [
+    "rowY",
+    "rowStep"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "rowY": {
+     "$ref": "common#/$defs/num"
+    },
+    "rowStep": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "row": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 20,
+   "items": {
+    "type": "object",
+    "required": [
+     "component",
+     "x",
+     "y"
+    ],
+    "additionalProperties": false,
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z]+$"
+     },
+     "component": {
+      "enum": [
+       "sprite",
+       "text"
+      ]
+     },
+     "x": {
+      "$ref": "common#/$defs/num"
+     },
+     "y": {
+      "$ref": "common#/$defs/num"
+     },
+     "sprite": {
+      "$ref": "common#/$defs/skinKey"
+     },
+     "frame": {
+      "$ref": "common#/$defs/count"
+     },
+     "sx": {
+      "$ref": "common#/$defs/num"
+     },
+     "sy": {
+      "$ref": "common#/$defs/num"
+     },
+     "color": {
+      "type": "string",
+      "pattern": "^#[0-9a-f]{6}$"
+     },
+     "alpha": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     },
+     "font": {
+      "$ref": "common#/$defs/skinKey"
+     },
+     "text": {
+      "$ref": "common#/$defs/stringKey"
+     },
+     "halign": {
+      "enum": [
+       "left",
+       "center",
+       "right"
+      ]
+     },
+     "valign": {
+      "enum": [
+       "top",
+       "middle",
+       "bottom"
+      ]
+     },
+     "snap": {
+      "type": "boolean"
+     }
+    }
+   }
+  },
+  "title": {
+   "type": "array",
+   "minItems": 2,
+   "maxItems": 2,
+   "items": {
+    "$ref": "common#/$defs/stringKey"
+   }
+  },
+  "lockFrame": {
+   "type": "object",
+   "required": [
+    "open",
+    "locked"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "open": {
+     "$ref": "common#/$defs/count"
+    },
+    "locked": {
+     "$ref": "common#/$defs/count"
+    }
+   }
+  },
+  "backingBelow": {
+   "$ref": "common#/$defs/num"
+  },
+  "backingIds": {
+   "type": "array",
+   "maxItems": 4,
+   "items": {
+    "type": "string",
+    "pattern": "^[a-zA-Z]+$"
+   }
+  },
+  "thumb": {
+   "type": "object",
+   "required": [
+    "top",
+    "bottom",
+    "view",
+    "unit",
+    "extra"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "top": {
+     "$ref": "common#/$defs/num"
+    },
+    "bottom": {
+     "$ref": "common#/$defs/num"
+    },
+    "view": {
+     "$ref": "common#/$defs/num"
+    },
+    "unit": {
+     "$ref": "common#/$defs/num"
+    },
+    "extra": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "bottom": {
+   "type": "object",
+   "required": [
+    "y",
+    "parts",
+    "currency"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "parts": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 20,
+     "items": {
+      "type": "object",
+      "required": [
+       "component",
+       "x",
+       "y"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "id": {
+        "type": "string",
+        "pattern": "^[a-zA-Z]+$"
+       },
+       "component": {
+        "enum": [
+         "sprite",
+         "text"
+        ]
+       },
+       "x": {
+        "$ref": "common#/$defs/num"
+       },
+       "y": {
+        "$ref": "common#/$defs/num"
+       },
+       "sprite": {
+        "$ref": "common#/$defs/skinKey"
+       },
+       "frame": {
+        "$ref": "common#/$defs/count"
+       },
+       "sx": {
+        "$ref": "common#/$defs/num"
+       },
+       "sy": {
+        "$ref": "common#/$defs/num"
+       },
+       "color": {
+        "type": "string",
+        "pattern": "^#[0-9a-f]{6}$"
+       },
+       "alpha": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+       },
+       "font": {
+        "$ref": "common#/$defs/skinKey"
+       },
+       "text": {
+        "$ref": "common#/$defs/stringKey"
+       },
+       "halign": {
+        "enum": [
+         "left",
+         "center",
+         "right"
+        ]
+       },
+       "valign": {
+        "enum": [
+         "top",
+         "middle",
+         "bottom"
+        ]
+       },
+       "snap": {
+        "type": "boolean"
+       }
+      }
+     }
+    },
+    "currency": {
+     "$ref": "common#/$defs/stringKey"
+    }
+   }
+  },
+  "modes": {
+   "type": "object",
+   "required": [
+    "columns",
+    "rows"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "columns": {
+     "const": [
+      "label",
+      "share"
+     ]
+    },
+    "rows": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 8,
+     "items": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+       {
+        "$ref": "common#/$defs/stringKey"
+       },
+       {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 1
+       }
+      ]
+     }
+    }
+   }
+  },
+  "format": {
+   "type": "object",
+   "required": [
+    "short",
+    "priceDecimals"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "short": {
+     "type": "object",
+     "required": [
+      "plainBelow",
+      "plainFloorFrom",
+      "plainDecimals",
+      "groupDigits",
+      "suffixes",
+      "sciPrefix",
+      "decimals",
+      "digits",
+      "rounding"
+     ],
+     "additionalProperties": false,
+     "description": "Короткий вывод чисел (ui/format/number.mjs): |x| < plainFloorFrom — целое как есть, дробное с plainDecimals знаками; до plainBelow — целая часть вниз; иначе группа k = ⌊⌊log10|x|⌋/groupDigits⌋, суффикс k (после последнего — sciPrefix + степень), знаков по величине (decimals), вниз от числа, округлённого до digits значащих цифр",
+     "properties": {
+      "plainBelow": {
+       "$ref": "common#/$defs/nonneg"
+      },
+      "plainFloorFrom": {
+       "$ref": "common#/$defs/nonneg"
+      },
+      "plainDecimals": {
+       "$ref": "common#/$defs/count"
+      },
+      "groupDigits": {
+       "$ref": "common#/$defs/count"
+      },
+      "suffixes": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 40,
+       "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z]{1,4}$"
+       }
+      },
+      "sciPrefix": {
+       "type": "string",
+       "pattern": "^[A-Za-z]{1,4}$"
+      },
+      "decimals": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 4,
+       "items": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": {
+         "type": "number"
+        }
+       }
+      },
+      "digits": {
+       "$ref": "common#/$defs/count"
+      },
+      "rounding": {
+       "enum": [
+        "floorSignificant"
+       ]
+      }
+     }
+    },
+    "priceDecimals": {
+     "$ref": "common#/$defs/count"
+    }
+   }
+  },
+  "lockedOnly": {
+   "type": "array",
+   "maxItems": 4,
+   "items": {
+    "type": "string",
+    "pattern": "^[a-zA-Z]+$"
+   }
+  },
+  "lockedColor": {
+   "type": "string",
+   "pattern": "^#[0-9a-f]{6}$"
+  }
+ }
+}

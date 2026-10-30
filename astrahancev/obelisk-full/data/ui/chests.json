@@ -1,0 +1,262 @@
+{
+ "$schema": "ui-chests",
+ "screen": "chests",
+ "version": "2.2.50",
+ "comment": "Меню сундуков предметов (этап 6.13): шкалы сундуков, кнопка Open (число, подтверждение «открыть все»), выбор количества 1/10/100/1000/All, выпавшие предметы сеткой, подпись внизу. Координаты — px комнаты 500×960 и обязаны совпасть с O. Поля шаблонов с id — привязки экрана (ui/screens/chests.mjs). Тексты кнопки — части: ключ t.*, {n} — число, остальное — как есть. Источники — oracle/sources.json → ui.chests613.",
+ "kitStyles": {
+  "panel": "panel.menu"
+ },
+ "disabledColor": "#808080",
+ "meters": [
+  {
+   "component": "rect",
+   "x1": 40,
+   "y1": 105,
+   "x2": 460,
+   "y2": 205,
+   "color": "#695051"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 250,
+   "y": 125,
+   "sx": 23,
+   "sy": 1.79999995
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 250,
+   "y": 125,
+   "text": "t.damage_required_to_fill_chest_meters",
+   "halign": "center",
+   "valign": "middle"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.chest",
+   "x": 62,
+   "y": 155,
+   "sx": 2,
+   "sy": 2
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.chest_relic",
+   "x": 62,
+   "y": 185,
+   "sx": 2,
+   "sy": 2
+  },
+  {
+   "component": "text",
+   "id": "itemMeter",
+   "font": "font.size12",
+   "x": 88,
+   "y": 155,
+   "valign": "middle"
+  },
+  {
+   "component": "text",
+   "id": "itemPct",
+   "font": "font.size12",
+   "x": 407,
+   "y": 155,
+   "valign": "middle"
+  },
+  {
+   "component": "text",
+   "id": "relicMeter",
+   "font": "font.size12",
+   "x": 88,
+   "y": 185,
+   "valign": "middle"
+  },
+  {
+   "component": "text",
+   "id": "relicPct",
+   "font": "font.size12",
+   "x": 407,
+   "y": 185,
+   "valign": "middle"
+  }
+ ],
+ "meterTexts": {
+  "item": ["t.item_chest_meter", "{n}", "t.per", "{req}"],
+  "relic": ["t.relic_chest_meter", "{n}", "t.per", "{req}"],
+  "pct": ["t.sym.28", "{n}", "t.pct_2"]
+ },
+ "open": [
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_brownish",
+   "x": 250,
+   "y": 690,
+   "sx": 16,
+   "sy": 9
+  },
+  {
+   "component": "sprite",
+   "id": "button",
+   "sprite": "sprite.patch_button",
+   "x": 250,
+   "y": 690,
+   "sx": 12,
+   "sy": 5
+  },
+  {
+   "component": "sprite",
+   "id": "icon",
+   "sprite": "sprite.chest",
+   "x": 250,
+   "y": 670,
+   "sx": 2,
+   "sy": 2
+  },
+  {
+   "component": "text",
+   "id": "shadow",
+   "font": "font.size12",
+   "x": 251,
+   "y": 709,
+   "halign": "center",
+   "valign": "middle",
+   "color": "#000000"
+  },
+  {
+   "component": "text",
+   "id": "label",
+   "font": "font.size12",
+   "x": 250,
+   "y": 708,
+   "halign": "center",
+   "valign": "middle"
+  }
+ ],
+ "confirmSprite": "sprite.patch_button_orange",
+ "openTexts": {
+  "one": ["t.open_2", "{n}", "t.chest_2", "t.sym.a_28", "{owned}", "t.owned_4"],
+  "many": ["t.open_2", "{n}", "t.chests_2", "t.sym.a_28", "{owned}", "t.owned_4"],
+  "all": ["t.open_all", "{owned}", "t.chests_2"],
+  "confirm": ["t.confirm_q", "\n", "t.open_all_2", " ", "{owned}", "t.chests_2"]
+ },
+ "selector": {
+  "backing": {
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_brownish",
+   "x": 250,
+   "y": 790,
+   "sx": 30,
+   "sy": 4
+  },
+  "x": 66,
+  "y": 790,
+  "step": 92,
+  "selectedFrame": 2,
+  "item": [
+   {
+    "component": "sprite",
+    "id": "button",
+    "sprite": "sprite.patch_button",
+    "x": 0,
+    "y": 0,
+    "sx": 4.4000001,
+    "sy": 2.5999999
+   },
+   {
+    "component": "text",
+    "id": "shadow",
+    "font": "font.size12",
+    "x": 1,
+    "y": -1,
+    "halign": "center",
+    "valign": "middle",
+    "color": "#000000"
+   },
+   {
+    "component": "text",
+    "id": "label",
+    "font": "font.size12",
+    "x": 0,
+    "y": -2,
+    "halign": "center",
+    "valign": "middle"
+   }
+  ],
+  "allLabel": "t.all_2"
+ },
+ "loot": {
+  "x": 180,
+  "y": 275,
+  "cols": 3,
+  "dx": 70,
+  "dy": 72,
+  "item": [
+   {
+    "component": "sprite",
+    "id": "frame",
+    "sprite": "sprite.patch_desc_white",
+    "x": 0,
+    "y": 0,
+    "sx": 2.5999999,
+    "sy": 2.5999999
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 0,
+    "y": 0,
+    "sx": 2.4000001,
+    "sy": 2.4000001
+   },
+   {
+    "component": "sprite",
+    "id": "icon",
+    "sprite": "sprite.items",
+    "x": 0,
+    "y": 0,
+    "sx": 2,
+    "sy": 2
+   },
+   {
+    "component": "text",
+    "id": "count",
+    "font": "font.size12",
+    "x": 0,
+    "y": 32,
+    "halign": "center",
+    "valign": "middle"
+   }
+  ],
+  "countPrefix": "+",
+  "rarityColor": {
+   "common": "#808080",
+   "rare": "#008000",
+   "epic": "#800080",
+   "legendary": "#ffa040",
+   "mythic": "#ff0000"
+  }
+ },
+ "footer": [
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_brownish_ml",
+   "x": 0,
+   "y": 76,
+   "sx": 31.25,
+   "sy": 2,
+   "color": "#c0c0c0"
+  },
+  {
+   "component": "text",
+   "font": "font.size10",
+   "x": 250,
+   "y": 77,
+   "text": "t.chest_meters_are_filled_based_on_damage_dealt",
+   "halign": "center",
+   "valign": "middle",
+   "color": "#c0c0c0"
+  }
+ ]
+}

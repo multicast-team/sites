@@ -1,0 +1,464 @@
+{
+ "$id": "ui-gemshop",
+ "title": "Магазин самоцветов (gem shop) мира 1 (data/ui/gemshop.json, этап 6.25)",
+ "description": "Вёрстка меню магазина из листьев-компонентов кита (sprite, text, rect, roundrect). Координаты — px комнаты 500×960, сняты с кадров O разовым конвертером oracle/gemshop625/mklayout625.mjs (ui.gemshop625 в oracle/sources.json). Ленты IAP — неизменная картинка (ряды с шагом), паки, открытия и улучшения за самоцветы — шаблоны рядов с привязками id. Цены, капы и паки — data/systems/gemshop.json. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "comment",
+  "disabledColor",
+  "armedFrame",
+  "outline",
+  "bg",
+  "banner",
+  "banners",
+  "iap",
+  "valuePacks",
+  "resource",
+  "freebie",
+  "packs",
+  "mythic",
+  "unlock",
+  "maxed",
+  "upgrade",
+  "gemPacks",
+  "drawBelow",
+  "thumb",
+  "topBar",
+  "toast",
+  "menu",
+  "texts",
+  "upgradeTexts"
+ ],
+ "$defs": {
+  "leaf": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "component": {
+     "enum": [
+      "sprite",
+      "text",
+      "rect",
+      "roundrect"
+     ]
+    },
+    "id": {
+     "type": "string"
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "value": {
+     "type": [
+      "string",
+      "integer"
+     ]
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "$ref": "common#/$defs/num"
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "y1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "y2": {
+     "$ref": "common#/$defs/num"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "xrad": {
+     "$ref": "common#/$defs/num"
+    },
+    "yrad": {
+     "$ref": "common#/$defs/num"
+    },
+    "frame": {
+     "type": "integer"
+    },
+    "sep": {
+     "type": "integer"
+    },
+    "width": {
+     "type": "integer"
+    },
+    "count": {
+     "type": "integer"
+    },
+    "step": {
+     "type": "integer"
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "snap": {
+     "type": "boolean"
+    },
+    "outline": {
+     "type": "boolean"
+    }
+   }
+  }
+ },
+ "properties": {
+  "$schema": {
+   "const": "ui-gemshop"
+  },
+  "screen": {
+   "const": "gemshop"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "disabledColor": {
+   "type": "string",
+   "pattern": "^#[0-9a-f]{6}$"
+  },
+  "armedFrame": {
+   "type": "integer",
+   "minimum": 0
+  },
+  "outline": {
+   "type": "array",
+   "items": {
+    "type": "array",
+    "items": {
+     "type": "integer"
+    },
+    "minItems": 2,
+    "maxItems": 2
+   }
+  },
+  "bg": {
+   "type": "object",
+   "additionalProperties": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "banner": {
+   "type": "object",
+   "additionalProperties": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "banners": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "frame",
+     "y",
+     "text"
+    ],
+    "properties": {
+     "frame": {
+      "type": "integer"
+     },
+     "y": {
+      "$ref": "common#/$defs/num"
+     },
+     "text": {
+      "$ref": "common#/$defs/stringKey"
+     }
+    }
+   }
+  },
+  "iap": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "valuePack",
+    "bundles",
+    "founders",
+    "perks"
+   ],
+   "properties": {
+    "valuePack": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/leaf"
+     }
+    },
+    "bundles": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "y",
+      "step",
+      "row",
+      "rows"
+     ],
+     "properties": {
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "step": {
+       "$ref": "common#/$defs/num"
+      },
+      "row": {
+       "type": "array",
+       "items": {
+        "$ref": "#/$defs/leaf"
+       }
+      },
+      "rows": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "object"
+        }
+       }
+      }
+     }
+    },
+    "founders": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/leaf"
+     }
+    },
+    "perks": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "y",
+      "step",
+      "row",
+      "rows"
+     ],
+     "properties": {
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "step": {
+       "$ref": "common#/$defs/num"
+      },
+      "row": {
+       "type": "array",
+       "items": {
+        "$ref": "#/$defs/leaf"
+       }
+      },
+      "rows": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "object"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "valuePacks": {
+   "type": "object"
+  },
+  "resource": {
+   "type": "object"
+  },
+  "freebie": {
+   "type": "object"
+  },
+  "packs": {
+   "type": "object"
+  },
+  "mythic": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "unlock": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "row",
+    "firstRow",
+    "rowStep",
+    "tail"
+   ],
+   "properties": {
+    "row": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/leaf"
+     }
+    },
+    "firstRow": {
+     "$ref": "common#/$defs/num"
+    },
+    "rowStep": {
+     "$ref": "common#/$defs/num"
+    },
+    "tail": {
+     "$ref": "common#/$defs/num"
+    },
+    "rows": {
+     "type": "array"
+    },
+    "icons": {
+     "type": "array"
+    }
+   }
+  },
+  "maxed": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "upgrade": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "row",
+    "firstRow",
+    "rowStep",
+    "tail"
+   ],
+   "properties": {
+    "row": {
+     "type": "array",
+     "items": {
+      "$ref": "#/$defs/leaf"
+     }
+    },
+    "firstRow": {
+     "$ref": "common#/$defs/num"
+    },
+    "rowStep": {
+     "$ref": "common#/$defs/num"
+    },
+    "tail": {
+     "$ref": "common#/$defs/num"
+    },
+    "rows": {
+     "type": "array"
+    },
+    "icons": {
+     "type": "array"
+    }
+   }
+  },
+  "gemPacks": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "drawBelow": {
+   "$ref": "common#/$defs/num"
+  },
+  "thumb": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "x1",
+    "x2",
+    "top",
+    "bottom",
+    "view",
+    "maxScroll",
+    "color",
+    "alpha"
+   ],
+   "properties": {
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "top": {
+     "$ref": "common#/$defs/num"
+    },
+    "bottom": {
+     "$ref": "common#/$defs/num"
+    },
+    "view": {
+     "$ref": "common#/$defs/num"
+    },
+    "maxScroll": {
+     "$ref": "common#/$defs/num"
+    },
+    "alpha": {
+     "$ref": "common#/$defs/num"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    }
+   }
+  },
+  "topBar": {
+   "type": "array",
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "toast": {
+   "type": "object"
+  },
+  "menu": {
+   "type": "object"
+  },
+  "texts": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "string"
+   }
+  },
+  "upgradeTexts": {
+   "type": "object"
+  }
+ }
+}

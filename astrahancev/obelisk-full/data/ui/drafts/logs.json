@@ -1,0 +1,345 @@
+{
+ "$schema": "ui-draft",
+ "screen": "logs",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Журнал» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "group",
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_brownish_with_desc",
+        "x": 250,
+        "y": 480,
+        "sx": 25,
+        "sy": 40
+       },
+       {
+        "component": "todo",
+        "what": "clear",
+        "color": "#000000",
+        "alpha": 0
+       },
+       {
+        "component": "text",
+        "font": "font.size24",
+        "x": 190,
+        "y": 305,
+        "text": "t.no_events_yet",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#c0c0c0"
+       },
+       {
+        "component": "todo",
+        "what": "surface",
+        "x": 60,
+        "y": 175
+       },
+       {
+        "component": "rect",
+        "x1": 440,
+        "y1": 175,
+        "x2": 445,
+        "y2": 785,
+        "color": "#808080",
+        "alpha": 0.300000012
+       },
+       {
+        "component": "rect",
+        "x1": 441,
+        "y1": 175,
+        "x2": 444,
+        "y2": 785,
+        "alpha": 0.800000012
+       },
+       {
+        "component": "rect",
+        "x1": 441,
+        "y1": 175,
+        "x2": 444,
+        "y2": 785,
+        "outline": true
+       },
+       {
+        "component": "rect",
+        "x1": 126,
+        "y1": 797,
+        "x2": 200,
+        "y2": 827,
+        "color": "#22191a"
+       },
+       {
+        "component": "line",
+        "x1": 126,
+        "y1": 797,
+        "x2": 126,
+        "y2": 827,
+        "colors": [
+         "#46393a",
+         "#46393a"
+        ]
+       },
+       {
+        "component": "line",
+        "x1": 200,
+        "y1": 797,
+        "x2": 200,
+        "y2": 827,
+        "colors": [
+         "#46393a",
+         "#46393a"
+        ]
+       },
+       {
+        "component": "line",
+        "x1": 126,
+        "y1": 827,
+        "x2": 200,
+        "y2": 827,
+        "colors": [
+         "#46393a",
+         "#46393a"
+        ]
+       },
+       {
+        "component": "line",
+        "x1": 126,
+        "y1": 797,
+        "x2": 200,
+        "y2": 797,
+        "colors": [
+         "#665355",
+         "#665355"
+        ]
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 164,
+        "y": 813,
+        "text": "t.debug",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 163,
+        "y": 812,
+        "text": "t.debug",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#c0c0c0"
+       },
+       {
+        "component": "rect",
+        "x1": 52,
+        "y1": 797,
+        "x2": 126,
+        "y2": 835,
+        "color": "#101318"
+       },
+       {
+        "component": "line",
+        "x1": 52,
+        "y1": 797,
+        "x2": 52,
+        "y2": 835,
+        "colors": [
+         "#665355",
+         "#665355"
+        ]
+       },
+       {
+        "component": "line",
+        "x1": 126,
+        "y1": 797,
+        "x2": 126,
+        "y2": 835,
+        "colors": [
+         "#665355",
+         "#665355"
+        ]
+       },
+       {
+        "component": "line",
+        "x1": 52,
+        "y1": 835,
+        "x2": 126,
+        "y2": 835,
+        "colors": [
+         "#665355",
+         "#665355"
+        ]
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 90,
+        "y": 817,
+        "text": "t.logs",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 89,
+        "y": 816,
+        "text": "t.logs",
+        "halign": "center",
+        "valign": "middle"
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 98,
+      "y": 141,
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 0,
+        "y": 0,
+        "sx": 4.22222233,
+        "sy": 1.79999995,
+        "color": "#808080"
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 1,
+        "y": 0,
+        "text": "t.all_2",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 0,
+        "y": -1,
+        "text": "t.all_2",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 174,
+    "y": 141,
+    "step": {
+     "x": 76,
+     "y": 0
+    },
+    "count": 4,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 4.22222233,
+      "sy": 1.79999995
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 1,
+      "y": 0,
+      "text": "t.milestones",
+      "halign": "center",
+      "valign": "middle",
+      "color": "#000000"
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": -1,
+      "text": "t.milestones",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.general"
+      },
+      "2": {
+       "text": "t.general"
+      }
+     },
+     {
+      "1": {
+       "text": "t.gem_spend"
+      },
+      "2": {
+       "text": "t.gem_spend"
+      }
+     },
+     {
+      "1": {
+       "text": "t.gift_loot"
+      },
+      "2": {
+       "text": "t.gift_loot"
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

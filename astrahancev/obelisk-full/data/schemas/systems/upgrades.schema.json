@@ -1,0 +1,445 @@
+{
+ "$id": "systems/upgrades",
+ "title": "Upgrades (data/systems/upgrades.json — этап 2.5; data/systems/upgraderules.json — этап 5.9)",
+ "description": "Этап 2.5: 93 строки улучшений таблицами (rows, capRaise, goldDiscount, pickaxe, texts, effects) — числа сняты с O (oracle/sources.json, группа data.upgrades25). Правила цены, капов и текстов — гипотезы, проверенные на всех клетках снимка O; спека upgrades — этапы 5.9/5.10. items (каркас 2.4) необязателен, но если есть — у каждого улучшения name, currency, cost, maxLevel, effects ≥ 1. upgraderules.json (этап 5.9, спека oracle/specs/upgrades.md): правила, которых нет в upgrades.json — задание вступления, эпсилон покупки, шаг скидки золота, ступени цены кирки (pickaxeStart/Steps/Multi), порог уровня после вступления (levelReq); источники — группа data.upgraderules59.",
+ "allOf": [
+  {
+   "$ref": "system"
+  },
+  {
+   "required": [
+    "tables"
+   ],
+   "properties": {
+    "system": {
+     "const": "upgrades"
+    },
+    "constants": {
+     "properties": {
+      "cost.round": {
+       "enum": [
+        "halfEven",
+        "halfUp",
+        "floor"
+       ]
+      },
+      "text.sep": {
+       "$ref": "common#/$defs/stringKey"
+      }
+     }
+    },
+    "tables": {
+     "properties": {
+      "rows": {
+       "properties": {
+        "columns": {
+         "const": [
+          "row",
+          "oreA",
+          "oreB",
+          "baseOreA",
+          "baseOreB",
+          "baseGold",
+          "linearBelow",
+          "cap",
+          "capRaisable",
+          "levelReq",
+          "worldReq"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "integer",
+            "minimum": -1
+           },
+           {
+            "type": "integer",
+            "minimum": -1
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "boolean"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "capRaise": {
+       "properties": {
+        "columns": {
+         "const": [
+          "row",
+          "perLevel"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "goldDiscount": {
+       "properties": {
+        "columns": {
+         "const": [
+          "level",
+          "multiplier"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1
+           }
+          ]
+         }
+        }
+       }
+      },
+      "pickaxe": {
+       "properties": {
+        "columns": {
+         "const": [
+          "level",
+          "ore",
+          "cost",
+          "value"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "$ref": "common#/$defs/nonneg"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "texts": {
+       "properties": {
+        "columns": {
+         "const": [
+          "row",
+          "name",
+          "sign",
+          "unit",
+          "valueBase",
+          "valueStep",
+          "decimals"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/stringKey"
+           },
+           {
+            "enum": [
+             "",
+             "+",
+             "-"
+            ]
+           },
+           {
+            "enum": [
+             "",
+             "x",
+             "%",
+             "s"
+            ]
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "enum": [
+             0,
+             1,
+             2,
+             3
+            ]
+           }
+          ]
+         }
+        }
+       }
+      },
+      "effects": {
+       "properties": {
+        "columns": {
+         "const": [
+          "row",
+          "cell",
+          "perLevel",
+          "linear"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "string",
+            "pattern": "^stat\\.[a-z0-9][A-Za-z0-9]*$"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "type": "boolean"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "levelReq": {
+       "properties": {
+        "columns": {
+         "const": [
+          "row",
+          "afterIntro"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "pickaxeStart": {
+       "properties": {
+        "columns": {
+         "const": [
+          "level",
+          "cost"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "pickaxeSteps": {
+       "properties": {
+        "columns": {
+         "const": [
+          "oreAbove",
+          "perLevel",
+          "fromLevel"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           },
+           {
+            "$ref": "common#/$defs/count"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "pickaxeMulti": {
+       "properties": {
+        "columns": {
+         "const": [
+          "fromLevel",
+          "factor"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "$ref": "common#/$defs/num"
+           }
+          ]
+         }
+        }
+       }
+      }
+     }
+    },
+    "items": {
+     "minItems": 1,
+     "items": {
+      "required": [
+       "id",
+       "name",
+       "currency",
+       "cost",
+       "maxLevel",
+       "effects"
+      ],
+      "properties": {
+       "effects": {
+        "minItems": 1
+       }
+      }
+     }
+    }
+   },
+   "anyOf": [
+    {
+     "required": [
+      "constants"
+     ],
+     "properties": {
+      "constants": {
+       "required": [
+        "rowCount",
+        "cost.growth",
+        "cost.round",
+        "cost.overflowLimit",
+        "cost.overflowValue",
+        "gold.row",
+        "pickaxe.row",
+        "text.sep"
+       ]
+      },
+      "tables": {
+       "required": [
+        "rows",
+        "capRaise",
+        "goldDiscount",
+        "pickaxe",
+        "texts",
+        "effects"
+       ]
+      }
+     }
+    },
+    {
+     "required": [
+      "constants"
+     ],
+     "properties": {
+      "constants": {
+       "required": [
+        "intro.task",
+        "afford.epsilon",
+        "gold.step",
+        "pickaxe.linearFrom",
+        "pickaxe.linearStep",
+        "pickaxe.loopFrom",
+        "pickaxe.loopLevelOffset",
+        "pickaxe.loopStep",
+        "pickaxe.loopShift",
+        "pickaxe.startTableBeforeTask",
+        "pickaxe.artifactTier",
+        "pickaxe.artifactIndex",
+        "pickaxe.artifactStep",
+        "pickaxe.minCost",
+        "cost.roundUpFromObelisk"
+       ]
+      },
+      "tables": {
+       "required": [
+        "levelReq",
+        "pickaxeStart",
+        "pickaxeSteps",
+        "pickaxeMulti"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

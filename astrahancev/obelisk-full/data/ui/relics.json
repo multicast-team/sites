@@ -1,0 +1,1209 @@
+{
+ "$schema": "ui-relics",
+ "screen": "relics",
+ "version": "2.2.50",
+ "comment": "Меню реликвий (этап 6.14), главная страница: список реликвий по редкостям (заголовок раздела с линиями, ряды: значок, название, подпись, уровень/кап, бонус, серая плашка для 0 и запертых, требования), прокрутка, ползунок, шапка (Reroll, Open Relic, Open All, Summary, подпись последней реликвии, число сундуков). Координаты — px комнаты 500×960 и обязаны совпасть с O; y рядов и заголовков — от якоря (0 = центр ряда / линия заголовка). Поля шаблонов с id — привязки экрана (ui/screens/relics.mjs). Тексты — части: t.* — ключ strings.json, {имя} — значение, прочее — как есть. Источники — oracle/sources.json → ui.relics614.",
+ "kitStyles": {
+  "panel": "panel.menu"
+ },
+ "disabledColor": "#808080",
+ "capColor": "#00ff00",
+ "list": {
+  "top": 300,
+  "titleToRow": 80,
+  "rowStep": 90,
+  "sectionGap": 90,
+  "cull": {
+   "rowTop": 0,
+   "rowBottom": 1150,
+   "titleTop": 0,
+   "titleBottom": 960
+  }
+ },
+ "title": {
+  "x": 250,
+  "font": "font.size12",
+  "line": {
+   "x1": 25,
+   "x2": 475,
+   "gap": 14,
+   "w": 2,
+   "alpha": 0.600000024
+  },
+  "shadow": {
+   "dx": 1,
+   "dy": 1,
+   "color": "#000000"
+  }
+ },
+ "rarities": {
+  "columns": [
+   "rarity",
+   "title",
+   "frame",
+   "reqName"
+  ],
+  "rows": [
+   [
+    "common",
+    "t.common",
+    "#7c6d6e",
+    "t.common"
+   ],
+   [
+    "rare",
+    "t.rare",
+    "#3f6d31",
+    "t.rare"
+   ],
+   [
+    "epic",
+    "t.epic",
+    "#714562",
+    "t.epic"
+   ],
+   [
+    "legendary",
+    "t.legendary",
+    "#7c5640",
+    "t.legendary"
+   ],
+   [
+    "mythic",
+    "t.mythic",
+    "#7c3031",
+    "t.mythic"
+   ],
+   [
+    "divine",
+    "t.d_i_v_i_n_e",
+    "#7c6d31",
+    "t.divine"
+   ]
+  ]
+ },
+ "row": [
+  {
+   "id": "frame",
+   "component": "rect",
+   "x1": 12,
+   "y1": -31,
+   "x2": 488,
+   "y2": 31
+  },
+  {
+   "component": "rect",
+   "x1": 77,
+   "y1": -24,
+   "x2": 383,
+   "y2": 24,
+   "color": "#0f1419"
+  },
+  {
+   "id": "icon",
+   "component": "sprite",
+   "x": 44,
+   "y": 0,
+   "sx": 2,
+   "sy": 2
+  },
+  {
+   "id": "name",
+   "component": "text",
+   "font": "font.size12",
+   "x": 230,
+   "y": 0,
+   "halign": "center",
+   "valign": "middle"
+  },
+  {
+   "id": "sub",
+   "component": "text",
+   "font": "font.size10",
+   "x": 230,
+   "y": 18,
+   "halign": "center",
+   "valign": "middle",
+   "color": "#808080"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 436,
+   "y": -13,
+   "sx": 6.19999981,
+   "sy": 1.39999998
+  },
+  {
+   "id": "level",
+   "component": "text",
+   "font": "font.size12",
+   "x": 436,
+   "y": -13,
+   "halign": "center",
+   "valign": "middle"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 436,
+   "y": 14,
+   "sx": 6.19999981,
+   "sy": 1.39999998
+  },
+  {
+   "id": "bonus",
+   "component": "text",
+   "font": "font.size12",
+   "x": 436,
+   "y": 14,
+   "halign": "center",
+   "valign": "middle"
+  }
+ ],
+ "overlay": {
+  "component": "sprite",
+  "sprite": "sprite.patch_backing_brownish",
+  "x": 250,
+  "y": 0,
+  "sx": 30,
+  "sy": 4.0999999,
+  "color": "#808080"
+ },
+ "req": [
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 250,
+   "y": 0,
+   "sx": 24,
+   "sy": 1.60000002
+  },
+  {
+   "id": "text",
+   "component": "text",
+   "font": "font.size12",
+   "x": 250,
+   "y": 0,
+   "halign": "center",
+   "valign": "middle",
+   "color": "#808080"
+  }
+ ],
+ "reqTwo": {
+  "rarityDy": 12,
+  "obeliskDy": -12
+ },
+ "reqTexts": {
+  "rarity": [
+   "t.required",
+   "{n}",
+   "/",
+   "{req}",
+   " ",
+   "{rarity}",
+   "t.relics_3"
+  ],
+  "obelisk": [
+   "t.required_obelisk_level",
+   "{req}"
+  ]
+ },
+ "levelTexts": {
+  "plain": [
+   "{n}"
+  ],
+  "capped": [
+   "{n}",
+   "/",
+   "{cap}"
+  ]
+ },
+ "bonusPrefix": "+",
+ "relicTexts": {
+  "columns": [
+   "relic",
+   "num",
+   "den",
+   "suffix"
+  ],
+  "rows": [
+   [
+    0,
+    3,
+    1,
+    "%"
+   ],
+   [
+    1,
+    3,
+    1,
+    "%"
+   ],
+   [
+    2,
+    1,
+    1,
+    "%"
+   ],
+   [
+    3,
+    1,
+    1,
+    "%"
+   ],
+   [
+    4,
+    1,
+    1,
+    "%"
+   ],
+   [
+    5,
+    20,
+    1,
+    "%"
+   ],
+   [
+    6,
+    3,
+    1,
+    "%"
+   ],
+   [
+    7,
+    1,
+    1,
+    "%"
+   ],
+   [
+    8,
+    2,
+    1,
+    "%"
+   ],
+   [
+    9,
+    1,
+    100,
+    "%"
+   ],
+   [
+    10,
+    10,
+    1,
+    "%"
+   ],
+   [
+    11,
+    2,
+    1,
+    "%"
+   ],
+   [
+    12,
+    2,
+    1,
+    "%"
+   ],
+   [
+    13,
+    1,
+    1,
+    ""
+   ],
+   [
+    14,
+    10,
+    100,
+    "%"
+   ],
+   [
+    15,
+    1,
+    1,
+    "%"
+   ],
+   [
+    16,
+    15,
+    1,
+    "%"
+   ],
+   [
+    17,
+    12,
+    1,
+    "%"
+   ],
+   [
+    18,
+    10,
+    100,
+    "%"
+   ],
+   [
+    19,
+    10,
+    100,
+    "%"
+   ],
+   [
+    20,
+    1,
+    1,
+    "%"
+   ],
+   [
+    21,
+    5,
+    1,
+    "x"
+   ],
+   [
+    22,
+    5,
+    1,
+    "%"
+   ],
+   [
+    23,
+    50,
+    100,
+    "%"
+   ],
+   [
+    24,
+    10,
+    100,
+    "%"
+   ],
+   [
+    25,
+    5,
+    100,
+    "%"
+   ],
+   [
+    26,
+    1,
+    1,
+    "%"
+   ],
+   [
+    27,
+    2,
+    1,
+    "x"
+   ],
+   [
+    28,
+    20,
+    1,
+    "%"
+   ],
+   [
+    29,
+    2,
+    1,
+    "%"
+   ],
+   [
+    30,
+    50,
+    100,
+    "%"
+   ]
+  ]
+ },
+ "subTexts": {
+  "columns": [
+   "relic",
+   "base",
+   "from",
+   "parts"
+  ],
+  "rows": [
+   [
+    22,
+    5,
+    14,
+    [
+     "(",
+     "{v}",
+     "x Ore on Golden Floors)"
+    ]
+   ],
+   [
+    26,
+    50,
+    28,
+    [
+     "(",
+     "{v}",
+     "x Ore on Rainbow Floors)"
+    ]
+   ]
+  ]
+ },
+ "header": [
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_brownish_tl",
+   "x": 0,
+   "y": 60,
+   "sx": 31.25,
+   "sy": 9
+  },
+  {
+   "id": "openButton",
+   "component": "sprite",
+   "sprite": "sprite.patch_button",
+   "x": 250,
+   "y": 120,
+   "sx": 7,
+   "sy": 4
+  },
+  {
+   "id": "openIcon",
+   "component": "sprite",
+   "sprite": "sprite.chest_relic",
+   "x": 250,
+   "y": 110,
+   "sx": 2,
+   "sy": 2
+  },
+  {
+   "id": "openLabel",
+   "component": "text",
+   "font": "font.size12",
+   "x": 250,
+   "y": 138,
+   "text": "t.open_relic",
+   "halign": "center",
+   "valign": "middle",
+   "color": "#ffffff",
+   "snap": false
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc",
+   "x": 250,
+   "y": 180,
+   "sx": 20,
+   "sy": 1.39999998
+  },
+  {
+   "id": "last",
+   "component": "text",
+   "font": "font.size12",
+   "x": 250,
+   "y": 180,
+   "halign": "center",
+   "valign": "middle",
+   "color": "#ffffff",
+   "snap": false
+  },
+  {
+   "id": "allButton",
+   "component": "sprite",
+   "sprite": "sprite.patch_button",
+   "x": 410,
+   "y": 120,
+   "sx": 5,
+   "sy": 2.79999995
+  },
+  {
+   "id": "allIcon",
+   "component": "sprite",
+   "sprite": "sprite.chest_relic",
+   "x": 410,
+   "y": 110
+  },
+  {
+   "id": "allLabel",
+   "component": "text",
+   "font": "font.size12",
+   "x": 410,
+   "y": 129,
+   "text": "t.open_all_2",
+   "halign": "center",
+   "valign": "middle",
+   "color": "#ffffff",
+   "snap": false
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_button",
+   "x": 90,
+   "y": 120,
+   "sx": 5,
+   "sy": 2.79999995
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.chest_relic_reroll",
+   "x": 90,
+   "y": 110
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 84,
+   "y": 129,
+   "text": "t.reroll",
+   "halign": "center",
+   "valign": "middle",
+   "color": "#ffffff",
+   "snap": false
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.triangles",
+   "x": 122,
+   "y": 129
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_button",
+   "x": 45,
+   "y": 180,
+   "sx": 4.19999981,
+   "sy": 1.60000002
+  },
+  {
+   "component": "text",
+   "font": "font.size12",
+   "x": 45,
+   "y": 179,
+   "text": "t.summary",
+   "halign": "center",
+   "valign": "middle"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_backing_brownish_mr",
+   "x": 500,
+   "y": 180,
+   "sx": 6.5999999,
+   "sy": 1.5,
+   "id": "countBack"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.patch_desc_mr",
+   "x": 498,
+   "y": 180,
+   "sx": 5,
+   "sy": 1.10000002,
+   "id": "countDesc"
+  },
+  {
+   "id": "count",
+   "component": "text",
+   "font": "font.size12",
+   "x": 423,
+   "y": 180,
+   "valign": "middle"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.chest_relic",
+   "x": 407,
+   "y": 180,
+   "id": "countIcon"
+  }
+ ],
+ "thumb": {
+  "x1": 492,
+  "x2": 502,
+  "top": 204,
+  "bottom": 882,
+  "view": 930,
+  "pad": 270,
+  "color": "#c0c0c0",
+  "alpha": 0.349999994
+ },
+ "format": {
+  "short": {
+   "plainBelow": 10000,
+   "plainFloorFrom": 1000,
+   "plainDecimals": 2,
+   "groupDigits": 3,
+   "suffixes": [
+    "k",
+    "m",
+    "b",
+    "t",
+    "q",
+    "qi",
+    "sx",
+    "sp",
+    "oc",
+    "no",
+    "dc",
+    "udc",
+    "ddc",
+    "tdc",
+    "qadc",
+    "qidc",
+    "sxdc",
+    "spdc",
+    "ocdc",
+    "nvdc"
+   ],
+   "sciPrefix": "e",
+   "decimals": [
+    [
+     10,
+     2
+    ],
+    [
+     100,
+     1
+    ],
+    [
+     1000,
+     0
+    ]
+   ],
+   "digits": 15,
+   "rounding": "floorSignificant"
+  },
+  "countPlainBelow": 100000
+ },
+ "summary": {
+  "comment": "Страница Summary (раунд исправлений 6.14): поверх шапки и ползунка главной страницы (ряды и заголовки списка не рисуются). Ряд на реликвию: рамка (золотая на капе), значок (пусто при 0), подложка, «(Nx) название» цветом редкости (серым при 0); правая колонка у первого ряда редкости: шанс, «Your Relics:», доля редкости среди всех реликвий; у мифической — ещё «Excluding» (без реликвий из мифических сундуков, ??); у божественной — «Your Average: 1/N». Затем «Tap to close», шахтёр (12 кадров, цвета костюма из сейва), счётчики (всего реликвий, мифические и божественные сундуки; серые при 0). Числа — листья события Draw меню реликвий O (записи r614-sum*).",
+  "background": {
+   "component": "rect",
+   "x1": 0,
+   "y1": 0,
+   "x2": 500,
+   "y2": 930,
+   "color": "#695051"
+  },
+  "rows": {
+   "top": 143,
+   "step": 20,
+   "sectionGap": 8
+  },
+  "row": [
+   {
+    "id": "frame",
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 22,
+    "y": 0,
+    "sx": 1.10000002,
+    "sy": 1.10000002
+   },
+   {
+    "id": "icon",
+    "component": "sprite",
+    "x": 22,
+    "y": 0
+   },
+   {
+    "component": "rect",
+    "x1": 35,
+    "y1": -9,
+    "x2": 359,
+    "y2": 9,
+    "color": "#0f1419"
+   },
+   {
+    "id": "name",
+    "component": "text",
+    "font": "font.size12",
+    "x": 35,
+    "y": 0,
+    "valign": "middle"
+   }
+  ],
+  "cappedFrame": "sprite.patch_desc_gold_frame",
+  "emptyIcon": "sprite.nothing",
+  "emptyColor": "#808080",
+  "nameParts": [
+   "(",
+   "{n}",
+   "x) ",
+   "{name}"
+  ],
+  "emptyParts": [
+   "(",
+   "{n}",
+   "x) ---------------"
+  ],
+  "smallFont": {
+   "font": "font.size10",
+   "relics": [
+    25
+   ]
+  },
+  "sideOf": {
+   "columns": [
+    "rarity",
+    "side",
+    "ring",
+    "chance"
+   ],
+   "rows": [
+    [
+     "common",
+     "pct",
+     0,
+     "t.chance_48_pct"
+    ],
+    [
+     "rare",
+     "pct",
+     1,
+     "t.chance_30_pct"
+    ],
+    [
+     "epic",
+     "pct",
+     2,
+     "t.chance_14_pct"
+    ],
+    [
+     "legendary",
+     "pct",
+     3,
+     "t.chance_7_pct"
+    ],
+    [
+     "mythic",
+     "mythic",
+     4,
+     null
+    ],
+    [
+     "divine",
+     "divine",
+     5,
+     "t.chance_1_per_25k"
+    ]
+   ]
+  },
+  "sides": {
+   "pct": [
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 0,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 20,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 30,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 40,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "id": "ring",
+     "component": "sprite",
+     "sprite": "sprite.rings",
+     "x": 379,
+     "y": -8
+    },
+    {
+     "component": "text",
+     "font": "font.size12",
+     "x": 364,
+     "y": 0,
+     "valign": "middle",
+     "id": "chance"
+    },
+    {
+     "component": "text",
+     "font": "font.size12",
+     "x": 364,
+     "y": 20,
+     "valign": "middle",
+     "text": "t.your_relics"
+    },
+    {
+     "component": "text",
+     "font": "font.size12",
+     "x": 424,
+     "y": 40,
+     "valign": "middle",
+     "id": "pct",
+     "halign": "center"
+    }
+   ],
+   "mythic": [
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 0,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 20,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 30,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 40,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "id": "ring",
+     "component": "sprite",
+     "sprite": "sprite.rings",
+     "x": 379,
+     "y": -8
+    },
+    {
+     "component": "text",
+     "font": "font.size12",
+     "x": 364,
+     "y": 0,
+     "valign": "middle",
+     "id": "chance"
+    },
+    {
+     "component": "text",
+     "font": "font.size12",
+     "x": 364,
+     "y": 20,
+     "valign": "middle",
+     "text": "t.your_relics"
+    },
+    {
+     "component": "text",
+     "font": "font.size12",
+     "x": 424,
+     "y": 40,
+     "valign": "middle",
+     "id": "pct",
+     "halign": "center"
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 70,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 60,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "component": "text",
+     "font": "font.size12",
+     "x": 372,
+     "y": 60,
+     "valign": "middle",
+     "text": "t.excluding"
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.mythic_chest16x16",
+     "x": 468,
+     "y": 60
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 80,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "component": "text",
+     "font": "font.size12",
+     "x": 424,
+     "y": 80,
+     "valign": "middle",
+     "id": "excl",
+     "halign": "center"
+    }
+   ],
+   "divine": [
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 0,
+     "sx": 8,
+     "sy": 1.10000002
+    },
+    {
+     "id": "ring",
+     "component": "sprite",
+     "sprite": "sprite.rings",
+     "x": 379,
+     "y": -8
+    },
+    {
+     "component": "text",
+     "font": "font.size10",
+     "x": 360,
+     "y": 0,
+     "valign": "middle",
+     "id": "chance"
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc_ml",
+     "x": 362,
+     "y": 30,
+     "sx": 8,
+     "sy": 2.20000005
+    },
+    {
+     "component": "text",
+     "font": "font.size10",
+     "x": 368,
+     "y": 21,
+     "valign": "middle",
+     "text": "t.your_average"
+    },
+    {
+     "component": "text",
+     "font": "font.size10",
+     "x": 368,
+     "y": 40,
+     "valign": "middle",
+     "id": "avg"
+    }
+   ]
+  },
+  "pctSuffix": "%",
+  "mythicChance": [
+   "t.chance_1_per",
+   "{n}"
+  ],
+  "averageParts": [
+   "t.1_per_2",
+   "{n}"
+  ],
+  "close": {
+   "component": "text",
+   "font": "font.size12",
+   "x": 250,
+   "y": 808,
+   "text": "t.tap_to_close",
+   "halign": "center",
+   "valign": "middle"
+  },
+  "miner": {
+   "sprite": "sprite.miner_blanket",
+   "frames": 12,
+   "x": 74,
+   "y": 100,
+   "sx": 2,
+   "sy": 2
+  },
+  "counters": [
+   {
+    "id": "relics",
+    "panel": {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc",
+     "x": 164,
+     "y": 100,
+     "sx": 5.5999999,
+     "sy": 3
+    },
+    "icon": {
+     "component": "sprite",
+     "sprite": "sprite.chest_relic",
+     "x": 164,
+     "y": 89
+    },
+    "text": {
+     "component": "text",
+     "font": "font.size12",
+     "x": 164,
+     "y": 112,
+     "valign": "middle",
+     "halign": "center"
+    }
+   },
+   {
+    "id": "mythic",
+    "panel": {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc",
+     "x": 258,
+     "y": 100,
+     "sx": 3.20000005,
+     "sy": 3
+    },
+    "icon": {
+     "component": "sprite",
+     "sprite": "sprite.mythic_chest16x16",
+     "x": 258,
+     "y": 89
+    },
+    "text": {
+     "component": "text",
+     "font": "font.size12",
+     "x": 258,
+     "y": 112,
+     "valign": "middle",
+     "halign": "center"
+    },
+    "dimZero": true
+   },
+   {
+    "id": "divine",
+    "panel": {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc",
+     "x": 333,
+     "y": 100,
+     "sx": 3.20000005,
+     "sy": 3
+    },
+    "icon": {
+     "component": "sprite",
+     "sprite": "sprite.divine_chest16x16",
+     "x": 333,
+     "y": 89
+    },
+    "text": {
+     "component": "text",
+     "font": "font.size12",
+     "x": 333,
+     "y": 112,
+     "valign": "middle",
+     "halign": "center"
+    },
+    "dimZero": true
+   }
+  ],
+  "counterZeroColor": "#404040"
+ },
+ "touch": {
+  "comment": "Зоны касания (GUI 500×960, a ≤ x ≤ b, c ≤ y ≤ d — ui/kit/input.mjs hitArea), по пробам O t614-* (раунд исправлений 6.14): Summary — x 5…85 (4 и 86 нет), y 160…200 (159 и 201 нет); Open Relic — x 190…310 (189 и 311 нет), y 80…160 (79 и 161 нет; углы 190/310 × 83/156/160 есть); при открытой Summary касание в любой точке закрывает её (снято в 4 точках: середина, шапка, низ списка, кнопка Summary; ?? остальное).",
+  "close": [
+   0,
+   500,
+   0,
+   960
+  ],
+  "buttons": [
+   {
+    "action": "summary",
+    "area": [
+     5,
+     85,
+     160,
+     200
+    ]
+   },
+   {
+    "action": "open",
+    "area": [
+     190,
+     310,
+     80,
+     160
+    ],
+    "needChests": true
+   }
+  ]
+ },
+ "chestKinds": {
+  "comment": "Сундуки шапки (раунд исправлений 6.14, записи r614-chx/chs/chm и r614-sum-ch*): вид, значок, надпись Open (по приоритету divine → mythic → relic: первый вид с сундуками), сдвиг строки счётчика от строки сундуков реликвий (строка mythic/divine — только при > 0). Open All: значки видов с сундуками > 0 в порядке relic, mythic, divine, x — allIconX[число значков − 1].",
+  "columns": [
+   "kind",
+   "icon",
+   "openText",
+   "rowDy"
+  ],
+  "rows": [
+   [
+    "relic",
+    "sprite.chest_relic",
+    "t.open_relic",
+    0
+   ],
+   [
+    "mythic",
+    "sprite.mythic_chest16x16",
+    "t.open_mythic",
+    24
+   ],
+   [
+    "divine",
+    "sprite.divine_chest16x16",
+    "t.open_divine",
+    48
+   ]
+  ],
+  "openPriority": [
+   "divine",
+   "mythic",
+   "relic"
+  ],
+  "allIconX": [
+   [
+    410
+   ],
+   [
+    398,
+    422
+   ],
+   [
+    392,
+    410,
+    428
+   ]
+  ]
+ },
+ "scroll": {
+  "comment": "Прокрутка списка жестом — кит ui/kit/scroll.mjs (spec scroll-list 6.10): v = (y − y нажатия)/divisor за кадр, предел — maxScroll экрана (3000). divisor 15 — по записям O 6.14: прокрутки 420/820/1640/2460/3000 десяти сценариев с протяжками = O.",
+  "divisor": 15,
+  "repeatEvery": 12
+ }
+}

@@ -1,0 +1,19 @@
+{
+ "$id": "strings",
+ "title": "Тексты интерфейса (data/strings.json)",
+ "description": "Ключ — наш (t.<слаг>), значение — текст 2.2.50 как есть (переносы \\n, фрагменты для склейки). Связь ключа с таблицей строк оригинала — только в oracle/strings/catalog.csv.",
+ "type": "object",
+ "required": ["$schema", "lang", "version", "strings"],
+ "additionalProperties": false,
+ "properties": {
+  "$schema": {"const": "strings"},
+  "lang": {"enum": ["en"]},
+  "version": {"$ref": "common#/$defs/version"},
+  "strings": {
+   "type": "object",
+   "minProperties": 1,
+   "propertyNames": {"$ref": "common#/$defs/textKeyName"},
+   "additionalProperties": {"type": "string", "minLength": 1}
+  }
+ }
+}

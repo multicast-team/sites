@@ -1,0 +1,23 @@
+{
+ "$id": "systems/rng",
+ "title": "Генераторы ГСЧ игры и кубики сундуков (система rng): предметов и реликвий, генераторы ГСЧ игры (data/systems/chests.json — этап 5.8)",
+ "description": "constants и таблицы правил spec chests (oracle/specs/chests.md): itemRarity — веса редкостей кубика сундука предметов в порядке броска; itemTutorial — предмет первых сундуков по числу открытых; relicRarity — веса редкостей кубика сундука реликвий в порядке броска (от самой редкой); generators — генераторы игры: номер, имя, слово 0 начального состояния новой игры. Числа сняты с O (oracle/sources.json, группа data.chests58).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "system": {"const": "rng"},
+    "tables": {
+     "required": ["itemRarity", "itemTutorial", "relicRarity", "generators"],
+     "properties": {
+      "itemRarity": {"properties": {"columns": {"const": ["rarity", "weight"]}, "rows": {"minItems": 1, "items": {"prefixItems": [{"type": "string"}, {"type": "integer", "minimum": 1}]}}}},
+      "itemTutorial": {"properties": {"columns": {"const": ["opened", "item"]}, "rows": {"minItems": 1, "items": {"prefixItems": [{"type": "integer", "minimum": 0}, {"type": "integer", "minimum": 0}]}}}},
+      "relicRarity": {"properties": {"columns": {"const": ["rarity", "weight"]}, "rows": {"minItems": 1, "items": {"prefixItems": [{"type": "string"}, {"type": "integer", "minimum": 1}]}}}},
+      "generators": {"properties": {"columns": {"const": ["id", "name", "state0"]}, "rows": {"minItems": 1, "items": {"prefixItems": [{"type": "integer", "minimum": 0}, {"type": "string"}, {"type": "integer", "minimum": 0, "maximum": 65535}]}}}}
+     }
+    }
+   }
+  }
+ ]
+}

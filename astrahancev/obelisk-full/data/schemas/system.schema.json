@@ -1,0 +1,18 @@
+{
+ "$id": "system",
+ "title": "Файл данных системы: data/systems/<система>.json (этап 2.4)",
+ "description": "Общая оболочка для всех систем. Своя схема systems/<система> сужает её (allOf). Список систем = справочник oracle/inventory/systems.json без «не нужна» (сверяет тест). Источников чисел здесь нет: они в oracle/sources.json.",
+ "type": "object",
+ "required": ["$schema", "system", "version"],
+ "additionalProperties": false,
+ "properties": {
+  "$schema": {"type": "string"},
+  "system": {"enum": ["mining", "ore", "crafting", "upgrades", "workshop", "drones", "prestige", "items", "relics", "gemshop", "obelisk", "skilltree", "challenges", "contracts", "cards", "pets", "statues", "worlds", "stars", "archaeology", "fishing", "arcana", "idols", "lootbug", "gifts", "buffs", "tasks", "events", "offline", "stats", "profile", "achievements", "options", "logs", "codes", "raids", "shop", "save", "cloud", "rng", "bigint", "text", "fx", "ui", "audio", "format", "boot", "minigame", "weather", "misc", "bombs"]},
+  "version": {"$ref": "common#/$defs/version"},
+  "flags": {"type": "array", "uniqueItems": true, "items": {"enum": ["outside-original", "test-shop"]},
+   "description": "outside-original — данные вне оригинала (локальная таблица кодов, §10.1 п.5); test-shop — тестовый магазин (§10.1 п.7)"},
+  "constants": {"type": "object", "propertyNames": {"$ref": "common#/$defs/id"}, "additionalProperties": {"$ref": "common#/$defs/scalar"}},
+  "tables": {"type": "object", "propertyNames": {"$ref": "common#/$defs/id"}, "additionalProperties": {"$ref": "common#/$defs/table"}},
+  "items": {"type": "array", "items": {"$ref": "common#/$defs/item"}}
+ }
+}

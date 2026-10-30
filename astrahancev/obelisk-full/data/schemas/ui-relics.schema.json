@@ -1,0 +1,930 @@
+{
+ "$id": "ui-relics",
+ "title": "Меню реликвий, главная страница (data/ui/relics.json, этап 6.14)",
+ "description": "Вёрстка меню реликвий из компонентов: заголовки разделов редкости, ряды реликвий (уровень/кап, бонус, подпись, серая плашка, требования), прокрутка и отсечение, ползунок, шапка (кнопки открытия, подпись последней реликвии, число сундуков). Поля шаблонов с id — привязки экрана (ui/screens/relics.mjs); y рядов — от якоря ряда. Тексты — части (t.* — ключ strings.json, {имя} — значение, прочее как есть). Координаты — px комнаты 500×960 и обязаны совпасть с O. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "kitStyles",
+  "disabledColor",
+  "capColor",
+  "list",
+  "title",
+  "rarities",
+  "row",
+  "overlay",
+  "req",
+  "reqTwo",
+  "reqTexts",
+  "levelTexts",
+  "bonusPrefix",
+  "relicTexts",
+  "subTexts",
+  "header",
+  "thumb",
+  "format",
+  "summary",
+  "touch",
+  "chestKinds",
+  "scroll"
+ ],
+ "$defs": {
+  "leaf": {
+   "type": "object",
+   "required": [
+    "component"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "id": {
+     "type": "string",
+     "pattern": "^[a-zA-Z]+$"
+    },
+    "component": {
+     "enum": [
+      "sprite",
+      "text",
+      "rect"
+     ]
+    },
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "y": {
+     "$ref": "common#/$defs/num"
+    },
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "y1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "y2": {
+     "$ref": "common#/$defs/num"
+    },
+    "sprite": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "frame": {
+     "$ref": "common#/$defs/count"
+    },
+    "sx": {
+     "$ref": "common#/$defs/num"
+    },
+    "sy": {
+     "$ref": "common#/$defs/num"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "text": {
+     "$ref": "common#/$defs/stringKey"
+    },
+    "halign": {
+     "enum": [
+      "left",
+      "center",
+      "right"
+     ]
+    },
+    "valign": {
+     "enum": [
+      "top",
+      "middle",
+      "bottom"
+     ]
+    },
+    "snap": {
+     "type": "boolean"
+    },
+    "xscale": {
+     "$ref": "common#/$defs/num"
+    },
+    "yscale": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  }
+ },
+ "properties": {
+  "$schema": {
+   "const": "ui-relics"
+  },
+  "screen": {
+   "const": "relics"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "kitStyles": {
+   "type": "object",
+   "required": [
+    "panel"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "panel": {
+     "type": "string"
+    }
+   }
+  },
+  "disabledColor": {
+   "type": "string",
+   "pattern": "^#[0-9a-f]{6}$"
+  },
+  "capColor": {
+   "type": "string",
+   "pattern": "^#[0-9a-f]{6}$"
+  },
+  "list": {
+   "type": "object",
+   "required": [
+    "top",
+    "titleToRow",
+    "rowStep",
+    "sectionGap",
+    "cull"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "top": {
+     "$ref": "common#/$defs/num"
+    },
+    "titleToRow": {
+     "$ref": "common#/$defs/num"
+    },
+    "rowStep": {
+     "$ref": "common#/$defs/num"
+    },
+    "sectionGap": {
+     "$ref": "common#/$defs/num"
+    },
+    "cull": {
+     "type": "object",
+     "required": [
+      "rowTop",
+      "rowBottom",
+      "titleTop",
+      "titleBottom"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "rowTop": {
+       "$ref": "common#/$defs/num"
+      },
+      "rowBottom": {
+       "$ref": "common#/$defs/num"
+      },
+      "titleTop": {
+       "$ref": "common#/$defs/num"
+      },
+      "titleBottom": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    }
+   }
+  },
+  "title": {
+   "type": "object",
+   "required": [
+    "x",
+    "font",
+    "line",
+    "shadow"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "x": {
+     "$ref": "common#/$defs/num"
+    },
+    "font": {
+     "$ref": "common#/$defs/skinKey"
+    },
+    "line": {
+     "type": "object",
+     "required": [
+      "x1",
+      "x2",
+      "gap",
+      "w",
+      "alpha"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "x1": {
+       "$ref": "common#/$defs/num"
+      },
+      "x2": {
+       "$ref": "common#/$defs/num"
+      },
+      "gap": {
+       "$ref": "common#/$defs/num"
+      },
+      "w": {
+       "$ref": "common#/$defs/num"
+      },
+      "alpha": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      }
+     }
+    },
+    "shadow": {
+     "type": "object",
+     "required": [
+      "dx",
+      "dy",
+      "color"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "dx": {
+       "$ref": "common#/$defs/num"
+      },
+      "dy": {
+       "$ref": "common#/$defs/num"
+      },
+      "color": {
+       "type": "string",
+       "pattern": "^#[0-9a-f]{6}$"
+      }
+     }
+    }
+   }
+  },
+  "rarities": {
+   "type": "object",
+   "required": [
+    "columns",
+    "rows"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "columns": {
+     "const": [
+      "rarity",
+      "title",
+      "frame",
+      "reqName"
+     ]
+    },
+    "rows": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 64,
+     "items": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  },
+  "row": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 12,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "overlay": {
+   "$ref": "#/$defs/leaf"
+  },
+  "req": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 4,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "reqTwo": {
+   "type": "object",
+   "required": [
+    "rarityDy",
+    "obeliskDy"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "rarityDy": {
+     "$ref": "common#/$defs/num"
+    },
+    "obeliskDy": {
+     "$ref": "common#/$defs/num"
+    }
+   }
+  },
+  "reqTexts": {
+   "type": "object",
+   "required": [
+    "rarity",
+    "obelisk"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "rarity": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "obelisk": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "levelTexts": {
+   "type": "object",
+   "required": [
+    "plain",
+    "capped"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "plain": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    },
+    "capped": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 12,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "bonusPrefix": {
+   "type": "string"
+  },
+  "relicTexts": {
+   "type": "object",
+   "required": [
+    "columns",
+    "rows"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "columns": {
+     "const": [
+      "relic",
+      "num",
+      "den",
+      "suffix"
+     ]
+    },
+    "rows": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 64,
+     "items": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {}
+     }
+    }
+   }
+  },
+  "subTexts": {
+   "type": "object",
+   "required": [
+    "columns",
+    "rows"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "columns": {
+     "const": [
+      "relic",
+      "base",
+      "from",
+      "parts"
+     ]
+    },
+    "rows": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 64,
+     "items": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {}
+     }
+    }
+   }
+  },
+  "header": {
+   "type": "array",
+   "minItems": 1,
+   "maxItems": 24,
+   "items": {
+    "$ref": "#/$defs/leaf"
+   }
+  },
+  "thumb": {
+   "type": "object",
+   "required": [
+    "x1",
+    "x2",
+    "top",
+    "bottom",
+    "view",
+    "pad",
+    "color",
+    "alpha"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "x1": {
+     "$ref": "common#/$defs/num"
+    },
+    "x2": {
+     "$ref": "common#/$defs/num"
+    },
+    "top": {
+     "$ref": "common#/$defs/num"
+    },
+    "bottom": {
+     "$ref": "common#/$defs/num"
+    },
+    "view": {
+     "$ref": "common#/$defs/num"
+    },
+    "pad": {
+     "$ref": "common#/$defs/num"
+    },
+    "color": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "alpha": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    }
+   }
+  },
+  "format": {
+   "type": "object",
+   "required": [
+    "short"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "short": {
+     "type": "object"
+    },
+    "countPlainBelow": {
+     "$ref": "common#/$defs/num",
+     "description": "число сундуков в шапке пишется числом при < countPlainBelow, иначе коротким форматом (r614-c99999 / c100000)"
+    }
+   }
+  },
+  "summary": {
+   "type": "object",
+   "additionalProperties": false,
+   "description": "Страница Summary (раунд исправлений 6.14): ряды реликвий, правая колонка редкостей, шахтёр, счётчики.",
+   "required": [
+    "background",
+    "rows",
+    "row",
+    "cappedFrame",
+    "emptyIcon",
+    "emptyColor",
+    "nameParts",
+    "emptyParts",
+    "smallFont",
+    "sideOf",
+    "sides",
+    "pctSuffix",
+    "mythicChance",
+    "averageParts",
+    "close",
+    "miner",
+    "counters",
+    "counterZeroColor"
+   ],
+   "properties": {
+    "comment": {
+     "type": "string"
+    },
+    "background": {
+     "$ref": "#/$defs/leaf"
+    },
+    "rows": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "top",
+      "step",
+      "sectionGap"
+     ],
+     "properties": {
+      "top": {
+       "$ref": "common#/$defs/num"
+      },
+      "step": {
+       "$ref": "common#/$defs/num"
+      },
+      "sectionGap": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "row": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 8,
+     "items": {
+      "$ref": "#/$defs/leaf"
+     }
+    },
+    "cappedFrame": {
+     "type": "string",
+     "pattern": "^sprite\\.[a-z0-9_]+$"
+    },
+    "emptyIcon": {
+     "type": "string",
+     "pattern": "^sprite\\.[a-z0-9_]+$"
+    },
+    "emptyColor": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    },
+    "nameParts": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 8,
+     "items": {
+      "type": "string"
+     }
+    },
+    "emptyParts": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 8,
+     "items": {
+      "type": "string"
+     }
+    },
+    "smallFont": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "font",
+      "relics"
+     ],
+     "properties": {
+      "font": {
+       "type": "string"
+      },
+      "relics": {
+       "type": "array",
+       "maxItems": 64,
+       "items": {
+        "type": "integer",
+        "minimum": 0
+       }
+      }
+     }
+    },
+    "sideOf": {
+     "type": "object",
+     "required": [
+      "columns",
+      "rows"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "columns": {
+       "const": [
+        "rarity",
+        "side",
+        "ring",
+        "chance"
+       ]
+      },
+      "rows": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 16,
+       "items": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+        "items": {}
+       }
+      }
+     }
+    },
+    "sides": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "pct",
+      "mythic",
+      "divine"
+     ],
+     "properties": {
+      "pct": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 16,
+       "items": {
+        "$ref": "#/$defs/leaf"
+       }
+      },
+      "mythic": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 24,
+       "items": {
+        "$ref": "#/$defs/leaf"
+       }
+      },
+      "divine": {
+       "type": "array",
+       "minItems": 1,
+       "maxItems": 16,
+       "items": {
+        "$ref": "#/$defs/leaf"
+       }
+      }
+     }
+    },
+    "pctSuffix": {
+     "type": "string"
+    },
+    "mythicChance": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 8,
+     "items": {
+      "type": "string"
+     }
+    },
+    "averageParts": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 8,
+     "items": {
+      "type": "string"
+     }
+    },
+    "close": {
+     "$ref": "#/$defs/leaf"
+    },
+    "miner": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "sprite",
+      "frames",
+      "x",
+      "y",
+      "sx",
+      "sy"
+     ],
+     "properties": {
+      "sprite": {
+       "type": "string",
+       "pattern": "^sprite\\.[a-z0-9_]+$"
+      },
+      "frames": {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 64
+      },
+      "x": {
+       "$ref": "common#/$defs/num"
+      },
+      "y": {
+       "$ref": "common#/$defs/num"
+      },
+      "sx": {
+       "$ref": "common#/$defs/num"
+      },
+      "sy": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    },
+    "counters": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 8,
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "id",
+       "panel",
+       "icon",
+       "text"
+      ],
+      "properties": {
+       "id": {
+        "enum": [
+         "relics",
+         "mythic",
+         "divine"
+        ]
+       },
+       "panel": {
+        "$ref": "#/$defs/leaf"
+       },
+       "icon": {
+        "$ref": "#/$defs/leaf"
+       },
+       "text": {
+        "$ref": "#/$defs/leaf"
+       },
+       "dimZero": {
+        "type": "boolean"
+       }
+      }
+     }
+    },
+    "counterZeroColor": {
+     "type": "string",
+     "pattern": "^#[0-9a-f]{6}$"
+    }
+   }
+  },
+  "touch": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "close",
+    "buttons"
+   ],
+   "description": "Зоны касания меню реликвий (GUI 500×960, границы включены).",
+   "properties": {
+    "comment": {
+     "type": "string"
+    },
+    "close": {
+     "type": "array",
+     "minItems": 4,
+     "maxItems": 4,
+     "items": {
+      "$ref": "common#/$defs/num"
+     }
+    },
+    "buttons": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 8,
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "action",
+       "area"
+      ],
+      "properties": {
+       "action": {
+        "enum": [
+         "summary",
+         "open",
+         "openAll",
+         "reroll"
+        ]
+       },
+       "area": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+        "items": {
+         "$ref": "common#/$defs/num"
+        }
+       },
+       "needChests": {
+        "type": "boolean"
+       }
+      }
+     }
+    }
+   }
+  },
+  "chestKinds": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "columns",
+    "rows",
+    "openPriority",
+    "allIconX"
+   ],
+   "description": "Виды сундуков шапки меню реликвий: значок, надпись Open, строка счётчика, значки Open All.",
+   "properties": {
+    "comment": {
+     "type": "string"
+    },
+    "columns": {
+     "const": [
+      "kind",
+      "icon",
+      "openText",
+      "rowDy"
+     ]
+    },
+    "rows": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 4,
+     "items": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {}
+     }
+    },
+    "openPriority": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 4,
+     "items": {
+      "enum": [
+       "relic",
+       "mythic",
+       "divine"
+      ]
+     }
+    },
+    "allIconX": {
+     "type": "array",
+     "minItems": 1,
+     "maxItems": 4,
+     "items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+       "$ref": "common#/$defs/num"
+      }
+     }
+    }
+   }
+  },
+  "scroll": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "divisor",
+    "repeatEvery"
+   ],
+   "description": "Параметры кита прокрутки жестом (ui/kit/scroll.mjs) для списка реликвий.",
+   "properties": {
+    "comment": {
+     "type": "string"
+    },
+    "divisor": {
+     "$ref": "common#/$defs/num"
+    },
+    "repeatEvery": {
+     "type": "integer",
+     "minimum": 1
+    }
+   }
+  }
+ }
+}

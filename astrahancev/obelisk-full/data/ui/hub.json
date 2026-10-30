@@ -1,0 +1,348 @@
+{
+ "$schema": "ui-hub",
+ "screen": "hub",
+ "version": "2.2.50",
+ "comment": "Хаб меню (этап 6.18): координаты — без безопасной зоны сверху (вырез экрана; вид insetTop сдвигает плитки и заголовки); плитки систем на сетке, гейты (задание / уровень обелиска / посещение), точки и пульс непосещённых (закон пульса tile.unvisited.pulse: base + gain·sin(ms / msPerRadian) — этап 6.8, ui.unlockfx68), режим пинов, низ экрана (звук, версия, часы, батарея). Основа — черновик 6.4 data/ui/drafts/hub.json и записи O хаба (группа hub, oracle/hub618/); источник каждого числа — oracle/sources.json → ui.hub618.",
+ "background": {
+  "sprite": "sprite.patch9c",
+  "x": 0,
+  "y": 0,
+  "sx": 31.25,
+  "sy": 58.125,
+  "color": "#404040",
+  "alpha": 0.879999995,
+  "pinsColor": "#ffa040"
+ },
+ "headers": {
+  "sprite": "sprite.patch_backing_brownish_ml",
+  "x": 0,
+  "sx": 15,
+  "sy": 1.5,
+  "textX": 50,
+  "font": "font.size12",
+  "rows": [
+   {
+    "text": "t.permanent",
+    "y": 90
+   },
+   {
+    "text": "t.this_prestige",
+    "y": 500
+   },
+   {
+    "text": "t.miscellaneous",
+    "y": 660
+   }
+  ]
+ },
+ "grid": {
+  "x": 100,
+  "dx": 100,
+  "rows": [
+   150,
+   240,
+   330,
+   420,
+   560
+  ],
+  "misc": {
+   "x": 100,
+   "dx": 70,
+   "y": 720
+  }
+ },
+ "tile": {
+  "font": "font.size12",
+  "button": "sprite.button_hub_menu",
+  "iconDy": -1,
+  "iconScale": 2,
+  "labelDy": 38,
+  "locked": {
+   "color": "#808080",
+   "lock": "sprite.lock_unlock",
+   "lockFrame": 1,
+   "lockDy": -1,
+   "lockScale": 2,
+   "backing": "sprite.patch_backing_grey",
+   "backingSx": 3,
+   "backingSy": 1.39999998
+  },
+  "taskLocked": {
+   "dy": 42,
+   "text": "t.sym.2d_2d_2d"
+  },
+  "obeliskLocked": {
+   "dy": 38,
+   "icon": "sprite.obelisk_icon",
+   "iconDx": -10,
+   "prefix": "  "
+  },
+  "unvisited": {
+   "text": "t.q_q_q",
+   "dot": {
+    "dx": -32,
+    "dy": -32,
+    "r": 6,
+    "color": "#ffff00"
+   },
+   "pulse": {
+    "amplitude": 0.08,
+    "tintBase": 0.25,
+    "tintGain": 0.35,
+    "base": 1.04,
+    "gain": 0.04,
+    "msPerRadian": 180
+   }
+  },
+  "taskDot": {
+   "fromTask": 2,
+   "toTask": 19
+  }
+ },
+ "tiles": [
+  {
+   "screen": 0,
+   "col": 0,
+   "row": 4,
+   "icon": "sprite.anvil",
+   "label": "t.craft_2"
+  },
+  {
+   "screen": 1,
+   "col": 1,
+   "row": 4,
+   "icon": "sprite.pickaxe_damage_no_red",
+   "label": "t.upgrades"
+  },
+  {
+   "screen": 2,
+   "col": 2,
+   "row": 4,
+   "icon": "sprite.sell_menu_icon",
+   "label": "t.sell"
+  },
+  {
+   "screen": 3,
+   "col": 0,
+   "row": 0,
+   "icon": "sprite.prestige_point",
+   "label": "t.prestige"
+  },
+  {
+   "screen": 4,
+   "col": 1,
+   "row": 0,
+   "icon": "sprite.drone_icon",
+   "label": "t.drones"
+  },
+  {
+   "screen": 5,
+   "col": 2,
+   "row": 0,
+   "icon": "sprite.chest",
+   "label": "t.chests"
+  },
+  {
+   "screen": 6,
+   "col": 3,
+   "row": 0,
+   "icon": "sprite.chest_relic",
+   "label": "t.relics"
+  },
+  {
+   "screen": 7,
+   "col": 0,
+   "row": 1,
+   "icon": "sprite.shop_test2",
+   "label": "t.store"
+  },
+  {
+   "screen": 9,
+   "col": 1,
+   "row": 1,
+   "icon": "sprite.workshop",
+   "label": "t.workshop"
+  },
+  {
+   "screen": 10,
+   "col": 2,
+   "row": 1,
+   "icon": "sprite.skill_tree_icon",
+   "label": "t.skill_tree"
+  },
+  {
+   "screen": 11,
+   "col": 3,
+   "row": 1,
+   "icon": "sprite.challenge_coin",
+   "label": "t.challenges"
+  },
+  {
+   "screen": 12,
+   "misc": 0,
+   "icon": "sprite.skill_bar",
+   "label": "t.stats"
+  },
+  {
+   "screen": 13,
+   "col": 3,
+   "row": 4,
+   "icon": "sprite.contract_icon",
+   "label": "t.contracts"
+  },
+  {
+   "screen": 14,
+   "misc": 2,
+   "icon": "sprite.option_cog",
+   "label": "t.options"
+  },
+  {
+   "screen": 15,
+   "col": 0,
+   "row": 2,
+   "icon": "sprite.ace_of_spades",
+   "label": "t.cards"
+  },
+  {
+   "screen": 16,
+   "offscreen": {
+    "x": -2323,
+    "y": 350
+   },
+   "lockLevel": 999
+  },
+  {
+   "screen": 17,
+   "col": 2,
+   "row": 2,
+   "icon": "sprite.statue16x16",
+   "label": "t.construct"
+  },
+  {
+   "screen": 18,
+   "misc": 1,
+   "icon": "sprite.cloud",
+   "label": "t.cloud",
+   "pinnable": false
+  },
+  {
+   "screen": 19,
+   "col": 1,
+   "row": 2,
+   "icon": "sprite.pet_menu_icon",
+   "label": "t.pets"
+  },
+  {
+   "screen": 20,
+   "col": 3,
+   "row": 2,
+   "icon": "sprite.stargazing_menu_icon_test",
+   "label": "t.stargazing"
+  },
+  {
+   "screen": 21,
+   "col": 1,
+   "row": 3,
+   "icon": "sprite.fishing_menu",
+   "label": "t.fishing"
+  },
+  {
+   "screen": 22,
+   "col": 0,
+   "row": 3,
+   "icon": "sprite.arch_menu_icon",
+   "label": "t.archaeology"
+  },
+  {
+   "screen": 23,
+   "misc": 3,
+   "icon": "sprite.the_logs",
+   "label": "t.logs"
+  },
+  {
+   "screen": 24,
+   "col": 2,
+   "row": 3,
+   "icon": "sprite.arcana_menu_icon",
+   "label": "t.arcanist"
+  }
+ ],
+ "pins": {
+  "minTask": 20,
+  "sprite": "sprite.patch_button",
+  "x": 410,
+  "y": 792,
+  "sx": 4,
+  "sy": 2.55999994,
+  "text": "t.setup_pins",
+  "textDy": -1,
+  "hint": {
+   "text": "t.click_a_menu_to_pin_it_ex",
+   "x": 413,
+   "y": 732
+  }
+ },
+ "sound": {
+  "sprite": "sprite.patch_button",
+  "sx": 2.20000005,
+  "sy": 2.20000005,
+  "iconScale": 2,
+  "y": 840,
+  "buttons": [
+   {
+    "x": 380,
+    "icon": "sprite.music"
+   },
+   {
+    "x": 440,
+    "icon": "sprite.sfx"
+   }
+  ]
+ },
+ "footer": {
+  "font": "font.size12",
+  "x": 54,
+  "color": "#808080",
+  "versionY": 870,
+  "clockY": 845,
+  "version": "v2.2.50"
+ },
+ "battery": {
+  "backing": {
+   "sprite": "sprite.patch_backing_brownish_ml",
+   "x": 0,
+   "y": 855,
+   "sx": 3,
+   "sy": 4.19999981
+  },
+  "frame": {
+   "sprite": "sprite.patch_button",
+   "x": 25,
+   "y": 853,
+   "sx": 2.20000005,
+   "sy": 3.20000005
+  },
+  "icon": {
+   "sprite": "sprite.battery_levels",
+   "x": 25,
+   "y": 854,
+   "scale": 2
+  },
+  "bars": {
+   "perBar": 20,
+   "stepY": -4,
+   "pairDy": -2,
+   "frameLow": 1,
+   "frameHigh": 2
+  },
+  "label": {
+   "sprite": "sprite.patch_desc",
+   "x": 25,
+   "y": 868,
+   "sx": 2,
+   "sy": 1.10000002,
+   "font": "font.size10",
+   "textDy": 1
+  }
+ }
+}

@@ -1,0 +1,124 @@
+{
+ "$schema": "systems/logs",
+ "system": "logs",
+ "version": "2.2.50",
+ "constants": {
+  "wss.periodSeconds": 10,
+  "wss.maxRetries": 7,
+  "player.groupBudget": 1000
+ },
+ "tables": {
+  "debugBoot": {
+   "columns": [
+    "order",
+    "level",
+    "when",
+    "text"
+   ],
+   "rows": [
+    [
+     0,
+     "info",
+     "always",
+     "Loading game data..."
+    ],
+    [
+     1,
+     "info",
+     "saveFound",
+     "Main save file found."
+    ],
+    [
+     2,
+     "info",
+     "always",
+     "No internet connection. Will try to check for verify server again after 30s"
+    ],
+    [
+     3,
+     "info",
+     "always",
+     "[IAP REFUND] GUID not set, skipping refund check"
+    ],
+    [
+     4,
+     "info",
+     "always",
+     "Loading account system"
+    ],
+    [
+     5,
+     "info",
+     "always",
+     "Pre 33 sdk. No runtime perm support."
+    ]
+   ]
+  },
+  "debugWss": {
+   "columns": [
+    "step",
+    "when",
+    "level",
+    "text"
+   ],
+   "rows": [
+    [
+     0,
+     "always",
+     "info",
+     "Retrying connection to wss!"
+    ],
+    [
+     1,
+     "retry",
+     "warning",
+     "Connecting to wss failed. Retrying in 10 seconds"
+    ],
+    [
+     2,
+     "last",
+     "warning",
+     "Max retries reached. Trying connection to wss again later."
+    ]
+   ]
+  },
+  "debugOnce": {
+   "columns": [
+    "atSeconds",
+    "level",
+    "text"
+   ],
+   "rows": [
+    [
+     30,
+     "info",
+     "No internet connection. Will try to check for verify server again after 30s"
+    ]
+   ]
+  },
+  "playerGroups": {
+   "columns": [
+    "group",
+    "filter"
+   ],
+   "rows": [
+    [
+     "general",
+     0
+    ],
+    [
+     "gemSpend",
+     1
+    ],
+    [
+     "giftLoot",
+     2
+    ],
+    [
+     "milestone",
+     3
+    ]
+   ]
+  }
+ }
+}

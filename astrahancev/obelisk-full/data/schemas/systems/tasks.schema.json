@@ -1,0 +1,109 @@
+{
+ "$id": "systems/tasks",
+ "title": "Задания обучения (data/systems/tasks.json — этап 2.6; data/systems/taskrules.json — этап 5.12)",
+ "description": "Задания 1..count: текст, цель, иконка; награда одна на все. Числа сняты с O (oracle/sources.json, группа data.tasks26); правила — ?? до спеки системы. Тексты — ключи strings.json (null — текст O собирается из частей, спека 5.2), иконки — ключи skin. taskrules.json (этап 5.12, спека oracle/specs/tasks.md): награда за последнее задание (final.*) и таблица onStart (задание → счётчик проверки при старте); источники — группа data.prestige512. Ядро получает оба файла, объединённые вызывающим.",
+ "allOf": [
+  {
+   "$ref": "system"
+  },
+  {
+   "required": [
+    "constants",
+    "tables"
+   ],
+   "properties": {
+    "system": {
+     "const": "tasks"
+    },
+    "constants": {},
+    "tables": {
+     "properties": {
+      "tasks": {
+       "properties": {
+        "columns": {
+         "const": [
+          "id",
+          "text",
+          "goal",
+          "icon"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": [
+             "string",
+             "null"
+            ],
+            "pattern": "^t(?:\\.[a-z0-9_]+)+$",
+            "x-stringKey": true,
+            "description": "Ключ текста strings.json или null (текст O собирается из частей — спека 5.2)"
+           },
+           {
+            "$ref": "common#/$defs/nonneg"
+           },
+           {
+            "$ref": "common#/$defs/skinKey"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "onStart": {
+       "properties": {
+        "columns": {
+         "const": [
+          "task",
+          "counter"
+         ]
+        }
+       }
+      }
+     }
+    }
+   },
+   "anyOf": [
+    {
+     "properties": {
+      "constants": {
+       "required": [
+        "count",
+        "firstId",
+        "reward"
+       ]
+      },
+      "tables": {
+       "required": [
+        "tasks"
+       ]
+      }
+     }
+    },
+    {
+     "properties": {
+      "constants": {
+       "required": [
+        "final.gems",
+        "final.dronePoints",
+        "final.item",
+        "final.itemCount",
+        "final.freebieCountdown"
+       ]
+      },
+      "tables": {
+       "required": [
+        "onStart"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

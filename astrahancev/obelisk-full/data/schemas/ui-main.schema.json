@@ -1,0 +1,21 @@
+{
+ "$id": "ui-main",
+ "title": "Страница игры (data/ui/main.json, этап 6.33)",
+ "description": "Сборка игры из экранов: номера экранов хаба, привязки состояния экранов к ключам INI-сейва (внешний формат), зоны касания кнопок Buy, прокрутка, ключ хранилища браузера. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": ["$schema", "screen", "version", "storageKey", "layer", "screens", "save", "buy", "scroll", "hud"],
+ "properties": {
+  "$schema": {"const": "ui-main"},
+  "screen": {"const": "main"},
+  "version": {"$ref": "common#/$defs/version"},
+  "comment": {"type": "string"},
+  "storageKey": {"type": "string"},
+  "layer": {"type": "array", "items": {"$ref": "common#/$defs/num"}},
+  "screens": {"type": "object", "additionalProperties": {"$ref": "common#/$defs/num"}},
+  "save": {"type": "object"},
+  "buy": {"type": "object"},
+  "scroll": {"type": "object"},
+  "hud": {"type": "object"}
+ }
+}

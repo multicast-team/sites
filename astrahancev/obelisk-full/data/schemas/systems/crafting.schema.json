@@ -1,0 +1,75 @@
+{
+ "$id": "systems/crafting",
+ "title": "Крафт баров: ряды меню Craft, цена, множители (data/systems/crafting.json, этап 6.11)",
+ "description": "Бары мира в меню Craft (номер, ключ имени, мир), база цены в руде за 1 бар (recipes), множители нижней полосы (max = 1 — «Max», fromObelisk — с какого уровня обелиска кнопка есть). Константы: minLastBar — последний ряд списка не меньше этого бара (ряды 0…max(minLastBar, руда последнего открытого этажа), ??); multiFromObelisk — нижняя полоса с уровня обелиска (??); craftAllFromObelisk — «Craft All» с уровня обелиска (??: ob4 нет, ob10 есть); floorCap — этажей мира 1. Источники — oracle/sources.json, группа ui.craft611.",
+ "allOf": [
+  {
+   "$ref": "system"
+  },
+  {
+   "required": [
+    "constants",
+    "tables"
+   ],
+   "properties": {
+    "system": {
+     "const": "crafting"
+    },
+    "constants": {
+     "required": [
+      "minLastBar",
+      "multiFromObelisk",
+      "craftAllFromObelisk",
+      "floorCap"
+     ],
+     "additionalProperties": {
+      "type": "integer",
+      "minimum": 0
+     }
+    },
+    "tables": {
+     "required": [
+      "bars",
+      "recipes",
+      "multipliers"
+     ],
+     "additionalProperties": false,
+     "properties": {
+      "bars": {
+       "properties": {
+        "columns": {
+         "const": [
+          "bar",
+          "name",
+          "world"
+         ]
+        }
+       }
+      },
+      "recipes": {
+       "properties": {
+        "columns": {
+         "const": [
+          "bar",
+          "cost"
+         ]
+        }
+       }
+      },
+      "multipliers": {
+       "properties": {
+        "columns": {
+         "const": [
+          "amount",
+          "max",
+          "fromObelisk"
+         ]
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

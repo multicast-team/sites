@@ -1,0 +1,23 @@
+{
+ "$schema": "ui-tasks",
+ "screen": "tasks",
+ "version": "2.2.50",
+ "comment": "Панель Intro Tasks (NPE, этап 6.7) над шахтой: заголовок «Intro Tasks (N/19)», значок задания слева и справа, текст задания, полоса прогресса «прогресс/цель», кнопка «Complete Task», когда прогресс ≥ цели. Координаты — px комнаты 500×960; y частей — смещения от верха панели top = base + безопасная зона сверху (вырез) + въезд. Въезд: после закрытия окна соглашения новой игры панель поднимается на slide.perFrame px за кадр от slide.from до 0. Задание, цель, значок — data/systems/tasks.json. Стили текста и полосы — data/ui/kit.json. Источники чисел — oracle/sources.json → ui.npe67.",
+ "base": 74,
+ "slide": {"from": 150, "perFrame": 1},
+ "header": {"sprite": "sprite.patch_backing_brownish_with_desc_ml", "x": 64, "y": 0, "sx": 13, "sy": 1.5},
+ "body": {"sprite": "sprite.patch_backing_brownish", "x": 258, "y": 40, "sx": 25, "sy": 4},
+ "icons": [{"x": 99, "y": 52, "sx": 2, "sy": 2}, {"x": 419, "y": 52, "sx": 2, "sy": 2}],
+ "title": {"style": "text.hud", "x": 84, "y": 1, "color": "#ffff00", "prefix": "t.intro_tasks", "suffix": ")"},
+ "desc": {"sprite": "sprite.patch_desc", "x": 259, "y": 24, "sx": 24, "sy": 1.4},
+ "descText": {"style": "text.hud.center", "x": 259, "y": 24},
+ "final": {"color": "#ffff00", "progressIsGoal": true},
+ "progress": {"style": "progress.task", "x": 141, "y": 36},
+ "complete": {
+  "parts": [
+   {"sprite": "sprite.patch_backing_brownish", "x": 259, "y": 92, "sx": 10, "sy": 2.8},
+   {"sprite": "sprite.patch_button", "x": 259, "y": 92, "sx": 8, "sy": 2}
+  ],
+  "text": {"style": "text.hud.center", "x": 259, "y": 91, "key": "t.complete_task_2"}
+ }
+}

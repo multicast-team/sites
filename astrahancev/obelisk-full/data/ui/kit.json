@@ -1,0 +1,174 @@
+{
+ "$schema": "ui-kit",
+ "version": "2.2.50",
+ "comment": "Стили UI-кита Workshop (этап 4.1). Смещения dx/dy — от якоря компонента, px комнаты 500×960. Источник чисел — запись O menu-workshop (oracle/sources.json → ui.kit41). Этап 6.1: вкладки tabs.*, полосы прогресса progress.*, палитра palette — цвет стиля «@имя» (источник — ui.kit61). Этап 6.3: gate — области значков окна вверху справа и кнопки закрытия, x1, x2, y1, y2 (ворота проверки, spec input-layout п.7, источник — ui.gate63).",
+ "gate": {"icons": {"left": [394, 430, 78, 114], "right": [444, 480, 78, 114]}, "close": [224, 276, 856, 908]},
+ "view": {"x1": 0, "y1": 0, "x2": 500, "y2": 960, "cullMargin": 0, "cullPad": 0.5},
+ "palette": {"white": "#ffffff", "black": "#000000", "grey": "#808080", "frame.light": "#957c7d", "frame.mid": "#503738", "frame.dark": "#695051"},
+ "styles": {
+  "panel.menu": {
+   "fill": {"x1": 0, "y1": 0, "x2": 500, "y2": 930, "color": "#000000", "alpha": 0.85},
+   "texture": {"sprite": "sprite.noise_test", "x": 32, "y": 0, "scale": 6, "step": {"x": 0, "y": 784}, "count": 12, "color": "#ffffff", "alpha": 0.15}
+  },
+  "text.hud": {"font": "font.size12", "halign": "left", "valign": "middle", "color": "@white", "snap": true},
+  "text.hud.right": {"font": "font.size12", "halign": "right", "valign": "middle", "color": "@white", "snap": true},
+  "text.hud.center": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "@white", "snap": true},
+  "text.hud.level": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "@white", "snap": true, "shadow": {"dx": 1, "dy": 1, "color": "@black"}},
+  "text.hud.timer": {"font": "font.size10", "halign": "center", "valign": "middle", "color": "#ffff00", "snap": true, "shadow": {"dx": 1, "dy": 1, "color": "@black"}},
+  "text.hud.auto": {"font": "font.size10", "halign": "center", "valign": "middle", "color": "@white", "snap": true, "shadow": {"dx": 1, "dy": 1, "color": "@black"}},
+  "text.hud.version": {"font": "font.size10", "halign": "right", "valign": "middle", "color": "@white", "snap": true},
+  "progress.shop": {"fill": {"sprite": "sprite.shop_fill_up", "frame": 0, "dx": 0, "dy": 0, "sx": 1, "sy": 1, "length": 50, "thickness": 60, "axis": "y", "angle": 180}},
+  "text.title": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "#ffffff", "snap": true,
+   "shadow": {"dx": 1, "dy": 1, "color": "#000000"}},
+  "text.titleSmall": {"font": "font.size10", "halign": "center", "valign": "middle", "color": "#ffffff", "snap": true,
+   "shadow": {"dx": 1, "dy": 1, "color": "#000000"}},
+  "text.header": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "#e1c3b9", "snap": true,
+   "shadow": {"dx": 1, "dy": 1, "color": "#000000"}},
+  "text.button": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "#ffffff", "snap": false,
+   "shadow": {"dx": 1, "dy": 1, "color": "#000000"}},
+  "text.badge": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "#ffffff", "snap": false},
+  "text.cost": {"font": "font.size12", "halign": "left", "valign": "middle", "color": "#808080", "snap": true},
+  "text.lock": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "#c0c0c0", "snap": true},
+  "button.buy": {
+   "body": {"sprite": "sprite.patch_button", "dx": 0, "dy": 0, "sx": 4.2, "sy": 3},
+   "label": "text.button", "labelDx": 0, "labelDy": 0,
+   "enabled": {"tint": "#ffffff", "text": "#ffffff"},
+   "disabled": {"tint": "#808080", "text": "#808080"}
+  },
+  "badge.level": {
+   "parts": [
+    {"sprite": "sprite.patch_backing_brownish", "dx": 0, "dy": 0, "sx": 4, "sy": 1.5},
+    {"sprite": "sprite.patch_desc", "dx": 0, "dy": 0, "sx": 3.6, "sy": 1.1}
+   ],
+   "label": "text.badge"
+  },
+  "header.section": {
+   "lines": [
+    {"x1": -225, "x2": -86, "dy": 0, "width": 2, "color": "#e1c3b9", "alpha": 0.6},
+    {"x1": 86, "x2": 225, "dy": 0, "width": 2, "color": "#e1c3b9", "alpha": 0.6}
+   ],
+   "label": "text.header"
+  },
+  "text.subtitle": {"font": "font.size10", "halign": "center", "valign": "middle", "color": "#c0c0c0", "snap": true},
+  "scroll.menu": {"x1": 492, "x2": 502, "color": "#c0c0c0", "alpha": 0.35},
+  "bar.subtitle": {
+   "rects": [
+    {"x1": 0, "y1": -18, "x2": 500, "y2": 17, "color": "@frame.light"},
+    {"x1": 0, "y1": -18, "x2": 500, "y2": 15, "color": "@frame.dark"}
+   ],
+   "label": "text.subtitle", "textX": 250, "textY": 0
+  },
+  "text.done": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "#ffffff", "snap": false},
+  "button.maxed": {
+   "body": {"sprite": "sprite.patch_button_green", "dx": 0, "dy": 0, "sx": 4.2, "sy": 3},
+   "label": "text.button", "labelDx": 0, "labelDy": 0,
+   "enabled": {"tint": "#ffffff", "text": "#ffffff"},
+   "disabled": {"tint": "#808080", "text": "#808080"}
+  },
+  "button.menu": {
+   "body": {"sprite": "sprite.patch_button", "dx": 0, "dy": 0, "sx": 1.6, "sy": 1.8},
+   "bars": [
+    {"x1": -8, "y1": -9, "x2": 7, "y2": -7, "color": "#ffffff"},
+    {"x1": -8, "y1": -3, "x2": 7, "y2": -1, "color": "#ffffff"},
+    {"x1": -8, "y1": 3, "x2": 7, "y2": 5, "color": "#ffffff"}
+   ]
+  },
+  "row.buy": {
+   "badge": {"style": "badge.level", "dx": 193, "dy": -48},
+   "backing": {"sprite": "sprite.patch_backing_brownish", "dx": 0, "dy": 0, "sx": 30, "sy": 4.8},
+   "desc": {"sprite": "sprite.patch_desc", "dx": -20, "dy": 0, "sx": 21, "sy": 4},
+   "icon": {"dx": -215, "dy": -2, "sx": 2, "sy": 2},
+   "overlay": {"dx": -208, "dy": 8, "sx": 2, "sy": 2},
+   "button": {"style": "button.buy", "dx": 193, "dy": 0},
+   "maxed": {"button": "button.maxed", "text": {"style": "text.done", "dx": -25, "dy": 0}},
+   "titleBox": [
+    {"dx": -20, "dy": -25, "sx": 21, "sy": 1.6},
+    {"sprite": "sprite.patch_desc", "dx": -20, "dy": -25, "sx": 20, "sy": 1.1}
+   ],
+   "title": {"style": "text.title", "dx": -20, "dy": -25, "fitWidth": 320, "smallStyle": "text.titleSmall"},
+   "costs": {
+    "style": "text.cost", "textDy": 11, "colorYes": "#ffffff", "colorNo": "#808080",
+    "icon": {"sprite": "sprite.bar", "dy": 9, "sx": 2, "sy": 2},
+    "columns": [{"textDx": -148, "iconDx": -169}, {"textDx": -38, "iconDx": -58}, {"textDx": 72, "iconDx": 52}]
+   },
+   "lock": {
+    "parts": [
+     {"dx": 0, "dy": 0, "sx": 30, "sy": 4.8, "color": "#808080"},
+     {"sprite": "sprite.patch_desc", "dx": 0, "dy": 0, "sx": 21, "sy": 3, "color": "#808080"}
+    ],
+    "label": "text.lock"
+   }
+  },
+  "text.tab": {"font": "font.size10", "halign": "center", "valign": "middle", "color": "@white", "snap": false, "shadow": {"dx": 1, "dy": 1, "color": "@black"}},
+  "text.caption": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "@white", "snap": true},
+  "tabs.options": {
+   "rects": [{"x1": 0, "y1": -30, "x2": 500, "y2": 31, "color": "@frame.light"}, {"x1": 0, "y1": -29, "x2": 500, "y2": 30, "color": "@frame.dark"}],
+   "first": {"dx": 55, "dy": 0},
+   "step": {"x": 78, "y": 0},
+   "body": {"sprite": "sprite.patch_button", "dx": 0, "dy": 0, "sx": 4, "sy": 2},
+   "normal": {"sprite": "sprite.patch_button", "tint": "@white", "text": "@white"},
+   "selected": {"sprite": "sprite.patch_button_green", "tint": "@white", "text": "@white"},
+   "label": "text.tab",
+   "labelDx": 0,
+   "labelDy": -1
+  },
+  "tabs.pages": {
+   "rects": [{"x1": -55, "y1": -21, "x2": 199, "y2": 18, "color": "@frame.light"}, {"x1": -56, "y1": -20, "x2": 200, "y2": 19, "color": "@frame.mid"}, {"x1": -55, "y1": -20, "x2": 199, "y2": 18, "color": "@frame.dark"}],
+   "caption": {"parts": [{"sprite": "sprite.patch_desc", "dx": 0, "dy": 0, "sx": 6.2, "sy": 1.6}], "label": "text.caption", "labelDx": 0, "labelDy": 0},
+   "first": {"dx": 75, "dy": 0},
+   "step": {"x": 50, "y": 0},
+   "body": {"sprite": "sprite.patch_button", "dx": 0, "dy": 0, "sx": 2, "sy": 2},
+   "normal": {"tint": "@white", "text": "@white"},
+   "selected": {"tint": "@grey", "text": "@grey"},
+   "label": "text.caption",
+   "labelDx": 0,
+   "labelDy": -1
+  },
+  "progress.xp": {
+   "bg": {"sprite": "sprite.exp_meter", "frame": 1, "dx": 0, "dy": 0, "sx": 2, "sy": 2},
+   "fill": {"sprite": "sprite.exp_meter", "frame": 0, "dx": 0, "dy": 0, "sx": 2, "sy": 2, "length": 77, "thickness": 6, "axis": "x", "angle": 0}
+  },
+  "progress.task": {
+   "bg": {"sprite": "sprite.chest_meter_tutorial", "frame": 1, "dx": 0, "dy": 0, "sx": 2, "sy": 2, "w": 120, "h": 14},
+   "fill": {"sprite": "sprite.chest_meter_tutorial", "frame": 0, "dx": 0, "dy": 0, "sx": 2, "sy": 2, "length": 120, "thickness": 14, "axis": "x", "angle": 0},
+   "label": {"style": "text.caption", "dx": 118, "dy": 15}
+  },
+  "progress.bomb": {
+   "bg": {"sprite": "sprite.bomb_charge_meter", "frame": 1, "dx": 0, "dy": 0, "sx": 1, "sy": 1, "w": 44, "h": 6},
+   "fill": {"sprite": "sprite.bomb_charge_meter", "frame": 0, "dx": 0, "dy": 0, "sx": 1, "sy": 1, "length": 44, "thickness": 6, "axis": "x", "angle": 0}
+  },
+  "progress.fish": {
+   "bg": {"sprite": "sprite.fish_meter", "frame": 1, "dx": 0, "dy": 0, "sx": 2, "sy": 2},
+   "fill": {"sprite": "sprite.fish_meter", "frame": 0, "dx": 0, "dy": 0, "sx": 2, "sy": 2, "length": 224, "thickness": 6, "axis": "x", "angle": 0}
+  },
+  "progress.fishTop": {
+   "bg": {"sprite": "sprite.fish_meter2", "frame": 1, "dx": 0, "dy": 0, "sx": 2, "sy": 2},
+   "fill": {"sprite": "sprite.fish_meter_just_inside", "frame": 0, "dx": 21, "dy": 6, "sx": 2, "sy": 2, "length": 202, "thickness": 6, "axis": "x", "angle": 0}
+  },
+  "progress.chest": {
+   "bg": {"sprite": "sprite.new_chest_meters", "frame": 0, "dx": 0, "dy": 0, "sx": 2, "sy": 2},
+   "fill": {"sprite": "sprite.new_chest_meter_filling", "frame": 0, "dx": 12, "dy": -9, "sx": 2, "sy": 2, "length": 48, "thickness": 12, "axis": "y", "angle": 180},
+   "cap": {"sprite": "sprite.new_chest_meter_toppers", "frame": 0, "dx": 0, "dy": -18, "sx": 2, "sy": 2}
+  },
+  "progress.relic": {
+   "bg": {"sprite": "sprite.new_chest_meters", "frame": 2, "dx": 0, "dy": 0, "sx": 2, "sy": 2},
+   "fill": {"sprite": "sprite.new_chest_meter_filling", "frame": 1, "dx": 12, "dy": -10, "sx": 2, "sy": 2, "length": 48, "thickness": 12, "axis": "y", "angle": 180},
+   "cap": {"sprite": "sprite.new_chest_meter_toppers", "frame": 1, "dx": 0, "dy": -18, "sx": 2, "sy": 2}
+  },
+  "box.frame": {"rects": [{"dx1": 0, "dy1": 0, "dx2": 0, "dy2": -1, "color": "@frame.light"}, {"dx1": -1, "dy1": 1, "dx2": 1, "dy2": 0, "color": "@frame.mid"}, {"dx1": 0, "dy1": 1, "dx2": 0, "dy2": -1, "color": "@frame.dark"}]},
+  "modal.window": {"top": 62, "tasksShift": 64, "overlay": {"x1": 0, "x2": 500, "dy1": 0, "y2": 1030, "color": "@black", "alpha": 0.75}, "panel": {"sprite": "sprite.patch_backing_brownish_tc", "dx": 250, "dy": 58, "sx": 28, "sy": 42}, "close": {"box": "box.frame", "x1": 218, "dy1": 730, "x2": 282, "dy2": 781, "body": {"sprite": "sprite.patch_button", "dx": 250, "dy": 756, "sx": 2.4, "sy": 2.4}, "icon": {"sprite": "sprite.exit", "dx": 249, "dy": 754, "sx": 2, "sy": 2}}},
+  "tabs.currencies": {"rects": [{"x1": -55, "y1": -21, "x2": 388, "y2": 18, "color": "@frame.light"}, {"x1": -56, "y1": -20, "x2": 389, "y2": 19, "color": "@frame.mid"}, {"x1": -55, "y1": -20, "x2": 388, "y2": 18, "color": "@frame.dark"}], "caption": {"parts": [{"sprite": "sprite.patch_desc", "dx": 0, "dy": 0, "sx": 6.2, "sy": 1.6}], "label": "text.caption", "labelDx": 0, "labelDy": 0}, "first": {"dx": 75, "dy": 0}, "step": {"x": 50, "y": 0}, "body": {"sprite": "sprite.patch_button", "dx": 0, "dy": 0, "sx": 2.4, "sy": 2}, "icon": {"dx": 0, "dy": -2, "sx": 2, "sy": 2}, "normal": {"tint": "@white", "icon": "@white"}, "selected": {"tint": "@grey", "icon": "@grey"}, "locked": {"tint": "#404040", "icon": "@black"}},
+  "text.toast": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "@white", "snap": true},
+  "toast.hub": {"band": {"x1": -335, "x2": 835, "dy1": -13, "dy2": 12, "color": "@black"}, "label": "text.toast", "textX": 250, "textAlphaMul": 2, "icon": {"sprite": "sprite.nothing", "dx": 98, "dy": 0, "sx": 2, "sy": 2}},
+  "button.menuOpen": {"body": {"sprite": "sprite.patch_button_green", "dx": 0, "dy": 0, "sx": 1.6, "sy": 1.8}, "bars": [{"x1": -8, "y1": -9, "x2": 7, "y2": -7, "color": "#ffffff"}, {"x1": -8, "y1": -3, "x2": 7, "y2": -1, "color": "#ffffff"}, {"x1": -8, "y1": 3, "x2": 7, "y2": 5, "color": "#ffffff"}]},
+  "text.menuCaption": {"font": "font.size10", "halign": "left", "valign": "middle", "color": "#ffff00", "snap": true},
+  "text.option": {"font": "font.size10", "halign": "left", "valign": "middle", "color": "@white", "snap": true, "shadow": {"dx": 1, "dy": 1, "color": "@black"}},
+  "text.popup.white": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "@white", "snap": true, "alphaRound": true, "shadow": {"dx": 1, "dy": 1, "color": "@black"}},
+  "text.popup.yellow": {"font": "font.size12", "halign": "center", "valign": "middle", "color": "#ffff00", "snap": true, "alphaRound": true, "shadow": {"dx": 1, "dy": 1, "color": "@black"}},
+  "menu.options": {"button": "button.menuOpen", "buttonX": 28, "buttonY": 80, "panel": {"x1": 14, "y1": 101, "padRight": 16, "y2": 177, "xrad": 10, "yrad": 10, "color": "@black", "alpha": 0.92, "outline": "@frame.light"}, "caption": {"style": "text.menuCaption", "x": 26, "y": 117}, "row": {"check": {"sprite": "sprite.unchecked_checked", "dx": 38, "dy": 147, "sx": 2, "sy": 2}, "label": "text.option", "labelX": 58, "labelY": 147, "step": 0}},
+  "sheet.offlineStart": {"overlay": {"x1": 0, "y1": 0, "x2": 500, "y2": 980, "color": "@black", "alpha": 0.85}, "box": "box.frame", "frame": [20, 199, 480, 921], "inner": {"x1": 25, "y1": 440, "x2": 475, "y2": 855, "color": "#0f1419"}, "button": {"body": {"sprite": "sprite.patch_button", "dx": 250, "dy": 895, "sx": 24, "sy": 2.4}, "label": "text.caption", "labelX": 250, "labelY": 894}},
+  "sheet.offlineResult": {"overlay": {"x1": 0, "y1": 0, "x2": 500, "y2": 970, "color": "@black", "alpha": 0.75}, "box": "box.frame", "frame": [20, 19, 480, 921], "inner": {"x1": 25, "y1": 65, "x2": 475, "y2": 720, "color": "#0f1419"}, "button": {"body": {"sprite": "sprite.patch_button", "dx": 250, "dy": 895, "sx": 24, "sy": 2.4}, "label": "text.caption", "labelX": 250, "labelY": 894}},
+  "window.stats": {"modal": "modal.window", "tabs": "tabs.pages", "tabsX": 255, "tabsDy": 38, "caption": "t.stat_pages", "labels": ["t.1", "t.2", "t.3"]},
+  "window.currencies": {"modal": "modal.window", "tabs": "tabs.currencies", "tabsX": 83, "tabsDy": 38, "caption": "t.currencies", "icons": [{"sprite": "sprite.bag16x16"}, {"sprite": "sprite.cart_world_cycle", "frame": 0}, {"sprite": "sprite.cart_world_cycle", "frame": 1}, {"sprite": "sprite.cart_world_cycle", "frame": 2}, {"sprite": "sprite.cart_world_cycle", "frame": 3}, {"sprite": "sprite.star_plain"}]}
+ }
+}

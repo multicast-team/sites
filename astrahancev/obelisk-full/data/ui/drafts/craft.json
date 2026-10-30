@@ -1,0 +1,482 @@
+{
+ "$schema": "ui-draft",
+ "screen": "craft",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Крафт» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "group",
+      "x": 25,
+      "y": 219,
+      "children": [
+       {
+        "component": "line",
+        "x1": 0,
+        "y1": 0,
+        "x2": 157,
+        "y2": 0,
+        "w": 2,
+        "color": "#e1c3b9",
+        "alpha": 0.600000024
+       },
+       {
+        "component": "line",
+        "x1": 293,
+        "y1": 0,
+        "x2": 450,
+        "y2": 0,
+        "w": 2,
+        "color": "#e1c3b9",
+        "alpha": 0.600000024
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 226,
+        "y": 1,
+        "value": "World 1 Bars",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 225,
+        "y": 0,
+        "value": "World 1 Bars",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#e1c3b9"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.eye",
+        "x": 0,
+        "y": 85,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_white",
+        "x": 225,
+        "y": 45,
+        "sx": 2.92857146,
+        "sy": 1.60000002,
+        "color": "#695051"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 225,
+        "y": 45,
+        "sx": 2.34931517,
+        "sy": 1.29999995
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 225,
+        "y": 44,
+        "text": "t.tin",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.craft_menu_main_backing",
+        "x": 225,
+        "y": 85,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.rock_test",
+        "x": 40,
+        "y": 69
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.bar",
+        "x": 40,
+        "y": 99
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 52,
+        "y": 70,
+        "text": "t.0",
+        "valign": "middle"
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 77,
+      "y": 319,
+      "children": [
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 0,
+        "text": "t.0",
+        "valign": "middle",
+        "snap": false
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 393,
+        "y": -15,
+        "sx": 1.39999998,
+        "sy": 1.39999998
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.small_arrow",
+        "frame": 1,
+        "x": 393,
+        "y": -17
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.small_arrow",
+        "x": 173,
+        "y": -23,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 120,
+        "y": 0,
+        "text": "t.5",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.rock_test",
+        "x": 118,
+        "y": -24,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 230,
+        "y": 0,
+        "text": "t.1",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.bar",
+        "x": 228,
+        "y": -25,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 331,
+        "y": -15,
+        "sx": 4.19999981,
+        "sy": 3,
+        "color": "#808080"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 331,
+        "y": -15,
+        "text": "t.craft_2",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080",
+        "snap": false
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.eye",
+        "x": -52,
+        "y": 85,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_white",
+        "x": 173,
+        "y": 45,
+        "sx": 4.85714293,
+        "sy": 1.60000002,
+        "color": "#695051"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 173,
+        "y": 45,
+        "sx": 4.19863033,
+        "sy": 1.29999995
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 173,
+        "y": 44,
+        "text": "t.copper",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.craft_menu_main_backing",
+        "x": 173,
+        "y": 85,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.rock_test",
+        "frame": 1,
+        "x": -12,
+        "y": 69
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.bar",
+        "frame": 1,
+        "x": -12,
+        "y": 99
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 70,
+        "text": "t.0",
+        "valign": "middle"
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 77,
+      "y": 419,
+      "children": [
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 0,
+        "y": 0,
+        "text": "t.0",
+        "valign": "middle",
+        "snap": false
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 393,
+        "y": -15,
+        "sx": 1.39999998,
+        "sy": 1.39999998,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.small_arrow",
+        "frame": 1,
+        "x": 393,
+        "y": -17,
+        "color": "#808080"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.small_arrow",
+        "x": 173,
+        "y": -23,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 120,
+        "y": 0,
+        "value": "6",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.rock_test",
+        "frame": 1,
+        "x": 118,
+        "y": -24,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 230,
+        "y": 0,
+        "text": "t.1",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.bar",
+        "frame": 1,
+        "x": 228,
+        "y": -25,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": 331,
+        "y": -15,
+        "sx": 4.19999981,
+        "sy": 3,
+        "color": "#808080"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 331,
+        "y": -15,
+        "text": "t.craft_2",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080",
+        "snap": false
+       },
+       {
+        "component": "rect",
+        "x1": 415,
+        "y1": -251,
+        "x2": 425,
+        "y2": 414.866089,
+        "color": "#c0c0c0",
+        "alpha": 0.349999994
+       },
+       {
+        "component": "rect",
+        "x1": -77,
+        "y1": -293,
+        "x2": 423,
+        "y2": -258,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -77,
+        "y1": -293,
+        "x2": 423,
+        "y2": -260,
+        "color": "#695051"
+       },
+       {
+        "component": "rect",
+        "x1": -77,
+        "y1": -260,
+        "x2": 423,
+        "y2": -253,
+        "color": "#957c7d"
+       },
+       {
+        "component": "rect",
+        "x1": -77,
+        "y1": -260,
+        "x2": 423,
+        "y2": -255,
+        "color": "#695051"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_button",
+        "x": -49,
+        "y": -275,
+        "sx": 1.60000002,
+        "sy": 1.79999995
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 20,
+    "y": 135,
+    "step": {
+     "x": 0,
+     "y": 6
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 15,
+      "y2": 2
+     }
+    ]
+   }
+  ]
+ }
+}

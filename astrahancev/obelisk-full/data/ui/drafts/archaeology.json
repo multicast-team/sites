@@ -1,0 +1,1406 @@
+{
+ "$schema": "ui-draft",
+ "screen": "archaeology",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Археология» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 930,
+    "color": "#000000",
+    "alpha": 0.850000024
+   },
+   {
+    "component": "repeat",
+    "x": 32,
+    "y": 0,
+    "step": {
+     "x": 0,
+     "y": 784
+    },
+    "count": 12,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.noise_test",
+      "x": 0,
+      "y": 0,
+      "sx": 6,
+      "sy": 6,
+      "alpha": 0.150000006
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "children": [
+     {
+      "component": "group",
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_big_background_tile",
+        "x": 250,
+        "y": 516,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 90,
+        "y": 420,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 92,
+        "y": 428,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": -3,
+        "sprite": "sprite.arch_dirt",
+        "x": 90,
+        "y": 426,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "rect",
+        "x1": 77,
+        "y1": 448,
+        "x2": 105,
+        "y2": 450,
+        "color": "#000000"
+       },
+       {
+        "component": "rect",
+        "x1": 77,
+        "y1": 448,
+        "x2": 99.4000015,
+        "y2": 450,
+        "color": "#ff0000"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 91,
+        "y": 386.33336,
+        "text": "t.10",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#000000",
+        "alpha": 0.655557334
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 90,
+        "y": 385.33336,
+        "text": "t.10",
+        "halign": "center",
+        "valign": "middle",
+        "alpha": 0.655557334
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "x": 154,
+        "y": 420,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 218,
+        "y": 420,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 220,
+        "y": 428,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": 0.5,
+        "sprite": "sprite.arch_dirt",
+        "x": 218,
+        "y": 426,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "x": 282,
+        "y": 420,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 346,
+        "y": 420,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_common_block",
+        "x": 348,
+        "y": 428,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": 0.5,
+        "sprite": "sprite.arch_common_block",
+        "x": 346,
+        "y": 426,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 2,
+        "x": 410,
+        "y": 420,
+        "sx": 2,
+        "sy": 2
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 410,
+        "y": 484,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_common_block",
+        "x": 412,
+        "y": 492,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": -0.5,
+        "sprite": "sprite.arch_common_block",
+        "x": 410,
+        "y": 490,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 2,
+        "x": 346,
+        "y": 484,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "x": 282,
+        "y": 484,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 2,
+        "x": 218,
+        "y": 484,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 154,
+        "y": 484,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 156,
+        "y": 492,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": -0.5,
+        "sprite": "sprite.arch_dirt",
+        "x": 154,
+        "y": 490,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 90,
+        "y": 484,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 92,
+        "y": 492,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": -0.5,
+        "sprite": "sprite.arch_dirt",
+        "x": 90,
+        "y": 490,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": 140.5,
+        "sprite": "sprite.arch_crosshair",
+        "x": 90,
+        "y": 490,
+        "sx": 1.5,
+        "sy": 1.5
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 90,
+        "y": 548,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 92,
+        "y": 556,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": 0.5,
+        "sprite": "sprite.arch_dirt",
+        "x": 90,
+        "y": 554,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 154,
+        "y": 548,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 156,
+        "y": 556,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": 0.5,
+        "sprite": "sprite.arch_dirt",
+        "x": 154,
+        "y": 554,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 3,
+        "x": 218,
+        "y": 548,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "x": 282,
+        "y": 548,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 346,
+        "y": 548,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 348,
+        "y": 556,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": 0.5,
+        "sprite": "sprite.arch_dirt",
+        "x": 346,
+        "y": 554,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 1,
+        "x": 410,
+        "y": 548,
+        "sx": 2,
+        "sy": 2
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 410,
+        "y": 612,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 412,
+        "y": 620,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": -0.5,
+        "sprite": "sprite.arch_dirt",
+        "x": 410,
+        "y": 618,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 346,
+        "y": 612,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 348,
+        "y": 620,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": -0.5,
+        "sprite": "sprite.arch_dirt",
+        "x": 346,
+        "y": 618,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 1,
+        "x": 282,
+        "y": 612,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 4,
+        "x": 218,
+        "y": 612,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 220,
+        "y": 620,
+        "sx": 2,
+        "sy": 2,
+        "color": "#000000",
+        "alpha": 0.400000006
+       },
+       {
+        "component": "todo",
+        "what": "spriteRotated",
+        "angle": -0.5,
+        "sprite": "sprite.arch_dirt",
+        "x": 218,
+        "y": 618,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 1,
+        "x": 154,
+        "y": 612,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_tile_test1",
+        "frame": 2,
+        "x": 90,
+        "y": 612,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_brownish_tc",
+        "x": 105,
+        "y": 179,
+        "sx": 10,
+        "sy": 8.5
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 105,
+        "y": 210,
+        "sx": 9.19999981,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 105,
+        "y": 210,
+        "value": "Stage: 1",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 105,
+        "y": 253,
+        "sx": 9.19999981,
+        "sy": 2.20000005
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_bar_stamina",
+        "x": 59,
+        "y": 254,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "todo",
+        "what": "spritePart",
+        "frame": 1,
+        "left": 6,
+        "top": 0,
+        "w": 35.28,
+        "h": 8,
+        "x": 72,
+        "y": 254,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 106,
+        "y": 247,
+        "value": "98/100",
+        "halign": "center",
+        "valign": "middle"
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 105,
+        "y": 292,
+        "sx": 9.19999981,
+        "sy": 2.4000001
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_bar_xp",
+        "x": 59,
+        "y": 292,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "todo",
+        "what": "spritePart",
+        "frame": 1,
+        "left": 7,
+        "top": 0,
+        "w": 0,
+        "h": 8,
+        "x": 72,
+        "y": 292,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 45,
+        "y": 301,
+        "text": "t.1",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "text",
+        "font": "font.size10",
+        "x": 45,
+        "y": 217,
+        "text": "t.1",
+        "halign": "center",
+        "valign": "middle",
+        "color": "#808080"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 106,
+        "y": 284,
+        "value": "0/15",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_brownish_ml",
+        "x": 195,
+        "y": 247,
+        "sx": 17.5,
+        "sy": 8.5
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc_ml",
+        "x": 225,
+        "y": 257,
+        "sx": 5,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_hp",
+        "x": 225,
+        "y": 256,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc_ml",
+        "x": 225,
+        "y": 292,
+        "sx": 5,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_armor",
+        "x": 225,
+        "y": 292,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 225,
+        "y": 257,
+        "value": "  80",
+        "valign": "middle"
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 225,
+        "y": 292,
+        "value": "  0",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 275,
+        "y": 210,
+        "sx": 7.5999999,
+        "sy": 2.4000001
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 275,
+        "y": 210,
+        "value": "Tier 1\nDirt Block",
+        "halign": "center",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_backing_brownish",
+        "x": 375,
+        "y": 210,
+        "sx": 3,
+        "sy": 3
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_dirt",
+        "x": 375,
+        "y": 210,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc",
+        "x": 435,
+        "y": 210,
+        "sx": 2,
+        "sy": 2.79999995,
+        "alpha": 0.660000026
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.card_backing",
+        "x": 435,
+        "y": 206,
+        "color": "#404040",
+        "alpha": 0.5
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_cards",
+        "x": 435,
+        "y": 206,
+        "color": "#404040",
+        "alpha": 0.5
+       }
+      ]
+     },
+     {
+      "component": "group",
+      "x": 327,
+      "y": 257,
+      "children": [
+       {
+        "component": "sprite",
+        "sprite": "sprite.patch_desc_ml",
+        "x": 0,
+        "y": 0,
+        "sx": 5.0999999,
+        "sy": 2
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.arch_xp_text_only",
+        "x": -2,
+        "y": 0,
+        "sx": 2,
+        "sy": 2
+       },
+       {
+        "component": "text",
+        "font": "font.size12",
+        "x": 18,
+        "y": 0,
+        "value": "0.050",
+        "valign": "middle"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#118a6b"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 1,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#5b0712"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 2,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#0c906f"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 3,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#efb0df"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 4,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#c25646"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 5,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#10ee44"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 6,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#734d9d"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 7,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#1d0e40"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 8,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#4753ed"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 9,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#e8b1eb"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 10,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#a422e6"
+       },
+       {
+        "component": "sprite",
+        "sprite": "sprite.miner_blanket",
+        "frame": 11,
+        "x": -285,
+        "y": 158,
+        "sx": 2,
+        "sy": 2,
+        "color": "#df6660"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 100,
+    "y": 733,
+    "step": {
+     "x": 150,
+     "y": 0
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 2.5999999,
+      "color": "#404040"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_only",
+      "x": 0,
+      "y": -2,
+      "sx": 2,
+      "sy": 2,
+      "color": "#404040"
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 0,
+    "y": 817,
+    "children": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 500,
+      "y2": 73,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 1,
+      "x2": 500,
+      "y2": 73,
+      "color": "#695051"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 115,
+      "y": 21,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arch_digsite_icon",
+      "x": 115,
+      "y": 20,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 115,
+    "y": 868,
+    "step": {
+     "x": 90,
+     "y": 0
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.digsite",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 90,
+      "y": -30,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arch_skill_strip",
+      "x": 90,
+      "y": -31,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.upgrades"
+      },
+      "3": {
+       "sprite": "sprite.arch_idol_small"
+      }
+     },
+     {
+      "1": {
+       "text": "t.idols"
+      },
+      "3": {
+       "sprite": "sprite.arch_ascension"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 385,
+    "y": 868,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 5,
+      "sy": 1.20000005
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.ascension",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "rect",
+      "x1": -385,
+      "y1": -795,
+      "x2": 115,
+      "y2": -678,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -386,
+      "y1": -794,
+      "x2": 116,
+      "y2": -677,
+      "color": "#503738"
+     },
+     {
+      "component": "rect",
+      "x1": -385,
+      "y1": -794,
+      "x2": 115,
+      "y2": -678,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -385,
+      "y1": -742,
+      "x2": 115,
+      "y2": -707,
+      "color": "#957c7d"
+     },
+     {
+      "component": "rect",
+      "x1": -385,
+      "y1": -742,
+      "x2": 115,
+      "y2": -709,
+      "color": "#695051"
+     },
+     {
+      "component": "rect",
+      "x1": -385,
+      "y1": -709,
+      "x2": 115,
+      "y2": -707,
+      "color": "#695051"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc_ml",
+      "x": -271,
+      "y": -724,
+      "sx": 4.4000001,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arch_fragment_strip",
+      "x": -271,
+      "y": -724,
+      "sx": 2,
+      "sy": 2
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 131,
+    "y": 144,
+    "step": {
+     "x": 88,
+     "y": 0
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 0,
+      "text": "t.0",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc_ml",
+      "x": 71,
+      "y": 0,
+      "sx": 4.4000001,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arch_fragment_strip",
+      "frame": 1,
+      "x": 71,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "2": {
+       "frame": 2
+      }
+     },
+     {
+      "2": {
+       "frame": 3
+      }
+     }
+    ]
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "x": 395,
+    "y": 144,
+    "text": "t.0",
+    "valign": "middle"
+   },
+   {
+    "component": "repeat",
+    "x": 114,
+    "y": 174,
+    "step": {
+     "x": 88,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 4.4000001,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arch_fragment_strip",
+      "frame": 4,
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 17,
+      "y": 0,
+      "text": "t.0",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "frame": 5
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 290,
+    "y": 174,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 4.4000001,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arch_lucky_token",
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 17,
+      "y": 0,
+      "text": "t.0",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc_ml",
+      "x": 88,
+      "y": 0,
+      "sx": 4.4000001,
+      "sy": 1.60000002
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.arch_stat_point",
+      "x": 88,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 105,
+      "y": 0,
+      "text": "t.1",
+      "valign": "middle",
+      "color": "#ffff00"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.skill_bar",
+      "x": -225,
+      "y": -15,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": -262,
+      "y": -15,
+      "sx": 1.60000002,
+      "sy": 1.79999995
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 20,
+    "y": 150,
+    "step": {
+     "x": 0,
+     "y": 6
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "rect",
+      "x1": 0,
+      "y1": 0,
+      "x2": 15,
+      "y2": 2
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 468,
+    "y": 159,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 1.60000002,
+      "sy": 1.79999995
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.info_icon",
+      "x": 0,
+      "y": -1
+     }
+    ]
+   }
+  ]
+ }
+}

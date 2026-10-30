@@ -1,0 +1,30 @@
+{
+ "$id": "ui-unlockfx",
+ "title": "Анимация открытия меню в хабе (data/ui/unlockfx.json, этап 6.8)",
+ "description": "Числа анимации открытия запертого обелиском меню поверх плитки хаба (spec unlock-fx): прогресс анимации (progress.durationUs — мкс на всю анимацию), рост замка, свечение после открытия (спрайт, цвет, режим смешивания, масштаб, скорость угасания). Места плиток — data/ui/hub.json, длительность анимации — data/systems/hub.json (unlockFrames). Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": ["$schema", "screen", "version", "lockGrow", "progress", "glow"],
+ "properties": {
+  "$schema": {"const": "ui-unlockfx"},
+  "screen": {"const": "unlockfx"},
+  "version": {"$ref": "common#/$defs/version"},
+  "comment": {"type": "string"},
+  "lockGrow": {"$ref": "common#/$defs/num"},
+  "progress": {"type": "object", "additionalProperties": false, "required": ["durationUs"], "properties": {"durationUs": {"$ref": "common#/$defs/num"}}},
+  "glow": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": ["sprite", "color", "blend", "scaleStart", "scaleGain", "fadePerSecond", "usPerSecond"],
+   "properties": {
+    "sprite": {"type": "string"},
+    "color": {"type": "string"},
+    "blend": {"$ref": "common#/$defs/num"},
+    "scaleStart": {"$ref": "common#/$defs/num"},
+    "scaleGain": {"$ref": "common#/$defs/num"},
+    "fadePerSecond": {"$ref": "common#/$defs/num"},
+    "usPerSecond": {"$ref": "common#/$defs/num"}
+   }
+  }
+ }
+}

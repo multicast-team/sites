@@ -1,0 +1,925 @@
+{
+ "$schema": "ui-draft",
+ "screen": "hub",
+ "version": "2.2.50",
+ "draft": true,
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Черновик вёрстки «Хаб меню (кнопки систем)» (этап 6.4): разовый конвертер oracle/ui64/draft64.mjs из записи O, разложен на компоненты; привязок к ядру нет — тексты чисел и имён стоят значениями кадра записи. Источник — oracle/sources.json → ui.draft64.",
+ "root": {
+  "component": "group",
+  "children": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch9c",
+    "x": 0,
+    "y": 0,
+    "sx": 31.25,
+    "sy": 58.125,
+    "color": "#404040",
+    "alpha": 0.879999995
+   },
+   {
+    "component": "repeat",
+    "x": 0,
+    "y": 154,
+    "step": {
+     "x": 0,
+     "y": 410
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 15,
+      "sy": 1.5
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 50,
+      "y": 0,
+      "text": "t.permanent",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "text": "t.this_prestige"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 0,
+    "y": 724,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": 0,
+      "y": 0,
+      "sx": 15,
+      "sy": 1.5
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 50,
+      "y": 0,
+      "text": "t.miscellaneous",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 100,
+      "y": -100
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.anvil",
+      "x": 100,
+      "y": -101,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 100,
+      "y": -62,
+      "text": "t.craft_2",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 200,
+    "y": 666,
+    "step": {
+     "x": -100,
+     "y": -410
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "text": "t.sym.2d_2d_2d",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 0,
+      "y": -42,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 0,
+      "y": -43,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 100,
+      "y": 0,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 100,
+      "y": 0,
+      "text": "t.sym.2d_2d_2d",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 100,
+      "y": -42,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 100,
+      "y": -43,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 300,
+    "y": 256,
+    "step": {
+     "x": 100,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "text": "t.sym.2d_2d_2d",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 0,
+      "y": -42,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 0,
+      "y": -43,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 100,
+    "y": 346,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "text": "t.sym.2d_2d_2d",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 0,
+      "y": -42,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 0,
+      "y": -43,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 200,
+    "y": 342,
+    "step": {
+     "x": 100,
+     "y": 0
+    },
+    "count": 3,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.obelisk_icon",
+      "x": -10,
+      "y": 0
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 0,
+      "y": -38,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 0,
+      "y": -39,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "  1",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "4": {
+       "value": "  4"
+      }
+     },
+     {
+      "4": {
+       "value": "  10"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 100,
+    "y": 826,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "text": "t.sym.2d_2d_2d",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 0,
+      "y": -42,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 0,
+      "y": -43,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 300,
+      "y": -164,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.obelisk_icon",
+      "x": 290,
+      "y": -164
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 300,
+      "y": -202,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 300,
+      "y": -203,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 300,
+      "y": -164,
+      "value": "  12",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 140,
+      "y": -42
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.option_cog",
+      "x": 140,
+      "y": -43,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 140,
+      "y": -4,
+      "text": "t.options",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 100,
+    "y": 432,
+    "step": {
+     "x": -2423,
+     "y": 20
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.obelisk_icon",
+      "x": -10,
+      "y": 0
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 0,
+      "y": -38,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 0,
+      "y": -39,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "  15",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "4": {
+       "value": "  999"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 300,
+    "y": 432,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.obelisk_icon",
+      "x": -10,
+      "y": 0
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 0,
+      "y": -38,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 0,
+      "y": -39,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "  19",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": -130,
+      "y": 352
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.cloud",
+      "x": -130,
+      "y": 351,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -130,
+      "y": 390,
+      "text": "t.cloud",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 200,
+    "y": 432,
+    "step": {
+     "x": 200,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.obelisk_icon",
+      "x": -10,
+      "y": 0
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 0,
+      "y": -38,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 0,
+      "y": -39,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "  17",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "4": {
+       "value": "  23"
+      }
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 200,
+    "y": 522,
+    "step": {
+     "x": -100,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": 0,
+      "y": 0,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.obelisk_icon",
+      "x": -10,
+      "y": 0
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 0,
+      "y": -38,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": 0,
+      "y": -39,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "  37",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ],
+    "items": [
+     {},
+     {
+      "4": {
+       "value": "  30"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 310,
+    "y": 784,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": 0,
+      "y": 0
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.the_logs",
+      "x": 0,
+      "y": -1,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 38,
+      "text": "t.logs",
+      "halign": "center",
+      "valign": "middle"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_grey",
+      "x": -10,
+      "y": -262,
+      "sx": 3,
+      "sy": 1.39999998,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.obelisk_icon",
+      "x": -20,
+      "y": -262
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.button_hub_menu",
+      "x": -10,
+      "y": -300,
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.lock_unlock",
+      "frame": 1,
+      "x": -10,
+      "y": -301,
+      "sx": 2,
+      "sy": 2,
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": -10,
+      "y": -262,
+      "value": "  70",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 380,
+    "y": 840,
+    "step": {
+     "x": 60,
+     "y": 0
+    },
+    "count": 2,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": 0,
+      "y": 0,
+      "sx": 2.20000005,
+      "sy": 2.20000005
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.music",
+      "frame": 1,
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     }
+    ],
+    "items": [
+     {},
+     {
+      "1": {
+       "sprite": "sprite.sfx"
+      }
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 54,
+    "y": 870,
+    "children": [
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": 0,
+      "value": "v2.2.50",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "text",
+      "font": "font.size12",
+      "x": 0,
+      "y": -25,
+      "value": "[00:00]",
+      "valign": "middle",
+      "color": "#808080"
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_backing_brownish_ml",
+      "x": -54,
+      "y": -15,
+      "sx": 3,
+      "sy": 4.19999981
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_button",
+      "x": -29,
+      "y": -17,
+      "sx": 2.20000005,
+      "sy": 3.20000005
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.battery_levels",
+      "x": -29,
+      "y": -16,
+      "sx": 2,
+      "sy": 2
+     }
+    ]
+   },
+   {
+    "component": "repeat",
+    "x": 25,
+    "y": 854,
+    "step": {
+     "x": 0,
+     "y": -4
+    },
+    "count": 5,
+    "item": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.battery_levels",
+      "frame": 1,
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.battery_levels",
+      "frame": 1,
+      "x": 0,
+      "y": -2,
+      "sx": 2,
+      "sy": 2
+     },
+     {
+      "component": "sprite",
+      "sprite": "sprite.battery_levels",
+      "frame": 2,
+      "x": 0,
+      "y": -2,
+      "sx": 2,
+      "sy": 2
+     }
+    ]
+   },
+   {
+    "component": "group",
+    "x": 25,
+    "y": 868,
+    "children": [
+     {
+      "component": "sprite",
+      "sprite": "sprite.patch_desc",
+      "x": 0,
+      "y": 0,
+      "sx": 2,
+      "sy": 1.10000002
+     },
+     {
+      "component": "text",
+      "font": "font.size10",
+      "x": 0,
+      "y": 1,
+      "value": "100%",
+      "halign": "center",
+      "valign": "middle"
+     }
+    ]
+   }
+  ]
+ }
+}

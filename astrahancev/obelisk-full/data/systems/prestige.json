@@ -1,0 +1,187 @@
+{
+ "$schema": "systems/prestige",
+ "system": "prestige",
+ "version": "2.2.50",
+ "constants": {
+  "gain.minLevel": 20,
+  "gain.base": 12,
+  "gain.growth": 1.084,
+  "gain.offset": 10,
+  "gain.overLevel": 200,
+  "gain.overStep": 0.05,
+  "task.id": 17,
+  "nameChanges.step": 1,
+  "prestiges.step": 1
+ },
+ "tables": {
+  "resetValues": {
+   "columns": [
+    "field",
+    "value"
+   ],
+   "rows": [
+    [
+     "level",
+     1
+    ],
+    [
+     "xp",
+     0
+    ],
+    [
+     "gold",
+     0
+    ],
+    [
+     "floor",
+     1
+    ],
+    [
+     "floorsUnlocked",
+     1
+    ],
+    [
+     "floorClears",
+     0
+    ],
+    [
+     "bombsFired",
+     0
+    ],
+    [
+     "floorGolden",
+     0
+    ],
+    [
+     "floorRainbow",
+     0
+    ],
+    [
+     "floorGalaxy",
+     0
+    ],
+    [
+     "floorPrismatic",
+     0
+    ],
+    [
+     "nextFloorGolden",
+     0
+    ],
+    [
+     "bestOreThisRun",
+     0
+    ],
+    [
+     "runSeconds",
+     0
+    ],
+    [
+     "contractPoints",
+     0
+    ],
+    [
+     "contractActive",
+     -1
+    ],
+    [
+     "contractLastRoll",
+     -1
+    ],
+    [
+     "contractGoal",
+     999
+    ],
+    [
+     "contractPointsSpentRun",
+     0
+    ],
+    [
+     "contractResetsRun",
+     0
+    ],
+    [
+     "contractsDoneRun",
+     0
+    ],
+    [
+     "nextBombMulti",
+     1
+    ],
+    [
+     "quickAmount",
+     0
+    ],
+    [
+     "quickCounter",
+     0
+    ],
+    [
+     "floorSelectPage",
+     1
+    ],
+    [
+     "starFollow",
+     -1
+    ]
+   ]
+  },
+  "resetArrays": {
+   "columns": [
+    "field",
+    "value"
+   ],
+   "rows": [
+    [
+     "bars",
+     0
+    ],
+    [
+     "ores",
+     0
+    ],
+    [
+     "upgrades",
+     0
+    ],
+    [
+     "contractLevels",
+     0
+    ],
+    [
+     "oreSellLocked",
+     0
+    ]
+   ]
+  },
+  "resetIndices": {
+   "columns": [
+    "field",
+    "index",
+    "value"
+   ],
+   "rows": [
+    [
+     "menuScroll",
+     0,
+     0
+    ],
+    [
+     "menuScroll",
+     1,
+     0
+    ],
+    [
+     "menuScroll",
+     2,
+     0
+    ],
+    [
+     "menuScroll",
+     13,
+     0
+    ]
+   ]
+  }
+ }
+}

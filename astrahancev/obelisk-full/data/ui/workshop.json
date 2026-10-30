@@ -1,0 +1,328 @@
+{
+ "$schema": "ui-screen",
+ "screen": "workshop",
+ "version": "2.2.50",
+ "room": {
+  "w": 500,
+  "h": 960
+ },
+ "comment": "Экран Workshop (этап 4.3): компоненты кита data/ui/kit.json; строки и секции — oracle/workshop43/mkscreen43.mjs из записи O; источники — oracle/sources.json → ui.workshop43.",
+ "format": {
+  "short": {
+   "plainBelow": 100000,
+   "plainFloorFrom": 1000,
+   "plainDecimals": 2,
+   "groupDigits": 3,
+   "suffixes": [
+    "k",
+    "m",
+    "b",
+    "t",
+    "q",
+    "qi",
+    "sx",
+    "sp",
+    "oc",
+    "no",
+    "dc",
+    "udc",
+    "ddc",
+    "tdc",
+    "qadc",
+    "qidc",
+    "sxdc",
+    "spdc",
+    "ocdc",
+    "nvdc"
+   ],
+   "sciPrefix": "e",
+   "decimals": [
+    [
+     10,
+     2
+    ],
+    [
+     100,
+     1
+    ],
+    [
+     1000,
+     0
+    ]
+   ],
+   "digits": 15,
+   "rounding": "floorSignificant"
+  }
+ },
+ "top": {
+  "tasksPanel": 64
+ },
+ "root": {
+  "component": "group",
+  "anchor": "topLeft",
+  "children": [
+   {
+    "component": "panel",
+    "id": "panel",
+    "style": "panel.menu"
+   },
+   {
+    "component": "list",
+    "id": "rows",
+    "x": 250,
+    "y": 160,
+    "gaps": {
+     "headerToRow": 88,
+     "rowStep": 115,
+     "rowToHeader": 87
+    },
+    "header": {
+     "component": "header",
+     "style": "header.section"
+    },
+    "item": {
+     "component": "buyRow",
+     "style": "row.buy"
+    },
+    "texts": {
+     "sectionPrefix": "t.world_5",
+     "sectionSuffix": "t.upgrades_2",
+     "buy": "t.buy",
+     "maxed": "t.maxed",
+     "costSep": "t.per_2",
+     "lockObelisk": "t.unlock_at_obelisk_level",
+     "lockWorldPrefix": "t.reach_world",
+     "lockWorldSuffix": "t.to_unlock",
+     "lockPrev": "t.required"
+    },
+    "sections": [
+     {
+      "world": 1,
+      "color": "#e1c3b9",
+      "backing": "sprite.patch_backing_brownish"
+     },
+     {
+      "world": 2,
+      "color": "#f5788c",
+      "backing": "sprite.patch_backing_magma"
+     },
+     {
+      "world": 3,
+      "color": "#78d77d",
+      "backing": "sprite.patch_backing_green"
+     },
+     {
+      "world": 4,
+      "color": "#c38cfa",
+      "backing": "sprite.patch_backing_purple"
+     }
+    ],
+    "items": [
+     {
+      "row": 0,
+      "icon": "sprite.bomb_of_plenty"
+     },
+     {
+      "row": 1,
+      "icon": "sprite.bomb_basic",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 2,
+      "icon": "sprite.bomb_exp"
+     },
+     {
+      "row": 3,
+      "icon": "sprite.bomb_chain",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 4,
+      "icon": "sprite.bomb_infinity"
+     },
+     {
+      "row": 5,
+      "icon": "sprite.bomb_of_plenty",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 6,
+      "icon": "sprite.bomb_cherry"
+     },
+     {
+      "row": 7,
+      "icon": "sprite.pickaxe_damage",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 8,
+      "icon": "sprite.bomb_d20"
+     },
+     {
+      "row": 9,
+      "icon": "sprite.bomb_exp",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 10,
+      "icon": "sprite.bomb_mega",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 11,
+      "icon": "sprite.bomb_d20",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 12,
+      "icon": "sprite.bomb_cherry",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 13,
+      "icon": "sprite.bomb_infinity",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 14,
+      "icon": "sprite.bomb_transmuter_test",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 15,
+      "icon": "sprite.bomb_damage",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 16,
+      "icon": "sprite.bomb_mega",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 17,
+      "icon": "sprite.bomb_transmuter_test"
+     },
+     {
+      "row": 18,
+      "icon": "sprite.bomb_vein",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 19,
+      "icon": "sprite.pickaxe_damage",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 20,
+      "icon": "sprite.bomb_of_plenty",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 21,
+      "icon": "sprite.bomb_damage",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 22,
+      "icon": "sprite.hamburger",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 23,
+      "icon": "sprite.bomb_of_plenty",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 24,
+      "icon": "sprite.sushi",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 25,
+      "icon": "sprite.fishing_drone_power",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 26,
+      "icon": "sprite.pickaxe_and_bomb_damage",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 27,
+      "icon": "sprite.starfruit",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 28,
+      "icon": "sprite.bomb_of_plenty",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 29,
+      "icon": "sprite.bomb_recharge_rate",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 30,
+      "icon": "sprite.frog_loot_multi",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 31,
+      "icon": "sprite.drone_cap_up",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 32,
+      "icon": "sprite.bomb_transmuter_test",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 33,
+      "icon": "sprite.portal_gold_chance",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 34,
+      "icon": "sprite.arcanist_wizard_loot_multi",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 35,
+      "icon": "sprite.spell_duration_multi",
+      "overlay": "sprite.arrow_green"
+     },
+     {
+      "row": 36,
+      "icon": "sprite.rainbow_ore_plain"
+     }
+    ]
+   },
+   {
+    "component": "scroll",
+    "id": "scroll",
+    "style": "scroll.menu",
+    "track": {
+     "top": 99,
+     "bottom": 882,
+     "viewBottom": 930,
+     "maxScroll": 3840
+    }
+   },
+   {
+    "component": "subtitleBar",
+    "id": "subtitle",
+    "style": "bar.subtitle",
+    "y": 80,
+    "text": "t.spend_bars_on_permanent_upgrades_ex"
+   },
+   {
+    "component": "menuButton",
+    "id": "menu",
+    "style": "button.menu",
+    "x": 28,
+    "y": 80
+   }
+  ]
+ }
+}
