@@ -24,6 +24,10 @@
   const levelRoot = new THREE.Group();
   let yardRoot = null;
   let elevatorRoot = null;
+  // Air taxis (syncTaxis): their models on the helipad and the shared materials and textures.
+  let taxiView = null;
+  let taxiKit = null;
+  const taxiSeat = new THREE.Vector3();
   scene.add(levelRoot);
   // Blue preview of every pattern being assembled in a yard: the slots drones have not filled yet.
   const patternGhosts = new THREE.Group();
@@ -46,13 +50,13 @@
   const CITY_LOT = { width: 10, depth: 8 };
   const CITY_GRID = { colX: 7.4, rowPitch: 12.5 };
   const CITY_AVENUE = { width: 3.2, walk: 0.8, near: 11 };
-  const CITY_ZONE_ROW = 4;
+  const CITY_ZONE_ROW = 6;
   // Camera box of the whole quarter (setMode('city')): the pivot rides the avenue and may slide over a lot.
   const CITY_CAMERA = {
     mode: 'city',
     key: 'city:boulevard',
-    minX: -12.6, maxX: 12.6, minZ: -55.1, maxZ: 6.5, topY: 5.5,
-    rail: { from: { x: 0, z: 6 }, to: { x: 0, z: -50.5 }, halfWidth: 7.6 },
+    minX: -12.6, maxX: 12.6, minZ: -67.6, maxZ: 6.5, topY: 5.5,
+    rail: { from: { x: 0, z: 6 }, to: { x: 0, z: -63 }, halfWidth: 7.6 },
   };
   const cityMat = {
     asphalt: new THREE.MeshStandardMaterial({ color: 0x3d4146, roughness: 0.95 }),
@@ -101,21 +105,414 @@
   scene.add(sun);
   scene.add(sun.target);
 
+  // ---- time of day (docs/gdd/08-needs-weather-events.md → «День и ночь») ----
+  // The sky dome, the fog, the hemisphere light and the sun follow the site clock
+  // (MicroBuildersSim.dayClock: a site starts at 8:00, night 20:00–6:00, dawn 2 h after it, sunset
+  // and twilight 2 h before it) by blending the looks below, so dawn, day, sunset and night read at
+  // a glance and never switch abruptly. Colors are sRGB hex; light intensities as in three.js.
+  // stars / moon — how much of them the dome shows; glow — the sun's halo; moonLight — how much the
+  // directional light comes from the moon instead of the sun.
+  const SKY_LOOKS = {
+    night: { top: 0x0d1830, horizon: 0x26375c, fog: 0x1f2c48, hemiSky: 0x9fb4e8, hemiGround: 0x2b3530, hemi: 0.55, sunColor: 0xb8c8f0, sun: 0.4, glow: 0, stars: 1, moon: 1, moonLight: 1 },
+    predawn: { top: 0x2c4372, horizon: 0xae869c, fog: 0x67678a, hemiSky: 0xa3aad6, hemiGround: 0x3d4539, hemi: 0.56, sunColor: 0xb4acdf, sun: 0.36, glow: 0.3, stars: 0.3, moon: 0.4, moonLight: 0.6 },
+    sunrise: { top: 0x6888b8, horizon: 0xf2a39c, fog: 0xd2acab, hemiSky: 0xf0c8c0, hemiGround: 0x6a6a52, hemi: 0.74, sunColor: 0xffb08a, sun: 1.05, glow: 1, stars: 0, moon: 0, moonLight: 0 },
+    morning: { top: 0x84b3d8, horizon: 0xf6d3b0, fog: 0xc2d1de, hemiSky: 0xe8eefa, hemiGround: 0x7c8a57, hemi: 0.84, sunColor: 0xffd9a8, sun: 1.32, glow: 0.5, stars: 0, moon: 0, moonLight: 0 },
+    day: { top: 0x78b0d6, horizon: 0xf5d6b3, fog: 0xb7cfe0, hemiSky: 0xe4f0ff, hemiGround: 0x7c8a57, hemi: 0.9, sunColor: 0xffe2b4, sun: 1.45, glow: 0.35, stars: 0, moon: 0, moonLight: 0 },
+    afternoon: { top: 0x6fa3cf, horizon: 0xf6c995, fog: 0xcfc8b9, hemiSky: 0xeee6d8, hemiGround: 0x7d8552, hemi: 0.82, sunColor: 0xffc98a, sun: 1.36, glow: 0.6, stars: 0, moon: 0, moonLight: 0 },
+    sunset: { top: 0x4c6b9b, horizon: 0xf0865a, fog: 0xc48c78, hemiSky: 0xf0b48c, hemiGround: 0x66614c, hemi: 0.7, sunColor: 0xff8a48, sun: 1, glow: 1, stars: 0, moon: 0, moonLight: 0 },
+    twilight: { top: 0x2a3b69, horizon: 0x9a6e8e, fog: 0x5b5777, hemiSky: 0x9c9ccc, hemiGround: 0x3c4238, hemi: 0.56, sunColor: 0xa4a8e0, sun: 0.36, glow: 0.35, stars: 0.35, moon: 0.5, moonLight: 0.6 },
+  };
+  const SKY_COLORS = ['top', 'horizon', 'fog', 'hemiSky', 'hemiGround', 'sunColor'];
+  const SKY_LEVELS = ['hemi', 'sun', 'glow', 'stars', 'moon', 'moonLight'];
+  Object.keys(SKY_LOOKS).forEach(function (name) {
+    const look = SKY_LOOKS[name];
+    SKY_COLORS.forEach(function (key) {
+      const hex = look[key];
+      look[key] = [(hex >> 16 & 255) / 255, (hex >> 8 & 255) / 255, (hex & 255) / 255];
+    });
+  });
+  // The sun rises in the middle of dawn and sets in the middle of the sunset-and-twilight hours,
+  // sweeping SUN_SWEEP degrees each side of SUN_NOON (the light's old fixed direction, so midday
+  // keeps the familiar shadows), up to SUN_PEAK degrees high. Shadows never go flatter than
+  // LIGHT_LOW degrees; the moon lights from MOON_SIDE degrees round from the noon sun.
+  const SUN_NOON = Math.atan2(0.35, 0.7);
+  const SUN_SWEEP = 100;
+  const SUN_PEAK = 58;
+  const LIGHT_LOW = 22;
+  const MOON_SIDE = 150;
+  const MOON_LIGHT_HIGH = 52;
+  const MOON_SKY_HIGH = 24;
   const sky = new THREE.Mesh(
-    new THREE.SphereGeometry(180, 24, 16),
+    new THREE.SphereGeometry(180, 32, 20),
     new THREE.ShaderMaterial({
       side: THREE.BackSide,
       depthWrite: false,
+      uniforms: {
+        uTop: { value: new THREE.Vector3(0.47, 0.69, 0.84) },
+        uHorizon: { value: new THREE.Vector3(0.96, 0.84, 0.7) },
+        uSunDir: { value: new THREE.Vector3(0.5, 0.6, 0.25).normalize() },
+        uSunColor: { value: new THREE.Vector3(1, 0.89, 0.71) },
+        uGlow: { value: 0.35 },
+        uMoonDir: { value: new THREE.Vector3(-0.6, 0.4, -0.5).normalize() },
+        uMoon: { value: 0 },
+        uStars: { value: 0 },
+        uClouds: { value: 0 },
+        uCloudColor: { value: new THREE.Vector3(0.6, 0.62, 0.66) },
+        uTime: { value: 0 },
+        uFlash: { value: 0 },
+      },
       vertexShader: 'varying vec3 vPos; void main(){ vPos = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-      fragmentShader: 'varying vec3 vPos; void main(){ float h = normalize(vPos).y; vec3 top = vec3(0.47, 0.69, 0.84); vec3 hor = vec3(0.96, 0.84, 0.70); gl_FragColor = vec4(mix(hor, top, smoothstep(-0.08, 0.55, h)), 1.0); }',
+      fragmentShader: [
+        'uniform vec3 uTop; uniform vec3 uHorizon; uniform vec3 uSunDir; uniform vec3 uSunColor; uniform float uGlow;',
+        'uniform vec3 uMoonDir; uniform float uMoon; uniform float uStars; uniform float uClouds; uniform vec3 uCloudColor;',
+        'uniform float uTime; uniform float uFlash; varying vec3 vPos;',
+        'float hash(vec3 p){ p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }',
+        'float hash2(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+        'float vnoise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);',
+        '  return mix(mix(hash2(i), hash2(i + vec2(1.0, 0.0)), f.x), mix(hash2(i + vec2(0.0, 1.0)), hash2(i + vec2(1.0, 1.0)), f.x), f.y); }',
+        'float fbm(vec2 p){ float v = 0.0; float a = 0.5; for (int i = 0; i < 4; i++) { v += a * vnoise(p); p = p * 2.03 + 17.0; a *= 0.5; } return v; }',
+        'void main(){',
+        '  vec3 d = normalize(vPos); float h = d.y;',
+        '  vec3 col = mix(uHorizon, uTop, smoothstep(-0.08, 0.55, h));',
+        '  float s = max(dot(d, uSunDir), 0.0);',
+        '  float band = 1.0 - smoothstep(0.0, 0.5, abs(h - uSunDir.y));',
+        '  col += uSunColor * (pow(s, 5.0) * 0.4 * band + pow(s, 48.0) * 0.5 + smoothstep(0.9991, 0.9996, s) * 0.9) * uGlow;',
+        '  float m = max(dot(d, uMoonDir), 0.0);',
+        '  col += vec3(0.86, 0.9, 1.0) * (smoothstep(0.99935, 0.9997, m) * 0.85 + pow(m, 60.0) * 0.12) * uMoon;',
+        '  vec3 g = floor(d * 150.0);',
+        '  float star = step(0.9962, hash(g)) * smoothstep(0.03, 0.3, h) * (0.55 + 0.45 * hash(g + 3.7));',
+        '  col += vec3(star) * uStars;',
+        // Clouds: a drifting layer over the dome; more cover — thicker, darker under a storm.
+        '  if (uClouds > 0.001) {',
+        '    vec2 cuv = d.xz / max(0.12, h + 0.18) * 1.6 + vec2(uTime * 0.012, uTime * 0.005);',
+        '    float n = fbm(cuv);',
+        '    float cover = smoothstep(1.0 - uClouds * 0.95, 1.15 - uClouds * 0.6, n + uClouds * 0.25) * smoothstep(-0.05, 0.12, h);',
+        '    col = mix(col, uCloudColor * (0.82 + 0.36 * n), cover * 0.92);',
+        '  }',
+        '  col += vec3(0.85, 0.88, 1.0) * uFlash * 0.6;',
+        '  gl_FragColor = vec4(col, 1.0);',
+        '}',
+      ].join('\n'),
     })
   );
   scene.add(sky);
+  // What updateSky last painted (dial — the hours the day-clock ring is drawn for; time — the frame
+  // clock it ran at) and the light rig of applySceneLighting: the sun circles its target at reach,
+  // fogNear / fogFar — the fog before the weather thickens it.
+  const skyView = { look: null, dial: '', time: 0 };
+  const lightRig = { reach: 0, fogNear: 36, fogFar: 120 };
+  const skyColor = new THREE.Color();
+  const sunDir = new THREE.Vector3();
+  const lightDir = new THREE.Vector3();
+  const moonDir = new THREE.Vector3();
+  const skyAhead = new THREE.Vector3();
+
+  // ---- weather (docs/gdd/08-needs-weather-events.md → «Погода») ----
+  // What each weather shows, 0…1: snowfall, rain (a storm pours harder and slants it), heat haze,
+  // cloud cover and the storm's darkness and lightning. A change cross-fades over WEATHER_FADE
+  // seconds of the site around the phase boundary, so clouds gather before the rain starts.
+  const WEATHER_LOOKS = {
+    '': { snow: 0, rain: 0, heat: 0, clouds: 0, storm: 0 },
+    snow: { snow: 1, rain: 0, heat: 0, clouds: 0.6, storm: 0 },
+    rain: { snow: 0, rain: 0.6, heat: 0, clouds: 0.8, storm: 0 },
+    heat: { snow: 0, rain: 0, heat: 1, clouds: 0, storm: 0 },
+    storm: { snow: 0, rain: 1, heat: 0, clouds: 1, storm: 1 },
+  };
+  const WEATHER_CHANNELS = ['snow', 'rain', 'heat', 'clouds', 'storm'];
+  const WEATHER_FADE = 30;
+  // The ground (visual only, no mechanics): snow settles in SNOW_BUILD seconds of snowfall and melts
+  // in SNOW_MELT; rain wets it in WET_BUILD and it dries in WET_DRY; heat melts and dries 4× faster.
+  const SNOW_BUILD = 50;
+  const SNOW_MELT = 160;
+  const WET_BUILD = 15;
+  const WET_DRY = 100;
+  // Ground cover now (cover — snow, wet — rain, melt — 0…1 while snow is melting, snowSum — seconds
+  // of full snowfall so far: footprints fill in by it) for the world it was counted for; the
+  // lightning flash (0…1, real time) and the storm window last checked for one.
+  const weatherView = {
+    world: null, site: -1, seconds: 0, cover: 0, wet: 0, melt: 0, snowSum: 0, dry: 0, heat: 0,
+    flash: 0, flashAt: 0, flashWindow: -1, flashArmed: false, lastFlash: -10, haze: 0,
+  };
+  // Ground materials that take the snow and the wet (weatherSurface), and the footprints.
+  const weatherGround = { uSnow: { value: 0 }, uWet: { value: 0 }, uMelt: { value: 0 }, uDry: { value: 0 } };
+  // Heat scorches the grass straw-yellow all at once: it turns in DRY_TURN seconds of the site
+  // (15 game minutes) as the heat starts and greens back as fast once it ends.
+  const DRY_TURN = 15;
+  // Heat: dust lying low over the site, in drifting layers (addGroundDust; the level's meshes).
+  const groundDust = { layers: [], amount: { value: 0 }, center: { value: new THREE.Vector3() }, radius: { value: 30 } };
+  // Snow lies and melts in patches: a point of the ground is white while the cover (scaled to
+  // −0.15…1.15) is above the noise there, so the snow comes and goes area by area, low noise first.
+  const SNOW_FIELD_GLSL = [
+    'float snowHash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+    'float snowNoise(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);',
+    '  return mix(mix(snowHash(i), snowHash(i + vec2(1.0, 0.0)), f.x), mix(snowHash(i + vec2(0.0, 1.0)), snowHash(i + vec2(1.0, 1.0)), f.x), f.y); }',
+    'float snowField(vec2 p){ return snowNoise(p * 0.09) * 0.6 + snowNoise(p * 0.27 + 7.0) * 0.3 + snowNoise(p * 1.1 + 3.0) * 0.1; }',
+    'float snowLevel(float cover){ return cover * 1.3 - 0.15; }',
+    '',
+  ].join('\n');
+  // Footprints in the snow (visual only): a ring of FOOTPRINTS boot prints, laid by workers walking on
+  // snowy ground every FOOT_STEP cells, left and right, each in a faint trodden smudge (overlapping
+  // smudges make a path where the crew walks often). Falling snow fills a print in FOOT_FILL seconds
+  // of full snowfall; one where the snow has melted is gone with it.
+  const FOOTPRINTS = 6000;
+  const FOOT_STEP = 0.4;
+  const FOOT_FILL = 60;
+  const footDummy = new THREE.Object3D();
+
+  // Precipitation: flakes and streaks in a box ahead of the camera, anchored in the world (wrapped
+  // with mod in the shader), so they do not slide when the camera moves. Real-time animation.
+  const PRECIP = {
+    time: { value: 0 },
+    center: { value: new THREE.Vector3() },
+    snowBox: { value: new THREE.Vector3(40, 26, 40) },
+    rainBox: { value: new THREE.Vector3(36, 24, 36) },
+    snowAmount: { value: 0 },
+    rainAmount: { value: 0 },
+    dustAmount: { value: 0 },
+    wind: { value: new THREE.Vector3(1.2, 0, 0.6) },
+    light: { value: 1 },
+    px: { value: 1 },
+  };
+  const snowfall = makePrecipitation(mobileRendering ? 1100 : 1800, false);
+  const rainfall = makePrecipitation(mobileRendering ? 900 : 1500, true);
+  const heatDust = makeHeatDust(mobileRendering ? 800 : 1400);
+  const footprints = makeFootprints();
+  const footState = { next: 0 };
+
+  // Heat: warm dust motes rising and swirling in the hot air ahead of the camera (as the snow, but up).
+  function makeHeatDust(count) {
+    const position = new Float32Array(count * 3);
+    const seed = new Float32Array(count);
+    const box = PRECIP.snowBox.value;
+    for (let i = 0; i < count; i++) {
+      position[i * 3] = Math.random() * box.x;
+      position[i * 3 + 1] = Math.random() * box.y;
+      position[i * 3 + 2] = Math.random() * box.z;
+      seed[i] = Math.random();
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(position, 3));
+    geometry.setAttribute('seed', new THREE.BufferAttribute(seed, 1));
+    const material = new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      uniforms: { uTime: PRECIP.time, uCenter: PRECIP.center, uBox: PRECIP.snowBox, uAmount: PRECIP.dustAmount, uLight: PRECIP.light, uPx: PRECIP.px },
+      vertexShader: [
+        'attribute float seed; uniform float uTime; uniform vec3 uCenter; uniform vec3 uBox; uniform float uAmount; uniform float uPx;',
+        'varying float vAlpha;',
+        'void main(){',
+        '  vec3 p = position;',
+        '  p.y += uTime * (0.35 + seed * 0.5);',
+        '  p.x += sin(uTime * (0.4 + seed * 0.6) + seed * 31.0) * 1.1;',
+        '  p.z += cos(uTime * (0.3 + seed * 0.5) + seed * 13.0) * 1.1;',
+        '  vec3 lo = uCenter - uBox * 0.5;',
+        '  p = lo + mod(p - lo, uBox);',
+        '  float edge = 1.0 - smoothstep(0.7, 1.0, length(p.xz - uCenter.xz) / (uBox.x * 0.5));',
+        '  edge *= 1.0 - smoothstep(0.75, 1.0, (p.y - lo.y) / uBox.y);',
+        '  vec4 mv = modelViewMatrix * vec4(p, 1.0);',
+        '  float on = step(seed, uAmount * 0.85);',
+        '  gl_PointSize = on * min(9.0 * uPx, uPx * (1.0 + 1.2 * seed) * 16.0 / max(1.0, -mv.z));',
+        '  vAlpha = on * edge * (0.725 + 0.275 * sin(uTime * (1.5 + seed * 2.0) + seed * 50.0));',
+        '  gl_Position = projectionMatrix * mv;',
+        '}',
+      ].join('\n'),
+      fragmentShader: [
+        'uniform float uLight; varying float vAlpha;',
+        'void main(){ vec2 c = gl_PointCoord - 0.5; float d = dot(c, c); if (d > 0.25 || vAlpha <= 0.0) discard;',
+        '  gl_FragColor = vec4(vec3(1.0, 0.82, 0.48) * uLight, (1.0 - d * 4.0) * vAlpha * 0.6); }',
+      ].join('\n'),
+    });
+    const mesh = new THREE.Points(geometry, material);
+    mesh.frustumCulled = false;
+    mesh.renderOrder = 4;
+    mesh.visible = false;
+    scene.add(mesh);
+    return mesh;
+  }
+
+  function makeFootprints() {
+    const geometry = new THREE.PlaneGeometry(0.42, 0.5);
+    geometry.rotateX(-Math.PI / 2);
+    const born = new THREE.InstancedBufferAttribute(new Float32Array(FOOTPRINTS).fill(-1e9), 1);
+    geometry.setAttribute('aBorn', born);
+    const material = new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      polygonOffset: true,
+      polygonOffsetFactor: -2,
+      polygonOffsetUnits: -2,
+      uniforms: { uSnowSum: { value: 0 }, uFill: { value: FOOT_FILL }, uSnow: weatherGround.uSnow, uLight: PRECIP.light },
+      vertexShader: [
+        'attribute float aBorn; uniform float uSnowSum; uniform float uFill;',
+        'varying vec2 vUv; varying float vFill; varying vec3 vWorld;',
+        'void main(){',
+        '  vUv = uv;',
+        '  vFill = clamp((uSnowSum - aBorn) / uFill, 0.0, 1.0);',
+        '  vec4 w = modelMatrix * instanceMatrix * vec4(position, 1.0);',
+        '  vWorld = w.xyz;',
+        '  gl_Position = projectionMatrix * viewMatrix * w;',
+        '}',
+      ].join('\n'),
+      fragmentShader: SNOW_FIELD_GLSL + [
+        'uniform float uSnow; uniform float uLight; varying vec2 vUv; varying float vFill; varying vec3 vWorld;',
+        'void main(){',
+        '  vec2 q = (vUv - 0.5) * 2.0;',
+        // A boot in the middle (the sole toward +z: uv.y runs to −z after the plane is laid flat, the
+        // heel behind it) and a soft trodden smudge round it.
+        '  float sole = length((q - vec2(0.0, -0.18)) / vec2(0.3, 0.42));',
+        '  float heel = length((q - vec2(0.0, 0.42)) / vec2(0.26, 0.2));',
+        '  float boot = max(smoothstep(1.0, 0.7, sole), smoothstep(1.0, 0.7, heel));',
+        '  float smudge = smoothstep(1.0, 0.2, length(q)) * 0.2;',
+        '  float n = snowField(vWorld.xz);',
+        '  float there = smoothstep(n - 0.05, n + 0.05, snowLevel(uSnow));',
+        '  float a = max(boot * 0.72, smudge) * (1.0 - vFill * vFill) * there;',
+        '  if (a <= 0.01) discard;',
+        '  gl_FragColor = vec4(vec3(0.46, 0.53, 0.66) * uLight, a);',
+        '}',
+      ].join('\n'),
+    });
+    const mesh = new THREE.InstancedMesh(geometry, material, FOOTPRINTS);
+    mesh.count = 0;
+    mesh.frustumCulled = false;
+    mesh.renderOrder = 2;
+    footDummy.scale.set(0, 0, 0);
+    footDummy.updateMatrix();
+    for (let i = 0; i < FOOTPRINTS; i++) mesh.setMatrixAt(i, footDummy.matrix);
+    footDummy.scale.set(1, 1, 1);
+    scene.add(mesh);
+    return mesh;
+  }
+
+  function makePrecipitation(count, streaks) {
+    const vertices = streaks ? count * 2 : count;
+    const position = new Float32Array(vertices * 3);
+    const seed = new Float32Array(vertices);
+    const tip = new Float32Array(vertices);
+    const box = streaks ? PRECIP.rainBox.value : PRECIP.snowBox.value;
+    for (let i = 0; i < count; i++) {
+      const x = Math.random() * box.x;
+      const y = Math.random() * box.y;
+      const z = Math.random() * box.z;
+      const r = Math.random();
+      const copies = streaks ? 2 : 1;
+      for (let k = 0; k < copies; k++) {
+        const v = i * copies + k;
+        position[v * 3] = x;
+        position[v * 3 + 1] = y;
+        position[v * 3 + 2] = z;
+        seed[v] = r;
+        tip[v] = k;
+      }
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(position, 3));
+    geometry.setAttribute('seed', new THREE.BufferAttribute(seed, 1));
+    if (streaks) geometry.setAttribute('tip', new THREE.BufferAttribute(tip, 1));
+    const fade = 'float edge = 1.0 - smoothstep(0.7, 1.0, length(p.xz - uCenter.xz) / (uBox.x * 0.5));' +
+      ' edge *= 1.0 - smoothstep(0.85, 1.0, (p.y - lo.y) / uBox.y);';
+    const material = new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      uniforms: {
+        uTime: PRECIP.time, uCenter: PRECIP.center, uBox: streaks ? PRECIP.rainBox : PRECIP.snowBox,
+        uAmount: streaks ? PRECIP.rainAmount : PRECIP.snowAmount, uWind: PRECIP.wind, uLight: PRECIP.light, uPx: PRECIP.px,
+      },
+      vertexShader: streaks ? [
+        'attribute float seed; attribute float tip; uniform float uTime; uniform vec3 uCenter; uniform vec3 uBox;',
+        'uniform float uAmount; uniform vec3 uWind; varying float vAlpha;',
+        'void main(){',
+        '  vec3 vel = vec3(uWind.x, -(17.0 + seed * 6.0), uWind.z);',
+        '  vec3 lo = uCenter - uBox * 0.5;',
+        '  vec3 p = lo + mod(position + vel * uTime - lo, uBox);',
+        '  p -= vel * tip * 0.045;',
+        '  ' + fade,
+        '  vAlpha = step(seed, uAmount) * edge * (0.2 + 0.3 * tip);',
+        '  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);',
+        '}',
+      ].join('\n') : [
+        'attribute float seed; uniform float uTime; uniform vec3 uCenter; uniform vec3 uBox; uniform float uAmount;',
+        'uniform vec3 uWind; uniform float uPx; varying float vAlpha;',
+        'void main(){',
+        '  vec3 p = position;',
+        '  p.y -= uTime * (1.0 + seed * 0.9);',
+        '  p.x += sin(uTime * (0.6 + seed) + seed * 40.0) * 0.6 + uTime * uWind.x * 0.25;',
+        '  p.z += cos(uTime * (0.5 + seed * 0.7) + seed * 17.0) * 0.6 + uTime * uWind.z * 0.25;',
+        '  vec3 lo = uCenter - uBox * 0.5;',
+        '  p = lo + mod(p - lo, uBox);',
+        '  ' + fade,
+        '  vec4 mv = modelViewMatrix * vec4(p, 1.0);',
+        '  float on = step(seed, uAmount);',
+        '  gl_PointSize = on * min(14.0 * uPx, uPx * (1.6 + 1.8 * seed) * 26.0 / max(1.0, -mv.z));',
+        '  vAlpha = on * edge;',
+        '  gl_Position = projectionMatrix * mv;',
+        '}',
+      ].join('\n'),
+      fragmentShader: streaks ? [
+        'uniform float uLight; varying float vAlpha;',
+        'void main(){ if (vAlpha <= 0.0) discard; gl_FragColor = vec4(vec3(0.74, 0.8, 0.88) * uLight, vAlpha); }',
+      ].join('\n') : [
+        'uniform float uLight; varying float vAlpha;',
+        'void main(){ vec2 c = gl_PointCoord - 0.5; float d = dot(c, c); if (d > 0.25 || vAlpha <= 0.0) discard;',
+        '  gl_FragColor = vec4(vec3(0.95, 0.97, 1.0) * uLight, (1.0 - d * 4.0) * vAlpha * 0.9); }',
+      ].join('\n'),
+    });
+    const mesh = streaks ? new THREE.LineSegments(geometry, material) : new THREE.Points(geometry, material);
+    mesh.frustumCulled = false;
+    mesh.renderOrder = 4;
+    mesh.visible = false;
+    scene.add(mesh);
+    return mesh;
+  }
+
+  // Heat: after the frame is drawn it is copied and drawn again through the hot air — the picture
+  // wobbles in rising waves (stronger toward the top of the screen: the far ground and the horizon),
+  // warm-graded and a little overexposed, with sun glare from above and a burning orange vignette.
+  // Only while it is hot and the sun is up.
+  const haze = {
+    scene: new THREE.Scene(),
+    camera: new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1),
+    texture: null,
+    size: new THREE.Vector2(),
+    origin: new THREE.Vector2(),
+    material: new THREE.ShaderMaterial({
+      depthTest: false,
+      depthWrite: false,
+      uniforms: { tMap: { value: null }, uTime: { value: 0 }, uHaze: { value: 0 }, uAspect: { value: 1 } },
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
+      fragmentShader: [
+        'uniform sampler2D tMap; uniform float uTime; uniform float uHaze; uniform float uAspect; varying vec2 vUv;',
+        'float hh(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+        'float hn(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);',
+        '  return mix(mix(hh(i), hh(i + vec2(1.0, 0.0)), f.x), mix(hh(i + vec2(0.0, 1.0)), hh(i + vec2(1.0, 1.0)), f.x), f.y); }',
+        'void main(){',
+        '  vec2 uv = vUv;',
+        '  float far = mix(0.35, 1.0, smoothstep(0.1, 0.85, uv.y));',
+        '  vec2 p = vec2(uv.x * 22.0 * uAspect, uv.y * 12.0 - uTime * 1.7);',
+        '  vec2 wobble = vec2(hn(p) - 0.5, (hn(p + 19.7) - 0.5) * 0.6) * 0.011;',
+        '  wobble += vec2(sin(uv.y * 170.0 - uTime * 7.0) * 0.0016, 0.0);',
+        '  vec3 c = texture2D(tMap, uv + wobble * uHaze * far).rgb;',
+        '  float l = dot(c, vec3(0.299, 0.587, 0.114));',
+        '  vec3 hot = c * vec3(1.08, 0.99, 0.86) + vec3(0.05, 0.03, 0.0);',
+        '  hot = mix(vec3(l), hot, 1.08);',
+        '  hot += smoothstep(0.6, 1.0, l) * vec3(0.13, 0.09, 0.03);',
+        '  float glare = smoothstep(0.55, 1.05, uv.y) * (0.8 + 0.2 * sin(uTime * 1.3));',
+        '  hot += vec3(1.0, 0.9, 0.72) * glare * 0.2;',
+        '  float vig = smoothstep(0.38, 0.85, length((uv - 0.5) * vec2(uAspect, 1.0)));',
+        '  hot = mix(hot, hot * vec3(1.0, 0.7, 0.42), vig * (0.5 + 0.08 * sin(uTime * 2.1)));',
+        '  gl_FragColor = vec4(mix(c, hot, uHaze), 1.0);',
+        '}',
+      ].join('\n'),
+    }),
+  };
+  haze.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), haze.material));
 
   const grass = new THREE.Mesh(
     new THREE.CircleGeometry(90, 64),
     new THREE.MeshStandardMaterial({ color: 0x7ea15d, roughness: 1, map: grassTexture() })
   );
+  weatherSurface(grass.material, 0.9, 0, 1);
+  callWaveSurface(grass.material);
   grass.rotation.x = -Math.PI / 2;
   grass.receiveShadow = true;
   scene.add(grass);
@@ -128,11 +525,52 @@
   // Company panels (#meta-panel): every screen but the site and the quarter. The office and the
   // recruiting center open from their buildings, the rest from the nav (the exchange from both).
   // × goes back where the panel was opened from: panelReturn {screen, building (the lot selected)}.
-  const PANEL_SCREENS = ['foremen', 'exchange', 'contract', 'office', 'tech', 'recruiting'];
+  const PANEL_SCREENS = ['foremen', 'exchange', 'contract', 'office', 'tech', 'recruiting', 'personnel', 'supply', 'reactor', 'training', 'materials'];
   let panelReturn = { screen: 'build', building: null };
   let panelKey = ''; // what the open panel shows (refreshPanel re-renders when it changes)
   let panelCheckedAt = 0;
-  let officeTab = 'Рабочая сила';
+  let officeTab = 'Бригада';
+  // Centre of personnel: its tab and whether its «i» is open.
+  let personnelTab = 'camp';
+  let personnelInfo = false;
+  // «Лаборатория материалов»: the open family tab.
+  let labTab = 'wood';
+  // Camp buildings in the order they open: the personnel line, its site upgrade and technology, what it
+  // is against (the short hint on the card; the weather link is in «i»).
+  const PERSONNEL_CAMP = [
+    { line: 'level', node: 'kitchen', tech: 'kitchen', hint: 'Голод' },
+    { line: 'sales', node: 'sales', tech: 'salesOffice', hint: 'Доход' },
+    { line: 'light', node: 'light', tech: 'floodlights', hint: 'Ночь' },
+    { line: 'lounge', node: 'lounge', tech: 'lounge', hint: 'Перекуры' },
+    { line: 'dorm', node: 'dorm', tech: 'dormitory', hint: 'Сон' },
+  ];
+  const PERSONNEL_TABS = [['camp', 'Городок'], ['canteen', 'Столовая'], ['dishes', 'Блюда']];
+  const PERSONNEL_INFO = {
+    camp: ['Здания городка открываются здесь за капитал и печати, тут же — их уровни и прокачки. На каждой стройке открытое здание стоит основанием: стройку начинают за жетон и монеты, уровни и прокачки покупают в окне здания.',
+      'Кухня спасает от голода (в снег ×2), зона отдыха — от перекуров (в дождь ×1,5), бытовки — от усталости (в жару ×1,5), освещение — от ночного штрафа, офис продаж приносит монеты.',
+      'Реактор на стройке открывается в Реакторе штаба.'],
+    canteen: ['Места и длительность обеда действуют во всех столовых. Рабочий идёт в столовую, когда у него остаётся ' +
+      window.MicroBuildersBalance.tuning.builders.hungryPoints + ' сытости; если мест нет, работает дальше голодным.'],
+    dishes: ['Столовая на стройке готовит одно из изученных блюд. Пообедавший получает его бафф до следующего обеда.'],
+  };
+
+  // «Продвинутые улучшения» (paintAdvanced, renderTechAdvanced): the star of the advanced key nodes on the
+  // site and in the tech center; above boot(), the HUD paints it from the first frame.
+  const ADVANCED = MB.ADVANCED;
+  const ADVANCED_TREE = [['advanced', null]].concat(ADVANCED.nodes.map(function (node) { return [node.id, 'advanced']; }));
+  const ADVANCED_GATES = { advanced: { name: ADVANCED.name, icon: ADVANCED.icon, badge: '' } };
+  const ADVANCED_NODES = {};
+  ADVANCED.nodes.forEach(function (node) { ADVANCED_NODES[node.id] = node; });
+  let advancedGraph = null;
+  let advancedOn = false;
+  let advancedPick = null;
+  let advancedViews = {};
+  let advancedTipKey = '';
+  let techTab = 'graph';
+  let techAdvancedGraph = null;
+  let techAdvancedPick = null;
+  let techAdvancedViews = {};
+
   let foremanFocus = null;
   let foremanGridScroll = 0; // «← Бригадиры» comes back to the same place in the grid
   let snapshotElapsed = 0;
@@ -145,7 +583,7 @@
   // (hudDirty) or the coins crossed a card price (dockRange); the coin counter tweens to
   // campaign.coins and sums gains into «+1 240» once a second; the rate is the last minute of pay.
   let hudDirty = true;
-  const dockRange = { campaign: null, low: 0, high: Infinity };
+  const dockRange = { campaign: null, low: 0, high: Infinity, taxiLow: false };
   const hudCoins = { campaign: null, shown: 0, from: 0, to: 0, t: 1, gain: 0, gainSince: 0, pulseAt: 0 };
   const coinRate = { campaign: null, samples: [], text: '' };
   const envView = { campaign: null, night: false, weather: '' };
@@ -155,7 +593,8 @@
   let crewSignature = '';
   let bannerToast = null; // the start card toast (showBanner), replaced by the next start
   // Weather badge of the day clock (names from Meta.applyEnvironment).
-  const WEATHER_ICONS = { 'Снег': 'snow', 'Жара': 'heat', 'Дождь': 'rain', 'Шторм': 'storm', 'Сейсмическая активность': 'quake' };
+  const WEATHER_ICONS = { 'Снег': 'snow', 'Жара': 'heat', 'Дождь': 'rain', 'Шторм': 'storm' };
+  // Why weather slows the crew on the building further (weatherEffect).
   let luckyPop = null; // the golden cube / jackpot popup on screen: { key, count, coins, capital, timer }
   // Construction sites (docs/gdd/16-ux-flow.md §1-3): the world in memory belongs to the registry
   // slot `liveKey` (Meta.site(meta, key)); it is simulated only while the player looks at it.
@@ -205,9 +644,13 @@
     front: '#6b6f75',
     path: '#b5651d',
     lost: '#c0392b',
+    // A short escape: through a cube or two onto ordinary ground (red «lost» — straight through the house).
+    lostShort: '#d9971a',
     overload: '#b3261e',
+    // A fall, the way to the hospital and the stay there: a red cross on white.
+    heal: '#f4efe6',
   };
-  const BADGE_URGENT = { overload: true, path: true, lost: true };
+  const BADGE_URGENT = { overload: true, path: true, lost: true, lostShort: true };
   const BADGE_TIMED_PHASES = { plan: true, mine: true, place: true, erect: true, passage: true, meal: true, break: true, pick: true };
   const BADGE_PENDING = 0.2; // a new state must last this long (real s) before the icon switches
   const BADGE_HOLD = 0.5; // the icon on screen stays at least this long
@@ -251,25 +694,41 @@
   let fxTime = 0;
   let fxChipLog = null; // dev: every chip asked for, on screen or not (MicroBuildersDebug.chipLog)
   const workerCard = { nodes: null };
+  const scaffoldCard = { nodes: null };
 
   const pops = [];
   const sparks = [];
+  // Lightning: the bolt (segments) and the pieces of the knocked-out cubes (see onLightning).
+  const BOLT_SEGMENTS = 96;
+  const SHARD_LIMIT = 720;
+  const SHARD_CRACK = 0.14;
+  const SHARD_LIFE = 2.6;
+  const SHARD_HOT = new THREE.Color(1, 0.86, 0.55);
+  const lightningFx = { bolt: null, glow: null, boltAge: Infinity, shards: [], shardMesh: null };
+  // Three simultaneous surface waves share uniforms across all block and ground materials.
+  const callWaves = [0, 1, 2].map(function () {
+    return { origin: new THREE.Vector4(), tint: new THREE.Vector4(), age: 2, radius: 0 };
+  });
+  const callWaveUniforms = {
+    uCallOrigin: { value: callWaves.map(function (wave) { return wave.origin; }) },
+    uCallTint: { value: callWaves.map(function (wave) { return wave.tint; }) },
+  };
   const graphStates = {}; // upgrade graph node states (paintUpgradeGraph), filled on every dock paint
   const TURN_SPEED = 9; // rad/s a worker turns at (visual)
   // On a ladder he stands this far from his cell's centre toward the wall: the ladder hangs 0.14
   // toward it, so a negative value keeps him just in front of the rungs.
   const LADDER_STAND = -0.1;
-  // Worker figure scale (was 1.2, −15%).
   // Direction from a cube being poured to what it leans on: floor, a side neighbour, the ceiling.
   const POUR_FLOOR = [0, -1, 0];
   const POUR_SIDES = [[-1, 0, 0], [1, 0, 0], [0, 0, -1], [0, 0, 1]];
   const POUR_CEILING = [0, 1, 0];
-  const STICK_SCALE = 1.02;
-  // Workers brought by expertise: a vest per rank and ±10% height (junior 0.8, middle 1, senior 1.2).
+  // The figure of worker-model.js stands ~1.06 tall: about a cube with this scale.
+  const STICK_SCALE = 0.94;
+  // Workers brought by expertise: ±10% height (junior 0.8, middle 1, senior 1.2).
   const RANK_LOOKS = {
-    junior: { vest: 0x7cc243, size: 0.9 },
-    middle: { vest: 0x2f7fe0, size: 1 },
-    senior: { vest: 0xb8322a, size: 1.1 },
+    junior: { size: 0.9 },
+    middle: { size: 1 },
+    senior: { size: 1.1 },
   };
   const NO_SHIFT = [0, 0];
   const cubeCoins = new Map(); // coins poured into a cube so far → one «+N» when it is done (onPour/onPlace)
@@ -279,17 +738,138 @@
   let flyMesh = null;
   const flyColor = new THREE.Color();
   let solidMeshes = [];
+  // Cubes fill their cells edge to edge: a gap between them let the ground and the sky show through a
+  // wall one cube thick. The grid still reads through the shader (cubeSurface): along every face edge
+  // a band CUBE_BEVEL of the half-face wide bends the normal over like a rounded edge and darkens the
+  // colour by up to CUBE_SEAM.
+  const CUBE_SIZE = 1;
+  const CUBE_BEVEL = 0.12;
+  const CUBE_SEAM = 0.2;
   let ghostMaterials = [];
   let ghostMeshes = [];
+  // Site camp buildings (docs/gdd/20-site-camp.md): their views by id and the open sheet, if any.
+  let campViews = {};
+  let campSheet = null;
+  // The open «Городок» list of the HUD ({ body }), repainted with the HUD (paintCampButton).
+  let campList = null;
+  // The open spell book on the site ({ body }), repainted with the mana (refreshSpells).
+  let spellSheet = null;
+  // The colour of each spell school (the rare resource it is learned with) in the spell book.
+  const SPELL_SCHOOLS = { residential: '143, 227, 159', industrial: '245, 166, 91', highrise: '127, 200, 255', landmark: '242, 199, 92' };
+  // «Эхо»: seconds before the spell it caught goes off again.
+  const ECHO_DELAY = 60;
+  // The selected worker's see-through cubes (updateWorkerXray): the ray radius and the hidden cubes
+  // with their faint copies (declared up here: disposeLevel runs during the boot).
+  const XRAY_RADIUS = 1.4;
+  // Seconds a cube takes to turn see-through and back; how see-through it gets.
+  const XRAY_FADE = 0.3;
+  const XRAY_OPACITY = 0.2;
+  const xray = { hidden: new Map(), clock: 0, materials: {}, geometry: null };
+  // Names and stack materials of camp buildings (declared up here: the boot builds the site view).
+  const CAMP_NAMES = { canteen: 'Полевая кухня', sales: 'Офис продаж', dorm: 'Бытовки', lounge: 'Зона отдыха', light: 'Освещение', reactor: 'Реактор' };
+  // Camp buildings collapsing (collapseCamp) and the soft puff of their dust.
+  const collapses = [];
+  let dustTexture = null;
+  // Lighting masts at night (updateMastLights): one spotlight per mast, without shadows — always in
+  // the scene and dark by day, so a mast going up never recompiles the materials — a soft additive
+  // beam cone from the lamps to the building and a glow on the lamps.
+  // The lamps of a mast: its cubes drawn in this material (whatever gem they are set in).
+  const LAMP_MATERIAL = 'ladder-diamond-pure';
+  const beamMaterial = new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+    blending: THREE.AdditiveBlending,
+    uniforms: { uOpacity: { value: 0 }, uColor: { value: new THREE.Color(0xfff0cf) } },
+    vertexShader: [
+      'varying float vT; varying vec3 vNormalV; varying vec3 vViewPos;',
+      'void main(){ vT = -position.y; vNormalV = normalize(normalMatrix * normal);',
+      '  vec4 mv = modelViewMatrix * vec4(position, 1.0); vViewPos = mv.xyz; gl_Position = projectionMatrix * mv; }',
+    ].join('\n'),
+    fragmentShader: [
+      'uniform float uOpacity; uniform vec3 uColor; varying float vT; varying vec3 vNormalV; varying vec3 vViewPos;',
+      'void main(){',
+      '  float facing = abs(dot(normalize(vNormalV), normalize(-vViewPos)));',
+      '  float a = uOpacity * pow(facing, 1.6) * pow(1.0 - clamp(vT, 0.0, 1.0), 1.4) * smoothstep(0.0, 0.06, vT);',
+      '  gl_FragColor = vec4(uColor * a, a);',
+      '}',
+    ].join('\n'),
+  });
+  const beamGeometry = new THREE.ConeGeometry(0.42, 1, 28, 1, true).translate(0, -0.5, 0);
+  const mastLights = [0, 1].map(function () {
+    const light = new THREE.SpotLight(0xfff1d6, 0, 0, 0.6, 0.7, 1.4);
+    light.castShadow = false;
+    scene.add(light);
+    scene.add(light.target);
+    const beam = new THREE.Mesh(beamGeometry, beamMaterial);
+    beam.frustumCulled = false;
+    beam.renderOrder = 6;
+    beam.visible = false;
+    scene.add(beam);
+    const glow = new THREE.Sprite(new THREE.SpriteMaterial({ color: 0xfff1d6, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }));
+    glow.visible = false;
+    scene.add(glow);
+    return { light: light, beam: beam, glow: glow };
+  });
+  const mastAim = new THREE.Vector3();
+  const mastUp = new THREE.Vector3(0, -1, 0);
+  const CAMP_PILES = { canteen: 'ladder-pine', sales: 'ladder-concrete', dorm: 'ladder-brick-yellow', lounge: 'ladder-pine', light: 'ladder-concrete', reactor: 'ladder-concrete' };
+  // The site upgrade of each camp building.
+  const CAMP_NODES = { canteen: 'kitchen', sales: 'sales', dorm: 'dorm', lounge: 'lounge', light: 'light', reactor: 'reactor' };
+  // The reactor's magic sphere: the cubes drawn in this material make its core (buildReactorFx),
+  // whatever gem they are set in.
+  const REACTOR_CORE = 'ladder-diamond';
+  let runeTexture = null;
+  // Camp building upgrades capped by the personnel centre: the building and its meta line.
+  const CAP_TEXTS = {
+    sales: ['Офис продаж', 'Уровни офиса продаж'],
+    kitchen: ['Полевая кухня', 'Уровни столовой'],
+    dorm: ['Бытовки', 'Уровни бытовок'],
+    lounge: ['Зона отдыха', 'Уровни зоны отдыха'],
+    light: ['Освещение', 'Уровни освещения'],
+  };
+  // The «i» of building sheets: the long texts about the mechanics are folded by default.
+  let sheetInfoOpen = false;
+  const campPoint = new THREE.Vector3();
+  // The pulse of the outline of tappable buildings, between these two colours.
+  const OUTLINE_DIM = new THREE.Color(0xa88848);
+  const OUTLINE_BRIGHT = new THREE.Color(0xf3dfae);
   let featureState = Features.createState();
   let ghostsOn = false;
   let scaffoldLookup = new Map();
+  // Wear marks by piece id (crack lines, the tape cross of a broken piece) and the pieces on view.
+  let scaffoldCrackLookup = new Map();
+  let scaffoldTapeLookup = new Map();
+  let scaffoldPieceById = new Map();
   let scaffoldMeshes = [];
   const scaffoldDirty = new Set();
+  const hiddenScaffoldMatrix = new THREE.Matrix4().compose(
+    new THREE.Vector3(0, -40, 0), new THREE.Quaternion(), new THREE.Vector3(0.001, 0.001, 0.001));
+  // Instance tints of a scaffold piece by its wear (paintScaffoldWear).
+  // Worn to nothing (the next step onto it is a fall) — reddish, between cracked and broken.
+  const WEAR_TINT = { ok: new THREE.Color(0xffffff), cracked: new THREE.Color(0xc29a72), worn: new THREE.Color(0xb0705a), broken: new THREE.Color(0x75685c) };
+  // How far a worn piece leans (radians): a ladder off its wall, a deck sags to one side.
+  const WEAR_TILT = { ok: 0, cracked: 0.07, worn: 0.1, broken: 0.14 };
+  // Scaffold types (balance.json → tuning.scaffold: every tierFloors floors, `tiers` of them).
+  // The floor of the deck tells the type first (scaffoldFloorTextures): wood boards, concrete slabs,
+  // green painted plywood, chequer plate with a yellow-black edge, dark chequer plate with a red edge.
+  // The wooden type is square timber (`timber`), the others steel tubes.
+  const SCAFFOLD_LOOKS = [
+    { frame: 0x9a6b3e, rough: 0.85, metal: 0.03, brace: 0x7a5232, deckRough: 0.88, deckMetal: 0.02, timber: true },
+    { frame: 0x9aa7b0, rough: 0.38, metal: 0.72, brace: 0xe07a2c, deckRough: 0.95, deckMetal: 0 },
+    { frame: 0x2f6db3, rough: 0.45, metal: 0.4, brace: 0xf0c330, deckRough: 0.6, deckMetal: 0.05 },
+    { frame: 0xe2b21e, rough: 0.5, metal: 0.3, brace: 0xc9442c, deckRough: 0.45, deckMetal: 0.45 },
+    { frame: 0x3b4149, rough: 0.42, metal: 0.6, brace: 0xc8262e, deckRough: 0.5, deckMetal: 0.5 },
+  ];
+  let scaffoldFloors = null;
   const workerRaycaster = new THREE.Raycaster();
   const workerPointer = new THREE.Vector2();
   const workerPlan = new THREE.Group();
   let selectedBuilder = null;
+  // The scaffold piece the player tapped (cracked or broken): its card and repair (paintScaffoldCard).
+  let selectedPieceId = '';
+  // Pieces mending by the player's order on view: id → { group, ring, hammer, swing } (updateRepairViews).
+  const repairViews = new Map();
   let workerPlanSignature = '';
   scene.add(workerPlan);
 
@@ -332,6 +912,19 @@
     if (sign) selectCityLot(sign.dataset.id);
   });
   document.getElementById('restart').addEventListener('click', confirmRestart);
+  document.body.insertAdjacentHTML('beforeend', '<div id="site-signs"></div>');
+  document.getElementById('site-signs').addEventListener('click', function (event) {
+    const sign = event.target.closest('[data-camp]');
+    if (sign) openCamp(sign.dataset.camp);
+  });
+  document.getElementById('jump-level-go').addEventListener('click', function () {
+    const number = Math.round(Number(document.getElementById('jump-level').value));
+    if (!(number >= 1 && number <= MB.LEVELS.length)) {
+      UI.toast({ text: 'Введите уровень от 1 до ' + MB.LEVELS.length, icon: 'lock', tone: 'warn', key: 'jump-level' });
+      return;
+    }
+    fastForwardTo(number - 1);
+  });
   document.getElementById('reset-company').addEventListener('click', confirmReset);
   document.getElementById('abandon-run').addEventListener('click', confirmAbandon);
   document.getElementById('site-chip').addEventListener('click', function () { openScreen('build'); });
@@ -414,6 +1007,12 @@
     cityBuilding = null;
     openScreen('hq');
   });
+  document.getElementById('mana-btn').addEventListener('click', function () {
+    if (world && campaign && campaign.status === 'play') openSpells();
+  });
+  document.getElementById('camp-btn').addEventListener('click', function () {
+    if (world && campaign && campaign.status === 'play') openCampList();
+  });
   document.getElementById('chest-25').addEventListener('click', function () { tapChest(25); });
   document.getElementById('chest-50').addEventListener('click', function () { tapChest(50); });
   // ui.js toggles the popover first; its lines are painted right away, then every HUD tick.
@@ -430,6 +1029,11 @@
     const tab = event.target.dataset && event.target.dataset.tab;
     if (tab) setLevelInfoTab(tab);
   });
+  // «Тайминги» → «По прокачкам» (paintLevelTimings) is remembered between sessions.
+  const TIME_CATEGORIES_KEY = 'mb.timeCategories';
+  const timeCategoriesToggle = document.getElementById('level-time-categories');
+  try { timeCategoriesToggle.checked = window.localStorage.getItem(TIME_CATEGORIES_KEY) === '1'; } catch (error) { /* stays off */ }
+  timeCategoriesToggle.addEventListener('change', function () { setTimeCategories(timeCategoriesToggle.checked); });
   document.getElementById('material-row').addEventListener('click', toggleMaterialRow);
   document.getElementById('panel-close').addEventListener('click', closePanel);
   document.getElementById('meta-content').addEventListener('click', onMetaAction);
@@ -456,6 +1060,9 @@
       return;
     }
     if (document.body.classList.contains('has-modal') || currentScreen !== 'build') return;
+    // Typing a number (the menu's «Перемотать на уровень») is not a purchase.
+    const tag = event.target && event.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
     if (event.key === '1') buy('builders');
     if (event.key === '2') buy('speed');
     if (event.key === '3') buy('carry');
@@ -465,9 +1072,17 @@
     if (event.key === '7') buy('vehicles');
     if (event.key === '8') buy('vehicleHeight');
     if (event.key === '9') buy('vehicleReach');
-    if (event.key === '0') buy('kitchen');
   });
 
+  // The foundation of a camp building not started yet: a concrete slab over its pad with orange-and-
+  // white corner posts — tap it to start the building (1 token + the coins of its first level).
+  const campFoundationMat = {
+    slab: new THREE.MeshStandardMaterial({ color: 0xb9b4aa, roughness: 0.92 }),
+    edge: new THREE.MeshStandardMaterial({ color: 0x8f8a80, roughness: 0.9 }),
+    post: new THREE.MeshStandardMaterial({ color: 0xf08a2a, roughness: 0.6 }),
+    cap: new THREE.MeshStandardMaterial({ color: 0xf4f1ea, roughness: 0.5 }),
+    wood: new THREE.MeshStandardMaterial({ color: 0x6a4a2f, roughness: 0.9 }),
+  };
   const machineMat = {
     yellow: new THREE.MeshStandardMaterial({ color: 0xf2b91f, roughness: 0.45, metalness: 0.3 }),
     dark: new THREE.MeshStandardMaterial({ color: 0x2f3236, roughness: 0.7, metalness: 0.3 }),
@@ -481,27 +1096,14 @@
     blur: new THREE.MeshBasicMaterial({ color: 0x1d2024, transparent: true, opacity: 0.18, depthWrite: false, side: THREE.DoubleSide }),
   };
 
+  // The worker figure itself is worker-model.js (MicroBuildersWorkerModel): body, face and the
+  // clothes of his rank. Here only the props in his hands.
   const workerMat = {
-    skin: new THREE.MeshStandardMaterial({ color: 0xf0b48a, roughness: 0.55 }),
     cloth: new THREE.MeshStandardMaterial({ color: 0x1a1d22, roughness: 0.62 }),
-    vest: new THREE.MeshStandardMaterial({ color: 0xf07820, roughness: 0.46 }),
-    stripe: new THREE.MeshStandardMaterial({ color: 0xf6d34a, roughness: 0.38, emissive: 0x8a6a12, emissiveIntensity: 0.15 }),
-    hat: new THREE.MeshStandardMaterial({ color: 0xf5c53a, roughness: 0.28, metalness: 0.22 }),
-    eye: new THREE.MeshStandardMaterial({ color: 0x1b1b1b, roughness: 0.4 }),
+    handle: new THREE.MeshStandardMaterial({ color: 0x8a5a32, roughness: 0.7 }),
     pick: new THREE.MeshStandardMaterial({ color: 0xb7c0c8, metalness: 0.7, roughness: 0.35 }),
   };
-  const workerGeo = {
-    head: new THREE.SphereGeometry(0.16, 16, 12),
-    helmet: new THREE.SphereGeometry(0.185, 16, 10, 0, Math.PI * 2, 0, Math.PI * 0.5),
-    brim: new THREE.CylinderGeometry(0.24, 0.24, 0.045, 18),
-    torso: new THREE.CapsuleGeometry(0.13, 0.18, 4, 8),
-    vest: new THREE.BoxGeometry(0.32, 0.26, 0.2),
-    stripe: new THREE.BoxGeometry(0.33, 0.055, 0.21),
-    leg: new THREE.CapsuleGeometry(0.06, 0.12, 3, 8),
-    arm: new THREE.CapsuleGeometry(0.048, 0.1, 3, 8),
-    hand: new THREE.SphereGeometry(0.058, 8, 6),
-    eye: new THREE.SphereGeometry(0.026, 8, 6),
-  };
+  const WorkerModel = window.MicroBuildersWorkerModel;
 
   const LOOK = {
     stone: { roughness: 0.92, metalness: 0.02, emissive: 0x000000, emissiveIntensity: 0 },
@@ -515,9 +1117,44 @@
     obsidian: { roughness: 0.12, metalness: 0.55, emissive: 0x120818, emissiveIntensity: 0.25 },
     diamond: { roughness: 0.04, metalness: 0.12, emissive: 0xb9f6ff, emissiveIntensity: 0.45 },
     platinum: { roughness: 0.16, metalness: 0.92, emissive: 0x000000, emissiveIntensity: 0 },
+    tile: { roughness: 0.3, metalness: 0.06, emissive: 0x000000, emissiveIntensity: 0 },
+    crystal: { roughness: 0.06, metalness: 0.12, emissive: 0x000000, emissiveIntensity: 0 },
+    lapis: { roughness: 0.3, metalness: 0.2, emissive: 0x000000, emissiveIntensity: 0 },
+    amber: { roughness: 0.18, metalness: 0.05, emissive: 0x000000, emissiveIntensity: 0 },
+    opal: { roughness: 0.14, metalness: 0.1, emissive: 0x000000, emissiveIntensity: 0 },
+    magma: { roughness: 0.7, metalness: 0.05, emissive: 0x000000, emissiveIntensity: 0 },
+    cosmic: { roughness: 0.1, metalness: 0.2, emissive: 0x000000, emissiveIntensity: 0 },
     glass: { roughness: 0.08, metalness: 0.1, emissive: 0x123c4a, emissiveIntensity: 0.35 },
   };
   const blockSurfaceCache = {};
+  // Grand dinner effects by the characteristic they lift (the kitchen block and its toast; events may
+  // come during boot).
+  const GRAND_EFFECTS = { place: 'Сноровка', carry: 'Сила', walk: 'Скорость', climb: 'Скорость' };
+  // The worker card's characteristics: the icons of their upgrades.
+  const STAT_ICONS = { speed: 'icon-up-horizontal.jpg', strength: 'icon-up-carry.jpg', skill: 'icon-up-speed.jpg' };
+  // The worker card's orders (workerOrdersHtml): need, icon, button.
+  // Injury steps (MB.injuryStatus) in the worker card; bandages on the figure by them
+  // (WorkerModel.bandage: the first N of its pieces); the shared «А-а-а!» bubble (screamBubble).
+  const INJURY_WORDS = { light: 'лёгкие травмы', heavy: 'травмы', severe: 'тяжёлые травмы' };
+  const BANDAGE_STEPS = { light: 2, heavy: 4, severe: 6 };
+  let screamMaterial = null;
+  // Signs over the quarries (makeMineLabel → placeMineSigns): repainted when a cube's price changes;
+  // their little cubes in the material's colours by material (mineCubeIcon).
+  const mineLabels = [];
+  const mineCubeIcons = {};
+  const minePoint = new THREE.Vector3();
+  const WORKER_ORDERS = [['meal', 'personnel', 'Отправить обедать'], ['sleep', 'moon', 'Отправить спать']];
+  // Picking a damaged scaffold piece by a tap (pickDamagedScaffold): within this many pixels.
+  const PIECE_PICK_PX = 30;
+  const pieceScreen = new THREE.Vector3();
+  // The player's scaffold repairs on view (updateRepairViews): the ring and the hammer.
+  const REPAIR_RING_SEGMENTS = 48;
+  const repairRingMaterial = new THREE.MeshBasicMaterial({ color: 0x6fe08a, transparent: true, depthTest: false, depthWrite: false, side: THREE.DoubleSide });
+  const repairTrackMaterial = new THREE.MeshBasicMaterial({ color: 0x1b2024, transparent: true, opacity: 0.55, depthTest: false, depthWrite: false, side: THREE.DoubleSide });
+  const repairHammerMaterials = {
+    handle: new THREE.MeshStandardMaterial({ color: 0x9a6a3c, roughness: 0.8 }),
+    head: new THREE.MeshStandardMaterial({ color: 0x8e979e, roughness: 0.35, metalness: 0.7 }),
+  };
 
   BuildPatternEditor.init(applyScaffoldTuning);
   MicroBuildersWorkerLog.bind(focusWorker);
@@ -546,8 +1183,40 @@
         paintHud();
       },
       world: function () { return world; },
+      // A scaffold piece's middle on screen (client pixels), to tap it.
+      pieceOnScreen: function (id) {
+        const piece = MB.scaffoldPieceOf(world, id);
+        if (!piece) return null;
+        const rect = view.getBoundingClientRect();
+        const point = pieceCentre(piece, new THREE.Vector3()).project(camera);
+        return { x: rect.left + (point.x + 1) / 2 * rect.width, y: rect.top + (1 - point.y) / 2 * rect.height };
+      },
+      // The canteen stands finished as form n (1–5); lookAtCamp frames a camp building.
+      canteenForm: function (n, collapse) {
+        return window.MicroBuildersDebug.campForm('canteen', n, collapse);
+      },
+      // Camp building id ('canteen' / 'sales' / 'dorm' / 'lounge' / 'light' — both masts) stands finished as form n.
+      campForm: function (id, n, collapse) {
+        if (!MB.debugCampForm(world, id, n, collapse)) return false;
+        consumeEvents();
+        paintHud();
+        const site = MB.campSite(world, id) || (world.lights || [])[0];
+        return site ? site.total : true;
+      },
+      lookAtCamp: function (id, distance, polar) {
+        const site = MB.campSite(world, id || 'canteen');
+        if (!site) return false;
+        const view = cameraController.getView();
+        view.target = { x: (site.box.x0 + site.box.x1) / 2, y: site.box.h * 0.35, z: (site.box.z0 + site.box.z1) / 2 };
+        view.distance = distance || 24;
+        view.polar = polar || 1.05;
+        view.autoFollow = false;
+        return cameraController.setView(view);
+      },
       meta: function () { return meta; },
       campaign: function () { return campaign; },
+      // Opens a building sheet: 'personnel' (the HQ centre) or a camp building id on the site.
+      sheet: function (id) { if (id === 'personnel') openBuildingPanel('personnel'); else openCamp(id); },
       // Presence flow: away(seconds) pretends the app spent that long in the background (from the
       // current screen) and runs the return; screen(name) is a nav tap; finish() completes the site.
       away: function (seconds) { simulateAway(seconds); },
@@ -636,9 +1305,12 @@
         const list = world.builders.filter(function (builder) { return builder.trade === trade; });
         const builder = list[nth || 0];
         if (!builder) return;
-        focusWorker(builder);
-        cameraController.setWorkerView(true);
-        updateWorkerViewButton();
+        if (selectedBuilder !== builder) focusWorker(builder);
+      },
+      // The camera now: orbit distance, whether it follows the selected worker, see-through cubes.
+      cameraInfo: function () {
+        return { radius: cameraController.radius, tracking: cameraController.isTracking(), xray: xray.hidden.size,
+          eye: camera.position.toArray().map(function (v) { return Math.round(v * 10) / 10; }) };
       },
       // Worker views without rAF (headless tests): one view frame with a fixed real dt;
       // render: true also draws the scene.
@@ -647,6 +1319,7 @@
         updatePours();
         updatePops(dt);
         updateSparks(dt);
+        updateLightningFx(dt);
         updateFlyCubes(dt);
         updateSticks(clock.elapsedTime, dt);
         updateWorkerPlan(clock.elapsedTime);
@@ -796,7 +1469,7 @@
     if (campaign && campaign.runMode === 'school') return;
     MB.SCAFFOLD.enabled = document.getElementById('scaffold-toggle').checked;
     MB.SCAFFOLD.step = Number(document.getElementById('scaffold-step').value);
-    MB.SCAFFOLD.erectSeconds = Number(document.getElementById('scaffold-erect').value);
+    MB.EFFORT.scaffold = Number(document.getElementById('scaffold-erect').value);
     MB.SCAFFOLD.shortcutRoutes = document.getElementById('scaffold-shortcut-routes').checked;
     MB.SCAFFOLD.expansionBudget = Number(document.getElementById('scaffold-expansion-budget').value);
     MB.SCAFFOLD.horizontalPrice = Number(document.getElementById('scaffold-horizontal-price').value);
@@ -910,13 +1583,22 @@
 
   function sessionUpgradeOpen(kind) {
     const button = document.getElementById('up-' + kind);
-    return upgradeLineOpen(kind, button.dataset.group);
+    // Camp buildings and their own upgrades have no dock card (bought in their windows).
+    return !!button && upgradeLineOpen(kind, button.dataset.group);
   }
 
   function upgradeLineOpen(kind, group) {
+    if (taxiTooLow(kind)) return false;
     if (campaign.devGroups.all === true || campaign.devGroups[group] === true) return true;
+    // Behind a pass not opened with tokens yet.
+    if (MB.lineGated(campaign, kind)) return false;
     if (DRONE_GATED_GROUPS.indexOf(group) >= 0 && campaign.purchases.engineers < 1) return false;
     return Meta.sessionLineOpen(meta, kind);
+  }
+
+  // «Аэротакси» waits for the building to stand MB.TAXI_FLOORS floors high (logic.js → buyUpgrade).
+  function taxiTooLow(kind) {
+    return kind === 'elevators' && !!world && !(campaign.purchases.elevators > 0) && MB.taxiFloorsShort(world) > 0;
   }
 
   function buy(kind) {
@@ -937,9 +1619,30 @@
   }
 
   // A tap on a card buys it or says why not: the card shakes, «Не хватает 1,2 тыс».
+  function siteUpgradeCapped(kind) {
+    return (kind === 'kitchen' && MB.kitchenCapped(campaign)) || (kind === 'sales' && MB.salesCapped(campaign)) ||
+      ((kind === 'dorm' || kind === 'lounge' || kind === 'light') && MB.campCapped(campaign, kind));
+  }
+
+  function capText(kind) {
+    const text = CAP_TEXTS[kind] || CAP_TEXTS.kitchen;
+    return 'Нужен Центр персонала · «' + text[1] + '»';
+  }
+
   function tapUpgrade(kind) {
     if (buy(kind)) return;
     const button = document.getElementById('up-' + kind);
+    if (CAP_TEXTS[kind] && world && sessionUpgradeOpen(kind) && siteUpgradeCapped(kind) &&
+        campaign.purchases[kind] < window.MicroBuildersBalance.session[kind].max) {
+      shake(button);
+      UI.toast({ text: capText(kind), icon: 'lock', key: kind + '-cap', duration: 2600 });
+      return;
+    }
+    if (world && sessionUpgradeOpen(kind) && MB.campBranchShut(campaign, kind)) {
+      shake(button);
+      UI.toast({ text: 'Сначала начните на стройке «' + window.MicroBuildersBalance.session[MB.CAMP_BRANCH_OF[kind]].name + '»', icon: 'lock', key: 'upgrade-camp', duration: 2400 });
+      return;
+    }
     if (button.classList.contains('locked') && !sessionUpgradeOpen(kind)) {
       // A locked card (paintLockedUpgrade) names the office node that opens it.
       shake(button);
@@ -952,14 +1655,17 @@
       UI.toast({ text: upgradeName(kind) + ': максимальный уровень', icon: 'lock', key: 'upgrade-max', duration: 1600 });
       return;
     }
-    const cost = MB.upgradeCost(kind, campaign.purchases[kind]);
-    if (campaign.coins < cost) {
-      UI.toast({ text: 'Не хватает ' + formatShort(cost - campaign.coins), icon: 'icons/icon-coins.jpg?v=2', tone: 'warn', key: 'upgrade-short', duration: 1600 });
-      const coins = document.getElementById('coins');
-      coins.classList.add('short');
-      clearTimeout(coins.shortTimer);
-      coins.shortTimer = setTimeout(function () { coins.classList.remove('short'); }, 600);
-    }
+    const cost = MB.upgradeCost(kind, campaign.purchases[kind], campaign);
+    if (campaign.coins < cost) coinsShort(cost);
+  }
+
+  // Not enough site coins: «Не хватает 1,2 тыс» and the coin counter blinks red.
+  function coinsShort(cost) {
+    UI.toast({ text: 'Не хватает ' + formatShort(cost - campaign.coins), icon: 'icons/icon-coins.jpg?v=2', tone: 'warn', key: 'upgrade-short', duration: 1600 });
+    const coins = document.getElementById('coins');
+    coins.classList.add('short');
+    clearTimeout(coins.shortTimer);
+    coins.shortTimer = setTimeout(function () { coins.classList.remove('short'); }, 600);
   }
 
   function shake(el) {
@@ -1030,6 +1736,8 @@
     const time = clock.elapsedTime;
     let viewStarted = performance.now();
     updatePours();
+    updateLightningFx(realDt);
+    updateCallWaves(realDt);
     if (timeScale !== 20) {
       updatePops(realDt);
       updateSparks(realDt);
@@ -1054,10 +1762,19 @@
     viewStarted = performance.now();
     cameraController.update(realDt, campaign ? campaign.status : '');
     if (cityRoot.visible) placeCitySigns();
+    updateCampViews(time);
+    updateCollapses(realDt);
+    updateMastLights();
+    placeCampSigns();
+    placeMineSigns();
+    updateWorkerXray(realDt);
     updateWorldFx(realDt);
+    updateRepairViews(realDt);
+    updateSky(realDt, time);
     MicroBuildersProfiler.add('cameraView', performance.now() - viewStarted);
     const renderStarted = performance.now();
     renderer.render(scene, camera);
+    renderHaze(time);
     MicroBuildersProfiler.add('render', performance.now() - renderStarted);
     MicroBuildersProfiler.count('drawCalls', renderer.info.render.calls);
     MicroBuildersProfiler.count('triangles', renderer.info.render.triangles);
@@ -1071,8 +1788,12 @@
       paintHud(true);
       paintDayPop();
       paintLevelInfo();
+      paintMineLabels();
       MicroBuildersWorkerLog.paint(world, selectedBuilder);
       paintWorkerCard();
+      paintScaffoldCard();
+      paintCampSigns();
+      refreshCampSheet();
       paintCameraButton();
       maybeCameraHint();
       refreshCity();
@@ -1088,7 +1809,28 @@
       const event = events[i];
       if (event.capital) meta.capital += event.capital;
       if (event.type === 'pour') onPour(event);
+      if (event.type === 'campCube') onCampCube(event);
+      if (event.type === 'campReform') onCampReform(event);
+      if (event.type === 'campReady') onCampReady(event);
+      if (event.type === 'canteenFull') onCanteenFull();
+      if (event.type === 'loungeFull') onLoungeFull();
+      if (event.type === 'salesPay') onSalesPay(event);
+      if (event.type === 'smokeCall') onSmokeCall(event);
+      if (event.type === 'rankUp') onRankUp(event);
+      if (event.type === 'snack') onSnack(event);
+      if (event.type === 'torte') onTorte();
+      if (event.type === 'kitchen') UI.toast({ text: 'Кухня ' + event.level + '-го уровня: рабочие ушли на кухню', icon: 'icons/icon-kitchen.jpg', tone: 'good', key: 'kitchen' });
+      if (event.type === 'chefLevel') UI.toast({ text: 'Шеф-повар ' + event.level + '-го уровня: блюда сильнее', icon: 'icons/icon-cook-hat.jpg', tone: 'good', key: 'chef-level' });
+      if (event.type === 'secretDish') {
+        Meta.discoverDish(meta, event.dish);
+        tone(990, 0.2);
+        UI.toast({ text: 'Шеф открыл секретное блюдо: ' + dishTitle(event.dish) + '!', icon: 'icons/icon-dish-' + event.dish + '.jpg', tone: 'good', key: 'secret-' + event.dish, duration: 3600 });
+      }
+      if (event.type === 'grandDinner') UI.toast({ text: 'Гранд-обед №' + event.count + ': вся бригада идёт обедать. ' + dishTitle(event.dish) + ' — ' +
+        (GRAND_EFFECTS[MB.DISH[event.dish].effect] || '') + ' +' + Math.round(MB.DISH[event.dish].value * 100) + ' до сдачи', icon: 'icons/icon-grand-dinner.jpg', tone: 'good', key: 'grand-dinner', duration: 3200 });
       if (event.type === 'place') {
+        // «Учебный центр»: a whole cube a worker set himself — 1 experience to the centre.
+        if (!event.drone) Meta.addTrainingXp(meta, 1);
         const placed = Meta.onBlocksPlaced(meta, campaign, world, [event.block]);
         showPlacementRewards(placed);
         floatFinds(placed.finds);
@@ -1107,7 +1849,8 @@
       }
       if (event.type === 'foreman' && event.block) floatForeman(event);
       if (event.type === 'autofill') {
-        showPlacementRewards({ expertise: Meta.gainForemanExperience(meta, campaign, world, event.blocks, false) });
+        // Crane, «Рабочий ритм» and the last unreachable cubes: whole cubes for the lab as well.
+        showPlacementRewards({ expertise: Meta.gainForemanExperience(meta, campaign, world, event.blocks, false), labPoints: Meta.countLabCubes(meta, event.blocks) });
         onAutofill(event);
         noteBuiltTop(event.blocks);
       }
@@ -1118,14 +1861,29 @@
         onScaffold(event);
         if (scaffoldLookup.has(event.ids[0])) {
           revealScaffold(event.ids[0]);
+          paintScaffoldWear(event.ids[0]);
         } else {
           scaffoldRefreshNeeded = true;
         }
       }
+      if (event.type === 'fallStart') onFallStart(event);
+      if (event.type === 'injury') onInjury(event);
+      if (event.type === 'scaffoldWear') {
+        onScaffoldWear(event);
+        if (scaffoldLookup.has(event.id)) paintScaffoldWear(event.id);
+        else scaffoldRefreshNeeded = true;
+      }
       if (event.type === 'strip') scaffoldRefreshNeeded = true;
+      if (event.type === 'lightning') {
+        onLightning(event);
+        scaffoldRefreshNeeded = true;
+        if (event.grounded) UI.toast({ text: 'Громоотвод: молния ушла в землю', icon: 'storm', key: 'lab-grounded', duration: 1800 });
+      }
+      if (event.type === 'lab') onLabEvent(event);
       if (event.type === 'spawn') syncSticks();
       if (event.type === 'spawnVehicle') syncVehicles();
-      if (event.type === 'elevators') syncElevators();
+      if (event.type === 'taxis') syncTaxis();
+      if (event.type === 'taxiCall') tone(880, 0.05);
       if (event.type === 'yardOpen') openYard(event);
       if (event.type === 'yardDeck') addYardBoard(event);
       if (event.type === 'yardCube') addYardCube(event);
@@ -1147,8 +1905,11 @@
   // the card's avatar in the level strip flashes. «Золотой куб!» and «Джекпот ×10!» get the big
   // popup instead. The golden cube's capital find is granted here whether or not anything shows.
   function onForemanEvent(event) {
-    const card = Meta.CARDS[event.card];
-    const found = event.card === 'golden' ? Meta.goldenFind(meta, event.block) : 0;
+    // The same effect bought in the office (office lines with a `trigger`): the line's name and icon.
+    const office = event.office && Meta.OFFICE[event.office];
+    const card = office ? { name: office.name, rarity: 'office' } : Meta.CARDS[event.card];
+    const found = event.card === 'golden' ? Meta.goldenFind(meta, event.block, campaign, event.findMultiplier) : 0;
+    if (found > 0) floatCapital(event.block.x + 0.5, event.block.y + 1.1, event.block.z + 0.5, found);
     // A trigger can change what the cards read (the recruiter's extra worker: «1 → 2»).
     hudDirty = true;
     pulseCrew(event.card);
@@ -1172,7 +1933,7 @@
     UI.toast({
       title: card.name,
       text: text,
-      icon: 'icons/icon-foreman-' + event.card + '.jpg?v=3',
+      icon: office ? 'icons/' + officeIcon(event.office) : 'icons/icon-foreman-' + event.card + '.jpg?v=3',
       className: 'toast-foreman rarity-' + card.rarity,
       tone: event.free ? 'good' : 'info',
       key: key,
@@ -1247,7 +2008,10 @@
   }
 
   function luckyText(coins, capital) {
-    return '+' + formatShort(coins) + ' монет' + (capital > 0 ? ' · находка +' + capital + ' капитала' : '');
+    const parts = [];
+    if (coins > 0) parts.push('+' + formatShort(coins) + ' монет');
+    if (capital > 0) parts.push('Находка +' + capital + ' капитала');
+    return parts.join(' · ');
   }
 
   function hideLuckyPop() {
@@ -1391,7 +2155,7 @@
     const look = spec.look;
     context.fillStyle = hexColor(spec.color);
     context.fillRect(0, 0, 128, 128);
-    if (spec.grid === 1) {
+    if (spec.grid === 1 && !spec.accent) {
       for (let i = 0; i < 24; i++) {
         context.fillStyle = shade(spec.color, i % 2 === 0 ? 0.94 : 1.06);
         context.fillRect((i * 41) % 128, (i * 23) % 128, 2, 2);
@@ -1459,6 +2223,99 @@
       }
     } else if (look === 'diamond') {
       paintDiamond(context, spec);
+    } else if (look === 'tile') {
+      // Glazed tiles: 4 × 4 with light grout and a glint on each.
+      context.fillStyle = shade(spec.color, 0.62);
+      context.fillRect(0, 0, 128, 128);
+      for (let y = 0; y < 4; y++) {
+        for (let x = 0; x < 4; x++) {
+          context.fillStyle = (x + y) % 2 === 0 ? hexColor(spec.color) : shade(spec.color, 0.9);
+          context.fillRect(x * 32 + 2, y * 32 + 2, 28, 28);
+          context.fillStyle = 'rgba(255,255,255,0.28)';
+          context.fillRect(x * 32 + 5, y * 32 + 5, 10, 3);
+        }
+      }
+    } else if (look === 'crystal') {
+      // A cut gem: facets of its colour, lighter and darker, with white edges.
+      for (let i = 0; i < 9; i++) {
+        const size = 34 + (i % 3) * 12;
+        paintFacet(context, (i * 41) % 112 - 8, (i * 29) % 112 - 8, size,
+          i % 2 === 0 ? shade(spec.color, 1.35) : shade(spec.color, 0.7), 'rgba(255,255,255,0.7)');
+      }
+      paintFacet(context, 34, 34, 60, shade(spec.color, 1.15), 'rgba(255,255,255,0.95)');
+    } else if (look === 'lapis') {
+      // Deep blue with pyrite flecks and pale veins.
+      context.strokeStyle = shade(spec.color, 1.45);
+      context.lineWidth = 2;
+      for (let i = 0; i < 3; i++) {
+        context.beginPath();
+        context.moveTo(-6, 30 + i * 36);
+        context.bezierCurveTo(40, 10 + i * 40, 80, 60 + i * 20, 134, 24 + i * 38);
+        context.stroke();
+      }
+      for (let i = 0; i < 40; i++) {
+        context.fillStyle = i % 3 === 0 ? '#f5d76e' : '#d9b443';
+        context.fillRect((i * 53) % 128, (i * 37) % 128, 2 + (i % 2), 2);
+      }
+    } else if (look === 'amber') {
+      // Warm resin: a lighter heart, bubbles and a dark inclusion.
+      const glow = context.createRadialGradient(64, 64, 6, 64, 64, 90);
+      glow.addColorStop(0, shade(spec.color, 1.3));
+      glow.addColorStop(1, shade(spec.color, 0.7));
+      context.fillStyle = glow;
+      context.fillRect(0, 0, 128, 128);
+      context.fillStyle = 'rgba(255,240,200,0.45)';
+      for (let i = 0; i < 9; i++) {
+        context.beginPath();
+        context.arc((i * 47) % 120 + 4, (i * 31) % 120 + 4, 2 + (i % 3), 0, Math.PI * 2);
+        context.fill();
+      }
+      context.fillStyle = shade(spec.color, 0.35);
+      context.beginPath();
+      context.ellipse(44, 80, 9, 4, 0.6, 0, Math.PI * 2);
+      context.fill();
+    } else if (look === 'opal') {
+      // Play of colour: soft patches of pink, green, blue and violet.
+      const fire = ['rgba(255,150,200,0.45)', 'rgba(120,240,190,0.45)', 'rgba(120,180,255,0.45)', 'rgba(200,140,255,0.45)', 'rgba(255,220,140,0.4)'];
+      for (let i = 0; i < 14; i++) {
+        context.fillStyle = fire[i % fire.length];
+        context.beginPath();
+        context.ellipse((i * 37) % 128, (i * 53) % 128, 16 + (i % 4) * 5, 9 + (i % 3) * 4, i, 0, Math.PI * 2);
+        context.fill();
+      }
+    } else if (look === 'magma') {
+      // Dark crust split by glowing cracks.
+      context.fillStyle = '#2a1410';
+      context.fillRect(0, 0, 128, 128);
+      context.strokeStyle = hexColor(spec.color);
+      context.lineWidth = 3;
+      for (let i = 0; i < 6; i++) {
+        context.beginPath();
+        context.moveTo((i * 29) % 128, 0);
+        context.lineTo((i * 29 + 30) % 128, 44);
+        context.lineTo((i * 29 + 6) % 128, 88);
+        context.lineTo((i * 29 + 40) % 128, 128);
+        context.stroke();
+      }
+    } else if (look === 'cosmic') {
+      // A star's heart: a bright core, rays and sparks.
+      const core = context.createRadialGradient(64, 64, 4, 64, 64, 80);
+      core.addColorStop(0, '#ffffff');
+      core.addColorStop(0.5, hexColor(spec.color));
+      core.addColorStop(1, shade(spec.color, 0.6));
+      context.fillStyle = core;
+      context.fillRect(0, 0, 128, 128);
+      context.strokeStyle = 'rgba(255,255,255,0.7)';
+      context.lineWidth = 2;
+      for (let i = 0; i < 8; i++) {
+        const a = i * Math.PI / 4;
+        context.beginPath();
+        context.moveTo(64 + Math.cos(a) * 12, 64 + Math.sin(a) * 12);
+        context.lineTo(64 + Math.cos(a) * 62, 64 + Math.sin(a) * 62);
+        context.stroke();
+      }
+      context.fillStyle = '#ffffff';
+      for (let i = 0; i < 20; i++) context.fillRect((i * 61) % 128, (i * 43) % 128, 2, 2);
     }
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -1540,12 +2397,13 @@
       map: materialTexture(spec),
       roughness: finish.roughness,
       metalness: finish.metalness,
-      emissive: spec.look === 'diamond' ? spec.glow : finish.emissive,
-      emissiveIntensity: spec.look === 'diamond' ? spec.glowStrength : finish.emissiveIntensity,
+      emissive: spec.glow !== undefined ? spec.glow : finish.emissive,
+      emissiveIntensity: spec.glow !== undefined ? spec.glowStrength : finish.emissiveIntensity,
       transparent: ghost || glass,
       opacity: ghost ? 0.16 : glass ? 0.8 : 1,
       depthWrite: !ghost && !glass,
     });
+    cubeSurface(material);
     blockSurfaceCache[key] = material;
     return material;
   }
@@ -1584,22 +2442,31 @@
     const footprint = world.level.footprint;
     const originX = footprint.minX;
     const originZ = footprint.maxZ + 8;
+    // One row per grid, nearest first; accents (✦) at the end of their row.
+    const placed = {};
+    let widest = 0;
+    let grids = 0;
     for (let i = 0; i < ladder.length; i++) {
       const spec = ladder[i];
-      const mesh = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.96, 0.96), blockSurface(spec.id, false));
-      mesh.position.set(originX + i * 1.45 + 0.5, 1.2, originZ);
+      const at = placed[spec.grid] || 0;
+      placed[spec.grid] = at + 1;
+      widest = Math.max(widest, at + 1);
+      grids = Math.max(grids, spec.grid);
+      const z = originZ + (spec.grid - 1) * 3.2;
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE), blockSurface(spec.id, false));
+      mesh.position.set(originX + at * 1.7 + 0.5, 1.2, z);
       mesh.castShadow = true;
       mesh.receiveShadow = true;
-      const label = materialLabel(spec.name);
-      label.position.set(mesh.position.x, 2.15, originZ);
+      const label = materialLabel((spec.accent ? '✦ ' : '') + spec.name);
+      label.position.set(mesh.position.x, 2.15, z);
       row.add(mesh);
       row.add(label);
     }
     scene.add(row);
     materialRow = row;
     button.textContent = 'Скрыть материалы';
-    const mid = originX + (ladder.length - 1) * 1.45 * 0.5;
-    cameraController.framePoint(mid, 1.2, originZ, 28);
+    const mid = originX + (widest - 1) * 1.7 * 0.5;
+    cameraController.framePoint(mid, 1.2, originZ + (grids - 1) * 1.6, 40);
   }
 
   function buildLevelView() {
@@ -1615,11 +2482,14 @@
       new THREE.CircleGeometry(padRadius * 1.18, 64),
       new THREE.MeshStandardMaterial({ map: groundPatchTexture('site'), transparent: true, depthWrite: false, roughness: 1 })
     );
+    weatherSurface(pad.material, 0.85, 0.12, 0.35);
+    callWaveSurface(pad.material);
     pad.rotation.x = -Math.PI / 2;
     pad.position.set(cx, 0.02, cz);
     pad.receiveShadow = true;
     levelRoot.add(pad);
     addScenery(level, cx, cz, padRadius);
+    addGroundDust(cx, cz, padRadius);
 
     const buckets = {};
     for (let i = 0; i < world.blocks.length; i++) {
@@ -1636,7 +2506,7 @@
       const solidMat = blockSurface(materialId, false);
       const ghostMat = blockSurface(materialId, true);
       ghostMaterials.push(ghostMat);
-      const geo = new THREE.BoxGeometry(0.96, 0.96, 0.96);
+      const geo = new THREE.BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE);
       const solid = new THREE.InstancedMesh(geo, solidMat, list.length);
       const ghost = new THREE.InstancedMesh(geo, ghostMat, list.length);
       solid.castShadow = true;
@@ -1683,7 +2553,7 @@
         continue;
       }
       const ghostMaterial = blockSurface(block.materialId, true);
-      const ghost = new THREE.Mesh(new THREE.BoxGeometry(0.96, 0.96, 0.96), ghostMaterial);
+      const ghost = new THREE.Mesh(new THREE.BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE), ghostMaterial);
       ghost.position.set(block.x + 0.5, block.y + 0.5, block.z + 0.5);
       ghost.visible = ghostsOn;
       levelRoot.add(ghost);
@@ -1696,14 +2566,1741 @@
       if (world.blocks[i].built) setBlockVisualScale(blockViews.get(world.blocks[i].id), 1, 0.001);
     }
 
+    mineLabels.length = 0;
     for (let i = 0; i < level.mines.length; i++) addMine(level.mines[i], cx, cz);
+    buildCampViews();
     buildScaffoldView();
     setSiteCamera(level, cx, cz);
     syncSticks();
     syncVehicles();
-    syncElevators();
+    syncTaxis();
     paintLevelInfo();
     applySceneLighting();
+  }
+
+  // ---------- site camp: canteen and sales office (docs/gdd/20-site-camp.md) ----------
+  // Every cube of a camp building is a mesh of its own (a few dozen): a blue silhouette until it is
+  // set, then the material. A wide invisible box takes the taps; a sign above the roof says how far
+  // it is while it goes up, and the state for 5 s after its sheet closes once it stands.
+
+  function campLevel(site) {
+    return campaign.purchases[CAMP_NODES[site.kind || site.id]] || 0;
+  }
+
+  // «Кафе», «Бизнес-центр» … — the standing form of a camp building (the first one while none stands).
+  function campName(site) {
+    return site.target ? MB.campForm(site.kind, Math.max(1, site.form || 0)).name : CAMP_NAMES[site.kind];
+  }
+
+  // A rebuild: the old form is gone, the new one is going up (the building works at the old level).
+  function campRebuilding(site) {
+    return !!site.target && site.form >= 1 && !site.ready;
+  }
+
+  function buildCampViews() {
+    campViews = {};
+    document.getElementById('site-signs').innerHTML = '';
+    (world.camp || []).forEach(buildCampView);
+  }
+
+  // A camp building's view (the canteen's forms of CANTEEN.voxel-cell voxels, the sales office of
+  // cells): instanced cubes per material for the form going up (site.cubes: the first site.built
+  // are set), one ghost mesh for the cubes still to set, the stack, a silhouette outline (an inflated
+  // back-face copy of the set cubes, glass left out), the tap box and the DOM sign. Rebuilt when
+  // the canteen starts a new form.
+  function campViewKey(site) {
+    return (site.target || 0) + ':' + site.total;
+  }
+
+  // Camp cube materials: the block's own, marking the stencil, so the outline is drawn only round
+  // the silhouette (never over the building or through its seams and windows).
+  function campSurface(materialId) {
+    const key = 'camp:' + materialId;
+    if (blockSurfaceCache[key]) return blockSurfaceCache[key];
+    const material = blockSurface(materialId, false).clone();
+    cubeSurface(material);
+    material.stencilWrite = true;
+    material.stencilRef = 1;
+    material.stencilFunc = THREE.AlwaysStencilFunc;
+    material.stencilZPass = THREE.ReplaceStencilOp;
+    blockSurfaceCache[key] = material;
+    return material;
+  }
+
+  function campInstances(group, geo, cubes) {
+    const byMaterial = {};
+    cubes.forEach(function (cube, i) {
+      if (!byMaterial[cube.materialId]) byMaterial[cube.materialId] = [];
+      byMaterial[cube.materialId].push(i);
+    });
+    const slots = new Array(cubes.length);
+    Object.keys(byMaterial).forEach(function (materialId) {
+      const list = byMaterial[materialId];
+      const mesh = new THREE.InstancedMesh(geo, campSurface(materialId), list.length);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      mesh.frustumCulled = false;
+      list.forEach(function (cubeIndex, k) { slots[cubeIndex] = { mesh: mesh, k: k }; });
+      group.add(mesh);
+    });
+    return slots;
+  }
+
+  function setCampInstance(mesh, k, cube, shown) {
+    dummy.position.set(cube.wx, cube.wy, cube.wz);
+    dummy.rotation.set(0, 0, 0);
+    dummy.scale.setScalar(shown ? 1 : 0);
+    dummy.updateMatrix();
+    mesh.setMatrixAt(k, dummy.matrix);
+    mesh.instanceMatrix.needsUpdate = true;
+  }
+
+  // The foundation of a camp building not started yet (campFoundationMat): tap it to start the building.
+  // No sign over it: its name is cut into a low board at its front edge (buildCampPlate).
+  function buildCampFoundation(box, name) {
+    const group = new THREE.Group();
+    // box: the world extent of the first form (logic.js → campBox).
+    const w = box.x1 - box.x0 + 0.4, d = box.z1 - box.z0 + 0.4;
+    const cx = (box.x0 + box.x1) / 2, cz = (box.z0 + box.z1) / 2;
+    const slabGeo = new THREE.BoxGeometry(w - 0.2, 0.12, d - 0.2);
+    const edgeGeo = new THREE.BoxGeometry(w, 0.06, d);
+    const postGeo = new THREE.CylinderGeometry(0.07, 0.07, 0.7, 8);
+    const capGeo = new THREE.CylinderGeometry(0.075, 0.075, 0.16, 8);
+    const slab = new THREE.Mesh(slabGeo, campFoundationMat.slab);
+    slab.position.set(cx, 0.08, cz);
+    slab.receiveShadow = true;
+    const edge = new THREE.Mesh(edgeGeo, campFoundationMat.edge);
+    edge.position.set(cx, 0.03, cz);
+    edge.receiveShadow = true;
+    group.add(slab, edge);
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (corner) {
+      const x = cx + corner[0] * (w / 2 - 0.1), z = cz + corner[1] * (d / 2 - 0.1);
+      const post = new THREE.Mesh(postGeo, campFoundationMat.post);
+      post.position.set(x, 0.35, z);
+      post.castShadow = true;
+      const cap = new THREE.Mesh(capGeo, campFoundationMat.cap);
+      cap.position.set(x, 0.5, z);
+      group.add(post, cap);
+    });
+    const plate = buildCampPlate(group, box, name);
+    group.visible = false;
+    return { group: group, geos: [slabGeo, edgeGeo, postGeo, capGeo].concat(plate.geos), plate: plate };
+  }
+
+  // The name board: two stakes at the front edge (the camera's side, +z) and a wooden board leaning
+  // back a little, the name cut into it — small from afar, read when the camera comes close.
+  function buildCampPlate(group, box, name) {
+    const width = Math.max(2, Math.min(3.4, (box.x1 - box.x0) * 0.8));
+    const height = width * 0.27;
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = Math.round(512 * height / width);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 4;
+    const paint = function () {
+      paintCampPlate(canvas, name);
+      texture.needsUpdate = true;
+    };
+    paint();
+    if (document.fonts && !document.fonts.check('800 40px Manrope')) document.fonts.load('800 40px Manrope').then(paint, function () {});
+    const face = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.85 });
+    const wood = campFoundationMat.wood;
+    const boardGeo = new THREE.BoxGeometry(width, height, 0.08);
+    const stakeGeo = new THREE.BoxGeometry(0.1, 0.62, 0.1);
+    const cx = (box.x0 + box.x1) / 2, z = box.z1 + 0.55;
+    const board = new THREE.Mesh(boardGeo, [wood, wood, wood, wood, face, wood]);
+    board.position.set(cx, 0.48, z);
+    board.rotation.x = -0.42;
+    board.castShadow = true;
+    group.add(board);
+    [-1, 1].forEach(function (side) {
+      const stake = new THREE.Mesh(stakeGeo, wood);
+      stake.position.set(cx + side * (width / 2 - 0.25), 0.31, z - 0.06);
+      stake.castShadow = true;
+      group.add(stake);
+    });
+    return { geos: [boardGeo, stakeGeo], texture: texture, face: face };
+  }
+
+  // Dark planks, the name cut in: the groove is in shadow on its upper edge and catches the light
+  // on its lower one.
+  function paintCampPlate(canvas, name) {
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    const grain = ctx.createLinearGradient(0, 0, 0, h);
+    grain.addColorStop(0, '#8a6440');
+    grain.addColorStop(1, '#6b4a2e');
+    ctx.fillStyle = grain;
+    ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(40, 24, 12, 0.18)';
+    ctx.lineWidth = 2;
+    for (let i = 1; i < 7; i++) {
+      const y = h * i / 7 + Math.sin(i * 2.3) * 3;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.bezierCurveTo(w * 0.3, y + 4, w * 0.6, y - 4, w, y + 2);
+      ctx.stroke();
+    }
+    ctx.strokeStyle = 'rgba(30, 18, 8, 0.55)';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(5, 5, w - 10, h - 10);
+    let size = Math.round(h * 0.5);
+    ctx.font = '800 ' + size + 'px Manrope, sans-serif';
+    const fit = (w - 56) / ctx.measureText(name).width;
+    if (fit < 1) size = Math.floor(size * fit);
+    ctx.font = '800 ' + size + 'px Manrope, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const x = w / 2, y = h / 2 + size * 0.04;
+    ctx.fillStyle = 'rgba(255, 226, 180, 0.45)';
+    ctx.fillText(name, x, y + 2.5);
+    ctx.fillStyle = '#2a170a';
+    ctx.fillText(name, x, y);
+  }
+
+  function buildCampView(site) {
+    const previous = campViews[site.id];
+    if (previous) {
+      levelRoot.remove(previous.group);
+      if (previous.foundation) levelRoot.remove(previous.foundation);
+      previous.geos.forEach(function (geo) { geo.dispose(); });
+      if (previous.plate) {
+        previous.plate.texture.dispose();
+        previous.plate.face.dispose();
+      }
+      ghostMaterials = ghostMaterials.filter(function (material) { return material !== previous.ghostMat; });
+      if (previous.reactor) disposeReactorFx(previous.reactor);
+    }
+    const group = new THREE.Group();
+    const size = site.voxel || 1;
+    const geo = new THREE.BoxGeometry(CUBE_SIZE * size, CUBE_SIZE * size, CUBE_SIZE * size);
+    const ghostMat = new THREE.MeshStandardMaterial({ color: 0x7fb2ff, transparent: true, opacity: 0.24, depthWrite: false });
+    ghostMaterials.push(ghostMat);
+    const slots = campInstances(group, geo, site.cubes);
+    const ghost = new THREE.InstancedMesh(geo, ghostMat, Math.max(1, site.cubes.length));
+    ghost.frustumCulled = false;
+    group.add(ghost);
+    // Outline: the cubes again, a little inflated, drawn last and only where the building did not
+    // mark the stencil — a rim round the silhouette.
+    const outlineMat = new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      stencilWrite: true,
+      stencilRef: 1,
+      stencilFunc: THREE.NotEqualStencilFunc,
+      stencilFail: THREE.KeepStencilOp,
+      stencilZFail: THREE.KeepStencilOp,
+      stencilZPass: THREE.KeepStencilOp,
+      uniforms: { uColor: { value: new THREE.Color(0xf2d79a) }, uGrow: { value: 0.05 } },
+      vertexShader: 'uniform float uGrow; void main(){ gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position * (1.0 + uGrow), 1.0); }',
+      fragmentShader: 'uniform vec3 uColor; void main(){ gl_FragColor = vec4(uColor, 1.0); }',
+    });
+    const outline = new THREE.InstancedMesh(geo, outlineMat, Math.max(1, site.cubes.length));
+    outline.frustumCulled = false;
+    outline.renderOrder = 10;
+    site.cubes.forEach(function (cube, i) { setCampInstance(outline, i, cube, true); });
+    outline.visible = false;
+    group.add(outline);
+    const shown = new Uint8Array(site.cubes.length);
+    site.cubes.forEach(function (cube, i) {
+      const done = cube.done === undefined ? i < site.built : cube.done;
+      shown[i] = done ? 1 : 0;
+      setCampInstance(slots[i].mesh, slots[i].k, cube, done);
+      setCampInstance(ghost, i, cube, !done);
+    });
+    // The stack the crew takes the cubes from (taken away once the house stands).
+    const plankGeo = new THREE.BoxGeometry(0.9, 0.22, 0.9);
+    const pile = [];
+    site.pile.forEach(function (cell, i) {
+      for (let k = 0; k < 3 - i; k++) {
+        const plank = new THREE.Mesh(plankGeo, blockSurface(CAMP_PILES[site.id] || 'ladder-pine', false));
+        plank.position.set(cell[0] + 0.5, 0.11 + k * 0.23, cell[2] + 0.5);
+        plank.rotation.y = (k % 2) * 0.24 - 0.12;
+        plank.castShadow = true;
+        plank.receiveShadow = true;
+        group.add(plank);
+        pile.push(plank);
+      }
+    });
+    const box = site.box;
+    const hit = new THREE.Mesh(
+      new THREE.BoxGeometry(box.x1 - box.x0 + 1, box.h + 0.5, box.z1 - box.z0 + 1),
+      new THREE.MeshBasicMaterial({ visible: false })
+    );
+    hit.position.set((box.x0 + box.x1) / 2, (box.h + 0.5) / 2, (box.z0 + box.z1) / 2);
+    group.add(hit);
+    levelRoot.add(group);
+    const foundation = buildCampFoundation(box, CAMP_NAMES[site.kind] || campName(site));
+    levelRoot.add(foundation.group);
+    let sign = previous ? previous.signEl : null;
+    if (!sign) {
+      sign = document.createElement('button');
+      sign.type = 'button';
+      sign.className = 'city-sign camp-sign';
+      sign.dataset.camp = site.id;
+      sign.hidden = true;
+      document.getElementById('site-signs').appendChild(sign);
+    }
+    let lamp = null;
+    if (site.kind === 'light') {
+      lamp = new THREE.Vector3();
+      let count = 0;
+      site.cubes.forEach(function (cube) {
+        if ((cube.drawn || cube.materialId) !== LAMP_MATERIAL) return;
+        lamp.x += cube.wx;
+        lamp.y += cube.wy;
+        lamp.z += cube.wz;
+        count += 1;
+      });
+      if (count > 0) lamp.divideScalar(count);
+      else lamp.set((box.x0 + box.x1) / 2, box.h, (box.z0 + box.z1) / 2);
+    }
+    campViews[site.id] = {
+      site: site,
+      lamp: lamp,
+      key: campViewKey(site),
+      group: group,
+      geos: [geo, plankGeo, hit.geometry].concat(foundation.geos),
+      foundation: foundation.group,
+      plate: foundation.plate,
+      ghostMat: ghostMat,
+      slots: slots,
+      ghost: ghost,
+      pile: pile,
+      outline: outline,
+      outlineMat: outlineMat,
+      outlineWidth: 0,
+      center: new THREE.Vector3((box.x0 + box.x1) / 2, box.h / 2, (box.z0 + box.z1) / 2),
+      hit: hit,
+      built: site.built,
+      shown: shown,
+      level: previous ? previous.level : -1,
+      anchor: new THREE.Vector3((box.x0 + box.x1) / 2, box.h + 0.8, (box.z0 + box.z1) / 2),
+      signEl: sign,
+      sign: '',
+      until: previous ? previous.until : 0,
+      reactor: site.kind === 'reactor' ? buildReactorFx(site, group, box) : null,
+      wasReady: site.ready,
+    };
+    updateCampView(campViews[site.id], 0);
+    paintCampSign(campViews[site.id]);
+  }
+
+  function updateCampViews(time) {
+    if (!world) return;
+    Object.keys(campViews).forEach(function (id) { updateCampView(campViews[id], time); });
+  }
+
+  function updateCampView(view, time) {
+    const site = view.site;
+    if (view.key !== campViewKey(site)) {
+      buildCampView(site);
+      return;
+    }
+    // The canteen shows up once «Полевая кухня» is bought on this site (a new kitchen level is a new
+    // canteen form to build); the sales office with the personnel centre's «Офис продаж».
+    const level = MB.campActive(world, site) ? campLevel(site) : 0;
+    if (view.level !== level) {
+      const was = view.level;
+      view.level = level;
+      view.group.visible = level >= 1;
+      if (site.id === 'canteen' && was >= 0 && level > was) onCanteenLevel(level);
+      if (site.id === 'sales' && was >= 0 && level > was) onSalesLevel(level);
+      if ((site.id === 'dorm' || site.id === 'lounge' || site.id === 'light-left' || site.id === 'reactor') && was >= 0 && level > was) onCampLevel(site, level);
+    }
+    // Not started yet (a token and the coins of level 1): the foundation of the pad.
+    const base = MB.campFoundation(world, site);
+    if (view.foundation.visible !== base) view.foundation.visible = base;
+    if (view.reactor) updateReactorFx(view, time);
+    if (level < 1) return;
+    if (site.ready) updateCampOutline(view, time);
+    if (view.built !== site.built) {
+      // Each worker sets his own cubes, so they go in a little out of order: compare them all.
+      for (let i = 0; i < site.cubes.length; i++) {
+        const done = site.cubes[i].done === undefined ? i < site.built : site.cubes[i].done;
+        if (view.shown[i] === (done ? 1 : 0)) continue;
+        view.shown[i] = done ? 1 : 0;
+        setCampInstance(view.slots[i].mesh, view.slots[i].k, site.cubes[i], done);
+        setCampInstance(view.ghost, i, site.cubes[i], !done);
+      }
+      view.built = site.built;
+    }
+    for (let i = 0; i < view.pile.length; i++) view.pile[i].visible = !site.ready;
+    view.outline.visible = site.ready;
+  }
+
+  function updateCampOutline(view, time) {
+    // ~2 CSS px of rim at the current camera distance, whatever the zoom.
+    const dist = camera.position.distanceTo(view.center);
+    const perPx = 2 * dist * Math.tan(camera.fov * Math.PI / 360) / Math.max(1, MicroBuildersStage.height());
+    const width = Math.min(0.3, Math.max(0.02, 2 * perPx));
+    if (Math.abs(width - view.outlineWidth) > 0.003) {
+      view.outlineWidth = width;
+      view.outlineMat.uniforms.uGrow.value = 2 * width / (CUBE_SIZE * (view.site.voxel || 1));
+    }
+    view.outlineMat.uniforms.uColor.value.copy(OUTLINE_DIM).lerp(OUTLINE_BRIGHT, 0.5 + 0.5 * Math.sin(time * 2.4));
+  }
+
+  // ---------- the reactor's glow: a magic sphere on top, louder with each form ----------
+  // Only additive meshes and sprites (no lights: a light added at run time recompiles every
+  // material). All forms: the core glow, a halo and sparks on orbit; from the 2nd motes rising from
+  // the ground and a rune circle under the building; from the 3rd a beam into the sky; from the 4th
+  // waves rolling off the sphere; the 5th doubles the circle and the beam. A flash once it is built.
+  function reactorRunes() {
+    if (runeTexture) return runeTexture;
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 512;
+    const c = canvas.getContext('2d');
+    c.translate(256, 256);
+    c.strokeStyle = 'rgba(255,255,255,0.95)';
+    c.lineCap = 'round';
+    [[250, 5], [232, 2], [176, 3], [160, 1.5]].forEach(function (ring) {
+      c.lineWidth = ring[1];
+      c.beginPath();
+      c.arc(0, 0, ring[0], 0, Math.PI * 2);
+      c.stroke();
+    });
+    // Glyphs between the rings: little strokes and ticks, all different.
+    c.lineWidth = 3.5;
+    for (let i = 0; i < 24; i++) {
+      c.save();
+      c.rotate(i / 24 * Math.PI * 2);
+      c.translate(0, -204);
+      c.beginPath();
+      const v = (i * 7) % 5;
+      c.moveTo(-9, -12); c.lineTo(v > 1 ? 9 : 0, v > 2 ? 12 : -2);
+      c.moveTo(v % 2 ? -9 : 9, 10); c.lineTo(0, v > 3 ? -12 : 4);
+      if (v === 0 || v === 3) { c.moveTo(-6, 0); c.arc(0, 0, 6, Math.PI, Math.PI * 3); }
+      c.stroke();
+      c.restore();
+    }
+    // A star of two triangles inside.
+    c.lineWidth = 2.5;
+    [0, Math.PI].forEach(function (turn) {
+      c.beginPath();
+      for (let k = 0; k <= 3; k++) {
+        const a = turn + k / 3 * Math.PI * 2 - Math.PI / 2;
+        if (k === 0) c.moveTo(Math.cos(a) * 158, Math.sin(a) * 158);
+        else c.lineTo(Math.cos(a) * 158, Math.sin(a) * 158);
+      }
+      c.stroke();
+    });
+    runeTexture = new THREE.CanvasTexture(canvas);
+    runeTexture.colorSpace = THREE.SRGBColorSpace;
+    return runeTexture;
+  }
+
+  function buildReactorFx(site, group, box) {
+    const level = Math.max(1, site.target || site.form || 1);
+    const cx = (box.x0 + box.x1) / 2 + 0.5;
+    const cz = (box.z0 + box.z1) / 2 + 0.5;
+    // The sphere is the biggest joined lump of glowing cubes (the lone glowing tips are not it).
+    const glowing = new Map();
+    site.cubes.forEach(function (cube) {
+      if ((cube.drawn || cube.materialId) === REACTOR_CORE) glowing.set(Math.round(cube.wx * 2) + ',' + Math.round(cube.wy * 2) + ',' + Math.round(cube.wz * 2), cube);
+    });
+    let lump = [];
+    const seen = new Set();
+    const step = 2 * (site.voxel || 1);
+    glowing.forEach(function (cube, key) {
+      if (seen.has(key)) return;
+      const part = [];
+      const queue = [key];
+      seen.add(key);
+      while (queue.length) {
+        const at = queue.pop();
+        const c = glowing.get(at);
+        part.push(c);
+        const p = at.split(',').map(Number);
+        [[step, 0, 0], [-step, 0, 0], [0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]].forEach(function (d) {
+          const next = (p[0] + d[0]) + ',' + (p[1] + d[1]) + ',' + (p[2] + d[2]);
+          if (glowing.has(next) && !seen.has(next)) {
+            seen.add(next);
+            queue.push(next);
+          }
+        });
+      }
+      if (part.length > lump.length) lump = part;
+    });
+    const core = new THREE.Vector3();
+    lump.forEach(function (cube) {
+      core.x += cube.wx;
+      core.y += cube.wy;
+      core.z += cube.wz;
+    });
+    if (lump.length > 0) core.divideScalar(lump.length);
+    else core.set(cx, box.h + 1, cz);
+    let radius = 1;
+    lump.forEach(function (cube) { radius = Math.max(radius, Math.hypot(cube.wx - core.x, cube.wy - core.y, cube.wz - core.z) + 0.5); });
+    const root = new THREE.Group();
+    root.visible = false;
+    group.add(root);
+    const fx = { root: root, core: core, radius: radius, level: level, mats: [], geos: [], glows: [], rings: [], sparks: [], motes: [], runes: [], beams: [], waves: [], born: -1 };
+    function additive(color, opacity) {
+      const material = new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: opacity, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false });
+      fx.mats.push(material);
+      return material;
+    }
+    function glow(color, scale, opacity, through) {
+      const material = new THREE.SpriteMaterial({ map: softTexture(), color: color, transparent: true, opacity: opacity, depthWrite: false, depthTest: !through, blending: THREE.AdditiveBlending, fog: false });
+      fx.mats.push(material);
+      const sprite = new THREE.Sprite(material);
+      sprite.scale.setScalar(scale);
+      sprite.position.copy(core);
+      sprite.renderOrder = 7;
+      root.add(sprite);
+      return sprite;
+    }
+    // The core: a white heart in a violet halo, both breathing; the light shows through the shell.
+    fx.glows.push({ sprite: glow(0x6a45ff, radius * (3 + 0.6 * level), 0.4, true), base: radius * (3 + 0.6 * level), opacity: 0.4, speed: 1.3 });
+    fx.glows.push({ sprite: glow(0x9fe6ff, radius * (1.7 + 0.25 * level), 0.55, true), base: radius * (1.7 + 0.25 * level), opacity: 0.55, speed: 2.1 });
+    // Rings round the sphere on tilted axes, each spinning its own way.
+    const ringColors = [0x38c8ff, 0x8a55ff, 0x38c8ff];
+    for (let i = 0; i < [1, 2, 2, 3, 3][level - 1]; i++) {
+      const geo = new THREE.TorusGeometry(radius * (1.4 + 0.3 * i), 0.025 + 0.008 * level, 6, 72);
+      fx.geos.push(geo);
+      const mesh = new THREE.Mesh(geo, additive(ringColors[i], 0.5));
+      mesh.position.copy(core);
+      mesh.renderOrder = 7;
+      const tilt = new THREE.Group();
+      tilt.position.copy(core);
+      tilt.rotation.set(0.5 + i * 0.7, i * 1.1, 0.3 - i * 0.5);
+      mesh.position.set(0, 0, 0);
+      tilt.add(mesh);
+      root.add(tilt);
+      fx.rings.push({ mesh: mesh, speed: (i % 2 ? -1 : 1) * (0.7 + 0.25 * i + 0.1 * level) });
+    }
+    // Sparks on orbit round the sphere.
+    for (let i = 0; i < 4 + 4 * level; i++) {
+      const sprite = glow(i % 3 ? 0xa8f0ff : 0xd6b8ff, 0.32 + 0.05 * level, 0.95);
+      fx.sparks.push({
+        sprite: sprite, r: radius * (1.25 + ((i * 37) % 10) / 10), speed: (0.5 + ((i * 53) % 10) / 12) * (i % 2 ? 1 : -1),
+        phase: i * 2.399, tilt: ((i * 29) % 10) / 10 - 0.5,
+      });
+    }
+    const reach = Math.max(2.5, Math.max(box.x1 - box.x0, box.z1 - box.z0) / 2 + 1.2);
+    if (level >= 2) {
+      // Motes drifting up from the ground round the base into the sphere.
+      for (let i = 0; i < 6 * level; i++) {
+        fx.motes.push({ sprite: glow(i % 2 ? 0x9ff3ff : 0xc7a6ff, 0.28 + 0.04 * level, 0), a: i * 2.399, r: reach * (0.8 + ((i * 31) % 10) / 25), phase: ((i * 41) % 100) / 100, period: 3.2 + ((i * 17) % 10) / 6 });
+      }
+      // The rune circle on the ground (the 5th adds a bigger one turning back).
+      for (let i = 0; i < (level >= 5 ? 2 : 1); i++) {
+        const size = reach * (1.15 + 0.12 * (level - 2)) * (i ? 1.45 : 1);
+        const geo = new THREE.PlaneGeometry(size * 2, size * 2);
+        fx.geos.push(geo);
+        const material = additive(i ? 0xb98cff : 0x7fe6ff, 0.6);
+        material.map = reactorRunes();
+        const mesh = new THREE.Mesh(geo, material);
+        mesh.rotation.x = -Math.PI / 2;
+        mesh.position.set(cx, 0.06 + i * 0.01, cz);
+        mesh.renderOrder = 5;
+        root.add(mesh);
+        fx.runes.push({ mesh: mesh, speed: i ? -0.12 : 0.18 });
+      }
+    }
+    if (level >= 3) {
+      // A beam from the sphere into the sky: wider with the form, a white inner one on the 5th.
+      for (let i = 0; i < (level >= 5 ? 2 : 1); i++) {
+        const width = radius * (i ? 0.28 : 0.4 + 0.18 * (level - 3));
+        const geo = new THREE.CylinderGeometry(width, width * 1.6, 1, 28, 1, true).translate(0, 0.5, 0);
+        fx.geos.push(geo);
+        const material = new THREE.ShaderMaterial({
+          transparent: true,
+          depthWrite: false,
+          side: THREE.DoubleSide,
+          blending: THREE.AdditiveBlending,
+          uniforms: { uOpacity: { value: 0.7 }, uTime: { value: 0 }, uColor: { value: new THREE.Color(i ? 0xf0fbff : 0x86dcff) } },
+          vertexShader: [
+            'varying float vT; varying vec3 vNormalV; varying vec3 vViewPos;',
+            'void main(){ vT = position.y; vNormalV = normalize(normalMatrix * normal);',
+            '  vec4 mv = modelViewMatrix * vec4(position, 1.0); vViewPos = mv.xyz; gl_Position = projectionMatrix * mv; }',
+          ].join('\n'),
+          fragmentShader: [
+            'uniform float uOpacity; uniform float uTime; uniform vec3 uColor; varying float vT; varying vec3 vNormalV; varying vec3 vViewPos;',
+            'void main(){',
+            '  float facing = abs(dot(normalize(vNormalV), normalize(-vViewPos)));',
+            '  float bands = 0.7 + 0.3 * sin(vT * 60.0 - uTime * 5.0);',
+            '  float a = uOpacity * pow(facing, 1.4) * pow(1.0 - clamp(vT, 0.0, 1.0), 1.3) * smoothstep(0.0, 0.03, vT) * bands;',
+            '  gl_FragColor = vec4(uColor * a, a);',
+            '}',
+          ].join('\n'),
+        });
+        fx.mats.push(material);
+        const mesh = new THREE.Mesh(geo, material);
+        mesh.position.copy(core);
+        mesh.scale.y = 26 + 8 * level;
+        mesh.frustumCulled = false;
+        mesh.renderOrder = 6;
+        root.add(mesh);
+        fx.beams.push({ mesh: mesh, material: material, opacity: i ? 0.9 : 0.55 + 0.1 * (level - 3) });
+      }
+    }
+    if (level >= 4) {
+      // Waves rolling off the sphere along the ground plane.
+      for (let i = 0; i < (level >= 5 ? 3 : 2); i++) {
+        const geo = new THREE.RingGeometry(0.9, 1, 64);
+        fx.geos.push(geo);
+        const mesh = new THREE.Mesh(geo, additive(0x9fe8ff, 0));
+        mesh.rotation.x = -Math.PI / 2;
+        mesh.position.copy(core);
+        mesh.renderOrder = 7;
+        root.add(mesh);
+        fx.waves.push({ mesh: mesh, offset: i / (level >= 5 ? 3 : 2) });
+      }
+    }
+    // The flash of the start: a big glow and a ring flying out, shown for a moment.
+    fx.flash = glow(0xe6fbff, 1, 0, true);
+    const flashGeo = new THREE.RingGeometry(0.85, 1, 64);
+    fx.geos.push(flashGeo);
+    fx.shock = new THREE.Mesh(flashGeo, additive(0xc7f4ff, 0));
+    fx.shock.rotation.x = -Math.PI / 2;
+    fx.shock.position.copy(core);
+    root.add(fx.shock);
+    return fx;
+  }
+
+  function disposeReactorFx(fx) {
+    fx.geos.forEach(function (geo) { geo.dispose(); });
+    fx.mats.forEach(function (material) { material.dispose(); });
+  }
+
+  function updateReactorFx(view, time) {
+    const fx = view.reactor;
+    const site = view.site;
+    const on = !!site.ready && view.level >= 1;
+    if (on && !view.wasReady && time > 0) {
+      fx.born = time;
+      if (levelRoot.visible) burst(fx.core.x, fx.core.y, fx.core.z, 0xa8f0ff, 18 + 6 * fx.level);
+    }
+    if (time > 0) view.wasReady = on;
+    fx.root.visible = on;
+    if (!on) return;
+    const look = skyView.look;
+    const night = look ? Math.max(0, Math.min(1, (look.moonLight - 0.15) / 0.6)) : 0;
+    const shine = 0.8 + 0.4 * night;
+    const core = fx.core;
+    fx.glows.forEach(function (item) {
+      const breath = 1 + 0.12 * Math.sin(time * item.speed) + 0.05 * Math.sin(time * item.speed * 3.7);
+      item.sprite.scale.setScalar(item.base * breath);
+      item.sprite.material.opacity = item.opacity * shine;
+    });
+    fx.rings.forEach(function (item) { item.mesh.rotation.z = time * item.speed; });
+    fx.sparks.forEach(function (item) {
+      const a = item.phase + time * item.speed;
+      item.sprite.position.set(core.x + Math.cos(a) * item.r, core.y + Math.sin(a * 1.3) * item.r * item.tilt, core.z + Math.sin(a) * item.r);
+      item.sprite.material.opacity = (0.6 + 0.4 * Math.sin(time * 4 + item.phase)) * shine;
+    });
+    fx.motes.forEach(function (item) {
+      const t = ((time / item.period + item.phase) % 1 + 1) % 1;
+      const pull = t * t;
+      const a = item.a + t * 1.6;
+      const r = item.r * (1 - pull) + fx.radius * 0.6 * pull;
+      item.sprite.position.set(core.x + Math.cos(a) * r, 0.2 + (core.y - 0.2) * t, core.z + Math.sin(a) * r);
+      item.sprite.material.opacity = Math.sin(t * Math.PI) * 0.9 * shine;
+    });
+    fx.runes.forEach(function (item, i) {
+      item.mesh.rotation.z = time * item.speed;
+      item.mesh.material.opacity = (0.45 + 0.2 * Math.sin(time * 1.7 + i)) * shine;
+    });
+    fx.beams.forEach(function (item) {
+      item.material.uniforms.uTime.value = time;
+      item.material.uniforms.uOpacity.value = item.opacity * (0.85 + 0.15 * Math.sin(time * 3.1)) * shine;
+    });
+    const period = fx.level >= 5 ? 2.4 : 3.4;
+    fx.waves.forEach(function (item) {
+      const t = ((time / period + item.offset) % 1 + 1) % 1;
+      item.mesh.scale.setScalar(fx.radius * (1.2 + t * (5 + fx.level)));
+      item.mesh.material.opacity = (1 - t) * (1 - t) * 0.5 * shine;
+    });
+    // The start: 1.6 s of flash, the ring flies out to the whole camp.
+    const since = fx.born >= 0 ? time - fx.born : 99;
+    if (since < 1.6) {
+      const k = since / 1.6;
+      fx.flash.scale.setScalar(fx.radius * (2 + 10 * Math.sqrt(k)) * (0.8 + 0.2 * fx.level));
+      fx.flash.material.opacity = (1 - k) * (1 - k);
+      fx.shock.scale.setScalar(fx.radius * (1 + k * (10 + 3 * fx.level)));
+      fx.shock.material.opacity = (1 - k) * 0.9;
+      fx.flash.visible = true;
+      fx.shock.visible = true;
+    } else {
+      fx.flash.visible = false;
+      fx.shock.visible = false;
+    }
+  }
+
+  function onCampCube(event) {
+    const cube = event.site.cubes[event.index];
+    if (cube) burst(cube.wx, cube.wy + 0.1, cube.wz, MB.MATERIAL[cube.materialId].color, 4);
+  }
+
+  // A new canteen level: the old building collapses (collapseCamp) and the new one's ghost appears.
+  function onCampReform(event) {
+    collapseCamp(event.site, event.old);
+    if (campViews[event.site.id]) buildCampView(event.site);
+    paintCampSigns();
+    refreshCampSheet(true);
+  }
+
+  // The old building comes down with a show, in real time: it shudders, then falls from the base up —
+  // the cubes burst outward, tumble, bounce once and crumble — under a rolling cloud of dust.
+  function collapseCamp(site, cubes) {
+    if (!cubes || cubes.length === 0 || !levelRoot.visible) return;
+    const size = site.voxel || 1;
+    const geo = new THREE.BoxGeometry(CUBE_SIZE * size, CUBE_SIZE * size, CUBE_SIZE * size);
+    const group = new THREE.Group();
+    const slots = campInstances(group, geo, cubes);
+    let cx = 0;
+    let cz = 0;
+    let top = 0;
+    cubes.forEach(function (cube) {
+      cx += cube.wx;
+      cz += cube.wz;
+      top = Math.max(top, cube.wy);
+    });
+    cx /= cubes.length;
+    cz /= cubes.length;
+    const parts = cubes.map(function (cube, i) {
+      const dx = cube.wx - cx;
+      const dz = cube.wz - cz;
+      const r = Math.hypot(dx, dz) || 1;
+      const push = 0.8 + Math.random() * 2.2;
+      return {
+        slot: slots[i], x: cube.wx, y: cube.wy, z: cube.wz,
+        vx: dx / r * push + (Math.random() - 0.5) * 1.2,
+        vy: 0.5 + Math.random() * 2.5,
+        vz: dz / r * push + (Math.random() - 0.5) * 1.2,
+        rx: 0, ry: 0, rz: 0,
+        sx: (Math.random() - 0.5) * 9, sy: (Math.random() - 0.5) * 9, sz: (Math.random() - 0.5) * 9,
+        delay: 0.3 + cube.wy * 0.04 + Math.random() * 0.12,
+        bounced: false, scale: 1,
+      };
+    });
+    levelRoot.add(group);
+    collapses.push({ group: group, geo: geo, parts: parts, t: 0, half: 0.5 * CUBE_SIZE * size, dust: campDust(cx, cz, site.box, top) });
+  }
+
+  // A ring of soft dust puffs round the base that billow out and up and fade.
+  // A soft white dot (dust puffs, lamp glows).
+  function softTexture() {
+    if (!dustTexture) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 64;
+      canvas.height = 64;
+      const context = canvas.getContext('2d');
+      const gradient = context.createRadialGradient(32, 32, 2, 32, 32, 31);
+      gradient.addColorStop(0, 'rgba(255,255,255,0.95)');
+      gradient.addColorStop(0.5, 'rgba(255,255,255,0.45)');
+      gradient.addColorStop(1, 'rgba(255,255,255,0)');
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 64, 64);
+      dustTexture = new THREE.CanvasTexture(canvas);
+      dustTexture.colorSpace = THREE.SRGBColorSpace;
+    }
+    return dustTexture;
+  }
+
+  function campDust(cx, cz, box, top) {
+    const texture = softTexture();
+    const rx = Math.max(2, (box.x1 - box.x0) / 2);
+    const rz = Math.max(2, (box.z1 - box.z0) / 2);
+    const light = Math.min(1, PRECIP.light.value);
+    const puffs = [];
+    for (let i = 0; i < 22; i++) {
+      const a = i / 22 * Math.PI * 2 + Math.random() * 0.3;
+      const material = new THREE.SpriteMaterial({ map: texture, color: new THREE.Color(0xd9c9aa).multiplyScalar(light), transparent: true, depthWrite: false, opacity: 0 });
+      const sprite = new THREE.Sprite(material);
+      const ring = 0.6 + Math.random() * 0.5;
+      sprite.position.set(cx + Math.cos(a) * rx * ring, 0.6 + Math.random() * Math.min(3, top * 0.3), cz + Math.sin(a) * rz * ring);
+      levelRoot.add(sprite);
+      puffs.push({ sprite: sprite, vx: Math.cos(a) * (0.8 + Math.random()), vz: Math.sin(a) * (0.8 + Math.random()), vy: 0.3 + Math.random() * 0.6, grow: 2.5 + Math.random() * 2.5, delay: 0.25 + Math.random() * 0.5 });
+    }
+    return puffs;
+  }
+
+  // At night the standing masts shine at the building: the spotlight (stronger with the mast's
+  // level), the beam and the glow fade in with the dark. Off over the quarter and by day.
+  function updateMastLights() {
+    const look = skyView.look;
+    const dark = look ? Math.max(0, Math.min(1, (look.moonLight - 0.15) / 0.6)) : 0;
+    const masts = world && levelRoot.visible && !cityRoot.visible ? world.lights || [] : [];
+    const fp = world ? world.level.footprint : null;
+    for (let i = 0; i < mastLights.length; i++) {
+      const fx = mastLights[i];
+      const mast = masts[i];
+      const view = mast ? campViews[mast.id] : null;
+      const on = !!(view && view.lamp && mast.form >= 1 && MB.campActive(world, mast) && view.key === campViewKey(mast) && dark > 0.01);
+      if (!on) {
+        fx.light.intensity = 0;
+        fx.beam.visible = false;
+        fx.glow.visible = false;
+        continue;
+      }
+      // Lamps of the standing form: while a new one goes up the old lamps are gone, so it lights
+      // from the top of what stands.
+      const lamp = view.lamp;
+      mastAim.set((fp.minX + fp.maxX) / 2 + 0.5, Math.max(2, siteBuiltTop * 0.4), (fp.minZ + fp.maxZ) / 2 + 0.5);
+      const distance = lamp.distanceTo(mastAim);
+      const reach = Math.max(4, Math.max(fp.maxX - fp.minX, fp.maxZ - fp.minZ) * 0.6);
+      fx.light.position.copy(lamp);
+      fx.light.target.position.copy(mastAim);
+      fx.light.angle = Math.max(0.3, Math.min(0.85, Math.atan(reach / Math.max(1, distance))));
+      fx.light.intensity = dark * (60 + 45 * mast.form);
+      const length = distance * 1.15;
+      fx.beam.position.copy(lamp);
+      fx.beam.scale.set(length * Math.tan(fx.light.angle) / 0.42, length, length * Math.tan(fx.light.angle) / 0.42);
+      fx.beam.quaternion.setFromUnitVectors(mastUp, mastAim.sub(lamp).normalize());
+      fx.beam.visible = true;
+      fx.glow.position.copy(lamp);
+      fx.glow.scale.setScalar(1.6 + 0.5 * mast.form);
+      if (!fx.glow.material.map) {
+        fx.glow.material.map = softTexture();
+        fx.glow.material.needsUpdate = true;
+      }
+      fx.glow.material.opacity = 0.9 * dark;
+      fx.glow.visible = true;
+    }
+    beamMaterial.uniforms.uOpacity.value = 0.45 * dark;
+  }
+
+  function updateCollapses(dt) {
+    for (let c = collapses.length - 1; c >= 0; c--) {
+      const fx = collapses[c];
+      fx.t += dt;
+      const shake = fx.t < 0.3 ? 0.06 * Math.sin(fx.t * 90) : 0;
+      for (let i = 0; i < fx.parts.length; i++) {
+        const part = fx.parts[i];
+        const local = fx.t - part.delay;
+        if (local > 0) {
+          part.vy -= 16 * dt;
+          part.x += part.vx * dt;
+          part.y += part.vy * dt;
+          part.z += part.vz * dt;
+          part.rx += part.sx * dt;
+          part.ry += part.sy * dt;
+          part.rz += part.sz * dt;
+          if (part.y < fx.half) {
+            part.y = fx.half;
+            if (!part.bounced) {
+              part.bounced = true;
+              part.vy = -part.vy * 0.3;
+              part.vx *= 0.5;
+              part.vz *= 0.5;
+            } else {
+              part.vy = 0;
+              part.vx *= 0.8;
+              part.vz *= 0.8;
+            }
+          }
+          if (part.bounced || local > 1.1) part.scale = Math.max(0, part.scale - dt * 1.6);
+        }
+        dummy.position.set(part.x + (local > 0 ? 0 : shake), part.y, part.z + (local > 0 ? 0 : shake * 0.6));
+        dummy.rotation.set(part.rx, part.ry, part.rz);
+        dummy.scale.setScalar(part.scale);
+        dummy.updateMatrix();
+        part.slot.mesh.setMatrixAt(part.slot.k, dummy.matrix);
+        part.slot.mesh.instanceMatrix.needsUpdate = true;
+      }
+      for (let i = 0; i < fx.dust.length; i++) {
+        const puff = fx.dust[i];
+        const local = fx.t - puff.delay;
+        if (local <= 0) continue;
+        puff.sprite.position.x += puff.vx * dt;
+        puff.sprite.position.y += puff.vy * dt;
+        puff.sprite.position.z += puff.vz * dt;
+        puff.vx *= 1 - dt * 0.8;
+        puff.vz *= 1 - dt * 0.8;
+        puff.sprite.scale.setScalar(1 + puff.grow * Math.min(1, local / 1.6));
+        puff.sprite.material.opacity = 0.75 * Math.min(1, local / 0.25) * Math.max(0, 1 - local / 2.4);
+      }
+      if (fx.t > 3.2) {
+        levelRoot.remove(fx.group);
+        fx.geo.dispose();
+        fx.dust.forEach(function (puff) {
+          levelRoot.remove(puff.sprite);
+          puff.sprite.material.dispose();
+        });
+        collapses.splice(c, 1);
+      }
+    }
+  }
+
+  function onCampReady(event) {
+    const site = event.site;
+    if (site.id === 'canteen' && site.form >= 2) {
+      UI.toast({
+        title: '«' + MB.canteenForm(site.form).name + '» построен' + (site.form === 2 ? 'о' : ''),
+        text: 'Ур. ' + site.form + ' · мест ' + MB.canteenSeats(world),
+        icon: 'hq', tone: 'good', key: 'canteen-ready',
+      });
+    } else if (site.id === 'sales' && site.form >= 2) {
+      UI.toast({
+        title: '«' + MB.campForm('sales', site.form).name + '» построен',
+        text: 'Ур. ' + site.form + ' · +' + formatRate(MB.salesRate(world)) + '/с',
+        icon: 'icons/icon-coins.jpg?v=2', tone: 'good', key: 'sales-ready',
+      });
+    } else if (site.kind === 'reactor') {
+      UI.toast({
+        title: '«' + MB.campForm('reactor', site.form).name + '» запущен',
+        text: 'Мана +' + Math.round(campaign.manaRate || 0) + '/мин · запас ' + Math.round(campaign.manaMax || 0),
+        icon: 'icons/icon-mana.jpg', tone: 'good', key: 'reactor-ready',
+      });
+    } else if (site.kind === 'lounge') {
+      UI.toast({
+        title: '«' + MB.campForm('lounge', site.form).name + '» ' + (site.form <= 3 ? 'готова' : 'готов'),
+        text: 'Мест ' + MB.loungeSeats(world) + ' · перекур −' + Math.round((1 - (MB.LOUNGE.smokeScale || 1)) * 100) + '%',
+        icon: 'hq', tone: 'good', key: 'lounge-ready',
+      });
+    } else if (site.kind === 'dorm' || site.kind === 'light') {
+      UI.toast({
+        title: '«' + MB.campForm(site.kind, site.form).name + '» ' + (site.kind === 'dorm' ? 'готов' + (site.form === 1 ? '' : site.form === 2 ? '' : 'о') : 'светит'),
+        text: site.kind === 'dorm' ? 'Коек ' + MB.dormBeds(world) + ' · сон −' + Math.round((1 - MB.dormSleepScale(campaign)) * 100) + '%' : nightLine(environmentEffects('')),
+        icon: site.kind === 'dorm' ? 'hq' : 'moon', tone: 'good', key: site.id + '-ready',
+      });
+    } else if (site.id === 'canteen') {
+      const dish = MB.DISH[site.dish];
+      UI.toast({
+        title: 'Полевая кухня готова',
+        text: 'Мест ' + MB.canteenSeats(world) + (dish ? ' · ' + dish.name : ''),
+        icon: 'hq', tone: 'good', key: 'canteen-ready',
+      });
+    } else {
+      UI.toast({
+        title: 'Офис продаж построен',
+        text: '+' + formatRate(MB.salesRate(world)) + '/с',
+        icon: 'icons/icon-coins.jpg?v=2', tone: 'good', key: 'sales-ready',
+      });
+    }
+    const view = campViews[site.id];
+    if (view) view.until = performance.now() + 5000;
+    paintCampSigns();
+    refreshCampSheet(true);
+  }
+
+  // «Полевая кухня» bought: level 1 — the canteen may be built; every next level — a new building
+  // to rebuild it into (more seats once it stands).
+  function onCanteenLevel(level) {
+    const form = MB.canteenForm(Math.min(MB.CANTEEN_FORMS.length, level));
+    UI.toast(level === 1
+      ? { title: 'Полевая кухня доступна', text: 'Назначьте рабочих на синем силуэте', icon: 'hq', tone: 'good', key: 'canteen-level-1' }
+      : { title: 'Строим «' + form.name + '»', text: 'Назначьте рабочих · кухня работает',
+        icon: 'hq', tone: 'good', key: 'canteen-level-' + level });
+    paintCampSigns();
+    refreshCampSheet(true);
+  }
+
+  // «Офис продаж» bought on the site: level 1 — it may be built; every next level — more income.
+  function onSalesLevel(level) {
+    const forms = MB.campFormCount('sales');
+    UI.toast(level === 1
+      ? { title: 'Можно строить офис продаж', text: 'Назначьте рабочих на синем силуэте', icon: 'icons/icon-coins.jpg?v=2', tone: 'good', key: 'sales-level-1' }
+      : forms > 0
+        ? { title: 'Строим «' + MB.campForm('sales', Math.min(forms, level)).name + '»', text: 'Назначьте рабочих · доход сохранён',
+          icon: 'icons/icon-coins.jpg?v=2', tone: 'good', key: 'sales-level-' + level }
+        : { title: 'Офис продаж ' + level + '-го уровня', text: world.sales && world.sales.ready ? 'Приносит ' + formatRate(MB.salesRate(world)) + ' в секунду' : 'Больше дохода, когда достроят',
+          icon: 'icons/icon-coins.jpg?v=2', tone: 'good', key: 'sales-level-' + level });
+    paintCampSigns();
+    refreshCampSheet(true);
+  }
+
+  // «Бытовки» / «Зона отдыха» / «Освещение» bought: level 1 — they may be built; every next level —
+  // a new form.
+  function onCampLevel(site, level) {
+    const mast = site.kind === 'light';
+    const form = MB.campForm(site.kind, Math.min(MB.campFormCount(site.kind), level));
+    UI.toast(level === 1
+      ? { title: CAMP_NAMES[site.kind] + ' · доступно', text: mast ? 'Назначьте рабочих на обе мачты' : 'Назначьте рабочих на синем силуэте',
+        icon: mast ? 'moon' : 'hq', tone: 'good', key: site.kind + '-level-1' }
+      : { title: 'Строим «' + form.name + '»', text: 'Назначьте рабочих · прежний эффект сохранён',
+        icon: mast ? 'moon' : 'hq', tone: 'good', key: site.kind + '-level-' + level });
+    paintCampSigns();
+    refreshCampSheet(true);
+  }
+
+  // The first worker turned away on a site explains the rule once.
+  function onCanteenFull() {
+    if (world.canteen.toldFull) return;
+    world.canteen.toldFull = true;
+    UI.toast({
+      title: 'В столовой нет мест',
+      text: 'Добавьте места в Центре персонала',
+      icon: 'hq',
+      tone: 'warn',
+      key: 'canteen-full',
+    });
+  }
+
+  // The first worker turned away at the lounge on a site explains the rule once.
+  function onLoungeFull() {
+    if (!world.lounge || world.lounge.toldFull) return;
+    world.lounge.toldFull = true;
+    UI.toast({
+      title: 'В зоне отдыха нет мест',
+      text: 'Улучшите Зону отдыха',
+      icon: 'hq',
+      tone: 'warn',
+      key: 'lounge-full',
+    });
+  }
+
+  // The sales office pays every few seconds: «+N» floats over its roof and flies into the counter.
+  function onSalesPay(event) {
+    const view = campViews.sales;
+    if (view && currentScreen === 'build') floatWorldCoins(view.anchor.x, view.anchor.y - 0.4, view.anchor.z, event.coins);
+    if (timeScale !== 20) pulseCoins();
+    if (campSheet && campSheet.id === 'sales') refreshCampSheet(false);
+  }
+
+  function paintCampSigns() {
+    Object.keys(campViews).forEach(function (id) { paintCampSign(campViews[id]); });
+  }
+
+  function paintCampSign(view) {
+    const site = view.site;
+    let state = 'is-idle';
+    let line = 'Назначить рабочих';
+    if (site.ready) {
+      state = 'is-live';
+      if (site.id === 'canteen') line = MB.DISH[site.dish] ? MB.DISH[site.dish].name : 'Без блюда';
+      else if (site.kind === 'dorm') line = 'Коек <b>' + MB.dormBeds(world) + '</b> · спят ' + MB.dormSleepers(world);
+      else if (site.kind === 'lounge') line = 'Мест <b>' + MB.loungeSeats(world) + '</b> · курят ' + MB.loungeSmokers(world);
+      else if (site.kind === 'light') line = 'Ночь · укладка <b>' + times(environmentEffects('').nightWork) + '</b>';
+      else if (site.kind === 'reactor') line = 'Мана <b>+' + Math.round(campaign.manaRate || 0) + '</b>/мин';
+      else line = '<b>+' + UI.escapeHtml(formatRate(MB.salesRate(world))) + '</b>/с';
+    } else {
+      const count = '<b>' + site.built + '/' + site.total + '</b>';
+      if (site.assigned > 0) {
+        state = 'is-building';
+        line = count + ' · рабочих ' + MB.campCrew(world, site) + ' из ' + site.assigned;
+      } else if (site.built > 0 || campRebuilding(site)) {
+        line = count + ' · никто не строит';
+      }
+      if (campRebuilding(site) && site.assigned === 0) line = count + ' · назначить рабочих';
+    }
+    const progress = site.built / site.total;
+    const html = '<span class="city-sign-main">' + (site.id === 'sales' ? '<img class="camp-sign-coin" src="icons/icon-coins.jpg?v=2" alt="">' : ICONS.hq) +
+      '<span>' + UI.escapeHtml(campName(site)) + '</span></span><span class="city-sign-line">' + line + '</span>' +
+      (site.ready ? '' : '<span class="city-sign-bar"><i style="width:' + Math.round(progress * 100) + '%"></i></span>');
+    if (view.sign !== state + html) {
+      view.sign = state + html;
+      view.signEl.className = 'city-sign camp-sign ' + state;
+      view.signEl.innerHTML = html;
+    }
+  }
+
+  function placeCampSigns() {
+    Object.keys(campViews).forEach(function (id) { placeCampSign(campViews[id]); });
+  }
+
+  function placeCampSign(view) {
+    const sign = view.signEl;
+    const site = view.site;
+    // A foundation has no sign (its name board stands in the world; «Городок» in the HUD lists them).
+    const show = !!(world && MB.campActive(world, site) && campaign && campaign.status === 'play' &&
+      currentScreen === 'build' && !cityRoot.visible && !(campSheet && campSheet.id === site.id) &&
+      (!site.ready || performance.now() < view.until));
+    if (!show) {
+      if (!sign.hidden) sign.hidden = true;
+      return;
+    }
+    camera.updateMatrixWorld();
+    campPoint.copy(view.anchor).project(camera);
+    const visible = campPoint.z > -1 && campPoint.z < 1 && Math.abs(campPoint.x) < 1 && campPoint.y < 1 && campPoint.y > -1;
+    if (sign.hidden === visible) sign.hidden = !visible;
+    if (!visible) return;
+    const x = Math.round((campPoint.x + 1) / 2 * MicroBuildersStage.width());
+    const y = Math.round((1 - campPoint.y) / 2 * MicroBuildersStage.height());
+    sign.style.transform = 'translate(' + x + 'px, ' + y + 'px) translate(-50%, -100%)';
+  }
+
+  // The tapped camp building, if any.
+  function pickCampView() {
+    let picked = null;
+    let best = Infinity;
+    Object.keys(campViews).forEach(function (id) {
+      const view = campViews[id];
+      if (!MB.campActive(world, view.site) && !MB.campFoundation(world, view.site)) return;
+      const hits = workerRaycaster.intersectObject(view.hit, false);
+      if (hits.length > 0 && hits[0].distance < best) {
+        best = hits[0].distance;
+        picked = view;
+      }
+    });
+    return picked;
+  }
+
+  // Tap on a camp building or its sign: the slider of the crew while it is going up, then its own
+  // sheet — the canteen's menu, the sales office's income and upgrades.
+  function openCamp(id) {
+    const site = world && MB.campSite(world, id);
+    if (!site || !(MB.campActive(world, site) || MB.campFoundation(world, site)) || campaign.status !== 'play') return;
+    sheetInfoOpen = false;
+    focusCamp(site);
+    UI.overlay.open({
+      id: 'camp',
+      type: 'sheet',
+      className: 'canteen-sheet',
+      kicker: 'Строительный городок',
+      title: campName(site),
+      body: function (body, handle) {
+        campSheet = { id: id, body: body, ready: null, level: campLevel(site) };
+        body.addEventListener('input', onCampInput);
+        body.addEventListener('click', onCampClick);
+        refreshCampSheet(true);
+        addSheetInfo(handle, body);
+        // The sheet's height is part of the camera's free band (measureSafeArea).
+        const card = body.closest('.overlay-card');
+        if (card && window.ResizeObserver) {
+          campSheet.resize = new ResizeObserver(queueSafeArea);
+          campSheet.resize.observe(card);
+        }
+        queueSafeArea();
+      },
+      onClose: function () {
+        const view = campViews[id];
+        if (view) view.until = performance.now() + 5000;
+        if (campSheet && campSheet.resize) campSheet.resize.disconnect();
+        campSheet = null;
+        queueSafeArea();
+      },
+    });
+  }
+
+  // «Городок» in the HUD: the camp buildings of the site in one list (the two light masts in one
+  // row); a row flies the camera to its building and opens its window. The badge counts the
+  // foundations a token would start now.
+  function campKinds() {
+    const kinds = [];
+    const byKind = {};
+    ((world && world.camp) || []).forEach(function (site) {
+      if (!byKind[site.kind]) {
+        byKind[site.kind] = [];
+        kinds.push(site.kind);
+      }
+      byKind[site.kind].push(site);
+    });
+    return kinds.map(function (kind) { return { kind: kind, sites: byKind[kind], state: campKindState(byKind[kind]) }; });
+  }
+
+  function campKindState(sites) {
+    const site = sites[0];
+    if (MB.campFoundation(world, site)) return MB.campStartable(campaign, CAMP_NODES[site.kind]) ? 'start' : 'base';
+    if (!MB.campActive(world, site)) return 'locked';
+    return sites.every(function (one) { return one.ready; }) ? 'live' : 'building';
+  }
+
+  function paintCampButton() {
+    const button = document.getElementById('camp-btn');
+    const kinds = world && campaign && campaign.status === 'play' ? campKinds().filter(function (entry) { return entry.state !== 'locked'; }) : [];
+    const on = kinds.length > 0;
+    if (button.hidden === on) button.hidden = !on;
+    if (!on) return;
+    const ready = kinds.filter(function (entry) { return entry.state === 'start'; }).length;
+    const badge = document.getElementById('camp-ready');
+    if (badge.hidden === (ready > 0)) badge.hidden = ready === 0;
+    setText('camp-ready', String(ready));
+    if (campList) morphHtml(campList.body, campListHtml());
+  }
+
+  function campListHtml() {
+    const token = '<img class="camp-row-token" src="icons/icon-gate-token.jpg" alt="жетон">';
+    const coin = '<img class="camp-row-token" src="icons/icon-coins.jpg?v=2" alt="монет">';
+    return '<div class="camp-list">' + campKinds().map(function (entry) {
+      const site = entry.sites[0];
+      const node = CAMP_NODES[site.kind];
+      let line = '';
+      if (entry.state === 'start') line = 'Основание · старт ' + token + (MB.TOKENS.campStart || 1) + ' + ' + coin + formatShort(MB.upgradeCost(node, 0, campaign));
+      else if (entry.state === 'base') line = 'Основание · нужен ' + token + ' жетон';
+      else if (entry.state === 'locked') line = node === 'reactor' ? 'Откройте в реакторе штаба' : 'Откройте в центре персонала';
+      else if (entry.state === 'live') line = 'Работает · ур. ' + campLevel(site);
+      else {
+        let built = 0, total = 0, assigned = 0;
+        entry.sites.forEach(function (one) { built += one.built; total += one.total; assigned += one.assigned; });
+        line = 'Стройка <b>' + built + '/' + total + '</b> · ' + (assigned > 0 ? 'рабочих ' + assigned : 'назначьте рабочих');
+      }
+      const icon = node === 'reactor' ? 'icon-hq-reactor.jpg' : officeIcon(node);
+      return '<button type="button" class="camp-row is-' + entry.state + '" data-camp-go="' + site.id + '"' + (entry.state === 'locked' ? ' aria-disabled="true"' : '') + '>' +
+        '<img class="camp-row-icon" src="icons/' + icon + '" alt="">' +
+        '<span class="camp-row-text"><b>' + UI.escapeHtml(entry.state === 'live' || entry.state === 'building' ? campName(site) : CAMP_NAMES[site.kind]) + '</b>' +
+        '<small>' + line + '</small></span>' +
+        (entry.state === 'locked' ? ICONS.lock : ICONS.chevron) + '</button>';
+    }).join('') + '</div>';
+  }
+
+  function openCampList() {
+    UI.overlay.open({
+      id: 'camp-list',
+      type: 'sheet',
+      className: 'camp-list-sheet',
+      kicker: 'Строительный городок',
+      title: 'Здания стройки',
+      body: function (body) {
+        campList = { body: body };
+        body.innerHTML = campListHtml();
+        body.addEventListener('click', function (event) {
+          const row = event.target.closest('[data-camp-go]');
+          if (!row) return;
+          if (row.getAttribute('aria-disabled') === 'true') {
+            shake(row);
+            UI.toast({ text: row.dataset.campGo === 'reactor' ? 'Реактор стройки открывается в реакторе штаба' : 'Это здание открывается в центре персонала штаба', icon: 'lock', key: 'camp-locked', duration: 1800 });
+            return;
+          }
+          UI.overlay.close('camp-list');
+          openCamp(row.dataset.campGo);
+        });
+      },
+      onClose: function () {
+        campList = null;
+      },
+    });
+  }
+
+  // A tapped camp building: the camera flies to it, framed by its size; the open sheet narrows the
+  // free band, so the building lands in the middle of what is left above it.
+  function focusCamp(site) {
+    const box = site.box;
+    if (!box) return;
+    const size = Math.max(box.x1 - box.x0, box.z1 - box.z0, box.h);
+    cameraController.flyTo({
+      target: { x: (box.x0 + box.x1) / 2, y: box.h * 0.4, z: (box.z0 + box.z1) / 2 },
+      distance: Math.max(14, Math.min(cameraController.homeDistance || 60, 10 + 1.5 * size)),
+    }, 0.6);
+  }
+
+  // The «i» in the head of a building sheet folds and unfolds its texts about the mechanics.
+  function addSheetInfo(handle, body) {
+    const head = handle.el && handle.el.querySelector('.overlay-head');
+    if (!head || head.querySelector('.sheet-info-btn')) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'info-btn sheet-info-btn';
+    button.textContent = 'i';
+    button.setAttribute('aria-label', 'Как это работает');
+    button.addEventListener('click', function () {
+      sheetInfoOpen = !sheetInfoOpen;
+      applySheetInfo(body);
+    });
+    head.insertBefore(button, head.querySelector('.overlay-close'));
+    applySheetInfo(body);
+  }
+
+  function applySheetInfo(body) {
+    body.querySelectorAll('.sheet-info').forEach(function (el) { el.hidden = !sheetInfoOpen; });
+    const card = body.closest('.overlay');
+    const button = card && card.querySelector('.sheet-info-btn');
+    if (button) {
+      button.classList.toggle('on', sheetInfoOpen);
+      button.setAttribute('aria-expanded', String(sheetInfoOpen));
+    }
+  }
+
+  function canteenFedCount() {
+    let fed = 0;
+    for (let i = 0; i < world.builders.length; i++) {
+      const builder = world.builders[i];
+      if (builder.trade === 'builder' && builder.dish) fed += 1;
+    }
+    return fed;
+  }
+
+  function canteenFedText() {
+    return canteenFedCount() + '/' + MB.workerCount(world);
+  }
+
+  function campCrewNote(site) {
+    return site.assigned === 0 ? 'Назначьте рабочих' : 'Строят: ' + MB.campCrew(world, site) + '/' + site.assigned;
+  }
+
+  function refreshCampSheet(full) {
+    if (!campSheet || !world) return;
+    const site = MB.campSite(world, campSheet.id);
+    if (!site) return;
+    const body = campSheet.body;
+    const base = MB.campFoundation(world, site);
+    if (full || campSheet.ready !== site.ready || campSheet.level !== campLevel(site) || campSheet.base !== base) {
+      campSheet.ready = site.ready;
+      campSheet.level = campLevel(site);
+      campSheet.base = base;
+      const live = site.id === 'canteen' ? canteenMenuHtml : site.kind === 'dorm' ? dormHtml : site.kind === 'lounge' ? loungeHtml : site.kind === 'light' ? lightHtml : site.kind === 'reactor' ? reactorHtml : salesHtml;
+      body.innerHTML = base ? campFoundationHtml(site)
+        : !site.ready
+          ? campBuildHtml(site) + (campRebuilding(site) ? live(site) : '')
+          : live(site) + campUpgradesHtml(site);
+      applySheetInfo(body);
+      return;
+    }
+    // The foundation's start button and the building's upgrades follow the coins and tokens.
+    if (base) {
+      morphHtml(body, campFoundationHtml(site));
+      applySheetInfo(body);
+      return;
+    }
+    const upgrades = body.querySelector('[data-camp-upgrades]');
+    if (upgrades && site.ready) morphHtml(upgrades, campUpgradesInner(site));
+    if (!site.ready) {
+      const workers = MB.workerCount(world);
+      body.querySelector('[data-camp-field="built"]').textContent = site.built;
+      body.querySelector('[data-camp-field="bar"]').style.width = Math.round(site.built / site.total * 100) + '%';
+      body.querySelector('[data-camp-field="note"]').textContent = campCrewNote(site);
+      const slider = body.querySelector('[data-camp-field="crew"]');
+      if (Number(slider.max) !== workers) slider.max = String(workers);
+      body.querySelector('[data-camp-field="of"]').textContent = 'из ' + workers;
+    } else if (site.id === 'canteen') {
+      body.querySelector('[data-camp-field="fed"]').textContent = canteenFedText();
+    } else {
+      // In place: the buttons stay the same elements, so a press and a purchase flash survive the ticks.
+      morphHtml(body, (site.kind === 'dorm' ? dormHtml : site.kind === 'lounge' ? loungeHtml : site.kind === 'light' ? lightHtml : site.kind === 'reactor' ? reactorHtml : salesHtml)(site) + campUpgradesHtml(site));
+      applySheetInfo(body);
+    }
+  }
+
+  // Brings `el`'s children to `html` touching only what differs: same tags keep their elements (the
+  // attributes and texts are updated), anything else is replaced.
+  function morphHtml(el, html) {
+    const next = document.createElement(el.tagName);
+    next.innerHTML = html;
+    morphChildren(el, next);
+  }
+
+  function morphChildren(el, next) {
+    const want = Array.prototype.slice.call(next.childNodes);
+    for (let i = 0; i < want.length; i++) {
+      const have = el.childNodes[i];
+      const node = want[i];
+      if (!have) {
+        el.appendChild(node);
+      } else if (have.nodeType !== node.nodeType || have.nodeName !== node.nodeName) {
+        el.replaceChild(node, have);
+      } else if (node.nodeType === 3 || node.nodeType === 8) {
+        if (have.nodeValue !== node.nodeValue) have.nodeValue = node.nodeValue;
+      } else {
+        const keep = have.hidden;
+        for (let a = have.attributes.length - 1; a >= 0; a--) {
+          const name = have.attributes[a].name;
+          if (!node.hasAttribute(name)) have.removeAttribute(name);
+        }
+        for (let a = 0; a < node.attributes.length; a++) {
+          const attr = node.attributes[a];
+          if (have.getAttribute(attr.name) !== attr.value) have.setAttribute(attr.name, attr.value);
+        }
+        // «i» texts keep their folded state (applySheetInfo sets it after).
+        if (have.classList.contains('sheet-info')) have.hidden = keep;
+        morphChildren(have, node);
+      }
+    }
+    while (el.childNodes.length > want.length) el.removeChild(el.lastChild);
+  }
+
+  // What a camp building does once it stands (the «i» of its sheet and its foundation).
+  function campWhatHtml(site) {
+    return site.id === 'canteen'
+      ? '<p>Когда столовая будет готова, голодные рабочие будут быстро обедать у неё и до следующего обеда получать бафф блюда.</p>'
+      : site.kind === 'dorm'
+        ? '<p>Когда бытовки будут готовы, рабочие, кому хватит коек, будут спать в них — рядом со стройкой, а не в дальних вагончиках, и на ' +
+          Math.round((1 - MB.dormSleepScale(campaign)) * 100) + '% меньше. Коек: ' + (MB.DORM.beds || 3) + ' за уровень.</p>'
+        : site.kind === 'lounge'
+          ? '<p>Когда зона отдыха будет готова, рабочие будут ходить курить к ней — у стройки, а не в 10–20 клетках от здания, и перекур там на ' +
+            Math.round((1 - (MB.LOUNGE.smokeScale || 1)) * 100) + '% короче. Мест: ' + (MB.LOUNGE.seats || 2) + ' за уровень; кому не хватило, идёт курить на обычное место.</p>'
+        : site.kind === 'light'
+          ? '<p>Две прожекторные мачты по бокам здания. Каждая готовая мачта снимает ' + Math.round(MB.lightReliefPerLevel(campaign) * 100) +
+            '% ночного штрафа за свой уровень. Мачты строятся отдельно, у каждой свой ползунок рабочих.</p>'
+        : site.kind === 'reactor'
+          ? '<p>Когда реактор будет готов, магическая сфера на его вершине начнёт копить ману для заклинаний: +' + MB.REACTOR_SITE.manaPerLevel +
+            ' в минуту за уровень. Пока его нет, маны нет. На перестройке прежний уровень продолжает давать ману.</p>'
+          : '<p>Когда офис продаж будет готов, он сам будет приносить монеты стройки — раз в ' + MB.SALES.payoutSeconds + ' секунд. Доход прокачивается в самом офисе за монеты, его уровень — здесь же, в окне здания.</p>';
+  }
+
+  function campBuildHtml(site) {
+    const workers = MB.workerCount(world);
+    const pct = Math.round(site.built / site.total * 100);
+    const what = campWhatHtml(site);
+    return '<div class="sheet-info">' + what +
+      '<p>Строят только рабочие, техника не помогает; кубы городка денег не приносят. Рабочий уходит на эту стройку, когда возвращается к столу за планом, ' +
+      'а снятый с неё возвращается к основному зданию после текущей ходки.</p></div>' +
+      campRebuildHtml(site) +
+      '<div class="canteen-progress"><span>Кубы <b data-camp-field="built">' + site.built + '</b>/' + site.total + '</span>' +
+      '<i><b data-camp-field="bar" style="width:' + pct + '%"></b></i></div>' +
+      '<label class="canteen-crew"><span class="canteen-crew-head">Рабочие <span><b data-camp-field="value">' + site.assigned + '</b> <small data-camp-field="of">из ' + workers + '</small></span></span>' +
+      '<input type="range" data-camp-field="crew" min="0" max="' + workers + '" step="1" value="' + site.assigned + '">' +
+      '<p class="canteen-note" data-camp-field="note">' + UI.escapeHtml(campCrewNote(site)) + '</p></label>';
+  }
+
+  // The site line of a camp building (both lighting masts are the one «Освещение»).
+  function campLine(site) {
+    return CAMP_NODES[site.kind || site.id];
+  }
+
+  // A foundation: what the building gives and «Начать стройку» for a token and the coins of level 1.
+  function campFoundationHtml(site) {
+    const kind = campLine(site);
+    const cost = MB.upgradeCost(kind, 0, campaign);
+    const need = MB.TOKENS.campStart || 1;
+    const tokens = campaign.tokens || 0;
+    const coinsShortBy = campaign.freePurchases ? 0 : Math.max(0, cost - campaign.coins);
+    const short = tokens < need || coinsShortBy > 0;
+    const shortText = tokens < need ? 'Нет жетона: жетоны даются в начале каждой стройки' : 'Не хватает ' + formatCompact(coinsShortBy) + ' монет';
+    const form = site.target ? MB.campForm(site.kind, 1) : null;
+    return '<p class="camp-foundation-lead">Основание готово. Начните стройку — появится синий чертёж' + (form ? ' «' + UI.escapeHtml(form.name) + '»' : '') +
+      ', на него можно назначить рабочих.</p>' + campWhatHtml(site) +
+      '<button type="button" class="buy-btn wide camp-start' + (short ? ' short' : '') + '" data-camp-start="' + kind + '"' +
+      (short ? ' aria-disabled="true" data-short="' + UI.escapeHtml(shortText) + '"' : '') + '>' +
+      '<span>Начать стройку</span><img class="currency-icon camp-token" src="icons/icon-gate-token.jpg" alt="жетон">' + need +
+      ' <img class="currency-icon" src="icons/icon-coins.jpg?v=2" alt="монеты">' + (campaign.freePurchases ? '0' : formatCompact(cost)) + '</button>' +
+      '<p class="canteen-note">Жетонов на этой стройке: ' + tokens + '. Ими же открываются проходы графа улучшений.</p>';
+  }
+
+  // The ready building's own upgrades: the next form (a rebuild, up to the personnel centre's limit)
+  // and its upgrades (opened in the personnel centre), all for the site's coins.
+  function campUpgradesHtml(site) {
+    return '<div class="camp-upgrades" data-camp-upgrades>' + campUpgradesInner(site) + '</div>';
+  }
+
+  function campUpgradesInner(site) {
+    const session = window.MicroBuildersBalance.session;
+    const line = campLine(site);
+    const icons = window.MicroBuildersUpgradeIcons || {};
+    let html = '<h3 class="camp-upgrades-head">Улучшения здания</h3>';
+    const level = campaign.purchases[line] || 0;
+    if (level < session[line].max) {
+      const next = MB.campForm(site.kind, level + 1);
+      const name = 'Уровень ' + (level + 1) + (next ? ' · «' + next.name + '»' : '');
+      html += siteUpgradeCapped(line)
+        ? campUpgradeRow(line, name, CAP_TEXTS[line] ? capText(line) : 'Откроется в центре персонала', icons, true)
+        : campUpgradeRow(line, name, 'Перестройка: пока новое здание строится, работает старое', icons, false);
+    }
+    Object.keys(MB.CAMP_UPGRADE_OF).forEach(function (kind) {
+      if (MB.CAMP_UPGRADE_OF[kind] !== line) return;
+      const spec = session[kind];
+      const open = Meta.sessionLineOpen(meta, kind);
+      const owned = campaign.purchases[kind] || 0;
+      const info = !open ? 'Откройте в центре персонала' : 'Ур. ' + owned + '/' + spec.max + ' · ' + upgradeLabel(kind);
+      html += campUpgradeRow(kind, spec.name, info, icons, !open);
+    });
+    return html;
+  }
+
+  function campUpgradeRow(kind, name, info, icons, locked) {
+    const spec = window.MicroBuildersBalance.session[kind];
+    const level = campaign.purchases[kind] || 0;
+    const maxed = level >= spec.max;
+    const cost = maxed ? 0 : MB.upgradeCost(kind, level, campaign);
+    // The 3rd and 5th levels of a building ask tokens too (logic.js → campLevelTokens).
+    const tokens = maxed ? 0 : MB.campLevelTokens(kind, level + 1);
+    const tokensShort = tokens > (campaign.tokens || 0);
+    const coinsShort = !campaign.freePurchases && campaign.coins < cost;
+    const button = locked || maxed
+      ? '<small class="camp-up-state">' + (maxed ? 'Максимум' : '🔒') + '</small>'
+      : buyButtonHtml({ attrs: 'data-camp-buy="' + kind + '"', icon: 'icons/icon-coins.jpg?v=2',
+        price: (campaign.freePurchases ? '0' : formatCompact(cost)) + (tokens ? ' <img class="currency-icon" src="icons/icon-gate-token.jpg" alt="жетоны">' + tokens : ''),
+        have: campaign.freePurchases ? cost : campaign.coins, cost: cost, short: coinsShort || tokensShort,
+        shortText: tokensShort ? 'Нужно жетонов: ' + tokens + ', есть ' + (campaign.tokens || 0) : 'Не хватает ' + formatCompact(Math.max(0, cost - campaign.coins)) + ' монет' });
+    return '<div class="camp-up' + (locked ? ' locked' : '') + '" data-camp-row="' + kind + '"><img src="icons/' + (icons[kind] || 'icon-up-speed.jpg') + '" alt="">' +
+      '<span><b>' + UI.escapeHtml(name) + '</b><small>' + UI.escapeHtml(info) + '</small></span>' + button + '</div>';
+  }
+
+  // «Строим «Кафе»»: what goes up and that the canteen keeps serving meanwhile.
+  function campRebuildHtml(site) {
+    if (!site.target) return '';
+    const form = MB.campForm(site.kind, site.target);
+    return '<p class="canteen-wallet">' + (campRebuilding(site) ? 'Перестройка' : 'Стройка') + ' · ' + UI.escapeHtml(form.name) + ' · ур. ' + site.target + '</p>' +
+      (campRebuilding(site) ? '<div class="sheet-info"><p>Во время перестройки сохраняется эффект прежнего уровня. Назначьте рабочих, чтобы завершить новый.</p></div>' : '');
+  }
+
+  // The state of a camp building at a glance: a row of small stat chips (label over value).
+  function campStatsHtml(items) {
+    return '<div class="camp-stats">' + items.map(function (item) {
+      return '<span class="camp-stat"><small>' + item[0] + '</small><b>' + item[1] + '</b></span>';
+    }).join('') + '</div>';
+  }
+
+  // A site-coin price on a buy button (the coin, as the HUD shows it).
+  function percentLess(scale) {
+    return '−' + Math.round((1 - (scale || 1)) * 100) + '%';
+  }
+
+  // The dorm: beds, who sleeps there tonight.
+  function dormHtml(site) {
+    return '<div class="sheet-info"><p>Когда рабочий выбился из сил, он идёт спать в бытовки, если там есть свободная койка: рядом со стройкой, а сон на ' +
+      Math.round((1 - MB.dormSleepScale(campaign)) * 100) + '% короче. Кому коек не хватило, уходит в дальние вагончики. Уровень бытовок — прокачка «Бытовки» стройки, ' +
+      'выше 1-го — «Уровни бытовок» в центре персонала.</p></div>' +
+      campStatsHtml([['Уровень', site.form || 0], ['Спят', MB.dormSleepers(world) + '/' + MB.dormBeds(world)], ['Сон', percentLess(MB.dormSleepScale(campaign))]]);
+  }
+
+  // The lounge: seats, who smokes there now, how many found no seat.
+  function loungeHtml(site) {
+    return '<div class="sheet-info"><p>Рабочий идёт на перекур к зоне отдыха — рядом со стройкой, а перекур тут на ' +
+      Math.round((1 - (MB.LOUNGE.smokeScale || 1)) * 100) + '% короче. Позвавший на перекур ведёт сюда и свою компанию. Если все места заняты, ' +
+      'рабочий идёт курить на обычное место, подальше от стройки. Уровень зоны отдыха — прокачка «Зона отдыха» стройки, ' +
+      'выше 1-го — «Уровни зоны отдыха» в центре персонала.</p>' +
+      (site.turnedAway > 0 ? '<p>Без места ушли за стройку: ' + site.turnedAway + '.</p>' : '') + '</div>' +
+      campStatsHtml([['Уровень', site.form || 0], ['Курят', MB.loungeSmokers(world) + '/' + MB.loungeSeats(world)], ['Перекур', percentLess(MB.LOUNGE.smokeScale)]]);
+  }
+
+  // The lighting masts: what is left of the night penalty.
+  // The site reactor: mana a minute and the store by the level of the form that stands.
+  function reactorHtml(site) {
+    return '<div class="sheet-info"><p>Пока реактор стоит, на стройке копится мана для заклинаний. Каждый уровень — больше маны в минуту и больше запас. ' +
+      'Уровень — прокачка «Реактор» стройки; заклинания изучаются в реакторе штаба.</p></div>' +
+      campStatsHtml([['Уровень', site.form || 0], ['Мана', '+' + Math.round(campaign.manaRate || 0) + '/мин'], ['Запас', Math.floor(campaign.mana || 0) + '/' + Math.round(campaign.manaMax || 0)]]);
+  }
+
+  function lightHtml(site) {
+    const masts = (world.lights || []).filter(function (mast) { return mast.form >= 1; }).length;
+    return '<div class="sheet-info"><p>Ночью мачты светят прожекторами на здание. Каждая готовая мачта снимает ' + Math.round(MB.lightReliefPerLevel(campaign) * 100) +
+      '% ночного штрафа за свой уровень (две мачты 5-го уровня — весь штраф). Уровень — прокачка «Освещение» стройки, выше 1-го — «Уровни освещения» в центре персонала.</p></div>' +
+      campStatsHtml([['Уровень', site.form || 0], ['Мачты', masts + '/' + (world.lights || []).length], ['Ночью укладка', times(environmentEffects('').nightWork)]]);
+  }
+
+  // The canteen's menu: a row a building level (MB.CANTEEN_ROWS) — the dish of the day, a pastry to take
+  // away (Кафе), the seasonal dishes that work by themselves (Бистро), the second dish (Ресторан), the
+  // chef's signature (Гранд-ресторан). A row above the standing level shows where it opens.
+  // A dish name in quotes, unless it already holds its own (Ужин «Грузчик»).
+  function dishTitle(id) {
+    const name = MB.DISH[id] ? MB.DISH[id].name : id;
+    return name.indexOf('«') >= 0 ? name : '«' + name + '»';
+  }
+
+  const CANTEEN_MENU = [
+    { slot: 'dish', row: 'day', level: 'day', title: 'Блюдо дня', hint: 'одно блюдо всем до следующего обеда' },
+    { slot: 'snack', row: 'snack', level: 'snack', title: 'С собой', hint: 'перекус на месте, когда снова проголодается' },
+    { kitchen: true, level: 'kitchen', title: 'Кухня' },
+    { slot: 'dish2', row: 'day', level: 'dish2', title: 'Второе блюдо', hint: 'одинаковые эффекты — сильнейший' },
+    { slot: 'signature', row: 'signature', level: 'signature', title: 'Ультимативное', hint: 'блюдо шефа со своим правилом', kitchenLevel: 5 },
+    { slot: 'grand', row: 'grand', level: 'grand', title: 'Гранд-обед', hint: 'меню гранд-обеда', kitchenLevel: 5 },
+  ];
+
+  // The kitchen block of the canteen window: its level and staff, the chef, the secret dishes, the grand
+  // dinners — and the button that gives workers to it.
+  function kitchenHtml() {
+    const K = MB.KITCHEN;
+    const kitchen = MB.kitchenOf(world);
+    const level = MB.canteenBuiltLevel(world);
+    const chef = MB.chefLevel(world);
+    const next = K.chefLevels[chef];
+    const power = Math.round((MB.chefPower(world) - 1) * 100);
+    let html = '<div class="kitchen-box"><img src="icons/icon-kitchen.jpg" alt=""><div>';
+    html += '<b>Кухня ур. ' + kitchen.level + '/' + K.staff.length + (kitchen.level ? ' · на кухне ' + kitchen.staff.length : '') + '</b>';
+    html += kitchen.level ? '<small>Шеф-повар ур. ' + chef + (next ? ' · опыт ' + Math.floor(kitchen.xp) + '/' + next : '') + ' · блюда +' + power + '%</small>'
+      : '<small>Шеф растёт с каждым обедом и усиливает блюда. Рабочие кухни не строят до сдачи</small>';
+    html += '</div>';
+    if (kitchen.level < K.staff.length) {
+      const need = MB.kitchenStaffNeeded(world);
+      const ok = MB.kitchenOpenable(world);
+      html += '<button type="button" class="kitchen-buy' + (ok ? '' : ' short') + '" data-kitchen-buy' + (ok ? '' : ' aria-disabled="true"') + '>' +
+        (kitchen.level ? 'Расширить' : 'Открыть') + '<small>' + (!ok && need > 0 ? 'мало рабочих' : need > 0 ? need + ' ' + UI.plural(need, 'рабочий', 'рабочих', 'рабочих') : 'без рабочих') + '</small></button>';
+    }
+    html += '</div>';
+    if (kitchen.level && campaign.foremen && campaign.foremen.feast && kitchen.level === 1) html += '<p class="canteen-note">«Повар артели» встал на кухню вместо рабочих</p>';
+    if (level >= (MB.CANTEEN_ROWS.secrets || 4) && kitchen.level) {
+      const secrets = MB.CANTEEN.dishes.filter(function (dish) { return dish.secret; });
+      const left = secrets.filter(function (dish) { return (campaign.canteenDishes || []).indexOf(dish.id) < 0; });
+      const found = secrets.length - left.length;
+      // The chance this meal finds any of the dishes still unknown.
+      const factor = (campaign.discoveryMultiplier || 1) * (K.discovery[kitchen.level - 1] || 1);
+      const chance = 1 - left.reduce(function (miss, dish) { return miss * (1 - Math.min(1, (dish.chance || 0) * factor)); }, 1);
+      html += '<div class="kitchen-line"><img src="icons/icon-secret-book.jpg" alt=""><span>Секретные блюда: <b>' + found + ' из ' + secrets.length + '</b> · шанс за обед ' +
+        (chance * 100).toFixed(2).replace('.', ',') + '% · множитель ×' + (campaign.discoveryMultiplier || 1).toFixed(4).replace('.', ',') + '</span></div>';
+    }
+    if (MB.grandReady(world)) {
+      const left = (K.grandCubes || 200) - (world.grandCubes || 0);
+      const stacks = Object.keys(world.grandStacks || {}).map(function (effect) {
+        return (GRAND_EFFECTS[effect] || effect) + ' +' + Math.round(world.grandStacks[effect] * 100);
+      }).join(', ');
+      html += '<div class="kitchen-line"><img src="icons/icon-grand-dinner.jpg" alt=""><span>Гранд-обед через <b>' + left + '</b> ' + UI.plural(left, 'куб', 'куба', 'кубов') +
+        (world.grandDinners ? ' · было ' + world.grandDinners + (stacks ? ' · ' + stacks : '') : '') + '</span></div>';
+    }
+    return html;
+  }
+
+  function canteenMenuHtml(canteen) {
+    const owned = campaign.canteenDishes || [];
+    const level = MB.canteenBuiltLevel(world);
+    const power = MB.campBoost(campaign, 'chef');
+    let html = '<div class="sheet-info"><p>Проголодавшись, рабочий идёт в столовую: есть место — обедает и получает блюда меню до следующего обеда; нет — работает голодным, на пределе уходит обедать в город.</p>' +
+      (canteen.turnedAway > 0 ? '<p>Без места за стройку: ' + canteen.turnedAway + '.</p>' : '') + '</div>' +
+      campStatsHtml([['Уровень', level], ['Мест', MB.canteenSeats(world)], ['Обед', Math.round(campaign.canteenMealSeconds) + ' с'],
+        ['С блюдом', '<span data-camp-field="fed">' + canteenFedText() + '</span>']]);
+    const kitchenLevel = MB.kitchenOf(world).level;
+    CANTEEN_MENU.forEach(function (menu) {
+      const opens = MB.CANTEEN_ROWS[menu.level] || 1;
+      const formOpen = Math.max(1, level) >= opens;
+      const open = formOpen && (!menu.kitchenLevel || kitchenLevel >= menu.kitchenLevel);
+      const form = MB.campForm('canteen', opens);
+      const lock = !formOpen ? 'с ' + opens + '-го уровня' + (form ? ' «' + UI.escapeHtml(form.name) + '»' : '') : 'нужна кухня ' + menu.kitchenLevel + '-го уровня';
+      html += '<h4 class="canteen-row' + (open ? '' : ' locked') + '">' + menu.title + ' <small>' + (open ? menu.hint || '' : lock) + '</small></h4>';
+      if (menu.kitchen) {
+        if (formOpen) html += kitchenHtml();
+        return;
+      }
+      if (!open) return;
+      const dishes = MB.CANTEEN.dishes.filter(function (dish) { return dish.row === menu.row && owned.indexOf(dish.id) >= 0; });
+      let tiles = '';
+      if (menu.slot === 'snack') {
+        tiles += '<li><button type="button" class="canteen-dish' + (!canteen.snack ? ' on' : '') + '" data-slot="snack" data-dish=""><b>Без выпечки</b><span>Каждый голод — в столовую</span><small>' +
+          (!canteen.snack ? 'Сейчас' : 'Выбрать') + '</small></button></li>';
+      }
+      dishes.forEach(function (dish) {
+        const ready = Math.max(1, level) >= (dish.level || 1);
+        const on = canteen[menu.slot] === dish.id;
+        const state = !ready ? 'с ' + dish.level + '-го ур.' : on ? 'Готовят' : dish.secret ? 'Секрет шефа' : 'Выбрать';
+        tiles += '<li><button type="button" class="canteen-dish has-icon' + (on ? ' on' : '') + (ready ? '' : ' locked') + '"' +
+          (!ready ? ' disabled' : ' data-slot="' + menu.slot + '" data-dish="' + dish.id + '"') + '>' +
+          '<img class="dish-icon" src="icons/icon-dish-' + dish.id + '.jpg" alt="">' +
+          '<b>' + UI.escapeHtml(dish.name) + '</b><span>' + UI.escapeHtml(MB.dishText(dish.id, power)) + '</span><small>' + state + '</small></button></li>';
+      });
+      html += tiles ? '<ul class="canteen-dishes">' + tiles + '</ul>' : '<p class="canteen-note">Блюда этой строки изучаются в центре персонала</p>';
+    });
+    const missing = MB.CANTEEN.dishes.filter(function (dish) { return !dish.secret && owned.indexOf(dish.id) < 0; }).length;
+    if (missing > 0) html += '<p class="canteen-note camp-more">Ещё ' + missing + ' ' + UI.plural(missing, 'блюдо', 'блюда', 'блюд') + ' — в центре персонала</p>';
+    return html;
+  }
+
+  // The sales office: income now, the next payout and its two upgrades for site coins.
+  function salesHtml(sales) {
+    const rate = MB.salesRate(world);
+    const left = Math.max(0, MB.SALES.payoutSeconds - sales.clock);
+    const mult = MB.salesMultiplier(world);
+    const rows = ['managers', 'showroom'].map(function (kind) {
+      const spec = MB.SALES.upgrades[kind];
+      const offer = MB.salesOffer(world, kind);
+      const level = sales.upgrades[kind];
+      let effect;
+      if (kind === 'managers') {
+        effect = offer ? '+' + formatRate(offer.gain) + '/с · окупится за ' + MB.formatClock(offer.payback) : '';
+      } else {
+        const perCube = (spec.perCube * mult).toFixed(3).replace(/0+$/, '').replace('.', ',');
+        effect = offer ? '+' + perCube + '/с за куб здания' : '';
+      }
+      const tail = offer
+        ? buyButtonHtml({ attrs: 'data-buy-sales="' + kind + '"', icon: 'icons/icon-coins.jpg?v=2', price: UI.escapeHtml(formatCompact(offer.cost)),
+          have: campaign.freePurchases ? Infinity : campaign.coins, cost: offer.cost })
+        : '<small>Максимум</small>';
+      return '<li class="canteen-dish" data-sales="' + kind + '"><b>' + UI.escapeHtml(spec.name) + ' <em>' + level + '/' + spec.max + '</em></b>' + (effect ? '<span>' + UI.escapeHtml(effect) + '</span>' : '') + tail + '</li>';
+    }).join('');
+    return '<div class="sheet-info"><p>Офис приносит монеты стройки сам, раз в ' + MB.SALES.payoutSeconds + ' секунд: ' + MB.SALES.levelRate +
+      ' в секунду за уровень офиса, «Менеджеры» и «Шоу-рум» — доход за каждый построенный куб основного здания, поэтому большое здание к концу приносит больше.</p>' +
+      '<p>Уровень офиса — прокачка «Офис продаж» стройки: каждый уровень — ещё +' + MB.SALES.levelRate + ' в секунду и +' + Math.round(MB.SALES.levelBonus * 100) +
+      '% ко всему доходу офиса. Уровни выше разрешает прокачка «Уровни офиса продаж» в центре персонала.</p></div>' +
+      '<p class="sheet-info">Всего принёс: ' + UI.escapeHtml(formatShort(sales.earned)) + '</p>' +
+      campStatsHtml([['Уровень', MB.salesBuiltLevel(world) + (mult > 1 ? ' <i>×' + mult.toFixed(1).replace('.', ',') + '</i>' : '')],
+        ['Доход', '<img class="currency-icon" src="icons/icon-coins.jpg?v=2" alt="">+' + UI.escapeHtml(formatRate(rate)) + '/с'], ['Выплата', 'через ' + Math.ceil(left) + ' с']]) +
+      '<ul class="canteen-dishes">' + rows + '</ul>';
+  }
+
+  function onCampInput(event) {
+    const slider = event.target.closest('[data-camp-field="crew"]');
+    if (!slider || !campSheet) return;
+    const site = MB.campSite(world, campSheet.id);
+    MB.setCampCrew(world, campSheet.id, Number(slider.value));
+    campSheet.body.querySelector('[data-camp-field="value"]').textContent = site.assigned;
+    campSheet.body.querySelector('[data-camp-field="note"]').textContent = campCrewNote(site);
+    paintCampSigns();
+  }
+
+  function onCampClick(event) {
+    if (!campSheet) return;
+    const kitchenBuy = event.target.closest('[data-kitchen-buy]');
+    if (kitchenBuy) {
+      if (!MB.buyKitchen(world)) {
+        shake(kitchenBuy);
+        UI.toast({ text: 'Не хватает свободных рабочих без ранга бригадира: нужно ' + MB.kitchenStaffNeeded(world), icon: 'icons/icon-kitchen.jpg', tone: 'warn', key: 'kitchen-short', duration: 2200 });
+        return;
+      }
+      consumeEvents();
+      refreshCampSheet(true);
+      saveLive({ awaySince: null });
+      return;
+    }
+    const dish = event.target.closest('[data-dish]');
+    if (dish && world.canteen && MB.setCanteenSlot(world, dish.dataset.slot || 'dish', dish.dataset.dish)) {
+      refreshCampSheet(true);
+      paintCampSigns();
+      saveLive({ awaySince: null });
+      return;
+    }
+    const start = event.target.closest('[data-camp-start]');
+    if (start) {
+      startCampBuilding(start);
+      return;
+    }
+    const campBuy = event.target.closest('[data-camp-buy]');
+    if (campBuy) {
+      buyCampUpgrade(campBuy);
+      return;
+    }
+    const buy = event.target.closest('[data-buy-sales]');
+    if (!buy) return;
+    const kind = buy.dataset.buySales;
+    const offer = MB.salesOffer(world, kind);
+    if (!offer) return;
+    const free = campaign.freePurchases;
+    if (!MB.buySalesUpgrade(world, kind)) {
+      if (!free && campaign.coins < offer.cost) {
+        shake(buy);
+        coinsShort(offer.cost);
+      }
+      return;
+    }
+    refreshCampSheet(true);
+    paintCampSigns();
+    paintHud();
+    saveLive({ awaySince: null });
+    buyFlash('[data-sales="' + kind + '"]', free ? 0 : offer.cost);
+  }
+
+  // «Начать стройку» on a foundation: a token and the coins of level 1; the blue blueprint goes up.
+  function startCampBuilding(button) {
+    const kind = button.dataset.campStart;
+    const cost = MB.upgradeCost(kind, 0, campaign);
+    if (!MB.startCamp(campaign, world, kind)) {
+      shake(button);
+      UI.toast({ text: button.dataset.short || 'Сейчас не начать', icon: 'icons/icon-gate-token.jpg', tone: 'warn', key: 'camp-start-short', duration: 2200 });
+      return;
+    }
+    tone(620, 0.12);
+    consumeEvents();
+    refreshSimEstimate();
+    hudDirty = true;
+    paintHud();
+    refreshCampSheet(true);
+    paintCampSigns();
+    saveLive({ awaySince: null });
+    if (!campaign.freePurchases && cost > 0) floatCoins('−' + formatShort(cost), 'spend');
+    UI.toast({ text: 'Стройка начата: назначьте рабочих на синий чертёж', icon: 'icons/icon-gate-token.jpg', tone: 'good', key: 'camp-start' });
+  }
+
+  // A level or an upgrade of a camp building bought in its window.
+  function buyCampUpgrade(button) {
+    const kind = button.dataset.campBuy;
+    if (!world || campaign.status !== 'play') return;
+    const cost = MB.upgradeCost(kind, campaign.purchases[kind], campaign);
+    if (!MB.buyUpgrade(campaign, world, kind)) {
+      if (button.getAttribute('aria-disabled') === 'true') buyShort(button, 'icons/icon-coins.jpg?v=2');
+      return;
+    }
+    tone(680, 0.09);
+    consumeEvents();
+    refreshSimEstimate();
+    hudDirty = true;
+    paintHud();
+    refreshCampSheet(true);
+    paintCampSigns();
+    saveLive({ awaySince: null });
+    buyFlash('[data-camp-row="' + kind + '"]', campaign.freePurchases ? 0 : cost);
+  }
+
+  // Menu «Перемотать на уровень»: the story up to this level done, the HQ buildings that open by then
+  // built (Meta.devFastForward), then straight into the level with the prefilled crew.
+  function fastForwardTo(index) {
+    if (contractLocked()) return;
+    Meta.devFastForward(meta, index);
+    // An HQ site whose building the jump has just finished is gone: nothing to save on leaving it.
+    if (liveKey && !Meta.site(meta, liveKey)) liveKey = null;
+    requestRun({ mode: 'campaign', levelIndex: index, reason: 'jump' });
+    syncCity();
+    UI.toast({ text: 'Уровень ' + (index + 1) + ': прошлые уровни пройдены, здания штаба до него построены', icon: 'hq', key: 'jump-done' });
   }
 
   // ---------- camera (docs/tech/camera.md, «Подключение в game.js») ----------
@@ -1725,6 +4322,13 @@
     const bounds = MicroBuildersCamera.siteBounds(level, cx, cz);
     bounds.key = siteCameraKey();
     bounds.builtTop = siteBuiltTop;
+    // The camp stands round the site, partly further out than the mines: zoomed out, the pan reaches
+    // every camp building (the reactor stands furthest).
+    let campReach = 0;
+    (world.camp || []).forEach(function (site) {
+      if (site.box) campReach = Math.max(campReach, Math.hypot((site.box.x0 + site.box.x1) / 2 - bounds.center.x, (site.box.z0 + site.box.z1) / 2 - bounds.center.z));
+    });
+    if (campReach > 0) bounds.panRadius = Math.max(Math.hypot(bounds.maxX - bounds.minX, bounds.maxZ - bounds.minZ) / 2, bounds.reach, campReach) + 2;
     cameraController.setBounds(bounds);
     cameraController.setActivity({ builtTop: siteBuiltTop });
     if (cityRoot.visible) cameraController.setMode('city');
@@ -1764,15 +4368,18 @@
     const cx = info.center.x;
     const cz = info.center.z;
     sun.target.position.set(cx, 0, cz);
-    sun.position.set(cx + reach * 0.7, reach * 1.15, cz + reach * 0.35);
+    // The sun's direction follows the clock (updateSky); its distance keeps the old rig's.
+    lightRig.reach = reach * 1.39;
     sun.shadow.camera.left = -reach;
     sun.shadow.camera.right = reach;
     sun.shadow.camera.top = reach;
     sun.shadow.camera.bottom = -reach;
     sun.shadow.camera.far = Math.max(160, reach * 2.8);
     sun.shadow.camera.updateProjectionMatrix();
-    scene.fog.near = cameraController.maxDistance + reach * 0.5;
-    scene.fog.far = scene.fog.near + reach * 3;
+    // The fog in clear weather; updateSky thickens it in snow and rain.
+    lightRig.fogNear = cameraController.maxDistance + reach * 0.5;
+    lightRig.fogFar = lightRig.fogNear + reach * 3;
+    updateSky(0, skyView.time);
     // The grass disc reaches past the farthest zoom, and its texture keeps the same grain.
     const ground = Math.min(175, Math.max(90, cameraController.maxDistance + reach + 30)) / 90;
     grass.scale.set(ground, ground, 1);
@@ -1811,6 +4418,13 @@
       const rect = bar(selector, false);
       if (rect) area.top = Math.max(area.top, (rect.bottom - viewRect.top) / scale);
     });
+    // A camp building's sheet rises from the bottom over the site: the scene centres above it, as
+    // above the upgrade sheet (its height, so its rise animation does not shift the band).
+    const sheet = !city && document.querySelector('#overlay-root .overlay.canteen-sheet .overlay-card');
+    if (sheet) {
+      const rect = sheet.getBoundingClientRect();
+      if (rect.height >= 1) area.bottom = Math.max(area.bottom, rect.height / scale);
+    }
     (city ? ['#city-card', '#app-nav'] : ['#hud .bottom', '#app-nav']).forEach(function (selector) {
       const rect = bar(selector, false);
       if (!rect) return;
@@ -1877,7 +4491,7 @@
     const city = currentScreen === 'hq' && cityRoot.visible;
     const cityFree = city && !cityBuilding && !cityReveal;
     const show = !!campaign && campaign.status !== 'title' && (currentScreen === 'build' || cityFree) &&
-      !cameraController.isWorkerView() && cameraController.isAwayFromHome();
+      !cameraController.isWorkerView() && !cameraController.isTracking() && cameraController.isAwayFromHome();
     if (button.hidden === !show) return;
     button.hidden = !show;
     const label = city ? 'Весь квартал' : 'Вернуть камеру';
@@ -1926,29 +4540,48 @@
     if (kind === 'home' && currentScreen === 'hq' && cityRoot.visible && cityBuilding && !cityReveal) clearCitySelection();
   }
 
+  // A quarry: a neat triangular pyramid of stones, 4 to a side (10 + 6 + 3 + 1), one flat side to the
+  // building, each stone turned its own way; over it — its sign (makeMineLabel).
   function addMine(mine, cx, cz) {
     const material = MB.MATERIAL[mine.materialId];
     const group = new THREE.Group();
-    for (let i = 0; i < mine.rocks.length; i++) {
-      const rock = mine.rocks[i];
-      const mesh = new THREE.Mesh(
-        new THREE.DodecahedronGeometry(0.46 + (i % 3) * 0.06, 0),
-        blockSurface(mine.materialId, false)
-      );
-      mesh.position.set(rock.x + 0.5, rock.y + 0.32, rock.z + 0.5);
-      mesh.scale.y = 0.82;
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      group.add(mesh);
+    const radius = 0.34;
+    const step = radius * 1.62; // centre to centre: neighbours touch face to face
+    const rise = step * Math.sqrt(2 / 3);
+    const lift = radius * 0.8; // the stone's inner radius: the bottom row sits on the ground
+    const pile = new THREE.Group();
+    pile.position.set(mine.x + 0.5, 0, mine.z + 0.5);
+    pile.rotation.y = Math.atan2(pile.position.x - cx, pile.position.z - cz);
+    const stones = new THREE.InstancedMesh(new THREE.DodecahedronGeometry(radius, 0), blockSurface(mine.materialId, false), 20);
+    stones.castShadow = true;
+    stones.receiveShadow = true;
+    // The same turns every time the site is built (a hash of the quarry's cell and the stone).
+    const turn = function (k) {
+      const v = Math.sin(k * 12.9898 + mine.x * 78.233 + mine.z * 37.719) * 43758.5453;
+      return (v - Math.floor(v)) * Math.PI * 2;
+    };
+    let k = 0;
+    for (let layer = 0; layer < 4; layer++) {
+      const n = 4 - layer;
+      for (let j = 0; j < n; j++) {
+        for (let i = 0; i + j < n; i++) {
+          dummy.position.set((i + j / 2 - (n - 1) / 2) * step, lift + layer * rise, (j - (n - 1) / 3) * step * Math.sqrt(3) / 2);
+          dummy.rotation.set(turn(k * 3), turn(k * 3 + 1), turn(k * 3 + 2));
+          dummy.scale.setScalar(1);
+          dummy.updateMatrix();
+          stones.setMatrixAt(k++, dummy.matrix);
+        }
+      }
     }
-    const label = makeLabel(material.name);
-    label.position.set(mine.x + 0.5, 2.7, mine.z + 0.5);
-    group.add(label);
+    pile.add(stones);
+    group.add(pile);
+    makeMineLabel(mine.materialId, new THREE.Vector3(mine.x + 0.5, lift + 3 * rise + radius + 0.25, mine.z + 0.5));
     // A patch of gravel in the stone's colour under the pile, soft at the edge.
     const patch = new THREE.Mesh(
       new THREE.CircleGeometry(2.4, 32),
       new THREE.MeshStandardMaterial({ map: groundPatchTexture('gravel'), color: new THREE.Color(material.color).lerp(new THREE.Color(0xb8ac98), 0.55), transparent: true, depthWrite: false, roughness: 1 })
     );
+    callWaveSurface(patch.material);
     patch.rotation.x = -Math.PI / 2;
     patch.position.set(mine.x + 0.5, 0.03, mine.z + 0.5);
     patch.receiveShadow = true;
@@ -1998,6 +4631,53 @@
     return texture;
   }
 
+  // Heat dust lying low over the site: three flat layers just above the ground (the lowest the
+  // thickest) of drifting noise, so the dust creeps along the ground with the wind and thins out at
+  // the site's edge. Shown only in the heat (updateSky).
+  function addGroundDust(cx, cz, padRadius) {
+    groundDust.layers = [];
+    groundDust.center.value.set(cx, 0, cz);
+    groundDust.radius.value = padRadius * 1.25;
+    const heights = [0.12, 0.45, 0.95];
+    for (let i = 0; i < heights.length; i++) {
+      const material = new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        uniforms: {
+          uTime: PRECIP.time, uLight: PRECIP.light, uAmount: groundDust.amount, uCenter: groundDust.center,
+          uRadius: groundDust.radius, uLayer: { value: i },
+        },
+        vertexShader: 'varying vec3 vWorld; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }',
+        fragmentShader: [
+          'uniform float uTime; uniform float uLight; uniform float uAmount; uniform vec3 uCenter; uniform float uRadius; uniform float uLayer;',
+          'varying vec3 vWorld;',
+          'float dh(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+          'float dn(vec2 p){ vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);',
+          '  return mix(mix(dh(i), dh(i + vec2(1.0, 0.0)), f.x), mix(dh(i + vec2(0.0, 1.0)), dh(i + vec2(1.0, 1.0)), f.x), f.y); }',
+          'float dfbm(vec2 p){ return dn(p) * 0.55 + dn(p * 2.1 + 7.0) * 0.3 + dn(p * 4.3 + 3.0) * 0.15; }',
+          'void main(){',
+          '  vec2 p = vWorld.xz * 0.11 + uLayer * 5.3;',
+          '  vec2 drift = vec2(uTime * 0.32, uTime * 0.11) * (0.7 + uLayer * 0.45);',
+          '  float n = dfbm(p - drift) * 0.7 + dfbm(p * 2.2 + drift * 1.5 + 11.0) * 0.4;',
+          '  float dust = smoothstep(0.36, 0.82, n);',
+          '  float edge = 1.0 - smoothstep(0.6, 1.0, length(vWorld.xz - uCenter.xz) / uRadius);',
+          '  float a = dust * edge * uAmount * (0.62 - uLayer * 0.16);',
+          '  if (a <= 0.004) discard;',
+          '  gl_FragColor = vec4(vec3(0.97, 0.89, 0.74) * uLight, a);',
+          '}',
+        ].join('\n'),
+      });
+      const layer = new THREE.Mesh(new THREE.PlaneGeometry(padRadius * 2.6, padRadius * 2.6), material);
+      layer.rotation.x = -Math.PI / 2;
+      layer.position.set(cx, heights[i], cz);
+      layer.renderOrder = 3;
+      layer.visible = false;
+      levelRoot.add(layer);
+      groundDust.layers.push(layer);
+    }
+  }
+
   // The far plan: a loose ring of low-poly trees and gentle green hills outside the site, so the
   // grass ends at a horizon instead of an empty fog. Seeded by the level, so it never jumps.
   function addScenery(level, cx, cz, padRadius) {
@@ -2008,6 +4688,7 @@
     let seed = (level.index || 0) * 9301 + 49297;
     const rand = function () { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
     const crowns = new THREE.InstancedMesh(new THREE.ConeGeometry(1, 1, 7), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, flatShading: true }), 90);
+    weatherSurface(crowns.material, 0.55, 0.2, 0.3);
     const trunks = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.18, 0.24, 1, 6), new THREE.MeshStandardMaterial({ color: 0x6b4a2f, roughness: 1 }), 90);
     const green = [0x4f7a3a, 0x5e8a42, 0x45703a, 0x6a9449];
     const color = new THREE.Color();
@@ -2039,6 +4720,7 @@
     trunks.castShadow = true;
     levelRoot.add(crowns, trunks);
     const hills = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 1), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, flatShading: true }), 14);
+    weatherSurface(hills.material, 0.85, -0.08, 0.8);
     const hillGreen = [0x6f9a52, 0x7aa35a, 0x668f4b];
     for (let i = 0; i < 14; i++) {
       const a = i / 14 * Math.PI * 2 + rand() * 0.3;
@@ -2067,7 +4749,7 @@
       if (stickViews.has(builder)) continue;
       if (builder.trade === 'engineer') addDronePad(builder.homeCell);
       const look = rankLook(builder.expertiseRank);
-      const group = builder.trade === 'engineer' ? createDrone() : createStick(builder.shirt, look ? look.vest : null, look ? look.size : 1);
+      const group = builder.trade === 'engineer' ? createDrone() : createStick(builder, look ? look.size : 1);
       group.userData.builder = builder;
       levelRoot.add(group);
       stickViews.set(builder, {
@@ -2312,7 +4994,10 @@
     }
   }
 
-  function syncElevators() {
+  // Air taxis (logic.js → activateTaxis, stepTaxis): a helipad with an «H» by the mines and, on it,
+  // small yellow open-top flying cabs with a chequered stripe and four rotors. A cab flies up, across
+  // and down; it leans into the flight, its rotors spin up before take-off, dust puffs off the ground.
+  function syncTaxis() {
     if (!world) return;
     sceneRoots();
     while (elevatorRoot.children.length > 0) {
@@ -2322,42 +5007,199 @@
       });
       elevatorRoot.remove(child);
     }
-    const pads = world.elevatorPads || [];
-    const floors = MB.upgradeValue(world.campaign, 'elevatorHeight', world.campaign.purchases.elevatorHeight);
-    const wall = new THREE.MeshStandardMaterial({ color: 0x6e787f, roughness: 0.72, metalness: 0.22 });
-    const exitDoor = new THREE.MeshStandardMaterial({ color: 0xd7c4a2, roughness: 0.55, metalness: 0.08 });
-    const enterDoor = new THREE.MeshStandardMaterial({ color: 0x2e3438, roughness: 0.6, metalness: 0.18 });
-    for (let i = 0; i < pads.length; i++) {
-      const pad = pads[i];
-      const group = new THREE.Group();
-      const height = floors + 1;
-      const shaft = new THREE.Mesh(new THREE.BoxGeometry(3, height, 3), wall);
-      shaft.position.set(pad.x + 1.5, height / 2, pad.z + 1.5);
-      shaft.castShadow = true;
-      shaft.receiveShadow = true;
-      group.add(shaft);
-      for (let floor = 0; floor < floors; floor++) {
-        group.add(elevatorOpening(pad, pad.exitX, pad.exitZ, floor, exitDoor));
-        group.add(elevatorOpening(pad, pad.enterX, pad.enterZ, floor, enterDoor));
-      }
-      elevatorRoot.add(group);
-    }
+    taxiView = null;
+    const pad = world.taxiPad;
+    if (!pad || !world.taxis || world.taxis.length === 0) return;
+    const kit = taxiParts();
+    const group = new THREE.Group();
+    const slab = new THREE.Mesh(new THREE.BoxGeometry(3, 0.1, 3), [kit.concrete, kit.concrete, kit.helipad, kit.concrete, kit.concrete, kit.concrete]);
+    slab.position.set(pad.x + 1.5, 0.05, pad.z + 1.5);
+    slab.receiveShadow = true;
+    group.add(slab);
+    [[0, 0], [3, 0], [0, 3], [3, 3]].forEach(function (c) {
+      const light = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.12, 0.14), kit.padLight);
+      light.position.set(pad.x + c[0] + (c[0] ? -0.12 : 0.12), 0.14, pad.z + c[1] + (c[1] ? -0.12 : 0.12));
+      group.add(light);
+    });
+    taxiView = { group: group, cabs: [], time: 0 };
+    world.taxis.forEach(function (taxi) {
+      const cab = taxiModel(kit);
+      cab.position.set(taxi.pos[0], taxi.pos[1] + 0.1, taxi.pos[2]);
+      cab.rotation.y = taxi.heading;
+      group.add(cab);
+      taxiView.cabs.push({ group: cab, yaw: taxi.heading, lean: 0, spin: 0, state: taxi.state, y: taxi.pos[1] });
+    });
+    elevatorRoot.add(group);
   }
 
-  function elevatorOpening(pad, cellX, cellZ, floor, material) {
-    const dx = cellX + 0.5 - (pad.x + 1.5);
-    const dz = cellZ + 0.5 - (pad.z + 1.5);
-    const alongX = Math.abs(dx) >= Math.abs(dz);
-    const mesh = new THREE.Mesh(
-      new THREE.BoxGeometry(alongX ? 0.08 : 0.7, 0.7, alongX ? 0.7 : 0.08),
-      material
-    );
-    mesh.position.set(
-      alongX ? pad.x + (dx > 0 ? 3 : 0) : cellX + 0.5,
-      floor + 0.55,
-      alongX ? cellZ + 0.5 : pad.z + (dz > 0 ? 3 : 0)
-    );
-    return mesh;
+  // A cab: an open yellow tub (a worker rides standing in it, his load on his back), a windscreen,
+  // a chequered stripe, skids, four arms with spinning rotors and blinking side lights.
+  function taxiModel(kit) {
+    const cab = new THREE.Group();
+    const body = new THREE.Group();
+    const floor = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.08, 0.74), kit.dark);
+    floor.position.y = 0.16;
+    body.add(floor);
+    [[0, 0.34], [0, -0.34]].forEach(function (p) {
+      const side = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.34, 0.07), [kit.yellow, kit.yellow, kit.yellow, kit.yellow, kit.chequer, kit.chequer]);
+      side.position.set(p[0], 0.33, p[1]);
+      side.castShadow = true;
+      body.add(side);
+    });
+    const back = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.42, 0.74), kit.yellow);
+    back.position.set(-0.42, 0.37, 0);
+    back.castShadow = true;
+    const nose = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.3, 0.74), kit.yellow);
+    nose.position.set(0.44, 0.31, 0);
+    const glass = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.3, 0.66), kit.glass);
+    glass.position.set(0.44, 0.6, 0);
+    glass.rotation.z = -0.35;
+    const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.08, 0.3), kit.lamp);
+    lamp.position.set(0.53, 0.33, 0);
+    body.add(back, nose, glass, lamp);
+    [-0.24, 0.24].forEach(function (z) {
+      const skid = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.04, 0.05), kit.dark);
+      skid.position.set(0, 0.02, z);
+      const strut = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.12, 0.04), kit.dark);
+      strut.position.set(0, 0.08, z);
+      body.add(skid, strut);
+    });
+    const rotors = [];
+    [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(function (c, i) {
+      const arm = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.04, 0.05), kit.dark);
+      arm.position.set(c[0] * 0.5, 0.52, c[1] * 0.42);
+      arm.rotation.y = Math.atan2(-c[1], c[0]) + (c[0] * c[1] > 0 ? 0 : 0);
+      const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.08, 8), kit.dark);
+      hub.position.set(c[0] * 0.66, 0.56, c[1] * 0.54);
+      const rotor = new THREE.Group();
+      rotor.position.copy(hub.position).setY(0.61);
+      const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.27, 0.01, 20), kit.blur);
+      const blade = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.015, 0.06), kit.dark);
+      rotor.add(disc, blade);
+      const nav = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.05), c[1] > 0 ? kit.navGreen : kit.navRed);
+      nav.position.set(c[0] * 0.72, 0.52, c[1] * 0.6);
+      body.add(arm, hub, rotor, nav);
+      rotors.push(rotor);
+    });
+    cab.add(body);
+    cab.scale.setScalar(0.86);
+    cab.userData.body = body;
+    cab.userData.rotors = rotors;
+    return cab;
+  }
+
+  function taxiParts() {
+    if (taxiKit) return taxiKit;
+    const h = document.createElement('canvas');
+    h.width = 128;
+    h.height = 128;
+    let ctx = h.getContext('2d');
+    ctx.fillStyle = '#5b6066';
+    ctx.fillRect(0, 0, 128, 128);
+    ctx.strokeStyle = '#f2b91f';
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.arc(64, 64, 52, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.fillStyle = '#f4f1ea';
+    ctx.fillRect(40, 32, 14, 64);
+    ctx.fillRect(74, 32, 14, 64);
+    ctx.fillRect(40, 57, 48, 14);
+    const helipad = new THREE.CanvasTexture(h);
+    helipad.colorSpace = THREE.SRGBColorSpace;
+    helipad.anisotropy = 4;
+    const c = document.createElement('canvas');
+    c.width = 64;
+    c.height = 16;
+    ctx = c.getContext('2d');
+    ctx.fillStyle = '#f2b91f';
+    ctx.fillRect(0, 0, 64, 16);
+    ctx.fillStyle = '#1f1f1f';
+    for (let x = 0; x < 64; x += 8) {
+      ctx.fillRect(x, (x / 8) % 2 === 0 ? 4 : 8, 4, 4);
+      ctx.fillRect(x + 4, (x / 8) % 2 === 0 ? 8 : 4, 4, 4);
+    }
+    const chequer = new THREE.CanvasTexture(c);
+    chequer.colorSpace = THREE.SRGBColorSpace;
+    chequer.magFilter = THREE.NearestFilter;
+    taxiKit = {
+      yellow: machineMat.yellow,
+      dark: machineMat.dark,
+      glass: machineMat.glass,
+      lamp: machineMat.light,
+      chequer: new THREE.MeshStandardMaterial({ map: chequer, roughness: 0.45, metalness: 0.2 }),
+      helipad: new THREE.MeshStandardMaterial({ map: helipad, roughness: 0.85 }),
+      concrete: new THREE.MeshStandardMaterial({ color: 0x8f8b84, roughness: 0.92 }),
+      padLight: new THREE.MeshStandardMaterial({ color: 0x9ff0ff, emissive: 0x5fd8ff, emissiveIntensity: 0.8 }),
+      blur: new THREE.MeshBasicMaterial({ color: 0xdfe6ea, transparent: true, opacity: 0.22, depthWrite: false }),
+      navRed: new THREE.MeshStandardMaterial({ color: 0xff4a3a, emissive: 0xff2a1a, emissiveIntensity: 1 }),
+      navGreen: new THREE.MeshStandardMaterial({ color: 0x5dff7a, emissive: 0x2aff4a, emissiveIntensity: 1 }),
+    };
+    return taxiKit;
+  }
+
+  // Every frame: each cab follows its logic position, turns towards where it flies, leans into the
+  // flight, bobs while hovering; rotors idle on the pad, spin up to board and fly; dust off the ground.
+  function updateTaxis(dt) {
+    if (!taxiView || !world || !world.taxis) return;
+    const kit = taxiParts();
+    taxiView.time += dt;
+    const blink = Math.sin(taxiView.time * 5) > 0.3;
+    kit.navRed.emissiveIntensity = blink ? 1.4 : 0.2;
+    kit.navGreen.emissiveIntensity = blink ? 0.2 : 1.4;
+    kit.padLight.emissiveIntensity = 0.5 + 0.4 * Math.sin(taxiView.time * 2.4);
+    world.taxis.forEach(function (taxi, i) {
+      const view = taxiView.cabs[i];
+      if (!view) return;
+      const cab = view.group;
+      const flying = taxi.state === 'carry' || taxi.state === 'return';
+      const airborne = taxi.pos[1] > 0.05 || (flying && taxi.leg > 0);
+      const hover = airborne && timeScale !== 20 ? Math.sin(taxiView.time * 3.3 + i) * 0.05 : 0;
+      cab.position.set(taxi.pos[0], taxi.pos[1] + 0.1 + hover, taxi.pos[2]);
+      // Heading: the cab's nose is its +x; turns smoothly.
+      let turn = (taxi.heading - Math.PI / 2) - view.yaw;
+      turn = Math.atan2(Math.sin(turn), Math.cos(turn));
+      view.yaw += turn * Math.min(1, dt * 6);
+      cab.rotation.y = view.yaw;
+      // Leaning into the flight across, levelling off for the climb and the descent.
+      const across = flying && taxi.leg === 1 ? 1 : 0;
+      view.lean += (across * 0.22 - view.lean) * Math.min(1, dt * 4);
+      cab.userData.body.rotation.z = -view.lean;
+      // Booked: idling slowly while its passenger walks up.
+      const target = taxi.state === 'parked' ? 0 : taxi.state === 'booked' ? 6 : taxi.state === 'boarding' || taxi.state === 'alighting' ? 18 : 40;
+      view.spin += (target - view.spin) * Math.min(1, dt * 2);
+      const rotors = cab.userData.rotors;
+      for (let r = 0; r < rotors.length; r++) rotors[r].rotation.y += (r % 2 ? -1 : 1) * view.spin * dt;
+      // Dust as it lifts off or sets down on the ground.
+      if (dt > 0 && taxi.pos[1] < 1.2 && flying && (taxi.leg === 0 || taxi.leg === 2) && Math.random() < dt * 14) {
+        burst(taxi.pos[0], 0.1, taxi.pos[2], 0xcbb894, 2);
+      }
+      view.state = taxi.state;
+    });
+  }
+
+  // A worker with a taxi (logic: phase 'taxi'): a hop into the tub from the pad, the flight standing
+  // in it, a hop out at the drop. → world position and yaw, or null.
+  function taxiRide(builder) {
+    const taxi = builder.taxi;
+    if (!taxi || !taxiView) return null;
+    const view = taxiView.cabs[taxi.index];
+    if (!view) return null;
+    const cab = view.group;
+    cab.updateMatrixWorld();
+    taxiSeat.set(-0.06, 0.18, 0);
+    cab.localToWorld(taxiSeat);
+    const u = Math.min(1, taxi.t / MB.TAXI.board);
+    // A hop faces where he jumps; in the tub he looks ahead with the cab.
+    const hop = function (a, b, t) {
+      const yaw = Math.abs(b[0] - a[0]) + Math.abs(b[2] - a[2]) > 0.05 ? Math.atan2(b[0] - a[0], b[2] - a[2]) : view.yaw + Math.PI / 2;
+      return { x: a[0] + (b[0] - a[0]) * t, y: a[1] + (b[1] - a[1]) * t + Math.sin(Math.PI * t) * 0.55, z: a[2] + (b[2] - a[2]) * t, yaw: yaw };
+    };
+    const seat = [taxiSeat.x, taxiSeat.y, taxiSeat.z];
+    if (taxi.state === 'boarding') return hop([builder.cell[0] + 0.5, builder.cell[1], builder.cell[2] + 0.5], seat, u);
+    if (taxi.state === 'alighting' && taxi.drop) return hop(seat, [taxi.drop[0] + 0.5, taxi.drop[1], taxi.drop[2] + 0.5], u);
+    if (builder.taxiRiding) return { x: seat[0], y: seat[1], z: seat[2], yaw: view.yaw + Math.PI / 2 };
+    return null;
   }
 
   function yardGroup(vehicle) {
@@ -2729,6 +5571,14 @@
   function focusWorker(builder) {
     if (cameraController.isWorkerView()) cameraController.setWorkerView(false);
     selectedBuilder = builder === selectedBuilder ? null : builder;
+    if (selectedBuilder && selectedPieceId) {
+      selectedPieceId = '';
+      paintScaffoldCard();
+    }
+    // The camera centres on the selected worker (closer than the site view; turn, tilt and zoom stay
+    // free) and goes back to the site when the card closes.
+    if (selectedBuilder) cameraController.setTrack(selectedWorkerPoint);
+    else cameraController.clearTrack();
     workerPlanSignature = '';
     stickViews.forEach(function (viewState, candidate) {
       // Drones have no selection ring (they are not selectable).
@@ -2763,12 +5613,322 @@
       while (object && !object.userData.builder) object = object.parent;
       if (object) builder = object.userData.builder;
     }
+    // A cracked or broken scaffold piece near the tap opens its card — unless a worker is nearer the finger.
+    const piece = pickDamagedScaffold(event);
+    if (piece && (!builder || piece.distance < screenDistance(workerTapPoint(builder), event))) {
+      focusScaffold(piece.piece.id);
+      return;
+    }
+    const camp = builder ? null : pickCampView();
+    if (camp) {
+      openCamp(camp.site.id);
+      return;
+    }
+    if (!builder && selectedPieceId) focusScaffold('');
     focusWorker(builder);
   }
 
-  // «Следовать» on the worker card shows whether the camera follows the selected worker.
+  // ---- the player's scaffold repairs (MB.repairScaffold) ----
+  // A tap picks the damaged piece (cracked, worn through, broken or mending) whose middle is nearest
+  // on screen, within PIECE_PICK_PX of the finger.
+  // Returns { piece, distance } (pixels) or null.
+  function pickDamagedScaffold(event) {
+    if (!world || campaign.status !== 'play') return null;
+    let best = null;
+    let bestDistance = PIECE_PICK_PX;
+    const check = function (piece) {
+      if (!piece.repair && !MB.scaffoldRepairable(piece)) return;
+      const distance = screenDistance(pieceCentre(piece, pieceScreen), event);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        best = piece;
+      }
+    };
+    world.scaffoldPieces.forEach(check);
+    world.scaffoldDecks.forEach(check);
+    return best ? { piece: best, distance: bestDistance } : null;
+  }
+
+  // Pixels on screen from a world point (a Vector3, changed) to the tap; Infinity behind the camera.
+  function screenDistance(point, event) {
+    point.project(camera);
+    if (point.z > 1) return Infinity;
+    const rect = view.getBoundingClientRect();
+    return Math.hypot(rect.left + (point.x + 1) / 2 * rect.width - event.clientX, rect.top + (1 - point.y) / 2 * rect.height - event.clientY);
+  }
+
+  // A worker's chest, where a tap on him aims.
+  function workerTapPoint(builder) {
+    const viewState = stickViews.get(builder);
+    return viewState ? pieceScreen.copy(viewState.group.position).setY(viewState.group.position.y + 0.5) : pieceScreen.set(0, -1e6, 0);
+  }
+
+  // The middle of a piece: a deck's floor, a ladder's (or frame's) poles half-way up.
+  function pieceCentre(piece, out) {
+    if (piece.deck) return out.set(piece.x + 0.5, piece.y + 0.08, piece.z + 0.5);
+    const lean = piece.ladder ? 0.14 : 0.26;
+    return out.set(piece.x + 0.5 + piece.ox * lean, piece.y + 0.5, piece.z + 0.5 + piece.oz * lean);
+  }
+
+  function focusScaffold(id) {
+    selectedPieceId = id;
+    if (id && selectedBuilder) focusWorker(null);
+    paintScaffoldCard();
+  }
+
+  function scaffoldCardNodes() {
+    if (scaffoldCard.nodes) return scaffoldCard.nodes;
+    const nodes = {
+      card: document.getElementById('scaffold-card'),
+      title: document.getElementById('scaffold-card-title'),
+      status: document.getElementById('scaffold-card-status'),
+      durability: document.getElementById('scaffold-card-durability'),
+      meter: document.getElementById('scaffold-card-meter'),
+      bar: document.getElementById('scaffold-card-bar'),
+      repair: document.getElementById('scaffold-card-repair'),
+      bottom: '',
+    };
+    document.getElementById('scaffold-card-close').addEventListener('click', function () { focusScaffold(''); });
+    nodes.repair.addEventListener('click', function () {
+      if (!world || !MB.repairScaffold(world, selectedPieceId)) return;
+      tone(520, 0.06);
+      paintScaffoldCard();
+    });
+    scaffoldCard.nodes = nodes;
+    return nodes;
+  }
+
+  // «Настил · 7-й этаж · 2-й тип», «Треснул», «Прочность 640 / 2 000 кг» on a bar, «Починить · 5 с»;
+  // while mending — «Ремонт · 3 с» and the bar filling.
+  function paintScaffoldCard() {
+    const nodes = scaffoldCardNodes();
+    const piece = selectedPieceId && world ? MB.scaffoldPieceOf(world, selectedPieceId) : null;
+    const show = !!piece && !piece.removed && (piece.built || piece.broken) && currentScreen === 'build' && !!campaign && campaign.status === 'play';
+    if (nodes.card.hidden === show) nodes.card.hidden = !show;
+    if (!show) return;
+    const max = MB.pieceDurability(piece);
+    const value = piece.broken && !piece.repair ? 0 : Math.max(0, Math.min(max, piece.durability));
+    const repair = piece.repair;
+    const state = repair ? 'repair' : piece.broken ? 'broken' : piece.worn || piece.cracked ? 'cracked' : 'ok';
+    setText('scaffold-card-title', (piece.deck ? 'Настил' : piece.ladder ? 'Лестница' : 'Леса') + ' · ' + (piece.y + 1) + '-й этаж · ' + MB.scaffoldTier(piece.y) + '-й тип');
+    setText('scaffold-card-status', repair ? 'Ремонт · ' + Math.max(1, Math.ceil(repair.seconds - repair.t)) + ' с'
+      : piece.broken ? 'Сломан — не пройти' : piece.worn ? 'Изношен — шаг ×' + String(MB.WEAR_EFFORT).replace('.', ',') + ', сорваться ' + Math.round(MB.INJURY.fallChance * 100) + '%' : piece.cracked ? 'Треснул' : 'Исправен');
+    setText('scaffold-card-durability', 'Прочность ' + formatTempo(value) + ' / ' + formatTempo(max) + ' кг');
+    const width = Math.round(Math.max(0, Math.min(1, value / max)) * 100) + '%';
+    if (nodes.bar.style.width !== width) nodes.bar.style.width = width;
+    nodes.meter.classList.toggle('cracked', state === 'cracked');
+    nodes.meter.classList.toggle('broken', state === 'broken');
+    const repairable = MB.scaffoldRepairable(piece);
+    if (nodes.repair.hidden === repairable) nodes.repair.hidden = !repairable;
+    if (repairable) setText('scaffold-card-repair', 'Починить · ' + String(window.MicroBuildersBalance.tuning.scaffold.manualRepairSeconds || 5).replace('.', ',') + ' с');
+    const bottom = Math.round(cameraController.getSafeArea().bottom + 8) + 'px';
+    if (nodes.bottom !== bottom) {
+      nodes.bottom = bottom;
+      nodes.card.style.bottom = bottom;
+    }
+  }
+
+  // Over every piece mending: a ring filling with the repair (as over a worker's action) and a hammer
+  // knocking on the piece, dust at each knock; done — a burst and «Починено».
+  function createRepairView(piece) {
+    const group = new THREE.Group();
+    const badge = new THREE.Group();
+    // The radii of a worker's action ring (createWorkerBadge), on a dark track.
+    const track = new THREE.Mesh(new THREE.RingGeometry(0.35, 0.455, REPAIR_RING_SEGMENTS), repairTrackMaterial);
+    const ring = new THREE.Mesh(new THREE.RingGeometry(0.374, 0.431, REPAIR_RING_SEGMENTS, 1, Math.PI / 2, Math.PI * 2), repairRingMaterial);
+    ring.scale.x = -1; // clockwise from the top
+    ring.geometry.setDrawRange(0, 0);
+    track.renderOrder = 40;
+    ring.renderOrder = 41;
+    badge.add(track, ring);
+    // The hammer: a handle and a steel head, swinging about the grip at the far end of the handle.
+    const hammer = new THREE.Group();
+    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.022, 0.32, 8), repairHammerMaterials.handle);
+    handle.position.y = 0.16;
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.07, 0.07), repairHammerMaterials.head);
+    head.position.y = 0.33;
+    hammer.add(handle, head);
+    group.add(badge, hammer);
+    const centre = pieceCentre(piece, new THREE.Vector3());
+    badgeRoot.add(group);
+    return { group: group, badge: badge, ring: ring, hammer: hammer, segments: 0, swing: Math.random(), knocked: false, centre: centre, lift: piece.deck ? 0.75 : 0.85 };
+  }
+
+  function updateRepairViews(realDt) {
+    if (!world) return;
+    for (let i = 0; i < world.repairs.length; i++) {
+      const piece = world.repairs[i];
+      if (!repairViews.has(piece.id)) repairViews.set(piece.id, createRepairView(piece));
+    }
+    repairViews.forEach(function (repairView, id) {
+      const piece = MB.scaffoldPieceOf(world, id);
+      if (!piece || !piece.repair) {
+        badgeRoot.remove(repairView.group);
+        repairView.ring.geometry.dispose();
+        repairView.badge.children[0].geometry.dispose();
+        repairViews.delete(id);
+        return;
+      }
+      // As big on screen as a worker's ring (badgeLodState), over the piece.
+      const scale = badgeLodState.scale;
+      const size = BADGE_SIZE * scale;
+      const centre = repairView.centre;
+      repairView.badge.scale.set(size, size, size);
+      repairView.badge.position.set(centre.x, centre.y + repairView.lift + (size - BADGE_SIZE) / 2, centre.z);
+      repairView.badge.quaternion.copy(camera.quaternion);
+      const share = Math.min(1, piece.repair.t / piece.repair.seconds);
+      const segments = Math.round(share * REPAIR_RING_SEGMENTS);
+      if (segments !== repairView.segments) {
+        repairView.segments = segments;
+        repairView.ring.geometry.setDrawRange(0, segments * 6);
+      }
+      // Two knocks a second, on the camera's side of the piece: the grip to the right of the middle, the
+      // head lifts up and drops onto the middle (the hammer turns in the screen's plane).
+      repairView.swing = (repairView.swing + realDt * 2 * Math.min(timeScale, 5)) % 1;
+      const lift = repairView.swing < 0.7 ? repairView.swing / 0.7 : 1 - (repairView.swing - 0.7) / 0.3;
+      let dx = camera.position.x - centre.x;
+      let dz = camera.position.z - centre.z;
+      const flat = Math.hypot(dx, dz) || 1;
+      dx /= flat;
+      dz /= flat;
+      const reach = 0.3 * Math.max(1, scale);
+      repairView.hammer.scale.setScalar(1.3 * Math.max(1, scale));
+      repairView.hammer.position.set(centre.x + dz * reach + dx * 0.15, centre.y + 0.08, centre.z - dx * reach + dz * 0.15);
+      repairView.hammer.rotation.set(0, Math.atan2(dx, dz), 1.35 - lift * 1.1);
+      const down = repairView.swing >= 0.97;
+      if (down && !repairView.knocked && timeScale === 1) {
+        burst(repairView.centre.x, repairView.centre.y + 0.05, repairView.centre.z, 0xd8c08a, 2);
+        tone(330 + Math.random() * 60, 0.025);
+      }
+      repairView.knocked = down;
+    });
+  }
+
+  function clearRepairViews() {
+    repairViews.forEach(function (repairView) {
+      badgeRoot.remove(repairView.group);
+      repairView.ring.geometry.dispose();
+      repairView.badge.children[0].geometry.dispose();
+    });
+    repairViews.clear();
+  }
+
+  // Where the camera looks while a worker is selected: his figure, at chest height.
+  function selectedWorkerPoint() {
+    const view = selectedBuilder ? stickViews.get(selectedBuilder) : null;
+    if (!view || !view.group) return null;
+    return { x: view.group.position.x, y: view.group.position.y + 0.8, z: view.group.position.z };
+  }
+
+  // ---- selected worker: built cubes between the camera and him turn see-through ----
+  // A wide ray (XRAY_RADIUS) from the eye to the worker: every built cube near it but the ones right
+  // around him (his floor stays) is hidden in its instanced mesh and drawn as its own copy that fades
+  // to see-through in XRAY_FADE seconds, and back before the cube returns. The ray is recounted ten
+  // times a second, the fades run every frame.
+  function xrayMaterial(materialId) {
+    let material = xray.materials[materialId];
+    if (!material) {
+      material = blockSurface(materialId, false).clone();
+      cubeSurface(material);
+      material.transparent = true;
+      material.depthWrite = false;
+      xray.materials[materialId] = material;
+    }
+    return material;
+  }
+
+  function updateWorkerXray(dt) {
+    if (currentScreen !== 'build' || cityRoot.visible || !world) {
+      if (xray.hidden.size) clearXray();
+      return;
+    }
+    const view = selectedBuilder ? stickViews.get(selectedBuilder) : null;
+    xray.clock -= dt;
+    if (xray.clock <= 0) {
+      xray.clock = 0.1;
+      const want = view ? xrayBlocks(view) : null;
+      xray.hidden.forEach(function (entry, block) { entry.dir = want && want.has(block) ? 1 : -1; });
+      if (want) want.forEach(function (block) { if (!xray.hidden.has(block)) hideXray(block); });
+    }
+    // Fades: t 0 — the cube as it is, 1 — see-through.
+    xray.hidden.forEach(function (entry, block) {
+      entry.t = Math.min(1, Math.max(0, entry.t + entry.dir * dt / XRAY_FADE));
+      const k = entry.t * entry.t * (3 - 2 * entry.t);
+      entry.mesh.material.opacity = 1 - (1 - XRAY_OPACITY) * k;
+      if (entry.dir < 0 && entry.t <= 0) unhideXray(block, entry);
+    });
+  }
+
+  // Built cubes in the wide ray from the eye to the worker (not the last 1.3 cells before him).
+  function xrayBlocks(view) {
+    const a = camera.position;
+    const bx = view.group.position.x;
+    const by = view.group.position.y + 0.8;
+    const bz = view.group.position.z;
+    const abx = bx - a.x;
+    const aby = by - a.y;
+    const abz = bz - a.z;
+    const want = new Set();
+    const len2 = abx * abx + aby * aby + abz * abz;
+    if (len2 < 1e-6) return want;
+    const tMax = Math.max(0, 1 - 1.3 / Math.sqrt(len2));
+    const r = XRAY_RADIUS + 0.5;
+    const minX = Math.min(a.x, bx) - r;
+    const maxX = Math.max(a.x, bx) + r;
+    const minY = Math.min(a.y, by) - r;
+    const maxY = Math.max(a.y, by) + r;
+    const minZ = Math.min(a.z, bz) - r;
+    const maxZ = Math.max(a.z, bz) + r;
+    const r2 = XRAY_RADIUS * XRAY_RADIUS;
+    for (let i = 0; i < world.blocks.length; i++) {
+      const block = world.blocks[i];
+      if (!block.built || block.feature || block.glassOf !== undefined) continue;
+      const cx = block.x + 0.5;
+      const cy = block.y + 0.5;
+      const cz = block.z + 0.5;
+      if (cx < minX || cx > maxX || cy < minY || cy > maxY || cz < minZ || cz > maxZ) continue;
+      const t = ((cx - a.x) * abx + (cy - a.y) * aby + (cz - a.z) * abz) / len2;
+      if (t <= 0 || t >= tMax) continue;
+      const px = a.x + abx * t - cx;
+      const py = a.y + aby * t - cy;
+      const pz = a.z + abz * t - cz;
+      if (px * px + py * py + pz * pz <= r2) want.add(block);
+    }
+    return want;
+  }
+
+  function hideXray(block) {
+    const record = blockViews.get(block.id);
+    if (!record || !record.solid) return;
+    setBlockVisualScale(record, 0.001, 0.001);
+    if (!xray.geometry) xray.geometry = new THREE.BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE);
+    // Its own material: every cube fades on its own clock.
+    const mesh = new THREE.Mesh(xray.geometry, xrayMaterial(block.materialId).clone());
+    cubeSurface(mesh.material);
+    mesh.material.opacity = 1;
+    mesh.position.set(block.x + 0.5, block.y + 0.5, block.z + 0.5);
+    mesh.renderOrder = 2;
+    levelRoot.add(mesh);
+    xray.hidden.set(block, { mesh: mesh, t: 0, dir: 1 });
+  }
+
+  function unhideXray(block, entry) {
+    const record = blockViews.get(block.id);
+    if (record) setBlockVisualScale(record, 1, 0.001);
+    levelRoot.remove(entry.mesh);
+    entry.mesh.material.dispose();
+    xray.hidden.delete(block);
+  }
+
+  // At once (leaving the site view); a deselected worker fades the cubes back instead.
+  function clearXray() {
+    xray.hidden.forEach(function (entry, block) { unhideXray(block, entry); });
+  }
+
+  // Old «Следовать» button state (the card has no such button now; the debug follow still uses it).
   function updateWorkerViewButton() {
     const follow = document.getElementById('worker-card-follow');
+    if (!follow) return;
     const on = cameraController.isWorkerView();
     follow.classList.toggle('on', on);
     follow.setAttribute('aria-pressed', on ? 'true' : 'false');
@@ -2975,12 +6135,16 @@
         context.closePath();
         context.fill();
       }
-    } else if (kind === 'lost') {
+    } else if (kind === 'lost' || kind === 'lostShort') {
       context.fillStyle = '#fff8ee';
       context.fillRect(57, 30, 14, 44);
       context.beginPath();
       context.arc(64, 90, 8, 0, Math.PI * 2);
       context.fill();
+    } else if (kind === 'heal') {
+      context.fillStyle = '#d64535';
+      context.fillRect(54, 34, 20, 60);
+      context.fillRect(34, 54, 60, 20);
     } else if (kind === 'overload') {
       // Kettlebell: a wide handle loop over a round body on a flat foot.
       context.strokeStyle = '#f4efe6';
@@ -3050,16 +6214,24 @@
   function workerIntent(builder, load, badge) {
     const phase = builder.phase;
     const purpose = phase === 'walk' ? builder.walkPurpose : '';
-    if (badge.alertUntil > fxTime || phase === 'recover' || purpose === 'recover') return 'lost';
+    if (badge.alertUntil > fxTime) return 'lost';
+    if (phase === 'recover' || purpose === 'recover') return builder.escapeKind === 'short' ? 'lostShort' : 'lost';
+    // Falling and lying after it he cries out instead (updateScream).
+    if (phase === 'fall') return builder.fall && (builder.fall.stage === 'drop' || builder.fall.stage === 'down') ? '' : 'heal';
+    if (purpose === 'heal' || (phase === 'break' && builder.breakKind === 'heal')) return 'heal';
     if (phase === 'meal' || purpose === 'meal') return 'meal';
-    if (phase === 'break') return builder.breakKind === 'rest' ? 'rest' : 'smoke';
-    if (purpose === 'smoke') return 'smoke';
+    if (phase === 'break') return builder.breakKind === 'smoke' ? 'smoke' : 'rest';
+    if (phase === 'smokeCall' || phase === 'smokeWait' || purpose === 'smokeMeet' || purpose === 'smoke') return 'smoke';
+    if (purpose === 'sleep') return 'rest';
+    if (builder.smokeCall && (builder.smokeCall.group.members || builder.smokeCall.until >= campaign.levelElapsed)) return 'smoke';
     if (phase === 'idle' && builder.waitReason === 'path') return 'path';
     if ((phase === 'plan' || phase === 'idle') && builder.waitReason === 'front') return 'front';
     if (phase === 'plan') return 'plan';
-    if (phase === 'mine') return 'fetch';
+    if (phase === 'mine' || phase === 'campFetch') return 'fetch';
     if (phase === 'place') return 'haul';
-    if (phase === 'erect' || phase === 'passage') return 'build';
+    if (phase === 'erect' || phase === 'passage' || phase === 'campBuild') return 'build';
+    // In an air taxi the load does not slow him.
+    if (phase === 'taxi') return '';
     if (builder.carry.length > 0 && load.overload > 1.05) return 'overload';
     return '';
   }
@@ -3122,15 +6294,15 @@
       badge.shownT = BADGE_PENDING;
       badge.changes += 1;
     }
-    // Hunger ≥ 50% is a status of its own, like a smoke break: the meal icon when nothing else is
-    // shown (no pip on other icons).
+    // Hunger with hungryPoints of satiety left (where it starts to slow him) is a status of its own, like a smoke
+    // break: the meal icon when nothing else is shown (no pip on other icons).
     if (BADGE_PREDICTABLE[want] && predictedSeconds(builder, want) / Math.max(1, timeScale) < BADGE_QUICK) want = '';
-    const hungry = builder.trade !== 'engineer' && timeScale !== 20 && builder.hunger >= MB.BALANCE.hungerMax * 0.5;
+    const hungry = builder.trade !== 'engineer' && timeScale !== 20 && MB.hungerStatus(builder) !== '';
     const hungerOnly = !want && hungry;
     if (hungerOnly) want = 'meal';
     const kind = dt > 0 ? settleBadge(badge, want, dt) : badge.shown;
     const selected = builder === selectedBuilder;
-    if (!kind || !levelRoot.visible || (badgeLodState.urgentOnly && !BADGE_URGENT[kind] && !selected)) {
+    if (!kind || !levelRoot.visible || viewState.indoors || (badgeLodState.urgentOnly && !BADGE_URGENT[kind] && !selected)) {
       if (badge.group.visible) badge.group.visible = false;
       return;
     }
@@ -3196,7 +6368,7 @@
     } else if (kind === 'path') {
       text = 'Ждёт проход';
       warn = true;
-    } else if (kind !== 'front' && kind !== 'lost' && BADGE_TIMED_PHASES[builder.phase] && builder.timer > 0) {
+    } else if (kind !== 'front' && kind !== 'lost' && kind !== 'lostShort' && BADGE_TIMED_PHASES[builder.phase] && builder.timer > 0) {
       duration = builder.actionT + builder.timer;
       ratio = builder.actionT / duration;
       left = builder.timer;
@@ -3676,9 +6848,13 @@
     if (kind === 'heavy') return 'Один тяжёлый кубик · перегруз' + (trip ? ' ×' + formatFactor(trip.overload) : '');
     if (kind === 'order') return 'Ждут опоры: часть плана позже';
     if (kind === 'split') return 'Тяжёлый куб · несёт частями';
+    // The plan counts mini-cubes; while each is a whole cube (grid 1) it reads as cubes.
     const cubes = plan ? plan.cubes : trip.cubes;
-    const count = cubes + ' ' + UI.plural(cubes, 'куб', 'куба', 'кубов');
-    if (kind === 'front') return 'План: ' + cubes + ' из ' + (plan ? plan.limit : MB.planCubeLimit(campaign)) + ' · мало свободных кубов';
+    const minis = plan ? (plan.minis || cubes) : (trip.minis || cubes);
+    const count = minis === cubes
+      ? cubes + ' ' + UI.plural(cubes, 'куб', 'куба', 'кубов')
+      : minis + ' ' + UI.plural(minis, 'мини-куб', 'мини-куба', 'мини-кубов');
+    if (kind === 'front') return 'План: ' + minis + ' из ' + (plan ? plan.limit : MB.planCubeLimit(campaign)) + ' · мало свободных кубов';
     if (kind === 'weight') {
       // A big next cube can stop a light load: «полна» would be wrong then.
       if (trip && trip.kg < trip.capacity * 0.8) return 'План: ' + count + ' · следующий не влез · ' + weight;
@@ -3731,12 +6907,12 @@
     if (event.capitalCoins > 0) floatCapital(x, y + 0.8, z, event.capitalCoins);
   }
 
-  // Golden cube / jackpot: a gold burst and the bare «+N» at the cube. The centred popup
-  // (showLuckyPop) names the event and the capital, so the world side never repeats the title.
+  // Jackpot coins float at the cube. Golden finds float as capital in onForemanEvent;
+  // the centred popup names either event and shows its payout.
   function floatForeman(event) {
     if (event.card !== 'golden' && !event.jackpot) return;
     const block = event.block;
-    floatAt(block.x + 0.5, block.y + 1.2, block.z + 0.5, '+' + formatCompact(event.gained), 'gold');
+    if (event.gained > 0) floatAt(block.x + 0.5, block.y + 1.2, block.z + 0.5, '+' + formatCompact(event.gained), 'gold');
     burst(block.x + 0.5, block.y + 0.8, block.z + 0.5, 0xffd34a, 18);
   }
 
@@ -3753,21 +6929,31 @@
   function workerCardNodes() {
     if (workerCard.nodes) return workerCard.nodes;
     const nodes = { card: document.getElementById('worker-card'), planWidth: '', loadWidth: '', bottom: '', tight: false, legendHeight: 0 };
-    ['title', 'status', 'plan', 'load', 'limit', 'pay', 'needs'].forEach(function (key) {
+    ['title', 'status', 'plan', 'load', 'xp', 'limit', 'pay', 'info'].forEach(function (key) {
       const el = document.getElementById('worker-card-' + key);
       el.textContent = '';
       nodes[key] = el.appendChild(document.createTextNode(''));
     });
+    nodes.needs = document.getElementById('worker-card-needs');
+    nodes.stats = document.getElementById('worker-card-stats');
+    nodes.orders = document.getElementById('worker-card-orders');
+    // The player's orders: a hungry worker off to eat, a tired one off to sleep (MB.sendWorker).
+    nodes.orders.addEventListener('click', function (event) {
+      const button = event.target.closest('[data-order]');
+      if (!button || !selectedBuilder || !world) return;
+      if (MB.sendWorker(world, selectedBuilder, button.dataset.order)) tone(520, 0.05);
+      paintWorkerCard();
+    });
+    nodes.effort = document.getElementById('worker-card-effort');
     nodes.limitRow = document.getElementById('worker-card-limit');
     nodes.legend = document.getElementById('worker-card-legend');
     nodes.planBar = document.getElementById('worker-card-plan-bar');
     nodes.loadBar = document.getElementById('worker-card-load-bar');
     nodes.loadMeter = document.getElementById('worker-card-load-meter');
+    nodes.xpBar = document.getElementById('worker-card-xp-bar');
+    nodes.xpMeter = document.getElementById('worker-card-xp-meter');
     document.getElementById('worker-card-close').addEventListener('click', function () { focusWorker(null); });
-    document.getElementById('worker-card-follow').addEventListener('click', function () {
-      cameraController.setWorkerView(!cameraController.isWorkerView());
-      updateWorkerViewButton();
-    });
+
     workerCard.nodes = nodes;
     return nodes;
   }
@@ -3794,10 +6980,33 @@
     const load = viewState.load;
     const rank = builder.expertiseRank;
     const title = rank ? (rank < 1 ? 'Младший' : rank > 1 ? 'Старший' : 'Средний') + ' рабочий' : 'Рабочий';
-    setNodeText(nodes.title, title + ' ' + workerNumber(builder) + (rank ? ' · ' + Math.round(rank * 100) + '%' : ''));
+    // «Учебный центр»: his rank in the title, experience to the next one on its own bar.
+    const grade = MB.workerRankInfo(builder, campaign);
+    if (builder.trade === 'engineer') grade.on = false;
+    setNodeText(nodes.title, title + ' ' + workerNumber(builder) + (grade.on ? ' · ' + grade.rank + ' разряд' : ''));
+    if (nodes.xpMeter.hidden === grade.on) nodes.xpMeter.hidden = !grade.on;
+    if (grade.on) {
+      setNodeText(nodes.xp, 'Опыт: ' + Math.floor(grade.xp) + (grade.next !== null ? ' / ' + grade.next + ' до ' + (grade.rank + 1) + ' разряда'
+        : grade.rank < MB.TRAINING_RANKS.length ? ' · потолок ' + grade.cap + ' разряда (учебный центр)' : ' · высший разряд'));
+      setBarWidth(nodes, 'xp', grade.next !== null ? (grade.xp - grade.from) / Math.max(1, grade.next - grade.from) : 1);
+    }
     setNodeText(nodes.status, workerStatusText(builder, load));
+    // Characteristics and the effort of what he does now (logic.js → «Трудоёмкость и темп»).
+    const statParts = {};
+    const stats = workerStatsHtml(builder, statParts);
+    if (nodes.statsHtml !== stats) {
+      nodes.statsHtml = stats;
+      nodes.stats.innerHTML = stats;
+    }
+    const effort = builder.trade === 'engineer' ? null : MB.currentEffort(builder, world);
+    const effortHtml = effort ? 'Трудоёмкость <b>' + formatTempo(effort.effort) + '</b> · темп <b>' + formatTempo(effort.tempo) + '/с</b>' : '';
+    if (nodes.effortHtml !== effortHtml) {
+      nodes.effortHtml = effortHtml;
+      nodes.effort.innerHTML = effortHtml;
+      nodes.effort.hidden = !effortHtml;
+    }
     const limit = MB.planCubeLimit(campaign);
-    const left = uniqueCubes(builder.plan);
+    const left = MB.planMinis(builder);
     setNodeText(nodes.plan, left > 0 ? 'План: ' + left + ' из ' + limit : 'План: нет');
     setBarWidth(nodes, 'plan', limit > 0 ? left / limit : 0);
     const over = builder.carry.length > 0 && load.overload > 1.05;
@@ -3813,7 +7022,31 @@
     let pay = coins > 0 ? 'За ходку: +' + formatCompact(coins) : 'За ходку: —';
     if (current && builder.tripLucky > 0) pay += ' · удача ×' + builder.tripLuckyMultiplier;
     setNodeText(nodes.pay, pay);
-    setNodeText(nodes.needs, workerNeedsText(builder));
+    const needs = workerNeedsText(builder);
+    if (nodes.needsHtml !== needs) {
+      nodes.needsHtml = needs;
+      nodes.needs.innerHTML = needs;
+    }
+    const orders = workerOrdersHtml(builder);
+    if (nodes.ordersHtml !== orders) {
+      nodes.ordersHtml = orders;
+      nodes.orders.innerHTML = orders;
+      nodes.orders.hidden = !orders;
+    }
+    const E = MB.EFFORT;
+    setNodeText(nodes.info, (effort ? 'Сейчас: ' + effort.notes.join(', ') + '. ' : '') +
+      'Трудоёмкость — сколько работы в действии: шаг по земле ' + E.ground + ', по настилу ' + E.deck + ' и +' + E.deckPerFloor +
+      ' за этаж выше первого, подъём на этаж ' + E.climb + ', мини-куб — его масса × ' + E.place + ', набор — ' + E.pick + ' за кг, элемент лесов ' + E.scaffold +
+      '; погода, ночь и перегруз её умножают. Темп — сколько трудоёмкости рабочий проходит за секунду: ' + E.tempo +
+      ' × характеристика / 100 × прокачки бригады. ' +
+      ['speed', 'strength', 'skill'].map(function (stat) { return statSourcesText(stat, statParts[stat]); }).join(' ') + ' ' +
+      'Сытость и энергия — очки, которые тают со временем (числа на полосках). Когда сытости остаётся ' + MB.BALANCE.hungryPoints +
+      ', рабочий голоден: Сила −' + Math.round(MB.BALANCE.hungerDebuff * 100) + '%; на нуле — сам уходит есть. Когда энергии остаётся ' + MB.SLEEP.tiredPoints +
+      ', он устал: Скорость −' + Math.round(MB.SLEEP.debuff * 100) + '; на нуле — сам уходит спать. Засечка на полоске — откуда начинается штраф. ' +
+      'Голодного можно отправить обедать, уставшего — спать. ' + injuryInfoText() + ' Привычка к перекурам: ' + Math.round(builder.habit || 0) + '/' + MB.SMOKING.habitCap +
+      habitText(builder.habit || 0) + '. Позвавший на перекур созывает компанию: кого накрыла волна клича и кто сам почти хочет курить. ' +
+      (builder.dish && MB.DISH[builder.dish] ? 'Блюдо: ' + MB.DISH[builder.dish].name + ' · ' + MB.dishText(builder.dish, builder.dishPower) + '. ' : '') +
+      'Время рассчитано при текущей погоде; у сна учтена ночь.');
     const area = cameraController.getSafeArea();
     const bottom = Math.round(area.bottom + 8) + 'px';
     if (nodes.bottom !== bottom) {
@@ -3830,11 +7063,56 @@
     }
   }
 
+  // «Здоровье 100: шаг на изношенный элемент лесов тяжелее ×3 и в 30% случаев — падение, −10 и −5 за этаж; …»
+  function injuryInfoText() {
+    const I = MB.INJURY;
+    const pct = function (perf) { return '−' + Math.round((1 - perf) * 100) + '%'; };
+    return 'Здоровье ' + I.health + ': шаг на изношенный до нуля элемент лесов тяжелее ×' + String(MB.WEAR_EFFORT).replace('.', ',') +
+      ' и в ' + Math.round(I.fallChance * 100) + '% случаев — падение, −' + I.fallDamage + ' и −' + I.fallDamagePerFloor +
+      ' за каждый этаж полёта. Ниже ' + I.health + ' Сила и Сноровка ' + pct(I.lightPerf) + ', ниже ' + Math.round(I.lightFrom * I.health) + ' — ' + pct(I.heavyPerf) +
+      ', ниже ' + Math.round(I.heavyFrom * I.health) + ' — ' + pct(I.severePerf) + '; при нуле — больница на ' + MB.formatClock(I.hospitalSeconds) + ', оттуда здоровым.';
+  }
+
+  // Orders for a hungry or tired worker (MB.canSend): «Отправить обедать», «Отправить спать». The order
+  // makes him very hungry or worn out (MB.sendWorker): he goes as soon as he is out of an unbroken state.
+  function workerOrdersHtml(builder) {
+    if (builder.trade === 'engineer' || campaign.status !== 'play') return '';
+    return WORKER_ORDERS.map(function (order) {
+      if (!MB.canSend(builder, world, order[0])) return '';
+      return '<button type="button" class="worker-order" data-order="' + order[0] + '">' + ICONS[order[1]] + order[2] + '</button>';
+    }).join('');
+  }
+
+  // The three characteristics as chips (icon, value; red below 100, green above), the sources of
+  // each into `parts` for the «i» text. A drone has none.
+  function workerStatsHtml(builder, parts) {
+    if (builder.trade === 'engineer') return '';
+    return ['speed', 'strength', 'skill'].map(function (stat) {
+      parts[stat] = [];
+      const value = Math.round(MB.workerStat(builder, campaign, stat, parts[stat]));
+      const name = MB.STAT_NAMES[stat];
+      const sources = statSourcesText(stat, parts[stat]);
+      return '<span class="worker-stat' + (value < 100 ? ' low' : value > 100 ? ' high' : '') + '" title="' + UI.escapeHtml(sources) + '">' +
+        '<img src="icons/' + STAT_ICONS[stat] + '" alt="">' + name + ' <b>' + value + '</b></span>';
+    }).join('');
+  }
+
+  // «Сила 75: база 100, Каша +10, голод −35.»
+  function statSourcesText(stat, parts) {
+    let value = 100;
+    const list = (parts || []).map(function (part) {
+      value += part[1];
+      const points = Math.round(part[1]);
+      return part[0] + ' ' + (points > 0 ? '+' : '−') + Math.abs(points);
+    }).filter(function (text) { return !/ [+−]0$/.test(text); });
+    return MB.STAT_NAMES[stat] + ' ' + Math.round(Math.max(MB.EFFORT.statMin || 10, value)) + ': база 100' + (list.length ? ', ' + list.join(', ') : '') + '.';
+  }
+
   // What sized his current (or last) trip; a heavy cube says which part he carries.
   function workerLimitText(builder) {
     if (!builder.tripLimit) return '';
     const split = builder.haulSplit;
-    if (split && builder.tripLimit === 'carry') return 'Тяжёлый куб несёт частями: ' + split.trip + ' из ' + split.trips;
+    if (split) return 'Несёт куб частями: ' + split.trip + ' из ' + split.trips;
     return MicroBuildersWorkerLog.tripLimitText(builder.tripLimit);
   }
 
@@ -3860,11 +7138,36 @@
   function workerStatusText(builder, load) {
     const phase = builder.phase;
     const purpose = phase === 'walk' ? builder.walkPurpose : '';
+    if (builder.kitchen) return 'На кухне столовой';
+    // Very hungry or worn out while setting a cube or in a taxi (MB.unbroken): he goes right after it.
+    const urgent = MB.urgentNeed(builder, world);
+    if (urgent && (phase === 'place' || phase === 'campBuild' || phase === 'taxi' || purpose === 'taxi')) {
+      return urgent === 'heal' ? 'Доделает и пойдёт в больницу' : urgent === 'meal' ? 'Доделает и пойдёт обедать' : 'Доделает и пойдёт спать';
+    }
+    if (phase === 'fall' && builder.fall) {
+      const stage = builder.fall.stage;
+      return stage === 'freeze' ? 'Леса под ним проседают!' : stage === 'drop' ? 'Падает!' : stage === 'down' ? 'Упал с лесов, лежит' : 'Поднимается после падения';
+    }
+    if (phase === 'break' && builder.breakKind === 'heal') return 'В больнице · ' + MB.formatClock(Math.ceil(builder.timer));
+    if (purpose === 'heal') return 'Идёт в больницу';
     if (phase === 'recover' || purpose === 'recover') return 'Нет пути — возвращается к столу';
-    if (phase === 'meal') return 'Обед';
-    if (purpose === 'meal') return 'Идёт обедать';
-    if (phase === 'break') return builder.breakKind === 'rest' ? 'Отдых' : 'Перекур';
-    if (purpose === 'smoke') return 'Идёт на перекур';
+    if (phase === 'meal') return builder.mealPlace === 'canteen' ? (builder.grandDue ? 'Гранд-обед' : 'Обедает в столовой') : 'Обед';
+    if (purpose === 'meal') return builder.mealPlace === 'canteen' ? 'Идёт в столовую' : 'Идёт обедать';
+    if (phase === 'campFetch') return 'Берёт материал для городка';
+    if (phase === 'campBuild' && builder.camp) return 'Строит: ' + CAMP_NAMES[builder.camp.id].toLowerCase() + ' · ' + builder.camp.built + '/' + builder.camp.total;
+    if (purpose === 'campFetch' || (builder.camp && purpose === 'route' && !(builder.campCarry > 0))) return 'Идёт за материалом для городка';
+    if (builder.camp && purpose === 'route') return 'Несёт материал на стройку городка';
+    if (builder.camp && phase === 'idle' && builder.waitReason === 'front') return 'Ждёт, пока поставят куб под его кубом';
+    if (phase === 'break' && builder.breakKind === 'sleep') return (builder.sleepPlace === 'dorm' ? 'Спит в бытовке · ' : 'Спит · ') + MB.formatClock(Math.ceil(builder.timer));
+    if (phase === 'break') return builder.breakKind === 'rest' ? 'Отдых' : builder.smokePlace === 'lounge' ? 'Перекур в зоне отдыха' : 'Перекур';
+    if (purpose === 'sleep') return builder.sleepPlace === 'dorm' ? 'Идёт в бытовки' : 'Идёт спать';
+    if (phase === 'smokeCall') return 'Зовёт на перекур';
+    if (phase === 'smokeWait') return 'Ждёт компанию на перекур';
+    if (purpose === 'smokeMeet') return 'Идёт к компании на перекур';
+    if (purpose === 'smoke') {
+      const where = builder.smokePlace === 'lounge' ? ' в зону отдыха' : '';
+      return builder.carry.length > 0 ? 'Идёт на перекур' + where + ' с кубами' : 'Идёт на перекур' + where;
+    }
     if (phase === 'idle' && builder.waitReason === 'path') return 'Ждёт проход';
     if ((phase === 'plan' || phase === 'idle') && builder.waitReason === 'front') return 'Ждёт: нет свободных кубов';
     if (phase === 'plan') return 'Получает план';
@@ -3875,6 +7178,8 @@
     }
     if (phase === 'erect') return 'Ставит леса';
     if (phase === 'passage') return 'Пробивает проход';
+    if (phase === 'taxi') return builder.taxiRiding ? 'Летит на аэротакси' : 'Садится в аэротакси';
+    if (purpose === 'taxi') return 'Идёт с грузом к аэротакси';
     if (builder.carry.length > 0) {
       const cubes = uniqueCubes(builder.carry);
       return 'Несёт ' + cubes + ' ' + UI.plural(cubes, 'куб', 'куба', 'кубов') + (load.overload > 1.05 ? ' · идёт медленнее' : '');
@@ -3884,28 +7189,83 @@
     return MicroBuildersWorkerLog.statusOf(builder);
   }
 
+  // Compact scales: the timer is always the time to the meal, the smoke or the sleep; the tick on
+  // the bar marks where the work penalty begins, the penalty itself shows next to the timer.
   function workerNeedsText(builder) {
-    const hunger = Math.round(Math.min(1, builder.hunger / MB.BALANCE.hungerMax) * 100);
-    let smoke = '';
-    if (builder.phase === 'break' && builder.breakKind === 'smoke') smoke = 'перекур сейчас';
-    else if (builder.phase === 'walk' && builder.walkPurpose === 'smoke') smoke = 'идёт на перекур';
-    else {
-      const left = builder.smokeThreshold - builder.smokeNeed;
-      smoke = left > 0 ? 'перекур через ' + MB.formatClock(left) : 'скоро перекур';
+    const purpose = builder.phase === 'walk' ? builder.walkPurpose : '';
+    const clock = function (need) {
+      const seconds = MB.needSecondsLeft(builder, world, need);
+      return seconds > 0 ? MB.formatClock(Math.ceil(seconds)) : 'пора';
+    };
+    const points = function (value) { return Math.round(value).toLocaleString('ru-RU'); };
+    const smoke = Math.min(1, (builder.smokeNeed || 0) / Math.max(1, builder.smokeThreshold || 1));
+    const eating = builder.phase === 'meal' || purpose === 'meal';
+    const sleeping = (builder.phase === 'break' && builder.breakKind === 'sleep') || purpose === 'sleep';
+    const smoking = (builder.phase === 'break' && builder.breakKind === 'smoke') || purpose === 'smoke';
+    const called = builder.smokeCall && builder.smokeCall.until >= campaign.levelElapsed;
+    // Only the needs this level has (tuning.intro). Hunger and fatigue go by the points left — satiety
+    // and energy (MB.satietyLeft, MB.energyLeft), in steps (MB.hungerStatus, MB.fatigueStatus):
+    // hungry / tired — the penalty at once; very hungry / worn out — he goes himself (red). Their bars
+    // show what is left, the tick — where the penalty begins.
+    const hungerStatus = eating ? '' : MB.hungerStatus(builder);
+    const fatigueStatus = sleeping ? '' : MB.fatigueStatus(builder);
+    const chips = [];
+    if (MB.needOpen(campaign, 'hunger')) {
+      const left = MB.satietyLeft(builder);
+      const penalty = eating ? 0 : MB.hungerDebuff(builder);
+      chips.push({ icon: 'personnel', text: eating ? 'обед' : points(left), penalty: penalty ? ' −' + Math.round(penalty * 100) + '%' : '',
+        bar: left / builder.hungerScale, tick: MB.BALANCE.hungryPoints / builder.hungerScale, bad: hungerStatus === 'starving',
+        label: 'Сытость: ' + points(left) + ' из ' + points(builder.hungerScale) + (hungerStatus === 'starving' ? ' · очень голоден — сам пойдёт есть'
+          : hungerStatus ? ' · голоден' : ' · голоден с ' + MB.BALANCE.hungryPoints) + (eating ? ' · обед' : ' · до нуля ' + clock('hunger')) +
+          (penalty ? ' · Сила −' + Math.round(penalty * 100) + '%' : '') });
     }
-    return 'Голод ' + hunger + '% · ' + smoke;
+    if (MB.needOpen(campaign, 'smoke')) {
+      const habit = builder.habit || 0;
+      chips.push({ icon: 'smoke', text: smoking ? 'перекур' : called ? 'зовут' : clock('smoke'), penalty: '', bar: smoke, tick: 0, bad: false,
+        label: 'Перекур: ' + Math.round(smoke * 100) + '% · ' + (smoking ? 'курит' : called ? 'зовут на перекур' : 'через ' + clock('smoke')) +
+          ' · привычка ' + Math.round(habit) + '/' + MB.SMOKING.habitCap + habitText(habit) });
+    }
+    if (MB.needOpen(campaign, 'sleep')) {
+      const left = MB.energyLeft(builder);
+      const penalty = sleeping ? 0 : MB.fatigueDebuff(builder);
+      chips.push({ icon: 'moon', text: sleeping ? 'сон' : points(left), penalty: penalty ? ' −' + Math.round(penalty * 100) : '',
+        bar: left / builder.fatigueScale, tick: MB.SLEEP.tiredPoints / builder.fatigueScale, bad: fatigueStatus === 'worn',
+        label: 'Энергия: ' + points(left) + ' из ' + points(builder.fatigueScale) + (fatigueStatus === 'worn' ? ' · очень устал — сам пойдёт спать'
+          : fatigueStatus ? ' · устал' : ' · устал с ' + MB.SLEEP.tiredPoints) + (sleeping ? ' · сон' : ' · до нуля ' + clock('fatigue')) +
+          (penalty ? ' · Скорость −' + Math.round(penalty * 100) : '') });
+    }
+    return workerHealthChip(builder) + chips.map(function (chip) {
+      const pct = Math.round(Math.max(0, Math.min(1, chip.bar)) * 100);
+      return '<span class="worker-need' + (chip.bad ? ' bad' : chip.penalty ? ' warn' : '') + '" aria-label="' + UI.escapeHtml(chip.label) + '" title="' + UI.escapeHtml(chip.label) + '">' +
+        ICONS[chip.icon] + '<span>' + chip.text + (chip.penalty ? '<b>' + chip.penalty + '</b>' : '') + '</span><i><b style="width:' + pct + '%"></b>' +
+        (chip.tick > 0 && chip.tick < 1 ? '<em style="left:' + Math.round(chip.tick * 100) + '%"></em>' : '') + '</i></span>';
+    }).join('');
   }
 
-  function workerLimb(geometry) {
-    const pivot = new THREE.Group();
-    const mesh = new THREE.Mesh(geometry, workerMat.cloth);
-    mesh.position.y = -0.16;
-    mesh.castShadow = true;
-    const hand = new THREE.Mesh(workerGeo.hand, workerMat.cloth);
-    hand.position.y = -0.3;
-    hand.castShadow = true;
-    pivot.add(mesh, hand);
-    return pivot;
+  // « — тянет курить в 1,8 раза чаще, перекур в 1,6 раза дольше»: what the smoking habit does now.
+  function habitText(habit) {
+    if (!(habit > 0)) return ' — растёт на 1 с каждым перекуром на этой стройке, учащает и удлиняет перекуры';
+    const S = MB.SMOKING;
+    return ' — тянет курить в ' + formatFactor(1 + S.habitInterval * habit) + ' раза чаще, перекур в ' + formatFactor(1 + S.habitDuration * habit) +
+      ' раза дольше; растёт на 1 с каждым перекуром на этой стройке';
+  }
+
+  // Health, only once he is hurt or in the hospital: its bar with ticks at the steps (MB.injuryStatus),
+  // the share of strength and skill the injuries take.
+  function workerHealthChip(builder) {
+    const I = MB.INJURY;
+    const healing = (builder.phase === 'break' && builder.breakKind === 'heal') || (builder.phase === 'walk' && builder.walkPurpose === 'heal');
+    if (builder.trade === 'engineer' || (builder.health >= I.health && !healing)) return '';
+    const fill = MB.healthFill(builder);
+    const pct = Math.round(fill * 100);
+    const perf = MB.injuryPerf(builder);
+    const penalty = perf < 1 ? ' −' + Math.round((1 - perf) * 100) + '%' : '';
+    const text = healing ? (builder.phase === 'break' ? MB.formatClock(Math.ceil(builder.timer)) : 'в больницу') : String(Math.round(builder.health));
+    const label = 'Здоровье: ' + Math.round(builder.health) + ' / ' + I.health + (INJURY_WORDS[MB.injuryStatus(builder)] ? ' · ' + INJURY_WORDS[MB.injuryStatus(builder)] : '') +
+      (penalty ? ' · Сила и Сноровка' + penalty : '') + (healing ? ' · больница, выйдет здоровым' : ' · при нуле — больница');
+    return '<span class="worker-need worker-health' + (fill < I.heavyFrom ? ' bad' : ' warn') + '" aria-label="' + UI.escapeHtml(label) + '" title="' + UI.escapeHtml(label) + '">' +
+      ICONS.health + '<span>' + text + (penalty ? '<b>' + penalty + '</b>' : '') + '</span><i><b style="width:' + pct + '%"></b>' +
+      '<em style="left:' + Math.round(I.lightFrom * 100) + '%"></em><em style="left:' + Math.round(I.heavyFrom * 100) + '%"></em></i></span>';
   }
 
   function rankLook(rank) {
@@ -3913,53 +7273,14 @@
     return rank < 1 ? RANK_LOOKS.junior : rank > 1 ? RANK_LOOKS.senior : RANK_LOOKS.middle;
   }
 
-  function createStick(shirt, vestColor, size) {
-    const group = new THREE.Group();
-    const accent = new THREE.MeshStandardMaterial({ color: shirt, roughness: 0.5 });
-    const head = new THREE.Mesh(workerGeo.head, workerMat.skin);
-    head.position.y = 0.74;
-    head.castShadow = true;
-    const helmet = new THREE.Mesh(workerGeo.helmet, workerMat.hat);
-    helmet.position.y = 0.76;
-    helmet.castShadow = true;
-    const brim = new THREE.Mesh(workerGeo.brim, workerMat.hat);
-    brim.position.y = 0.77;
-    brim.castShadow = true;
-    const eyeL = new THREE.Mesh(workerGeo.eye, workerMat.eye);
-    eyeL.position.set(-0.06, 0.7, 0.155);
-    const eyeR = new THREE.Mesh(workerGeo.eye, workerMat.eye);
-    eyeR.position.set(0.06, 0.7, 0.155);
-    const torso = new THREE.Mesh(workerGeo.torso, workerMat.cloth);
-    torso.position.y = 0.46;
-    torso.castShadow = true;
-    const vestMaterial = vestColor === null ? workerMat.vest : new THREE.MeshStandardMaterial({ color: vestColor, roughness: 0.46 });
-    const vest = new THREE.Mesh(workerGeo.vest, vestMaterial);
-    vest.position.set(0, 0.48, 0.02);
-    vest.castShadow = true;
-    const stripe = new THREE.Mesh(workerGeo.stripe, workerMat.stripe);
-    stripe.position.set(0, 0.44, 0.03);
-    const patch = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.09, 0.04), accent);
-    patch.position.set(0.09, 0.55, 0.12);
-    const leftLeg = new THREE.Mesh(workerGeo.leg, workerMat.cloth);
-    leftLeg.castShadow = true;
-    const rightLeg = new THREE.Mesh(workerGeo.leg, workerMat.cloth);
-    rightLeg.castShadow = true;
-    const leftLegPivot = new THREE.Group();
-    leftLegPivot.position.set(-0.08, 0.32, 0);
-    leftLeg.position.set(0, -0.18, 0);
-    leftLegPivot.add(leftLeg);
-    const rightLegPivot = new THREE.Group();
-    rightLegPivot.position.set(0.08, 0.32, 0);
-    rightLeg.position.set(0, -0.18, 0);
-    rightLegPivot.add(rightLeg);
-    const leftArm = workerLimb(workerGeo.arm);
-    leftArm.position.set(-0.2, 0.58, 0.02);
-    leftArm.rotation.z = 0.28;
-    const rightArm = workerLimb(workerGeo.arm);
-    rightArm.position.set(0.2, 0.58, 0.02);
-    rightArm.rotation.z = -0.28;
+  // A worker: the figure of worker-model.js in his rank's clothes (looks by the hiring order), with
+  // the pickaxe and the cigarette in the right hand, the load on the back, the cube in the hands, the
+  // shadow, the selection ring and a hit sphere for taps.
+  function createStick(builder, size) {
+    const group = WorkerModel.create({ shirt: builder.shirt, rank: builder.rank, seed: builder.index });
+    const rightArm = group.userData.rightArm;
     const pick = new THREE.Group();
-    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.42, 6), workerMat.cloth);
+    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.42, 6), workerMat.handle);
     const headPick = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.06, 0.06), workerMat.pick);
     headPick.position.y = 0.18;
     pick.add(handle, headPick);
@@ -4013,20 +7334,10 @@
       new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, colorWrite: false })
     );
     hit.position.y = 0.5;
-    group.add(shadow, torso, vest, stripe, patch, head, eyeL, eyeR, helmet, brim, leftLegPivot, rightLegPivot, leftArm, rightArm, carry, hand, selection, hit);
+    group.add(shadow, carry, hand, selection, hit);
     group.scale.setScalar(STICK_SCALE * (size || 1));
     group.rotation.order = 'YXZ';
-    group.userData = {
-      leftLeg: leftLegPivot,
-      rightLeg: rightLegPivot,
-      leftArm: leftArm,
-      rightArm: rightArm,
-      pick: pick,
-      cigarette: cigarette,
-      carry: carry,
-      hand: hand,
-      selection: selection,
-    };
+    Object.assign(group.userData, { pick: pick, cigarette: cigarette, carry: carry, hand: hand, selection: selection });
     return group;
   }
 
@@ -4174,6 +7485,8 @@
   // realDt drives the status icons and the stride: both stand still while the game is paused.
   function updateSticks(time, realDt) {
     const dt = timeScale === 0 ? 0 : realDt || 0;
+    // The cabs first: a worker riding one stands where it is now.
+    updateTaxis(dt);
     badgeRoot.visible = levelRoot.visible;
     workerPlan.visible = levelRoot.visible;
     updateBadgeLod();
@@ -4185,6 +7498,8 @@
       }
       const pos = MB.builderPosition(builder, world, viewState.pos || (viewState.pos = {}));
       const t = pos.mode === 'ride' ? 0 : builder.segmentT;
+      // With an air taxi: hopping in, flying standing in its tub, hopping out.
+      const ride = builder.phase === 'taxi' ? taxiRide(builder) : null;
       const x = pos.x;
       // Onto or off a cube the body follows a climbing / hopping curve, not the logic's straight line.
       const y = pos.mode === 'climb'
@@ -4199,13 +7514,16 @@
       const w1 = mastDir(builder.to[0], builder.to[1], builder.to[2]);
       const wall = w1 || w0;
       const hanging = builder.phase !== 'walk' && !!wall && hangingAt(builder.cell);
-      const cling = wall ? NO_SHIFT : clingShift(builder.to);
+      const cling = wall || ride ? NO_SHIFT : clingShift(builder.to);
       const nudgeX = ((w0 ? w0[0] : 0) + ((w1 ? w1[0] : 0) - (w0 ? w0[0] : 0)) * t) * LADDER_STAND;
       const nudgeZ = ((w0 ? w0[1] : 0) + ((w1 ? w1[1] : 0) - (w0 ? w0[1] : 0)) * t) * LADDER_STAND;
       const sit = builder.phase === 'break' && builder.breakKind === 'rest' ? 0.12 : 0;
-      group.position.set(x + 0.5 + cling[0] + nudgeX, y - sit, z + 0.5 + cling[1] + nudgeZ);
+      if (ride) group.position.set(ride.x, ride.y, ride.z);
+      else group.position.set(x + 0.5 + cling[0] + nudgeX, y - sit, z + 0.5 + cling[1] + nudgeZ);
       let yawTarget = viewState.yaw === undefined ? group.rotation.y : viewState.yawTarget;
-      if ((pos.mode === 'ladder' || hanging) && wall) {
+      if (ride) {
+        yawTarget = ride.yaw;
+      } else if ((pos.mode === 'ladder' || hanging) && wall) {
         yawTarget = Math.atan2(wall[0], wall[1]);
       } else {
         const faceDx = builder.faceX + 0.5 - group.position.x;
@@ -4222,6 +7540,14 @@
         viewState.yaw += Math.abs(turn) <= step ? turn : Math.sign(turn) * step;
       }
       group.rotation.y = viewState.yaw;
+      // Asleep in the dorm: inside, out of sight.
+      viewState.indoors = builder.sleepPlace === 'dorm' && builder.phase === 'break' && builder.breakKind === 'sleep';
+      if (group.visible === viewState.indoors) group.visible = !viewState.indoors;
+      trackFootprints(viewState, builder, group, y, pos.mode);
+      // In the heat a worker sweats: now and then drops fly off his head (about every 3 s).
+      if (weatherView.heat > 0.3 && dt > 0 && Math.random() < dt * 0.35 * weatherView.heat) {
+        burst(group.position.x, group.position.y + 1.05, group.position.z, 0xa8dcff, 2);
+      }
       const moving = builder.phase === 'walk';
       const load = MB.carryLoad(builder, world, viewState.load);
       const carrying = builder.carry.length > 0;
@@ -4238,6 +7564,8 @@
       group.rotation.x = carrying ? 0.04 + 0.1 * fill + (heavy ? 0.12 : 0) : 0;
       group.userData.carry.position.y = heavy ? 0.34 : 0.4;
       if (heavy && moving && timeScale !== 20) group.position.y -= Math.abs(step) * 0.05;
+      // A light walk bounces: up as the legs pass each other, down on each step.
+      else if (moving && timeScale !== 20 && pos.mode === 'walk') group.position.y += (1 - Math.abs(step)) * 0.035;
       group.userData.leftLeg.rotation.x = swing;
       group.userData.rightLeg.rotation.x = -swing;
       if (builder.phase === 'mine') {
@@ -4248,6 +7576,13 @@
         if (timeScale !== 20 && Math.sin(builder.actionT * 16) > 0.92) {
           burst(builder.faceX + 0.5, 0.7, builder.faceZ + 0.5, MB.MATERIAL[builder.mineQueue[0].materialId].color, 2);
         }
+      } else if (builder.phase === 'campFetch') {
+        group.userData.rightArm.rotation.x = timeScale === 20 ? -0.6 : -0.6 + Math.sin(builder.actionT * 16) * 1.05;
+        group.userData.leftArm.rotation.x = 0.35;
+      } else if (builder.phase === 'campBuild') {
+        const shake = timeScale === 20 ? 0 : Math.sin(builder.actionT * 18) * 0.06;
+        group.userData.rightArm.rotation.x = -1.6 + shake;
+        group.userData.leftArm.rotation.x = -1.6 - shake;
       } else if (builder.phase === 'plan') {
         group.userData.rightArm.rotation.x = -1.05;
         group.userData.leftArm.rotation.x = -1.05;
@@ -4304,11 +7639,25 @@
       if (builder.phase === 'meal') {
         group.userData.leftArm.rotation.x = -2.15;
         group.userData.rightArm.rotation.x = -2.15;
+      } else if (builder.phase === 'fall' && builder.fall) {
+        poseFall(group, builder.fall, hanging, timeScale === 20 ? 0 : time);
+      } else if (builder.phase === 'break' && (builder.breakKind === 'sleep' || builder.breakKind === 'heal')) {
+        // Asleep on his back in the trailer camp (or lying in the hospital), breathing slowly.
+        const breath = timeScale === 20 ? 0 : Math.sin(builder.actionT * 1.6 + builder.index) * 0.04;
+        group.rotation.x = -Math.PI / 2;
+        group.position.y += 0.14;
+        group.userData.leftArm.rotation.x = 0.08 + breath;
+        group.userData.rightArm.rotation.x = 0.08 + breath;
+        group.userData.leftLeg.rotation.x = 0;
+        group.userData.rightLeg.rotation.x = 0;
       } else if (builder.phase === 'break' && builder.breakKind === 'rest') {
         group.userData.leftArm.rotation.x = 0.4;
         group.userData.rightArm.rotation.x = 0.4;
         group.userData.leftLeg.rotation.x = 1.15;
         group.userData.rightLeg.rotation.x = 1.15;
+      } else if (builder.phase === 'smokeCall') {
+        group.userData.rightArm.rotation.x = -2.15;
+        group.userData.leftArm.rotation.x = 0.12;
       } else if (builder.phase === 'break' && builder.breakKind === 'smoke') {
         const drag = timeScale === 20 ? 0 : Math.sin(builder.actionT * 3.2);
         group.userData.rightArm.rotation.x = -2.15 - drag * 0.28;
@@ -4318,9 +7667,12 @@
         }
       }
       group.userData.cigarette.visible = builder.phase === 'break' && builder.breakKind === 'smoke';
+      // Hurt: bandages by the step of his health (MB.injuryStatus — the same steps as his work).
+      WorkerModel.bandage(group, BANDAGE_STEPS[MB.injuryStatus(builder)] || 0);
       updateHandCube(viewState, builder, group, dt);
       updateBadge(viewState, builder, workerIntent(builder, load, viewState.badge), dt, load);
-      group.userData.pick.visible = builder.phase === 'mine';
+      updateScream(viewState, builder, time);
+      group.userData.pick.visible = builder.phase === 'mine' || builder.phase === 'campFetch';
       // carryVersion changes with every change of the carry; the capacity with a new trip.
       // The cube being set is in the hands, not on the back: the stack shrinks as placing starts.
       const inHands = builder.phase === 'place' ? builder.carry[0] || null : null;
@@ -4538,7 +7890,7 @@
       const x = cell[0] + dirs[i][0];
       const z = cell[2] + dirs[i][1];
       if (!index.inside(x, cell[1], z)) continue;
-      if (world.solidGrid[index.id(x, cell[1], z)] === 1) return [dirs[i][0] * 0.26, dirs[i][1] * 0.26];
+      if (world.solidGrid[index.id(x, cell[1], z)] === 1) return [dirs[i][0] * 0.24, dirs[i][1] * 0.24];
     }
     return [0, 0];
   }
@@ -4563,10 +7915,140 @@
 
 
   function onScaffold(event) {
+    // The player's repair is done: a burst of fresh dust and «Починено».
+    if (event.manual) {
+      if (timeScale === 20) return;
+      burst(event.x + 0.5, event.y + 0.5, event.z + 0.5, 0x6fe08a, 10);
+      floatAt(event.x + 0.5, event.y + 1.2, event.z + 0.5, 'Починено', 'gold');
+      tone(660, 0.08);
+      return;
+    }
     if (timeScale === 1) {
       burst(event.x + 0.5, event.y + 0.45, event.z + 0.5, 0xc2a36b, 4);
       tone(210, 0.045);
     }
+  }
+
+  // «Учебный центр»: a worker passed a rank — his helmet takes its colour, a pop over him.
+  function onRankUp(event) {
+    const view = stickViews.get(event.builder);
+    if (!view || !view.group.userData.body) return;
+    WorkerModel.dress(view.group, event.rank);
+    if (timeScale !== 1) return;
+    const p = view.group.position;
+    const spec = MB.TRAINING_RANKS[event.rank - 1];
+    burst(p.x, p.y + 0.9, p.z, spec ? parseInt(spec.helmet, 16) : 0xffd24a, 10);
+    floatAt(p.x, p.y + 1.3, p.z, event.rank + ' разряд!', 'gold');
+    tone(660 + event.rank * 60, 0.1);
+  }
+
+  // The cafe's pastry eaten on the spot: crumbs and its name over the worker.
+  function onSnack(event) {
+    const builder = world.builders[event.builder];
+    const view = builder ? stickViews.get(builder) : null;
+    if (!view || timeScale !== 1) return;
+    const p = view.group.position;
+    burst(p.x, p.y + 0.8, p.z, 0xe0a85a, 5);
+    floatAt(p.x, p.y + 1.2, p.z, MB.DISH[event.dish] ? MB.DISH[event.dish].name : 'Перекус', 'gold');
+  }
+
+  // «Торт «Наполеон»»: its moment — everyone who ate it works faster for a while.
+  function onTorte() {
+    UI.toast({ text: 'Торт «Наполеон»: у всех, кто его ел, +25% ко всему на 40 с', icon: 'icons/icon-dish-napoleon.jpg', tone: 'good', key: 'torte', duration: 2600 });
+  }
+
+  // A piece cracked (half its durability gone), wore through or broke: dust, and a creak when it breaks.
+  function onScaffoldWear(event) {
+    if (timeScale !== 1) return;
+    burst(event.x + 0.5, event.y + 0.45, event.z + 0.5, event.broken ? 0x8a6a48 : 0xb59a72, event.broken ? 8 : 3);
+    if (event.broken) tone(120, 0.08);
+  }
+
+  // A worker steps onto a piece worn to nothing: it creaks and sheds dust while he freezes on it.
+  function onFallStart(event) {
+    if (timeScale !== 1) return;
+    burst(event.x + 0.5, event.y + 0.3, event.z + 0.5, 0x9a7a58, 5);
+    tone(150, 0.12);
+  }
+
+  // He hit the floor: dust, a thud and the health he lost over him; at no health — a toast, he goes
+  // to the hospital.
+  function onInjury(event) {
+    const builder = world.builders[event.builder];
+    if (!builder) return;
+    if (timeScale !== 20) {
+      burst(event.x + 0.5, event.y + 0.15, event.z + 0.5, 0xb59a72, 9);
+      floatAt(event.x + 0.5, event.y + 1.3, event.z + 0.5, '−' + Math.round(event.damage), 'hurt', 'здоровье');
+      tone(90, 0.14);
+    }
+    if (event.health <= 0) {
+      UI.toast({ text: 'Рабочий ' + workerNumber(builder) + ' сорвался с лесов и уходит в больницу на ' + MB.formatClock(MB.INJURY.hospitalSeconds),
+        icon: 'health', tone: 'warn', key: 'hospital-' + event.builder });
+    }
+  }
+
+  // Wear on view: a cracked piece goes darker with dark crack lines, one worn to nothing reddish and
+  // leaning more, a broken one darker still under a red-and-white tape cross. Broken pieces stay on
+  // view until repaired.
+  function paintScaffoldWear(id) {
+    const piece = scaffoldPieceById.get(id);
+    if (!piece) return;
+    const state = piece.broken ? 'broken' : piece.worn ? 'worn' : piece.cracked ? 'cracked' : 'ok';
+    const tint = WEAR_TINT[state];
+    const tilt = wearTilt(piece, WEAR_TILT[state]);
+    const list = scaffoldLookup.get(id) || [];
+    for (let i = 0; i < list.length; i++) {
+      const item = list[i];
+      if (item.owner !== id) continue;
+      item.mesh.setColorAt(item.index, tint);
+      item.mesh.setMatrixAt(item.index, tilt ? wearMatrix.multiplyMatrices(tilt, item.matrix) : item.matrix);
+      scaffoldDirty.add(item.mesh);
+    }
+    showScaffoldMarks(scaffoldCrackLookup.get(id), state !== 'ok', tilt);
+    showScaffoldMarks(scaffoldTapeLookup.get(id), state === 'broken', tilt);
+  }
+
+  function showScaffoldMarks(list, visible, tilt) {
+    if (!list) return;
+    for (let i = 0; i < list.length; i++) {
+      const item = list[i];
+      if (!visible) item.mesh.setMatrixAt(item.index, hiddenScaffoldMatrix);
+      else item.mesh.setMatrixAt(item.index, tilt ? wearMatrix.multiplyMatrices(tilt, item.matrix) : item.matrix);
+      scaffoldDirty.add(item.mesh);
+    }
+  }
+
+  // The lean of a worn piece by `angle`: a ladder (or frame) turns about its foot by the wall so its
+  // top comes off the wall; a deck turns about one edge so the opposite one drops (the edge — steady
+  // per cell). Null when it stands straight.
+  const wearMatrix = new THREE.Matrix4();
+  const wearPivot = new THREE.Matrix4();
+  const wearTurn = new THREE.Matrix4();
+  const wearAxis = new THREE.Vector3();
+  function wearTilt(piece, angle) {
+    if (!angle) return null;
+    let px;
+    let py;
+    let pz;
+    if (piece.deck) {
+      const side = ((piece.x * 7 + piece.z * 13 + piece.y * 3) % 4 + 4) % 4;
+      const sx = side === 0 ? 1 : side === 1 ? -1 : 0;
+      const sz = side === 2 ? 1 : side === 3 ? -1 : 0;
+      px = piece.x + 0.5 - sx * 0.5;
+      py = piece.y + 0.06;
+      pz = piece.z + 0.5 - sz * 0.5;
+      wearAxis.set(sz, 0, -sx);
+    } else {
+      const out = piece.ladder ? 0.14 : 0.26;
+      px = piece.x + 0.5 + piece.ox * out;
+      py = piece.y;
+      pz = piece.z + 0.5 + piece.oz * out;
+      wearAxis.set(-piece.oz, 0, piece.ox);
+    }
+    wearTurn.makeRotationAxis(wearAxis.normalize(), angle);
+    wearPivot.makeTranslation(px, py, pz);
+    const tilt = new THREE.Matrix4().multiplyMatrices(wearPivot, wearTurn);
+    return tilt.multiply(wearPivot.makeTranslation(-px, -py, -pz));
   }
 
   function revealScaffold(id) {
@@ -4582,6 +8064,7 @@
   function flushScaffold() {
     scaffoldDirty.forEach(function (mesh) {
       mesh.instanceMatrix.needsUpdate = true;
+      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
     });
     scaffoldDirty.clear();
   }
@@ -4596,21 +8079,138 @@
     }
     scaffoldMeshes = [];
     scaffoldLookup = new Map();
+    scaffoldCrackLookup = new Map();
+    scaffoldTapeLookup = new Map();
+    scaffoldPieceById = new Map();
   }
 
   function refreshScaffoldView() {
     const started = performance.now();
     buildScaffoldView();
-    for (let i = 0; i < world.scaffoldPieces.length; i++) {
-      const piece = world.scaffoldPieces[i];
-      if (piece.built && !piece.removed) revealScaffold(piece.id);
-    }
-    for (let i = 0; i < world.scaffoldDecks.length; i++) {
-      const deck = world.scaffoldDecks[i];
-      if (deck.built && !deck.removed) revealScaffold(deck.id);
+    const all = world.scaffoldPieces.concat(world.scaffoldDecks);
+    for (let i = 0; i < all.length; i++) {
+      const piece = all[i];
+      if (piece.removed || !(piece.built || piece.broken)) continue;
+      revealScaffold(piece.id);
+      if (piece.cracked || piece.worn || piece.broken) paintScaffoldWear(piece.id);
     }
     flushScaffold();
     MicroBuildersProfiler.add('scaffoldView', performance.now() - started);
+  }
+
+  // Deck floors of the five scaffold types, painted once on 64×64 canvases (steady pseudo-random grain).
+  function scaffoldFloorTextures() {
+    if (scaffoldFloors) return scaffoldFloors;
+    let seed = 7;
+    const rnd = function () {
+      seed = (seed * 16807) % 2147483647;
+      return seed / 2147483647;
+    };
+    function floor(paint) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 64;
+      canvas.height = 64;
+      paint(canvas.getContext('2d'));
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = 4;
+      return texture;
+    }
+    // Chequer plate: raised ticks in alternating diagonals, lit from the top-left.
+    function chequer(g, base, light, dark) {
+      g.fillStyle = base;
+      g.fillRect(0, 0, 64, 64);
+      for (let y = 0; y < 64; y += 8) {
+        for (let x = 0; x < 64; x += 8) {
+          g.save();
+          g.translate(x + 4, y + 4);
+          g.rotate((x + y) % 16 === 0 ? Math.PI / 4 : -Math.PI / 4);
+          g.fillStyle = dark;
+          g.fillRect(-3, 0, 6, 1.6);
+          g.fillStyle = light;
+          g.fillRect(-3, -1.4, 6, 1.4);
+          g.restore();
+        }
+      }
+    }
+    function edge(g, width) {
+      g.beginPath();
+      g.rect(0, 0, 64, 64);
+      g.rect(width, width, 64 - 2 * width, 64 - 2 * width);
+    }
+    scaffoldFloors = [
+      floor(function (g) {
+        // Wood: four boards, grain, dark gaps and nail heads.
+        const tones = ['#c39058', '#b07b45', '#c79a63', '#a9753f'];
+        for (let b = 0; b < 4; b++) {
+          const y = b * 16;
+          g.fillStyle = tones[b];
+          g.fillRect(0, y, 64, 16);
+          g.fillStyle = 'rgba(92, 56, 24, 0.32)';
+          for (let k = 0; k < 5; k++) g.fillRect(0, y + 2 + Math.floor(rnd() * 11), 64, 1);
+          g.fillStyle = '#5a391b';
+          g.fillRect(0, y + 15, 64, 1);
+          g.fillRect(Math.floor(8 + rnd() * 48), y, 1, 15);
+          g.fillStyle = '#3e2812';
+          g.fillRect(3, y + 7, 2, 2);
+          g.fillRect(59, y + 7, 2, 2);
+        }
+      }),
+      floor(function (g) {
+        // Concrete: four slabs, speckles, seams.
+        g.fillStyle = '#aaa79f';
+        g.fillRect(0, 0, 64, 64);
+        for (let i = 0; i < 700; i++) {
+          g.fillStyle = rnd() < 0.5 ? 'rgba(70, 68, 62, 0.28)' : 'rgba(232, 229, 220, 0.32)';
+          g.fillRect(Math.floor(rnd() * 64), Math.floor(rnd() * 64), 1, 1);
+        }
+        g.fillStyle = '#76736c';
+        g.fillRect(31, 0, 2, 64);
+        g.fillRect(0, 31, 64, 2);
+        g.fillRect(0, 0, 64, 1);
+        g.fillRect(0, 0, 1, 64);
+      }),
+      floor(function (g) {
+        // Painted plywood: green paint, lighter anti-slip dots, a darker painted rim.
+        g.fillStyle = '#3d9862';
+        g.fillRect(0, 0, 64, 64);
+        g.fillStyle = '#62b985';
+        for (let y = 4; y < 64; y += 8) {
+          for (let x = (y / 8) % 2 ? 8 : 4; x < 64; x += 8) g.fillRect(x - 1, y - 1, 2, 2);
+        }
+        g.fillStyle = '#2a7046';
+        edge(g, 3);
+        g.fill('evenodd');
+      }),
+      floor(function (g) {
+        // Chequer plate, a yellow-black hazard edge.
+        chequer(g, '#9da4ab', '#cfd5da', '#686f76');
+        g.save();
+        edge(g, 7);
+        g.clip('evenodd');
+        g.fillStyle = '#1e1e1e';
+        g.fillRect(0, 0, 64, 64);
+        g.fillStyle = '#f2c230';
+        for (let k = -64; k < 128; k += 12) {
+          g.beginPath();
+          g.moveTo(k, 0);
+          g.lineTo(k + 6, 0);
+          g.lineTo(k + 70, 64);
+          g.lineTo(k + 64, 64);
+          g.closePath();
+          g.fill();
+        }
+        g.restore();
+      }),
+      floor(function (g) {
+        // Dark chequer plate, a red edge.
+        chequer(g, '#4a5058', '#727a83', '#2c3036');
+        g.fillStyle = '#c8262e';
+        edge(g, 5);
+        g.fill('evenodd');
+      }),
+    ];
+    return scaffoldFloors;
   }
 
   function buildScaffoldView() {
@@ -4626,8 +8226,12 @@
     const rails = [];
     const posts = [];
     const couplers = [];
+    const cracks = [];
+    const tapes = [];
     const up = new THREE.Vector3(0, 1, 0);
     const dir = new THREE.Vector3();
+    // The type of what is stamped now (MB.scaffoldTier by its level): each type has its own look.
+    let tier = 1;
     function stamp(list, id, px, py, pz, sx, sy, sz, dx, dy, dz, also) {
       dummy.position.set(px, py, pz);
       dummy.scale.set(sx, sy, sz);
@@ -4637,10 +8241,22 @@
         dummy.quaternion.setFromUnitVectors(up, dir);
       }
       dummy.updateMatrix();
-      list.push({ id: id, also: also || '', matrix: dummy.matrix.clone() });
+      list.push({ id: id, also: also || '', tier: tier, matrix: dummy.matrix.clone() });
+    }
+    // A bar from one point to another (crack lines, tape strips).
+    function bar(list, id, ax, ay, az, bx, by, bz, radius) {
+      stamp(list, id, (ax + bx) / 2, (ay + by) / 2, (az + bz) / 2, radius, Math.hypot(bx - ax, by - ay, bz - az), radius,
+        bx - ax, by - ay, bz - az);
+    }
+    // A steady pseudo-random 0…1 per cell and salt, so crack lines differ between pieces.
+    function jitter(x, y, z, salt) {
+      const h = Math.sin(x * 12.9898 + y * 78.233 + z * 37.719 + salt * 4.581) * 43758.5453;
+      return h - Math.floor(h);
     }
     for (let i = 0; i < pieces.length; i++) {
       const piece = pieces[i];
+      tier = MB.scaffoldTier(piece.y);
+      scaffoldPieceById.set(piece.id, piece);
       const ox = piece.ox;
       const oz = piece.oz;
       const perpX = -oz;
@@ -4674,6 +8290,22 @@
         const plateZ = Math.abs(perpZ) * 0.34 + 0.22;
         stamp(plates, piece.id, (x1 + x2) / 2, 0.025, (z1 + z2) / 2, plateX, 0.05, plateZ, 0, 1, 0);
       }
+      // Cracks: a split along each pole; the tape: a cross over the ladder, off the wall.
+      for (let side = 0; side < 2; side++) {
+        const px = side === 0 ? x1 : x2;
+        const pz = side === 0 ? z1 : z2;
+        const at = piece.y + 0.2 + jitter(piece.x, piece.y, piece.z, side) * 0.45;
+        // A kinked split: up the pole, then a short jag aside.
+        const cx = px - ox * radius;
+        const cz = pz - oz * radius;
+        const jag = (side === 0 ? 1 : -1) * 0.07;
+        bar(cracks, piece.id, cx, at, cz, cx + perpX * jag, at + 0.2, cz + perpZ * jag, radius * 0.8);
+        bar(cracks, piece.id, cx + perpX * jag, at + 0.2, cz + perpZ * jag, cx, at + 0.36, cz, radius * 0.8);
+      }
+      const fx = -ox * 0.06;
+      const fz = -oz * 0.06;
+      bar(tapes, piece.id, x1 + fx, piece.y + 0.1, z1 + fz, x2 + fx, piece.y + 0.9, z2 + fz, 0.042);
+      bar(tapes, piece.id, x2 + fx, piece.y + 0.1, z2 + fz, x1 + fx, piece.y + 0.9, z1 + fz, 0.042);
     }
     const deckAt = new Set();
     const ladderBy = new Map();
@@ -4702,11 +8334,15 @@
       const len = Math.hypot(dx, dz);
       stamp(braces, id, mx, y + 0.88, mz, 0.024, len, 0.024, dx, 0, dz);
       stamp(rails, id, mx, y + 0.5, mz, 0.018, len, 0.018, dx, 0, dz);
-      stamp(posts, id, x0, y + 0.46, z0, 0.028, 0.86, 0.028, 0, 1, 0);
-      stamp(posts, id, x1, y + 0.46, z1, 0.028, 0.86, 0.028, 0, 1, 0);
+      // A post at a corner against a wall stands a hair off its cell edge, clear of the cube face.
+      const off = function (v) { const cell = Math.floor(v); return Math.min(cell + 0.97, Math.max(cell + 0.03, v)); };
+      stamp(posts, id, off(x0), y + 0.46, off(z0), 0.028, 0.86, 0.028, 0, 1, 0);
+      stamp(posts, id, off(x1), y + 0.46, off(z1), 0.028, 0.86, 0.028, 0, 1, 0);
     }
     for (let i = 0; i < decks.length; i++) {
       const deck = decks[i];
+      tier = MB.scaffoldTier(deck.y);
+      scaffoldPieceById.set(deck.id, deck);
       const east = hasConnectedSide(deck.x + 1, deck.y, deck.z);
       const west = hasConnectedSide(deck.x - 1, deck.y, deck.z);
       const north = hasConnectedSide(deck.x, deck.y, deck.z + 1);
@@ -4740,6 +8376,25 @@
       if (!west) layRail(deck.id, deck.y, minX, minZ, minX, maxZ);
       if (!north) layRail(deck.id, deck.y, minX, maxZ, maxX, maxZ);
       if (!south) layRail(deck.id, deck.y, minX, minZ, maxX, minZ);
+      // Cracks: three dark lines over the boards; the tape: a cross from corner to corner.
+      for (let c = 0; c < 3; c++) {
+        const cx = minX + (0.2 + 0.6 * jitter(deck.x, deck.y, deck.z, c)) * lenX;
+        const cz = minZ + (0.2 + 0.6 * jitter(deck.x, deck.y, deck.z, c + 7)) * lenZ;
+        const angle = jitter(deck.x, deck.y, deck.z, c + 13) * Math.PI;
+        const half = 0.12 + 0.06 * jitter(deck.x, deck.y, deck.z, c + 21);
+        bar(cracks, deck.id, cx - Math.cos(angle) * half, deck.y + 0.085, cz - Math.sin(angle) * half,
+          cx + Math.cos(angle) * half, deck.y + 0.085, cz + Math.sin(angle) * half, 0.02);
+      }
+      // The tape: a cordon round the deck at waist height, seen from any side.
+      const tx0 = minX + 0.03;
+      const tx1 = maxX - 0.03;
+      const tz0 = minZ + 0.03;
+      const tz1 = maxZ - 0.03;
+      const ty = deck.y + 0.6;
+      bar(tapes, deck.id, tx0, ty, tz0, tx1, ty, tz0, 0.04);
+      bar(tapes, deck.id, tx0, ty, tz1, tx1, ty, tz1, 0.04);
+      bar(tapes, deck.id, tx0, ty, tz0, tx0, ty, tz1, 0.04);
+      bar(tapes, deck.id, tx1, ty, tz0, tx1, ty, tz1, 0.04);
     }
     const byFloor = new Map();
     for (let i = 0; i < pieces.length; i++) {
@@ -4761,6 +8416,7 @@
         for (let j = i + 1; j < list.length; j++) {
           const a = list[i];
           const b = list[j];
+          tier = MB.scaffoldTier(a.y);
           const dx = b.x - a.x;
           const dz = b.z - a.z;
           if (dx !== 0 && dz !== 0) continue;
@@ -4786,65 +8442,104 @@
         }
       }
     });
-    const metal = new THREE.MeshStandardMaterial({ color: 0x9aa7b0, roughness: 0.38, metalness: 0.72 });
-    const board = document.createElement('canvas');
-    board.width = 64;
-    board.height = 16;
-    const paint = board.getContext('2d');
-    paint.fillStyle = '#c4a36a';
-    paint.fillRect(0, 0, 64, 16);
-    paint.fillStyle = '#8d6840';
-    paint.fillRect(15, 0, 2, 16);
-    paint.fillRect(31, 0, 2, 16);
-    paint.fillRect(47, 0, 2, 16);
-    paint.fillStyle = '#d8bc88';
-    paint.fillRect(0, 1, 64, 2);
-    const boardTex = new THREE.CanvasTexture(board);
-    boardTex.wrapS = THREE.RepeatWrapping;
-    boardTex.wrapT = THREE.RepeatWrapping;
-    const wood = new THREE.MeshStandardMaterial({ map: boardTex, color: 0xffffff, roughness: 0.84, metalness: 0.02 });
-    const orange = new THREE.MeshStandardMaterial({ color: 0xe07a2c, roughness: 0.55, metalness: 0.12 });
+    const stripes = document.createElement('canvas');
+    stripes.width = 4;
+    stripes.height = 32;
+    const stripePaint = stripes.getContext('2d');
+    for (let band = 0; band < 8; band++) {
+      stripePaint.fillStyle = band % 2 === 0 ? '#e8242a' : '#ffffff';
+      stripePaint.fillRect(0, band * 4, 4, 4);
+    }
+    const stripeTex = new THREE.CanvasTexture(stripes);
+    stripeTex.magFilter = THREE.NearestFilter;
+    // Five types by height: wood, galvanised steel, blue frames, yellow system scaffolding, heavy dark
+    // steel. Frame — poles, rungs, rails, posts, couplers; brace — the diagonals; deck — its floor.
+    const floors = scaffoldFloorTextures();
+    const looks = SCAFFOLD_LOOKS.map(function (look, i) {
+      return {
+        timber: !!look.timber,
+        frame: new THREE.MeshStandardMaterial({ color: look.frame, roughness: look.rough, metalness: look.metal }),
+        brace: new THREE.MeshStandardMaterial({ color: look.brace, roughness: 0.55, metalness: Math.min(0.3, look.metal) }),
+        deck: new THREE.MeshStandardMaterial({ map: floors[i], color: 0xffffff, roughness: look.deckRough, metalness: look.deckMetal }),
+      };
+    });
     const plateMat = new THREE.MeshStandardMaterial({ color: 0x6d7680, roughness: 0.6, metalness: 0.4 });
-    function makeInstances(geometry, material, parts, shadow) {
+    const crackMat = new THREE.MeshStandardMaterial({ color: 0x241a12, roughness: 1, metalness: 0 });
+    const tapeMat = new THREE.MeshStandardMaterial({ map: stripeTex, color: 0xffffff, roughness: 0.7, metalness: 0,
+      emissive: 0x401010, emissiveIntensity: 0.6 });
+    function lookSet(tierIndex) {
+      return looks[Math.min(looks.length, Math.max(1, tierIndex)) - 1];
+    }
+    function lookOf(kind, tierIndex) {
+      if (kind === 'plate') return plateMat;
+      return lookSet(tierIndex)[kind];
+    }
+    function hide(mesh, i) {
+      mesh.setMatrixAt(i, hiddenScaffoldMatrix);
+    }
+    // One instanced mesh per kind and type. Every instance starts hidden (revealScaffold shows a built
+    // piece) and white (paintScaffoldWear tints a worn one; `owner` — the piece whose wear it shows).
+    // `bar`: a tube kind — the wooden type gets square timber (a 2×1×2 box, the same size as the tube).
+    function makeInstances(geometry, kind, parts, bar) {
+      const byTier = new Map();
+      for (let i = 0; i < parts.length; i++) {
+        if (!byTier.has(parts[i].tier)) byTier.set(parts[i].tier, []);
+        byTier.get(parts[i].tier).push(parts[i]);
+      }
+      let first = true;
+      byTier.forEach(function (list, tierIndex) {
+        const timber = bar && lookSet(tierIndex).timber;
+        const shape = timber ? new THREE.BoxGeometry(2, 1, 2) : first ? geometry : geometry.clone();
+        if (!timber) first = false;
+        const mesh = new THREE.InstancedMesh(shape, lookOf(kind, tierIndex), list.length);
+        mesh.frustumCulled = false;
+        mesh.castShadow = false;
+        mesh.receiveShadow = true;
+        for (let i = 0; i < list.length; i++) {
+          const item = { mesh: mesh, index: i, matrix: list[i].matrix, owner: list[i].id };
+          addLookup(scaffoldLookup, list[i].id, item);
+          if (list[i].also) addLookup(scaffoldLookup, list[i].also, item);
+          hide(mesh, i);
+          mesh.setColorAt(i, WEAR_TINT.ok);
+        }
+        mesh.instanceMatrix.needsUpdate = true;
+        mesh.instanceColor.needsUpdate = true;
+        levelRoot.add(mesh);
+        scaffoldMeshes.push(mesh);
+      });
+    }
+    // Wear marks: hidden until paintScaffoldWear shows them.
+    function makeMarks(geometry, material, parts, lookup) {
       if (parts.length === 0) return;
       const mesh = new THREE.InstancedMesh(geometry, material, parts.length);
       mesh.frustumCulled = false;
       mesh.castShadow = false;
-      mesh.receiveShadow = true;
       for (let i = 0; i < parts.length; i++) {
-        let list = scaffoldLookup.get(parts[i].id);
-        if (!list) {
-          list = [];
-          scaffoldLookup.set(parts[i].id, list);
-        }
-        const item = { mesh: mesh, index: i, matrix: parts[i].matrix };
-        list.push(item);
-        if (parts[i].also) {
-          let extra = scaffoldLookup.get(parts[i].also);
-          if (!extra) {
-            extra = [];
-            scaffoldLookup.set(parts[i].also, extra);
-          }
-          extra.push(item);
-        }
-        dummy.position.set(0, -40, 0);
-        dummy.quaternion.identity();
-        dummy.scale.set(0.001, 0.001, 0.001);
-        dummy.updateMatrix();
-        mesh.setMatrixAt(i, dummy.matrix);
+        addLookup(lookup, parts[i].id, { mesh: mesh, index: i, matrix: parts[i].matrix });
+        hide(mesh, i);
       }
       mesh.instanceMatrix.needsUpdate = true;
       levelRoot.add(mesh);
       scaffoldMeshes.push(mesh);
     }
-    makeInstances(new THREE.CylinderGeometry(1, 1, 1, 6), metal, poles, true);
-    makeInstances(new THREE.CylinderGeometry(1, 1, 1, 5), metal, rungs, false);
-    makeInstances(new THREE.CylinderGeometry(1, 1, 1, 5), orange, braces, false);
-    makeInstances(new THREE.BoxGeometry(1, 1, 1), plateMat, plates, true);
-    makeInstances(new THREE.BoxGeometry(1, 1, 1), wood, planks, true);
-    makeInstances(new THREE.CylinderGeometry(1, 1, 1, 5), metal, rails, false);
-    makeInstances(new THREE.CylinderGeometry(1, 1, 1, 5), metal, posts, true);
-    makeInstances(new THREE.SphereGeometry(1, 6, 5), metal, couplers, false);
+    function addLookup(lookup, id, item) {
+      let list = lookup.get(id);
+      if (!list) {
+        list = [];
+        lookup.set(id, list);
+      }
+      list.push(item);
+    }
+    makeInstances(new THREE.CylinderGeometry(1, 1, 1, 6), 'frame', poles, true);
+    makeInstances(new THREE.CylinderGeometry(1, 1, 1, 5), 'frame', rungs, true);
+    makeInstances(new THREE.CylinderGeometry(1, 1, 1, 5), 'brace', braces, true);
+    makeInstances(new THREE.BoxGeometry(1, 1, 1), 'plate', plates);
+    makeInstances(new THREE.BoxGeometry(1, 1, 1), 'deck', planks);
+    makeInstances(new THREE.CylinderGeometry(1, 1, 1, 5), 'frame', rails, true);
+    makeInstances(new THREE.CylinderGeometry(1, 1, 1, 5), 'frame', posts, true);
+    makeInstances(new THREE.SphereGeometry(1, 6, 5), 'frame', couplers);
+    makeMarks(new THREE.BoxGeometry(1, 1, 1), crackMat, cracks, scaffoldCrackLookup);
+    makeMarks(new THREE.CylinderGeometry(1, 1, 1, 6), tapeMat, tapes, scaffoldTapeLookup);
   }
 
   function ensurePour(block) {
@@ -4913,7 +8608,7 @@
   // bit, so a cube being built never hangs in the air.
   // Window glass goes over its wall cube, a touch bigger so it shows.
   function pourSpan(block) {
-    return block.glassOf !== undefined ? 1.02 : 0.96;
+    return block.glassOf !== undefined ? 1.02 : CUBE_SIZE;
   }
 
   function setPourScale(record, block, index, scale) {
@@ -4978,7 +8673,8 @@
       const record = blockViews.get(pop.id);
       const u = pop.t / 0.36;
       const settled = u >= 1 || !record;
-      const scale = settled ? 1 : 1 + 0.12 * Math.sin(Math.PI * u) * (1 - 0.5 * u);
+      // A light swell: the cube fills its cell, so a bigger one would cut into its neighbours.
+      const scale = settled ? 1 : 1 + 0.05 * Math.sin(Math.PI * u) * (1 - 0.5 * u);
       if (record) setBlockVisualScale(record, scale, 0.001);
       if (settled) pops.splice(i, 1);
     }
@@ -5081,6 +8777,102 @@
 
   // The jump's body: knees bend and arms swing back, the push-off straightens him with the arms
   // swinging up, legs tuck a little in the air and reach for the ground, the landing bends the knees.
+  // Falling and lying after a fall: «А-а-а!» in a speech bubble over him (in place of his status
+  // icon), pulsing; its tail points down at him. One shared bubble texture; a sprite per worker,
+  // made on his first fall.
+  function screamBubble() {
+    if (screamMaterial) return screamMaterial;
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 160;
+    const g = canvas.getContext('2d');
+    const r = 34;
+    g.beginPath();
+    g.moveTo(10 + r, 10);
+    g.lineTo(246 - r, 10);
+    g.quadraticCurveTo(246, 10, 246, 10 + r);
+    g.lineTo(246, 118 - r);
+    g.quadraticCurveTo(246, 118, 246 - r, 118);
+    g.lineTo(112, 118);
+    g.lineTo(76, 152);
+    g.lineTo(84, 118);
+    g.lineTo(10 + r, 118);
+    g.quadraticCurveTo(10, 118, 10, 118 - r);
+    g.lineTo(10, 10 + r);
+    g.quadraticCurveTo(10, 10, 10 + r, 10);
+    g.closePath();
+    g.fillStyle = '#fffaf0';
+    g.fill();
+    g.lineWidth = 7;
+    g.strokeStyle = '#3a2a1c';
+    g.stroke();
+    g.fillStyle = '#c0392b';
+    g.font = '900 60px Manrope, sans-serif';
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillText('А-а-а!', 128, 66);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    screamMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false, depthWrite: false });
+    return screamMaterial;
+  }
+
+  function updateScream(viewState, builder, time) {
+    const fall = builder.phase === 'fall' ? builder.fall : null;
+    const show = !!fall && (fall.stage === 'drop' || fall.stage === 'down') && timeScale !== 20 && levelRoot.visible && !viewState.indoors;
+    if (!show) {
+      if (viewState.scream) viewState.scream.visible = false;
+      return;
+    }
+    if (!viewState.scream) {
+      viewState.scream = new THREE.Sprite(screamBubble());
+      viewState.scream.center.set(0.3, 0.05);
+      viewState.scream.renderOrder = 41;
+      badgeRoot.add(viewState.scream);
+    }
+    const sprite = viewState.scream;
+    const p = viewState.group.position;
+    const h = 0.6 * badgeLodState.scale * (1 + 0.06 * Math.sin(time * 18));
+    sprite.scale.set(h * 1.6, h, 1);
+    sprite.position.set(p.x, p.y + 0.75, p.z);
+    sprite.visible = true;
+    viewState.badge.group.visible = false;
+  }
+
+  // A fall (MB → stepFall): frozen on the piece, trembling — on a ladder clinging to it, on a deck
+  // arms out for balance; falling — arms up, legs kicking, leaning back; down — on his back, a leg
+  // twitching; up — getting up. `time` 0 — a still pose (×20).
+  function poseFall(group, fall, hanging, time) {
+    const u = group.userData;
+    const k = Math.sin(time * 38);
+    if (fall.stage === 'freeze') {
+      group.position.x += k * 0.015;
+      if (hanging) return;
+      u.rightArm.rotation.x = -1.7 + k * 0.25;
+      u.leftArm.rotation.x = -1.5 - k * 0.25;
+      u.leftLeg.rotation.x = 0.15;
+      u.rightLeg.rotation.x = -0.15;
+      group.rotation.x = -0.12 + k * 0.05;
+      return;
+    }
+    if (fall.stage === 'drop') {
+      const flail = Math.sin(time * 26);
+      u.rightArm.rotation.x = -2.9 + flail * 0.3;
+      u.leftArm.rotation.x = -2.9 - flail * 0.3;
+      u.leftLeg.rotation.x = -0.5 + flail * 0.4;
+      u.rightLeg.rotation.x = -0.5 - flail * 0.4;
+      group.rotation.x = -0.4;
+      return;
+    }
+    const up = fall.stage === 'up' ? Math.max(0, Math.min(1, fall.t / Math.max(0.01, fall.seconds))) : 0;
+    group.rotation.x = -Math.PI / 2 * (1 - up);
+    group.position.y += 0.14 * (1 - up);
+    u.leftArm.rotation.x = 0.3 * (1 - up);
+    u.rightArm.rotation.x = -0.4 * up;
+    u.leftLeg.rotation.x = 0.2 * (1 - up);
+    u.rightLeg.rotation.x = fall.stage === 'down' ? Math.max(0, Math.sin(time * 7)) * 0.35 : 0;
+  }
+
   function poseJumpDown(group, c) {
     const crouch = climbStage(c, 0, 0.25);
     const push = climbStage(c, 0.25, 0.36);
@@ -5135,14 +8927,15 @@
     const pour = pourViews.get(block.id);
     const support = pour ? pour.support : POUR_FLOOR;
     const coord = pourCell(support, Math.min(block.poured, total - 1), n);
-    const cell = 0.96 / n;
+    const cell = CUBE_SIZE / n;
+    const edge = (1 - CUBE_SIZE) / 2;
     // Aim at the part of the mini-cube next to its support.
     const aim = function (k) { return support[k] ? 0.5 + 0.2 * support[k] : 0.2 + Math.random() * 0.6; };
     emitFlyCube(
       group.position.x + Math.sin(yaw) * 0.3 * group.scale.x, group.position.y + 0.42 * group.scale.x, group.position.z + Math.cos(yaw) * 0.3 * group.scale.x,
-      block.x + 0.02 + (coord.x + aim(0)) * cell,
-      block.y + 0.02 + (coord.y + aim(1)) * cell,
-      block.z + 0.02 + (coord.z + aim(2)) * cell,
+      block.x + edge + (coord.x + aim(0)) * cell,
+      block.y + edge + (coord.y + aim(1)) * cell,
+      block.z + edge + (coord.z + aim(2)) * cell,
       MB.MATERIAL[block.materialId].color
     );
   }
@@ -5209,6 +9002,112 @@
     flyMesh.visible = levelRoot.visible;
   }
 
+  // A reusable world-space sound wave: reuse a finished slot, or replace the oldest call.
+  function callWave(x, y, z, radius, color) {
+    if (timeScale === 20 || currentScreen !== 'build') return;
+    let wave = callWaves[0];
+    for (let i = 1; i < callWaves.length; i++) {
+      if (callWaves[i].age > wave.age) wave = callWaves[i];
+    }
+    const tint = new THREE.Color(color);
+    wave.origin.set(x, y, z, 0);
+    wave.tint.set(tint.r, tint.g, tint.b, 0);
+    wave.radius = radius;
+    wave.age = 0;
+  }
+
+  // Brighten the thin spherical shell on visible surfaces, including instanced cubes. Chain the
+  // existing material hook so ground snow and rain still work; no cube traversal or extra draws.
+  // The cube materials (blockSurface and its clones): soft rounded edges drawn by the shader, then the
+  // call wave. On every axis-aligned box face (BoxGeometry, one segment: its corners are the face's
+  // half-extents) a band CUBE_BEVEL × the shorter half-extent wide along each edge tilts the normal
+  // toward that edge (up to 45°, where the next face takes over) and darkens by up to CUBE_SEAM, so
+  // two cubes side by side meet in a soft groove. Other shapes (the quarry rocks) are left as they are.
+  function cubeSurface(material) {
+    const compile = material.onBeforeCompile;
+    const key = material.customProgramCacheKey();
+    material.onBeforeCompile = function (shader) {
+      compile.call(this, shader);
+      shader.vertexShader = 'varying vec2 vCubeEdge;\nvarying vec2 vCubeHalf;\nvarying vec3 vCubeU;\nvarying vec3 vCubeV;\n' +
+        shader.vertexShader.replace('#include <project_vertex>', [
+          '#include <project_vertex>',
+          'vec3 cubeN = abs(normal);',
+          'vec3 cubeU = cubeN.x > 0.5 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);',
+          'vec3 cubeV = cubeN.z > 0.5 ? vec3(0.0, 1.0, 0.0) : vec3(0.0, 0.0, 1.0);',
+          'vec2 cubeAt = vec2(dot(position, cubeU), dot(position, cubeV));',
+          'vCubeEdge = sign(cubeAt);',
+          'vCubeHalf = max(cubeN.x, max(cubeN.y, cubeN.z)) > 0.999 ? abs(cubeAt) : vec2(0.0);',
+          'mat3 cubeView = mat3(modelViewMatrix);',
+          '#ifdef USE_INSTANCING',
+          'cubeView = cubeView * mat3(instanceMatrix);',
+          '#endif',
+          'vCubeU = normalize(cubeView * cubeU);',
+          'vCubeV = normalize(cubeView * cubeV);',
+        ].join('\n'));
+      shader.fragmentShader = 'varying vec2 vCubeEdge;\nvarying vec2 vCubeHalf;\nvarying vec3 vCubeU;\nvarying vec3 vCubeV;\n' +
+        shader.fragmentShader.replace('#include <normal_fragment_maps>', [
+          '#include <normal_fragment_maps>',
+          'if (vCubeHalf.x > 0.0 && vCubeHalf.y > 0.0) {',
+          '  float cubeBand = ' + CUBE_BEVEL.toFixed(3) + ' * min(vCubeHalf.x, vCubeHalf.y);',
+          '  vec2 cubeEdge = clamp(1.0 - (1.0 - abs(vCubeEdge)) * vCubeHalf / cubeBand, 0.0, 1.0);',
+          '  cubeEdge *= cubeEdge;',
+          '  normal = normalize(normal + sign(vCubeEdge.x) * cubeEdge.x * vCubeU + sign(vCubeEdge.y) * cubeEdge.y * vCubeV);',
+          '  diffuseColor.rgb *= 1.0 - ' + CUBE_SEAM.toFixed(3) + ' * max(cubeEdge.x, cubeEdge.y);',
+          '}',
+        ].join('\n'));
+    };
+    material.customProgramCacheKey = function () { return key + '|cubeEdge'; };
+    callWaveSurface(material);
+  }
+
+  function callWaveSurface(material) {
+    const compile = material.onBeforeCompile;
+    const key = material.customProgramCacheKey();
+    material.onBeforeCompile = function (shader) {
+      compile.call(this, shader);
+      shader.uniforms.uCallOrigin = callWaveUniforms.uCallOrigin;
+      shader.uniforms.uCallTint = callWaveUniforms.uCallTint;
+      shader.vertexShader = 'varying vec3 vCallWorld;\n' + shader.vertexShader.replace('#include <project_vertex>', [
+        '#include <project_vertex>',
+        'vec4 callWorld = vec4(transformed, 1.0);',
+        '#ifdef USE_INSTANCING',
+        'callWorld = instanceMatrix * callWorld;',
+        '#endif',
+        'vCallWorld = (modelMatrix * callWorld).xyz;',
+      ].join('\n'));
+      shader.fragmentShader = 'varying vec3 vCallWorld;\nuniform vec4 uCallOrigin[3];\nuniform vec4 uCallTint[3];\n' +
+        shader.fragmentShader.replace('#include <opaque_fragment>', [
+          'for (int callIndex = 0; callIndex < 3; callIndex++) {',
+          '  if (uCallTint[callIndex].a <= 0.0) continue;',
+          '  float callDistance = distance(vCallWorld, uCallOrigin[callIndex].xyz);',
+          '  float callWidth = max(0.22, uCallOrigin[callIndex].w * 0.045);',
+          '  float callShell = 1.0 - smoothstep(callWidth * 0.25, callWidth, abs(callDistance - uCallOrigin[callIndex].w));',
+          '  outgoingLight += uCallTint[callIndex].rgb * uCallTint[callIndex].a * callShell;',
+          '}',
+          '#include <opaque_fragment>',
+        ].join('\n'));
+    };
+    material.customProgramCacheKey = function () { return key + '|callWave'; };
+  }
+
+  // «Айда курить!»: a reddish wave crosses the cubes and the ground from the caller's mouth.
+  function onSmokeCall(event) {
+    if (timeScale === 20 || currentScreen !== 'build') return;
+    callWave(event.x + 0.5, event.y + 1.05, event.z + 0.5, event.radius, 0xff5a58);
+  }
+
+  // Real-time expansion takes 1.35 s, independently of simulation speed; accelerated FX vanish.
+  function updateCallWaves(dt) {
+    for (let i = 0; i < callWaves.length; i++) {
+      const wave = callWaves[i];
+      if (timeScale === 20 || !levelRoot.visible) wave.age = 2;
+      wave.age += dt;
+      const t = Math.min(1, wave.age / 1.35);
+      wave.origin.w = wave.radius * Math.min(1, t / 0.85);
+      wave.tint.w = Math.min(1, wave.age / 0.08) * (1 - t * t) * 1.35;
+    }
+  }
+
   function updateSparks(dt) {
     for (let i = 0; i < sparks.length; i++) {
       const spark = sparks[i];
@@ -5220,6 +9119,263 @@
       spark.mesh.position.z += spark.vz * dt;
       if (spark.life <= 0) spark.mesh.visible = false;
     }
+  }
+
+  // ---- lightning (a storm's strike, MB.strikeLightning → the 'lightning' event) ----
+  // The bolt: a jagged white-blue line from the clouds into the top of the struck cube, with a
+  // couple of branches; it flickers and is gone in half a second, the sky flashes with it. Every
+  // knocked-out cube cracks into 2×2×2 pieces glowing hot along the cracks, then they burst away
+  // from the strike with some chips, tumble, bounce off the ground or the roof and shrink away. The
+  // cubes are back as ghosts of the plan at once. Real time, so it reads at any speed.
+
+  function lightningMeshes() {
+    if (lightningFx.bolt) return;
+    const geometry = new THREE.CylinderGeometry(1, 1, 1, 5, 1, true);
+    function make(color, opacity) {
+      const mesh = new THREE.InstancedMesh(geometry, new THREE.MeshBasicMaterial({
+        color: color, transparent: true, opacity: opacity, blending: THREE.AdditiveBlending, depthWrite: false, fog: false,
+      }), BOLT_SEGMENTS);
+      mesh.frustumCulled = false;
+      mesh.renderOrder = 3;
+      mesh.visible = false;
+      scene.add(mesh);
+      return mesh;
+    }
+    lightningFx.bolt = make(0xf2f6ff, 1);
+    lightningFx.glow = make(0x7f9dff, 0.35);
+    const shards = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 }), SHARD_LIMIT);
+    shards.castShadow = true;
+    shards.frustumCulled = false;
+    shards.count = 0;
+    dummy.position.set(0, -50, 0);
+    dummy.scale.setScalar(0.001);
+    dummy.quaternion.identity();
+    dummy.updateMatrix();
+    for (let i = 0; i < SHARD_LIMIT; i++) {
+      shards.setMatrixAt(i, dummy.matrix);
+      shards.setColorAt(i, SHARD_HOT);
+    }
+    scene.add(shards);
+    lightningFx.shardMesh = shards;
+  }
+
+  // The bolt's points: from high above, a little off to the side, down to (x, y, z), split in halves
+  // with the middle pushed aside (less at every split).
+  function boltPath(x, y, z, height, spread) {
+    let points = [new THREE.Vector3(x + (Math.random() - 0.5) * spread, y + height, z + (Math.random() - 0.5) * spread), new THREE.Vector3(x, y, z)];
+    let push = height * 0.16;
+    for (let level = 0; level < 5; level++) {
+      const next = [points[0]];
+      for (let i = 1; i < points.length; i++) {
+        const a = points[i - 1];
+        const b = points[i];
+        next.push(new THREE.Vector3(
+          (a.x + b.x) / 2 + (Math.random() - 0.5) * push,
+          (a.y + b.y) / 2 + (Math.random() - 0.5) * push * 0.3,
+          (a.z + b.z) / 2 + (Math.random() - 0.5) * push
+        ), b);
+      }
+      points = next;
+      push *= 0.55;
+    }
+    return points;
+  }
+
+  function setBoltSegments(lines) {
+    const up = new THREE.Vector3(0, 1, 0);
+    const dir = new THREE.Vector3();
+    let n = 0;
+    lines.forEach(function (line) {
+      for (let i = 1; i < line.points.length && n < BOLT_SEGMENTS; i++) {
+        const a = line.points[i - 1];
+        const b = line.points[i];
+        dir.subVectors(b, a);
+        const length = dir.length();
+        if (length < 1e-4) continue;
+        dummy.position.addVectors(a, b).multiplyScalar(0.5);
+        dummy.quaternion.setFromUnitVectors(up, dir.multiplyScalar(1 / length));
+        dummy.scale.set(line.width, length, line.width);
+        dummy.updateMatrix();
+        lightningFx.bolt.setMatrixAt(n, dummy.matrix);
+        dummy.scale.set(line.width * 4, length, line.width * 4);
+        dummy.updateMatrix();
+        lightningFx.glow.setMatrixAt(n, dummy.matrix);
+        n += 1;
+      }
+    });
+    lightningFx.bolt.count = n;
+    lightningFx.glow.count = n;
+    lightningFx.bolt.instanceMatrix.needsUpdate = true;
+    lightningFx.glow.instanceMatrix.needsUpdate = true;
+  }
+
+  function onLightning(event) {
+    lightningMeshes();
+    const target = event.block;
+    const x = target.x + 0.5;
+    const y = target.y + 1;
+    const z = target.z + 0.5;
+    // The cubes go back into the plan: ghosts again, no pour, no see-through copy.
+    event.blocks.forEach(function (block) {
+      clearPour(block.id);
+      cubeCoins.delete(block.id);
+      const entry = xray.hidden.get(block);
+      if (entry) {
+        levelRoot.remove(entry.mesh);
+        entry.mesh.material.dispose();
+        xray.hidden.delete(block);
+      }
+      for (let i = pops.length - 1; i >= 0; i--) if (pops[i].id === block.id) pops.splice(i, 1);
+      const record = blockViews.get(block.id);
+      if (record) setBlockVisualScale(record, 0.001, 1);
+      shatterCube(block, x, y - 0.5, z);
+    });
+    // The bolt with two branches off its lower half.
+    const main = boltPath(x, y, z, 34, 10);
+    const lines = [{ points: main, width: 0.07 }];
+    for (let b = 0; b < 2; b++) {
+      const from = main[Math.floor(main.length * (0.35 + Math.random() * 0.4))];
+      const end = new THREE.Vector3(from.x + (Math.random() - 0.5) * 9, Math.max(y + 1, from.y - 4 - Math.random() * 6), from.z + (Math.random() - 0.5) * 9);
+      const branch = boltPath(end.x, end.y, end.z, from.y - end.y, 0);
+      branch[0] = from;
+      lines.push({ points: branch.slice(0, 1 + Math.floor(branch.length * 0.7)), width: 0.035 });
+    }
+    setBoltSegments(lines);
+    lightningFx.boltAge = 0;
+    weatherView.flash = 1;
+    weatherView.lastFlash = clock.elapsedTime;
+    burst(x, y + 0.1, z, 0xfff1b8, 16);
+    if (timeScale !== 20) {
+      tone(1400, 0.05);
+      tone(58, 0.9);
+    }
+    const count = event.blocks.length;
+    UI.toast({
+      text: 'Молния выбила ' + count + ' ' + UI.plural(count, 'куб', 'куба', 'кубов') + ' — они снова в плане',
+      icon: 'storm',
+      tone: 'warn',
+      priority: 1,
+      key: 'lightning',
+    });
+  }
+
+  // 2×2×2 pieces of the cube where they sit, plus a few chips; each flies off on its own once the
+  // crack has opened.
+  function shatterCube(block, sx, sy, sz) {
+    const color = new THREE.Color(MB.MATERIAL[block.materialId].color);
+    const cx = block.x + 0.5;
+    const cy = block.y + 0.5;
+    const cz = block.z + 0.5;
+    const away = new THREE.Vector3(cx - sx, cy - sy, cz - sz);
+    if (away.lengthSq() < 1e-6) away.set(Math.random() - 0.5, 0.3, Math.random() - 0.5);
+    away.normalize();
+    for (let i = 0; i < 12; i++) {
+      const piece = i < 8;
+      const ox = piece ? ((i & 1) ? 0.25 : -0.25) : (Math.random() - 0.5) * 0.8;
+      const oy = piece ? ((i & 2) ? 0.25 : -0.25) : (Math.random() - 0.5) * 0.8;
+      const oz = piece ? ((i & 4) ? 0.25 : -0.25) : (Math.random() - 0.5) * 0.8;
+      const kick = 2.2 + Math.random() * 2.4;
+      addShard({
+        x: cx + ox, y: cy + oy, z: cz + oz,
+        ox: ox, oy: oy, oz: oz,
+        vx: away.x * kick + ox * 5 + (Math.random() - 0.5) * 1.5,
+        vy: 2.5 + Math.random() * 3 + Math.max(0, away.y) * kick + oy * 3,
+        vz: away.z * kick + oz * 5 + (Math.random() - 0.5) * 1.5,
+        size: piece ? 0.46 : 0.1 + Math.random() * 0.12,
+        axis: new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize(),
+        spin: (piece ? 4 : 9) * (0.5 + Math.random()),
+        angle: 0,
+        age: -Math.random() * 0.05,
+        life: SHARD_LIFE * (0.8 + Math.random() * 0.4),
+        color: color,
+        rest: false,
+      });
+    }
+  }
+
+  function addShard(shard) {
+    const list = lightningFx.shards;
+    if (list.length >= SHARD_LIMIT) list.shift();
+    list.push(shard);
+  }
+
+  // Top of what is under (x, z) at height y: a built solid cube or the ground.
+  function shardFloor(x, y, z) {
+    if (!world) return 0;
+    const cx = Math.floor(x);
+    const cz = Math.floor(z);
+    for (let cy = Math.min(Math.floor(y), world.index.maxY); cy >= 0; cy--) {
+      if (!world.index.inside(cx, cy, cz)) continue;
+      if (world.solidGrid[world.index.id(cx, cy, cz)] === 1) return cy + 1;
+    }
+    return 0;
+  }
+
+  function updateLightningFx(dt) {
+    if (!lightningFx.bolt) return;
+    if (lightningFx.boltAge < 1) {
+      lightningFx.boltAge += dt;
+      const t = lightningFx.boltAge;
+      const k = t < 0.07 ? 1 : t < 0.13 ? 0.25 : t < 0.22 ? 0.95 : Math.max(0, 1 - (t - 0.22) / 0.3);
+      lightningFx.bolt.visible = k > 0;
+      lightningFx.glow.visible = k > 0;
+      lightningFx.bolt.material.opacity = k;
+      lightningFx.glow.material.opacity = 0.35 * k;
+    }
+    const list = lightningFx.shards;
+    const mesh = lightningFx.shardMesh;
+    if (!list.length && mesh.count === 0) return;
+    const color = new THREE.Color();
+    let n = 0;
+    for (let i = 0; i < list.length; i++) {
+      const shard = list[i];
+      shard.age += dt;
+      if (shard.age >= shard.life) continue;
+      const crack = Math.max(0, Math.min(1, shard.age / SHARD_CRACK));
+      let px = shard.x;
+      let py = shard.y;
+      let pz = shard.z;
+      if (shard.age < SHARD_CRACK) {
+        // The crack opens: the pieces part a little where they sit.
+        px += shard.ox * 0.25 * crack;
+        py += shard.oy * 0.25 * crack;
+        pz += shard.oz * 0.25 * crack;
+      } else if (!shard.rest) {
+        const step = Math.min(dt, 0.05);
+        shard.vy -= 15 * step;
+        shard.x += shard.vx * step;
+        shard.y += shard.vy * step;
+        shard.z += shard.vz * step;
+        shard.angle += shard.spin * step;
+        const floor = shardFloor(shard.x, shard.y + shard.size, shard.z) + shard.size / 2;
+        if (shard.y < floor && shard.vy < 0) {
+          shard.y = floor;
+          shard.vy = -shard.vy * 0.32;
+          shard.vx *= 0.55;
+          shard.vz *= 0.55;
+          shard.spin *= 0.5;
+          if (Math.abs(shard.vy) < 0.6) shard.rest = true;
+        }
+        px = shard.x;
+        py = shard.y;
+        pz = shard.z;
+      }
+      const fade = Math.min(1, (shard.life - shard.age) / 0.6);
+      dummy.position.set(px, py, pz);
+      dummy.quaternion.setFromAxisAngle(shard.axis, shard.angle);
+      dummy.scale.setScalar(Math.max(0.001, shard.size * fade));
+      dummy.updateMatrix();
+      mesh.setMatrixAt(n, dummy.matrix);
+      // Hot along the cracks, cooling down as it flies.
+      const heat = Math.max(0, 1 - Math.max(0, shard.age - SHARD_CRACK * 0.5) / 0.5);
+      color.copy(shard.color).lerp(SHARD_HOT, heat * 0.85);
+      mesh.setColorAt(n, color);
+      n += 1;
+    }
+    for (let i = list.length - 1; i >= 0; i--) if (list[i].age >= list[i].life) list.splice(i, 1);
+    mesh.count = n;
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
   }
 
   // Session HUD (docs/gdd/16-ux-flow.md §5): every 0.25 s from frame() (`fromTick`) and right after
@@ -5241,6 +9397,9 @@
     paintLevelStrip(level, done, total);
     paintDayClock();
     paintCoinRate();
+    paintMana();
+    paintTokens();
+    paintCampButton();
     if (!fromTick) snapCoins();
     setText('total-time', UI.formatDuration(campaign.totalElapsed));
     paintDock();
@@ -5257,6 +9416,11 @@
   }
 
   // Short money for HUD captions: «840», «1,2 тыс», «24 тыс», then formatCompact («3,2 млн»).
+  // Coins per second: one decimal below 10 («2,4»), else as formatShort.
+  function formatRate(value) {
+    return value < 10 ? value.toFixed(1).replace('.', ',').replace(/,0$/, '') : formatShort(value);
+  }
+
   function formatShort(value) {
     const number = Math.round(value);
     if (number < 1000 || number >= 1e4) return formatCompact(number);
@@ -5327,9 +9491,18 @@
     }
   }
 
-  // «+1 240» / «−1,2 тыс» floating out under the coin pill (at most three at a time).
-  function floatCoins(text, kind) {
-    const host = document.getElementById('coin-fx');
+  // «+1 240» / «−1,2 тыс» floating out under the coin pill (at most three at a time); `hostId` —
+  // another wallet's float spot ('wallet-fx' under the HQ panel wallet).
+  function floatCoins(text, kind, hostId) {
+    const host = document.getElementById(hostId || 'coin-fx');
+    if (!host) return;
+    if (hostId === 'wallet-fx') {
+      // Under the capital pill of the panel wallet (both sit in the panel head).
+      const pill = document.querySelector('#panel-wallet .pill');
+      if (!pill) return;
+      host.style.left = (pill.offsetLeft + 26) + 'px';
+      host.style.top = (pill.offsetTop + pill.offsetHeight + 4) + 'px';
+    }
     const tag = document.createElement('span');
     tag.className = 'coin-float ' + kind;
     tag.textContent = text;
@@ -5450,73 +9623,565 @@
     ], { duration: 700, easing: 'ease-out' });
   }
 
-  // ---- the day clock and its popover ----
+  // ---- the time of day: the sky and the day clock ----
 
-  function paintDayClock() {
-    const ENV = MicroBuildersSim.ENVIRONMENT;
-    const elapsed = campaign.levelElapsed;
-    const cycle = elapsed % ENV.cycleSeconds;
-    const dial = document.getElementById('day-dial');
-    dial.classList.toggle('is-night', cycle >= ENV.nightFrom);
-    const turn = 'rotate(' + Math.round(cycle / ENV.cycleSeconds * 360) + ' 18 18)';
-    const marker = document.getElementById('dial-marker');
-    if (marker.getAttribute('transform') !== turn) marker.setAttribute('transform', turn);
-    setText('level-time', elapsed < 3600 ? MB.formatClock(elapsed) : UI.formatDuration(elapsed));
-    const weather = envView.campaign === campaign ? envView.weather : 'Ясно';
-    const badge = document.getElementById('day-weather');
-    const icon = WEATHER_ICONS[weather] || '';
-    if (badge.dataset.icon !== icon) {
-      badge.dataset.icon = icon;
-      badge.hidden = !icon;
-      badge.className = 'day-weather ' + icon;
-      badge.innerHTML = icon ? ICONS[icon] : '';
-      badge.title = icon ? weather : '';
-    }
+  function wrapHours(hours) {
+    return ((hours % 24) + 24) % 24;
   }
 
-  // Night and weather effects of this run: the base penalties, softened by the office's night
-  // relief, or the boosts of «Ночной прораб» / «Метеоролог» (as Meta.applyEnvironment applies them).
+  function skyEase(x) {
+    const t = Math.max(0, Math.min(1, x));
+    return t * t * (3 - 2 * t);
+  }
+
+  function blendLooks(a, b, t) {
+    if (t <= 0) return a;
+    if (t >= 1) return b;
+    const out = {};
+    SKY_COLORS.forEach(function (key) {
+      out[key] = [0, 1, 2].map(function (i) { return a[key][i] + (b[key][i] - a[key][i]) * t; });
+    });
+    SKY_LEVELS.forEach(function (key) { out[key] = a[key] + (b[key] - a[key]) * t; });
+    return out;
+  }
+
+  // stages: [[progress, look], …] from 0 to 1; eased between neighbours, so each look holds a beat.
+  function blendStages(progress, stages) {
+    for (let i = 1; i < stages.length; i++) {
+      if (progress <= stages[i][0]) {
+        const from = stages[i - 1];
+        return blendLooks(from[1], stages[i][1], skyEase((progress - from[0]) / (stages[i][0] - from[0])));
+      }
+    }
+    return stages[stages.length - 1][1];
+  }
+
+  // The look at this moment: night → (dawn) predawn blue, pink sunrise, soft morning → the full day
+  // → golden afternoon light in its last 1.5 h → (dusk) orange sunset, mauve twilight → night.
+  function skyLook(clock) {
+    const L = SKY_LOOKS;
+    if (clock.phase === 'night') return L.night;
+    if (clock.phase === 'dawn') return blendStages(clock.progress, [[0, L.night], [0.35, L.predawn], [0.6, L.sunrise], [1, L.morning]]);
+    if (clock.phase === 'dusk') return blendStages(clock.progress, [[0, L.afternoon], [0.5, L.sunset], [0.8, L.twilight], [1, L.night]]);
+    const ENV = MicroBuildersSim.ENVIRONMENT;
+    const span = 24 - wrapHours(ENV.nightToHour - ENV.nightFromHour) - ENV.dawnHours - ENV.duskHours;
+    const morning = blendLooks(L.morning, L.day, skyEase(clock.progress * span / 1.5));
+    return blendLooks(L.afternoon, morning, skyEase((1 - clock.progress) * span / 1.5));
+  }
+
+  // A direction degrees round from the noon sun and degrees up.
+  function skyDirection(azimuth, elevation, out) {
+    const a = SUN_NOON + azimuth * Math.PI / 180;
+    const e = elevation * Math.PI / 180;
+    return out.set(Math.cos(e) * Math.cos(a), Math.sin(e), Math.cos(e) * Math.sin(a));
+  }
+
+  // The sun is up from the middle of dawn to the middle of dusk on an arc round the noon direction,
+  // then passes under the horizon back to its rising side. → [azimuth, elevation] in degrees.
+  function sunPosition(hour) {
+    const ENV = MicroBuildersSim.ENVIRONMENT;
+    const rise = ENV.nightToHour + ENV.dawnHours / 2;
+    const set = ENV.nightFromHour - ENV.duskHours / 2;
+    const day = wrapHours(set - rise) || 24;
+    const since = wrapHours(hour - rise);
+    if (since <= day) {
+      const u = since / day;
+      return [(u * 2 - 1) * SUN_SWEEP, Math.sin(Math.PI * u) * SUN_PEAK];
+    }
+    const n = (since - day) / Math.max(1e-6, 24 - day);
+    return [SUN_SWEEP + n * (360 - 2 * SUN_SWEEP), -Math.sin(Math.PI * n) * 30];
+  }
+
+  // The clock the sky shows: the site's, or a fixed 13:00 over the company quarter and the title.
+  function skySeconds() {
+    if (!cityRoot.visible && campaign && world && campaign.status !== 'title') return campaign.levelElapsed;
+    return middaySeconds();
+  }
+
+  // 13:00 on the site clock: the company quarter, the title and the sites before the night opens
+  // (MB.needOpen 'night') stay in this light.
+  function middaySeconds() {
+    const ENV = MicroBuildersSim.ENVIRONMENT;
+    return (13 - ENV.startHour) * ENV.hourSeconds;
+  }
+
+  function mixRgb(a, b, t) {
+    return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  }
+
+  // The weather's share in the look at a moment of the site (WEATHER_LOOKS), cross-faded at the
+  // phase boundaries with the neighbouring phase.
+  function weatherChannels(site, seconds) {
+    const P = MicroBuildersSim.ENVIRONMENT.weatherPhaseSeconds;
+    const index = Math.floor(seconds / P);
+    const into = seconds - index * P;
+    const at = function (i) { return WEATHER_LOOKS[MicroBuildersSim.weatherAt(site, (i + 0.5) * P)] || WEATHER_LOOKS['']; };
+    const here = at(index);
+    let other = here;
+    let w = 1;
+    if (into < WEATHER_FADE / 2) {
+      other = at(index - 1);
+      w = skyEase(0.5 + into / WEATHER_FADE);
+    } else if (P - into < WEATHER_FADE / 2) {
+      other = at(index + 1);
+      w = skyEase(0.5 + (P - into) / WEATHER_FADE);
+    }
+    const out = {};
+    WEATHER_CHANNELS.forEach(function (key) { out[key] = other[key] + (here[key] - other[key]) * w; });
+    return out;
+  }
+
+  function settleGround(site, t, dt) {
+    if (dt <= 0) return;
+    const ch = weatherChannels(site, t);
+    const thaw = 1 + 3 * ch.heat;
+    const hot = MicroBuildersSim.weatherAt(site, t + dt / 2) === 'heat' ? 1 : 0;
+    weatherView.dry = Math.max(0, Math.min(1, weatherView.dry + Math.sign(hot - weatherView.dry) * Math.min(Math.abs(hot - weatherView.dry), dt / DRY_TURN)));
+    const melting = ch.snow <= 0.05 && weatherView.cover > 0 ? 1 : 0;
+    weatherView.melt += (melting - weatherView.melt) * Math.min(1, dt / 20);
+    weatherView.snowSum += ch.snow * dt;
+    weatherView.cover = Math.max(0, Math.min(1, weatherView.cover + dt * (ch.snow > 0.05 ? ch.snow / SNOW_BUILD : -thaw / SNOW_MELT)));
+    weatherView.wet = Math.max(0, Math.min(1, weatherView.wet + dt * (ch.rain > 0.05 ? ch.rain / WET_BUILD : -thaw / WET_DRY)));
+  }
+
+  // Snow and wet on the ground of this site now: stepped with the site clock; a new site, a jump or
+  // a return after a while is counted over the last 10 minutes of the site in 5-second steps.
+  function stepGround(site, seconds) {
+    if (weatherView.world !== world || weatherView.site !== site || seconds < weatherView.seconds || seconds - weatherView.seconds > 60) {
+      weatherView.world = world;
+      weatherView.site = site;
+      weatherView.cover = 0;
+      weatherView.wet = 0;
+      weatherView.melt = 0;
+      weatherView.dry = 0;
+      weatherView.snowSum = 0;
+      clearFootprints();
+      for (let t = Math.max(0, seconds - 600); t < seconds; t += 5) settleGround(site, t, Math.min(5, seconds - t));
+    } else {
+      settleGround(site, weatherView.seconds, seconds - weatherView.seconds);
+    }
+    weatherView.seconds = seconds;
+  }
+
+  // Overcast greys the sky and the light and hides the sun, the moon and the stars (a storm darkens
+  // them further); heat bleaches the sky pale and warm under a white-hot sun (by day only).
+  function weatherLook(base, ch) {
+    if (ch.clouds <= 0.001 && ch.heat <= 0.001) return base;
+    const look = blendLooks(base, base, 0.5);
+    const grey = function (c, k) {
+      const l = c[0] * 0.3 + c[1] * 0.55 + c[2] * 0.15;
+      return [l * 0.96 * k, l * k, l * 1.05 * k];
+    };
+    const overcast = ch.clouds;
+    const dark = 1 - 0.4 * ch.storm;
+    ['top', 'horizon', 'fog', 'hemiSky'].forEach(function (key) { look[key] = mixRgb(look[key], grey(look[key], dark), overcast * 0.8); });
+    look.sunColor = mixRgb(look.sunColor, grey(look.sunColor, 1), overcast * 0.6);
+    look.sun *= 1 - 0.7 * overcast;
+    look.glow *= 1 - overcast;
+    look.stars *= 1 - overcast;
+    look.moon *= 1 - 0.9 * overcast;
+    look.hemi *= 1 - 0.08 * overcast - 0.14 * ch.storm;
+    const heat = ch.heat * Math.min(1, base.sun / 1.2);
+    if (heat > 0) {
+      look.top = mixRgb(look.top, [0.74, 0.8, 0.84], 0.5 * heat);
+      look.horizon = mixRgb(look.horizon, [0.99, 0.9, 0.7], 0.55 * heat);
+      look.fog = mixRgb(look.fog, [0.92, 0.86, 0.72], 0.55 * heat);
+      look.sunColor = mixRgb(look.sunColor, [1, 0.96, 0.86], 0.5 * heat);
+      look.sun *= 1 + 0.12 * heat;
+      look.glow += 0.3 * heat;
+    }
+    return look;
+  }
+
+  // A storm flashes lightning: each 7-second window of the site may hold one flash at a pseudo-random
+  // moment, at most one per 1.5 s of real time (so ×20 does not strobe); a flash fades in 0.45 s
+  // with a second flicker.
+  function stormFlash(seconds, storm, realDt, time) {
+    weatherView.flash = Math.max(0, weatherView.flash - realDt / 0.45);
+    if (storm > 0.5) {
+      const window7 = Math.floor(seconds / 7);
+      if (window7 !== weatherView.flashWindow) {
+        const r = Math.sin(window7 * 12.9898) * 43758.5453;
+        weatherView.flashWindow = window7;
+        weatherView.flashAt = (window7 + (r - Math.floor(r))) * 7;
+        weatherView.flashArmed = (r * 3.1 - Math.floor(r * 3.1)) < 0.6;
+      }
+      if (weatherView.flashArmed && seconds >= weatherView.flashAt && time - weatherView.lastFlash > 1.5) {
+        weatherView.flashArmed = false;
+        weatherView.lastFlash = time;
+        weatherView.flash = 1;
+      }
+    }
+    const f = weatherView.flash;
+    return f > 0.75 ? 1 : f > 0.55 ? 0.25 : f > 0.3 ? 0.7 * f : 0.4 * f;
+  }
+
+  // Every frame: the dome, fog, hemisphere light and the sun (direction, color, strength) at this
+  // moment of the day, under this weather. The directional light turns from the sun to the moon
+  // through the twilight, while it is faint, and never comes lower than LIGHT_LOW, so shadows stay
+  // readable. Weather: precipitation, snow and wet on the ground, clouds, lightning, heat haze; the
+  // company quarter and the title stay clear.
+  function updateSky(realDt, time) {
+    skyView.time = time;
+    const seconds = skySeconds();
+    const onSite = !cityRoot.visible && !!campaign && !!world && campaign.status !== 'title';
+    const site = onSite ? campaign.levelIndex : -1;
+    const ch = onSite ? weatherChannels(site, seconds) : WEATHER_LOOKS[''];
+    if (onSite) stepGround(site, seconds);
+    const clock = MicroBuildersSim.dayClock(onSite && !MB.needOpen(campaign, 'night') ? middaySeconds() : seconds);
+    const base = skyLook(clock);
+    const look = weatherLook(base, ch);
+    skyView.look = look;
+    const flash = onSite ? stormFlash(seconds, ch.storm, realDt, time) : 0;
+    const sunAt = sunPosition(clock.hour);
+    skyDirection(sunAt[0], sunAt[1], sunDir);
+    skyDirection(sunAt[0], Math.max(LIGHT_LOW, sunAt[1]), lightDir);
+    skyDirection(MOON_SIDE, MOON_LIGHT_HIGH, moonDir);
+    lightDir.lerp(moonDir, look.moonLight).normalize();
+    skyDirection(MOON_SIDE, MOON_SKY_HIGH, moonDir);
+    const uniforms = sky.material.uniforms;
+    uniforms.uTop.value.fromArray(look.top);
+    uniforms.uHorizon.value.fromArray(look.horizon);
+    uniforms.uSunDir.value.copy(sunDir);
+    uniforms.uSunColor.value.fromArray(look.sunColor);
+    uniforms.uGlow.value = look.glow;
+    uniforms.uMoonDir.value.copy(moonDir);
+    uniforms.uMoon.value = look.moon;
+    uniforms.uStars.value = look.stars;
+    uniforms.uClouds.value = ch.clouds;
+    const cloud = look.horizon[0] * 0.3 + look.horizon[1] * 0.55 + look.horizon[2] * 0.15;
+    uniforms.uCloudColor.value.set(cloud * 0.95, cloud * 0.97, cloud * 1.02).multiplyScalar(1.05 - 0.45 * ch.storm);
+    uniforms.uTime.value = time;
+    uniforms.uFlash.value = flash;
+    skyColor.setRGB(look.fog[0], look.fog[1], look.fog[2], THREE.SRGBColorSpace);
+    scene.fog.color.copy(skyColor);
+    renderer.setClearColor(skyColor, 1);
+    // Snow and rain shorten the view, the heat hazes the distance a little.
+    const precip = Math.max(ch.snow, ch.rain);
+    scene.fog.near = lightRig.fogNear * (1 - 0.3 * precip);
+    scene.fog.far = lightRig.fogFar * (1 - 0.4 * precip - 0.12 * ch.heat);
+    hemi.color.setRGB(look.hemiSky[0], look.hemiSky[1], look.hemiSky[2], THREE.SRGBColorSpace);
+    hemi.groundColor.setRGB(look.hemiGround[0], look.hemiGround[1], look.hemiGround[2], THREE.SRGBColorSpace);
+    hemi.intensity = look.hemi + 1.6 * flash;
+    sun.color.setRGB(look.sunColor[0], look.sunColor[1], look.sunColor[2], THREE.SRGBColorSpace);
+    sun.intensity = look.sun;
+    if (lightRig.reach > 0) sun.position.copy(sun.target.position).addScaledVector(lightDir, lightRig.reach);
+    // Ground: snow cover and wet (visual only).
+    weatherGround.uSnow.value = onSite ? weatherView.cover : 0;
+    weatherGround.uWet.value = onSite ? weatherView.wet : 0;
+    weatherGround.uMelt.value = onSite ? weatherView.melt : 0;
+    weatherGround.uDry.value = onSite ? weatherView.dry : 0;
+    groundDust.amount.value = onSite ? ch.heat : 0;
+    for (let i = 0; i < groundDust.layers.length; i++) groundDust.layers[i].visible = onSite && ch.heat > 0.01;
+    weatherView.heat = onSite ? ch.heat : 0;
+    footprints.material.uniforms.uSnowSum.value = weatherView.snowSum;
+    footprints.visible = onSite && weatherView.cover > 0.001;
+    // Precipitation ahead of the camera; the storm slants the rain.
+    PRECIP.time.value = time;
+    camera.getWorldDirection(skyAhead);
+    PRECIP.center.value.copy(camera.position).addScaledVector(skyAhead, 14);
+    PRECIP.snowAmount.value = ch.snow;
+    PRECIP.rainAmount.value = ch.rain;
+    PRECIP.wind.value.set(1.2 + 5 * ch.storm, 0, 0.6 + 2.5 * ch.storm);
+    PRECIP.light.value = Math.min(1, 0.3 + 0.5 * look.hemi + 0.25 * look.sun) + 0.6 * flash;
+    PRECIP.px.value = renderer.getPixelRatio();
+    PRECIP.dustAmount.value = ch.heat * (0.4 + 0.6 * Math.min(1, base.sun / 1.2));
+    heatDust.visible = ch.heat > 0.01;
+    snowfall.visible = ch.snow > 0.01;
+    rainfall.visible = ch.rain > 0.01;
+    weatherView.haze = ch.heat * Math.min(1, base.sun / 1.2);
+  }
+
+  // The heat haze pass (see haze): after the scene is drawn.
+  function renderHaze(time) {
+    if (weatherView.haze <= 0.01) return;
+    renderer.getDrawingBufferSize(haze.size);
+    if (!haze.texture || haze.texture.image.width !== haze.size.x || haze.texture.image.height !== haze.size.y) {
+      if (haze.texture) haze.texture.dispose();
+      haze.texture = new THREE.FramebufferTexture(haze.size.x, haze.size.y);
+      haze.material.uniforms.tMap.value = haze.texture;
+    }
+    renderer.copyFramebufferToTexture(haze.origin, haze.texture);
+    haze.material.uniforms.uTime.value = time;
+    haze.material.uniforms.uHaze.value = weatherView.haze;
+    haze.material.uniforms.uAspect.value = haze.size.x / Math.max(1, haze.size.y);
+    const autoClear = renderer.autoClear;
+    renderer.autoClear = false;
+    renderer.render(haze.scene, haze.camera);
+    renderer.autoClear = autoClear;
+  }
+
+  // Ground materials under the weather: snow whitens them in patches (mix — how white: grass and earth
+  // fully, tree crowns partly; bias — later or sooner than the grass: crowns shed it first, the
+  // trodden site earth melts sooner), a melting edge is dark slush, rain darkens them and makes them
+  // glossy. Uniforms are shared (weatherGround), so one write a frame updates all of them.
+  function weatherSurface(material, mix, bias, dry) {
+    const lift = (bias || 0).toFixed(2);
+    const scorch = (dry || 0).toFixed(2);
+    material.onBeforeCompile = function (shader) {
+      shader.uniforms.uSnow = weatherGround.uSnow;
+      shader.uniforms.uWet = weatherGround.uWet;
+      shader.uniforms.uMelt = weatherGround.uMelt;
+      shader.uniforms.uDry = weatherGround.uDry;
+      shader.vertexShader = 'varying vec3 vSnowWorld;\n' + shader.vertexShader.replace('#include <begin_vertex>', [
+        '#include <begin_vertex>',
+        'vec4 snowWorld = vec4(transformed, 1.0);',
+        '#ifdef USE_INSTANCING',
+        'snowWorld = instanceMatrix * snowWorld;',
+        '#endif',
+        'vSnowWorld = (modelMatrix * snowWorld).xyz;',
+      ].join('\n'));
+      shader.fragmentShader = 'uniform float uSnow;\nuniform float uWet;\nuniform float uMelt;\nuniform float uDry;\nvarying vec3 vSnowWorld;\n' +
+        SNOW_FIELD_GLSL + shader.fragmentShader
+        .replace('#include <map_fragment>', [
+          '#include <map_fragment>',
+          'float snowGrain = 1.0;',
+          '#ifdef USE_MAP',
+          'snowGrain = 0.82 + 0.18 * fract(sin(dot(floor(vMapUv * 96.0), vec2(12.9898, 78.233))) * 43758.5453);',
+          '#endif',
+          'float snowN = snowField(vSnowWorld.xz) + ' + lift + ';',
+          'float snowC = snowLevel(uSnow);',
+          'float snowAmt = smoothstep(snowN - 0.05, snowN + 0.05, snowC);',
+          'float slush = smoothstep(snowN - 0.24, snowN - 0.04, snowC) * (1.0 - snowAmt) * uMelt;',
+          'diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.9, 0.93, 0.97), clamp(snowAmt * ' + mix.toFixed(2) + ' * snowGrain, 0.0, 1.0));',
+          'diffuseColor.rgb *= 1.0 - 0.34 * slush;',
+          'diffuseColor.rgb *= 1.0 - 0.38 * uWet * (1.0 - snowAmt);',
+          'float dryAmt = smoothstep(0.0, 1.0, uDry) * ' + scorch + ';',
+          'diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(1.5, 1.18, 0.42) + vec3(0.12, 0.08, 0.0), dryAmt * (1.0 - snowAmt));',
+        ].join('\n'))
+        .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = mix(roughnessFactor, 0.42, max(uWet * (1.0 - snowAmt), slush * 0.8));');
+    };
+    material.customProgramCacheKey = function () { return 'weather' + mix + '|' + lift + '|' + scorch; };
+  }
+
+  // A print where a worker walking on snowy ground has stepped (trackFootprints).
+  function addFootprint(x, z, yaw) {
+    const index = footState.next;
+    footState.next = (footState.next + 1) % FOOTPRINTS;
+    footDummy.position.set(x, 0.035, z);
+    footDummy.rotation.set(0, yaw, 0);
+    footDummy.updateMatrix();
+    footprints.setMatrixAt(index, footDummy.matrix);
+    footprints.count = Math.max(footprints.count, index + 1);
+    // Upload only the changed print, not the whole ring.
+    footprints.instanceMatrix.addUpdateRange(index * 16, 16);
+    footprints.instanceMatrix.needsUpdate = true;
+    const born = footprints.geometry.getAttribute('aBorn');
+    born.array[index] = weatherView.snowSum;
+    born.addUpdateRange(index, 1);
+    born.needsUpdate = true;
+  }
+
+  function clearFootprints() {
+    const born = footprints.geometry.getAttribute('aBorn');
+    born.array.fill(-1e9);
+    born.needsUpdate = true;
+    footprints.count = 0;
+    footState.next = 0;
+  }
+
+  // Every FOOT_STEP cells of a walk on the ground while there is snow: a print, left and right in turn,
+  // a little to the side of his path. A jump (a new site, ×20) starts the trail anew.
+  function trackFootprints(viewState, builder, group, y, mode) {
+    if (weatherGround.uSnow.value < 0.08 || builder.phase !== 'walk' || mode !== 'walk' || y > 0.05) {
+      viewState.footAt = null;
+      return;
+    }
+    const x = group.position.x;
+    const z = group.position.z;
+    const at = viewState.footAt;
+    if (!at) {
+      viewState.footAt = { x: x, z: z };
+      return;
+    }
+    const dx = x - at.x;
+    const dz = z - at.z;
+    const d = Math.hypot(dx, dz);
+    if (d < FOOT_STEP) return;
+    at.x = x;
+    at.z = z;
+    if (d > 4) return;
+    const yaw = Math.atan2(dx, dz);
+    viewState.footSide = viewState.footSide === 1 ? -1 : 1;
+    const side = 0.065 * viewState.footSide;
+    addFootprint(x + Math.cos(yaw) * side, z - Math.sin(yaw) * side, yaw);
+  }
+
+  // «08:00»: game time (a minute of the site is an hour).
+  function clockText(hour) {
+    const minutes = Math.floor(wrapHours(hour) * 60 + 1e-6) % 1440;
+    const hh = Math.floor(minutes / 60);
+    const mm = minutes % 60;
+    return (hh < 10 ? '0' : '') + hh + ':' + (mm < 10 ? '0' : '') + mm;
+  }
+
+  // The 24-hour ring: noon at the top, midnight at the bottom.
+  function dialAngle(hour) {
+    return (wrapHours(hour) - 12) / 24 * 360;
+  }
+
+  function dialArc(fromHour, toHour) {
+    const span = wrapHours(toHour - fromHour);
+    if (span <= 0) return '';
+    const a0 = dialAngle(fromHour) * Math.PI / 180;
+    const a1 = a0 + span / 24 * Math.PI * 2;
+    const point = function (a) { return (18 + 14 * Math.sin(a)).toFixed(2) + ' ' + (18 - 14 * Math.cos(a)).toFixed(2); };
+    return 'M' + point(a0) + 'A14 14 0 ' + (span > 12 ? 1 : 0) + ' 1 ' + point(a1);
+  }
+
+  // Night navy, dawn pink, the day gold, sunset and twilight orange — redrawn when the hours change.
+  function paintDialArcs() {
+    const ENV = MicroBuildersSim.ENVIRONMENT;
+    const key = [ENV.nightFromHour, ENV.nightToHour, ENV.dawnHours, ENV.duskHours].join('|');
+    if (key === skyView.dial) return;
+    skyView.dial = key;
+    const morning = ENV.nightToHour + ENV.dawnHours;
+    const evening = ENV.nightFromHour - ENV.duskHours;
+    document.getElementById('dial-night').setAttribute('d', dialArc(ENV.nightFromHour, ENV.nightToHour));
+    document.getElementById('dial-dawn').setAttribute('d', dialArc(ENV.nightToHour, morning));
+    document.getElementById('dial-day').setAttribute('d', dialArc(morning, evening));
+    document.getElementById('dial-dusk').setAttribute('d', dialArc(evening, ENV.nightFromHour));
+  }
+
+  // The time of day on the dial and as text; before the night opens (levels 1–6, tuning.intro) only a
+  // sun: no day and night, no time. The weather is not shown here — it comes as a surprise.
+  function paintDayClock() {
+    const night = MB.needOpen(campaign, 'night');
+    const dial = document.getElementById('day-dial');
+    dial.classList.toggle('no-night', !night);
+    const marker = document.getElementById('dial-marker');
+    const time = document.getElementById('level-time');
+    time.hidden = !night;
+    if (!night) {
+      dial.classList.remove('is-night');
+      const center = 'translate(18 18) scale(1.7) translate(-18 -4)';
+      if (marker.getAttribute('transform') !== center) marker.setAttribute('transform', center);
+      return;
+    }
+    const clock = MicroBuildersSim.dayClock(campaign.levelElapsed);
+    paintDialArcs();
+    dial.classList.toggle('is-night', clock.night);
+    const turn = 'rotate(' + dialAngle(clock.hour).toFixed(1) + ' 18 18)';
+    if (marker.getAttribute('transform') !== turn) marker.setAttribute('transform', turn);
+    setText('level-time', clockText(clock.hour));
+  }
+
+  // «Закат · 18:40 — ночь в 20:00, через 1:20» (the wait in site time: minutes at ×1).
+  function dayPhaseLine(clock) {
+    const ENV = MicroBuildersSim.ENVIRONMENT;
+    const name = { night: 'Ночь', dawn: 'Рассвет', day: 'День', dusk: clock.progress < 0.5 ? 'Закат' : 'Сумерки' }[clock.phase];
+    const next = {
+      night: ['рассвет', ENV.nightToHour],
+      dawn: ['день', ENV.nightToHour + ENV.dawnHours],
+      day: ['закат', ENV.nightFromHour - ENV.duskHours],
+      dusk: ['ночь', ENV.nightFromHour],
+    }[clock.phase];
+    return name + ' · ' + next[0] + ' через ' + MB.formatClock(Math.ceil(clock.untilChange));
+  }
+
+  // Night and weather effects of this run as factors of the effort (logic.js → «Трудоёмкость и
+  // темп»): the base penalties, the night's softened by the office's night relief, or the boosts of
+  // «Ночной прораб» / «Метеоролог» (as Meta.applyEnvironment applies them).
   function environmentEffects(weather) {
     const ENV = MicroBuildersSim.ENVIRONMENT;
     const foremen = campaign.foremen || {};
-    const relief = campaign.metaNightRelief || 0;
-    const nightWork = ENV.nightWork + (1 - ENV.nightWork) * relief;
-    const phase = Math.floor(campaign.levelElapsed / ENV.weatherPhaseSeconds) % 4;
-    const bad = weather && weather !== 'Ясно' ? (phase === ENV.storm.phase ? ENV.storm : ENV.weather) : null;
+    const relief = Meta.nightRelief(campaign);
+    const kind = weather && weather !== 'Ясно' ? MicroBuildersSim.weatherAt(campaign.levelIndex, campaign.levelElapsed) : '';
+    const bad = kind ? ENV.kinds[kind] : null;
+    const slowed = bad && !foremen.meteo;
+    const more = function (factor) { return slowed && factor > 1 ? factor : 0; };
     return {
-      nightSlow: foremen.nightBoost ? 0 : Math.round((1 - nightWork) * 100),
+      kind: kind,
+      nightWork: foremen.nightBoost ? 1 : 1 + (ENV.nightWork - 1) * (1 - relief),
+      nightMove: foremen.nightBoost ? 1 : 1 + (ENV.nightMove - 1) * (1 - relief),
       nightFast: foremen.nightBoost ? Math.round(foremen.nightBoost.value * 100) : 0,
-      weatherSlow: bad && !foremen.meteo ? Math.round((1 - bad.work) * 100) : 0,
+      weatherWork: bad ? more(bad.work) : 0,
+      weatherMove: bad ? more(bad.move) : 0,
+      weatherGround: bad ? more(bad.ground) : 0,
+      weatherDeck: bad ? more(bad.deck) : 0,
+      weatherCarry: slowed && bad.carry < 1 ? Math.round((1 - bad.carry) * 100) : 0,
+      // Need rates: how many times faster hunger, the smoke wish and fatigue fill (×2 — «голод ×2»).
+      weatherHunger: slowed && bad.hungerRate > 1 ? bad.hungerRate : 0,
+      weatherSmoke: slowed && bad.smokeRate > 1 ? bad.smokeRate : 0,
+      weatherFatigue: slowed && bad.fatigueRate > 1 ? bad.fatigueRate : 0,
+      lightning: !!bad && bad.lightning > 0,
       weatherFast: bad && foremen.meteo ? Math.round(foremen.meteo.value * 100) : 0,
     };
   }
 
+  function times(factor) {
+    return '×' + String(Math.round(factor * 100) / 100).replace('.', ',');
+  }
+
+  // «Ночью · укладка ×1,4, шаги ×1,2» (the effort), or «Ночной прораб» making the crew faster.
   function nightLine(effects) {
-    if (effects.nightFast > 0) return 'Ночью бригада работает на ' + effects.nightFast + '% быстрее · Ночной прораб';
-    if (effects.nightSlow > 0) return 'Ночью бригада работает на ' + effects.nightSlow + '% медленнее';
-    return 'Ночью бригада работает как днём';
+    if (effects.nightFast > 0) return 'Ночью · Сноровка +' + effects.nightFast;
+    if (!(effects.nightWork > 1.001) && !(effects.nightMove > 1.001)) return 'Ночью · без штрафа';
+    return 'Ночью · укладка ' + times(effects.nightWork) + ', шаги ' + times(effects.nightMove);
   }
 
+  // One decision-relevant effect; the complete mechanics stay behind «i».
+  function weatherSummary(effects) {
+    if (effects.lightning) return 'молнии с ' + MicroBuildersSim.ENVIRONMENT.lightning.minFloor + '-го этажа';
+    if (effects.weatherFast > 0) return 'Сноровка +' + effects.weatherFast;
+    if (effects.weatherHunger > 0) return 'голод ' + times(effects.weatherHunger);
+    if (effects.weatherSmoke > 0) return 'перекуры ' + times(effects.weatherSmoke);
+    if (effects.weatherFatigue > 0) return 'усталость ' + times(effects.weatherFatigue);
+    if (effects.weatherWork > 0) return 'укладка ' + times(effects.weatherWork);
+    if (effects.weatherGround > 0) return 'шаги ' + times(effects.weatherGround);
+    if (effects.weatherMove > 0) return 'шаги ' + times(effects.weatherMove);
+    return '';
+  }
+
+  // Each weather its own, as the effort: «шаги по земле ×1,5, по настилам ×2, голод ×2 (холод)»
+  // (snow), «укладка ×1,3, шаги и подъёмы ×1,1» (heat), «укладка ×1,4, ноша −30% (мокрый материал)»
+  // (rain), «молнии выбивают кубы с 5-го этажа» (storm).
   function weatherEffect(effects) {
-    if (effects.weatherFast > 0) return 'Метеоролог: работа +' + effects.weatherFast + '%';
-    return 'работа −' + effects.weatherSlow + '%';
+    const strikes = effects.lightning ? 'молнии выбивают кубы с ' + MicroBuildersSim.ENVIRONMENT.lightning.minFloor + '-го этажа' : '';
+    if (effects.weatherFast > 0) {
+      return 'Метеоролог: штрафов нет, Сноровка +' + effects.weatherFast + ', Скорость +' + Math.round(effects.weatherFast / 2) + (strikes ? ', но ' + strikes : '');
+    }
+    const effort = [];
+    if (effects.weatherWork > 0) effort.push('укладка ' + times(effects.weatherWork));
+    if (effects.weatherMove > 0) effort.push('шаги и подъёмы ' + times(effects.weatherMove));
+    if (effects.weatherGround > 0) effort.push('шаги по земле ' + times(effects.weatherGround));
+    if (effects.weatherDeck > 0) effort.push('по настилам ' + times(effects.weatherDeck) + (effects.kind === 'snow' ? ' (наледь)' : ''));
+    const parts = [];
+    if (effects.weatherCarry > 0) parts.push('ноша −' + effects.weatherCarry + '%' + (effects.kind === 'rain' ? ' (мокрый материал)' : ''));
+    if (effects.weatherHunger > 0) parts.push('голод ' + times(effects.weatherHunger) + (effects.kind === 'snow' ? ' (холод)' : ''));
+    if (effects.weatherSmoke > 0) parts.push('тянет курить ' + times(effects.weatherSmoke));
+    if (effects.weatherFatigue > 0) parts.push('усталость ' + times(effects.weatherFatigue));
+    if (strikes) parts.push(strikes);
+    if (effort.length) parts.unshift('трудоёмкость: ' + effort.join(', '));
+    return parts.join('; ');
   }
 
-  // «День · ещё 3:12 до ночи», the night penalty, the weather, «Стройка идёт 1 ч 02 мин», speed.
+  // «Закат · 18:40 — ночь в 20:00, через 1:20», the night penalty, the weather, «Стройка идёт
+  // 1 ч 02 мин», speed.
   function paintDayPop() {
     const pop = document.getElementById('day-pop');
     if (pop.hidden || !campaign || !world) return;
-    const ENV = MicroBuildersSim.ENVIRONMENT;
     const elapsed = campaign.levelElapsed;
-    const cycle = elapsed % ENV.cycleSeconds;
-    const night = cycle >= ENV.nightFrom;
     const weather = envView.campaign === campaign ? envView.weather : 'Ясно';
     const effects = environmentEffects(weather);
-    setText('day-pop-phase', night
-      ? 'Ночь · ещё ' + MB.formatClock(Math.ceil(ENV.cycleSeconds - cycle)) + ' до утра'
-      : 'День · ещё ' + MB.formatClock(Math.ceil(ENV.nightFrom - cycle)) + ' до ночи');
-    setText('day-pop-night', nightLine(effects));
-    setText('day-pop-weather', weather === 'Ясно' ? 'Погода: ясно' : 'Погода: ' + weather.toLowerCase() + ' — ' + weatherEffect(effects));
+    // Before the night opens: no phase of the day and no night lines. No forecast: the weather is a surprise.
+    const night = MB.needOpen(campaign, 'night');
+    const phase = document.getElementById('day-pop-phase');
+    phase.hidden = !night;
+    document.getElementById('day-pop-night').hidden = !night;
+    if (night) {
+      setText('day-pop-phase', dayPhaseLine(MicroBuildersSim.dayClock(elapsed)));
+      setText('day-pop-night', nightLine(effects));
+    }
+    const summary = weatherSummary(effects);
+    setText('day-pop-weather', weather + (summary ? ' · ' + summary : ''));
+    const detail = weatherEffect(effects);
+    setText('day-pop-details', (detail ? detail.charAt(0).toUpperCase() + detail.slice(1) + '.' : 'Ясная погода без штрафов.') + (night
+      ? ' Ночью усталость ×' + String(MB.SLEEP.nightFatigue).replace('.', ',') + '. Освещение снижает ночной штраф.' : ''));
+    const help = { snow: 'Снег: Полевая кухня сокращает путь на обед.', rain: 'Дождь: Зона отдыха сокращает перекуры и путь к ним.',
+      heat: 'Жара: Бытовки сокращают сон и путь к нему.', storm: 'Шторм: молнии повреждают верхние этажи.' };
+    setText('day-pop-help', help[effects.kind] || '');
+
     let time = 'Стройка идёт ' + formatSpan(elapsed);
     if (timedMode(campaign.runMode)) {
       time += ' · осталось ' + MB.formatClock(Math.ceil(Math.max(0, trialLimit(campaign) - elapsed)));
@@ -5524,8 +10189,9 @@
     setText('day-pop-time', time);
   }
 
-  // Night and weather repaint the sky only when they change. A change during the run also gets a
-  // toast («Наступила ночь — бригада медленнее на 28%», «Погода наладилась»); a new site starts quiet.
+  // Night and weather changes during the run get a toast («Наступила ночь — бригада медленнее на
+  // 28%», «Погода наладилась»); a new site starts quiet. The sky follows the clock every frame
+  // (updateSky).
   function applyEnvironmentView(value) {
     const fresh = envView.campaign !== campaign;
     if (!fresh && envView.night === value.night && envView.weather === value.weather) return;
@@ -5534,27 +10200,16 @@
     envView.campaign = campaign;
     envView.night = value.night;
     envView.weather = value.weather;
-    const skyColor = value.night ? 0x17243a : 0xb7cfe0;
-    renderer.setClearColor(skyColor, 1);
-    scene.fog.color.setHex(skyColor);
-    hemi.intensity = value.night ? 0.34 : 0.9;
-    sun.intensity = value.night ? 0.22 : 1.45;
     if (fresh || campaign.status !== 'play') return;
     const effects = environmentEffects(value.weather);
     if (value.night !== wasNight) {
-      let text = 'Утро — работа в полную силу';
-      if (value.night) {
-        text = effects.nightFast > 0 ? 'Наступила ночь — Ночной прораб: бригада быстрее на ' + effects.nightFast + '%'
-          : effects.nightSlow > 0 ? 'Наступила ночь — бригада медленнее на ' + effects.nightSlow + '%'
-            : 'Наступила ночь — бригада работает как днём';
-      }
+      const text = value.night ? nightLine(effects).replace('Ночью', 'Ночь') : 'Рассвет · ночной штраф снят';
       UI.toast({ text: text, icon: value.night ? 'moon' : 'sun', tone: value.night ? 'info' : 'good', priority: 1, key: 'env-day' });
     }
     if (value.weather !== wasWeather) {
       const bad = value.weather !== 'Ясно';
-      const feminine = value.weather === 'Жара' || value.weather === 'Сейсмическая активность';
       UI.toast({
-        text: bad ? (feminine ? 'Началась ' : 'Начался ') + value.weather.toLowerCase() + ': ' + weatherEffect(effects) : 'Погода наладилась',
+        text: value.weather + (bad && weatherSummary(effects) ? ' · ' + weatherSummary(effects) : ''),
         icon: bad ? WEATHER_ICONS[value.weather] : 'sun',
         tone: bad ? 'warn' : 'good',
         priority: 1,
@@ -5567,10 +10222,12 @@
 
   function paintDock() {
     const coins = campaign.coins;
-    const stale = hudDirty || dockRange.campaign !== campaign || coins < dockRange.low || coins >= dockRange.high;
+    const taxiLow = taxiTooLow('elevators');
+    const stale = hudDirty || dockRange.campaign !== campaign || coins < dockRange.low || coins >= dockRange.high || dockRange.taxiLow !== taxiLow;
     if (stale) {
       hudDirty = false;
       dockRange.campaign = campaign;
+      dockRange.taxiLow = taxiLow;
       let low = 0;
       let high = Infinity;
       document.querySelectorAll('#upgrade-dock .upgrade-group').forEach(function (column) {
@@ -5594,7 +10251,7 @@
           }
           if (button.hidden) button.hidden = false;
           any = true;
-          const cost = MB.upgradeCost(kind, campaign.purchases[kind]);
+          const cost = MB.upgradeCost(kind, campaign.purchases[kind], campaign);
           paintUpgrade(kind, upgradeLabel(kind), cost);
           if (campaign.freePurchases || campaign.purchases[kind] >= window.MicroBuildersBalance.session[kind].max) return;
           if (cost <= coins) low = Math.max(low, cost);
@@ -5615,11 +10272,266 @@
     }
     paintDockFill(coins);
     paintUpgradeGraph();
+    paintAdvanced();
   }
 
+  // ---------- «Продвинутые улучшения» on the site (docs/gdd/29-tokens-draft.md) ----------
+  // A second graph in the «Улучшения» sheet (the ★ button in its head, shown once the tech center has
+  // researched an advanced technology): the centre pass for the site's coins (session line `advanced`),
+  // around it a star of key nodes, ADVANCED.tokens each (MB.buyAdvanced). Under the star a card says
+  // what the tapped node does and holds its button; opening the star picks the next step by itself
+  // (the centre while it is shut, then the first node that can be opened).
+
+  // The star itself (upgrade-graph.js): the centre and a ring of key nodes.
+  function advancedGraphOf(root, onSelect) {
+    const graph = window.MicroBuildersGraph.create({
+      root: root, tree: ADVANCED_TREE, gates: ADVANCED_GATES, ring: 106,
+      icon: function (id) { return ADVANCED_NODES[id] ? ADVANCED_NODES[id].icon : ADVANCED.icon; },
+      name: function (id) { return ADVANCED_NODES[id] ? ADVANCED_NODES[id].name : ADVANCED.name; },
+      onSelect: onSelect,
+    });
+    ADVANCED.nodes.forEach(function (node) { graph.nodes[node.id].classList.add('is-ultimate'); });
+    return graph;
+  }
+
+  function advancedAvailable() {
+    return !!world && (campaign.advancedOpen || []).length > 0;
+  }
+
+  function advancedCenterCost() {
+    return MB.upgradeCost('advanced', 0, campaign);
+  }
+
+  // What the star offers right now: the centre for coins, nodes for tokens.
+  function advancedReadyCount() {
+    if (!advancedAvailable()) return 0;
+    if (!(campaign.purchases.advanced > 0)) return campaign.coins >= advancedCenterCost() ? 1 : 0;
+    if ((campaign.tokens || 0) < ADVANCED.tokens) return 0;
+    return ADVANCED.nodes.filter(function (node) { return MB.advancedOpenable(campaign, node.id); }).length;
+  }
+
+  // The next step: the shut centre, else the first node that can be opened now.
+  function advancedNextPick() {
+    if (!(campaign.purchases.advanced > 0)) return 'advanced';
+    const next = ADVANCED.nodes.find(function (node) { return MB.advancedOpenable(campaign, node.id); });
+    return next ? next.id : null;
+  }
+
+  function pickAdvanced(id) {
+    advancedPick = id;
+    advancedGraph.select(id);
+    paintAdvancedTip(true);
+  }
+
+  function setAdvancedView(on) {
+    advancedOn = on;
+    if (on && !advancedGraph) {
+      document.getElementById('advanced-graph').classList.add('advanced-star');
+      advancedGraph = advancedGraphOf(document.getElementById('advanced-graph'), function (id) { pickAdvanced(id); });
+    }
+    document.getElementById('upgrade-sheet').classList.toggle('advanced-on', on);
+    document.getElementById('upgrade-graph').hidden = on;
+    document.getElementById('advanced-graph').hidden = !on;
+    document.getElementById('advanced-tip').hidden = !on;
+    if (on) document.getElementById('graph-tip').hidden = true;
+    document.getElementById('upgrade-sheet-title').textContent = on ? ADVANCED.name : 'Улучшения';
+    document.getElementById('advanced-toggle').firstChild.textContent = on ? '← Граф' : '★ Продвинутые';
+    if (!on) {
+      if (advancedGraph) advancedGraph.select(null);
+      return;
+    }
+    paintAdvanced();
+    pickAdvanced(advancedNextPick());
+    advancedGraph.centre();
+  }
+  document.getElementById('advanced-toggle').addEventListener('click', function () { setAdvancedView(!advancedOn); });
+
+  function paintAdvanced() {
+    const toggle = document.getElementById('advanced-toggle');
+    const available = advancedAvailable();
+    if (toggle.hidden === available) toggle.hidden = !available;
+    if (!available && advancedOn) setAdvancedView(false);
+    // «Улучшения» counts what the star offers too (ui.js keeps its own count in data-graph).
+    const ready = advancedReadyCount();
+    toggle.classList.toggle('has-ready', ready > 0 && !advancedOn);
+    const badge = document.getElementById('upgrades-ready');
+    const total = (Number(badge.dataset.graph) || 0) + ready;
+    if (badge.hidden === (total > 0)) badge.hidden = total === 0;
+    if (total > 0 && badge.textContent !== String(total)) badge.textContent = String(total);
+    if (!advancedOn) return;
+    const center = campaign.purchases.advanced > 0;
+    const tokens = campaign.tokens || 0;
+    advancedViews = { advanced: center ? 'owned' : 'available' };
+    ADVANCED.nodes.forEach(function (node) {
+      advancedViews[node.id] = MB.advancedOwned(campaign, node.id) ? 'owned' : !MB.advancedResearched(campaign, node.id) ? 'office' :
+        center ? 'available' : 'sealed';
+    });
+    advancedGraph.paint(advancedViews);
+    advancedGraph.nodes.advanced.classList.toggle('is-ready', !center && campaign.coins >= advancedCenterCost());
+    ADVANCED.nodes.forEach(function (node) {
+      const el = advancedGraph.nodes[node.id];
+      const view = advancedViews[node.id];
+      el.classList.toggle('is-sealed', view === 'sealed');
+      el.classList.toggle('is-buyable', view === 'available');
+      el.classList.toggle('is-ready', view === 'available' && tokens >= ADVANCED.tokens);
+      el.classList.toggle('is-short', view === 'available' && tokens < ADVANCED.tokens);
+    });
+    paintAdvancedTip(false);
+  }
+
+  // The card under the star: the tapped node (icon, name, state, what it does, its button), or how the
+  // star works while nothing is tapped. Redrawn when its state changes.
+  function paintAdvancedTip(force) {
+    const tip = document.getElementById('advanced-tip');
+    const id = advancedPick;
+    const view = id ? advancedViews[id] : '';
+    const tokens = campaign.tokens || 0;
+    const key = id + ':' + view + ':' + tokens + ':' + (campaign.coins >= advancedCenterCost());
+    if (!force && key === advancedTipKey) return;
+    advancedTipKey = key;
+    const researched = (campaign.advancedOpen || []).length;
+    const bought = ADVANCED.nodes.filter(function (node) { return MB.advancedOwned(campaign, node.id); }).length;
+    let icon = ADVANCED.icon;
+    let name = ADVANCED.name;
+    let state = '';
+    let text = '';
+    let action = '';
+    if (!id) {
+      state = 'Открыто узлов: ' + bought + ' · изучено в техцентре: ' + researched + ' из ' + ADVANCED.nodes.length;
+      text = 'Нажмите на узел ★, чтобы узнать, что он даёт. Узел стоит ' + ADVANCED.tokens + ' жетона и работает до конца этой стройки.';
+    } else if (id === 'advanced') {
+      const cost = advancedCenterCost();
+      state = view === 'owned' ? 'Открыт · узлы — по ' + ADVANCED.tokens + ' жетона' : 'Центр · за монеты стройки';
+      text = view === 'owned' ? 'Выберите узел ★ вокруг: изученные в техцентре открываются за жетоны до конца стройки.' :
+        'Откройте центр — и узлы ★ вокруг можно брать за жетоны. Изучено в техцентре: ' + researched + ' из ' + ADVANCED.nodes.length + '.';
+      if (view !== 'owned') {
+        action = buyButtonHtml({ attrs: 'data-advanced-center', icon: 'icons/icon-coins.jpg?v=2', price: formatShort(cost), have: campaign.coins, cost: cost,
+          aria: 'Открыть центр за ' + formatShort(cost) + ' монет', shortText: 'Не хватает ' + formatCompact(Math.max(0, cost - campaign.coins)) + ' монет' });
+      }
+    } else {
+      const node = ADVANCED_NODES[id];
+      icon = node.icon;
+      name = '★ ' + node.name;
+      text = node.text;
+      if (view === 'owned') state = 'Работает на этой стройке';
+      else if (view === 'office') state = 'Изучите в техцентре: вкладка «★ Продвинутые технологии»';
+      else if (view === 'sealed') state = 'Сначала откройте центр звезды';
+      else {
+        state = 'Жетонов у вас: ' + tokens;
+        action = buyButtonHtml({ attrs: 'data-advanced-node="' + id + '"', icon: 'icons/icon-gate-token.jpg', price: String(ADVANCED.tokens), have: tokens,
+          cost: ADVANCED.tokens, aria: 'Открыть за ' + ADVANCED.tokens + ' жетона', shortText: 'Не хватает жетонов: нужно ' + ADVANCED.tokens + ', есть ' + tokens });
+      }
+    }
+    tip.innerHTML = '<div class="adv-card' + (view === 'owned' ? ' is-owned' : view === 'office' || view === 'sealed' ? ' is-locked' : '') + '">' +
+      '<img class="adv-card-icon" src="icons/' + icon + '" alt="">' +
+      '<div class="adv-card-head"><b>' + UI.escapeHtml(name) + '</b><small>' + UI.escapeHtml(state) + '</small></div>' +
+      (action ? '<div class="adv-card-buy">' + action + '</div>' : '') + '<p class="adv-card-text">' + UI.escapeHtml(text) + '</p></div>';
+  }
+
+  document.getElementById('advanced-tip').addEventListener('click', function (event) {
+    const button = event.target.closest('[data-advanced-center], [data-advanced-node]');
+    if (!button || !world || campaign.status !== 'play') return;
+    const center = button.hasAttribute('data-advanced-center');
+    if (button.getAttribute('aria-disabled') === 'true') {
+      buyShort(button, center ? 'icons/icon-coins.jpg?v=2' : 'icons/icon-gate-token.jpg');
+      return;
+    }
+    if (center) {
+      const cost = advancedCenterCost();
+      if (!MB.buyUpgrade(campaign, world, 'advanced')) {
+        buyShort(button, 'icons/icon-coins.jpg?v=2');
+        return;
+      }
+      tone(760, 0.12);
+      consumeEvents();
+      refreshSimEstimate();
+      UI.toast({ text: 'Центр открыт: ключевые узлы ★ — по ' + ADVANCED.tokens + ' жетона', icon: 'icons/' + ADVANCED.icon, tone: 'good', key: 'advanced-open' });
+    } else {
+      const id = button.dataset.advancedNode;
+      if (!MB.buyAdvanced(campaign, world, id)) {
+        buyShort(button, 'icons/icon-gate-token.jpg');
+        return;
+      }
+      tone(880, 0.14);
+      world.events = world.events.filter(function (event) { return event.type !== 'advanced'; });
+      UI.toast({ text: '★ «' + ADVANCED_NODES[id].name + '»: ' + ADVANCED_NODES[id].text, icon: 'icons/' + ADVANCED_NODES[id].icon, tone: 'good', key: 'advanced-node' });
+      const el = advancedGraph.nodes[id];
+      if (el && el.animate) {
+        el.animate([{ transform: 'scale(1)', filter: 'brightness(1)' }, { transform: 'scale(1.35)', filter: 'brightness(1.8)' }, { transform: 'scale(1)', filter: 'brightness(1)' }],
+          { duration: 700, easing: 'ease-out' });
+      }
+    }
+    hudDirty = true;
+    paintHud();
+    saveLive({ awaySince: null });
+    // The centre bought — the next step is a node; a node bought — its card says it works now.
+    if (center) pickAdvanced(advancedNextPick());
+    else paintAdvancedTip(true);
+  });
+
   // The graph shows the same lines as the cards: open or not, level, affordable, what opens a closed one.
+  // Tokens of this site (2 a construction): the graph's passes and the camp buildings' starts.
+  function paintTokens() {
+    const tokens = campaign.tokens || 0;
+    setText('token-value', String(tokens));
+    document.getElementById('tokens').classList.toggle('empty', tokens === 0);
+  }
+
+  // A pass of the graph opened for tokens («Открыть за 1 жетон» in its tip).
+  function openGate(id) {
+    if (!world || campaign.status !== 'play') return false;
+    const gate = (window.MicroBuildersBalance.gates || {})[id];
+    if (!MB.buyGate(campaign, id, devLineOpen)) {
+      if (gate && !MB.gatePassed(campaign, id) && !MB.gateResearched(campaign, id, devLineOpen)) {
+        const needs = gateEntryTechs(id);
+        UI.toast({ text: 'Проход «' + gate.name + '» закрыт: изучите в техцентре хотя бы одну технологию его блока' + (needs ? ' — начните с ' + needs : ''),
+          icon: 'lock', tone: 'warn', key: 'gate-empty', duration: 2600 });
+      } else if (gate && MB.gateOpenable(campaign, id, devLineOpen)) {
+        UI.toast({ text: 'Не хватает жетонов: нужно ' + (gate.tokens || 1) + ', есть ' + (campaign.tokens || 0), icon: 'icons/icon-gate-token.jpg', tone: 'warn', key: 'tokens-short', duration: 2200 });
+      }
+      return false;
+    }
+    tone(760, 0.12);
+    UI.toast({ text: 'Проход «' + gate.name + '» открыт', icon: 'icons/icon-gate-token.jpg', tone: 'good', key: 'gate-open' });
+    const pill = document.getElementById('tokens');
+    pill.classList.remove('pulse');
+    void pill.offsetWidth;
+    pill.classList.add('pulse');
+    hudDirty = true;
+    paintHud();
+    saveLive({ awaySince: null });
+    return true;
+  }
+  window.MicroBuildersUpgradeGraph.onGate = openGate;
+
+  // A line the dev panel's group switch opens (upgradeLineOpen): its pass counts as researched.
+  function devLineOpen(kind) {
+    const button = document.getElementById('up-' + kind);
+    return !!button && campaign.devGroups[button.dataset.group] === true;
+  }
+
+  // «Дроны» — the tech center's technologies that open the way into a pass's block (logic.js →
+  // gateEntries): every other technology of the block comes after one of them.
+  function gateEntryTechs(id) {
+    const lines = MB.gateEntries(id);
+    return Meta.TECH_ORDER.filter(function (tech) {
+      const spec = Meta.TECH[tech];
+      return !spec.center && (spec.opens || []).some(function (kind) { return lines.indexOf(kind) >= 0; });
+    }).map(function (tech) { return '«' + Meta.TECH[tech].name + '»'; }).join(' или ');
+  }
+
   function paintUpgradeGraph() {
     const session = window.MicroBuildersBalance.session;
+    const gates = window.MicroBuildersBalance.gates || {};
+    Object.keys(gates).forEach(function (id) {
+      const s = graphStates[id] || (graphStates[id] = {});
+      s.passed = MB.gatePassed(campaign, id);
+      // Nothing of its block researched in the tech center: shut, nothing behind it shows.
+      s.researched = MB.gateResearched(campaign, id, devLineOpen);
+      if (!s.researched && s.needs === undefined) s.needs = gateEntryTechs(id);
+      s.cost = gates[id].tokens || 1;
+      s.ready = !s.passed && MB.gateOpenable(campaign, id, devLineOpen) && (campaign.tokens || 0) >= s.cost;
+    });
     Object.keys(session).forEach(function (kind) {
       const button = document.getElementById('up-' + kind);
       if (!button) return;
@@ -5636,6 +10548,9 @@
   }
 
   function upgradeLockText(kind, group) {
+    if (taxiTooLow(kind) && Meta.sessionLineOpen(meta, kind)) {
+      return 'когда здание поднимется до ' + MB.TAXI_FLOORS + ' этажей (сейчас ' + (MB.TAXI_FLOORS - MB.taxiFloorsShort(world)) + ')';
+    }
     if (DRONE_GATED_GROUPS.indexOf(group) >= 0 && campaign.purchases.engineers < 1) return 'после первого дрона';
     const source = Meta.SESSION_LINE[kind];
     const tech = techOf(source);
@@ -5658,6 +10573,11 @@
   }
 
   // Big values drop their decimals («298,7» → «299») so the pair fits a card.
+  // Effort and tempo (logic.js → «Трудоёмкость и темп»): whole numbers, thousands apart.
+  function formatTempo(value) {
+    return Math.round(value).toLocaleString('ru-RU');
+  }
+
   function upgradeNumber(value, digits, trim) {
     const text = value.toFixed(Math.abs(value) >= 100 ? 0 : digits).replace('.', ',');
     return trim && text.indexOf(',') >= 0 ? text.replace(/0+$/, '').replace(/,$/, '') : text;
@@ -5670,6 +10590,14 @@
     const maxed = level >= window.MicroBuildersBalance.session[kind].max;
     let current = MB.upgradeValue(campaign, kind, level);
     let next = MB.upgradeValue(campaign, kind, level + 1);
+    if (kind === 'gather' || kind === 'droneBuild') {
+      const foremen = campaign.foremen || {};
+      const scale = kind === 'gather'
+        ? campaign.metaPickupSpeed * (foremen.droneGather ? foremen.droneGather.value : 1)
+        : campaign.metaPlaceSpeed * (foremen.machines ? foremen.machines.second : 1);
+      current *= scale;
+      next *= scale;
+    }
     let digits = 2;
     let trim = true;
     let prefix = '';
@@ -5679,42 +10607,85 @@
       next = count + next - current;
       current = count;
       digits = 0;
-    } else if (kind === 'scaffold') {
-      current = MB.SCAFFOLD.erectSeconds / current;
-      next = MB.SCAFFOLD.erectSeconds / next;
-      digits = 1;
-      trim = false;
-      unit = ' с';
-    } else if (kind === 'kitchen') {
+    } else if (MB.TEMPO_UPGRADES[kind]) {
+      // Walking, climbing, setting, picking, scaffolds: the crew's tempo at 100 of the characteristic
+      // (effort a second, logic.js → «Трудоёмкость и темп»): «400 → 470/с».
+      return maxed ? formatTempo(current) + '/с' : formatTempo(current) + ' → ' + formatTempo(next) + '/с';
+    } else if (CAP_TEXTS[kind] || kind === 'reactor') {
       digits = 0;
       prefix = 'ур. ';
-    } else if (kind === 'speed' || kind === 'gather' || kind === 'droneBuild' || kind === 'pickup') {
+    } else if (kind === 'gather' || kind === 'droneBuild') {
       digits = 1;
       trim = false;
       unit = ' кг/с';
-    } else if (kind === 'horizontal' || kind === 'vertical' || kind === 'loaderSpeed' || kind === 'heliSpeed' || kind === 'droneSpeed') {
+    } else if (kind === 'loaderSpeed' || kind === 'heliSpeed' || kind === 'droneSpeed') {
       digits = 1;
       trim = false;
       unit = ' м/с';
-    } else if (kind === 'boomSpeed' || kind === 'elevatorSpeed') {
+    } else if (kind === 'elevatorSpeed') {
+      // The air taxi's speed: how many times its first level (the formula is seconds, less is faster).
+      const base = MB.upgradeValue(campaign, 'elevatorSpeed', 0);
+      current = base / current;
+      next = base / next;
+      digits = 2;
+      prefix = '×';
+    } else if (kind === 'boomSpeed') {
       trim = false;
       unit = ' с';
     } else if (kind === 'carry' || kind === 'loaderMass' || kind === 'heliMass') {
       digits = 0;
       unit = ' кг';
-    } else if (kind === 'freeBuy' || kind === 'cubeCapital' || kind === 'capitalChance' || kind === 'triplePay' || kind === 'budgetCapital' || kind === 'floorPay') {
+    } else if (kind === 'cubeCapital') {
+      digits = 0; prefix = '+'; unit = ' кап./находку';
+    } else if (kind === 'loungeSeats' || kind === 'dormBeds' || kind === 'campServe') {
+      digits = 0;
+      prefix = '+';
+      const count = maxed ? current : next;
+      unit = kind === 'dormBeds' ? ' ' + UI.plural(count, 'койка', 'койки', 'коек') : ' ' + UI.plural(count, 'место', 'места', 'мест');
+    } else if (kind === 'campSalesAway') {
+      current *= 100;
+      next *= 100;
+      digits = 0;
+      unit = '% без вас';
+    } else if (kind === 'freeBuy' || kind === 'triplePay' || kind === 'floorPay') {
       current *= 100;
       next *= 100;
       digits = 1;
       unit = '%';
     } else if (kind === 'plan') {
       digits = 0;
-      unit = ' ' + UI.plural(maxed ? current : next, 'куб', 'куба', 'кубов');
+      unit = ' ' + UI.plural(maxed ? current : next, 'мини-куб', 'мини-куба', 'мини-кубов');
     } else if (kind === 'vehicleHeight' || kind === 'elevatorHeight') {
       digits = 0;
       unit = ' эт.';
     } else if (kind === 'engineers' || kind === 'helicopters' || kind === 'elevators' || kind === 'patternHeight' || kind === 'bucket' || kind === 'vehicleReach' || kind === 'heliWidth' || kind === 'heliHeight') {
       digits = 0;
+    } else if (kind === 'satiety' || kind === 'hireXp' || kind === 'tokenBuy') {
+      digits = 0;
+      prefix = '+';
+      unit = kind === 'satiety' ? ' с сытости' : kind === 'hireXp' ? ' опыта' : ' ' + UI.plural(maxed ? current : next, 'жетон', 'жетона', 'жетонов');
+    } else if (kind === 'mealFast' || kind === 'sleepFast') {
+      digits = 0;
+      prefix = '−';
+      unit = ' с';
+    } else if (kind === 'deckWalk' || kind === 'nightGear' || kind === 'winterGear' || kind === 'rainTents' || kind === 'heatGear' || kind === 'rankFast' ||
+      kind === 'campLightRain' || kind === 'campTea' || kind === 'spellTune') {
+      // The share of a penalty taken away (rankFast — of the experience a rank asks, campTea — of the
+      // habit a smoke at the lounge adds, spellTune — of a spell's mana).
+      if (kind === 'rankFast' || kind === 'campTea' || kind === 'spellTune') {
+        current = 1 - current;
+        next = 1 - next;
+      }
+      current *= 100;
+      next *= 100;
+      digits = 0;
+      prefix = '−';
+      unit = kind === 'rankFast' ? '% опыта' : kind === 'campTea' ? '% привычки' : kind === 'spellTune' ? '% маны' : '% штрафа';
+    } else if (kind === 'willpower' || kind === 'cubeGift') {
+      current *= 100;
+      next *= 100;
+      digits = 0;
+      unit = '%';
     } else {
       prefix = '×';
     }
@@ -5727,8 +10698,12 @@
     const max = window.MicroBuildersBalance.session[kind].max;
     const level = campaign.purchases[kind];
     const maxed = level >= max;
+    // A camp building's level above what the personnel centre allows waits for its upgrade there.
+    const capped = !maxed && siteUpgradeCapped(kind);
+    // A line of the camp's graph branch waits for its building to be started on this site.
+    const shut = !maxed && MB.campBranchShut(campaign, kind);
     setUpgradeLabel(kind, label);
-    setText(kind + '-cost', maxed ? 'Максимум' : campaign.freePurchases ? '0' : formatCompact(cost));
+    setText(kind + '-cost', maxed ? 'Максимум' : capped ? 'Центр персонала' : shut ? 'Нет здания' : campaign.freePurchases ? '0' : formatCompact(cost));
     // The level sits as a small number in the icon's corner (none before the first level).
     setText(kind + '-level', level > 0 ? String(level) : '');
     const button = document.getElementById('up-' + kind);
@@ -5736,7 +10711,8 @@
       button.classList.remove('locked');
       button.title = '';
     }
-    const ready = (campaign.freePurchases || campaign.coins >= cost) && campaign.status !== 'won' && !maxed;
+    const ready = (campaign.freePurchases || campaign.coins >= cost) && campaign.status !== 'won' && !maxed && !capped && !shut;
+    if (CAP_TEXTS[kind]) button.title = capped ? capText(kind) : '';
     button.classList.toggle('ready', ready);
     button.classList.toggle('maxed', maxed);
     const disabled = ready ? 'false' : 'true';
@@ -5758,7 +10734,9 @@
   // The technology that opens a closed dock line (Meta.SESSION_LINE), or '' when an HQ building
   // opens it, nothing does yet, or its machine tab still waits for the first drone.
   function dockLockNode(kind, group) {
+    if (taxiTooLow(kind)) return '';
     if (DRONE_GATED_GROUPS.indexOf(group) >= 0 && campaign.purchases.engineers < 1) return '';
+    if (MB.lineGated(campaign, kind)) return '';
     return techOf(Meta.SESSION_LINE[kind]);
   }
 
@@ -5814,6 +10792,37 @@
     anim.onfinish = function () { tag.remove(); };
   }
 
+  // ---------- purchase buttons (docs/tech/interface.md «Кнопка покупки») ----------
+  // One price pill for every upgrade bought outside the dock (building sheets, HQ panels), as the
+  // dock's own: green when it can be bought; dark with a gold fill of what is saved up when not —
+  // still tappable, the tap shakes it and says what is short; pressed it sinks; a purchase flashes
+  // its card gold and «−N» floats from the wallet. Locked (no technology, no copies) — grey, disabled.
+  // spec: { attrs (data-… of the action), price (html after the icon), icon, have, cost, short
+  // (overrides have < cost), shortText (the tap's toast), label, aria, locked, wide }
+  function buyButtonHtml(spec) {
+    const short = !spec.locked && (spec.short !== undefined ? spec.short : spec.have < spec.cost);
+    const fill = short ? Math.max(0, Math.min(99, Math.floor((spec.have || 0) / Math.max(1, spec.cost) * 100))) : 100;
+    return '<button type="button" class="buy-btn' + (short ? ' short' : '') + (spec.wide ? ' wide' : '') + '" ' + spec.attrs +
+      (spec.aria ? ' aria-label="' + UI.escapeHtml(spec.aria) + '"' : '') +
+      (spec.locked ? ' disabled' : short ? ' aria-disabled="true" data-short="' + UI.escapeHtml(spec.shortText || 'Не хватает') + '"' : '') +
+      ' style="--fill:' + fill + '%">' + (spec.label ? '<span>' + UI.escapeHtml(spec.label) + '</span>' : '') +
+      '<img class="currency-icon" src="' + spec.icon + '" alt="">' + spec.price + '</button>';
+  }
+
+  // A tap on a price not saved up yet.
+  function buyShort(button, icon) {
+    shake(button);
+    UI.toast({ text: button.dataset.short || 'Не хватает', icon: icon, tone: 'warn', key: 'buy-short', duration: 1800 });
+  }
+
+  // After the re-render: the card with `selector` flashes and «−N» floats from the wallet.
+  function buyFlash(selector, spent, hostId) {
+    const el = document.querySelector(selector);
+    flashCard(el && el.closest('.canteen-dish, .meta-card'), '', 'paid');
+    if (spent > 0) floatCoins('−' + formatShort(spent), 'spend', hostId);
+    tone(680, 0.09);
+  }
+
   // Office capital finds (Meta.onBlocksPlaced) go straight to the treasury; the session HUD shows
   // no company currencies, and chests announce themselves in paintChest.
   function showPlacementRewards(result) {
@@ -5822,7 +10831,25 @@
         icon: 'icons/icon-foreman-' + change.id + '.jpg?v=3', key: 'expertise:' + change.id, duration: 2400 });
       hudDirty = true;
     });
+    // «Лаборатория материалов»: a family earned a perk point (spent in the HQ).
+    (result.labPoints || []).forEach(function (family) {
+      UI.toast({ text: 'Лаборатория: очко перка «' + labFamily(family).name + '»', icon: labFamilyIcon(family), tone: 'gold', key: 'lab-point:' + family, duration: 3000 });
+      hudDirty = true;
+    });
     return result;
+  }
+
+  // The materials lab's counters on the site (logic.js → stepForemen).
+  function onLabEvent(event) {
+    if (event.perk === 'token') {
+      UI.toast({ text: 'Стеклянный жетон: +1 жетон', icon: labFamilyIcon('glass'), key: 'lab-token', duration: 1800 });
+      hudDirty = true;
+    }
+    if (event.perk === 'chest') {
+      const prize = Meta.claimLabChest(meta);
+      UI.toast({ text: 'Счастливая жила: сундук · +' + formatCompact(prize.capital) + ' капитала', icon: labFamilyIcon('gems'), tone: 'gold', key: 'lab-chest', duration: 2600 });
+      hudDirty = true;
+    }
   }
 
   // ---- chests 25% / 50% ----
@@ -5963,7 +10990,8 @@
       const done = count.built === count.total;
       rows += '<li' + (done ? ' class="done"' : '') + '>' +
         '<i style="background:#' + material.color.toString(16).padStart(6, '0') + '"></i>' +
-        '<span class="level-info-name"><b>' + material.name + '</b><small>' + material.weight + ' кг за куб</small></span>' +
+        '<span class="level-info-name"><b>' + material.name + '</b><small>' + (material.accent ? 'отделка · ' : '') +
+        material.weight.toLocaleString('ru-RU') + ' кг за куб</small></span>' +
         '<span class="level-info-count"><b>' + count.built + '</b> / ' + count.total + '</span>' +
         '<span class="level-info-bar"><em style="width:' + (count.built / count.total * 100) + '%"></em></span>' +
         '</li>';
@@ -5973,7 +11001,8 @@
     if (!document.getElementById('level-info-time').hidden) paintLevelTimings();
     document.getElementById('level-info-summary').innerHTML =
       '<span>Построено <b>' + builtCubes + ' / ' + totalCubes + '</b> кубов</span>' +
-      '<span>Масса <b>' + builtMass.toLocaleString('ru-RU') + ' / ' + totalMass.toLocaleString('ru-RU') + '</b> кг</span>';
+      '<span>Масса <b>' + builtMass.toLocaleString('ru-RU') + ' / ' + totalMass.toLocaleString('ru-RU') + '</b> кг</span>' +
+      '<span>Стройка идёт <b>' + UI.formatDuration(campaign.levelElapsed) + '</b></span>';
     document.getElementById('level-info-rows').innerHTML = rows;
     if (!simEstimate) refreshSimEstimate();
     document.getElementById('level-info-sim').innerHTML =
@@ -5990,9 +11019,38 @@
     paintLevelInfo();
   }
 
-  // «Тайминги»: worker-seconds per state and sub-state from logic's time ledger, biggest first.
+  // «По прокачкам»: which session upgrades shorten each category of logic's timeCategories.
+  const TIME_CATEGORY_UPGRADES = {
+    'Горизонтальное движение': ['horizontal'],
+    'Подъёмы и спуски': ['vertical'],
+    'Аэротакси': ['elevatorSpeed', 'elevators'],
+    'Перегруз': ['carry', 'lightCarry'],
+    'Набор материала': ['pickup'],
+    'Укладка': ['speed'],
+    'Леса и проходы': ['scaffold'],
+    'План работ': ['plan'],
+    'Перекур': ['smokeRare', 'smokeShort', 'lounge', 'loungeSeats', 'smokePath'],
+    'Обед': ['kitchen', 'portions'],
+    'Сон': ['dorm', 'dormBeds', 'dormSleep'],
+    'Городок': ['kitchen', 'campPrefab'],
+  };
+
+  function setTimeCategories(on) {
+    try {
+      if (on) window.localStorage.setItem(TIME_CATEGORIES_KEY, '1');
+      else window.localStorage.removeItem(TIME_CATEGORIES_KEY);
+    } catch (error) { /* private mode: the choice lasts until reload */ }
+    paintLevelInfo();
+  }
+
+  // «Тайминги»: worker-seconds per state and sub-state from logic's time ledger, biggest first;
+  // with «По прокачкам» the same seconds come from the category ledger instead.
   function paintLevelTimings() {
-    const ledger = world.timeLedger;
+    const byUpgrade = document.getElementById('level-time-categories').checked;
+    const ledger = byUpgrade ? world.timeCategories : world.timeLedger;
+    document.getElementById('level-info-time-label').textContent = byUpgrade
+      ? 'Время рабочих по прокачкам, сумма по бригаде'
+      : 'Время рабочих по состояниям, сумма по бригаде';
     const states = [];
     let total = 0;
     Object.keys(ledger).forEach(function (name) {
@@ -6022,8 +11080,12 @@
         const sub = state.subs[j];
         subs += '<li><b>' + sub.name + '</b><span>' + formatSpan(sub.seconds) + '</span><em>' + share(sub.seconds) + '</em></li>';
       }
+      const upgrades = byUpgrade ? TIME_CATEGORY_UPGRADES[state.name] : null;
+      const hint = upgrades
+        ? '<small>' + (upgrades.length > 1 ? 'Прокачки: ' : 'Прокачка: ') + upgrades.map(upgradeName).join(', ') + '</small>'
+        : '';
       rows += '<li>' +
-        '<div class="level-time-head"><b>' + state.name + '</b><span>' + formatSpan(state.seconds) + '</span><em>' + share(state.seconds) + '</em></div>' +
+        '<div class="level-time-head"><b>' + state.name + '</b><span>' + formatSpan(state.seconds) + '</span><em>' + share(state.seconds) + '</em>' + hint + '</div>' +
         '<div class="level-time-bar"><i style="width:' + (total > 0 ? state.seconds / total * 100 : 0) + '%"></i></div>' +
         '<ul class="level-time-sub">' + subs + '</ul>' +
         '</li>';
@@ -6208,7 +11270,10 @@
     const onScreen = key === liveKey;
     const stats = reward.stats || {};
     const details = [
-      ['Лестницы', stats.ladders], ['Настилы', stats.decks], ['Дополнительные двери', stats.additionalDoors],
+      ['Лестницы', stats.ladders], ['Настилы', stats.decks],
+      ['Леса сломались', stats.scaffoldBreaks || 0], ['Ремонты лесов', stats.scaffoldRepairs || 0],
+      ['Падения с лесов', stats.injuries || 0], ['В больнице', stats.hospital || 0],
+      ['Дополнительные двери', stats.additionalDoors],
       ['Вертикальные люки', stats.verticalHatches], ['Машиной построено', stats.vehicleBlocks],
     ].filter(function (row) { return row[1] !== undefined; });
     if (reward.autoCompleted > 0) details.push(['Достроено автоматически', reward.autoCompleted + ' ' + UI.plural(reward.autoCompleted, 'куб', 'куба', 'кубов')]);
@@ -6370,7 +11435,7 @@
   }
 
   function cityIcon(id) {
-    const keys = { office: 'office', tech: 'gear', personnel: 'personnel', exchange: 'exchange', recruiting: 'foremen', garage: 'truck', contracts: 'contract', expansion: 'crane' };
+    const keys = { office: 'office', tech: 'gear', personnel: 'personnel', exchange: 'exchange', recruiting: 'foremen', garage: 'truck', contracts: 'contract', supply: 'truck', reactor: 'storm', training: 'foremen', materials: 'pick', expansion: 'crane' };
     return ICONS[keys[id]] || ICONS.hq;
   }
 
@@ -6517,7 +11582,7 @@
       if (!byMaterial[block.materialId]) byMaterial[block.materialId] = [];
       byMaterial[block.materialId].push(block);
     });
-    const geometry = new THREE.BoxGeometry(0.98, 0.98, 0.98);
+    const geometry = new THREE.BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE);
     Object.keys(byMaterial).forEach(function (materialId) {
       const list = byMaterial[materialId];
       const solid = new THREE.InstancedMesh(geometry, blockSurface(materialId, false), list.length);
@@ -6701,6 +11766,12 @@
     const seals = (project.seals || 0) - meta.seals;
     if (capital > 0) missing.push(capital.toLocaleString('ru-RU') + ' капитала');
     if (seals > 0) missing.push(seals + ' ' + UI.plural(seals, 'печати', 'печатей', 'печатей'));
+    if (project.rare) {
+      Object.keys(project.rare).forEach(function (key) {
+        const need = project.rare[key] - (meta.rare[key] || 0);
+        if (need > 0) missing.push(need + ' · ' + Meta.RARE_NAMES[key].toLowerCase());
+      });
+    }
     return missing;
   }
 
@@ -6751,7 +11822,7 @@
 
   // Can the company open the next technology right now (the «!» on the tech center's sign)?
   function techAffordable() {
-    return Meta.TECH_ORDER.some(function (id) {
+    return Meta.TECH_CENTER_ORDER.concat(Meta.ADVANCED_TECHS).some(function (id) {
       return Meta.techUnlocked(meta, id) && meta.capital >= Meta.techCost(id) && meta.seals >= Meta.techSeals(id);
     });
   }
@@ -6788,6 +11859,10 @@
     if (lines.length) parts.push('Открывает на стройке: ' + lines.join(', '));
     if (project.gives) parts.push(project.gives);
     if (project.rewardSeals && !(meta.hq[id] > 0)) parts.push('При постройке: +' + project.rewardSeals + ' ' + UI.plural(project.rewardSeals, 'печать', 'печати', 'печатей'));
+    if (project.rewardRare && !(meta.hq[id] > 0)) {
+      parts.push('При постройке: ' + Object.keys(project.rewardRare).map(function (key) { return '+' + project.rewardRare[key] + ' · ' + Meta.RARE_NAMES[key].toLowerCase(); }).join(', ') +
+        '; до неё редкие ресурсы за заказы не выдаются');
+    }
     return parts.join('. ');
   }
 
@@ -6824,8 +11899,11 @@
   function cityBadges(id) {
     if (id === 'office' && officeAffordable()) return ['<em class="city-badge alert" title="Есть прокачки по карману">!</em>'];
     if (id === 'tech' && techAffordable()) return ['<em class="city-badge alert" title="Можно открыть новую прокачку">!</em>'];
+    if (id === 'materials' && meta.hq.materials > 0 && Meta.labAffordableFamilies(meta).length) return ['<em class="city-badge alert" title="Есть очки перков">!</em>'];
     if (id === 'recruiting' && schoolAffordable()) return ['<em class="city-badge">Обучение доступно</em>'];
     if (id === 'recruiting' && Meta.refreshRecruiting(meta).stock > 0) return ['<em class="city-badge">Найм готов</em>'];
+    const special = id === 'exchange' ? Meta.specialOrder(meta) : null;
+    if (special && !special.done) return ['<em class="city-badge alert" title="Спецзаказ дня: печати">★</em>'];
     if (id === 'exchange' && meta.exchange.orders.length > 0) {
       const count = meta.exchange.orders.length;
       return ['<em class="city-badge">' + count + ' ' + UI.plural(count, 'заказ', 'заказа', 'заказов') + '</em>'];
@@ -6862,9 +11940,10 @@
     } else if (state === 'plot') {
       const can = cityShortfall(id).length === 0;
       cls += can ? ' is-afford' : '';
-      line = '<span class="city-sign-line">' + priceChip('capital', 'капитал', project.capital, meta.capital) +
-        (project.seals ? priceChip('seals', 'печати', project.seals, meta.seals) : '') + '</span>';
-      label += can ? ': можно купить участок' : ': участок, не хватает ресурсов';
+      line = '<span class="city-sign-line">' + (project.capital ? priceChip('capital', 'капитал', project.capital, meta.capital) : '') +
+        (project.seals ? priceChip('seals', 'печати', project.seals, meta.seals) : '') +
+        (project.rare ? Object.keys(project.rare).map(function (key) { return priceChip('rare-' + key, Meta.RARE_NAMES[key], project.rare[key], meta.rare[key] || 0); }).join('') : '') + '</span>';
+      label += can ? ': можно строить' : ': не хватает ресурсов';
     } else {
       icon = ICONS.lock;
       line = '<span class="city-sign-line">с уровня ' + (project.unlock + 1) + '</span>';
@@ -7238,8 +12317,11 @@
       // Rare resources once the player has some: no row of zeros.
       if (meta.rare[key] > 0) items.push(['rare-' + key, Meta.RARE_NAMES[key], meta.rare[key]]);
     });
+    if (meta.hq.training > 0) items.push(['training', 'Опыт учебного центра', Meta.trainingXp(meta)]);
     const html = items.map(function (item) {
-      return '<span class="pill" title="' + item[1] + '"><img class="game-icon currency-icon" src="icons/icon-' + (item[0] === 'diplomas' ? 'diplomas.svg' : item[0] + '.jpg?v=2') + '" alt="' + item[1] + '"><b>' + formatCompact(item[2]) + '</b></span>';
+      const file = item[0] === 'diplomas' ? 'diplomas.svg' : item[0] === 'training' ? 'training-xp.jpg' : item[0] + '.jpg?v=2';
+      const icon = '<img class="game-icon currency-icon" src="icons/icon-' + file + '" alt="' + item[1] + '">';
+      return '<span class="pill" title="' + item[1] + '">' + icon + '<b>' + formatCompact(item[2]) + '</b></span>';
     }).join('');
     if (html === cityWalletHtml) return;
     cityWalletHtml = html;
@@ -7266,8 +12348,10 @@
   // «Капитал 250 (есть 180)» per currency of the plot price.
   function cityCostRows(id) {
     const project = Meta.PROJECTS[id];
-    const rows = [['capital', 'Капитал', project.capital, meta.capital]];
+    const rows = project.capital ? [['capital', 'Капитал', project.capital, meta.capital]] : [];
     if (project.seals) rows.push(['seals', 'Печати', project.seals, meta.seals]);
+    if (project.rare) Object.keys(project.rare).forEach(function (key) { rows.push(['rare-' + key, Meta.RARE_NAMES[key], project.rare[key], meta.rare[key] || 0]); });
+    if (!rows.length) return '';
     return '<ul class="city-cost">' + rows.map(function (row) {
       return '<li class="' + (row[3] >= row[2] ? 'ok' : 'short') + '"><img class="currency-icon" src="icons/icon-' + row[0] + '.jpg?v=2" alt="">' +
         '<span>' + row[1] + ' <b>' + row[2].toLocaleString('ru-RU') + '</b></span><small>(есть ' + row[3].toLocaleString('ru-RU') + ')</small></li>';
@@ -7297,6 +12381,15 @@
     }
     if (id === 'recruiting') return { label: 'Открыть школу', action: 'city-open', note: 'Попытки сегодня: ' + Meta.schoolAttempts(meta).left + ' / 5' };
     if (id === 'contracts') return { label: 'Открыть контракты', action: 'city-contracts' };
+    if (id === 'materials') return { label: 'Открыть лабораторию', action: 'city-open', note: labNote() };
+    if (id === 'training') return { label: 'Открыть учебный центр', action: 'city-open', note: 'Опыт центра ' + formatCompact(Meta.trainingXp(meta)) + (Meta.trainingUpgradeLevel(meta, 'onsite') > 0 ? ' · разряды до ' + Meta.trainingStats(meta).cap : ' · опыт рабочих ещё не включён') };
+    if (id === 'supply') return { label: 'Открыть снабжение', action: 'city-open', note: 'Бустеров открыто: ' + Object.keys(Meta.BOOSTERS).filter(function (b) { return Meta.boosterLevel(meta, b) > 0; }).length + ' из ' + Object.keys(Meta.BOOSTERS).length };
+    if (id === 'reactor') return { label: 'Открыть реактор', action: 'city-open', note: 'Заклинаний изучено: ' + Object.keys(Meta.SPELLS).filter(function (s) { return Meta.spellLevel(meta, s) > 0; }).length + ' из ' + Object.keys(Meta.SPELLS).length };
+    if (id === 'personnel') {
+      const owned = Meta.DISHES.filter(function (dish) { return Meta.dishOwned(meta, dish.id); }).length;
+      return { label: 'Открыть центр персонала', action: 'city-cookbook',
+        note: 'Кухня до ур. ' + Meta.canteenMaxLevel(meta) + ' · блюда ' + owned + '/' + Meta.DISHES.length };
+    }
     return null;
   }
 
@@ -7320,6 +12413,8 @@
       html += '<section class="city-gives"><h4>Что даёт</h4><p>' + UI.escapeHtml(cityGives(id)) + '</p></section>';
     }
     if (state === 'plot' || state === 'locked') html += cityCostRows(id);
+    // Once the materials lab stands: what the building is made of, by family (its cubes count there).
+    if (state !== 'live' && meta.hq.materials > 0 && MB.HQ_LEVELS[id]) html += '<section class="city-gives"><h4>Материалы</h4>' + labFamilyChips(MB.HQ_LEVELS[id].blocks) + '</section>';
     if (state === 'building') {
       const pct = cityBuildPercent(id);
       html += '<div class="city-progress"><i style="width:' + pct + '%"></i></div>';
@@ -7386,6 +12481,8 @@
       selectCityLot(id);
     } else if (action === 'city-open' || action === 'city-contracts') {
       openBuildingPanel(id);
+    } else if (action === 'city-cookbook') {
+      openBuildingPanel('personnel');
     } else if (action === 'take-build') {
       takeBuild(id);
     } else if (action === 'site-switch') {
@@ -7443,6 +12540,7 @@
     const next = cityRecords.size ? cityNextStep() : null;
     if (next && cityState(next) !== 'building') return true;
     if (meta.hq.office > 0 && officeAffordable()) return true;
+    if (meta.hq.materials > 0 && Meta.labAffordableFamilies(meta).length) return true;
     if (schoolAffordable() || (meta.hq.recruiting > 0 && Meta.schoolHasUpgrade(meta, 'recruiting') && meta.recruit && meta.recruit.stock > 0)) return true;
     if (meta.hq.exchange > 0 && meta.exchange.orders.length > 0) return true;
     return Meta.contractBoardOpen(meta) && contractReadyNow();
@@ -7455,7 +12553,7 @@
   // A working HQ building's own panel, from its card: the office, recruiting, contracts and the
   // exchange (the same screen as its nav tab). × comes back to this card. False: no panel (yet).
   function openBuildingPanel(id) {
-    const screen = { office: 'office', tech: 'tech', exchange: 'exchange', recruiting: 'recruiting', contracts: 'contract' }[id];
+    const screen = { office: 'office', tech: 'tech', exchange: 'exchange', recruiting: 'recruiting', contracts: 'contract', personnel: 'personnel', supply: 'supply', reactor: 'reactor', training: 'training', materials: 'materials' }[id];
     if (!screen || !(meta.hq[id] > 0)) return false;
     cityBuilding = id;
     return openScreen(screen);
@@ -7583,6 +12681,11 @@
     if (screen === 'contract') return { kicker: 'Штаб · заказы на время', title: 'Контракты' };
     if (screen === 'office') return { kicker: 'Штаб · отделы', title: 'Главный офис' };
     if (screen === 'tech') return { kicker: 'Штаб · новые прокачки', title: 'Технологический центр' };
+    if (screen === 'personnel') return { kicker: 'Штаб · городок и столовая', title: 'Центр персонала' };
+    if (screen === 'supply') return { kicker: 'Штаб · бустеры на заказ', title: 'Снабжение' };
+    if (screen === 'training') return { kicker: 'Штаб · опыт и разряды рабочих', title: 'Учебный центр' };
+    if (screen === 'materials') return { kicker: 'Штаб · перки семейств материалов', title: 'Лаборатория материалов' };
+    if (screen === 'reactor') return { kicker: 'Штаб · техно-магия', title: 'Реактор' };
     return { kicker: 'Штаб · бригадиры', title: 'Школа бригадиров' };
   }
 
@@ -7604,6 +12707,11 @@
     if (currentScreen === 'office') renderOffice(content);
     if (currentScreen === 'tech') renderTech(content);
     if (currentScreen === 'recruiting') renderRecruiting(content);
+    if (currentScreen === 'personnel') renderPersonnel(content);
+    if (currentScreen === 'supply') renderSupply(content);
+    if (currentScreen === 'training') renderTraining(content);
+    if (currentScreen === 'materials') renderMaterialsLab(content);
+    if (currentScreen === 'reactor') renderReactor(content);
     const head = panelHead(currentScreen);
     setText('meta-kicker', head.kicker);
     setText('meta-title', head.title);
@@ -7617,16 +12725,20 @@
     const items = [];
     items.push(['capital', 'Капитал', meta.capital]);
     if (currentScreen === 'recruiting') items.push(['diplomas', 'Дипломы', meta.diplomas]);
+    if (currentScreen === 'training') items.push(['training', 'Опыт центра', Meta.trainingXp(meta)]);
     if (currentScreen !== 'recruiting' && (meta.seals > 0 || sealsShown)) items.push(['seals', 'Печати', meta.seals]);
-    if (currentScreen === 'exchange') {
+    if (currentScreen === 'exchange' || currentScreen === 'supply' || currentScreen === 'reactor') {
+      // Boosters and spells are paid in them: all four, zeros too.
       Object.keys(meta.rare).forEach(function (key) {
-        if (meta.rare[key] > 0) items.push(['rare-' + key, Meta.RARE_NAMES[key], meta.rare[key]]);
+        if (meta.rare[key] > 0 || currentScreen !== 'exchange') items.push(['rare-' + key, Meta.RARE_NAMES[key], meta.rare[key]]);
       });
     }
     const wallet = document.getElementById('panel-wallet');
     wallet.hidden = items.length === 0;
     wallet.innerHTML = items.map(function (item) {
-      return '<span class="pill" title="' + item[1] + '"><img class="game-icon currency-icon" src="icons/icon-' + (item[0] === 'diplomas' ? 'diplomas.svg' : item[0] + '.jpg?v=2') + '" alt="' + item[1] + '"><b>' + formatCompact(item[2]) + '</b></span>';
+      const file = item[0] === 'diplomas' ? 'diplomas.svg' : item[0] === 'training' ? 'training-xp.jpg' : item[0] + '.jpg?v=2';
+      const icon = '<img class="game-icon currency-icon" src="icons/icon-' + file + '" alt="' + item[1] + '">';
+      return '<span class="pill" title="' + item[1] + '">' + icon + '<b>' + formatCompact(item[2]) + '</b></span>';
     }).join('');
   }
 
@@ -7641,12 +12753,14 @@
     const recruit = meta.hq.recruiting > 0 ? Meta.refreshRecruiting(meta) : null;
     const side = Meta.site(meta, 'side');
     return [
-      currentScreen, officeTab, schoolTab, meta.diplomas, JSON.stringify(meta.school), currentScreen === 'recruiting' ? minutes(Meta.schoolAttempts(meta).resetAt) : '', foremanFocus, meta.capital, meta.seals, JSON.stringify(meta.rare),
+      currentScreen, officeTab, personnelTab, personnelInfo, JSON.stringify(meta.personnel), JSON.stringify(meta.cookbook), schoolTab, meta.diplomas, JSON.stringify(meta.school), currentScreen === 'recruiting' ? minutes(Meta.schoolAttempts(meta).resetAt) : '', foremanFocus, meta.capital, meta.seals, JSON.stringify(meta.rare),
       currentScreen === 'foremen' ? JSON.stringify(meta.cards) : '',
       recruit ? recruit.stock + ':' + minutes(recruit.nextAt) : '',
       meta.exchange.orders.length, minutes(meta.exchange.nextOrderAt),
       meta.contract.index, minutes(meta.contract.cooldownUntil), Meta.contractReady(meta) ? 1 : 0,
       side ? side.runMode + ':' + side.status + ':' + side.built : '',
+      JSON.stringify(meta.supply), JSON.stringify(meta.reactor), JSON.stringify(meta.training),
+      labTab, JSON.stringify(meta.lab),
     ].join('|');
   }
 
@@ -7692,12 +12806,39 @@
     return 'plot';
   }
 
+  // The office's topics in the order they open: a topic opens with the earliest of its lines (their
+  // story level); the open ones and the next one with a lock and its level («Капитал 🔒 4 ур.»), the
+  // rest hidden. → [{ section, level, open }].
+  function officeTabs() {
+    const list = Meta.OFFICE_SECTIONS.map(function (section) {
+      const level = Math.min.apply(null, Meta.officeChain(section).map(function (id) { return Meta.OFFICE[id].level || 0; }));
+      return { section: section, level: level, open: meta.campaignLevel >= level };
+    }).sort(function (a, b) { return a.level - b.level; });
+    const next = list.findIndex(function (tab) { return !tab.open; });
+    return next < 0 ? list : list.slice(0, next + 1);
+  }
+
+  // The office's topics as a grid of chips (officeTabs); a green number — lines of the topic that can
+  // be bought now.
   function renderOffice(content) {
-    const tabs =['Рабочая сила', 'Экономика', 'Организация'];
-    let html = '<div class="office-tabs">';
-    tabs.forEach(function (section) {
+    const shown = officeTabs();
+    const tabs = shown.filter(function (tab) { return tab.open; }).map(function (tab) { return tab.section; });
+    if (tabs.indexOf(officeTab) < 0) officeTab = tabs[0] || Meta.OFFICE_SECTIONS[0];
+    let html = '<div class="office-tabs office-topics">';
+    shown.forEach(function (tab) {
+      const section = tab.section;
+      if (!tab.open) {
+        html += '<button type="button" class="is-locked" data-action="office-tab" data-id="' + section + '" aria-disabled="true">' + ICONS.lock + section +
+          '<small>' + (tab.level + 1) + ' ур.</small></button>';
+        return;
+      }
+      const ready = Meta.officeChain(section).filter(function (id) {
+        const level = meta.office[id];
+        return Meta.officeUnlocked(meta, id) && level < Meta.OFFICE[id].max &&
+          meta.capital >= Meta.officeCost(id, level) && meta.seals >= Meta.officeSeals(id, level);
+      }).length;
       html += '<button type="button" data-action="office-tab" data-id="' + section + '"' +
-        (officeTab === section ? ' class="on"' : '') + '>' + section + '</button>';
+        (officeTab === section ? ' class="on"' : '') + '>' + section + (ready ? '<i class="topic-ready">' + ready + '</i>' : '') + '</button>';
     });
     html += '</div>';
     const rows = Meta.officeChain(officeTab);
@@ -7720,8 +12861,8 @@
       const maxed = level >= spec.max;
       const cost = Meta.officeCost(id, level);
       const seals = Meta.officeSeals(id, level);
-      const now = officeValueText(spec, Meta.officeValue(id, level), level);
-      const next = maxed ? '' : ' → <b class="value-next">' + officeValueText(spec, Meta.officeValue(id, level + 1), level + 1) + '</b>';
+      const now = officeValueText(spec, Meta.officeValue(id, level), level, Meta.officeValue2(id, level));
+      const next = maxed ? '' : ' → <b class="value-next">' + officeValueText(spec, Meta.officeValue(id, level + 1), level + 1, Meta.officeValue2(id, level + 1)) + '</b>';
       html += compactUpgradeCard({
         id: id, name: spec.name, icon: officeIcon(id), className: 'office-item', level: level, max: spec.max,
         body: '<p>' + UI.escapeHtml(spec.text) + ': ' + now + next + '</p>',
@@ -7736,7 +12877,8 @@
   function compactUpgradeCard(spec) {
     const level = spec.level === undefined ? '' : ' <small>' + spec.level + ' / ' + spec.max + '</small>';
     const icon = spec.iconMarkup || '<img class="game-icon" src="icons/' + spec.icon + '" alt="">';
-    let html = '<article class="meta-card office-upgrade compact-upgrade ' + spec.className + '">' + icon +
+    let html = '<article class="meta-card office-upgrade compact-upgrade ' + spec.className + '"' +
+      (spec.action ? ' data-buy="' + spec.action + ':' + spec.id + '"' : '') + '>' + icon +
       '<div class="upgrade-copy"><h3>' + UI.escapeHtml(spec.name) + level + '</h3>' + spec.body + '</div>';
     if (spec.status) {
       html += '<div class="upgrade-purchase"><small class="upgrade-status">' + UI.escapeHtml(spec.status) + '</small></div>';
@@ -7744,33 +12886,888 @@
       const capitalShort = meta.capital < spec.capital;
       const sealsShort = meta.seals < spec.seals;
       const diplomasShort = meta.diplomas < (spec.diplomas || 0);
-      const label = (spec.action === 'office' ? 'Улучшить' : 'Изучить') + ' «' + spec.name + '»: ' + spec.capital.toLocaleString('ru-RU') + ' капитала' +
+      const xpShort = Meta.trainingXp(meta) < (spec.trainingXp || 0);
+      const label = (spec.action === 'office' || spec.action === 'personnel' ? 'Улучшить' : 'Изучить') + ' «' + spec.name + '»: ' + spec.capital.toLocaleString('ru-RU') + ' капитала' +
         (spec.seals ? ' и ' + spec.seals + ' ' + UI.plural(spec.seals, 'печать', 'печати', 'печатей') : '') +
-        (spec.diplomas ? ' и ' + spec.diplomas + ' ' + UI.plural(spec.diplomas, 'диплом', 'диплома', 'дипломов') : '');
+        (spec.diplomas ? ' и ' + spec.diplomas + ' ' + UI.plural(spec.diplomas, 'диплом', 'диплома', 'дипломов') : '') +
+        (spec.trainingXp ? ' и ' + spec.trainingXp + ' опыта центра' : '');
       html += '<div class="upgrade-purchase">';
       if (spec.diplomas > 0) html += '<small class="upgrade-price' + (diplomasShort ? ' short' : '') + '"><img class="currency-icon" src="icons/icon-diplomas.svg" alt="дипломы">' + spec.diplomas + '</small>';
       if (spec.seals > 0) html += '<small class="upgrade-price upgrade-seals' + (sealsShort ? ' short' : '') + '"><img class="currency-icon" src="icons/icon-seals.jpg?v=2" alt="печати">' + spec.seals + '</small>';
-      html += '<button class="upgrade-price' + (capitalShort ? ' short' : '') + '" data-action="' + spec.action + '" data-id="' + spec.id + '" aria-label="' + UI.escapeHtml(label) + '"' +
-        (spec.disabled || capitalShort || sealsShort || diplomasShort ? ' disabled' : '') + '><img class="currency-icon" src="icons/icon-capital.jpg?v=2" alt="">' + spec.capital.toLocaleString('ru-RU') + '</button></div>';
+      if (spec.trainingXp > 0) html += '<small class="upgrade-price upgrade-xp' + (xpShort ? ' short' : '') + '"><img class="currency-icon" src="icons/icon-training-xp.jpg" alt="опыт центра">' + formatCompact(spec.trainingXp) + '</small>';
+      const short = capitalShort || sealsShort || diplomasShort || xpShort;
+      html += buyButtonHtml({ attrs: 'data-action="' + spec.action + '" data-id="' + spec.id + '"', aria: label, icon: 'icons/icon-capital.jpg?v=2',
+        price: spec.capital.toLocaleString('ru-RU'), have: meta.capital, cost: spec.capital, short: short, locked: spec.disabled,
+        shortText: [shortfallText(spec.capital, spec.seals || 0), diplomasShort ? 'Не хватает дипломов: ' + ((spec.diplomas || 0) - meta.diplomas) : '',
+          xpShort ? 'Не хватает опыта центра: ' + formatCompact((spec.trainingXp || 0) - Meta.trainingXp(meta)) : ''].filter(Boolean).join(' · ') }) + '</div>';
     }
     if (spec.prerequisite) html += '<small class="upgrade-prerequisite">' + UI.escapeHtml(spec.prerequisite) + '</small>';
     return html + '</article>';
   }
 
-  function renderTech(content) {
-    let html = '';
+  // ---------- техцентр: the site's upgrade graph (upgrade-graph.js), one technology per node ----------
+  // The same radial tree as «Улучшения» on the site, so a technology sits exactly where its line
+  // sits. Shown like there, one step deep: what is researched (dim, a check), what can be researched
+  // now (bright, the red dot once the price is saved up) or waits for an HQ building (a lock), and one
+  // node past those as «?». Gates are the site's passes (a token there): drawn, never researched here.
+  // The tapped node's card, or why it cannot be researched, goes under the graph.
+  let techGraph = null; // built on the first visit; the same nodes are re-attached on every render
+  let techGraphScroll = null; // { x, y } where the player left the graph; null — centre on the root
+  let techSelected = null; // the tapped graph node, kept across panel re-renders
+  let techViews = {};
+  let techByKind = null;
+
+  // Graph node → the technology that opens it (the camp's techs live in their centers: `center`).
+  function techKinds() {
+    if (techByKind) return techByKind;
+    techByKind = {};
+    const inTree = {};
+    window.MicroBuildersBalance.upgradeTree.forEach(function (pair) { inTree[pair[0]] = true; });
     Meta.TECH_ORDER.forEach(function (id) {
       const spec = Meta.TECH[id];
-      const owned = meta.tech[id] > 0;
-      const missing = Meta.missingTechPrerequisites(meta, id);
+      const kind = spec.opens && spec.opens[0];
+      if (!spec.center && kind && inTree[kind]) techByKind[kind] = id;
+    });
+    return techByKind;
+  }
+
+  function techNodeIcon(kind) {
+    return (window.MicroBuildersUpgradeIcons || {})[kind] || 'icon-up-speed.jpg';
+  }
+
+  function techGraphRoot() {
+    if (techGraph) return techGraph.root;
+    const box = document.createElement('div');
+    box.className = 'tech-graph panel-wide';
+    box.addEventListener('scroll', function () { techGraphScroll = { x: box.scrollLeft, y: box.scrollTop }; }, { passive: true });
+    techGraph = window.MicroBuildersGraph.create({
+      root: box,
+      tree: window.MicroBuildersBalance.upgradeTree,
+      gates: window.MicroBuildersBalance.gates,
+      layout: window.MicroBuildersBalance.upgradeLayout,
+      icon: techNodeIcon,
+      name: function (kind) { return techKinds()[kind] ? Meta.TECH[techKinds()[kind]].name : upgradeName(kind); },
+      onSelect: selectTechNode,
+    });
+    return box;
+  }
+
+  // Views as on the site graph: a node past a researched line (or past a pass behind one) shows its
+  // own state, one past a researchable line is a «?», the rest is hidden.
+  function paintTechGraph() {
+    const gates = window.MicroBuildersBalance.gates || {};
+    const byKind = techKinds();
+    techViews = {};
+    window.MicroBuildersBalance.upgradeTree.forEach(function (pair) {
+      const kind = pair[0];
+      const id = byKind[kind];
+      const above = pair[1] ? techViews[pair[1]] : 'owned';
+      const reached = above === 'owned' || above === 'pass';
+      let view = 'hidden';
+      if (gates[kind]) view = reached ? 'pass' : above === 'available' ? 'preview' : 'hidden';
+      else if (id && meta.tech[id] > 0) view = 'owned';
+      else if (reached && id && Meta.techUnlocked(meta, id)) view = 'available';
+      // Prerequisites met but an HQ building is missing (or a line the tech center does not open).
+      else if (reached && (!id || Meta.missingTechPrerequisites(meta, id).length === 0)) view = 'office';
+      else if (reached || above === 'available') view = 'preview';
+      techViews[kind] = view;
+    });
+    techGraph.paint(techViews);
+    Object.keys(byKind).forEach(function (kind) {
+      const id = byKind[kind];
+      const open = techViews[kind] === 'available';
+      techGraph.nodes[kind].classList.toggle('is-open', open);
+      techGraph.nodes[kind].classList.toggle('is-ready', open && meta.capital >= Meta.techCost(id) && meta.seals >= Meta.techSeals(id));
+    });
+    if (techSelected && techViews[techSelected] === 'hidden') techSelected = null;
+    techGraph.select(techSelected);
+  }
+
+  // The nearest line above (passes skipped), for «Откроется после «…»».
+  function techParentName(kind) {
+    const gates = window.MicroBuildersBalance.gates || {};
+    let parent = techGraph.parent[kind];
+    while (parent && gates[parent]) parent = techGraph.parent[parent];
+    if (!parent) return '';
+    return techKinds()[parent] ? Meta.TECH[techKinds()[parent]].name : upgradeName(parent);
+  }
+
+  // A short line about a node that is not researched here and now; data-buy lets the purchase flash
+  // land on it (a bought node turns into «Уже изучено»).
+  function techTipHtml(id, title, text) {
+    return '<article class="meta-card tech-tip"' + (id ? ' data-buy="tech:' + id + '"' : '') + '><h3>' + UI.escapeHtml(title) + '</h3>' +
+      '<p>' + UI.escapeHtml(text) + '</p></article>';
+  }
+
+  // Under the graph: the tapped node — a researchable one as the HQ's usual card with its price and
+  // «Изучить», anything else as a short line why not.
+  function techPickHtml() {
+    const kind = techSelected;
+    const view = kind ? techViews[kind] : 'hidden';
+    if (!kind || view === 'hidden') return '<p class="tech-hint">Нажмите на узел: что он откроет на стройке и сколько стоит</p>';
+    const id = techKinds()[kind];
+    if (view === 'preview') return techTipHtml('', '?', 'Откроется после «' + techParentName(kind) + '»');
+    const line = upgradeName(kind);
+    if (!id) return techTipHtml('', line, 'Открывается не в техцентре');
+    const spec = Meta.TECH[id];
+    if (view === 'owned') return techTipHtml(id, spec.name, 'Уже изучено · на стройке: «' + line + '»');
+    if (view === 'office') {
+      const project = spec.requiresProject && !(meta.hq[spec.requiresProject] > 0) ? spec.requiresProject : !(meta.hq.tech > 0) ? 'tech' : '';
+      return techTipHtml(id, spec.name, (Meta.PROJECTS[project] ? 'Нужно здание «' + Meta.PROJECTS[project].name + '»' : 'Пока закрыто') +
+        ' · на стройке откроет «' + line + '»');
+    }
+    // Most texts only repeat «Открывает на стройке «…»» (with an older line name): kept when they say more.
+    const text = /^Открывает на стройке «[^»]*»$/.test(spec.text) ? '' : '<p>' + UI.escapeHtml(spec.text) + '</p>';
+    return compactUpgradeCard({
+      id: id, name: spec.name, icon: techNodeIcon(kind), className: 'tech-upgrade',
+      body: '<p class="tech-opens">На стройке откроет: <b>«' + UI.escapeHtml(line) + '»</b></p>' + text,
+      action: 'tech', capital: Meta.techCost(id), seals: Meta.techSeals(id), disabled: !Meta.techUnlocked(meta, id),
+    });
+  }
+
+  function selectTechNode(kind) {
+    // Researched nodes are dim and not picked (a bought node keeps its «Уже изучено» card, though).
+    if (kind && techViews[kind] === 'owned') return;
+    techSelected = kind;
+    techGraph.select(kind);
+    const pick = document.getElementById('tech-pick');
+    if (pick) pick.innerHTML = techPickHtml();
+  }
+
+  // ---------- техцентр: «Продвинутые технологии» (docs/gdd/29-tokens-draft.md) ----------
+  // The second tab: the site's advanced star (the same graph as in the «Улучшения» sheet) — the centre
+  // pass, bought on the site for coins, and the key nodes around it, researched here for capital and
+  // seals from story level ADVANCED.unlockLevel; on the site each costs ADVANCED.tokens tokens.
+
+  function techAdvancedRoot() {
+    if (techAdvancedGraph) return techAdvancedGraph.root;
+    const box = document.createElement('div');
+    box.className = 'tech-graph panel-wide advanced-star';
+    techAdvancedGraph = advancedGraphOf(box, function (id) {
+      techAdvancedPick = id;
+      techAdvancedGraph.select(id);
+      const pick = document.getElementById('tech-pick');
+      if (pick) pick.innerHTML = techAdvancedPickHtml();
+    });
+    return box;
+  }
+
+  // Before the story level everything is shut (a lock); then the researched nodes are dim with a check,
+  // the researchable bright (a red dot once the price is saved up), those waiting for an HQ building locked.
+  function paintTechAdvanced() {
+    const open = Meta.advancedUnlocked(meta);
+    techAdvancedViews = { advanced: open ? 'pass' : 'office' };
+    ADVANCED.nodes.forEach(function (node) {
+      techAdvancedViews[node.id] = !open ? 'office' : meta.tech[node.id] > 0 ? 'owned' : Meta.techUnlocked(meta, node.id) ? 'available' : 'office';
+    });
+    techAdvancedGraph.paint(techAdvancedViews);
+    ADVANCED.nodes.forEach(function (node) {
+      const el = techAdvancedGraph.nodes[node.id];
+      const available = techAdvancedViews[node.id] === 'available';
+      el.classList.toggle('is-open', available);
+      el.classList.toggle('is-ready', available && meta.capital >= Meta.techCost(node.id) && meta.seals >= Meta.techSeals(node.id));
+    });
+    techAdvancedGraph.select(techAdvancedPick);
+  }
+
+  // The first node to research (or the centre while the tab is shut) — the card is never empty.
+  function techAdvancedDefault() {
+    if (!Meta.advancedUnlocked(meta)) return 'advanced';
+    const next = ADVANCED.nodes.find(function (node) { return Meta.techUnlocked(meta, node.id); });
+    return next ? next.id : 'advanced';
+  }
+
+  function techAdvancedPickHtml() {
+    const id = techAdvancedPick;
+    const level = ADVANCED.unlockLevel;
+    if (!id) return '<p class="tech-hint">Нажмите на узел: что он даст на стройке и сколько стоит</p>';
+    const view = techAdvancedViews[id];
+    const researched = ADVANCED.nodes.filter(function (node) { return meta.tech[node.id] > 0; }).length;
+    if (id === 'advanced') {
+      return techTipHtml('', ADVANCED.name, view === 'office'
+        ? 'Откроются на ' + level + '-м уровне основной кампании (сейчас ' + ((meta.campaignLevel || 0) + 1) + '-й). Двенадцать сильнейших улучшений стройки.'
+        : 'Изучено ' + researched + ' из ' + ADVANCED.nodes.length + '. На стройке: «Улучшения» → ★ Продвинутые — центр за монеты стройки, вокруг узлы по ' + ADVANCED.tokens + ' жетона.');
+    }
+    const node = ADVANCED_NODES[id];
+    if (!Meta.advancedUnlocked(meta)) return techTipHtml(id, '★ ' + node.name, node.text + '. Откроется на ' + level + '-м уровне основной кампании.');
+    if (view === 'owned') return techTipHtml(id, '★ ' + node.name, node.text + '. Изучено.');
+    if (view === 'office') {
+      const project = Meta.TECH[id].requiresProject;
+      return techTipHtml(id, '★ ' + node.name, node.text + '. ' + (project && Meta.PROJECTS[project] ? 'Нужно здание «' + Meta.PROJECTS[project].name + '».' : 'Пока закрыто.'));
+    }
+    return compactUpgradeCard({
+      id: id, name: '★ ' + node.name, icon: node.icon, className: 'tech-upgrade',
+      body: '<p>' + UI.escapeHtml(node.text) + '</p>',
+      action: 'tech', capital: Meta.techCost(id), seals: Meta.techSeals(id), disabled: !Meta.techUnlocked(meta, id),
+    });
+  }
+
+  // A researchable advanced technology whose price is saved up: a dot on the tab.
+  function advancedTechReady() {
+    return Meta.ADVANCED_TECHS.some(function (id) {
+      return Meta.techUnlocked(meta, id) && meta.capital >= Meta.techCost(id) && meta.seals >= Meta.techSeals(id);
+    });
+  }
+
+  function renderTechAdvanced(content) {
+    const researched = ADVANCED.nodes.filter(function (node) { return meta.tech[node.id] > 0; }).length;
+    content.insertAdjacentHTML('beforeend', '<p class="tech-legend panel-wide">' + (Meta.advancedUnlocked(meta)
+      ? 'Изучено <b>' + researched + ' из ' + ADVANCED.nodes.length + '</b> · капитал и печати здесь, на стройке — центр за монеты и узлы по ' + ADVANCED.tokens + ' жетона'
+      : 'С ' + ADVANCED.unlockLevel + '-го уровня основной кампании') + '</p>');
+    const box = techAdvancedRoot();
+    content.appendChild(box);
+    if (!techAdvancedPick || (techAdvancedPick !== 'advanced' && meta.tech[techAdvancedPick] > 0 && Meta.advancedUnlocked(meta))) techAdvancedPick = techAdvancedDefault();
+    paintTechAdvanced();
+    content.insertAdjacentHTML('beforeend', '<div class="tech-pick panel-wide" id="tech-pick">' + techAdvancedPickHtml() + '</div>');
+  }
+
+  // «★ Продвинутые» is locked on the tab itself until the story level (a lock and «25 ур.»).
+  function renderTech(content) {
+    const advancedOpen = Meta.advancedUnlocked(meta);
+    if (!advancedOpen) techTab = 'graph';
+    content.insertAdjacentHTML('beforeend', '<div class="office-tabs tech-tabs"><button type="button" data-action="tech-tab" data-id="graph"' + (techTab === 'graph' ? ' class="on"' : '') +
+      '>Граф стройки</button><button type="button" data-action="tech-tab" data-id="advanced"' +
+      (advancedOpen ? (techTab === 'advanced' ? ' class="on"' : '') + '>★ Продвинутые' + (techTab !== 'advanced' && advancedTechReady() ? '<i class="advanced-dot on"></i>' : '')
+        : ' class="is-locked" aria-disabled="true">' + ICONS.lock + '★ Продвинутые<small>' + ADVANCED.unlockLevel + ' ур.</small>') + '</button></div>');
+    if (techTab === 'advanced') {
+      renderTechAdvanced(content);
+      return;
+    }
+    content.insertAdjacentHTML('beforeend', '<p class="tech-legend panel-wide">Тусклые — изучено · Яркие — можно изучить · ? — откроется следом · серый ⬡ — проход, открывается на стройке за жетон</p>');
+    const box = techGraphRoot();
+    content.appendChild(box);
+    paintTechGraph();
+    // First visit: «План работ» in the middle; after that the graph stays where the player left it.
+    if (techGraphScroll) {
+      box.scrollLeft = techGraphScroll.x;
+      box.scrollTop = techGraphScroll.y;
+    } else {
+      techGraph.centre();
+    }
+    content.insertAdjacentHTML('beforeend', '<div class="tech-pick panel-wide" id="tech-pick">' + techPickHtml() + '</div>');
+  }
+
+  // ---------- центр персонала: пределы зданий городка, столовая, кулинарная книга ----------
+  function personnelCard(id, name, icon, level, max, body, missingTech) {
+    const maxed = level >= max;
+    return compactUpgradeCard({
+      id: id, name: name, icon: icon, className: 'personnel-upgrade', level: level, max: max, body: body,
+      action: 'personnel', capital: maxed ? 0 : Meta.personnelCost(id, level), seals: maxed ? 0 : Meta.personnelSeals(id, level),
+      disabled: !!missingTech, status: maxed ? 'Максимум' : '',
+      prerequisite: !maxed && missingTech ? 'Сначала откройте «' + Meta.TECH[missingTech].name + '» на вкладке «Городок»' : '',
+    });
+  }
+
+  // A tech researched outside the tech center (center: personnel — a camp building or its upgrade,
+  // reactor — the site reactor): the same purchase as there, for capital and seals.
+  function centerTechCard(id) {
+    const spec = Meta.TECH[id];
+    const owned = meta.tech[id] > 0;
+    const missing = Meta.missingTechPrerequisites(meta, id).map(function (before) { return '«' + Meta.TECH[before].name + '»'; });
+    if (spec.requiresProject && !(meta.hq[spec.requiresProject] > 0)) missing.push('здание «' + Meta.PROJECTS[spec.requiresProject].name + '»');
+    const line = window.MicroBuildersBalance.session[spec.opens[0]];
+    return compactUpgradeCard({
+      id: id, name: spec.name, icon: officeIcon(id), className: 'tech-upgrade' + (owned ? ' tech-owned' : ''),
+      body: '<p>' + (MB.CAMP_LINES[spec.opens[0]] ? 'На стройке: основание здания, старт за жетон' : 'На стройке: «' + UI.escapeHtml(line ? line.name : spec.opens[0]) + '» в окне здания') + '</p>',
+      action: 'tech', capital: Meta.techCost(id), seals: Meta.techSeals(id), disabled: !Meta.techUnlocked(meta, id),
+      status: owned ? 'Открыто' : '',
+      prerequisite: !owned && missing.length ? 'Сначала ' + missing.join(', ') : '',
+    });
+  }
+
+  // ---------- «Учебный центр»: worker ranks (docs/gdd/26-builder-school-draft.md) ----------
+
+  // Rank colours as CSS (balance meta.training.ranks[].helmet).
+  function rankSwatch(rank) {
+    const spec = MB.TRAINING_RANKS[Math.max(0, rank - 1)];
+    return '<i class="rank-swatch" style="background:linear-gradient(#' + (spec ? spec.helmet : 'f5c53a') + ' 50%, #' + (spec ? spec.suit || spec.helmet : 'd2b56e') + ' 50%)"></i>';
+  }
+
+  // The centre: its experience (a currency from the workers' cubes), the rank ladder, then the
+  // programs — each for capital and the centre's experience.
+  function renderTraining(content) {
+    const stats = Meta.trainingStats(meta);
+    let html = '<article class="meta-card panel-wide training-intro">' +
+      '<img class="training-hero" src="icons/icon-hq-training.jpg" alt="">' +
+      '<p class="training-note"><img class="currency-icon" src="icons/icon-training-xp.jpg" alt="">Каждый целый куб, поставленный рабочим на любой стройке, даёт центру 1 опыт. Кубы дронов и техники опыта не дают. Программы стоят капитал и опыт центра.</p>';
+    html += '<ol class="training-ranks">';
+    MB.TRAINING_RANKS.forEach(function (spec, i) {
+      const rank = i + 1;
+      const open = stats.on && rank <= stats.cap;
+      html += '<li class="' + (open ? 'open' : 'closed') + '">' + rankSwatch(rank) + '<b>' + rank + '</b>' +
+        '<span>×' + formatFactor(1 + (spec.work - 1) * stats.power) + '</span><small>' + (rank === 1 ? 'старт' : spec.xp + ' оп.') + '</small></li>';
+    });
+    html += '</ol></article>';
+    Meta.TRAINING.upgrades.forEach(function (spec) {
+      const owned = Meta.trainingUpgradeLevel(meta, spec.id);
+      const cost = Meta.trainingCost(meta, spec.id);
+      const xp = Meta.trainingXpCost(meta, spec.id);
+      const needOnsite = spec.id !== 'onsite' && Meta.trainingUpgradeLevel(meta, 'onsite') <= 0;
       html += compactUpgradeCard({
-        id: id, name: spec.name, icon: officeIcon(id), className: 'tech-upgrade' + (owned ? ' tech-owned' : ''),
-        body: '<p>' + UI.escapeHtml(spec.text) + '</p>',
-        action: 'tech', capital: Meta.techCost(id), seals: Meta.techSeals(id), disabled: !Meta.techUnlocked(meta, id),
-        status: owned ? 'Открыто' : '',
-        prerequisite: !owned && missing.length ? 'Сначала разблокируйте ' + missing.map(function (before) { return '«' + Meta.TECH[before].name + '»'; }).join(', ') : '',
+        id: spec.id, name: spec.name, icon: spec.icon || 'icon-training-' + spec.id + '.jpg', className: 'training-upgrade',
+        level: owned, max: spec.max, body: '<p>' + UI.escapeHtml(trainingEffect(spec, owned, stats)) + '</p>',
+        action: cost !== null ? 'training' : '', capital: cost || 0, seals: 0, trainingXp: xp || 0,
+        disabled: needOnsite, status: cost === null ? 'Максимум' : '',
+        prerequisite: cost !== null && needOnsite ? 'Сначала «Обучение на объекте»' : '',
       });
     });
+    content.insertAdjacentHTML('beforeend', html);
+  }
+
+  // ---------- «Лаборатория материалов» (docs/gdd/32-materials-lab-draft.md) ----------
+  // A tab per family: its cubes, the progress to its next point and the free points; then its perk
+  // lines — one point raises a line by a level (Meta.buyLabPerk); a capstone wants points spent first.
+  function labFamily(id) {
+    return Meta.LAB.families.find(function (family) { return family.id === id; }) || Meta.LAB.families[0];
+  }
+
+  // The family's little cube (the quarry signs' drawing, in the family colour).
+  function labFamilyIcon(id) {
+    const family = labFamily(id);
+    return mineCubeIcon({ id: 'family-' + family.id, color: parseInt(family.color.slice(1), 16) });
+  }
+
+  // «▣ Дерево 120 · ▣ Камень 80»: cubes of a building by family, biggest first.
+  function labFamilyChips(blocks, className) {
+    const counts = Meta.labFamilyCounts(blocks);
+    return Meta.LAB.families.filter(function (family) { return counts[family.id] > 0; })
+      .sort(function (a, b) { return counts[b.id] - counts[a.id]; })
+      .map(function (family) {
+        return '<span class="' + (className || 'lab-chip') + '"><img class="lab-chip-cube" src="' + labFamilyIcon(family.id) + '" alt="">' +
+          UI.escapeHtml(family.name) + ' <b>' + counts[family.id].toLocaleString('ru-RU') + '</b></span>';
+      }).join('');
+  }
+
+  // The lab's city card note: free points by family, or what the next point is.
+  function labNote() {
+    const free = Meta.LAB.families.filter(function (family) { return Meta.labPoints(meta, family.id) > 0; });
+    if (free.length) return 'Свободные очки: ' + free.map(function (family) { return family.name + ' ' + Meta.labPoints(meta, family.id); }).join(', ');
+    return 'Очки копятся за кубы, уложенные на любой стройке';
+  }
+
+  // «+8 к Скорости рабочих», «каждый 40-й куб…»: a line's text at a level.
+  function labValueText(spec, level) {
+    const value = Meta.labLineValue(spec, level);
+    return spec.format === 'percent' ? Math.round(value * 100) + ' %' : String(value);
+  }
+
+  function labLineText(spec, level) {
+    return spec.text.replace('{v}', labValueText(spec, Math.max(1, level)));
+  }
+
+  function labPerkCard(spec) {
+    const level = Meta.labPerkLevel(meta, spec.id);
+    const block = Meta.labPerkBlock(meta, spec.id);
+    const family = labFamily(spec.family);
+    const next = labValueText(spec, level + 1);
+    const nextText = spec.format === 'points' ? '+' + next : spec.format === 'every' ? next + '-й' : next;
+    let body = '<p>' + UI.escapeHtml(labLineText(spec, level)) + (level > 0 && level < spec.max ? ' → <b class="value-next">' + UI.escapeHtml(nextText) + '</b>' : '') + '</p>';
+    if (level === 0) body = '<p class="lab-perk-next">' + UI.escapeHtml(labLineText(spec, 1)) + '</p>';
+    let html = '<article class="meta-card office-upgrade compact-upgrade lab-perk' + (level > 0 ? ' owned' : '') + '" data-buy="lab-perk:' + spec.id + '">' +
+      '<img class="game-icon lab-perk-icon" src="' + labFamilyIcon(spec.family) + '" alt="">' +
+      '<div class="upgrade-copy"><h3>' + UI.escapeHtml(spec.name) + ' <small>' + level + ' / ' + spec.max + '</small></h3>' + body + '</div><div class="upgrade-purchase">';
+    if (block === 'max') html += '<small class="upgrade-status">Максимум</small>';
+    else {
+      html += buyButtonHtml({ attrs: 'data-action="lab-perk" data-id="' + spec.id + '"', aria: 'Вложить очко в «' + spec.name + '»', icon: labFamilyIcon(spec.family), price: '1',
+        have: Meta.labPoints(meta, spec.family), cost: 1, short: block === 'points', locked: block === 'requires' || block === 'closed',
+        shortText: 'Нет свободного очка семейства «' + family.name + '»' });
+    }
+    html += '</div>';
+    if (block === 'requires') html += '<small class="upgrade-prerequisite">Откроется, когда в семейство вложено ' + spec.requires + ' очков (сейчас ' + Meta.labSpent(meta, spec.family) + ')</small>';
+    return html + '</article>';
+  }
+
+  function renderMaterialsLab(content) {
+    const families = Meta.LAB.families;
+    if (!families.some(function (family) { return family.id === labTab; })) labTab = families[0].id;
+    let html = '<div class="office-tabs office-topics lab-tabs">';
+    families.forEach(function (family) {
+      const points = Meta.labPoints(meta, family.id);
+      html += '<button type="button" data-action="lab-tab" data-id="' + family.id + '"' + (labTab === family.id ? ' class="on"' : '') + '>' +
+        '<img class="lab-tab-cube" src="' + labFamilyIcon(family.id) + '" alt="">' + UI.escapeHtml(family.name) +
+        (points > 0 ? '<i class="topic-ready">' + points + '</i>' : '') + '</button>';
+    });
+    html += '</div>';
+    const family = labFamily(labTab);
+    const progress = Meta.labProgress(meta, labTab);
+    const points = Meta.labPoints(meta, labTab);
+    const left = progress.need - progress.into;
+    html += '<article class="meta-card panel-wide lab-intro">' +
+      '<p class="lab-count"><img class="lab-intro-cube" src="' + labFamilyIcon(labTab) + '" alt=""><span><b>' + UI.escapeHtml(family.name) + '</b> · уложено ' +
+      progress.cubes.toLocaleString('ru-RU') + ' ' + UI.plural(progress.cubes, 'куб', 'куба', 'кубов') + ' · очков ' + progress.earned +
+      (points > 0 ? ' · <em>свободно ' + points + '</em>' : '') + '</span></p>' +
+      '<div class="city-progress lab-progress"><i style="width:' + Math.floor(progress.into / progress.need * 100) + '%"></i></div>' +
+      '<p class="lab-next">До следующего очка ' + left.toLocaleString('ru-RU') + ' ' + UI.plural(left, 'куб', 'куба', 'кубов') + '</p></article>';
+    Meta.LAB.lines.filter(function (spec) { return spec.family === labTab; }).forEach(function (spec) { html += labPerkCard(spec); });
+    content.insertAdjacentHTML('beforeend', html);
+  }
+
+  // «до 3 разряда → 4», «опыт +20% → +30%»: what a program does now and after the next level.
+  function trainingEffect(spec, level, stats) {
+    const maxed = level >= spec.max;
+    const arrow = function (now, then) { return maxed ? now : now + ' → ' + then; };
+    if (spec.id === 'onsite') return level > 0 ? 'Включено: опыт за кубы, разряды до 3-го' : spec.text;
+    if (spec.id === 'ladder') return 'Потолок разряда: ' + arrow(stats.cap, Math.min(MB.TRAINING_RANKS.length, stats.cap + 1));
+    if (spec.id === 'plan') return 'Опыт рабочих: ' + arrow('+' + Math.round(level * spec.value * 100) + '%', '+' + Math.round((level + 1) * spec.value * 100) + '%');
+    if (spec.id === 'power') return 'Прибавка разряда: ' + arrow('×' + formatFactor(1 + level * spec.value), '×' + formatFactor(1 + (level + 1) * spec.value));
+    if (spec.id === 'intern') return 'Нанятые приходят с опытом: ' + arrow(level * spec.value, (level + 1) * spec.value);
+    if (spec.id === 'safety') return 'Прочность лесов: ' + arrow('×' + formatFactor(1 + level * spec.value), '×' + formatFactor(1 + (level + 1) * spec.value));
+    if (spec.id === 'prepared') return 'Стартовые рабочие приходят ' + arrow(stats.startRank + '-м разрядом', (stats.startRank + 1) + '-м разрядом');
+    return spec.text;
+  }
+
+  // ---------- «Снабжение»: boosters (docs/gdd/21-mech-draft.md) ----------
+  const RARE_ORDER = ['residential', 'industrial', 'highrise', 'landmark'];
+
+  function rareIcon(key) {
+    return 'icons/icon-rare-' + key + '.jpg?v=2';
+  }
+
+  // «+2 строителей на старте» for a level of a booster (its first level when not opened yet).
+  function boosterEffect(spec, level) {
+    return '+' + spec.amounts[Math.max(0, Math.min(spec.amounts.length, level) - 1)] + ' ' + spec.text;
+  }
+
+  // The panel: slots, then every booster by resource — open / raise for capital; each use costs one
+  // of its rare resource before a construction.
+  function renderSupply(content) {
+    let html = '<article class="meta-card panel-wide supply-intro"><p>Перед стартом стройки выберите бустеры: бонус на этот заказ за ' +
+      Meta.SUPPLY.useCost + ' редкий ресурс его типа. Слотов: <b>' + Meta.supplySlots(meta) + '</b>.</p>';
+    const slotCost = Meta.supplySlotCost(meta);
+    if (slotCost !== null) {
+      html += buyButtonHtml({ attrs: 'data-action="supply-slot" data-id="slot"', label: 'Ещё слот', icon: 'icons/icon-capital.jpg?v=2', wide: true,
+        price: slotCost.toLocaleString('ru-RU'), have: meta.capital, cost: slotCost, shortText: shortfallText(slotCost, 0) });
+    }
+    html += '</article>';
+    RARE_ORDER.forEach(function (key) {
+      Meta.SUPPLY.boosters.filter(function (spec) { return spec.resource === key; }).forEach(function (spec) {
+        const level = Meta.boosterLevel(meta, spec.id);
+        const cost = Meta.boosterCost(meta, spec.id);
+        const next = cost !== null ? ' → <b class="value-next">' + UI.escapeHtml(boosterEffect(spec, level + 1)) + '</b>' : '';
+        html += compactUpgradeCard({
+          id: spec.id, action: cost !== null ? 'booster' : '', name: spec.name, className: 'booster-item', icon: spec.icon,
+          level: level, max: spec.amounts.length,
+          body: '<p>' + (level > 0 ? UI.escapeHtml(boosterEffect(spec, level)) + next : 'Откроет: ' + UI.escapeHtml(boosterEffect(spec, 1))) + '</p>' +
+            '<small class="booster-use"><img class="currency-icon" src="' + rareIcon(key) + '" alt="">' + Meta.SUPPLY.useCost + ' · ' + UI.escapeHtml(Meta.RARE_NAMES[key]) + '</small>',
+          status: cost === null ? 'Максимум' : '', capital: cost || 0, seals: 0,
+        });
+      });
+    });
+    content.insertAdjacentHTML('beforeend', html);
+  }
+
+  // Before a construction: the opened boosters as cards, up to the slots; the choice is paid in
+  // launchRun (Meta.spendBoosters). No supply, nothing opened or a dev jump — straight on.
+  function chooseBoosters(spec, go) {
+    const opened = Meta.SUPPLY.boosters.filter(function (b) { return Meta.boosterLevel(meta, b.id) > 0; });
+    if (!(meta.hq.supply > 0) || opened.length === 0 || spec.reason === 'jump' || spec.mode === 'hq') {
+      go([]);
+      return;
+    }
+    const slots = Meta.supplySlots(meta);
+    const picked = [];
+    function card(b) {
+      const block = Meta.boosterBlock(meta, b.id);
+      const on = picked.indexOf(b.id) >= 0;
+      return '<button type="button" class="booster-card' + (on ? ' on' : '') + (block ? ' blocked' : '') + '" data-booster="' + b.id + '"' + (block ? ' aria-disabled="true"' : '') + '>' +
+        '<img class="game-icon" src="icons/' + b.icon + '" alt=""><b>' + UI.escapeHtml(b.name) + '</b>' +
+        '<span>' + UI.escapeHtml(boosterEffect(b, Meta.boosterLevel(meta, b.id))) + '</span>' +
+        '<small><img class="currency-icon" src="' + rareIcon(b.resource) + '" alt="">' + Meta.SUPPLY.useCost + ' <em>есть ' + (meta.rare[b.resource] || 0) + '</em></small>' +
+        (block ? '<i>' + UI.escapeHtml(block) + '</i>' : '') + '</button>';
+    }
+    function paint(body) {
+      body.innerHTML = '<p class="booster-count">Выбрано <b>' + picked.length + '</b> из ' + slots + '</p><div class="booster-grid">' + opened.map(card).join('') + '</div>' +
+        (opened.length < Meta.SUPPLY.boosters.length ? '<p class="camp-more">Ещё ' + (Meta.SUPPLY.boosters.length - opened.length) + ' бустеров — в «Снабжении»</p>' : '');
+    }
+    UI.overlay.open({
+      id: 'boosters',
+      kicker: 'Перед стартом',
+      title: 'Бустеры на заказ',
+      className: 'booster-sheet',
+      body: function (body) {
+        paint(body);
+        body.addEventListener('click', function (event) {
+          const button = event.target.closest('[data-booster]');
+          if (!button) return;
+          const id = button.dataset.booster;
+          if (button.getAttribute('aria-disabled') === 'true') {
+            shake(button);
+            UI.toast({ text: Meta.boosterBlock(meta, id), icon: 'lock', key: 'booster-block', duration: 1600 });
+            return;
+          }
+          const at = picked.indexOf(id);
+          if (at >= 0) picked.splice(at, 1);
+          else if (picked.length < slots) picked.push(id);
+          else {
+            shake(button);
+            UI.toast({ text: 'Слотов: ' + slots + ' — сначала снимите другой бустер', icon: 'lock', key: 'booster-slots', duration: 1600 });
+            return;
+          }
+          paint(body);
+        });
+      },
+      actions: [
+        { label: 'Начать стройку', primary: true, onClick: function () { go(picked.slice()); } },
+        { label: 'Без бустеров', onClick: function () { go([]); } },
+      ],
+    });
+  }
+
+  // The chosen boosters go on the new site: paid now, free levels of their lines (as a purchase that
+  // costs nothing) or more rare resource at the hand-over («Связи в мэрии»).
+  function applyBoosters(ids) {
+    campaign.boosters = [];
+    campaign.boosterRare = 0;
+    if (!ids.length || !Meta.spendBoosters(meta, ids)) return;
+    const free = campaign.freePurchases;
+    campaign.freePurchases = true;
+    ids.forEach(function (id) {
+      const spec = Meta.BOOSTERS[id];
+      const amount = spec.amounts[Math.max(0, Meta.boosterLevel(meta, id) - 1)];
+      campaign.boosters.push(id);
+      if (spec.kind === 'rare') campaign.boosterRare += amount;
+      else for (let n = 0; n < amount; n++) MB.buyUpgrade(campaign, world, spec.line);
+    });
+    campaign.freePurchases = free;
+    world.events = world.events.filter(function (event) { return event.type !== 'upgrade'; });
+    UI.toast({ text: 'Бустеры: ' + ids.map(function (id) { return Meta.BOOSTERS[id].name; }).join(', '), icon: 'icons/' + Meta.BOOSTERS[ids[0]].icon, tone: 'good', key: 'boosters-on' });
+  }
+
+  // ---------- reactor: techno-magic (draft) ----------
+  function renderReactor(content) {
+    let html = '<article class="meta-card panel-wide"><p>Реактор на стройке открывается здесь; потом на каждой стройке он стоит основанием — стройку начинают за жетон и монеты, его уровни покупаются в окне реактора. Пока он стоит, копится мана — ' +
+      Meta.REACTOR.manaPerLevel + ' в минуту за уровень. Заклинания изучаются и усиливаются редкими ресурсами своей школы, применяются кнопкой маны на стройке.</p></article>';
+    Meta.centerTechs('reactor').forEach(function (id) { html += centerTechCard(id); });
+    RARE_ORDER.forEach(function (key) {
+      Meta.REACTOR.spells.filter(function (spell) { return spell.school === key; }).forEach(function (spell) {
+        const level = Meta.spellLevel(meta, spell.id);
+        const cost = Meta.spellCost(meta, spell.id);
+        const have = meta.rare[key] || 0;
+        const button = cost === null ? '<small class="upgrade-status">Максимум</small>'
+          : buyButtonHtml({ attrs: 'data-action="spell" data-id="' + spell.id + '"', icon: rareIcon(key), price: String(cost), have: have, cost: cost,
+            shortText: 'Не хватает: ' + Meta.RARE_NAMES[key].toLowerCase() + ' ' + (cost - have) });
+        html += '<article class="meta-card office-upgrade compact-upgrade spell-item" data-buy="spell:' + spell.id + '"><img class="game-icon" src="icons/' + spell.icon + '" alt="">' +
+          '<div class="upgrade-copy"><h3>' + UI.escapeHtml(spell.name) + ' <small>' + level + ' / ' + spell.learn.length + '</small></h3>' +
+          '<p>' + UI.escapeHtml(spellText(spell, Math.max(1, level))) + ' · ' + spell.mana + ' маны</p></div>' +
+          '<div class="upgrade-purchase">' + button + '</div></article>';
+      });
+    });
+    content.insertAdjacentHTML('beforeend', html);
+  }
+
+  function spellText(spell, level) {
+    const power = spell.power[Math.max(0, Math.min(spell.power.length, level) - 1)];
+    if (spell.id === 'haste') return 'бригада ×' + String(power).replace('.', ',') + ' на ' + spell.seconds + ' с';
+    if (spell.id === 'summon') return '+' + power + ' ' + UI.plural(power, 'рабочий', 'рабочих', 'рабочих') + ' до конца стройки';
+    if (spell.id === 'telekinesis') return power + ' кубов встают сами';
+    if (spell.id === 'clearSky') return 'без непогоды ' + Math.round(spell.seconds * power) + ' с';
+    if (spell.id === 'noon') return 'ночь без штрафа ' + Math.round(spell.seconds * power) + ' с';
+    if (spell.id === 'goldRush') return 'монеты за кубы ×' + String(power).replace('.', ',') + ' на ' + spell.seconds + ' с';
+    if (spell.id === 'scaffoldWard') return '+' + spellPercent(power) + ' к прочности лесов до конца стройки';
+    if (spell.id === 'manaBoost') return 'мана копится на ' + spellPercent(power) + ' быстрее до конца стройки';
+    if (spell.id === 'manaTank') return 'запас маны +' + spellPercent(power) + ' до конца стройки';
+    if (spell.id === 'echo') return spellPercent(power) + ' шанс, что следующее заклинание повторится бесплатно через минуту';
+    if (spell.id === 'bandage') return 'каждому рабочему +' + power + ' здоровья';
+    if (spell.id === 'generosity') return power > 1 ? power + ' самых дешёвых покупки бесплатно' : 'самая дешёвая покупка бесплатно';
+    if (spell.id === 'secondWind') return '+' + power + ' к шкалам голода, усталости и перекура';
+    if (spell.id === 'weightless') return 'следующие ' + power + ' кубов весят вдвое меньше';
+    if (spell.id === 'instantScaffold') return 'леса чинятся, ' + power + ' элементов встают мгновенно';
+    if (spell.id === 'levitation') return 'подъём ×' + String(power).replace('.', ',') + ' на ' + spell.seconds + ' с';
+    return spell.text;
+  }
+
+  // «7,5 %» — a share as the spell cards write it.
+  function spellPercent(share) {
+    return String(Math.round(share * 1000) / 10).replace('.', ',') + ' %';
+  }
+
+  // Mana of a summon grows with each one on this site.
+  function spellMana(spell) {
+    const uses = (campaign.spellUses && campaign.spellUses[spell.id]) || 0;
+    // «Живой ток» of the materials lab: every spell a share cheaper.
+    const lab = campaign.lab && campaign.lab.spell ? campaign.lab.spell : 1;
+    // «Тонкая настройка» of the site graph (⬡ «Реактор»).
+    return Math.round(spell.mana * Math.pow(spell.growth || 1, uses) * lab * MB.lineValue(campaign, 'spellTune'));
+  }
+
+  // When a running spell ends (site seconds; 0 — it has no duration or never ran).
+  function spellUntil(id) {
+    if (id === 'haste') return campaign.spellHasteUntil || 0;
+    if (id === 'clearSky') return campaign.spellClearUntil || 0;
+    if (id === 'noon') return campaign.spellNoonUntil || 0;
+    if (id === 'goldRush') return campaign.spellGoldUntil || 0;
+    if (id === 'levitation') return campaign.spellLevitateUntil || 0;
+    return 0;
+  }
+
+  // How long one cast of a spell works at this level (0 — it acts at once).
+  function spellSpan(spell, level) {
+    if (!spell.seconds) return 0;
+    const power = spell.power[Math.max(0, Math.min(spell.power.length, level) - 1)];
+    // «Стабилизатор поля» of the site graph (⬡ «Реактор»): every spell with a duration lasts longer.
+    return (spell.id === 'clearSky' || spell.id === 'noon' ? spell.seconds * power : spell.seconds) * MB.lineValue(campaign, 'spellSpan');
+  }
+
+  function spellLeft(id) {
+    return Math.max(0, spellUntil(id) - campaign.levelElapsed);
+  }
+
+  // «1:05» for the spell book timers.
+  function shortClock(seconds) {
+    const whole = Math.max(0, Math.ceil(seconds));
+    return Math.floor(whole / 60) + ':' + String(whole % 60).padStart(2, '0');
+  }
+
+  function paintMana() {
+    tickEcho();
+    const button = document.getElementById('mana-btn');
+    const on = !!campaign && campaign.manaRate > 0 && campaign.status === 'play';
+    if (button.hidden === on) button.hidden = !on;
+    if (!on) return;
+    setText('mana-value', String(Math.floor(campaign.mana || 0)));
+    const pct = Math.round((campaign.mana || 0) / (campaign.manaMax || 100) * 100) + '%';
+    if (button.dataset.fill !== pct) {
+      button.dataset.fill = pct;
+      button.style.setProperty('--mana', pct);
+    }
+    // A spell at work: the button glows in its rhythm.
+    const casting = Meta.REACTOR.spells.some(function (spell) { return spellLeft(spell.id) > 0; });
+    if (button.classList.contains('casting') !== casting) button.classList.toggle('casting', casting);
+    refreshSpells();
+  }
+
+  // The spell book: the mana store on top, then every spell of the reactor — learned ones to cast,
+  // the rest locked until the HQ reactor teaches them.
+  function spellsHtml() {
+    const mana = campaign.mana || 0;
+    const max = Math.round(campaign.manaMax || 0);
+    const rate = campaign.manaRate || 0;
+    const pct = max > 0 ? Math.min(100, mana / max * 100) : 0;
+    const toFull = rate > 0 && mana < max ? (max - mana) / rate * 60 : 0;
+    const state = rate <= 0 ? 'Реактор перестраивается — мана не копится'
+      : toFull > 0 ? 'Полный запас через ' + shortClock(toFull) : 'Запас полон — самое время колдовать';
+    return '<div class="mana-panel' + (toFull > 0 ? '' : ' full') + '">' +
+      '<div class="mana-crystal"><img src="icons/icon-mana.jpg" alt=""></div>' +
+      '<div class="mana-meter"><p><b>' + Math.floor(mana) + '</b><em>/ ' + max + ' маны</em><span>+' + Math.round(rate) + ' в минуту</span></p>' +
+      '<i class="mana-bar"><b style="width:' + pct.toFixed(1) + '%"></b></i><small>' + state + '</small></div></div>' +
+      '<div class="spell-grid">' + Meta.REACTOR.spells.map(spellCardHtml).join('') + '</div>' +
+      '<p class="spell-foot">Изучаются и усиливаются в реакторе штаба за редкие ресурсы своей школы.</p>';
+  }
+
+  function spellCardHtml(spell) {
+    const level = (campaign.spellLevels || {})[spell.id] || 0;
+    const left = level > 0 ? spellLeft(spell.id) : 0;
+    const span = spellSpan(spell, level);
+    let pips = '';
+    for (let i = 0; i < spell.learn.length; i++) pips += '<i' + (i < level ? ' class="on"' : '') + '></i>';
+    let foot = '<small class="spell-lock">Изучите в реакторе штаба</small>';
+    if (level > 0) {
+      const cost = spellMana(spell);
+      foot = buyButtonHtml({
+        attrs: 'data-spell="' + spell.id + '"', icon: 'icons/icon-mana.jpg', price: String(cost), have: campaign.mana || 0, cost: cost, wide: true,
+        label: left > 0 ? 'Продлить' : '', shortText: 'Мало маны: ещё ' + Math.ceil(cost - (campaign.mana || 0)),
+      });
+    }
+    const style = '--school:' + SPELL_SCHOOLS[spell.school] + (left > 0 && span > 0 ? ';--left:' + Math.min(100, left / span * 100).toFixed(1) + '%' : '');
+    return '<article class="spell-card' + (level > 0 ? '' : ' locked') + (left > 0 ? ' active' : '') + '" data-spell-card="' + spell.id + '" style="' + style + '">' +
+      '<div class="spell-art"><img src="icons/' + spell.icon + '" alt="">' +
+      '<img class="spell-school" src="' + rareIcon(spell.school) + '" alt="" title="' + UI.escapeHtml(Meta.RARE_NAMES[spell.school]) + '">' +
+      (left > 0 ? '<span class="spell-timer">' + shortClock(left) + '</span>' : '') + '</div>' +
+      '<b class="spell-name">' + UI.escapeHtml(spell.name) + '</b>' +
+      '<span class="spell-pips" aria-label="Уровень ' + level + ' из ' + spell.learn.length + '">' + pips + '</span>' +
+      '<span class="spell-effect">' + UI.escapeHtml(spellText(spell, Math.max(1, level))) + '</span>' +
+      (spell.growth && level > 0 ? '<span class="spell-note">следующий дороже ×' + String(spell.growth).replace('.', ',') + '</span>' : '') +
+      (spellNote(spell.id) ? '<span class="spell-note">' + spellNote(spell.id) + '</span>' : '') +
+      foot + '</article>';
+  }
+
+  function refreshSpells() {
+    if (spellSheet) morphHtml(spellSheet.body, spellsHtml());
+  }
+
+  function openSpells() {
+    UI.overlay.open({
+      id: 'spells',
+      type: 'sheet',
+      kicker: 'Техно-магия',
+      title: 'Книга заклинаний',
+      className: 'spells-sheet',
+      body: function (body) {
+        spellSheet = { body: body };
+        body.innerHTML = spellsHtml();
+        body.addEventListener('click', function (event) {
+          const button = event.target.closest('[data-spell]');
+          if (!button) {
+            const locked = event.target.closest('.spell-card.locked');
+            if (locked) {
+              shake(locked);
+              UI.toast({ text: 'Это заклинание изучается в реакторе штаба', icon: 'lock', key: 'spell-locked', duration: 1600 });
+            }
+            return;
+          }
+          if (button.getAttribute('aria-disabled') === 'true') {
+            buyShort(button, 'icons/icon-mana.jpg');
+            return;
+          }
+          const card = button.closest('.spell-card');
+          if (!castSpell(button.dataset.spell)) return;
+          card.classList.add('cast');
+          flashCard(card, '', 'free');
+          // A moment to see the card flare, then back to the site to watch it work.
+          setTimeout(function () { UI.overlay.close('spells'); }, 420);
+        });
+      },
+      onClose: function () {
+        spellSheet = null;
+      },
+    });
+  }
+
+  // A spell goes off: mana paid, its effect on the site at once or for a while (logic.js and
+  // meta.js → environment read the campaign.spell* fields). Cast again while it works, it lasts longer.
+  // `echoed` — «Эхо» repeats it: no mana, the next cast does not get dearer.
+  function castSpell(id, echoed) {
+    const spell = Meta.SPELLS[id];
+    const level = (campaign.spellLevels || {})[id] || 0;
+    if (!spell || level <= 0 || !world || campaign.status !== 'play') return false;
+    const cost = echoed ? 0 : spellMana(spell);
+    if ((campaign.mana || 0) < cost) return false;
+    campaign.mana -= cost;
+    campaign.spellUses = campaign.spellUses || {};
+    if (!echoed) campaign.spellUses[id] = (campaign.spellUses[id] || 0) + 1;
+    const power = spell.power[Math.min(spell.power.length, level) - 1];
+    const until = Math.max(campaign.levelElapsed, spellUntil(id)) + spellSpan(spell, level);
+    if (id === 'haste') { campaign.spellHasteUntil = until; campaign.spellHaste = power; }
+    if (id === 'clearSky') campaign.spellClearUntil = until;
+    if (id === 'noon') campaign.spellNoonUntil = until;
+    if (id === 'goldRush') { campaign.spellGoldUntil = until; campaign.spellGold = power; }
+    // «Закалка лесов»: every cast adds its share of scaffold durability till the end of the site (logic.js → wearScaffold).
+    if (id === 'scaffoldWard') campaign.spellScaffold = (campaign.spellScaffold || 0) + power;
+    // Mana till the end of the site (logic.js → stepWorld): «Подпитка» its rate, «Резервуар» its store.
+    if (id === 'manaBoost') campaign.spellManaRate = (campaign.spellManaRate || 0) + power;
+    if (id === 'manaTank') campaign.spellManaMax = (campaign.spellManaMax || 0) + power;
+    if (id === 'bandage') MB.healCrew(world, power);
+    if (id === 'generosity') MB.giftCheapest(world, power);
+    if (id === 'secondWind') MB.delayNeeds(world, power);
+    // Counters the site spends (logic.js → carryWeight / finishPlace, erectSeconds / finishErect).
+    if (id === 'weightless') campaign.spellWeightless = (campaign.spellWeightless || 0) + power;
+    if (id === 'instantScaffold') {
+      campaign.spellInstantScaffold = (campaign.spellInstantScaffold || 0) + power;
+      MB.repairAllScaffolds(world);
+    }
+    if (id === 'levitation') { campaign.spellLevitateUntil = until; campaign.spellLevitate = power; }
+    let echoNote = '';
+    if (id === 'echo') {
+      // «Эхо» waits for the next spell; it never repeats itself.
+      campaign.spellEcho = power;
+    } else if (!echoed && campaign.spellEcho > 0) {
+      const chance = campaign.spellEcho;
+      campaign.spellEcho = 0;
+      if (Math.random() < chance) {
+        campaign.spellEchoNext = { id: id, at: campaign.levelElapsed + ECHO_DELAY };
+        echoNote = ' · эхо повторит через минуту';
+      }
+    }
+    if (id === 'summon') {
+      const free = campaign.freePurchases;
+      campaign.freePurchases = true;
+      for (let n = 0; n < power; n++) MB.buyUpgrade(campaign, world, 'builders');
+      campaign.freePurchases = free;
+    }
+    if (id === 'telekinesis') MB.applyOfflineBlocks(world, power);
+    consumeEvents();
+    paintHud();
+    tone(880, 0.12);
+    UI.toast({ text: (echoed ? 'Эхо — ' : '') + spell.name + ': ' + spellText(spell, level) + echoNote, icon: 'icons/' + spell.icon, tone: 'good', key: 'spell-cast' });
+    return true;
+  }
+
+  // «Эхо»: the spell it caught goes off again, free, ECHO_DELAY seconds after.
+  function tickEcho() {
+    const next = campaign && campaign.spellEchoNext;
+    if (!next || campaign.status !== 'play' || campaign.levelElapsed < next.at) return;
+    campaign.spellEchoNext = null;
+    castSpell(next.id, true);
+  }
+
+  // What a spell that lasts till the end of the site has gathered, for its card in the book.
+  function spellNote(id) {
+    if (id === 'scaffoldWard' && campaign.spellScaffold > 0) return 'сейчас +' + spellPercent(campaign.spellScaffold);
+    if (id === 'manaBoost' && campaign.spellManaRate > 0) return 'сейчас +' + spellPercent(campaign.spellManaRate);
+    if (id === 'manaTank' && campaign.spellManaMax > 0) return 'сейчас +' + spellPercent(campaign.spellManaMax);
+    if (id === 'weightless' && campaign.spellWeightless > 0) return 'осталось ' + campaign.spellWeightless + ' ' + UI.plural(campaign.spellWeightless, 'куб', 'куба', 'кубов');
+    if (id === 'instantScaffold' && campaign.spellInstantScaffold > 0) return 'осталось ' + campaign.spellInstantScaffold + ' эл.';
+    if (id === 'echo' && campaign.spellEchoNext) return 'повторит «' + Meta.SPELLS[campaign.spellEchoNext.id].name + '» через ' + shortClock(campaign.spellEchoNext.at - campaign.levelElapsed);
+    if (id === 'echo' && campaign.spellEcho > 0) return 'наготове';
+    return '';
+  }
+
+  function renderPersonnel(content) {
+    let html = '<div class="office-tabs personnel-tabs">';
+    PERSONNEL_TABS.forEach(function (tab) {
+      html += '<button type="button" data-action="personnel-tab" data-id="' + tab[0] + '"' + (personnelTab === tab[0] ? ' class="on"' : '') + '>' + tab[1] + '</button>';
+    });
+    html += '<button type="button" class="info-btn personnel-info-btn' + (personnelInfo ? ' on' : '') + '" data-action="personnel-info" aria-label="Как это работает" aria-expanded="' + personnelInfo + '">i</button></div>';
+    if (personnelInfo) html += '<div class="meta-card panel-wide personnel-info">' + PERSONNEL_INFO[personnelTab].map(function (text) { return '<p>' + UI.escapeHtml(text) + '</p>'; }).join('') + '</div>';
+    if (personnelTab === 'camp') {
+      // Per building: open it (capital + seals), then its level limit and its upgrades (techs with `after`).
+      PERSONNEL_CAMP.forEach(function (item) {
+        const spec = Meta.PERSONNEL_UPGRADES[item.line];
+        if (!spec) return;
+        html += '<h3 class="personnel-building panel-wide">' + UI.escapeHtml(CAP_TEXTS[item.node][0]) + ' <small>' + item.hint + '</small></h3>';
+        if (!(meta.tech[item.tech] > 0)) {
+          html += centerTechCard(item.tech);
+          return;
+        }
+        const level = meta.personnel[item.line] || 0;
+        const cap = 1 + level;
+        const body = '<p>Уровни здания на стройке · до ур. ' + cap + (level >= spec.max ? '' : ' → <b class="value-next">' + (cap + 1) + '</b>') + '</p>';
+        html += personnelCard(item.line, CAP_TEXTS[item.node][1], officeIcon(item.node), level, spec.max, body, '');
+        Meta.centerTechs('personnel').forEach(function (id) {
+          const kind = Meta.TECH[id].opens[0];
+          if (MB.CAMP_UPGRADE_OF[kind] === item.node) html += centerTechCard(id);
+        });
+      });
+    } else if (personnelTab === 'canteen') {
+      const kitchen = meta.tech.kitchen > 0 ? '' : 'kitchen';
+      const seats = meta.personnel.seats || 0;
+      const seatsSpec = Meta.PERSONNEL_UPGRADES.seats;
+      html += personnelCard('seats', seatsSpec.name, officeIcon('seats'), seats, seatsSpec.max,
+        '<p>+' + seats + (seats >= seatsSpec.max ? '' : ' → <b class="value-next">+' + (seats + 1) + '</b>') + ' ' + UI.plural(seats + 1, 'место', 'места', 'мест') + '</p>', kitchen);
+      const meal = meta.personnel.meal || 0;
+      const mealSpec = Meta.PERSONNEL_UPGRADES.meal;
+      const now = Meta.canteenMealSeconds(meta);
+      const next = Math.max(MB.CANTEEN.minMealSeconds || 10, now - 1);
+      html += personnelCard('meal', mealSpec.name, officeIcon('meal'), meal, mealSpec.max,
+        '<p>Обед ' + now + ' с' + (meal >= mealSpec.max ? '' : ' → <b class="value-next">' + next + ' с</b>') + '</p>', kitchen);
+    } else {
+      // The cookbook by the canteen level that serves the dishes: «Кафе и выше», …
+      const ROW_TITLES = { day: 'Блюдо дня', snack: 'С собой', signature: 'Ультимативное', grand: 'Гранд-обед' };
+      let heading = '';
+      Meta.DISHES.slice().sort(function (a, b) { return (a.level || 1) - (b.level || 1); }).forEach(function (dish) {
+        const owned = Meta.dishOwned(meta, dish.id);
+        const form = MB.campForm('canteen', dish.level || 1);
+        const head = (form ? form.name : 'Столовая') + (dish.level > 1 ? ' и выше' : '') + ' · ' + (dish.secret ? 'секреты шефа' : dish.level === 4 ? 'второе' : ROW_TITLES[dish.row || 'day'].toLowerCase());
+        if (head !== heading) {
+          heading = head;
+          html += '<h3 class="exchange-heading">' + UI.escapeHtml(head) + '</h3>';
+        }
+        if (dish.secret) {
+          html += compactUpgradeCard({
+            id: dish.id, name: owned ? dish.name : 'Секретное блюдо', icon: owned ? 'icon-dish-' + dish.id + '.jpg' : 'icon-secret-book.jpg',
+            className: 'personnel-dish' + (owned ? ' tech-owned' : ''),
+            body: '<p>' + (owned ? UI.escapeHtml(MB.dishText(dish.id)) : 'Откроет шеф-повар на кухне Ресторана: шанс на каждом обеде') + '</p>',
+            status: owned ? 'Найдено' : '?',
+          });
+          return;
+        }
+        html += compactUpgradeCard({
+          id: dish.id, name: dish.name, icon: 'icon-dish-' + dish.id + '.jpg', className: 'personnel-dish' + (owned ? ' tech-owned' : ''),
+          body: '<p>' + UI.escapeHtml(MB.dishText(dish.id)) + '</p>',
+          action: 'dish', capital: dish.capital, seals: 0, status: owned ? 'Изучено' : '',
+        });
+      });
+    }
     content.insertAdjacentHTML('beforeend', html);
   }
 
@@ -7789,7 +13786,16 @@
   }
 
   // Office values in player units: +2 рабочих, ×1,3, 12%, 2 500 монет.
-  function officeValueText(spec, value, level) {
+  function officeValueText(spec, value, level, value2) {
+    // Counters and bonuses that do nothing at level 0.
+    if (level <= 0 && ['every', 'crane', 'seconds', 'perFloor', 'minus', 'hours'].indexOf(spec.format) >= 0) return 'нет';
+    if (spec.format === 'every') return 'каждые ' + Math.round(value) + ' ' + UI.plural(Math.round(value), 'куб', 'куба', 'кубов');
+    if (spec.format === 'crane') return value2 + ' ' + UI.plural(value2, 'куб', 'куба', 'кубов') + ' каждые ' + Math.round(value);
+    if (spec.format === 'seconds') return Math.round(value) + ' с';
+    if (spec.format === 'less') return '−' + Math.round((1 - value) * 100) + '%';
+    if (spec.format === 'perFloor') return '+' + (value * 100).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + '% за этаж';
+    if (spec.format === 'minus') return '−' + value;
+    if (spec.format === 'hours') return '+' + value + ' ч';
     if (spec.format === 'skip') return Math.round(value).toLocaleString('ru-RU') + ' монет';
     if (spec.format === 'plus') return '+' + value;
     if (spec.format === 'mult') return '×' + value.toLocaleString('ru-RU', { maximumFractionDigits: 2 });
@@ -7813,18 +13819,98 @@
       capitalValue: 'icon-office-capital-value.jpg',
       offline: 'icon-office-offline.jpg',
       foremanSlots: 'icon-office-foreman-slots.jpg',
-      machines: 'icon-office-machines.jpg',
-      loaders: 'icon-office-machines.jpg',
-      // Placeholders until these nodes get their own icons.
-      tools: 'icon-up-builders.jpg',
-      pickSkill: 'icon-office-speed.jpg',
-      rigging: 'icon-up-carry.jpg',
-      lifts: 'icon-office-heights.jpg',
-      cubeBonus: 'icon-coins.jpg',
-      rates: 'icon-office-income.jpg',
-      capitalLines: 'icon-capital.jpg',
-      bonuses: 'icon-chest-50.jpg',
-      aviation: 'icon-office-machines.jpg',
+      recruitDesk: 'icon-office-recruit.jpg',
+      morningRush: 'icon-office-morning-rush.jpg',
+      lightStep: 'icon-office-light-step.jpg',
+      climbTraining: 'icon-office-climb.jpg',
+      cargoPaths: 'icon-office-cargo-paths.jpg',
+      endurance: 'icon-office-endurance.jpg',
+      scaffoldCrew: 'icon-office-scaffold-crew.jpg',
+      scaffoldStrength: 'icon-up-scaffold-durability.jpg',
+      safetyGear: 'icon-office-safety.jpg',
+      geodesy: 'icon-office-geodesy.jpg',
+      dietPlan: 'icon-office-diet.jpg',
+      nightShift: 'icon-office-night-shift.jpg',
+      healthyCrew: 'icon-office-healthy.jpg',
+      shortBreaks: 'icon-office-short-breaks.jpg',
+      soundSleep: 'icon-office-sleep.jpg',
+      weatherReport: 'icon-office-weather.jpg',
+      hqRods: 'icon-office-rods.jpg',
+      starterLoader: 'icon-office-starter-loader.jpg',
+      mechanics: 'icon-office-mechanics.jpg',
+      droneGatherers: 'icon-office-drone-gather.jpg',
+      craneCrew: 'icon-office-crane.jpg',
+      heavyMount: 'icon-office-heavy-mount.jpg',
+      bulkBuying: 'icon-office-bulk-buying.jpg',
+      tenderDept: 'icon-office-tender.jpg',
+      stainedGlass: 'icon-office-glass.jpg',
+      luckyDeals: 'icon-office-lucky.jpg',
+      contractorGifts: 'icon-office-gifts.jpg',
+      exchangeRep: 'icon-office-exchange-rep.jpg',
+      handoverBonus: 'icon-office-handover.jpg',
+      surveys: 'icon-office-surveys.jpg',
+      goldReserve: 'icon-office-gold-reserve.jpg',
+      campPrefabs: 'icon-office-camp-prefabs.jpg',
+      cookSchool: 'icon-office-cook-school.jpg',
+      kitchenStaff: 'icon-office-kitchen-staff.jpg',
+      dispatch: 'icon-office-dispatch.jpg',
+      tokenReserve: 'icon-office-token-reserve.jpg',
+      pickSkill: 'icon-office-pick-skill.jpg',
+      // Technologies show the icon of the site line they open.
+      machines: 'icon-up-drones.jpg',
+      loaders: 'icon-up-vehicles.jpg',
+      tools: 'icon-up-pickup.jpg',
+      rigging: 'icon-up-light-carry.jpg',
+      lifts: 'icon-up-elevators.jpg',
+      cubeBonus: 'icon-up-cube-pay.jpg',
+      capitalLines: 'icon-up-cube-capital.jpg',
+      bonuses: 'icon-up-free-buy.jpg',
+      aviation: 'icon-up-helicopters.jpg',
+      builders: 'icon-up-builders.jpg',
+      scaffold: 'icon-up-scaffold.jpg',
+      kitchen: 'icon-up-kitchen.jpg',
+      sales: 'icon-up-sales.jpg',
+      dorm: 'icon-up-dorm.jpg',
+      lounge: 'icon-up-lounge.jpg',
+      light: 'icon-up-light.jpg',
+      smokeRare: 'icon-up-smoke-rare.jpg',
+      smokeShort: 'icon-up-smoke-short.jpg',
+      floorPay: 'icon-up-floor-pay.jpg',
+      droneBuild: 'icon-up-drone-build.jpg',
+      gather: 'icon-up-gather.jpg',
+      droneSpeed: 'icon-up-drone-speed.jpg',
+      elevatorHeight: 'icon-up-elevator-height.jpg',
+      elevatorSpeed: 'icon-up-elevator-speed.jpg',
+      loaderMass: 'icon-up-loader-mass.jpg',
+      bucket: 'icon-up-bucket.jpg',
+      vehicleHeight: 'icon-up-vehicle-height.jpg',
+      vehicleReach: 'icon-up-vehicle-reach.jpg',
+      patternHeight: 'icon-up-pattern-height.jpg',
+      loaderSpeed: 'icon-up-loader-speed.jpg',
+      boomSpeed: 'icon-up-boom-speed.jpg',
+      triplePay: 'icon-up-triple-pay.jpg',
+      triplePower: 'icon-up-triple-power.jpg',
+      heliMass: 'icon-up-heli-mass.jpg',
+      heliWidth: 'icon-up-heli-width.jpg',
+      heliHeight: 'icon-up-heli-height.jpg',
+      heliSpeed: 'icon-up-heli-speed.jpg',
+      campPrefab: 'icon-up-camp-prefab.jpg',
+      portions: 'icon-up-portions.jpg',
+      chef: 'icon-up-chef.jpg',
+      salesAds: 'icon-up-sales-ads.jpg',
+      lightPower: 'icon-up-light-power.jpg',
+      loungeSeats: 'icon-up-lounge-seats.jpg',
+      smokePath: 'icon-up-smoke-path.jpg',
+      dormBeds: 'icon-up-dorm-beds.jpg',
+      dormSleep: 'icon-up-dorm-sleep.jpg',
+      // The techs of the camp buildings (personnel centre) and of the site reactor (HQ reactor).
+      salesOffice: 'icon-up-sales.jpg',
+      floodlights: 'icon-up-light.jpg',
+      dormitory: 'icon-up-dorm.jpg',
+      reactorSite: 'icon-reactor-core.jpg',
+      // Centre of personnel: canteen seats and the shorter meal.
+      seats: 'icon-pc-seats.jpg',
+      meal: 'icon-pc-meal.jpg',
     };
     return names[id] || 'icon-office-speed.jpg';
   }
@@ -8036,7 +14122,9 @@
     if (owned && !maxed) {
       const can = foremanCanUpgrade(id);
       upgrade = '<div class="foreman-upgrade"><span class="foreman-copy-count' + (card.copies >= need ? ' ready' : '') + '">Копии ' + card.copies + ' / ' + need + '</span>' +
-        '<button type="button" data-action="card-upgrade" data-id="' + id + '"' + (can ? '' : ' disabled') + '>Повысить · ' + priceHtml(cost, seals) + '</button></div>';
+        buyButtonHtml({ attrs: 'data-action="card-upgrade" data-id="' + id + '"', label: 'Повысить', icon: 'icons/icon-capital.jpg?v=2', wide: true,
+          price: priceHtml(cost, seals).replace(/^<img[^>]*>/, ''), have: meta.capital, cost: cost, short: !can, locked: card.copies < need,
+          shortText: foremanUpgradeBlock(id) }) + '</div>';
       if (!can && card.copies >= need) upgrade += reasonHtml(foremanUpgradeBlock(id));
     }
     return '<button type="button" class="foreman-back" data-action="foreman-back">← Бригадиры</button>' +
@@ -8166,7 +14254,10 @@
     const orders = meta.exchange.orders.slice().sort(function (a, b) { return a.levelIndex - b.levelIndex; });
     const side = Meta.site(meta, 'side');
     const sideRun = sideBusy();
-    let html = '<p class="exchange-status">Заказы ' + orders.length + ' / ' + capacity +
+    let html = '';
+    const special = Meta.specialOrder(meta);
+    if (special) html += specialOrderHtml(special, side, sideRun);
+    html += '<p class="exchange-status">Заказы ' + orders.length + ' / ' + capacity +
       (orders.length < capacity ? ' · новый через ' + formatWait(meta.exchange.nextOrderAt - Date.now()) : '') + '</p>';
     orders.forEach(function (order) {
       const level = MB.LEVELS[order.levelIndex];
@@ -8207,11 +14298,29 @@
       html += '<article class="meta-card office-upgrade"><div><h3>' + spec.name + ' <small>' + level + ' / ' + spec.max + '</small></h3>' +
         '<p>' + spec.text + ': ' + now + next + '</p>' +
         (maxed ? '<button disabled>Максимум</button>'
-          : '<button data-action="exchange-upgrade" data-id="' + kind + '"' + (short ? ' disabled' : '') + '>Улучшить · ' +
-            priceHtml(cost, seals) + '</button>' + (short ? reasonHtml(shortfallText(cost, seals)) : '')) +
+          : buyButtonHtml({ attrs: 'data-action="exchange-upgrade" data-id="' + kind + '"', label: 'Улучшить', icon: 'icons/icon-capital.jpg?v=2', wide: true,
+            price: priceHtml(cost, seals).replace(/^<img[^>]*>/, ''), have: meta.capital, cost: cost, short: short, shortText: shortfallText(cost, seals) }) +
+            (short ? reasonHtml(shortfallText(cost, seals)) : '')) +
         '</div></article>';
     });
     content.insertAdjacentHTML('beforeend', html);
+  }
+
+  // «Спецзаказ дня» (Meta.specialOrder): a gold card on top of the board, the size of the others —
+  // the building, capital and seals; done, its button counts down to the next one (00:00 UTC).
+  function specialOrderHtml(special, side, sideRun) {
+    const level = MB.LEVELS[special.levelIndex];
+    const reward = Meta.specialReward(meta, special.levelIndex);
+    const active = sideRun && side.runMode === 'exchange' && side.runPayload && side.runPayload.special;
+    let button = '<button data-action="order" data-id="special">Взять</button>';
+    if (active) button = '<button data-action="continue-order">Продолжить</button>';
+    else if (special.done) button = '<button disabled>' + ICONS.clock + formatWait(Meta.nextUtcDay(Date.now()) - Date.now()) + '</button>';
+    else if (sideRun) button = '<button disabled>Идёт другой заказ</button>';
+    return '<article class="meta-card exchange-order exchange-special' + (special.done ? ' done' : '') + '"><div>' +
+      '<h3>★ ' + level.name + '</h3><small>' + (special.done ? 'Выполнен · новый через' : 'Спецзаказ дня') + '</small>' +
+      '<p class="exchange-reward"><img class="currency-icon" src="icons/icon-capital.jpg?v=2" alt="капитал">' + reward.capital.toLocaleString('ru-RU') +
+      ' <img class="currency-icon" src="icons/icon-seals.jpg?v=2" alt="печати">+' + reward.seals + '</p>' +
+      '</div>' + button + '</article>';
   }
 
   // «43 куба», «1 240 кубов».
@@ -8281,16 +14390,17 @@
       return;
     }
     const project = Meta.PROJECTS[id];
-    const parts = [project.capital + ' капитала'];
+    const parts = project.capital ? [project.capital + ' капитала'] : [];
     if (project.seals) parts.push(project.seals + ' ' + UI.plural(project.seals, 'печать', 'печати', 'печатей'));
+    if (project.rare) Object.keys(project.rare).forEach(function (key) { parts.push(project.rare[key] + ' · ' + Meta.RARE_NAMES[key].toLowerCase()); });
     const price = parts.length > 2 ? parts.slice(0, -1).join(', ') + ' и ' + parts[parts.length - 1] : parts.join(' и ');
     UI.overlay.open({
       id: 'confirm-plot',
       kicker: project.name,
-      title: 'Купить участок за ' + price + '?',
+      title: price ? 'Купить участок за ' + price + '?' : 'Начать стройку «' + project.name + '»?',
       body: '<p>Стройка здания начнётся сразу. ' + (liveKey ? 'Текущая стройка продолжит без вас.' : '') + '</p>',
       actions: [
-        { label: 'Купить и строить', primary: true, onClick: function () {
+        { label: price ? 'Купить и строить' : 'Строить', primary: true, onClick: function () {
           spec.prepare = function () {
             return (meta.plots[id] === 1 || Meta.buyPlot(meta, id)) && Meta.startHqProject(meta, id);
           };
@@ -8303,11 +14413,36 @@
 
   function onMetaAction(event) {
     const button = event.target.closest('[data-action]');
+    if (button && button.dataset.action === 'spell' && !button.disabled && button.getAttribute('aria-disabled') !== 'true') {
+      const id = button.dataset.id;
+      if (Meta.learnSpell(meta, id)) {
+        if (campaign && campaign.status !== 'title') Meta.applyLive(meta, campaign);
+        rerenderPanel();
+        buyFlash('[data-buy="spell:' + id + '"]', 0);
+        UI.toast({ text: 'Изучено: «' + Meta.SPELLS[id].name + '» · ур. ' + Meta.spellLevel(meta, id), icon: 'icons/icon-mana.jpg', tone: 'good', key: 'spell-learn' });
+      }
+      return;
+    }
     if (!button) return;
     const action = button.dataset.action;
     const id = button.dataset.id;
     if (button.disabled) return;
+    // A price not saved up yet (buyButtonHtml): shake and say what is short.
+    if (button.classList.contains('buy-btn') && button.getAttribute('aria-disabled') === 'true') {
+      buyShort(button, action === 'lab-perk' ? labFamilyIcon(Meta.LAB_LINES[id].family) : 'icons/icon-capital.jpg?v=2');
+      return;
+    }
+    const capitalBefore = meta.capital;
     if (action === 'school-tab') { schoolTab = id; renderMetaScreen(); return; }
+    if (action === 'tech-tab') {
+      if (id === 'advanced' && !Meta.advancedUnlocked(meta)) {
+        UI.toast({ text: 'Продвинутые технологии откроются на ' + ADVANCED.unlockLevel + '-м уровне основной кампании', icon: 'lock', key: 'advanced-locked', duration: 1800 });
+        return;
+      }
+      techTab = id;
+      renderMetaScreen();
+      return;
+    }
     if (action === 'school-info') { showSchoolUnlocks(); return; }
     if (action === 'school-resume') { switchSite('side'); return; }
     if (action === 'school-trial') {
@@ -8318,7 +14453,13 @@
       requestRun(spec);
       return;
     }
-    if (action === 'school-upgrade') { Meta.buySchoolUpgrade(meta, id); renderMetaScreen(); syncCity(); return; }
+    if (action === 'school-upgrade') {
+      Meta.buySchoolUpgrade(meta, id);
+      renderMetaScreen();
+      syncCity();
+      if (meta.capital < capitalBefore) buyFlash('[data-buy="school-upgrade:' + id + '"]', capitalBefore - meta.capital, 'wallet-fx');
+      return;
+    }
     if (action === 'school-target') { const card = Meta.claimRecruit(meta, true); if (card) showCardReveal(card, 'recruiting'); renderMetaScreen(); return; }
     // Moving inside a panel starts at the top (the grid remembers its place for «← Бригадиры»).
     if (action === 'foreman-open') {
@@ -8330,10 +14471,34 @@
       return;
     }
     if (action === 'office-tab') {
+      const tab = officeTabs().find(function (item) { return item.section === id; });
+      if (tab && !tab.open) {
+        UI.toast({ text: 'Раздел «' + id + '» откроется на ' + (tab.level + 1) + '-м уровне основной кампании', icon: 'lock', key: 'office-tab-locked', duration: 1800 });
+        return;
+      }
       officeTab = id;
       renderMetaScreen();
       document.getElementById('meta-panel').scrollTop = 0;
       return;
+    }
+    if (action === 'personnel-tab') {
+      personnelTab = id;
+      renderMetaScreen();
+      document.getElementById('meta-panel').scrollTop = 0;
+      return;
+    }
+    if (action === 'personnel-info') {
+      personnelInfo = !personnelInfo;
+      renderMetaScreen();
+      return;
+    }
+    if (action === 'personnel' && Meta.buyPersonnel(meta, id)) {
+      if (campaign && campaign.status !== 'title') Meta.applyLive(meta, campaign);
+      refreshCity();
+    }
+    if (action === 'dish' && Meta.buyDish(meta, id)) {
+      if (campaign && campaign.status !== 'title') Meta.applyLive(meta, campaign);
+      UI.toast({ text: 'Изучено блюдо «' + MB.DISH[id].name + '»', icon: 'hq', tone: 'good', key: 'dish-new' });
     }
     if (action === 'tech' && Meta.buyTech(meta, id)) {
       Meta.applyLive(meta, campaign);
@@ -8356,8 +14521,42 @@
       if (Meta.upgradeCard(meta, id) && campaign && campaign.crew) Meta.applyLive(meta, campaign);
     }
     if (action === 'exchange-upgrade') Meta.buyExchangeUpgrade(meta, id);
+    if (action === 'booster') Meta.buyBooster(meta, id);
+    if (action === 'lab-tab') {
+      labTab = id;
+      renderMetaScreen();
+      document.getElementById('meta-panel').scrollTop = 0;
+      return;
+    }
+    if (action === 'lab-perk') {
+      const spec = Meta.LAB_LINES[id];
+      if (spec && Meta.buyLabPerk(meta, id)) {
+        if (campaign && campaign.status !== 'title') Meta.applyLive(meta, campaign);
+        refreshCity();
+        rerenderPanel();
+        buyFlash('[data-buy="lab-perk:' + id + '"]', 0);
+        UI.toast({ text: '«' + spec.name + '» · ур. ' + Meta.labPerkLevel(meta, id), icon: labFamilyIcon(spec.family), tone: 'good', key: 'lab-perk' });
+      }
+      return;
+    }
+    if (action === 'training' && Meta.buyTraining(meta, id)) {
+      // The cap, the power and the hires change at once on the running site.
+      if (campaign && campaign.status !== 'title') {
+        Meta.applyLive(meta, campaign);
+        if (world) MB.refreshRanks(world);
+      }
+      refreshCity();
+    }
+    if (action === 'supply-slot') Meta.buySupplySlot(meta);
     if (action === 'abandon') {
       confirmAbandon();
+      return;
+    }
+    if (action === 'order' && id === 'special') {
+      const special = Meta.specialOrder(meta);
+      if (!special || special.done || sideBusy()) return;
+      cityBuilding = null;
+      requestRun({ mode: 'exchange', levelIndex: special.levelIndex, payload: { orderId: 'special', special: true, day: special.day }, reason: 'order' });
       return;
     }
     if (action === 'order') {
@@ -8381,6 +14580,9 @@
     // A purchase re-renders in place: the card the player pressed stays under the finger.
     rerenderPanel();
     paintHud();
+    if (meta.capital < capitalBefore && button.classList.contains('buy-btn')) {
+      buyFlash('[data-buy="' + action + ':' + id + '"], [data-action="' + action + '"][data-id="' + id + '"]', capitalBefore - meta.capital, 'wallet-fx');
+    }
   }
 
   // ---------- one launcher for every new run ----------
@@ -8391,7 +14593,7 @@
   function requestRun(spec) {
     if (spec.mode === 'school' && (!spec.prepare || spec.reason !== 'school')) return;
     if (contractLocked()) return;
-    openBriefing(spec, function (crew) { launchRun(spec, crew); });
+    openBriefing(spec, function (crew) { chooseBoosters(spec, function (boosters) { launchRun(spec, crew, boosters); }); });
   }
 
   // ---------- briefing before every new run (docs/gdd/16-ux-flow.md §4) ----------
@@ -8546,6 +14748,8 @@
       html += '<span class="briefing-chip limit">' + ICONS.clock + 'Лимит ' + MB.formatClock(spec.mode === 'school' ? spec.payload.limit : Meta.contractLimitSeconds(meta)) + '</span>';
     }
     html += '</div>';
+    // Once the materials lab stands: the building's cubes by family (they all count there).
+    if (meta.hq.materials > 0) html += '<div class="briefing-facts briefing-families">' + labFamilyChips(level.blocks, 'briefing-chip family') + '</div>';
     if (spec.mode === 'school') html += '<p class="briefing-note">Попытка спишется после старта. Таймер идёт без пауз, в том числе оффлайн. При поражении опыт сохраняется.</p>';
     if (spec.mode === 'contract') html += '<p class="briefing-note">Таймер идёт и без вас. Уйти с контракта можно, только бросив его.</p>';
     return html;
@@ -8564,6 +14768,10 @@
       const reward = Meta.storyReward(meta, spec.levelIndex || 0);
       if (reward.capital > 0) add(img('icons/icon-capital.jpg?v=2'), '+' + formatCompact(reward.capital));
       if (reward.done) note = 'Награда за этот объект уже получена.';
+    } else if (spec.mode === 'exchange' && spec.payload && spec.payload.special) {
+      const reward = Meta.specialReward(meta, spec.levelIndex || 0);
+      add(img('icons/icon-seals.jpg?v=2'), '+' + reward.seals);
+      if (reward.capital > 0) add(img('icons/icon-capital.jpg?v=2'), '+' + formatCompact(reward.capital));
     } else if (spec.mode === 'exchange') {
       const reward = Meta.exchangeReward(meta, spec.levelIndex || 0);
       add(img('icons/icon-rare-' + reward.rare + '.jpg?v=2'), '+' + reward.rareAmount);
@@ -8587,6 +14795,9 @@
       if (project) {
         note = project.text;
         if (project.rewardSeals && !(meta.hq[spec.payload.projectId] > 0)) add(img('icons/icon-seals.jpg?v=2'), '+' + project.rewardSeals);
+        if (project.rewardRare && !(meta.hq[spec.payload.projectId] > 0)) {
+          Object.keys(project.rewardRare).forEach(function (key) { add(img('icons/icon-rare-' + key + '.jpg?v=2'), '+' + project.rewardRare[key]); });
+        }
       }
     }
     if (items.length === 0 && !note) return '';
@@ -8680,6 +14891,8 @@
     if (bonus.startCoinGrant > 0) chips.push('+' + bonus.startCoinGrant.toLocaleString('ru-RU') + ' монет от коллекции на старте');
     if (bonus.plan > 0) chips.push('План +' + Math.round(bonus.plan));
     if (bonus.capitalChance > 0) chips.push('Шанс находки +' + Math.round(bonus.capitalChance * 100) + '%');
+    if (bonus.findValueBonus > 0) chips.push('Находки +' + bonus.findValueBonus + ' капитала');
+    if (bonus.orderCapitalMultiplier > 1) chips.push('Капитал за заказ +' + Math.round((bonus.orderCapitalMultiplier - 1) * 100) + '%');
     Object.keys(bonus.triggers).forEach(function (effect) {
       const id = bonus.triggers[effect].card;
       if (!Meta.CARDS[id]) return;
@@ -8795,7 +15008,7 @@
 
   // Start `spec` on its slot and put it on screen; the site that was on screen goes on without the
   // player. `crew` (card ids from the briefing, locked until the run ends; null — the mode's preset).
-  function launchRun(spec, crew) {
+  function launchRun(spec, crew, boosters) {
     if (spec.prepare && spec.prepare() === false) {
       UI.toast({ text: 'Не получилось начать: не хватает ресурсов', icon: 'hq', tone: 'bad' });
       syncCity();
@@ -8819,6 +15032,7 @@
     Meta.configureNewCampaign(meta, campaign, spec.mode, spec.levelIndex || 0, spec.payload || null, chosen);
     campaign.freePurchases = freePurchases;
     world = MB.startLevel(campaign);
+    applyBoosters(boosters || []);
     liveKey = key;
     Meta.saveSite(meta, key, campaign, world, { status: 'play', awaySince: null, awayBank: 0, reward: null });
     Meta.setActiveSite(meta, key);
@@ -8903,7 +15117,10 @@
     const same = liveKey === key && !!world;
     const view = same && cameraController.getView ? cameraController.getView() : null;
     // The snapshot does not keep the dev time ledger: it stays with the site across the rebuild.
-    if (same) restored.world.timeLedger = world.timeLedger;
+    if (same) {
+      restored.world.timeLedger = world.timeLedger;
+      restored.world.timeCategories = world.timeCategories;
+    }
     disposeLevel();
     campaign = restored.campaign;
     world = restored.world;
@@ -8920,7 +15137,7 @@
   // for the absence (at most offlineCapHours), placed as whole cubes in build order. A contract's
   // clock runs on real time, so it only builds within the time it had left.
   function catchUpWorld(key, c, w, seconds) {
-    const capSeconds = Meta.offlineCapSeconds();
+    const capSeconds = Meta.offlineCapSeconds(meta);
     const efficiency = Meta.offlineEfficiency(meta);
     const contract = timedMode(c.runMode);
     const limit = contract ? trialLimit(c) : 0;
@@ -8931,9 +15148,14 @@
     const coinsBefore = c.coins;
     let built = [];
     let worked = 0;
+    // The workers' share of the offline cubes (sim.js → builderShare): drones and machines give no experience.
+    let workerShare = 0;
     if (work > 0 && w.remaining > 0 && c.status === 'play') {
-      const estimate = MicroBuildersSim.estimate(simSummary(w.level), c);
+      // Needs, night and weather over the session so far plus the time away: hours of offline work
+      // reach the steady state of the needs, not the warm-up of a fresh short build (sim.js → warmUp).
+      const estimate = MicroBuildersSim.estimate(simSummary(w.level), Object.assign({}, c, { environmentSeconds: (c.levelElapsed || 0) + work }));
       const rate = estimate.massPerMinute / 60 * efficiency;
+      workerShare = estimate.builderShare || 0;
       built = MB.applyOfflineMass(w, rate * work);
       worked = work;
       if (w.completed && rate > 0) {
@@ -8945,10 +15167,21 @@
     }
     // Capital: the cubes' own pay plus the office find rolls. The 'autofill' event carries the same
     // capital, so the events are dropped here (consumeEvents would count it a second time).
+    // «Дежурный менеджер»: the standing sales office pays its share while the player is away.
+    const salesAway = c.status === 'play' && !contract ? Math.round(MB.salesAwayCoins(w, w.completed ? worked : work)) : 0;
+    if (salesAway > 0) {
+      c.coins += salesAway;
+      c.coinsEarned = (c.coinsEarned || 0) + salesAway;
+      if (w.sales) w.sales.earned += salesAway;
+    }
     let capital = 0;
     for (let i = 0; i < built.length; i++) capital += built[i].capitalPay || 0;
     meta.capital += capital;
     capital += Meta.onBlocksPlaced(meta, c, w, built, { offline: true }).capital;
+    // «Учебный центр»: offline cubes — 1 experience a whole cube of the workers' share, to the workers
+    // (evenly) and to the centre.
+    MB.shareWorkerXp(w, built, workerShare);
+    Meta.addTrainingXp(meta, built.length * workerShare);
     w.events.length = 0;
     const after = total - w.remaining;
     let elapsed = 0;
@@ -9008,7 +15241,7 @@
       // Rebuilding the site on screen restarts its workers: only a real absence is worth it there.
       const onScreen = slot === liveKey && !!world && campaign.status === 'play';
       const threshold = snap.runMode === 'school' ? 0 : !active ? INACTIVE_CATCH_UP_SECONDS : (onScreen && !contract ? ACTIVE_CATCH_UP_SECONDS : 1);
-      if (active) activeBank = contract ? 0 : Math.min(seconds, Meta.offlineCapSeconds());
+      if (active) activeBank = contract ? 0 : Math.min(seconds, Meta.offlineCapSeconds(meta));
       if (seconds < threshold) return;
       const restored = restoreSiteWorld(snap);
       const result = catchUpWorld(slot, restored.campaign, restored.world, seconds);
@@ -9108,7 +15341,7 @@
     if (!meta.flags.awayExplained) {
       meta.flags.awayExplained = true;
       Meta.save(meta);
-      const hours = Math.round(Meta.offlineCapSeconds() / 3600);
+      const hours = Math.round(Meta.offlineCapSeconds(meta) / 3600);
       UI.overlay.open({
         id: 'away-explained',
         kicker: 'Без вас',
@@ -9177,7 +15410,7 @@
     const snap = Meta.site(meta, liveKey);
     if (!snap) return;
     const away = snap.awaySince ? Math.max(0, (Date.now() - snap.awaySince) / 1000) : 0;
-    saveLive({ awaySince: null, awayBank: Math.min((snap.awayBank || 0) + away, Meta.offlineCapSeconds()) });
+    saveLive({ awaySince: null, awayBank: Math.min((snap.awayBank || 0) + away, Meta.offlineCapSeconds(meta)) });
   }
 
   // Dev: pretend the page spent `seconds` in the background, then bring it back.
@@ -9253,7 +15486,7 @@
 
   function openReturnDialog(report, rows) {
     const efficiency = Math.round(Meta.offlineEfficiency(meta) * 100);
-    const hours = Math.round(Meta.offlineCapSeconds() / 3600);
+    const hours = Math.round(Meta.offlineCapSeconds(meta) / 3600);
     const capped = report.sites.some(function (item) { return item.capped; });
     const body = (report.sites.length ? '<div class="return-sites">' + report.sites.map(returnSiteCard).join('') + '</div>' : '') +
       (rows.length ? '<section class="return-company"><h4>Компания</h4><ul class="return-rows">' + rows.join('') + '</ul></section>' : '') +
@@ -9334,7 +15567,12 @@
 
   function disposeLevel() {
     if (cameraController.isWorkerView()) cameraController.setWorkerView(false);
+    // A new site: no worker focus, no see-through cubes (their meshes go with levelRoot below).
+    cameraController.clearTrack(true);
+    xray.hidden.clear();
     selectedBuilder = null;
+    selectedPieceId = '';
+    clearRepairViews();
     workerPlanSignature = '';
     updateWorkerViewButton();
     clearWorkerPlan();
@@ -9351,6 +15589,9 @@
     ghostMeshes = [];
     Features.reset(featureState);
     scaffoldLookup = new Map();
+    scaffoldCrackLookup = new Map();
+    scaffoldTapeLookup = new Map();
+    scaffoldPieceById = new Map();
     scaffoldMeshes = [];
     scaffoldDirty.clear();
     for (let i = levelRoot.children.length - 1; i >= 0; i--) {
@@ -9366,6 +15607,10 @@
     }
     yardRoot = null;
     elevatorRoot = null;
+    taxiView = null;
+    campViews = {};
+    const signs = document.getElementById('site-signs');
+    if (signs) signs.innerHTML = '';
   }
 
   function resize() {
@@ -9415,25 +15660,100 @@
     return texture;
   }
 
-  function makeLabel(text) {
+  // Over a quarry, a sign like the camp's: a little cube in the material's colours and its name, then a
+  // cube's weight and what it pays now. Not tappable. Made into the page by placeMineSigns.
+  function makeMineLabel(materialId, anchor) {
+    mineLabels.push({ materialId: materialId, anchor: anchor, el: null, html: '' });
+  }
+
+  function paintMineLabel(label) {
+    if (!label.el) return;
+    const material = MB.MATERIAL[label.materialId];
+    const coins = campaign ? formatCompact(MB.cubeCoins(campaign, label.materialId)) : '';
+    const html = '<span class="city-sign-main"><img class="mine-sign-cube" src="' + mineCubeIcon(material) + '" alt="">' +
+      '<span>' + UI.escapeHtml(material.name) + '</span></span><span class="city-sign-line">' +
+      (meta.hq.materials > 0 && Meta.labFamilyOf(material.id) ? '<span class="mine-sign-family">' + UI.escapeHtml(labFamily(Meta.labFamilyOf(material.id)).name) + '</span> · ' : '') +
+      material.weight.toLocaleString('ru-RU') + ' кг · <img class="camp-sign-coin" src="icons/icon-coins.jpg?v=2" alt=""><b>' + coins + '</b></span>';
+    if (label.html === html) return;
+    label.html = html;
+    label.el.innerHTML = html;
+  }
+
+  function paintMineLabels() {
+    for (let i = 0; i < mineLabels.length; i++) paintMineLabel(mineLabels[i]);
+  }
+
+  // Every frame: the signs follow their quarries on screen, only on the site while it is being built.
+  function placeMineSigns() {
+    const show = !!(world && campaign && campaign.status === 'play' && currentScreen === 'build' && !cityRoot.visible);
+    if (show) camera.updateMatrixWorld();
+    for (let i = 0; i < mineLabels.length; i++) {
+      const label = mineLabels[i];
+      if (!label.el || !label.el.isConnected) {
+        if (!show) continue;
+        label.el = document.createElement('div');
+        label.el.className = 'city-sign mine-sign';
+        label.html = '';
+        document.getElementById('site-signs').appendChild(label.el);
+        paintMineLabel(label);
+      }
+      let visible = show;
+      if (visible) {
+        minePoint.copy(label.anchor).project(camera);
+        visible = minePoint.z > -1 && minePoint.z < 1 && Math.abs(minePoint.x) < 1 && Math.abs(minePoint.y) < 1;
+      }
+      const x = Math.round((minePoint.x + 1) / 2 * MicroBuildersStage.width());
+      const y = Math.round((1 - minePoint.y) / 2 * MicroBuildersStage.height());
+      // Not under the HUD: a sign that would reach the top bar or the bottom button hides.
+      if (visible) {
+        const safe = cameraController.getSafeArea();
+        visible = y - 50 >= safe.top && y <= MicroBuildersStage.height() - safe.bottom;
+      }
+      if (label.el.hidden === visible) label.el.hidden = !visible;
+      if (!visible) continue;
+      label.el.style.transform = 'translate(' + x + 'px, ' + y + 'px) translate(-50%, -100%)';
+    }
+  }
+
+  // A small isometric cube in the material's colours (lit top, the base colour, a shaded side).
+  function mineCubeIcon(material) {
+    if (mineCubeIcons[material.id]) return mineCubeIcons[material.id];
     const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 64;
+    canvas.width = 36;
+    canvas.height = 36;
     const context = canvas.getContext('2d');
-    context.fillStyle = 'rgba(28, 22, 16, 0.78)';
-    roundRect(context, 8, 8, 240, 48, 16);
-    context.fill();
-    context.fillStyle = '#f6efe4';
-    context.font = '700 28px Manrope, sans-serif';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillText(text, 128, 34);
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false, depthTest: false }));
-    sprite.center.set(0.5, 0);
-    sprite.scale.set(2.15, 0.54, 1);
-    return sprite;
+    const faces = [
+      [[18, 3], [33, 11], [18, 19], [3, 11], 1.22],
+      [[3, 11], [18, 19], [18, 34], [3, 26], 0.95],
+      [[18, 19], [33, 11], [33, 26], [18, 34], 0.7],
+    ];
+    faces.forEach(function (face) {
+      context.beginPath();
+      context.moveTo(face[0][0], face[0][1]);
+      for (let i = 1; i < 4; i++) context.lineTo(face[i][0], face[i][1]);
+      context.closePath();
+      context.fillStyle = shadeLight(material.color, face[4]);
+      context.fill();
+    });
+    context.strokeStyle = 'rgba(0, 0, 0, 0.35)';
+    context.lineWidth = 1.5;
+    context.lineJoin = 'round';
+    context.beginPath();
+    context.moveTo(18, 3); context.lineTo(33, 11); context.lineTo(33, 26); context.lineTo(18, 34);
+    context.lineTo(3, 26); context.lineTo(3, 11); context.closePath();
+    context.moveTo(3, 11); context.lineTo(18, 19); context.lineTo(33, 11);
+    context.moveTo(18, 19); context.lineTo(18, 34);
+    context.stroke();
+    mineCubeIcons[material.id] = canvas.toDataURL();
+    return mineCubeIcons[material.id];
+  }
+
+  // shade(), but above 1 it mixes toward white instead of clipping.
+  function shadeLight(color, amount) {
+    if (amount <= 1) return shade(color, amount);
+    const t = amount - 1;
+    const mix = function (v) { return Math.round(v + (255 - v) * t); };
+    return 'rgb(' + mix((color >> 16) & 255) + ',' + mix((color >> 8) & 255) + ',' + mix(color & 255) + ')';
   }
 
   function roundRect(context, x, y, width, height, radius) {

@@ -348,11 +348,12 @@
     group.add(portal);
     // A walk-through box frame: a full roof slab (workers stand on it), a full floor and side walls
     // the depth of the cell. A cut-in door is walked through both ways, so it keeps slim jambs.
-    addBox(portal, frame, [0.98, 0.08, 0.98], [0, 0.96, 0]);
-    addBox(portal, frame, [0.98, 0.04, 0.98], [0, 0.02, 0]);
+    // Side to side it meets the wall cubes on both hands (they fill their cells): no slit to see through.
+    addBox(portal, frame, [1, 0.08, 0.98], [0, 0.96, 0]);
+    addBox(portal, frame, [1, 0.04, 0.98], [0, 0.02, 0]);
     const depth = block.additionalDoor ? 0.09 : 0.98;
-    addBox(portal, frame, [0.09, 0.88, depth], [-0.445, 0.48, 0]);
-    addBox(portal, frame, [0.09, 0.88, depth], [0.445, 0.48, 0]);
+    addBox(portal, frame, [0.09, 0.88, depth], [-0.455, 0.48, 0]);
+    addBox(portal, frame, [0.09, 0.88, depth], [0.455, 0.48, 0]);
     const pivot = new root.THREE.Group();
     pivot.position.set(-0.4, 0, 0);
     const panel = addBox(pivot, wood, [0.8, 0.86, 0.055], [0.4, 0.47, 0]);
@@ -387,7 +388,8 @@
       opacity: transparent ? 0.58 : 1,
     });
     const rail = new root.THREE.MeshStandardMaterial({ color: 0x48565c, roughness: 0.38, metalness: 0.72 });
-    addBox(group, slab, [0.96, 0.14, 0.96], [0, 0.91, 0]);
+    // The whole cell, its top flush with the cube tops around it.
+    addBox(group, slab, [1, 0.14, 1], [0, 0.93, 0]);
     addRails(group, block.rails, rail);
   }
 

@@ -277,6 +277,20 @@
   #coin-rate { color: #9be8ad; font-size: 11px; font-weight: 800; }
   #coin-rate:empty { display: none; }
   .coins.short { border-color: rgba(255, 120, 90, 0.9); }
+  /* tokens of this site (2 a construction): the graph's passes and the camp buildings' starts */
+  .pill.tokens-pill { height: 44px; padding: 0 12px 0 5px; gap: 6px; border-color: rgba(111, 224, 207, 0.55); }
+  .tokens-pill .currency-icon { width: 30px; height: 30px; border-radius: 8px; }
+  .tokens-pill b { font-family: Unbounded, Manrope, sans-serif; font-size: 17px; font-weight: 700; }
+  .tokens-pill.empty { opacity: 0.6; }
+  .tokens-pill.pulse { animation: token-pulse 0.6s ease-out; }
+  @keyframes token-pulse { 0% { transform: scale(1); } 40% { transform: scale(1.15); } 100% { transform: scale(1); } }
+  /* «Открыть за [жетон] 1» in the tip of a pass */
+  .gate-open-btn { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; padding: 4px 10px; border: 0; border-radius: 999px;
+    background: #2c8a80; color: #eafffb; font: 800 12px/1.2 Manrope, sans-serif; cursor: pointer; }
+  .gate-open-btn img { width: 16px; height: 16px; border-radius: 4px; }
+  .gate-open-btn.short { background: #3a4644; color: #b6c8c5; }
+  .graph-gate.is-ready .graph-gate-hex polygon { stroke: #fff2a8; animation: gate-ready 1.6s ease-in-out infinite; }
+  @keyframes gate-ready { 0%, 100% { filter: drop-shadow(0 0 0 rgba(255, 242, 168, 0)); } 50% { filter: drop-shadow(0 0 7px rgba(255, 242, 168, 0.8)); } }
   /* landscape: gains float out under the pill; portrait: in the gap right of it (row 1) */
   .coin-fx { position: absolute; left: 40px; top: calc(100% + 12px); width: 0; height: 0; pointer-events: none; }
   .coin-float {
@@ -295,7 +309,8 @@
   .coin-float.gain { color: #ffe09a; }
   .coin-float.spend { color: #ffb4a0; }
 
-  /* day clock: 20-minute cycle ring (day gold, night navy), sun / moon at the current phase */
+  /* day clock: 24-hour ring, noon at the top (night navy, dawn pink, day gold, sunset orange), sun /
+     moon at the current hour, game time «08:00» */
   .pill.day-clock {
     height: 44px;
     margin-left: auto;
@@ -308,32 +323,22 @@
   .day-dial { position: relative; flex: 0 0 auto; width: 34px; height: 34px; }
   .day-dial svg { display: block; width: 34px; height: 34px; overflow: visible; }
   .dial-track { fill: rgba(0, 0, 0, 0.28); }
-  .dial-day, .dial-night { fill: none; stroke-width: 4; }
+  .dial-day, .dial-night, .dial-dawn, .dial-dusk { fill: none; stroke-width: 4; }
   .dial-day { stroke: #f2c75c; }
   .dial-night { stroke: #3d5a9c; }
+  .dial-dawn { stroke: #ee9fa8; }
+  .dial-dusk { stroke: #ec8a4c; }
   .dial-sun { fill: #fff1b8; stroke: #c98b2c; stroke-width: 1.4; }
   .dial-moon { fill: #e4ebff; stroke: #22345e; stroke-width: 1.4; }
   .dial-bite { fill: #22345e; }
   .day-dial .dial-moon, .day-dial .dial-bite, .day-dial.is-night .dial-sun { display: none; }
   .day-dial.is-night .dial-moon, .day-dial.is-night .dial-bite { display: inline; }
-  .day-weather {
-    position: absolute;
-    right: -6px;
-    bottom: -4px;
-    display: grid;
-    place-items: center;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #5d7fb8;
-    color: #fff;
-    box-shadow: 0 0 0 2px rgba(28, 22, 17, 0.92);
-  }
-  .day-weather[hidden] { display: none; }
-  .day-weather .ui-icon { width: 12px; height: 12px; stroke-width: 2.4; }
-  .day-weather.heat { background: #d9703a; }
-  .day-weather.storm, .day-weather.quake { background: #7a5bb8; }
-  #level-time { color: var(--ink); font-family: Unbounded, Manrope, sans-serif; font-size: 14px; font-weight: 700; }
+  /* before the night opens (levels 1–6): only the sun, no ring and no time */
+  .day-dial.no-night .dial-track, .day-dial.no-night .dial-day, .day-dial.no-night .dial-night,
+  .day-dial.no-night .dial-dawn, .day-dial.no-night .dial-dusk { display: none; }
+  .day-clock:has(.no-night) { padding-right: 5px; }
+  #level-time[hidden] { display: none; }
+  #level-time { color: var(--ink); font-family: Unbounded, Manrope, sans-serif; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
   .day-tempo {
     padding: 2px 6px;
     border-radius: 999px;
@@ -369,6 +374,116 @@
     pointer-events: auto;
   }
   #hq-btn[hidden], body.away #hq-btn, body.interface-hidden #hq-btn { display: none; }
+  /* techno-magic: the mana button under «В штаб» (fills with mana), spells in a sheet */
+  #mana-btn {
+    position: absolute;
+    top: calc(100% + 68px);
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: 2px solid #8ff3e6;
+    border-radius: 14px;
+    background: linear-gradient(0deg, rgba(79, 227, 210, 0.55) var(--mana, 0%), rgba(20, 40, 44, 0.9) var(--mana, 0%));
+    box-shadow: 0 3px 0 #1d6b63, 0 0 12px rgba(79, 227, 210, 0.35);
+    cursor: pointer;
+  }
+  #mana-btn img { width: 30px; height: 30px; border-radius: 8px; }
+  #mana-btn b { position: absolute; right: -6px; bottom: -6px; min-width: 22px; padding: 1px 4px; border-radius: 9px; background: #12302f; color: #bffaf1; font: 800 11px/16px Manrope, sans-serif; box-shadow: 0 0 0 1.5px #8ff3e6; }
+  #mana-btn:active { transform: translateY(2px); }
+  #mana-btn[hidden], body.away #mana-btn, body.interface-hidden #mana-btn { display: none; }
+  #mana-btn.casting { animation: mana-casting 1.6s ease-in-out infinite; }
+  /* «Городок»: under the mana button (in its place while there is no mana) — the list of the camp
+     buildings of the site; the badge counts the foundations a token would start now */
+  #camp-btn {
+    position: absolute;
+    top: calc(100% + 128px);
+    left: 0;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    border: 2px solid #f2c27a;
+    border-radius: 14px;
+    background: #3a2616;
+    box-shadow: 0 3px 0 #6b4520, 0 6px 14px rgba(40, 22, 8, 0.35);
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  #mana-btn[hidden] + #camp-btn { top: calc(100% + 68px); }
+  #camp-btn img { width: 40px; height: 40px; border-radius: 9px; }
+  #camp-btn b { position: absolute; right: -6px; top: -6px; min-width: 20px; padding: 1px 4px; border-radius: 10px; background: #6fe0cf; color: #0e2b27; font: 800 11px/16px Manrope, sans-serif; box-shadow: 0 0 0 1.5px #0e2b27; }
+  #camp-btn b[hidden] { display: none; }
+  #camp-btn:active { transform: translateY(2px); }
+  #camp-btn[hidden], body.away #camp-btn, body.interface-hidden #camp-btn { display: none; }
+  @keyframes mana-casting { 50% { box-shadow: 0 3px 0 #1d6b63, 0 0 22px 5px rgba(150, 120, 255, 0.8); } }
+  /* the spell book: the mana store, then the spells in the colour of their school (--school: r, g, b) */
+  .spells-sheet .overlay-card { background: radial-gradient(130% 55% at 50% 0%, rgba(112, 84, 230, 0.3), transparent 72%), var(--panel-solid); }
+  .mana-panel { display: flex; align-items: center; gap: 12px; margin: 0 0 12px; padding: 11px 12px; border: 1px solid rgba(143, 243, 230, 0.35); border-radius: 16px;
+    background: linear-gradient(135deg, rgba(18, 52, 58, 0.92), rgba(46, 28, 82, 0.92)); box-shadow: inset 0 0 18px rgba(79, 227, 210, 0.14); }
+  .mana-crystal { position: relative; flex: 0 0 auto; width: 52px; height: 52px; }
+  .mana-crystal::before { content: ''; position: absolute; inset: -9px; border-radius: 50%; background: radial-gradient(circle, rgba(143, 243, 230, 0.6), transparent 66%); animation: mana-breathe 2.4s ease-in-out infinite; }
+  .mana-crystal img { position: relative; display: block; width: 52px; height: 52px; border-radius: 14px; box-shadow: 0 0 0 2px #8ff3e6, 0 0 14px rgba(143, 243, 230, 0.5); }
+  @keyframes mana-breathe { 0%, 100% { opacity: 0.5; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.08); } }
+  .mana-meter { flex: 1 1 auto; min-width: 0; }
+  .mana-meter p { display: flex; align-items: baseline; gap: 5px; margin: 0 0 7px; }
+  .mana-meter p b { color: #c9fff7; font: 800 24px/1 Unbounded, sans-serif; font-variant-numeric: tabular-nums; text-shadow: 0 0 12px rgba(143, 243, 230, 0.65); }
+  .mana-meter p em { color: var(--muted); font-size: 12px; font-style: normal; font-weight: 700; }
+  .mana-meter p span { margin-left: auto; color: #8ff3e6; font-size: 11px; font-weight: 800; white-space: nowrap; }
+  .mana-bar { position: relative; display: block; height: 10px; overflow: hidden; border-radius: 6px; background: rgba(0, 0, 0, 0.42); box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5); }
+  .mana-bar b { position: absolute; top: 0; bottom: 0; left: 0; overflow: hidden; border-radius: 6px; background: linear-gradient(90deg, #4fe3d2, #8a6bff); box-shadow: 0 0 10px rgba(138, 107, 255, 0.75); transition: width 0.25s linear; }
+  .mana-bar b::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent); animation: mana-shine 2.2s linear infinite; }
+  @keyframes mana-shine { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+  .mana-meter small { display: block; margin-top: 6px; color: var(--muted); font-size: 11px; font-weight: 700; }
+  .mana-panel.full { border-color: rgba(143, 243, 230, 0.75); box-shadow: inset 0 0 18px rgba(79, 227, 210, 0.2), 0 0 14px rgba(143, 243, 230, 0.3); }
+  .mana-panel.full .mana-meter small { color: #c9fff7; }
+  .spell-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .spell-card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; padding: 12px 8px 9px; border: 1.5px solid rgba(var(--school), 0.45); border-radius: 16px;
+    background: linear-gradient(180deg, rgba(var(--school), 0.16), rgba(255, 255, 255, 0.03) 72%); text-align: center; }
+  .spell-art { position: relative; width: 62px; height: 62px; margin-bottom: 5px; }
+  .spell-art::before { content: ''; position: absolute; inset: -8px; border-radius: 50%; background: radial-gradient(circle, rgba(var(--school), 0.5), transparent 68%); }
+  .spell-art > img:first-child { position: relative; display: block; width: 62px; height: 62px; border-radius: 16px; box-shadow: 0 0 0 2px rgba(var(--school), 0.85), 0 4px 10px rgba(0, 0, 0, 0.35); }
+  .spell-school { position: absolute; top: -6px; left: -6px; width: 20px; height: 20px; border-radius: 50%; box-shadow: 0 0 0 2px var(--panel-solid); }
+  .spell-name { font-size: 13px; font-weight: 800; line-height: 1.2; }
+  .spell-pips { display: inline-flex; gap: 4px; margin: 1px 0 2px; }
+  .spell-pips i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255, 255, 255, 0.16); }
+  .spell-pips i.on { background: rgb(var(--school)); box-shadow: 0 0 6px rgba(var(--school), 0.9); }
+  .spell-effect { color: var(--muted); font-size: 11px; font-weight: 700; line-height: 1.25; }
+  .spell-note { color: #f0b48a; font-size: 10px; font-weight: 700; line-height: 1.2; }
+  .spell-card .buy-btn.wide { margin-top: auto; min-height: 36px; }
+  .spell-card .spell-effect, .spell-card .spell-note { margin-bottom: 4px; }
+  .spell-lock { margin-top: auto; padding: 8px 0 3px; color: var(--muted); font-size: 11px; font-weight: 700; }
+  .spell-card.locked { opacity: 0.55; filter: grayscale(0.8); }
+  .spell-card.active { border-color: rgb(var(--school)); animation: spell-live 1.8s ease-in-out infinite; }
+  .spell-card.active::after { content: ''; position: absolute; top: 5px; left: 14px; right: 14px; height: 3px; border-radius: 2px;
+    background: linear-gradient(90deg, rgb(var(--school)) var(--left, 0%), rgba(255, 255, 255, 0.12) var(--left, 0%)); }
+  @keyframes spell-live { 0%, 100% { box-shadow: 0 0 0 1px rgba(var(--school), 0.5), 0 0 12px rgba(var(--school), 0.35); } 50% { box-shadow: 0 0 0 1px rgba(var(--school), 0.9), 0 0 24px rgba(var(--school), 0.7); } }
+  .spell-timer { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); padding: 0 7px; border-radius: 9px; background: rgb(var(--school)); color: #14201a;
+    font: 800 11px/17px Manrope, sans-serif; font-variant-numeric: tabular-nums; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45); }
+  .spell-card.cast { animation: spell-cast 0.42s ease-out; }
+  @keyframes spell-cast { 40% { transform: scale(1.06); } 100% { transform: scale(0.98); } }
+  .spell-foot { margin: 10px 4px 0; color: var(--muted); font-size: 11px; font-weight: 700; line-height: 1.3; text-align: center; }
+  /* boosters before a construction: cards, picked ones lit */
+  .booster-count { margin: 0 0 8px; color: var(--muted); font-size: 13px; font-weight: 700; }
+  .booster-count b { color: var(--gold); }
+  .booster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .booster-card { position: relative; display: grid; justify-items: center; gap: 3px; padding: 10px 8px 9px; border: 2px solid rgba(242, 199, 92, 0.35); border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05); color: var(--ink); text-align: center; cursor: pointer; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35); transition: transform 0.08s ease; }
+  .booster-card:active { transform: translateY(2px); }
+  .booster-card .game-icon { width: 46px; height: 46px; border-radius: 11px; }
+  .booster-card b { font-size: 12px; line-height: 1.2; }
+  .booster-card span { color: var(--muted); font-size: 11px; line-height: 1.25; }
+  .booster-card small { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 800; }
+  .booster-card small .currency-icon { width: 16px; height: 16px; border-radius: 50%; }
+  .booster-card small em { color: var(--muted); font-style: normal; font-weight: 700; }
+  .booster-card i { color: #f08b86; font-size: 10px; font-style: normal; font-weight: 700; }
+  .booster-card.on { border-color: #8fe39f; background: rgba(143, 227, 159, 0.14); box-shadow: 0 3px 0 #2c7a41, 0 0 14px rgba(143, 227, 159, 0.35); }
+  .booster-card.blocked { opacity: 0.55; }
+  .meta-card small.booster-use { display: inline-flex; align-items: center; gap: 4px; margin: 4px 0 0; color: var(--muted); font-size: 11px; }
+  .meta-card small.booster-use .currency-icon { width: 15px; height: 15px; border-radius: 50%; }
   #hq-btn .ui-icon { width: 26px; height: 26px; stroke-width: 2.4; }
   #hq-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #237a40, 0 3px 8px rgba(18, 60, 30, 0.4); }
   #hq-btn.has-news::after { content: ''; position: absolute; top: -4px; right: -4px; width: 12px; height: 12px; border-radius: 50%; background: #ff6b4a; box-shadow: 0 0 0 2px rgba(28, 22, 17, 0.9); }
@@ -600,6 +715,10 @@
   .level-info-tabs button.on { background: rgba(242, 199, 92, 0.18); color: var(--gold); }
   .level-info-pane { display: flex; flex-direction: column; min-height: 0; }
   .level-info-pane[hidden] { display: none; }
+  .level-time-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 10px; margin-bottom: 5px; }
+  .level-time-tools .level-info-label { margin: 0; }
+  .level-time-tools .check { min-height: 32px; }
+  .level-time-head small { grid-column: 1 / -1; color: var(--muted); font-size: 11px; font-weight: 700; }
   .level-time-rows {
     display: flex;
     flex-direction: column;
@@ -907,6 +1026,39 @@
   }
   .upgrade[aria-disabled="true"] { cursor: default; }
   .upgrade[aria-disabled="true"]:not(.ready) .game-icon { filter: saturate(0.6); }
+  /* ---------- the purchase button outside the dock (game.js buyButtonHtml), styled as the dock's price pill:
+     green — can buy; dark with a gold fill of what is saved up — short, still tappable; grey — locked ---------- */
+  .buy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-height: 34px;
+    margin: 0;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #8fe39f, #46b862);
+    color: #0f2d17;
+    font: 800 12px/1 Manrope, sans-serif;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    box-shadow: 0 3px 0 #2c7a41;
+    cursor: pointer;
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+  }
+  .buy-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #2c7a41; }
+  .buy-btn .currency-icon { flex: 0 0 auto; width: 16px; height: 16px; border-radius: 50%; }
+  .buy-btn > span { margin-right: 2px; }
+  .buy-btn.short {
+    background: linear-gradient(90deg, rgba(242, 199, 92, 0.42) var(--fill, 0%), rgba(0, 0, 0, 0.38) var(--fill, 0%));
+    color: #ffd6c8;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+  }
+  .buy-btn.short:active { box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35); }
+  .buy-btn:disabled { background: rgba(255, 255, 255, 0.08); color: var(--muted); box-shadow: none; cursor: default; transform: none; }
+  .buy-btn.wide { width: 100%; min-height: 40px; font-size: 13px; }
+  .wallet-fx { top: 0; left: 0; z-index: 4; }
   /* purchase feedback: «Бесплатно!» / «Подарок!» over the card */
   .upgrade-flash {
     position: absolute;
@@ -962,6 +1114,8 @@
   .fx-float.fx-lucky img { width: 20px; height: 20px; }
   .fx-float.fx-capital { color: #ffe9b0; border-color: rgba(242, 199, 92, 0.6); }
   /* golden cube / jackpot at the cube: only a gold «+N» (the centred #lucky-pop names the event) */
+  /* a fall: the health lost, red */
+  .fx-float.fx-hurt { color: #ff7a66; font-size: 17px; }
   .fx-float.fx-gold { color: #ffd34a; font-size: 17px; text-shadow: 0 1px 0 rgba(60, 30, 4, 0.95), 0 0 10px rgba(255, 196, 64, 0.8); }
   .fx-chip {
     padding: 5px 10px;
@@ -980,7 +1134,7 @@
 
   /* Wide and short: one header row with the status, so the scene above keeps most of its band.
      game.js sets `bottom` over the dock and adds .tight (no legend) when the band is too low. */
-  #worker-card {
+  #worker-card, #scaffold-card {
     position: fixed;
     left: var(--hud-left);
     bottom: calc(var(--safe-b) + 200px);
@@ -998,14 +1152,15 @@
     font-size: 12px;
     line-height: 1.35;
   }
-  #worker-card[hidden], body.interface-hidden #worker-card, body.away #worker-card, body.city-view #worker-card { display: none; }
+  #worker-card[hidden], body.interface-hidden #worker-card, body.away #worker-card, body.city-view #worker-card,
+  #scaffold-card[hidden], body.interface-hidden #scaffold-card, body.away #scaffold-card, body.city-view #scaffold-card { display: none; }
   .worker-card-head { display: flex; align-items: center; gap: 6px; min-height: 44px; }
   .worker-card-name { display: grid; flex: 1 1 auto; min-width: 0; margin: 2px 0 0; line-height: 1.2; }
   .worker-card-name b { color: var(--gold); font-size: 13px; font-weight: 800; }
   .worker-card-status { font-size: 13px; font-weight: 800; }
   /* Portrait: the full width, so the card stays low; landscape keeps the middle (the followed worker) free. */
   @container stage (orientation: portrait) {
-    #worker-card { width: min(440px, calc(100 * var(--vw) - var(--safe-l) - var(--safe-r))); }
+    #worker-card, #scaffold-card { width: min(440px, calc(100 * var(--vw) - var(--safe-l) - var(--safe-r))); }
   }
   .worker-card-follow {
     min-height: 44px;
@@ -1035,9 +1190,60 @@
   .worker-card-meter i { display: block; height: 5px; overflow: hidden; border-radius: 3px; background: rgba(255, 255, 255, 0.12); }
   .worker-card-meter b { display: block; width: 0; height: 100%; border-radius: 3px; background: #4c8dff; }
   #worker-card-load-meter b { background: var(--ok); }
+  #worker-card-xp-meter { grid-column: 1 / -1; }
+  #worker-card-xp-meter[hidden] { display: none; }
+  #worker-card-xp-meter b { background: #f2c14a; }
+  /* «Учебный центр»: centre level bar and the rank ladder */
+  .training-intro p { margin: 0 0 6px; }
+  .training-note { color: var(--muted); font-size: 12px; }
+  .training-hero { float: left; width: 64px; height: 64px; margin: 0 10px 4px 0; border-radius: 14px; }
+  .training-note .currency-icon { width: 16px; height: 16px; margin-right: 4px; vertical-align: -3px; }
+  .training-ranks { clear: both; }
+  #worker-card-xp-meter img { width: 14px; height: 14px; margin-right: 4px; border-radius: 50%; vertical-align: -2px; }
+  .training-ranks { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin: 6px 0 0; padding: 0; list-style: none; }
+  .training-ranks li { display: grid; justify-items: center; gap: 1px; padding: 5px 2px; border-radius: 8px; background: rgba(255, 255, 255, 0.06); font-size: 11px; }
+  .training-ranks li.closed { opacity: 0.4; }
+  .training-ranks li b { font-size: 13px; }
+  .training-ranks li small { color: var(--muted); font-size: 10px; }
+  .rank-swatch { display: block; width: 16px; height: 16px; border-radius: 8px 8px 3px 3px; box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.25); }
   #worker-card-load-meter.over span { color: #ff8a73; font-weight: 800; }
   #worker-card-load-meter.over b { background: var(--danger); }
   .worker-card-line { margin: 0 0 3px; color: var(--muted); }
+  /* Characteristics (base 100) and the effort of the current action (logic.js → «Трудоёмкость и темп»). */
+  .worker-stats { display: flex; flex-wrap: wrap; gap: 3px 10px; margin: -2px 0 4px; }
+  .worker-stats:empty { display: none; }
+  .worker-stat { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; color: var(--muted); }
+  .worker-stat img { width: 14px; height: 14px; border-radius: 4px; }
+  .worker-stat b { color: var(--ink); font-weight: 800; }
+  .worker-stat.high b { color: var(--ok); }
+  .worker-stat.low b { color: #ff8a73; }
+  .worker-effort b { color: var(--ink); font-weight: 800; }
+  /* The player's orders: a hungry worker to eat, a tired one to sleep; the scaffold card's repair. */
+  .worker-orders { display: flex; flex-wrap: wrap; gap: 6px; margin: 5px 0 0; }
+  .worker-orders[hidden] { display: none; }
+  .worker-order {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid rgba(242, 193, 74, 0.6);
+    border-radius: 999px;
+    background: rgba(242, 193, 74, 0.14);
+    color: #ffe7a6;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .worker-order svg { width: 16px; height: 16px; }
+  .worker-order[disabled] { opacity: 0.55; cursor: default; }
+  .scaffold-card-meter { margin: 0 0 7px; }
+  #scaffold-card-meter b { background: var(--ok); }
+  #scaffold-card-meter.cracked b { background: #f2c14a; }
+  #scaffold-card-meter.broken b { background: var(--danger); }
+  .scaffold-repair { width: 100%; justify-content: center; }
+  .scaffold-repair[hidden] { display: none; }
   .worker-card-line[hidden] { display: none; }
   .worker-card-pair { display: flex; flex-wrap: wrap; gap: 0 12px; }
   .worker-card-legend { display: flex; flex-wrap: wrap; gap: 2px 9px; margin: 5px 0 0; color: var(--muted); font-size: 11px; }
@@ -1167,7 +1373,7 @@
   .meta-card h3 { margin: 0 0 4px; font-size: 14px; }
   .meta-card p { margin: 0 0 8px; color: var(--muted); font-size: 12px; line-height: 1.4; }
   .meta-card small { display: block; margin-bottom: 8px; color: var(--gold); font-size: 11px; font-weight: 800; }
-  .meta-card button {
+  .meta-card button:not(.buy-btn) {
     width: 100%;
     min-height: 44px;
     margin-top: 2px;
@@ -1181,9 +1387,9 @@
     box-shadow: 0 3px 0 #a46a22;
     cursor: pointer;
   }
-  .meta-card button + button { margin-top: 7px; }
-  .meta-card button:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 #a46a22; }
-  .meta-card button:disabled {
+  .meta-card button:not(.buy-btn) + button { margin-top: 7px; }
+  .meta-card button:not(.buy-btn):active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 #a46a22; }
+  .meta-card button:not(.buy-btn):disabled {
     cursor: default;
     background: rgba(255, 255, 255, 0.08);
     color: var(--muted);
@@ -1211,14 +1417,37 @@
     cursor: pointer;
   }
   .office-tabs button.on { background: linear-gradient(180deg, #ffe09a, #e9a743); color: #3a2410; }
+  /* The office's eight topics: a 4 × 2 grid of chips, a green number — lines to buy now. */
+  .office-tabs.office-topics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; }
+  .office-topics button { position: relative; min-height: 36px; padding: 0 4px; font-size: 11.5px; white-space: nowrap; overflow: visible; }
+  /* the next topic to open: a lock and its story level */
+  .office-topics button.is-locked { display: inline-flex; align-items: center; justify-content: center; gap: 4px; color: rgba(205, 191, 169, 0.55); cursor: default; }
+  .office-topics button.is-locked .ui-icon { width: 12px; height: 12px; }
+  .office-topics button.is-locked small { font-size: 10px; font-weight: 800; }
+  .office-topics .topic-ready { position: absolute; top: -5px; right: -3px; min-width: 16px; height: 16px; padding: 0 4px; border: 2px solid #1b120d; border-radius: 9px; background: #52c46a; color: #10260f; font-size: 10px; font-style: normal; font-weight: 900; line-height: 12px; box-sizing: border-box; }
   .office-upgrade { display: flex; gap: 10px; align-items: flex-start; }
   .office-upgrade .game-icon { width: 46px; height: 46px; flex: 0 0 auto; border-radius: 12px; }
+  /* «Лаборатория материалов»: family tabs with their little cube, the intro card, perk cards */
+  .lab-tabs button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
+  .lab-tab-cube { width: 14px; height: 14px; flex: 0 0 auto; }
+  .lab-intro { display: flex; flex-direction: column; gap: 6px; }
+  .lab-count { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 13px; }
+  .lab-count em { font-style: normal; color: #9be8ad; font-weight: 800; }
+  .lab-intro-cube { width: 26px; height: 26px; flex: 0 0 auto; }
+  .lab-next { margin: 0; font-size: 11.5px; color: var(--muted); }
+  .office-upgrade .game-icon.lab-perk-icon { width: 34px; height: 34px; margin: 6px; border-radius: 0; }
+  .lab-perk-next { color: var(--muted); }
+  .briefing-chip.family { min-height: 26px; padding: 0 10px; gap: 5px; font-size: 12px; }
+  .briefing-chip.family b, .lab-chip b { color: var(--ink); }
+  .briefing-chip.family img, .lab-chip-cube { width: 14px; height: 14px; }
+  .lab-chip { display: inline-flex; align-items: center; gap: 4px; margin: 0 6px 4px 0; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.07); font-size: 12px; font-weight: 700; }
+  .briefing-families { margin-top: 6px; }
   .office-upgrade > div { flex: 1; min-width: 0; }
   .office-upgrade h3 small { margin-left: 6px; color: #e7c15a; font-size: 11px; font-weight: 700; }
   .office-upgrade p { margin: 2px 0 8px; }
   .office-upgrade p b { color: #ffe09a; }
-  .office-upgrade button { padding: 4px 10px; }
-  .office-upgrade button .currency-icon { width: 18px; height: 18px; vertical-align: -4px; }
+  .office-upgrade button:not(.buy-btn) { padding: 4px 10px; }
+  .office-upgrade button:not(.buy-btn) .currency-icon { width: 18px; height: 18px; vertical-align: -4px; }
   .exchange-status { margin: 4px 2px 0; color: var(--muted); font-size: 12px; font-weight: 700; }
   .exchange-order { display: flex; gap: 10px; align-items: center; }
   .exchange-order > div { flex: 1; min-width: 0; }
@@ -1227,6 +1456,11 @@
   .exchange-reward { margin: 6px 0 0; display: flex; align-items: center; gap: 4px; font-weight: 800; color: #ffe09a; }
   .exchange-reward .currency-icon { width: 20px; height: 20px; }
   .exchange-reward .currency-icon + .currency-icon, .exchange-reward img:nth-of-type(2) { margin-left: 8px; }
+  /* «Спецзаказ дня»: the same card as the others, gold-rimmed (game.js → specialOrderHtml) */
+  .exchange-special { border-color: #ffd678; background: linear-gradient(135deg, rgba(255, 214, 120, 0.16), rgba(30, 24, 18, 0.9) 70%); }
+  .exchange-special.done { border-color: rgba(255, 214, 120, 0.4); }
+  .exchange-special.done h3, .exchange-special.done .exchange-reward { opacity: 0.5; }
+  .exchange-special > button[disabled] .ui-icon { width: 14px; height: 14px; margin-right: 4px; vertical-align: -2px; }
   .exchange-heading { margin: 10px 2px 0; font-size: 14px; }
   .office-locked { align-items: center; }
   .tech-done p { margin: 2px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
@@ -1258,7 +1492,7 @@
   .meta-card small.upgrade-price { display: flex; align-items: center; justify-content: center; gap: 3px; margin: 0; color: var(--ink); font-size: 10px; line-height: 1.2; }
   .compact-upgrade .upgrade-price .currency-icon { width: 16px; height: 16px; vertical-align: 0; }
   .compact-upgrade .upgrade-seals .currency-icon { width: 14px; height: 14px; }
-  .meta-card.compact-upgrade button {
+  .meta-card.compact-upgrade button:not(.buy-btn) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1735,7 +1969,7 @@
     .upgrade small { font-size: 12px; }
     .upgrade strong { font-size: 15px; }
     .pill { height: 34px; font-size: 13px; }
-    .pill.coins, .pill.day-clock { height: 48px; }
+    .pill.coins, .pill.day-clock, .pill.tokens-pill { height: 48px; }
     .coins .currency-icon { width: 36px; height: 36px; }
     #coin-value { font-size: 19px; }
   }
@@ -1820,7 +2054,7 @@
   .foreman-upgrade { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; }
   .foreman-copy-count { color: var(--muted); font-size: 11px; white-space: nowrap; }
   .foreman-copy-count.ready { color: #8fe39f; }
-  .meta-card .foreman-upgrade button { flex: 0 0 auto; width: auto; min-height: 36px; margin: 0; padding: 6px 12px; border-radius: 10px; font-size: 12px; }
+  .meta-card .foreman-upgrade .buy-btn { flex: 0 0 auto; width: auto; }
   .foreman-effect { font-size: 14px; line-height: 1.35; }
   .foreman-effect b { color: #ffe09a; }
   .foreman-detail.missing img { filter: grayscale(1) brightness(0.55); }
@@ -2395,8 +2629,125 @@
   .graph-q { display: none; position: absolute; inset: 0; color: rgba(242, 199, 92, 0.75); font: 800 18px/35px Unbounded, Manrope, sans-serif; font-style: normal; text-align: center; }
   .graph-node.is-preview img { display: none; }
   .graph-node.is-preview .graph-q { display: block; }
+  /* gateway nodes: a larger teal hexagon «token» with its cost and the block's name under it —
+     the passes into a themed block of lines */
+  .graph-node.graph-gate { width: 50px; height: 50px; margin: -25px 0 0 -25px; border: 0; border-radius: 0; background: none; }
+  .graph-gate-hex { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .graph-gate-hex polygon { fill: #1f5f5a; stroke: #6fe0cf; stroke-width: 2.5; stroke-linejoin: round; }
+  .graph-gate.is-owned .graph-gate-hex polygon { fill: #2c8a80; stroke: #a8fff0; filter: drop-shadow(0 0 6px rgba(111, 224, 207, 0.55)); }
+  .graph-gate.is-preview .graph-gate-hex polygon { fill: #1a2624; stroke: rgba(111, 224, 207, 0.6); stroke-dasharray: 4 4; }
+  /* the gate's own picture inside the hexagon */
+  .graph-node .graph-gate-icon { position: absolute; left: 7px; top: 6px; width: 36px; height: 38px; border-radius: 0; object-fit: cover;
+    clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+  .graph-gate:not(.is-owned) .graph-gate-icon { filter: saturate(0.7) brightness(0.85); }
+  .graph-gate.is-preview .graph-gate-icon { display: none; }
+  .graph-gate.is-preview .graph-gate-cost { display: none; }
+  .graph-gate .graph-q { color: rgba(111, 224, 207, 0.8); line-height: 46px; }
+  /* token price: a small teal coin in the corner */
+  .graph-gate-cost { position: absolute; right: -4px; bottom: 1px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 8px; background: #1f5f5a;
+    box-shadow: 0 0 0 1.5px #6fe0cf, 0 0 0 3px #2a221b; color: #eafffb; font: 800 10px/16px Unbounded, Manrope, sans-serif; text-align: center; }
+  .graph-gate.is-owned .graph-gate-cost { display: none; }
+  .graph-gate-name { position: absolute; left: 50%; top: 100%; margin-top: 3px; transform: translateX(-50%); white-space: nowrap; color: #9ff0e3; font: 800 10px/1.2 Manrope, sans-serif; font-style: normal; letter-spacing: 0.02em; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); }
+  .graph-gate.is-preview .graph-gate-name { display: none; }
+  /* a pass whose block has nothing researched in the tech center: grey, a lock, no price */
+  .graph-gate.is-office .graph-gate-hex polygon { fill: #2a2520; stroke: rgba(205, 191, 169, 0.45); }
+  .graph-gate.is-office .graph-gate-icon { filter: grayscale(1) brightness(0.6); }
+  .graph-gate.is-office .graph-gate-cost { display: none; }
+  .graph-gate.is-office .graph-gate-name { color: var(--muted); }
+  .graph-gate .graph-lock { top: 2px; left: 0; }
+  /* the tapped pass: a white rim along the hexagon, not the square ring of the line nodes */
+  .graph-node.graph-gate.on { box-shadow: none; }
+  .graph-gate.on .graph-gate-hex polygon { stroke: #fff6e0; stroke-width: 3.5; animation: none; }
   #graph-tip { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 3; margin: 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 16px; background: rgba(16, 12, 9, 0.96); color: var(--ink); font-size: 13px; font-weight: 700; line-height: 1.35; }
   #graph-tip[hidden] { display: none; }
+  /* «Продвинутые улучшения»: the ★ switch in the sheet head, the star graph and the card under it
+     (game.js → paintAdvanced, paintAdvancedTip; the tech center tab draws the same star) */
+  #upgrade-sheet-title { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .advanced-toggle { position: relative; flex: none; white-space: nowrap; margin-left: auto; margin-right: 8px; height: 32px; padding: 0 12px;
+    border: 1px solid rgba(242, 199, 92, 0.6); border-radius: 16px; background: rgba(242, 199, 92, 0.14); color: var(--gold);
+    font: 800 12px/30px Manrope, sans-serif; cursor: pointer; }
+  .advanced-toggle[hidden] { display: none; }
+  .advanced-toggle.has-ready { background: rgba(242, 199, 92, 0.24); border-color: #ffd678; }
+  .advanced-dot { display: none; position: absolute; top: -3px; right: -3px; width: 9px; height: 9px; border-radius: 50%; background: #ff5a4a; box-shadow: 0 0 0 2px #1e1812; }
+  .advanced-toggle.has-ready .advanced-dot, .advanced-dot.on { display: block; }
+  .tech-tabs button { position: relative; }
+  /* «★ Продвинутые» before its story level: a lock and «25 ур.», greyed */
+  .tech-tabs button.is-locked { display: inline-flex; align-items: center; justify-content: center; gap: 5px; color: rgba(205, 191, 169, 0.55); cursor: default; }
+  .tech-tabs button.is-locked .ui-icon { width: 14px; height: 14px; }
+  .tech-tabs button.is-locked small { padding: 1px 6px; border-radius: 8px; background: rgba(255, 255, 255, 0.08); font-size: 10.5px; font-weight: 800; }
+  #advanced-graph { position: relative; display: flex; flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; touch-action: pan-x pan-y; scrollbar-width: none; }
+  #advanced-graph::-webkit-scrollbar { display: none; }
+  #advanced-graph[hidden] { display: none; }
+  .advanced-star .graph-canvas { flex: none; min-width: 0; margin: auto; }
+  #upgrade-sheet.advanced-on .upgrade.pop { display: none; }
+  #advanced-tip { flex: none; margin: 0 10px 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 16px; background: rgba(16, 12, 9, 0.92); color: var(--ink); }
+  #advanced-tip[hidden] { display: none; }
+  #upgrade-sheet.advanced-on { height: min(calc(64 * var(--vh)), 560px); }
+  .adv-card { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; grid-template-areas: 'icon head buy' 'text text text'; column-gap: 10px; align-items: center; }
+  .adv-card-icon { grid-area: icon; width: 42px; height: 42px; border-radius: 11px; box-shadow: 0 0 0 2px rgba(255, 214, 120, 0.75), 0 0 12px rgba(255, 214, 120, 0.25); }
+  .adv-card-head { grid-area: head; min-width: 0; }
+  .adv-card-head b { display: block; font: 800 14px/1.2 Manrope, sans-serif; color: var(--ink); }
+  .adv-card-head small { display: block; margin-top: 2px; color: var(--gold); font-size: 11px; font-weight: 800; line-height: 1.25; }
+  .adv-card-buy { grid-area: buy; }
+  .adv-card-text { grid-area: text; margin: 7px 0 0; color: var(--muted); font-size: 12px; font-weight: 700; line-height: 1.35; }
+  .adv-card.is-locked .adv-card-icon { filter: grayscale(0.8) brightness(0.7); box-shadow: 0 0 0 2px rgba(205, 191, 169, 0.3); }
+  .adv-card.is-locked small { color: var(--muted); }
+  .adv-card.is-owned small { color: var(--ok); }
+  .adv-card-buy .buy-btn { min-width: 76px; }
+  .graph-gate-cost:empty { display: none; }
+  /* a key node: a gold frame; owned glows with a check, can be opened with the tokens at hand — pulses
+     with a red dot, not researched — grey with a lock, before the centre is open — dimmed */
+  .graph-node.is-ultimate { width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 11px; border-color: rgba(255, 214, 120, 0.85); }
+  .graph-node.is-ultimate img { border-radius: 8px; }
+  #advanced-graph .graph-node.is-ultimate.is-owned { border-color: #ffd678; box-shadow: 0 0 12px rgba(255, 214, 120, 0.65); }
+  #advanced-graph .graph-node.is-owned .graph-check { display: block; }
+  .graph-node.is-sealed { border-color: rgba(255, 214, 120, 0.35); }
+  .graph-node.is-sealed img { filter: grayscale(0.5) brightness(0.6); }
+  /* the star's centre: bigger, its name is the sheet's / tab's title */
+  .advanced-star .graph-gate-name { display: none; }
+  .advanced-star .graph-node.graph-gate { width: 58px; height: 58px; margin: -29px 0 0 -29px; }
+  .advanced-star .graph-node .graph-gate-icon { left: 8px; top: 7px; width: 42px; height: 44px; }
+  /* the tech center tab: the star at its own size, the card right under it */
+  .tech-graph.advanced-star { display: flex; height: auto; min-height: 0; padding: 4px 0; overflow: hidden; }
+  /* a researched node's check (tech center only) */
+  .graph-check { display: none; position: absolute; right: -5px; bottom: -5px; width: 16px; height: 16px; border-radius: 50%; background: var(--ok); color: #0f2e19; box-shadow: 0 0 0 2px #2a221b; font-style: normal; }
+  .graph-check .ui-icon { display: block; width: 10px; height: 10px; margin: 3px; stroke-width: 3.2; }
+
+  /* ---------- tech center: the same graph (upgrade-graph.js), a technology per node ---------- */
+  .tech-legend { margin: 0 2px; color: var(--muted); font-size: 11px; font-weight: 700; line-height: 1.35; }
+  .tech-graph {
+    position: relative;
+    height: min(calc(52 * var(--vh)), 440px);
+    min-height: 260px;
+    overflow: auto;
+    overscroll-behavior: contain;
+    touch-action: pan-x pan-y;
+    scrollbar-width: none;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: rgba(16, 12, 9, 0.55);
+  }
+  .tech-graph::-webkit-scrollbar { display: none; }
+  /* researched: dim, grey frame, a green check; researchable now: bright, a gold frame */
+  .tech-graph .graph-node.is-owned { border-color: rgba(205, 191, 169, 0.35); cursor: default; }
+  .tech-graph .graph-node.is-owned img { opacity: 0.45; filter: grayscale(0.7); }
+  .tech-graph .graph-node.is-owned .graph-check { display: block; }
+  .tech-graph .graph-node.is-open { border-color: var(--gold); }
+  /* passes: opened on the site, not here — half size, black and white with a lock, no taps (the
+     advanced star's centre keeps its own look) */
+  .tech-graph:not(.advanced-star) .graph-node.graph-gate { width: 25px; height: 25px; margin: -12.5px 0 0 -12.5px; pointer-events: none; cursor: default; }
+  .tech-graph:not(.advanced-star) .graph-gate .graph-gate-hex polygon { fill: #2a2520; stroke: rgba(205, 191, 169, 0.5); stroke-width: 3; stroke-dasharray: none; filter: none; animation: none; }
+  .tech-graph:not(.advanced-star) .graph-node .graph-gate-icon { display: block; left: 3.5px; top: 3px; width: 18px; height: 19px; filter: grayscale(1) brightness(0.7); }
+  .tech-graph:not(.advanced-star) .graph-gate .graph-gate-cost, .tech-graph:not(.advanced-star) .graph-gate .graph-gate-name, .tech-graph:not(.advanced-star) .graph-gate .graph-q { display: none; }
+  .tech-graph:not(.advanced-star) .graph-gate .graph-lock { display: block; top: -5px; left: -6px; width: 12px; height: 12px; }
+  .tech-graph:not(.advanced-star) .graph-gate .graph-lock .ui-icon { width: 8px; height: 8px; margin: 2px; }
+  /* the tapped node keeps its white ring (the ready pulse would paint over it) */
+  .tech-graph .graph-node.on { animation: none; }
+  .tech-pick .tech-hint { margin: 0 2px; color: var(--muted); font-size: 12px; font-weight: 700; line-height: 1.35; }
+  .tech-pick .tech-tip h3 { margin-bottom: 3px; }
+  .tech-pick .tech-tip p { margin: 0; }
+  .tech-pick .tech-opens { margin-bottom: 3px; color: var(--ink); }
+  .tech-pick .tech-opens b { color: var(--gold); }
   /* the old tabbed dock lives on inside the sheet only as the source of the cards: the tapped
      node's card pops up over the bottom of the graph */
   #upgrade-sheet .dock-head { display: none; }
@@ -2482,7 +2833,7 @@
   .school-trial > div { flex: 1; min-width: 0; }
   .school-trial h3 { margin: 0 0 3px; line-height: 1.25; }
   .school-trial small { margin: 0; color: var(--muted); font-size: 12px; }
-  .school-trial > button { flex: 0 0 auto; width: auto; min-width: 104px; margin: 0; }
+  .meta-card.school-trial > button { flex: 0 0 auto; width: auto; min-width: 104px; margin: 0; }
   .school-trial .school-icon { width: 56px; height: 56px; flex: 0 0 auto; border-radius: 13px; }
   .school-trial.locked .school-icon { filter: grayscale(1) brightness(0.55); }
   .school-trial.locked h3 { color: var(--muted); }
@@ -2509,3 +2860,172 @@
   .school-focus select { display: block; width: 100%; max-width: 100%; min-height: 44px; padding: 0 12px; background: rgba(0, 0, 0, 0.3); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; font-size: 13px; font-weight: 700; }
   .school-lock, .school-upgrade .upgrade-prerequisite { display: block; color: #ee9387; font-size: 11px; }
   .mentor-label { position: absolute; top: 0; line-height: 1.4; left: 0; right: 0; background: #b28b48; color: #201b15; font-size: 9px; border-radius: 4px; z-index: 2; }
+
+  /* ---------- menu: fast-forward to a level ---------- */
+  #settings-menu .menu-jump { display: flex; flex-direction: column; gap: 5px; padding: 6px 4px 2px; border-top: 1px solid rgba(242, 199, 92, 0.16); }
+  #settings-menu .menu-jump label { color: var(--ink); font-size: 12px; font-weight: 800; }
+  #settings-menu .menu-jump p { margin: 0; color: var(--muted); font-size: 11px; font-weight: 700; line-height: 1.3; }
+  .menu-jump-row { display: flex; gap: 6px; }
+  .menu-jump-row input { width: 64px; min-height: 44px; padding: 0 8px; border: 1px solid var(--line); border-radius: 12px; background: rgba(0, 0, 0, 0.3); color: var(--ink); font: 800 14px Manrope, sans-serif; }
+  .menu-jump-row button { flex: 1; }
+
+  /* ---------- site camp: the canteen sign, sheet and the cookbook ---------- */
+  #site-signs { position: fixed; inset: 0; z-index: var(--z-scene-ui); overflow: hidden; pointer-events: none; }
+  #site-signs[hidden], body.interface-hidden #site-signs, body.away #site-signs { display: none; }
+  .canteen-sign .city-sign-line b { color: var(--ink); }
+  .canteen-sign.is-building { border-color: rgba(242, 199, 92, 0.9); }
+  .canteen-sign.is-live { border-color: rgba(143, 227, 159, 0.75); }
+  .canteen-sign.is-idle { border-color: #6fb2ff; animation: city-sign-pulse 1.6s ease-in-out infinite; }
+  .canteen-lead { margin: 0 0 10px; color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1.4; }
+  .canteen-progress { display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px; font-size: 13px; font-weight: 800; color: var(--ink); }
+  .canteen-progress i { display: block; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.12); overflow: hidden; }
+  .canteen-progress i b { display: block; height: 100%; background: var(--gold); transition: width 0.25s; }
+  .canteen-crew { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255, 255, 255, 0.04); }
+  .canteen-crew-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; color: var(--ink); font-size: 14px; font-weight: 800; }
+  .canteen-crew-head b { color: var(--gold); font-size: 20px; }
+  .canteen-crew input[type="range"] { width: 100%; height: 32px; accent-color: #e9a743; }
+  .canteen-note { margin: 0; color: var(--muted); font-size: 12px; font-weight: 700; line-height: 1.35; }
+  .canteen-dishes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .canteen-dish { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; height: 100%; min-height: 52px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255, 255, 255, 0.05); color: var(--ink); text-align: left; font: inherit; }
+  button.canteen-dish { cursor: pointer; }
+  /* the canteen menu's rows (game.js → canteenMenuHtml): a small heading, the row's hint or where it opens */
+  .canteen-row { margin: 10px 2px 6px; color: var(--gold); font: 800 13px/1.2 Manrope, sans-serif; }
+  .canteen-row small { margin-left: 4px; color: var(--muted); font-size: 11px; font-weight: 700; }
+  .canteen-row.locked { color: var(--muted); }
+  .canteen-dish.locked { opacity: 0.5; }
+  button.canteen-dish[disabled] { cursor: default; }
+  /* the kitchen block (game.js → kitchenHtml): its picture, level and chef, the button that gives workers */
+  .kitchen-box { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255, 255, 255, 0.05); }
+  .kitchen-box > img, .kitchen-line > img { width: 42px; height: 42px; border-radius: 10px; }
+  .kitchen-box b { display: block; font: 800 13px/1.25 Manrope, sans-serif; }
+  .kitchen-box small { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; font-weight: 700; line-height: 1.3; }
+  .kitchen-buy { padding: 6px 12px; border: 0; border-radius: 12px; background: var(--ok); color: #0f2e19; font: 800 13px/1.1 Manrope, sans-serif; cursor: pointer; }
+  .kitchen-buy small { display: block; color: #0f2e19; font-size: 10px; opacity: 0.8; }
+  .kitchen-buy.short { background: rgba(255, 255, 255, 0.12); color: var(--muted); }
+  .kitchen-buy.short small { color: var(--muted); }
+  .kitchen-line { display: flex; gap: 8px; align-items: center; margin-top: 6px; color: var(--ink); font-size: 12px; font-weight: 700; line-height: 1.3; }
+  .kitchen-line > img { width: 28px; height: 28px; border-radius: 8px; }
+  .canteen-dish b { font-size: 13px; font-weight: 800; line-height: 1.2; }
+  .canteen-dish span { color: var(--muted); font-size: 11px; font-weight: 700; line-height: 1.25; }
+  .canteen-dish small { margin-top: auto; padding-top: 2px; color: var(--muted); font-size: 11px; font-weight: 800; }
+  .canteen-dish.on { border-color: var(--gold); background: rgba(242, 199, 92, 0.14); box-shadow: 0 0 0 2px rgba(242, 199, 92, 0.25); }
+  .canteen-dish.on small { color: var(--gold); }
+  .canteen-dish.locked { opacity: 0.55; }
+  .canteen-dish.owned small { color: var(--ok); }
+  .canteen-dish .buy-btn { align-self: stretch; margin-top: auto; }
+  .canteen-wallet { margin: 0 0 10px; color: var(--ink); font-size: 13px; font-weight: 800; }
+
+  /* building sheets (canteen, cookbook): about half the screen, the site stays visible above */
+  .canteen-sheet .overlay-card { max-height: 50%; }
+  .canteen-sheet .overlay-head { padding-top: 8px; padding-bottom: 2px; }
+  .canteen-sheet .overlay-head h2 { font-size: 18px; }
+  .canteen-sheet .overlay-head .info-btn { align-self: center; }
+  .canteen-sheet .overlay-body { padding-bottom: 12px; }
+  #overlay-root:has(.canteen-sheet.is-top) .overlay-backdrop { background: rgba(14, 10, 6, 0.12); }
+  .sheet-info-btn.on { background: var(--gold); color: #3a2410; }
+  .sheet-info { margin: 0 0 10px; padding: 8px 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); }
+  .sheet-info[hidden] { display: none; }
+  .overlay-body .sheet-info p { margin: 0 0 6px; color: var(--muted); font-size: 12px; font-weight: 700; line-height: 1.4; }
+  .overlay-body .sheet-info p:last-child { margin-bottom: 0; }
+  .canteen-sheet .canteen-progress { margin-bottom: 10px; }
+  .canteen-sheet .canteen-crew { gap: 4px; padding: 10px 12px; }
+  .canteen-sheet .canteen-wallet { margin-bottom: 8px; }
+  .overlay-body .canteen-section { margin: 12px 0 6px; color: var(--gold); font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+  .camp-sign .camp-sign-coin { width: 16px; height: 16px; border-radius: 50%; }
+  /* over a quarry: just a plate (no taps), a little cube of the material, the price in gold */
+  .mine-sign { pointer-events: none; cursor: default; min-height: 0; padding: 4px 9px 5px; gap: 2px; border-width: 1.5px; }
+  .mine-sign::before { display: none; }
+  .mine-sign .mine-sign-cube { width: 16px; height: 16px; }
+  .mine-sign .camp-sign-coin { width: 13px; height: 13px; border-radius: 50%; }
+  .mine-sign .city-sign-line b { color: var(--gold); }
+  .mine-sign .mine-sign-family { color: #d8ccb8; font-weight: 800; }
+  /* «Городок»: the camp buildings of the site, a row each; a row flies to its building */
+  .camp-list { display: grid; gap: 8px; }
+  .camp-row { display: grid; grid-template-columns: 44px 1fr 18px; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 1.5px solid rgba(255, 255, 255, 0.08); border-radius: 14px; background: rgba(255, 255, 255, 0.05); color: inherit; font: inherit; text-align: left; cursor: pointer; }
+  .camp-row:active { transform: translateY(1px); }
+  .camp-row-icon { width: 44px; height: 44px; border-radius: 10px; }
+  .camp-row-text { display: grid; gap: 2px; min-width: 0; }
+  .camp-row-text b { font-size: 14px; font-weight: 800; }
+  .camp-row-text small { color: var(--muted); font-size: 12px; font-weight: 700; }
+  .camp-row-text small b { color: inherit; font-size: inherit; }
+  .camp-row .ui-icon { width: 18px; height: 18px; opacity: 0.6; transform: rotate(-90deg); }
+  .camp-row.is-locked .ui-icon { transform: none; }
+  .camp-row-token { width: 15px; height: 15px; margin: 0 2px; border-radius: 4px; vertical-align: -3px; }
+  .camp-row.is-start { border-color: rgba(111, 224, 207, 0.7); background: rgba(111, 224, 207, 0.1); }
+  .camp-row.is-start small { color: #bff5ec; }
+  .camp-row.is-live small { color: #9fe3b0; }
+  .camp-row.is-locked { opacity: 0.5; cursor: default; }
+
+/* Needs and weather: the situation at a glance; mechanics use the shared «i» disclosure. */
+.day-clock-text { display: grid; justify-items: start; gap: 1px; }
+.day-pop-head { display: flex; align-items: center; gap: 12px; padding-right: 4px; }
+.day-pop-head > p { flex: 1; }
+.day-pop-head .info-btn { margin: 3px 0; }
+.info-btn.on { background: var(--gold); color: #3a2410; }
+#day-pop-info { margin: 4px 0 0; }
+#day-pop-info p { font-size: 12px; font-weight: 600; }
+.worker-needs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 6px 0 3px; }
+.worker-need { position: relative; display: flex; align-items: center; gap: 4px; min-width: 0; padding: 5px 4px 9px; border-radius: 7px; background: rgba(255, 255, 255, 0.06); color: var(--ink); font-size: 11px; font-variant-numeric: tabular-nums; line-height: 1.25; }
+.worker-need > .ui-icon { flex: 0 0 auto; width: 15px; height: 15px; color: var(--muted); }
+.worker-need > span { display: flex; flex-wrap: wrap; gap: 0 3px; min-width: 0; }
+.worker-need > i { position: absolute; bottom: 3px; left: 5px; right: 5px; height: 3px; overflow: hidden; border-radius: 2px; background: rgba(255, 255, 255, 0.12); }
+.worker-need > i > b { display: block; height: 100%; background: var(--gold); }
+/* where the work penalty begins */
+.worker-need > i > em { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: rgba(255, 255, 255, 0.55); }
+.worker-need.warn > span > b { color: #ff9b7e; }
+.worker-need.warn > i > b { background: #ff9b7e; }
+/* «Очень голоден», «очень устал»: he goes himself at the next desk visit. */
+.worker-need.bad > span { color: #ff8a73; font-weight: 800; }
+.worker-need.bad > i > b { background: var(--danger); }
+/* Health: a fourth chip, only once he is hurt (falls through worn scaffolds) or in the hospital. */
+.worker-needs:has(.worker-health) { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.worker-info { margin: 7px 0 4px; font-size: 11px; line-height: 1.45; }
+#worker-info-toggle { margin: 0 5px; }
+
+/* Scrollbars: thin and in the panel gold — the system grey bar is out of style. Strips that hide
+   their bar (tabs, the dock, the graph) keep scrollbar-width: none, which wins over this. */
+* { scrollbar-width: thin; scrollbar-color: rgba(242, 199, 92, 0.32) transparent; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb { border-radius: 3px; background: rgba(242, 199, 92, 0.32); }
+
+/* Centre of personnel: the office tabs plus the «i» of the tab. */
+.personnel-tabs { align-items: center; }
+.office-tabs .personnel-info-btn { flex: 0 0 auto; min-height: 0; width: 26px; height: 26px; margin: 0 6px 0 4px; padding: 0; border: 1px solid rgba(242, 199, 92, 0.55); border-radius: 50%; background: rgba(242, 199, 92, 0.16); color: var(--gold); font: italic 700 15px Georgia, "Times New Roman", serif; }
+.office-tabs .personnel-info-btn.on { background: var(--gold); color: #3a2410; }
+.personnel-info p { margin: 0 0 6px; color: var(--muted); font-size: 12px; font-weight: 700; line-height: 1.4; }
+.personnel-info p:last-child { margin-bottom: 0; }
+
+/* Camp building sheets: the state as stat chips, coin prices on the buy buttons. */
+.camp-stats { display: flex; gap: 6px; margin: 0 0 10px; }
+.camp-stat { display: flex; flex: 1 1 0; min-width: 0; flex-direction: column; gap: 1px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255, 255, 255, 0.05); }
+.camp-stat small { color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+.camp-stat b { display: flex; align-items: center; gap: 3px; color: var(--ink); font-size: 14px; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.camp-stat b i { color: var(--gold); font-size: 11px; font-style: normal; }
+.camp-stat .currency-icon { width: 15px; height: 15px; }
+.canteen-dish b em { margin-left: 4px; color: #e7c15a; font-size: 10px; font-style: normal; font-weight: 700; }
+.camp-more { margin-top: 8px; text-align: center; }
+.canteen-crew + .camp-stats { margin-top: 10px; }
+/* The colour legend of the worker card is reference: it shows with the card's «i». */
+#worker-card-info[hidden] + .worker-card-legend { display: none; }
+/* A dish tile of the site canteen carries the dish's picture in its corner. */
+.canteen-dish.has-icon { position: relative; padding-right: 46px; }
+.canteen-dish .dish-icon { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; border-radius: 8px; }
+
+/* ---------- camp building window: the foundation's start and the building's upgrades ---------- */
+.camp-foundation-lead { margin: 0 0 8px; font-weight: 700; }
+.camp-start { margin: 10px 0 4px; }
+.camp-start .camp-token { border-radius: 6px; }
+.camp-upgrades { margin-top: 12px; }
+.camp-upgrades-head { margin: 0 0 6px; font-size: 13px; letter-spacing: 0.02em; color: var(--muted, #b9ad98); }
+.camp-up { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.camp-up > img { flex: 0 0 auto; width: 36px; height: 36px; border-radius: 10px; }
+.camp-up > span { display: grid; flex: 1 1 auto; min-width: 0; gap: 1px; }
+.camp-up > span b { font-size: 13px; }
+.camp-up > span small { color: var(--muted, #b9ad98); font-size: 11px; }
+.camp-up .buy-btn { flex: 0 0 auto; }
+.camp-up.locked > img { filter: grayscale(0.7) brightness(0.8); }
+.camp-up-state { flex: 0 0 auto; color: var(--muted, #b9ad98); font-weight: 800; }
+.personnel-building { margin: 10px 0 2px; font-size: 14px; }
+.personnel-building small { margin-left: 6px; color: var(--muted, #b9ad98); font-size: 11px; font-weight: 700; }
+

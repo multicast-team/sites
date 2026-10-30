@@ -14,63 +14,34 @@
     if (locked !== undefined) return locked;
     return evalFormula(spec.formula, level);
   }
+
+  // A camp property line of the site graph at its level bought («Типовые проекты», «Скамейки», …).
+  function campBoost(campaign, kind) {
+    return sessionValue(kind, campaign.purchases[kind] || 0);
+  }
+
+  // Any site line's value at the level bought (0 levels — its formula at 0).
+  function lineValue(campaign, kind) {
+    return sessionValue(kind, (campaign && campaign.purchases[kind]) || 0);
+  }
   const MATERIALS = [];
 
   // cell = mass of one mini-cube, grid = mini-cubes per edge (a cube is grid³ mini-cubes).
   // Mini-cube mass per grid: 1 → 2–100, 2 → 5–70, 3 → 10–120, 4 → 15–250, 5 → 25–800 kg.
-  const MATERIAL_LADDER = [
-    { id: 'ladder-stone', name: 'Камень', cell: 2, grid: 1, color: 0x9a947f, look: 'stone' },
-    { id: 'ladder-sandstone', name: 'Песчаник', cell: 3, grid: 1, color: 0xd2b48a, look: 'sand' },
-    { id: 'ladder-concrete', name: 'Бетон', cell: 4, grid: 1, color: 0xb7b7b2, look: 'concrete' },
-    { id: 'ladder-pine', name: 'Сосна', cell: 5, grid: 1, color: 0xc4894a, look: 'wood' },
-    { id: 'ladder-oak', name: 'Дуб', cell: 7, grid: 1, color: 0x8a5a32, look: 'wood' },
-    { id: 'ladder-brick-yellow', name: 'Жёлтый кирпич', cell: 9, grid: 1, color: 0xd7a15a, look: 'brick' },
-    { id: 'ladder-brick-red', name: 'Красный кирпич', cell: 12, grid: 1, color: 0xb64b3a, look: 'brick' },
-    { id: 'ladder-brick-white', name: 'Белый кирпич', cell: 16, grid: 1, color: 0xe7e1d6, look: 'brick' },
-    { id: 'ladder-bronze', name: 'Бронза', cell: 20, grid: 1, color: 0xb87333, look: 'metal' },
-    { id: 'ladder-iron', name: 'Железо', cell: 26, grid: 1, color: 0x8d939b, look: 'metal' },
-    { id: 'ladder-granite', name: 'Гранит', cell: 34, grid: 1, color: 0x6e655f, look: 'stone' },
-    { id: 'ladder-steel', name: 'Сталь', cell: 44, grid: 1, color: 0xb9c0c7, look: 'metal' },
-    { id: 'ladder-marble', name: 'Мрамор', cell: 58, grid: 1, color: 0xe6e1dc, look: 'marble' },
-    { id: 'ladder-marble-white', name: 'Белый мрамор', cell: 75, grid: 1, color: 0xf4f1ec, look: 'marble' },
-    { id: 'ladder-marble-black', name: 'Чёрный мрамор', cell: 100, grid: 1, color: 0x2c2a2e, look: 'marble' },
-    { id: 'ladder-steel-stainless', name: 'Нержавеющая сталь', cell: 5, grid: 2, color: 0xd5dbe2, look: 'metal' },
-    { id: 'ladder-steel-hard', name: 'Калёная сталь', cell: 7, grid: 2, color: 0x5e666e, look: 'metal' },
-    { id: 'ladder-steel-mirror', name: 'Зеркальная сталь', cell: 11, grid: 2, color: 0xe8eef3, look: 'metal' },
-    { id: 'ladder-marble-polished', name: 'Полированный мрамор', cell: 15, grid: 2, color: 0xf7f4ef, look: 'marble' },
-    { id: 'ladder-marble-rose', name: 'Розовый мрамор', cell: 23, grid: 2, color: 0xe7c2c0, look: 'marble' },
-    { id: 'ladder-silver', name: 'Серебро', cell: 33, grid: 2, color: 0xf2f4f7, look: 'metal' },
-    { id: 'ladder-silver-pure', name: 'Чистое серебро', cell: 48, grid: 2, color: 0xffffff, look: 'metal' },
-    { id: 'ladder-gold', name: 'Золото', cell: 70, grid: 2, color: 0xf0c14a, look: 'metal' },
-    { id: 'ladder-malachite', name: 'Малахит', cell: 10, grid: 3, color: 0x1f8a4c, look: 'gem' },
-    { id: 'ladder-jade', name: 'Нефрит', cell: 14, grid: 3, color: 0x6fbf8a, look: 'gem' },
-    { id: 'ladder-onyx', name: 'Оникс', cell: 20, grid: 3, color: 0x1a1a1c, look: 'obsidian' },
-    { id: 'ladder-obsidian', name: 'Обсидиан', cell: 29, grid: 3, color: 0x141018, look: 'obsidian' },
-    { id: 'ladder-obsidian-black', name: 'Чёрный обсидиан', cell: 41, grid: 3, color: 0x07060a, look: 'obsidian' },
-    { id: 'ladder-diamond', name: 'Алмаз', cell: 59, grid: 3, color: 0xd7f6ff, look: 'diamond', glow: 0x9adfff, glowStrength: 0.35 },
-    { id: 'ladder-diamond-pure', name: 'Чистый алмаз', cell: 84, grid: 3, color: 0xffffff, look: 'diamond', glow: 0xffffff, glowStrength: 0.7 },
-    { id: 'ladder-diamond-black', name: 'Чёрный алмаз', cell: 120, grid: 3, color: 0x1c2128, look: 'diamond', glow: 0xc5d4e8, glowStrength: 0.2 },
-    { id: 'ladder-platinum', name: 'Платина', cell: 15, grid: 4, color: 0xe6e8ea, look: 'platinum' },
-    { id: 'ladder-platinum-pure', name: 'Чистая платина', cell: 30, grid: 4, color: 0xf4f6f8, look: 'platinum' },
-    { id: 'ladder-platinum-white', name: 'Белая платина', cell: 60, grid: 4, color: 0xffffff, look: 'platinum' },
-    { id: 'ladder-platinum-mirror', name: 'Зеркальная платина', cell: 125, grid: 4, color: 0xf8fbff, look: 'platinum' },
-    { id: 'ladder-platinum-black', name: 'Чёрная платина', cell: 250, grid: 4, color: 0x3a4048, look: 'platinum' },
-    { id: 'ladder-platinum-royal', name: 'Королевская платина', cell: 25, grid: 5, color: 0xfff6df, look: 'platinum' },
-    { id: 'ladder-platinum-imperial', name: 'Имперская платина', cell: 60, grid: 5, color: 0xf3e2a8, look: 'platinum' },
-    { id: 'ladder-diamond-royal', name: 'Королевский алмаз', cell: 140, grid: 5, color: 0xffe7a8, look: 'diamond', glow: 0xffc14a, glowStrength: 0.4 },
-    { id: 'ladder-diamond-imperial', name: 'Имперский алмаз', cell: 340, grid: 5, color: 0xf0b429, look: 'diamond', glow: 0xff9a1f, glowStrength: 0.55 },
-    { id: 'ladder-diamond-final', name: 'Предельный алмаз', cell: 800, grid: 5, color: 0xfffaf2, look: 'diamond', glow: 0xfff1c4, glowStrength: 0.9 },
-  ];
+  // The material ladder lives in balance.json → materials.ladder («Настройки» of the balance tool):
+  // id, name, cell (mini-cube kg), grid, color, look, glow / glowStrength for diamonds.
+  const MATERIAL_LADDER = window.MicroBuildersBalance.materials.ladder.map(function (item) { return Object.assign({}, item); });
+
 
   // Glass of windows: its own pile on every site with windows; not on the ladder (levels never
   // shift it).
-  const GLASS = { id: 'glass', name: 'Стекло', cell: 3, grid: 1, color: 0x8fd8ee, look: 'glass' };
+  const GLASS = Object.assign({}, window.MicroBuildersBalance.materials.glass);
   for (let i = 0; i < MATERIAL_LADDER.length; i++) {
     const item = MATERIAL_LADDER[i];
     item.weight = item.cell * item.grid * item.grid * item.grid;
     MATERIALS.push(item);
   }
-  GLASS.weight = GLASS.cell;
+  GLASS.weight = GLASS.cell * GLASS.grid * GLASS.grid * GLASS.grid;
   MATERIALS.push(GLASS);
 
   const MATERIAL = {};
@@ -79,6 +50,12 @@
   const SHIRTS = [0x2f6fed, 0xd4543c, 0x2f9d6c, 0xef8a2a, 0x7a5af5, 0xdb4f8a, 0x1f8a8a, 0xc6a15b];
 
   const BALANCE = TUNING.builders;
+
+  // Effort of the workers' actions (balance.json → tuning.effort, docs/gdd/02-construction-session.md →
+  // «Трудоёмкость и темп»): what a step, a climb, a mini-cube to set or to pick and a scaffold piece
+  // take by the world's rules; `tempo` — the effort a worker gets through a second at 100 of his
+  // characteristic and the crew's factors ×1.
+  const EFFORT = TUNING.effort || { tempo: 400, ground: 100, deck: 170, deckPerFloor: 10, climb: 450, jump: 0.5, place: 200, pick: 70, scaffold: 450, statMin: 10 };
 
   const VEHICLE = {
     basePlan: TUNING.machines.planBase,
@@ -112,13 +89,10 @@
     lightCarry: { base: 80, growth: 1.66 },
     cubePay: { base: 120, growth: 1.74 },
     cubeCapital: { base: 160, growth: 1.8 },
-    payMultiplier: { base: 180, growth: 1.82 },
     floorPay: { base: 200, growth: 1.84 },
     freeBuy: { base: 220, growth: 1.9 },
-    capitalChance: { base: 160, growth: 1.8 },
     triplePay: { base: 240, growth: 1.88 },
     triplePower: { base: 260, growth: 1.9 },
-    budgetCapital: { base: 200, growth: 1.86 },
     engineers: { base: 280, growth: 1.92 },
     loaderSpeed: { base: 140, growth: 1.7 },
     boomSpeed: { base: 160, growth: 1.72 },
@@ -155,7 +129,6 @@
   const SCAFFOLD = {
     enabled: true,
     step: 1,
-    erectSeconds: TUNING.scaffold.erectSeconds,
     horizontalPrice: TUNING.scaffold.horizontalPrice,
     verticalPrice: TUNING.scaffold.verticalPrice,
     shortcutRoutes: true,
@@ -163,8 +136,50 @@
     ladderPrice: TUNING.scaffold.ladderPrice,
     deckPrice: TUNING.scaffold.deckPrice,
     passagePrice: TUNING.scaffold.passagePrice,
-    elevatorFloorPrice: 0.35,
   };
+  // Air taxis (docs/gdd/02-construction-session.md → «Аэротакси»): flight speeds as multiples of the
+  // worker's ground walk, the climb above the highest built cube, boarding and getting off (seconds);
+  // prefer — he takes the taxi while it is no slower than walking × prefer; minFloors — the line
+  // opens once the building stands that many floors high.
+  const TAXI = { fly: 2.5, rise: 1.5, clearance: 3, board: 1, prefer: 1.2, minFloors: 5 };
+
+  // Scaffold types and wear (tuning.scaffold, docs/gdd/02-construction-session.md → «Леса»). Every
+  // tierFloors floors the scaffolds change type (`tiers` types, the last one goes on up): each type
+  // takes tierTime times longer to set and to repair than the one below. A piece has durability
+  // (tierDurability times more a type); every pass of a worker over it takes workerWeight plus his
+  // load; each piece rolls its own share of it when put up (rollDurability). At crackShare it cracks;
+  // worn to zero it still stands, a step on it takes wornEffort times the effort (stepTimes), and
+  // a worker stepping onto it may fall through (scaffoldGivesWay, injury fallChance — a fall, an
+  // injury): it breaks, the way through it is gone until a worker repairs it in repairShare of its
+  // set time. The player mends a cracked, worn or broken piece himself in seconds (repairScaffold).
+  const WEAR = TUNING.scaffold;
+  const BROKEN_MAST = 1;
+  const BROKEN_DECK = 2;
+  const tierFactors = [];
+
+  // Type of a piece on level y (a ladder spans y…y + 1): 1 on floors 1–5, 2 on 6–10, …
+  function scaffoldTier(y) {
+    return Math.min(WEAR.tiers || 1, Math.floor(Math.max(0, y) / (WEAR.tierFloors || Infinity)) + 1);
+  }
+
+  // How many times longer a piece on level y takes to set than one of the first type.
+  function tierTimeFactor(y) {
+    return tierFactors[y] || (tierFactors[y] = Math.pow(WEAR.tierTime || 1, scaffoldTier(y) - 1));
+  }
+
+  // A piece's full durability: its type's, times its own roll (rollDurability).
+  function pieceDurability(piece) {
+    return (WEAR.durability > 0 ? WEAR.durability : Infinity) * Math.pow(WEAR.tierDurability || 1, scaffoldTier(piece.y) - 1) *
+      (piece.durabilityRoll || 1);
+  }
+
+  // Each time a piece is put up (finishErect) its durability is rolled anew: a deck
+  // deckDurabilityMin…Max of its type's, a ladder ladderDurabilityMin…Max (ladders are sturdier).
+  function rollDurability(piece) {
+    const min = (piece.deck ? WEAR.deckDurabilityMin : WEAR.ladderDurabilityMin) || 1;
+    const max = (piece.deck ? WEAR.deckDurabilityMax : WEAR.ladderDurabilityMax) || min;
+    piece.durabilityRoll = min + Math.random() * Math.max(0, max - min);
+  }
 
 
   function cellKey(x, y, z) {
@@ -546,7 +561,8 @@
         rocks: mineRocks,
       });
     }
-    const elevators = elevatorPads(minX, maxX, minZ, maxZ, occupied);
+    const helipad = taxiHelipad(blocks, minX, maxX, minZ, maxZ, occupied, mines);
+    const elevators = helipad ? [helipad] : [];
     const spawnPoints = [];
     const spawnCenterX = Math.round(cx);
     let spawnZ = maxZ + 5;
@@ -599,52 +615,305 @@
     };
   }
 
-  function padClear(x, z, occupied) {
+  // The air taxis' helipad (3×3) right by the quarries: the free spot with the shortest walk from the
+  // mines' stands, each weighted by its cubes (the busiest quarries pull it closest). Not on the
+  // building and the ring round it (2 cells for scaffolds), off the piles (3 cells from a mine's
+  // centre) and their stands, clear of the drones' pad and the loaders' yard by the first mine.
+  function taxiHelipad(blocks, minX, maxX, minZ, maxZ, occupied, mines) {
+    const cubes = {};
+    for (let i = 0; i < blocks.length; i++) cubes[blocks[i].materialId] = (cubes[blocks[i].materialId] || 0) + 1;
+    const first = mines[0];
+    const cx = (minX + maxX) / 2;
+    const cz = (minZ + maxZ) / 2;
+    const free = function (x, z) {
+      if (occupied.has(cellKey(x, 0, z))) return false;
+      if (x >= minX - 2 && x <= maxX + 2 && z >= minZ - 2 && z <= maxZ + 2) return false;
+      for (let i = 0; i < mines.length; i++) {
+        const m = mines[i];
+        if (Math.max(Math.abs(m.x - x), Math.abs(m.z - z)) < 3) return false;
+        if (Math.max(Math.abs(m.standX - x), Math.abs(m.standZ - z)) < 2) return false;
+      }
+      if (x >= first.x + 1 && x <= first.x + 8 && z >= first.z - 6 && z <= first.z + 1) return false;
+      if (x >= first.x + 6 && z >= first.z + 4 && z <= first.z + 16) return false;
+      return true;
+    };
+    let lowX = minX;
+    let highX = maxX;
+    let lowZ = minZ;
+    let highZ = maxZ;
+    for (let i = 0; i < mines.length; i++) {
+      lowX = Math.min(lowX, mines[i].x);
+      highX = Math.max(highX, mines[i].x);
+      lowZ = Math.min(lowZ, mines[i].z);
+      highZ = Math.max(highZ, mines[i].z);
+    }
+    let best = null;
+    for (let z = lowZ - 10; z <= highZ + 10; z++) {
+      for (let x = lowX - 10; x <= highX + 10; x++) {
+        let clear = true;
+        for (let dz = 0; dz < 3 && clear; dz++) {
+          for (let dx = 0; dx < 3 && clear; dx++) clear = free(x + dx, z + dz);
+        }
+        if (!clear) continue;
+        let walk = 0;
+        for (let i = 0; i < mines.length; i++) {
+          const m = mines[i];
+          walk += (cubes[m.materialId] || 0) * (Math.abs(m.standX - (x + 1)) + Math.abs(m.standZ - (z + 1)));
+        }
+        // Equal walks: the one nearer the building (shorter flights).
+        const score = walk / Math.max(1, blocks.length) + 0.01 * Math.hypot(x + 1.5 - cx, z + 1.5 - cz);
+        if (!best || score < best.score) best = { x: x, z: z, score: score };
+      }
+    }
+    if (!best) return null;
     for (let dz = 0; dz < 3; dz++) {
-      for (let dx = 0; dx < 3; dx++) {
-        if (occupied.has(cellKey(x + dx, 0, z + dz))) return false;
-      }
+      for (let dx = 0; dx < 3; dx++) occupied.add(cellKey(best.x + dx, 0, best.z + dz));
     }
-    return true;
-  }
-
-  function elevatorPads(minX, maxX, minZ, maxZ, occupied) {
-    const midX = Math.round((minX + maxX) / 2);
-    const midZ = Math.round((minZ + maxZ) / 2);
-    const sides = [
-      { x: minX - 4, z: midZ - 1, exitX: minX - 1, exitZ: midZ, enterX: minX - 5, enterZ: midZ, along: 'z' },
-      { x: maxX + 2, z: midZ - 1, exitX: maxX + 1, exitZ: midZ, enterX: maxX + 5, enterZ: midZ, along: 'z' },
-      { x: midX - 1, z: minZ - 4, exitX: midX, exitZ: minZ - 1, enterX: midX, enterZ: minZ - 5, along: 'x' },
-      { x: midX - 1, z: maxZ + 2, exitX: midX, exitZ: maxZ + 1, enterX: midX, enterZ: maxZ + 5, along: 'x' },
-    ];
-    const pads = [];
-    for (let s = 0; s < sides.length; s++) {
-      const side = sides[s];
-      let placed = null;
-      for (let shift = 0; shift <= 8 && !placed; shift++) {
-        const delta = shift === 0 ? 0 : (shift % 2 === 0 ? shift / 2 : -Math.ceil(shift / 2));
-        const x = side.along === 'x' ? side.x + delta : side.x;
-        const z = side.along === 'z' ? side.z + delta : side.z;
-        const exitX = side.along === 'x' ? side.exitX + delta : side.exitX;
-        const exitZ = side.along === 'z' ? side.exitZ + delta : side.exitZ;
-        const enterX = side.along === 'x' ? side.enterX + delta : side.enterX;
-        const enterZ = side.along === 'z' ? side.enterZ + delta : side.enterZ;
-        if (!padClear(x, z, occupied)) continue;
-        if (occupied.has(cellKey(exitX, 0, exitZ)) || occupied.has(cellKey(enterX, 0, enterZ))) continue;
-        placed = { x: x, z: z, exitX: exitX, exitZ: exitZ, enterX: enterX, enterZ: enterZ };
-      }
-      if (!placed) continue;
-      pads.push(placed);
-      for (let dz = 0; dz < 3; dz++) {
-        for (let dx = 0; dx < 3; dx++) occupied.add(cellKey(placed.x + dx, 0, placed.z + dz));
-      }
-      occupied.add(cellKey(placed.exitX, 0, placed.exitZ));
-      occupied.add(cellKey(placed.enterX, 0, placed.enterZ));
-    }
-    return pads;
+    return { x: best.x, z: best.z };
   }
 
   const LEVEL_SPECS = root.MicroBuilderLevelSpecs;
+
+  // ---------- materials of a building by its mass (docs/gdd/12-materials.md) ----------
+  // A campaign building is drawn in the first materials of the ladder; its mass (balance of the
+  // calendar: levels.js → LEVEL_MASS) sets how long it is built, and its materials are picked for that
+  // mass. Each part of the blueprint (all cubes of one drawn material) takes the material of the same
+  // tone and texture whose mass is closest to its share, so red brick stays red, oak stays wood. The
+  // body is structural; an accent (gem, diamond — heavier than any structural of its grid) goes on
+  // one small part high up, or on the gems of the drawing (camp forms) in the closest gems that fit.
+  // The exact mass comes from the lower (or upper) cubes of one part in a neighbouring material of the
+  // same tone: a plinth or a band.
+  const STRUCTURAL = MATERIAL_LADDER.filter(function (item) { return !item.accent; });
+  const ACCENTS = MATERIAL_LADDER.filter(function (item) { return item.accent; });
+  const LOOK_FAMILY = {
+    stone: 'stone', sand: 'stone', concrete: 'stone', obsidian: 'stone',
+    wood: 'wood', brick: 'brick', tile: 'brick', metal: 'metal', platinum: 'metal', marble: 'marble',
+  };
+  // Green gems stand out on a roof of any other colour: an accent only where nothing else fits.
+  const GREEN_ACCENTS = { 'ladder-malachite': true, 'ladder-jade': true, 'ladder-emerald': true, 'ladder-turquoise': true };
+  const PICK = {
+    lookPenalty: 10,     // tone cost of another texture family (wood → brick)
+    massWeight: 10,      // tone cost of a part's mass off its share by e times
+    errorWeight: 60,     // cost of the building's mass off the target by e times, past the tolerance
+    tolerance: 0.25,     // mass the picking may miss by (ln); the band of a part makes it exact
+    accentShare: 0.12,   // an accent part: at most this share of the cubes…
+    accentHeight: 0.45,  // …with its middle at least this high (share of the building's height)…
+    accentMass: 0.25,    // …and at most this share of the building's mass
+    drawnAccentMass: 0.5, // drawn trim (gems of a camp form): all of it at most this share of the mass
+    gridPenalty: 12,     // accent cost per grid below the building's
+    greenPenalty: 20,
+    bandLook: 15,        // band material of another texture family
+  };
+
+  function labColor(color) {
+    const rgb = [(color >> 16) & 255, (color >> 8) & 255, color & 255].map(function (v) {
+      v /= 255;
+      return v > 0.04045 ? Math.pow((v + 0.055) / 1.055, 2.4) : v / 12.92;
+    });
+    const f = function (t) { return t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116; };
+    const x = f((rgb[0] * 0.4124 + rgb[1] * 0.3576 + rgb[2] * 0.1805) / 0.95047);
+    const y = f(rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722);
+    const z = f((rgb[0] * 0.0193 + rgb[1] * 0.1192 + rgb[2] * 0.9505) / 1.08883);
+    return [116 * y - 16, 500 * (x - y), 200 * (y - z)];
+  }
+  for (let i = 0; i < MATERIALS.length; i++) MATERIALS[i].lab = labColor(MATERIALS[i].color);
+
+  // How far a material is from the drawn one by look: colour distance (CIELAB) plus another texture.
+  function toneCost(from, to) {
+    const d = Math.hypot(from.lab[0] - to.lab[0], from.lab[1] - to.lab[1], from.lab[2] - to.lab[2]);
+    return d + (LOOK_FAMILY[from.look] === LOOK_FAMILY[to.look] ? 0 : PICK.lookPenalty);
+  }
+
+  function pickMaterials(blocks, mass, maxGrid) {
+    const parts = new Map();
+    let height = 0;
+    let cubes = 0;
+    for (let i = 0; i < blocks.length; i++) {
+      const block = blocks[i];
+      if (block.materialId === GLASS.id) continue;
+      let part = parts.get(block.materialId);
+      if (!part) {
+        part = { from: MATERIAL[block.materialId], blocks: [], y: 0 };
+        parts.set(block.materialId, part);
+      }
+      part.blocks.push(block);
+      part.y += block.y;
+      height = Math.max(height, block.y);
+      cubes += 1;
+    }
+    if (!cubes) return;
+    // The closest accent of the building's grid or below for a part, its cubes at most `share` of the
+    // building's mass (null — none fits).
+    let trim = 0;
+    function accentFor(part, share) {
+      let best = Infinity;
+      let pick = null;
+      for (let i = 0; i < ACCENTS.length; i++) {
+        const item = ACCENTS[i];
+        if (item.grid > maxGrid || trim + part.blocks.length * item.weight > share * mass) continue;
+        const green = GREEN_ACCENTS[item.id] && !GREEN_ACCENTS[part.from.id];
+        const cost = toneCost(part.from, item) + PICK.gridPenalty * (maxGrid - item.grid) + (green ? PICK.greenPenalty : 0);
+        if (cost < best) {
+          best = cost;
+          pick = item;
+        }
+      }
+      return pick;
+    }
+    // Trim: gems and diamonds of the drawing stay trim (the largest part first); without them, the
+    // highest small part (of three or more) becomes it.
+    const accents = [];
+    const drawnTrim = [];
+    parts.forEach(function (part) { if (part.from.accent) drawnTrim.push(part); });
+    drawnTrim.sort(function (a, b) { return b.blocks.length - a.blocks.length; });
+    drawnTrim.forEach(function (part) {
+      const item = accentFor(part, PICK.drawnAccentMass);
+      if (!item) return;
+      accents.push({ part: part, item: item });
+      trim += part.blocks.length * item.weight;
+    });
+    if (!drawnTrim.length && parts.size >= 3) {
+      let accent = null;
+      parts.forEach(function (part) {
+        const middle = part.y / part.blocks.length;
+        if (part.blocks.length > PICK.accentShare * cubes || middle < PICK.accentHeight * height) return;
+        if (!accent || middle > accent.y / accent.blocks.length) accent = part;
+      });
+      const item = accent && accentFor(accent, PICK.accentMass);
+      if (item) {
+        accents.push({ part: accent, item: item });
+        trim += accent.blocks.length * item.weight;
+      }
+    }
+    const body = [];
+    parts.forEach(function (part) {
+      if (!accents.some(function (accent) { return accent.part === part; })) body.push(part);
+    });
+    const target = mass - trim;
+    const candidates = STRUCTURAL.filter(function (item) { return item.grid <= maxGrid; });
+    if (!body.length) {
+      accents.forEach(function (accent) {
+        for (let i = 0; i < accent.part.blocks.length; i++) accent.part.blocks[i].materialId = accent.item.id;
+      });
+      return;
+    }
+    let drawn = 0;
+    let bodyCubes = 0;
+    for (let p = 0; p < body.length; p++) {
+      const part = body[p];
+      part.tones = candidates.map(function (item) { return toneCost(part.from, item); });
+      drawn += part.blocks.length * part.from.weight;
+      bodyCubes += part.blocks.length;
+    }
+    // A choice (candidate index of each part) at scale k (the masses of the drawn materials × k):
+    // tone + how far each part is off its scaled mass + the building's mass past the tolerance.
+    function score(choice, k) {
+      let total = 0;
+      let cost = 0;
+      for (let p = 0; p < body.length; p++) {
+        const part = body[p];
+        const item = candidates[choice[p]];
+        total += part.blocks.length * item.weight;
+        cost += part.blocks.length * (part.tones[choice[p]] + PICK.massWeight * Math.abs(Math.log(item.weight / (part.from.weight * k))));
+      }
+      const miss = Math.abs(Math.log(total / target));
+      return { cost: cost / bodyCubes + PICK.errorWeight * Math.max(0, miss - PICK.tolerance), total: total };
+    }
+    let best = null;
+    const k0 = target / drawn;
+    for (let step = -60; step <= 60; step++) {
+      const k = k0 * Math.exp(step * 0.025);
+      const choice = body.map(function (part) {
+        let pick = 0;
+        let low = Infinity;
+        for (let c = 0; c < candidates.length; c++) {
+          const cost = part.tones[c] + PICK.massWeight * Math.abs(Math.log(candidates[c].weight / (part.from.weight * k)));
+          if (cost < low) {
+            low = cost;
+            pick = c;
+          }
+        }
+        return pick;
+      });
+      const result = score(choice, k);
+      if (!best || result.cost < best.cost) best = { cost: result.cost, total: result.total, choice: choice, k: k };
+    }
+    // Then part by part, while any single change helps.
+    for (let pass = 0; pass < 4; pass++) {
+      let improved = false;
+      for (let p = 0; p < body.length; p++) {
+        for (let c = 0; c < candidates.length; c++) {
+          if (c === best.choice[p]) continue;
+          const choice = best.choice.slice();
+          choice[p] = c;
+          const result = score(choice, best.k);
+          if (result.cost < best.cost - 1e-9) {
+            best = { cost: result.cost, total: result.total, choice: choice, k: best.k };
+            improved = true;
+          }
+        }
+      }
+      if (!improved) break;
+    }
+    for (let p = 0; p < body.length; p++) {
+      const id = candidates[best.choice[p]].id;
+      for (let i = 0; i < body[p].blocks.length; i++) body[p].blocks[i].materialId = id;
+    }
+    // The band: j cubes of one part in another material of its tone make up the rest of the mass —
+    // the heavier material below.
+    const delta = target - best.total;
+    if (Math.abs(delta) > 0.005 * target) {
+      let band = null;
+      for (let p = 0; p < body.length; p++) {
+        const part = body[p];
+        const was = candidates[best.choice[p]];
+        for (let c = 0; c < candidates.length; c++) {
+          const item = candidates[c];
+          if (item === was || (item.weight - was.weight) * delta <= 0) continue;
+          const j = Math.round(delta / (item.weight - was.weight));
+          if (j < 1 || j >= part.blocks.length) continue;
+          const cost = part.tones[c] + (LOOK_FAMILY[item.look] === LOOK_FAMILY[was.look] ? 0 : PICK.bandLook) +
+            PICK.massWeight / 2 * Math.abs(Math.log(item.weight / was.weight));
+          if (!band || cost < band.cost) band = { cost: cost, part: part, item: item, j: j, heavier: item.weight > was.weight };
+        }
+      }
+      if (band) {
+        const order = band.part.blocks.slice().sort(function (a, b) { return (a.y - b.y) || (a.id - b.id); });
+        if (!band.heavier) order.reverse();
+        for (let i = 0; i < band.j; i++) order[i].materialId = band.item.id;
+      }
+    }
+    accents.forEach(function (accent) {
+      for (let i = 0; i < accent.part.blocks.length; i++) accent.part.blocks[i].materialId = accent.item.id;
+    });
+  }
+
+  const LEVEL_MASS = root.MicroBuilderLevelMass || {};
+  const LEVEL_GRID_FROM = root.MicroBuilderLevelGridFrom || [];
+
+  // The heaviest grid of a campaign level by the calendar.
+  function levelGrid(number) {
+    let grid = 1;
+    for (let i = 0; i < LEVEL_GRID_FROM.length; i++) if (number >= LEVEL_GRID_FROM[i][0]) grid = LEVEL_GRID_FROM[i][1];
+    return grid;
+  }
+
+  // A school stage: its top material is the heaviest part's (the rest scales with it, as drawn);
+  // a top lighter than the drawn heaviest keeps the drawing.
+  function schoolMaterials(blocks, topId) {
+    const top = MATERIAL[topId];
+    if (!top) return;
+    let heaviest = 0;
+    let drawn = 0;
+    for (let i = 0; i < blocks.length; i++) {
+      if (blocks[i].materialId === GLASS.id) continue;
+      const weight = MATERIAL[blocks[i].materialId].weight;
+      heaviest = Math.max(heaviest, weight);
+      drawn += weight;
+    }
+    if (top.weight <= heaviest) return;
+    pickMaterials(blocks, drawn * top.weight / heaviest, top.grid);
+  }
 
   const HQ_LEVELS = {};
   root.MicroBuilderHqSpecs.forEach(function (spec) {
@@ -680,7 +949,7 @@
       spec.build(bp);
       validateSpecialBlocks(bp);
       const blocks = finalizeBlocks(bp);
-      shiftLevelMaterials(blocks, stage.top);
+      schoolMaterials(blocks, stage.top);
       const site = layoutSite(blocks, spec.mineGap);
       return {
         index: index, number: 'Испытание', name: spec.name, pace: spec.pace, blurb: spec.blurb,
@@ -701,29 +970,12 @@
     return variants[phase];
   }
 
-  // Shifts the level's materials up the ladder so the heaviest one becomes `topId`; the order of
-  // materials inside the level (lighter / heavier parts of the building) stays the same.
-  function shiftLevelMaterials(blocks, topId) {
-    if (!topId) return;
-    const ladder = MATERIAL_LADDER.map(function (item) { return item.id; });
-    let heaviest = 0;
-    for (let i = 0; i < blocks.length; i++) heaviest = Math.max(heaviest, ladder.indexOf(blocks[i].materialId));
-    const shift = ladder.indexOf(topId) - heaviest;
-    if (shift <= 0) return;
-    for (let i = 0; i < blocks.length; i++) {
-      const at = ladder.indexOf(blocks[i].materialId);
-      if (at >= 0) blocks[i].materialId = ladder[Math.min(ladder.length - 1, at + shift)];
-    }
-  }
-
-  const LEVEL_MATERIAL_TOPS = root.MicroBuilderLevelMaterialTops || {};
-
   const LEVELS = LEVEL_SPECS.map(function (spec, index) {
     const bp = createBlueprint();
     spec.build(bp);
     validateSpecialBlocks(bp);
     const blocks = finalizeBlocks(bp);
-    shiftLevelMaterials(blocks, LEVEL_MATERIAL_TOPS[index + 1]);
+    if (LEVEL_MASS[index + 1]) pickMaterials(blocks, LEVEL_MASS[index + 1], levelGrid(index + 1));
     const site = layoutSite(blocks, spec.mineGap);
     return {
       index: index,
@@ -843,7 +1095,6 @@
     if (grid[id] === 1) return false;
     if (world.waterGrid[id] === 1) return false;
     if (world.doorGrid[id] === 1) return true;
-    if (world.elevatorPads && y >= 0 && y < elevatorFloors(world) && elevatorPadBy(world, x, z, 'lobby')) return true;
     if (y === 0) return true;
     if (world.mastGrid[id] === 1 || world.deckGrid[id] === 1) return true;
     if (index.inside(x, y - 1, z) && grid[index.id(x, y - 1, z)] === 1) return true;
@@ -1090,20 +1341,19 @@
     if (ny === y) return SCAFFOLD.horizontalPrice;
     const climb = SCAFFOLD.verticalPrice * Math.abs(ny - y);
     if (nx === x && nz === z) return climb;
-    // Off a cube he jumps: half the climb (segmentSpeed).
-    return SCAFFOLD.horizontalPrice + (ny < y ? climb / JUMP_DOWN : climb);
+    // Off a cube he jumps: EFFORT.jump of the climb (climbEffort).
+    return SCAFFOLD.horizontalPrice + (ny < y ? climb * EFFORT.jump : climb);
   }
 
   function refreshPathPrices(world) {
-    const walk = walkSpeedNow(world);
-    const climb = climbSpeedNow(world);
-    if (!(walk > 0) || !(climb > 0)) return;
+    const ground = groundStepSeconds(world);
+    const climb = climbFloorSeconds(world);
+    if (!(ground > 0) || !(climb > 0)) return;
     SCAFFOLD.horizontalPrice = 1;
-    SCAFFOLD.verticalPrice = walk / climb;
+    SCAFFOLD.verticalPrice = climb / ground;
     // Setting a ladder or deck piece: its erect time in flat steps.
-    SCAFFOLD.ladderPrice = scaffoldSeconds(world.campaign, world.level.pace) * walk;
+    SCAFFOLD.ladderPrice = scaffoldSeconds(world.campaign, world.level.pace) / ground;
     SCAFFOLD.deckPrice = SCAFFOLD.ladderPrice;
-    SCAFFOLD.elevatorFloorPrice = sessionValue('elevatorSpeed', world.campaign.purchases.elevatorSpeed) * walk;
   }
 
   function findPath(start, goalIds, world) {
@@ -1256,8 +1506,87 @@
     return sessionValue(kind, level) - sessionValue(kind, 0);
   }
 
-  function carryKg(campaign) {
-    return sessionValue('carry', campaign.purchases.carry) * campaign.metaCarryScale + campaign.metaCarry;
+  // The carry of a worker, kg: the crew's (session «Ноша» × meta + the foremen's, «Ловкие руки»)
+  // × his strength / 100 (workerStat: the dishes, hunger). Rain wets the material: the carry shrinks
+  // (campaign.environmentCarry). No builder — the crew's at strength 100.
+  function carryKg(campaign, builder) {
+    // «Горячий шоколад» (rain): the material does not get wet for him.
+    const wet = seasonOn(builder, campaign, 'rain') ? 1 : campaign.environmentCarry || 1;
+    return (sessionValue('carry', campaign.purchases.carry) * campaign.metaCarryScale + campaign.metaCarry) *
+      wet * advancedValue(campaign, 'advCarry', 1) * workerStat(builder, campaign, 'strength') / 100;
+  }
+
+  // ---------- canteen dishes (docs/gdd/20-site-camp.md) ----------
+  // A worker who ate at the canteen keeps the dish of that meal until his next one.
+  const CANTEEN = window.MicroBuildersBalance.canteen || {
+    mealSeconds: 50, seats: 2, minMealSeconds: 10, maxCarry: 8, voxel: 1, forms: [], dishes: [],
+  };
+  const DISH = {};
+  CANTEEN.dishes.forEach(function (dish) { DISH[dish.id] = dish; });
+
+  // The menu grows a row a canteen level (balance canteen.rows, docs/gdd/23-canteen-draft.md): the dish
+  // of the day (1), a pastry to take away (2, Кафе), the seasonal dishes (3, Бистро), the second dish (4,
+  // Ресторан), the chef's signature (5, Гранд-ресторан). A dish is served only from its building level.
+  const ROWS = CANTEEN.rows || { day: 1, snack: 2, kitchen: 3, dish2: 4, secrets: 4, signature: 5, grand: 5 };
+  // The kitchen (canteen level 3+): workers given to it for the site, the chef's experience and level,
+  // the secret dishes the chef finds, the grand dinners (docs/gdd/20-site-camp.md → «Кухня»). The chef's
+  // levels, the secret chances and the grand dinner's cubes come from their timings (kitchen-calibration.js).
+  const KITCHEN = CANTEEN.kitchen || { staff: [2, 3, 4, 5, 6], chefLevels: [10, 25, 50, 100, 200, 400, 800], dishPerLevel: [0.04, 0.05, 0.06, 0.07, 0.08],
+    discovery: [1, 1.25, 1.5, 2, 2.5], multiplierPerMass: 0.000001, grandCubes: 200, grandKitchen: 5, signatureKitchen: 5, keepCrew: 2 };
+  const ENVIRONMENT_KINDS = (TUNING.environment && TUNING.environment.kinds) || {};
+  // Who ate at the canteen: the torte's and the feast's moments, and the pastry rush (stepWorld sets them).
+  let canteenNow = { elapsed: 0, torte: false, feast: false, grand: {} };
+
+  // The plain percentage of a day dish for each effect (the cutlet counts twice: carry and climb).
+  function dayDishBonus(bonus, id, world) {
+    const dish = DISH[id];
+    if (!dish) return;
+    const add = function (effect, value) { bonus[effect] = Math.max(bonus[effect] || 0, value); };
+    if (dish.effect === 'carryClimb') {
+      add('carry', dish.value);
+      add('climb', dish.value);
+    } else if (dish.effect === 'pelmeni') {
+      // «Пельмени «Артельные»»: the common pot — more for every one eating at the canteen now.
+      add('place', Math.min(dish.max || 0.3, dish.value * Math.max(1, canteenEating(world))));
+    } else if (dish.effect === 'multi') {
+      Object.keys(dish.effects || {}).forEach(function (effect) { add(effect, dish.effects[effect]); });
+    } else if (dish.effect !== 'torte' && dish.effect !== 'deck' && !dish.weather) add(dish.effect, dish.value);
+  }
+
+  // A dish effect that is not a characteristic (satiety, smoke): × its value; «Шеф-повар» makes the
+  // dishes stronger — their power at the meal stays with the worker (dishPower). The characteristics'
+  // effects (walk, climb, carry, place, pickup) go into workerStat.
+  function dishBoost(builder, effect) {
+    if (!builder) return 1;
+    return 1 + dishValue(builder, effect) * (builder.dishPower || 1);
+  }
+
+  // Does he carry this dish from his last canteen meal (the day dish or the second one)?
+  function ateDish(builder, test) {
+    return !!builder && ((!!builder.dish && !!DISH[builder.dish] && test(DISH[builder.dish])) ||
+      (!!builder.dish2 && !!DISH[builder.dish2] && test(DISH[builder.dish2])));
+  }
+
+  // A seasonal dish (a secret of the chef, served as a day dish) works while its weather (or the night) is on.
+  function seasonOn(builder, campaign, weather) {
+    if (!ateDish(builder, function (dish) { return dish.weather === weather; })) return false;
+    return weather === 'night' ? !!campaign.environmentNight : campaign.environmentKind === weather;
+  }
+
+  // `power` — «Шеф-повар» on this site (1 — none).
+  function dishText(id, power) {
+    const dish = DISH[id];
+    if (!dish) return '';
+    if (dish.text) return dish.text;
+    // The characteristics' dishes give their points (workerStat), the others a share.
+    const points = Math.round(dish.value * (power || 1) * 100);
+    const pct = points + '%';
+    if (dish.effect === 'carry') return 'Сила +' + points;
+    if (dish.effect === 'place' || dish.effect === 'pickup') return 'Сноровка +' + points;
+    if (dish.effect === 'walk' || dish.effect === 'climb') return 'Скорость +' + points;
+    if (dish.effect === 'satiety') return 'Сытость дольше на ' + pct;
+    if (dish.effect === 'smoke') return 'Перекуры реже на ' + pct;
+    return '';
   }
 
   function planCubeLimit(campaign) {
@@ -1276,91 +1605,562 @@
     return sessionValue('vehicleReach', campaign.purchases.vehicleReach);
   }
 
-  function scaffoldSeconds(campaign, pace) {
-    return SCAFFOLD.erectSeconds * pace /
-      sessionValue('scaffold', campaign.purchases.scaffold) /
-      campaign.metaScaffold;
+  // A* price of setting a piece at cell `id` on level y from the base price of the first type: its
+  // type, and repairShare where a broken piece of this kind (`brokenBit`) waits for repair.
+  function erectPrice(world, base, id, y, brokenBit) {
+    return base * tierTimeFactor(y) * ((world.scaffoldBroken[id] & brokenBit) !== 0 ? WEAR.repairShare : 1);
   }
 
-  function buildSpeed(campaign, pace) {
-    return sessionValue('speed', campaign.purchases.speed) *
-      campaign.metaPlaceSpeed * campaign.environmentWorkMultiplier * campaign.foremanRush / pace;
+  // ---------- effort and tempo (docs/gdd/02-construction-session.md → «Трудоёмкость и темп») ----------
+  // Every action of a worker has its effort by the world's rules (EFFORT: a step, a climb, a mini-cube
+  // to set or to pick, a scaffold piece); the weather, the night, the level's pace and an overload
+  // multiply it. He gets through it at his tempo: EFFORT.tempo × his characteristic / 100 × the crew's
+  // factor of that action (crewFactor). Seconds = effort / tempo. Upgrades never lower an effort —
+  // they raise the tempo. The same as sim.js → builderPass.
+
+  // The dish effects each characteristic takes.
+  const STAT_EFFECTS = { speed: ['walk', 'climb'], strength: ['carry'], skill: ['place', 'pickup'] };
+  const STAT_NAMES = { speed: 'Скорость', strength: 'Сила', skill: 'Сноровка' };
+  // The characteristic an action goes by.
+  const ACTION_STAT = { walk: 'speed', climb: 'speed', place: 'skill', pick: 'skill', scaffold: 'skill' };
+
+  function dishValue(builder, effect) {
+    if (builder.dishBonus) return builder.dishBonus[effect] || 0;
+    const dish = builder.dish && DISH[builder.dish];
+    return dish && dish.effect === effect ? dish.value : 0;
   }
 
-  function floorFactor(y, campaign) {
-    const floor = y + 1;
-    return 1 + (floor - 1) * BALANCE.heightStep * campaign.metaHeightPenalty;
+  function dishGives(dish, effects) {
+    if (!dish) return false;
+    for (let i = 0; i < effects.length; i++) {
+      const effect = effects[i];
+      if (dish.effect === effect || (dish.effect === 'carryClimb' && (effect === 'carry' || effect === 'climb')) ||
+        (dish.effect === 'pelmeni' && effect === 'place') || (dish.effect === 'multi' && dish.effects && dish.effects[effect])) return true;
+    }
+    return false;
   }
 
-  function placeSeconds(campaign, pace, block) {
-    // «Оконщица»: doors and windows go in at once.
-    if (block.feature && campaign.foremen.glazier) return 0;
-    // «Тяжеловес»: grid 2+ materials go in faster.
-    const heavy = campaign.foremen.heavyMat && MATERIAL[block.materialId].grid >= 2 ? campaign.foremen.heavyMat.value : 1;
-    const mass = MATERIAL[block.materialId].cell / heavy;
-    return mass / buildSpeed(campaign, pace) * floorFactor(block.y, campaign);
+  // The dishes he carries that give one of `effects`, by name.
+  function dishSource(builder, effects) {
+    const names = [];
+    [builder.dish, builder.dish2].forEach(function (id) {
+      if (id && dishGives(DISH[id], effects) && names.indexOf(DISH[id].name) < 0) names.push(DISH[id].name);
+    });
+    return names.join(', ') || 'Блюдо';
   }
 
-  // Pay is for mass: `units` mini-cubes of the block's material, each weighing one cell.
-  // lucky / luckyMultiplier / capitalCoin report the two rolls for the view; the rolls themselves
-  // (two Math.random calls per grant, always) are part of the calibrated simulation.
-  function grantPlacePay(world, block, units) {
+  // His rank (training centre) and his starting rank (the foremen's expertise): builder.timeEfficiency.
+  function rankSource(builder) {
+    const base = builder.baseEfficiency || 1;
+    if (base !== 1 && (builder.timeEfficiency || 1) !== base) return 'Опыт и разряд';
+    return base !== 1 ? 'Опыт' : 'Разряд';
+  }
+
+  // A worker's characteristic, 100 at base (×1): speed — walking and climbing, strength — the carry,
+  // skill — setting, picking, scaffolds and the plan. Each source adds its points: the rank (speed,
+  // skill), the dishes of his last meal (× the chef's power), the torte, the feast and the grand
+  // dinners, «Пончик» (speed), the crew's rushes of the foremen and of the weather (speed, skill),
+  // «Табельщик» after a break and the spell «Ускорение» (skill); fatigue takes speed, hunger a share
+  // of strength, injuries a share of strength and skill (injuryPerf). Never under EFFORT.statMin. `parts` (optional) gets [source, points] of each, for the worker card.
+  // No builder — the crew's 100. `campaign` may be missing (a bare check): only his own sources.
+  function workerStat(builder, campaign, stat, parts) {
+    if (!builder) return 100;
+    let value = 100;
+    const add = function (name, points) {
+      if (!points) return;
+      value += points;
+      if (parts) parts.push([name, points]);
+    };
+    const effects = STAT_EFFECTS[stat];
+    if (stat !== 'strength') add(parts ? rankSource(builder) : '', ((builder.timeEfficiency || 1) - 1) * 100);
+    let dish = 0;
+    for (let i = 0; i < effects.length; i++) dish += dishValue(builder, effects[i]);
+    add(parts && dish ? dishSource(builder, effects) : '', dish * (builder.dishPower || 1) * 100);
+    if (canteenNow.torte && builder.ateTorte) add(DISH.napoleon ? DISH.napoleon.name : 'Торт', (DISH.napoleon ? DISH.napoleon.value : 0.25) * 100);
+    if (canteenNow.feast) add(DISH.pir ? DISH.pir.name : 'Пир', (DISH.pir ? DISH.pir.value : 0.1) * 100);
+    let grand = 0;
+    for (let i = 0; i < effects.length; i++) grand += canteenNow.grand[effects[i]] || 0;
+    add('Гранд-обеды', grand * 100);
+    if (stat === 'speed' && builder.rushUntil > canteenNow.elapsed) add(DISH.ponchik ? DISH.ponchik.name : 'Пончик', (DISH.ponchik ? DISH.ponchik.value : 0.4) * 100);
+    if (campaign && stat !== 'strength') {
+      add('Бригадиры', ((campaign.foremanRush || 1) - 1) * 100);
+      const boost = campaign.environmentBoost;
+      if (boost) add(boost.name, boost[stat] || 0);
+    }
+    // «Лаборатория материалов»: «Лёгкий шаг», «Хватка каменотёса», «Рука каменщика» (meta.js → labEffects).
+    if (campaign && campaign.lab) add('Лаборатория', campaign.lab[stat] || 0);
+    if (stat === 'skill') {
+      add('Ускорение', (spellHasteNow - 1) * 100);
+      if (builder.fedLeft > 0) add('Табельщик', ((builder.fedBoost || 1) - 1) * 100);
+    }
+    if (stat === 'speed') add('Усталость', -fatigueDebuff(builder) * 100);
+    // Hunger takes its share of what he has: strength × (1 − hungerDebuff).
+    if (stat === 'strength') add('Голод', -value * hungerDebuff(builder));
+    // Injuries take their share of what he has: strength and skill × injuryPerf.
+    if (stat !== 'speed' && builder.health < INJURY.health) add('Травмы', value * (injuryPerf(builder) - 1));
+    return Math.max(EFFORT.statMin || 10, value);
+  }
+
+  // The crew's factor of an action, ×1 at base: walk, climb — the session's horizontal and vertical
+  // upgrades × meta under the soft cap (softCap), «Ловкий подъём» (advanced) on the climb; place —
+  // «Скорость стройки» × meta × «Мастер укладки» (advanced); pick — «Скорость набора» × meta;
+  // scaffold — «Леса и настилы» × meta.
+  function crewFactor(campaign, kind) {
+    const p = campaign.purchases;
+    if (kind === 'walk') return softCap(sessionValue('horizontal', p.horizontal) * campaign.metaMovement, BALANCE.walkSoftCap);
+    if (kind === 'climb') {
+      // «Левитация» (a spell): climbs faster for a while.
+      const levitate = (campaign.spellLevitateUntil || 0) > campaign.levelElapsed ? campaign.spellLevitate || 1 : 1;
+      return softCap(sessionValue('vertical', p.vertical) * campaign.metaMovement * campaign.metaClimb, BALANCE.climbSoftCap) *
+        advancedValue(campaign, 'advClimb', 1) * levitate;
+    }
+    if (kind === 'place') return sessionValue('speed', p.speed) * campaign.metaPlaceSpeed * advancedValue(campaign, 'advPlace', 1);
+    if (kind === 'pick') return sessionValue('pickup', p.pickup) * campaign.metaPickupSpeed;
+    if (kind === 'scaffold') return sessionValue('scaffold', p.scaffold) * campaign.metaScaffold;
+    return 1;
+  }
+
+  // Effort a second of this worker on an action (no builder — the crew at 100).
+  function actionTempo(builder, campaign, kind) {
+    return EFFORT.tempo * crewFactor(campaign, kind) * workerStat(builder, campaign, ACTION_STAT[kind]) / 100;
+  }
+
+  // Half a penalty off for him: an effort factor m > 1 becomes (1 + m) / 2 — the factor on top of m.
+  function halfPenalty(m) {
+    return m > 1 ? (1 + m) / 2 / m : 1;
+  }
+
+  // Effort of setting one mini-cube of `block`: its cell mass × EFFORT.place, heightStep of it more a
+  // floor (the foremen's and the office's metaHeightPenalty soften it), × the weather and the night on
+  // hand work (rain, heat, night: campaign.environmentWork; «Окрошка» — half the heat's, «Кофе ночной
+  // смены» — half the night's) and the level's pace. «Оконщица»: doors and windows go in at once (0).
+  function placeEffort(builder, world, block) {
     const campaign = world.campaign;
-    const mass = MATERIAL[block.materialId].cell;
-    let coins = units * mass * BALANCE.coinPerKg * campaign.metaCoinMultiplier;
+    if (block.feature && campaign.foremen.glazier) return 0;
+    let weather = campaign.environmentWork || 1;
+    if (seasonOn(builder, campaign, 'heat')) weather *= halfPenalty(ENVIRONMENT_KINDS.heat ? ENVIRONMENT_KINDS.heat.work : 1);
+    if (seasonOn(builder, campaign, 'night')) weather *= halfPenalty(campaign.environmentNightWork || 1);
+    return MATERIAL[block.materialId].cell * EFFORT.place * (1 + block.y * BALANCE.heightStep * campaign.metaHeightPenalty) *
+      weather * world.level.pace;
+  }
+
+  // His tempo on `block`: «Тяжеловес» sets grid 2+ materials faster.
+  function placeTempo(builder, world, block) {
+    const campaign = world.campaign;
+    const heavy = campaign.foremen.heavyMat && MATERIAL[block.materialId].grid >= 2 ? campaign.foremen.heavyMat.value : 1;
+    return actionTempo(builder, campaign, 'place') * heavy;
+  }
+
+  // Seconds of a piece of hand work: its effort at his tempo. Remembers both on the worker
+  // (builder.work, workEffort, workTempo) for the worker card.
+  function workTimer(builder, kind, effort, tempo) {
+    if (builder) {
+      builder.work = kind;
+      builder.workEffort = effort;
+      builder.workTempo = tempo;
+    }
+    return effort > 0 && tempo > 0 ? effort / tempo : 0;
+  }
+
+  // Seconds of placing one mini-cube of `block` by this worker.
+  function builderPlaceSeconds(builder, world, block) {
+    return workTimer(builder, 'place', placeEffort(builder, world, block), placeTempo(builder, world, block));
+  }
+
+  // Effort of picking `mass` kg of mini-cubes in a quarry (or off a camp pile): mass × EFFORT.pick × pace.
+  function pickEffort(world, mass) {
+    return mass * EFFORT.pick * world.level.pace;
+  }
+
+  function pickSeconds(builder, world, mass) {
+    return workTimer(builder, 'pick', pickEffort(world, mass), actionTempo(builder, world.campaign, 'pick'));
+  }
+
+  // Effort of a scaffold piece: EFFORT.scaffold × its type by height (tierTimeFactor), repairShare of
+  // it to repair a broken one, × pace; a passage cut through a cube (no piece) — the base piece.
+  function scaffoldEffort(world, piece) {
+    return EFFORT.scaffold * world.level.pace * (piece ? tierTimeFactor(piece.y) * (piece.broken ? WEAR.repairShare : 1) : 1);
+  }
+
+  function erectSeconds(piece, world, builder) {
+    // «Мгновенные леса» (a spell): the next pieces go up at once.
+    if (world.campaign.spellInstantScaffold > 0) return 0.05;
+    return workTimer(builder, 'scaffold', scaffoldEffort(world, piece), actionTempo(builder, world.campaign, 'scaffold'));
+  }
+
+  // Seconds of the crew (at 100) on a first-type piece: the planner's price of setting one.
+  function scaffoldSeconds(campaign, pace) {
+    return EFFORT.scaffold * pace / actionTempo(null, campaign, 'scaffold');
+  }
+
+  const WEATHER_WORDS = { snow: 'снег', heat: 'жара', rain: 'дождь', storm: 'шторм' };
+
+  function factorNote(name, factor) {
+    return name + ' ×' + String(Math.round(factor * 100) / 100).replace('.', ',');
+  }
+
+  // The night and the weather on his steps (environmentMove) and on hand work (environmentWork) as a
+  // note: «ночь ×1,2», «жара ×1,3», «ночь и жара ×1,32».
+  function environmentNote(campaign, factor, nightFactor) {
+    if (!(factor > 1.001)) return '';
+    const names = [];
+    if (campaign.environmentNight && nightFactor > 1) names.push('ночь');
+    if (campaign.environmentKind && factor / (nightFactor || 1) > 1.001) names.push(WEATHER_WORDS[campaign.environmentKind] || 'погода');
+    return factorNote(names.join(' и ') || 'погода', factor);
+  }
+
+  // View (the worker card): what he does now — {kind, effort, tempo, stat, notes} or null between
+  // actions. kind: walk, climb, place, pick, scaffold; tempo — effort a second; notes — what makes the
+  // effort: the world's base, then the weather, the night, the building's pace and the overload.
+  const CARD_STEP = { flat: 0, rise: 0, flatEffort: 0, riseEffort: 0, worn: 1 };
+  function currentEffort(builder, world) {
+    const campaign = world.campaign;
+    const pace = world.level.pace;
+    const notes = [];
+    if (builder.phase === 'walk' && builder.segmentT < 1 && builder.from && builder.to) {
+      const from = builder.from, to = builder.to;
+      const times = stepTimes(world, builder, from, to, CARD_STEP);
+      const overload = carryOverload(builder, world);
+      const effort = (times.flatEffort + times.riseEffort) * overload;
+      const seconds = (times.flat + times.rise) * overload;
+      const move = moveEffortFactor(world, builder) / pace;
+      const y = Math.max(from[1], to[1]);
+      const dy = to[1] - from[1];
+      const ladder = from[0] === to[0] && from[2] === to[2];
+      if (times.flatEffort > 0) {
+        const surface = times.flatEffort / move / pace / times.worn;
+        const deckWeather = y > 0 && !advancedOwned(campaign, 'advDeck') ? campaign.environmentDeck || 1 : campaign.environmentGround || 1;
+        const base = deckWeather > 1 ? surface / (seasonOn(builder, campaign, 'snow') ? (1 + deckWeather) / 2 : deckWeather) : surface;
+        notes.push((y > 0 ? 'настил, ' + y + '-й эт.: ' : 'земля: ') + Math.round(base));
+        if (surface / base > 1.001) notes.push(factorNote(WEATHER_WORDS[campaign.environmentKind] || 'погода', surface / base));
+      }
+      if (times.riseEffort > 0) {
+        notes.push((dy > 0 ? 'подъём: ' : ladder ? 'спуск: ' : 'прыжок: ') + Math.round(times.riseEffort / move / pace / times.worn));
+      }
+      if (times.worn > 1) notes.push(factorNote('изношенный элемент', times.worn));
+      const env = environmentNote(campaign, move, seasonOn(builder, campaign, 'night') ? 1 + ((campaign.environmentNightMove || 1) - 1) / 2 : campaign.environmentNightMove || 1);
+      if (env) notes.push(env);
+      if (pace !== 1) notes.push(factorNote('здание', pace));
+      if (overload > 1.001) notes.push(factorNote('перегруз', overload));
+      return { kind: times.riseEffort > times.flatEffort ? 'climb' : 'walk', effort: effort, tempo: seconds > 0 ? effort / seconds : 0, stat: 'speed', notes: notes };
+    }
+    const phase = builder.phase;
+    const working = (phase === 'place' && builder.work === 'place') || (phase === 'campBuild' && builder.work === 'place') ||
+      ((phase === 'mine' || phase === 'campFetch') && builder.work === 'pick') || ((phase === 'erect' || phase === 'passage') && builder.work === 'scaffold');
+    if (!working || !(builder.workEffort > 0)) return null;
+    if (builder.work === 'place') {
+      const block = phase === 'place' ? builder.carry[0] : builder.camp && builder.camp.cubes[builder.campIndex];
+      if (block) {
+        const material = MATERIAL[block.materialId];
+        notes.push((phase === 'campBuild' ? 'куб ' : 'мини-куб ') + material.name.toLowerCase() + ': ' +
+          (phase === 'campBuild' ? material.weight : material.cell) + ' кг × ' + EFFORT.place);
+        const height = block.y * BALANCE.heightStep * campaign.metaHeightPenalty;
+        if (height > 0) notes.push('высота +' + Math.round(height * 100) + '%');
+        let weather = campaign.environmentWork || 1;
+        if (seasonOn(builder, campaign, 'heat')) weather *= halfPenalty(ENVIRONMENT_KINDS.heat ? ENVIRONMENT_KINDS.heat.work : 1);
+        const night = seasonOn(builder, campaign, 'night') ? 1 + ((campaign.environmentNightWork || 1) - 1) / 2 : campaign.environmentNightWork || 1;
+        if (seasonOn(builder, campaign, 'night')) weather *= halfPenalty(campaign.environmentNightWork || 1);
+        const env = environmentNote(campaign, weather, night);
+        if (env) notes.push(env);
+      }
+    } else if (builder.work === 'pick') {
+      notes.push('набор: ' + EFFORT.pick + ' за кг');
+    } else {
+      const piece = phase === 'erect' ? builder.erectPiece : null;
+      notes.push((phase === 'passage' ? 'проход: ' : 'элемент лесов: ') + EFFORT.scaffold);
+      if (piece && tierTimeFactor(piece.y) > 1) notes.push(factorNote(scaffoldTier(piece.y) + '-й тип', tierTimeFactor(piece.y)));
+      if (piece && piece.broken && WEAR.repairShare !== 1) notes.push(factorNote('ремонт', WEAR.repairShare));
+    }
+    if (pace !== 1) notes.push(factorNote('здание', pace));
+    return { kind: builder.work, effort: builder.workEffort, tempo: builder.workTempo, stat: 'skill', notes: notes };
+  }
+
+  // Coins a whole cube of the material pays on the first floor now, without luck and the per-worker
+  // dishes (the base of grantPlacePay): the label over its quarry.
+  function cubeCoins(campaign, materialId) {
+    const material = MATERIAL[materialId];
+    return Math.pow(material.weight, BALANCE.coinMassExponent) * BALANCE.coinRewardScale * campaign.metaCoinMultiplier *
+      sessionValue('cubePay', campaign.purchases.cubePay);
+  }
+
+  // Price the WHOLE cube first, then pay the share represented by `units` mini-cubes.
+  // Coin luck is independent of capital. Finds are rolled only by meta.js on whole-cube completion.
+  function grantPlacePay(world, block, units, builder) {
+    const campaign = world.campaign;
+    const material = MATERIAL[block.materialId];
+    const fullReward = Math.pow(material.weight, BALANCE.coinMassExponent) * BALANCE.coinRewardScale;
+    let coins = fullReward * units / Math.pow(material.grid, 3) * campaign.metaCoinMultiplier;
+    // «Бутерброд с икрой»: a worker who ate it earns more for his cubes.
+    if (builder && builder.signature === 'ikra' && DISH.ikra) coins *= 1 + DISH.ikra.value;
     const foremen = campaign.foremen;
     if (block.feature && foremen.glazier) coins *= foremen.glazier.value;
+    // «Витражи» of the office: windows and doors pay more.
+    if (block.feature && campaign.office) coins *= campaign.office.glass;
     if (campaign.badWeather && foremen.meteo) coins *= 2;
     if (foremen.earlyCoins && campaign.levelElapsed < 300) coins *= foremen.earlyCoins.value;
     coins *= sessionValue('cubePay', campaign.purchases.cubePay);
-    coins *= sessionValue('payMultiplier', campaign.purchases.payMultiplier);
+    // «Золотые руки» (advanced): every 10th cube of the blueprint pays ×10.
+    if (advancedOwned(campaign, 'advGold') && block.id % 10 === 9) coins *= ADVANCED_NODE.advGold.value;
+    // «Золотая лихорадка» (a spell): every cube pays more for a while.
+    if ((campaign.spellGoldUntil || 0) > campaign.levelElapsed) coins *= campaign.spellGold || 3;
     const floor = block.y + 1;
     coins *= 1 + (floor - 1) * sessionValue('floorPay', campaign.purchases.floorPay);
     const lucky = Math.random() < sessionValue('triplePay', campaign.purchases.triplePay);
     const luckyMultiplier = lucky ? sessionValue('triplePower', campaign.purchases.triplePower) : 1;
     if (lucky) coins *= luckyMultiplier;
-    const rounded = Math.round(coins);
+    // Carry the fractional remainder so subdivision cannot change the total integer payout.
+    const accumulated = coins + (campaign.coinRewardRemainder || 0);
+    const rounded = Math.round(accumulated);
+    campaign.coinRewardRemainder = accumulated - rounded;
     campaign.coins += rounded;
     campaign.coinsEarned = (campaign.coinsEarned || 0) + rounded;
-    let capital = Math.round(rounded * sessionValue('budgetCapital', campaign.purchases.budgetCapital));
-    const chance = sessionValue('cubeCapital', campaign.purchases.cubeCapital) +
-      sessionValue('capitalChance', campaign.purchases.capitalChance);
-    const capitalCoin = Math.random() < chance;
-    if (capitalCoin) capital += 1;
     return {
       coins: rounded,
-      capital: capital,
+      capital: 0,
       lucky: lucky,
       luckyMultiplier: luckyMultiplier,
-      capitalCoin: capitalCoin,
+      capitalCoin: false,
     };
   }
 
-  function rollSmoke(campaign) {
-    return rollSpan(BALANCE.smokeDesireMin, BALANCE.smokeDesireMax) *
-      sessionValue('smokeRare', campaign.purchases.smokeRare) * campaign.metaSmoke;
+  // A fresh smoke scale: smokePointsMin…Max points (a new roll after every smoke).
+  function rollSmoke() {
+    return rollSpan(BALANCE.smokePointsMin, BALANCE.smokePointsMax);
   }
 
   function smokeDuration(campaign) {
     return BALANCE.smokeSeconds / sessionValue('smokeShort', campaign.purchases.smokeShort) / campaign.metaSmokeShort;
   }
 
+  // ---------- smoking habit and smoking together (docs/gdd/08-needs-weather-events.md) ----------
+  // Every smoke on this site adds to the worker's habit (up to SMOKING.habitCap; «Реже перекуры»
+  // slows the growth); the habit fills the smoke scale faster and makes smokes longer. A worker going
+  // to smoke calls out: everyone within SMOKING.callRadius cells (a sphere) whose smoke desire is
+  // past SMOKING.callDesire of his threshold joins his company as soon as his hands allow. The
+  // caller pauses, they gather on the ground, then leave together; every companion makes the
+  // smoke SMOKING.chat longer.
+  const SMOKING = window.MicroBuildersBalance.smoking || {
+    habitGrowth: 1, habitCap: 15, habitInterval: 0.12, habitDuration: 0.08,
+    callRadius: 8, callDesire: 0.5, callSeconds: 20, callPause: 1.2, chat: 0.1, chatMax: 5,
+  };
+
+  function habitGrowth(campaign) {
+    // «Бросили курить» (advanced): the habit no longer grows.
+    if (advancedOwned(campaign, 'advSmoke')) return 0;
+    return SMOKING.habitGrowth / sessionValue('smokeRare', campaign.purchases.smokeRare) / lineValue(campaign, 'smokeHabit');
+  }
+
+  // ---------- fatigue and sleep (docs/gdd/08-needs-weather-events.md) ----------
+  // Fatigue (a scale of SLEEP.fatiguePointsMin…Max rolled after every sleep, see fatigueRate: ×3
+  // at night; a hire starts at 0) grows while a worker is awake; what is left of the scale is his
+  // energy (energyLeft). Two steps, no smooth slope: with SLEEP.tiredPoints of energy left he is
+  // tired — his speed drops by SLEEP.debuff at once (the player may send him to sleep, sendWorker);
+  // with none left he is worn out and goes to sleep himself, by night or by day
+  // (at a desk visit with free hands), in the trailers SLEEP.minSquares…maxSquares cells off the site,
+  // for SLEEP.sleepMin…Max seconds; fatigue drains while he sleeps. The rolled scales and the fast
+  // night spread the crew's sleep into a wave.
+  const SLEEP = TUNING.sleep || {
+    fatiguePointsMin: 1800, fatiguePointsMax: 3000, nightFatigue: 3, tiredPoints: 1200, debuff: 0.2,
+    sleepMin: 400, sleepMax: 600, minSquares: 30, maxSquares: 40, startFatigueMin: 0, startFatigueMax: 0, sleepHunger: 0.5,
+  };
+
+  function rollFatigue() {
+    return rollSpan(SLEEP.fatiguePointsMin, SLEEP.fatiguePointsMax);
+  }
+
+  // The site clock now (sim.js → dayClock: night 20:00–6:00, a site starts at 8:00). Tools that run
+  // the engine without the simulator get no night.
+  function siteClock(world) {
+    return root.MicroBuildersSim ? root.MicroBuildersSim.dayClock(world.campaign.levelElapsed) : null;
+  }
+
+  function nightNow(world) {
+    if (!needOpen(world.campaign, 'night')) return false;
+    const clock = siteClock(world);
+    return !!clock && clock.night;
+  }
+
+  // Needs and the night open by the story level (balance.json → tuning.intro): no smoking before
+  // smokeFromLevel, no hunger before hungerFromLevel, no night before nightFromLevel (1: the night runs
+  // from the start, the first levels are just over before it), no fatigue and sleep before
+  // sleepFromLevel (nightFromLevel in an older balance).
+  // The level — campaign.storyLevel (Meta.configureNewCampaign); an older save of a story order
+  // falls back to its own level, anything else has everything open. The same as sim.js → introGates.
+  const INTRO = TUNING.intro || {};
+  function introLevel(campaign) {
+    if (campaign.storyLevel > 0) return campaign.storyLevel;
+    return campaign.runMode === 'campaign' && campaign.levelIndex >= 0 ? campaign.levelIndex + 1 : Infinity;
+  }
+
+  // need: 'smoke' | 'hunger' | 'night' | 'sleep' (fatigue and sleep).
+  function needOpen(campaign, need) {
+    const from = need === 'sleep' && INTRO.sleepFromLevel === undefined ? INTRO.nightFromLevel : INTRO[need + 'FromLevel'];
+    return !(from > introLevel(campaign));
+  }
+
+  function fatigueFill(builder) {
+    return Math.min(1, (builder.fatigue || 0) / builder.fatigueScale);
+  }
+
+  // Energy left: the points of his fatigue scale he has not used up yet.
+  function energyLeft(builder) {
+    return Math.max(0, builder.fatigueScale - (builder.fatigue || 0));
+  }
+
+  // 'tired' with SLEEP.tiredPoints of energy left, 'worn' with none (he goes to sleep himself), else ''.
+  function fatigueStatus(builder) {
+    const left = energyLeft(builder);
+    return left <= 0 ? 'worn' : left <= SLEEP.tiredPoints ? 'tired' : '';
+  }
+
+  // Tired or worn out: speed −SLEEP.debuff × 100 at once.
+  function fatigueDebuff(builder) {
+    return fatigueStatus(builder) ? SLEEP.debuff : 0;
+  }
+
+  // His fatigue scale is full. Tools that run the engine without the simulator (no site clock) get
+  // no sleep, as no night.
+  function sleepDue(builder, world) {
+    if (builder.trade !== 'builder' || !siteClock(world)) return false;
+    return builder.fatigue >= builder.fatigueScale;
+  }
+
+  function sleepSeconds() {
+    return rollSpan(SLEEP.sleepMin, SLEEP.sleepMax);
+  }
+
   function carryWeight(campaign, materialId) {
     const heavy = campaign.foremen.heavyMat && MATERIAL[materialId].grid >= 2 ? campaign.foremen.heavyMat.value : 1;
-    return MATERIAL[materialId].cell / sessionValue('lightCarry', campaign.purchases.lightCarry) / heavy;
+    // «Лёгкая ноша» of the materials lab: every cube a share lighter.
+    const lab = campaign.lab && campaign.lab.weight ? campaign.lab.weight : 1;
+    // «Невесомость» (a spell): the next cubes weigh half.
+    const light = campaign.spellWeightless > 0 ? 0.5 : 1;
+    return MATERIAL[materialId].cell / sessionValue('lightCarry', campaign.purchases.lightCarry) / heavy * lab * light;
+  }
+
+  // ---------- needs: hunger, smoke, fatigue (docs/gdd/08-needs-weather-events.md) ----------
+  // Every need is a scale of points that fills at a rate in points a second: 1 at base, times what
+  // speeds it up (the smoking habit, night for fatigue, the weather: campaign.environment*Rate) and
+  // over what slows it (upgrades, the dish). Every scale is rolled anew after its need is served:
+  // hunger hungerPointsMin…Max (builder.hungerScale; what is left of it is his satiety — hungry
+  // with hungryPoints left, at none a meal), smoke smokePointsMin…Max (builder.smokeThreshold), fatigue
+  // SLEEP.fatiguePointsMin…Max (builder.fatigueScale; at the top sleep). A rate changing mid-way
+  // (snow begins) only changes how fast the rest fills, and the worker card shows the time left at
+  // the rate now (needSecondsLeft).
+  function rollHunger() {
+    return rollSpan(BALANCE.hungerPointsMin, BALANCE.hungerPointsMax);
+  }
+
+  function hungerRate(builder, world) {
+    const campaign = world.campaign;
+    // «Сытные порции»: after a canteen meal (he has its dish) the satiety lasts longer.
+    // «Горячий сбитень»: the cold does not hurry his hunger.
+    return (seasonOn(builder, campaign, 'snow') ? 1 : campaign.environmentHungerRate || 1) / advancedValue(campaign, 'advStamina', 1) /
+      ((campaign.metaHunger || 1) * dishBoost(builder, 'satiety') * (builder.dish ? campBoost(campaign, 'portions') : 1));
+  }
+
+  function smokeRate(builder, world) {
+    const campaign = world.campaign;
+    // «Горячий шоколад»: the rain does not make him smoke more often.
+    return (1 + SMOKING.habitInterval * (builder.habit || 0)) * (seasonOn(builder, campaign, 'rain') ? 1 : campaign.environmentSmokeRate || 1) /
+      (sessionValue('smokeRare', campaign.purchases.smokeRare) * (campaign.metaSmoke || 1) * dishBoost(builder, 'smoke') *
+        advancedValue(campaign, 'advSmoke', 1));
+  }
+
+  function fatigueRate(builder, world) {
+    // «Окрошка на квасе»: the heat does not tire him faster.
+    return (nightNow(world) ? SLEEP.nightFatigue : 1) * (seasonOn(builder, world.campaign, 'heat') ? 1 : world.campaign.environmentFatigueRate || 1) /
+      advancedValue(world.campaign, 'advStamina', 1) /
+      lineValue(world.campaign, 'coffee') /
+      // «Душевые» (⬡ «Городок»): after a sleep in the dorm, till the next sleep.
+      (builder.showered ? lineValue(world.campaign, 'campShower') : 1) /
+      (world.campaign.office ? world.campaign.office.fatigue : 1);
+  }
+
+  function needState(builder, world, need) {
+    if (need === 'hunger') return { points: builder.hunger, max: builder.hungerScale, rate: hungerRate(builder, world) };
+    if (need === 'smoke') return { points: builder.smokeNeed, max: builder.smokeThreshold, rate: smokeRate(builder, world) };
+    return { points: builder.fatigue || 0, max: builder.fatigueScale, rate: fatigueRate(builder, world) };
+  }
+
+  // Seconds until the need fills to `fill` of its scale (1 — the top) at its rate now; 0 if it is there.
+  // Fatigue walks the site clock ahead instead (×SLEEP.nightFatigue at night, the weather as it is
+  // now), so the time to sleep does not jump at nightfall and dawn.
+  function needSecondsLeft(builder, world, need, fill) {
+    const state = needState(builder, world, need);
+    const target = state.max * (fill === undefined ? 1 : fill);
+    const sim = root.MicroBuildersSim;
+    if (need !== 'fatigue' || !siteClock(world)) return Math.max(0, (target - state.points) / state.rate);
+    const weather = world.campaign.environmentFatigueRate || 1;
+    const now = world.campaign.levelElapsed;
+    const horizon = 3 * sim.cycleSeconds();
+    const step = 5;
+    let points = state.points;
+    let t = 0;
+    while (points < target && t < horizon) {
+      const rate = (sim.dayClock(now + t).night ? SLEEP.nightFatigue : 1) * weather;
+      if (points + rate * step >= target) return t + (target - points) / rate;
+      points += rate * step;
+      t += step;
+    }
+    return t;
   }
 
   function hungerFill(builder) {
-    return builder.hunger < BALANCE.hungerMax ? builder.hunger / BALANCE.hungerMax : 1;
+    return Math.min(1, builder.hunger / builder.hungerScale);
   }
 
-  function workSeconds(builder, seconds) {
-    seconds /= builder.timeEfficiency || 1;
-    // «Повар артели»: a good meal makes the worker faster for a while.
-    if (builder.fedLeft > 0) seconds /= builder.fedBoost;
-    if (builder.hungerClock < builder.hungerGrace) return seconds;
-    const debuff = BALANCE.hungerDebuffMin + (BALANCE.hungerDebuffMax - BALANCE.hungerDebuffMin) * hungerFill(builder);
-    return seconds / (1 - debuff);
+  // Satiety left: the points of his hunger scale not eaten up yet.
+  function satietyLeft(builder) {
+    return Math.max(0, builder.hungerScale - builder.hunger);
+  }
+
+  // Two steps by the points left, no smooth slope: 'hungry' with hungryPoints of satiety left (the
+  // player may send him to eat, sendWorker), 'starving' with none (he goes to eat himself), else ''.
+  function hungerStatus(builder) {
+    const left = satietyLeft(builder);
+    return left <= 0 ? 'starving' : left <= BALANCE.hungryPoints ? 'hungry' : '';
+  }
+
+  // Hungry or starving: strength × (1 − hungerDebuff) at once (workerStat).
+  function hungerDebuff(builder) {
+    return hungerStatus(builder) ? BALANCE.hungerDebuff : 0;
+  }
+
+  // ---------- injuries and the hospital (docs/gdd/08-needs-weather-events.md → «Травмы») ----------
+  // A worker has INJURY.health points of health. A step onto a scaffold piece worn to nothing
+  // throws him down with fallChance (scaffoldGivesWay, startFall): fallDamage + fallDamagePerFloor a
+  // floor fallen.
+  // Less health — less strength and skill, in steps (injuryPerf); at 0 he goes to the hospital,
+  // hospitalMinSquares…MaxSquares cells off the site, for hospitalSeconds and comes back whole.
+  const INJURY = TUNING.injury || {
+    health: 100, fallChance: 0.3, fallDamage: 10, fallDamagePerFloor: 5, freezeSeconds: 1, lieSeconds: 3, getUpSeconds: 0.6,
+    lightFrom: 0.5, lightPerf: 0.75, heavyFrom: 0.25, heavyPerf: 0.5, severePerf: 0.25,
+    hospitalSeconds: 300, hospitalMinSquares: 36, hospitalMaxSquares: 44,
+  };
+
+  function healthFill(builder) {
+    return Math.max(0, Math.min(1, builder.health / INJURY.health));
+  }
+
+  // '' — whole, 'light' — from lightFrom of his health, 'heavy' — from heavyFrom, 'severe' — below.
+  function injuryStatus(builder) {
+    const fill = healthFill(builder);
+    return fill >= 1 ? '' : fill >= INJURY.lightFrom ? 'light' : fill >= INJURY.heavyFrom ? 'heavy' : 'severe';
+  }
+
+  // His strength and skill × this (1 — whole).
+  function injuryPerf(builder) {
+    const status = injuryStatus(builder);
+    return status === 'light' ? INJURY.lightPerf : status === 'heavy' ? INJURY.heavyPerf : status === 'severe' ? INJURY.severePerf : 1;
+  }
+
+  // The «Ускорение» factor of the world being stepped (1 — no spell).
+  let spellHasteNow = 1;
+
+  // Seconds of hand work by his skill (workerStat): `seconds` at skill 100. The plan at the desk.
+  function workSeconds(builder, seconds, campaign) {
+    return seconds * 100 / workerStat(builder, campaign, 'skill');
   }
 
   // A cube of a material with grid N is built from N³ mini-cubes; workers carry and set them one
@@ -1383,72 +2183,55 @@
     return { x: x, y: y, z: z };
   }
 
-  // Session upgrade value as it works on site, with company (meta) bonuses applied.
+  // Session upgrade value as it works on site, with company (meta) bonuses applied. The upgrades of
+  // the actions (walking, climbing, setting, picking, scaffolds) show the crew's tempo at 100 of the
+  // characteristic, before the soft cap (softCap): the capped tempo is hidden for now.
+  const TEMPO_UPGRADES = { horizontal: 'walk', vertical: 'climb', speed: 'place', pickup: 'pick', scaffold: 'scaffold' };
   function upgradeValue(campaign, kind, level) {
     const value = sessionValue(kind, level);
-    if (kind === 'speed') return value * campaign.metaPlaceSpeed;
-    if (kind === 'pickup') return value * campaign.metaPickupSpeed;
+    if (kind === 'speed') return EFFORT.tempo * value * campaign.metaPlaceSpeed;
+    if (kind === 'pickup') return EFFORT.tempo * value * campaign.metaPickupSpeed;
     if (kind === 'carry') return value * campaign.metaCarryScale + campaign.metaCarry;
     if (kind === 'plan') return value + campaign.metaPlan;
-    if (kind === 'horizontal' || kind === 'vertical') return value * campaign.metaMovement;
-    if (kind === 'scaffold') return value * campaign.metaScaffold;
+    if (kind === 'horizontal') return EFFORT.tempo * value * campaign.metaMovement;
+    if (kind === 'vertical') return EFFORT.tempo * value * campaign.metaMovement * campaign.metaClimb;
+    if (kind === 'scaffold') return EFFORT.tempo * value * campaign.metaScaffold;
     return value;
   }
 
   // Prices come from the balance (calibrated by pricing.js); the old curves are only a fallback.
-  function upgradeCost(kind, purchases) {
+  // `campaign` — the site's: «Оптовые закупки» of the office make every site upgrade a share cheaper.
+  function upgradeCost(kind, purchases, campaign) {
     const prices = SESSION_BALANCE[kind] && SESSION_BALANCE[kind].prices;
-    if (prices && prices.length > 0) return prices[Math.min(purchases, prices.length - 1)];
     const spec = UPGRADES[kind];
-    return Math.round(spec.base * Math.pow(spec.growth, purchases));
+    const base = prices && prices.length > 0 ? prices[Math.min(purchases, prices.length - 1)] : Math.round(spec.base * Math.pow(spec.growth, purchases));
+    const discount = campaign && campaign.office ? Math.min(0.9, campaign.office.discount || 0) : 0;
+    return discount > 0 ? Math.max(1, Math.round(base * (1 - discount))) : base;
   }
 
-function statsOf(campaign, pace) {
-  const move = campaign.metaMovement * campaign.environmentMoveMultiplier;
-  const current = buildSpeed(campaign, pace);
-  const next = sessionValue('speed', campaign.purchases.speed + 1) *
-    campaign.metaPlaceSpeed * campaign.environmentWorkMultiplier / pace;
-  const horizontal = sessionValue('horizontal', campaign.purchases.horizontal) * move / pace;
-  const vertical = sessionValue('vertical', campaign.purchases.vertical) * move / pace;
-  return {
-    builders: sessionValue('builders', campaign.purchases.builders),
-    buildSpeed: current,
-    carryKg: carryKg(campaign),
-    nextBuilders: sessionValue('builders', campaign.purchases.builders + 1),
-    nextBuildSpeed: next,
-    nextCarryKg: sessionValue('carry', campaign.purchases.carry + 1) * campaign.metaCarryScale + campaign.metaCarry,
-    horizontalSpeed: horizontal,
-    nextHorizontalSpeed: sessionValue('horizontal', campaign.purchases.horizontal + 1) * move / pace,
-    verticalSpeed: vertical,
-    nextVerticalSpeed: sessionValue('vertical', campaign.purchases.vertical + 1) * move / pace,
-    planCubes: planCubeLimit(campaign),
-    nextPlanCubes: sessionValue('plan', campaign.purchases.plan + 1) + campaign.metaPlan,
-    vehicles: sessionValue('vehicles', campaign.purchases.vehicles),
-    nextVehicles: sessionValue('vehicles', campaign.purchases.vehicles + 1),
-    vehicleHeight: vehicleHeight(campaign),
-    nextVehicleHeight: sessionValue('vehicleHeight', campaign.purchases.vehicleHeight + 1),
-    vehicleReach: vehicleReach(campaign),
-    nextVehicleReach: sessionValue('vehicleReach', campaign.purchases.vehicleReach + 1),
-    scaffoldSeconds: scaffoldSeconds(campaign, pace),
-    nextScaffoldSeconds: SCAFFOLD.erectSeconds * pace /
-      sessionValue('scaffold', campaign.purchases.scaffold + 1) /
-      campaign.metaScaffold,
-    kitchen: campaign.purchases.kitchen,
-    nextKitchen: campaign.purchases.kitchen + 1,
+  // A building's cubes as the planning rules see them (sealsOther): the main site's blocks; a camp
+  // building has its own view of its cubes (campCubesView), the rules are the same.
+  const MAIN_CUBES = {
+    at: function (world, x, y, z) {
+      return world.index.inside(x, y, z) ? world.blockGrid[world.index.id(x, y, z)] || null : null;
+    },
+    built: function (block) { return block.built; },
+    ready: function (block) { return block.ready; },
+    reserved: function (block) { return block.reserved; },
   };
-}
 
-  function sealsOther(candidate, world, planned) {
+  function sealsOther(candidate, world, planned, cubes) {
     // Glass goes into a cell that is already solid: it closes nothing.
     if (candidate.glassOf !== undefined) return false;
+    cubes = cubes || MAIN_CUBES;
     const index = world.index;
     const nearby = world.nearbyBlocks;
     nearby.length = 0;
     for (let dy = -1; dy <= 1; dy++) {
       for (let dz = -1; dz <= 1; dz++) {
         for (let dx = -1; dx <= 1; dx++) {
-          const block = world.blockByKey.get(cellKey(candidate.x + dx, candidate.y + dy, candidate.z + dz));
-          if (block && block !== candidate && !block.built) {
+          const block = cubes.at(world, candidate.x + dx, candidate.y + dy, candidate.z + dz);
+          if (block && block !== candidate && !cubes.built(block)) {
             nearby.push(block);
           }
         }
@@ -1468,9 +2251,9 @@ function statsOf(campaign, pace) {
               if (x === candidate.x && y === candidate.y && z === candidate.z) continue;
               if (y < 0 || !index.inside(x, y, z)) continue;
               const id = index.id(x, y, z);
-              const future = world.blockGrid[id];
+              const future = cubes.at(world, x, y, z);
               if (world.solidGrid[id] === 1) continue;
-              if (planned.has(id) || (future && future.reserved && !future.built)) continue;
+              if (planned.has(id) || (future && cubes.reserved(future) && !cubes.built(future))) continue;
               open = true;
               break;
             }
@@ -1483,7 +2266,7 @@ function statsOf(campaign, pace) {
     if (!canStand(candidate.x, candidate.y, candidate.z, world)) return false;
     for (let i = 0; i < nearby.length; i++) {
       const block = nearby[i];
-      if (!block.ready) continue;
+      if (!cubes.ready(block)) continue;
       let open = false;
       for (let dy = -1; dy <= 1 && !open; dy++) {
         for (let dz = -1; dz <= 1 && !open; dz++) {
@@ -1495,11 +2278,11 @@ function statsOf(campaign, pace) {
             if (x === candidate.x && y === candidate.y && z === candidate.z) continue;
             if (y < 0 || !index.inside(x, y, z)) continue;
             const id = index.id(x, y, z);
-            const future = world.blockGrid[id];
-            if (planned.has(id) || (future && future.reserved && !future.built)) continue;
+            const future = cubes.at(world, x, y, z);
+            if (planned.has(id) || (future && cubes.reserved(future) && !cubes.built(future))) continue;
             if (world.solidGrid[id] === 1) continue;
             const belowId = index.id(x, y - 1, z);
-            const belowFuture = world.blockGrid[belowId];
+            const belowFuture = cubes.at(world, x, y - 1, z);
             if (y === 0 ||
                 world.mastGrid[id] === 1 ||
                 world.deckGrid[id] === 1 ||
@@ -1508,7 +2291,7 @@ function statsOf(campaign, pace) {
                 world.doorGrid[index.id(x, y - 1, z)] === 1 ||
                 (x === candidate.x && y - 1 === candidate.y && z === candidate.z) ||
                 planned.has(belowId) ||
-                (belowFuture && belowFuture.reserved && !belowFuture.built) ||
+                (belowFuture && cubes.reserved(belowFuture) && !cubes.built(belowFuture)) ||
                 world.mastGrid[index.id(x, y - 1, z)] === 1) {
               open = true;
               break;
@@ -1529,9 +2312,32 @@ function statsOf(campaign, pace) {
     builder.plan = next;
   }
 
+  // The plan has mini-cubes left to pick up. A started cube whose share of this plan is used up
+  // stays in builder.plan (it is his) but waits for the next plan at the desk.
   function planHasWork(builder) {
     refreshPlan(builder);
-    return builder.plan.length > 0;
+    for (let i = 0; i < builder.plan.length; i++) {
+      if (builder.plan[i].planLeft > 0) return true;
+    }
+    return false;
+  }
+
+  // View: mini-cubes of the current plan not set yet — still to pick up plus in his hands.
+  function planMinis(builder) {
+    let count = 0;
+    for (let i = 0; i < builder.plan.length; i++) {
+      if (!builder.plan[i].built) count += builder.plan[i].planLeft;
+    }
+    for (let i = 0; i < builder.carry.length; i++) {
+      if (!builder.carry[i].built) count += 1;
+    }
+    return count;
+  }
+
+  function releasePlanBlock(block) {
+    block.reserved = false;
+    block.owner = -1;
+    block.planLeft = 0;
   }
 
   function canCompleteAfter(block, world, completed) {
@@ -1578,39 +2384,66 @@ function statsOf(campaign, pace) {
   }
 
   // Carry limit of the next trip («Кладовщик»: every N-th trip of the crew carries double).
-  function tripCapacity(world) {
+  function tripCapacity(world, builder) {
     const storekeeper = world.campaign.foremen.storekeeper;
     const doubled = !!storekeeper && (world.foremanTrips + 1) % Math.round(storekeeper.value) === 0;
-    return { kg: carryKg(world.campaign) * (doubled ? 2 : 1), doubled: doubled };
+    return { kg: carryKg(world.campaign, builder) * (doubled ? 2 : 1), doubled: doubled };
   }
 
   function cubeCarryWeight(world, block) {
     return (pourTotal(block) - block.poured) * carryWeight(world.campaign, block.materialId);
   }
 
-  // A plan is one trip: up to «План работ» cubes and no heavier than the carry, so the worker never
-  // comes back for a leftover. A cube heavier than the carry is a plan of its own and goes in parts.
+  // A plan is one desk visit: up to «План работ» mini-cubes and no heavier than the carry. The
+  // plan counts mini-cubes, so a big cube can take several plans: it stays his from the first
+  // mini-cube on and heads each next plan until it is done. The plan takes whole cubes while the
+  // count allows; only the last one may be cut by the count (a cut cube is no support yet, so it
+  // is always last). A share heavier than the carry is a plan of its own and goes in parts.
   // builder.planReason (view): 'count' — the plan limit, 'weight' — the next cube would not fit,
-  // 'front' — no more free cubes nearby, 'heavy' — one cube heavier than the carry.
+  // 'front' — no more free cubes nearby, 'heavy' — the plan is heavier than the carry.
   function reservePlan(builder, world) {
-    const limit = planCubeLimit(world.campaign);
-    const capacity = tripCapacity(world).kg;
+    const limit = Math.max(1, Math.floor(planCubeLimit(world.campaign)));
+    const capacity = tripCapacity(world, builder).kg;
     let load = 0;
+    let count = 0;
     let weightBlocked = false;
     const chosen = [];
     const planned = new Set();
     const completed = new Set();
     const candidates = world.orderedBlocks;
+
+    function take(block, share) {
+      const rest = pourTotal(block) - block.poured;
+      block.planLeft = share;
+      count += share;
+      load += share * carryWeight(world.campaign, block.materialId);
+      chosen.push(block);
+      planned.add(world.index.id(block.x, block.y, block.z));
+      if (share >= rest) completed.add(cellKey(block.x, block.y, block.z));
+    }
+
+    // His started cubes go first: whoever started a cube finishes it.
     for (let i = 0; i < builder.plan.length; i++) {
       const block = builder.plan[i];
       if (block.built) continue;
-      chosen.push(block);
-      load += cubeCarryWeight(world, block);
-      planned.add(world.index.id(block.x, block.y, block.z));
-      completed.add(cellKey(block.x, block.y, block.z));
+      const share = Math.min(pourTotal(block) - block.poured, limit - count);
+      if (share > 0) {
+        take(block, share);
+      } else if (block.poured > 0) {
+        block.planLeft = 0;
+        chosen.push(block);
+      } else {
+        releasePlanBlock(block);
+      }
     }
-    let anchor = chosen.length > 0 ? chosen[0] : null;
-    if (!anchor && chosen.length < limit) {
+    let anchor = null;
+    for (let i = 0; i < chosen.length; i++) {
+      if (chosen[i].planLeft > 0) {
+        anchor = chosen[i];
+        break;
+      }
+    }
+    if (!anchor && count < limit) {
       for (let i = 0; i < candidates.length; i++) {
         const block = candidates[i];
         if (block.built || block.reserved || block.failedNavSerial === world.navSerial) continue;
@@ -1618,35 +2451,29 @@ function statsOf(campaign, pace) {
         if (!block.ready) continue;
         if (sealsOther(block, world, planned)) continue;
         anchor = block;
-        chosen.push(block);
-        load += cubeCarryWeight(world, block);
-        planned.add(world.index.id(block.x, block.y, block.z));
-        completed.add(cellKey(block.x, block.y, block.z));
+        take(block, Math.min(pourTotal(block) - block.poured, limit - count));
         break;
       }
     }
     const heavy = anchor !== null && load > capacity;
     let added = anchor !== null && !heavy;
-    while (added && chosen.length < limit) {
+    while (added && count < limit) {
       added = false;
-      for (let i = 0; i < candidates.length && chosen.length < limit; i++) {
+      for (let i = 0; i < candidates.length && count < limit; i++) {
         const block = candidates[i];
         if (block.built || block.reserved || block.failedNavSerial === world.navSerial) continue;
         if (block.owner !== -1) continue;
         const id = world.index.id(block.x, block.y, block.z);
         if (planned.has(id)) continue;
         if (Math.max(Math.abs(block.x - anchor.x), Math.abs(block.z - anchor.z)) > BALANCE.loadRadius) continue;
-        const weight = cubeCarryWeight(world, block);
-        if (load + weight > capacity) {
+        const share = Math.min(pourTotal(block) - block.poured, limit - count);
+        if (load + share * carryWeight(world.campaign, block.materialId) > capacity) {
           weightBlocked = true;
           continue;
         }
         if (!canCompleteAfter(block, world, completed)) continue;
         if (sealsOther(block, world, planned)) continue;
-        load += weight;
-        chosen.push(block);
-        planned.add(id);
-        completed.add(cellKey(block.x, block.y, block.z));
+        take(block, share);
         added = true;
       }
     }
@@ -1655,7 +2482,21 @@ function statsOf(campaign, pace) {
       chosen[i].owner = builder.index;
     }
     builder.plan = chosen;
-    builder.planReason = heavy ? 'heavy' : chosen.length >= limit ? 'count' : weightBlocked ? 'weight' : 'front';
+    builder.planReason = heavy ? 'heavy' : count >= limit ? 'count' : weightBlocked ? 'weight' : 'front';
+    return count;
+  }
+
+  // Trips a cube still needs after this one: the rest of this plan's share in carries of
+  // `perTrip`, then plans of up to `limit` mini-cubes each.
+  function cubeTripsAfter(rest, share, perTrip, limit) {
+    let trips = Math.ceil(Math.min(share, rest) / perTrip);
+    rest -= Math.min(share, rest);
+    while (rest > 0) {
+      const next = Math.min(limit, rest);
+      trips += Math.ceil(next / perTrip);
+      rest -= next;
+    }
+    return trips;
   }
 
   // Fills the carry from the plan. Also notes for the view why the load stopped growing
@@ -1666,14 +2507,18 @@ function statsOf(campaign, pace) {
   // The notes never feed back into the simulation.
   function haulFromPlan(builder, world) {
     refreshPlan(builder);
-    const trip = tripCapacity(world);
+    const trip = tripCapacity(world, builder);
     const doubled = trip.doubled;
     const capacity = trip.kg;
     let left = capacity;
     let split = null;
     const chosen = [];
+    // finished — cubes this trip completes (support for the next ones); done — cubes whose share
+    // of the plan this trip takes up.
     const finished = new Set();
+    const done = new Set();
     const plan = builder.plan;
+    const planLimit = Math.max(1, Math.floor(planCubeLimit(world.campaign)));
     let heavy = null;
     let limit = 'plan';
 
@@ -1683,10 +2528,11 @@ function statsOf(campaign, pace) {
       for (let i = 0; i < plan.length; i++) {
         const block = plan[i];
         const key = cellKey(block.x, block.y, block.z);
-        if (block.built || finished.has(key) || block.failedNavSerial === world.navSerial) continue;
+        if (block.built || block.planLeft <= 0 || done.has(key) || block.failedNavSerial === world.navSerial) continue;
         if (!canCompleteAfter(block, world, finished)) continue;
         const weight = carryWeight(world.campaign, block.materialId);
-        const need = pourTotal(block) - block.poured;
+        const rest = pourTotal(block) - block.poured;
+        const need = Math.min(block.planLeft, rest);
         const remainingWeight = need * weight;
         if (weight > left) {
           if (weight > capacity) {
@@ -1708,18 +2554,20 @@ function statsOf(campaign, pace) {
           left -= weight;
           taken += 1;
         }
-        // A cube heavier than the carry goes in parts: this is trip k of n for it.
-        const total = pourTotal(block);
-        if (taken > 0 && total * weight > capacity) {
+        // A cube that does not go in one trip (heavier than the carry or bigger than the plan)
+        // goes in parts: this is trip k of n for it.
+        if (taken > 0 && (taken < rest || block.haulTrips > 0)) {
           const perTrip = Math.max(1, Math.floor(capacity / weight));
-          split = { trip: Math.floor(block.poured / perTrip) + 1, trips: Math.ceil(total / perTrip) };
+          const trip = block.haulTrips + 1;
+          split = { trip: trip, trips: trip + cubeTripsAfter(rest - taken, need - taken, perTrip, planLimit) };
         }
         if (taken < need) {
           limit = 'carry';
           grew = false;
           break;
         }
-        finished.add(key);
+        done.add(key);
+        if (taken >= rest) finished.add(key);
         grew = true;
       }
     }
@@ -1732,7 +2580,7 @@ function statsOf(campaign, pace) {
       // limit), anything else waits for its support or the build order.
       for (let i = 0; i < plan.length; i++) {
         const block = plan[i];
-        if (block.built || finished.has(cellKey(block.x, block.y, block.z))) continue;
+        if (block.built || block.planLeft <= 0 || done.has(cellKey(block.x, block.y, block.z))) continue;
         if (carryWeight(world.campaign, block.materialId) > capacity) {
           limit = 'carry';
           continue;
@@ -1764,15 +2612,15 @@ function statsOf(campaign, pace) {
 
   // Walking slowdown for a load: weight over the base carry limit (not the doubled storekeeper
   // capacity — that is how the trip timing was calibrated).
-  function overloadFactor(weight, world) {
-    const overload = Math.max(1, weight / carryKg(world.campaign));
+  function overloadFactor(weight, world, builder) {
+    const overload = Math.max(1, weight / carryKg(world.campaign, builder));
     // «Тяжеловес» softens the slowdown of an overloaded trip.
     const soften = world.campaign.foremen.overload;
     return soften ? 1 + (overload - 1) * soften.value : overload;
   }
 
   function carryOverload(builder, world) {
-    return overloadFactor(carriedWeight(builder, world), world);
+    return overloadFactor(carriedWeight(builder, world), world, builder);
   }
 
   // View: what the worker has in hands now. kg — real mini-cube weights («Снижение веса»,
@@ -1782,12 +2630,12 @@ function statsOf(campaign, pace) {
   function carryLoad(builder, world, out) {
     const kg = carriedWeight(builder, world);
     const busy = builder.carry.length > 0 || builder.mineQueue.length > 0;
-    const capacity = busy && builder.tripCapacity > 0 ? builder.tripCapacity : carryKg(world.campaign);
+    const capacity = busy && builder.tripCapacity > 0 ? builder.tripCapacity : carryKg(world.campaign, builder);
     const load = out || {};
     load.kg = kg;
     load.capacity = capacity;
     load.fill = capacity > 0 ? kg / capacity : 0;
-    load.overload = overloadFactor(kg, world);
+    load.overload = overloadFactor(kg, world, builder);
     return load;
   }
 
@@ -1838,19 +2686,64 @@ function statsOf(campaign, pace) {
       routeTargetId: -1,
       faceX: cell[0],
       faceZ: cell[2] + 1,
+      // Need scales (points, see hungerRate): hunger, fatigue (spawnBuilder starts it part-way up).
       hunger: 0,
-      hungerClock: 0,
-      hungerGrace: rollSpan(BALANCE.hungerGraceMin, BALANCE.hungerGraceMax),
-      fatigue: index * 11,
+      hungerScale: rollHunger(),
+      fatigue: 0,
+      fatigueScale: rollFatigue(),
+      // 'dorm' — tonight's bed is in the site's dorm, '' — the far trailers.
+      sleepPlace: '',
+      sleepFrom: 0,
+      sleepTotal: 0,
       smokeNeed: 0,
-      smokeThreshold: rollSpan(BALANCE.smokeDesireMin, BALANCE.smokeDesireMax),
+      smokeThreshold: rollSmoke(),
       trade: 'builder',
+      // «Учебный центр»: experience (cubes he set himself, by their grid), rank (1…), the efficiency
+      // before the rank (the expertise rank of «Бригадир смены» or 1).
+      xp: 0,
+      rank: 1,
+      baseEfficiency: 1,
       yardSlot: null,
       awayCell: null,
       mealCount: 0,
       restCount: 0,
       smokeCount: 0,
       breakKind: '',
+      // Canteen: the dish of his last meal there ('' — none), where the current meal is
+      // ('canteen' or ''), building the canteen now, canteen cubes in his hands.
+      dish: '',
+      // «Шеф-повар» at his last canteen meal; on his way back from a smoke («Дорожки на перекур»).
+      dishPower: 1,
+      fromSmoke: false,
+      mealPlace: '',
+      // Set off for the canteen this hunger cycle: he does not go there again till his next meal
+      // (turned away at a full one, he forgets it and eats the usual way).
+      canteenTried: false,
+      // Health (INJURY.health when whole): falls through worn scaffolds take it, the hospital gives it back.
+      health: INJURY.health,
+      // The fall he is in (startFall): { stage, t, seconds, piece, fromY, toY }; null — none.
+      fall: null,
+      // Smoking habit on this site; the smoke group he is with; a call he heard and will follow
+      // ({ group, until } in level seconds); where this smoke is ('lounge' — a seat at the site's
+      // lounge, '' — a spot off the site).
+      habit: 0,
+      smokeGroup: null,
+      smokeCall: null,
+      smokePlace: '',
+      // Slept in the dorm last time («Душевые»: his fatigue fills slower till the next sleep).
+      showered: false,
+      camp: null,
+      campCarry: 0,
+      // The hand work he is on (workTimer): 'place' | 'pick' | 'scaffold', its effort and his tempo.
+      work: '',
+      workEffort: 0,
+      workTempo: 0,
+      campHops: 0,
+      // Indices of the camp cubes in his hands and the one he is setting.
+      campCubes: [],
+      campIndex: -1,
+      // Seconds he has waited on the camp since his last cube or trip (campStalled).
+      campStall: 0,
       exitAfterPlace: false,
       forcePlace: false,
       // View-only bookkeeping (never read by the simulation): why the worker waits, the plan
@@ -1894,13 +2787,110 @@ function statsOf(campaign, pace) {
     const builder = createBuilder(index, cell);
     // Only the workers brought by expertise have a rank. Recruits and session hires are regular.
     const ranks = world.campaign.metaWorkerRanks || [];
-    builder.timeEfficiency = index < ranks.length ? ranks[index] : 1;
+    builder.baseEfficiency = index < ranks.length ? ranks[index] : 1;
+    builder.timeEfficiency = builder.baseEfficiency;
     builder.expertiseRank = index < ranks.length ? ranks[index] : 0;
+    // «Учебный центр»: a resumed site gives back his experience (by hiring order); a fresh start —
+    // the starting workers come at «Подготовленный набор», hires with «Стажировка».
+    const training = world.campaign.training;
+    const ordinal = countWorkers(world);
+    const resumed = world.campaign.resumeWorkerXp || [];
+    if (ordinal < resumed.length) builder.xp = resumed[ordinal] || 0;
+    else if (training && training.on) {
+      builder.xp = ordinal < (world.campaign.baseMetaBuilders || 0)
+        ? rankXp(Math.min(training.startRank, training.cap)) : (training.hireXp || 0) + lineValue(world.campaign, 'hireXp');
+    }
+    builder.hungerScale += lineValue(world.campaign, 'satiety');
+    settleRank(builder, world, false);
     builder.timer /= builder.timeEfficiency;
-    builder.smokeThreshold = rollSmoke(world.campaign);
+    // A hire starts rested: hires come at different times, so the crew's sleep spreads into a wave.
+    builder.fatigue = ((SLEEP.startFatigueMin || 0) + Math.random() * ((SLEEP.startFatigueMax || 0) - (SLEEP.startFatigueMin || 0))) * builder.fatigueScale;
     world.builders.push(builder);
     world.events.push({ type: 'spawn', builder: builder });
     return builder;
+  }
+
+  // ---------- «Учебный центр»: experience and ranks (docs/gdd/26-builder-school-draft.md) ----------
+  const TRAINING = (window.MicroBuildersBalance.meta && window.MicroBuildersBalance.meta.training) ||
+    { ranks: [{ xp: 0, work: 1 }], baseRankCap: 3 };
+
+  function countWorkers(world) {
+    let count = 0;
+    for (let i = 0; i < world.builders.length; i++) if (world.builders[i].trade !== 'engineer') count += 1;
+    return count;
+  }
+
+  // Experience a rank starts at (rank 1 — 0).
+  function rankXp(rank) {
+    const spec = TRAINING.ranks[Math.max(0, Math.min(TRAINING.ranks.length, rank) - 1)];
+    return spec ? spec.xp : 0;
+  }
+
+  // The work factor of a rank; «Сила разряда» stretches its bonus.
+  function rankWork(rank, campaign) {
+    const spec = TRAINING.ranks[Math.max(0, Math.min(TRAINING.ranks.length, rank) - 1)];
+    const power = campaign && campaign.training ? campaign.training.power || 1 : 1;
+    return 1 + ((spec ? spec.work : 1) - 1) * power;
+  }
+
+  // Rank from experience under the site's cap; the efficiency follows it. `announce` — a rank-up event.
+  function settleRank(builder, world, announce) {
+    const training = world.campaign.training;
+    const cap = training && training.on ? training.cap : 1;
+    let rank = 1;
+    // «Ускоренная аттестация»: every rank asks for less experience.
+    const exam = lineValue(world.campaign, 'rankFast');
+    while (rank < cap && rank < TRAINING.ranks.length && builder.xp >= TRAINING.ranks[rank].xp * exam) rank += 1;
+    if (announce && rank > builder.rank) world.events.push({ type: 'rankUp', builder: builder, rank: rank });
+    builder.rank = rank;
+    builder.timeEfficiency = builder.baseEfficiency * rankWork(rank, world.campaign);
+  }
+
+  // A worker set a whole cube himself: experience by its grid (a heavy grid-3 cube — 3 points).
+  function gainWorkerXp(builder, world, block) {
+    const training = world.campaign.training;
+    if (!training || !training.on || builder.trade === 'engineer') return;
+    // 1 a whole cube: not the mini-cubes, whatever the grid; «Мастер-класс» (advanced) doubles it.
+    builder.xp += (training.xpScale || 1) * advancedValue(world.campaign, 'advXp', 1) * lineValue(world.campaign, 'xpRate');
+    settleRank(builder, world, true);
+  }
+
+  // Offline cubes: their experience is shared by the workers evenly — 1 a whole cube, only the workers'
+  // share of them (`share`, sim.js → builderShare; drones and machines give none).
+  function shareWorkerXp(world, blocks, share) {
+    const training = world.campaign.training;
+    if (!training || !training.on || blocks.length === 0) return;
+    const workers = world.builders.filter(function (builder) { return builder.trade !== 'engineer'; });
+    if (workers.length === 0) return;
+    const points = blocks.length * (share === undefined ? 1 : share);
+    const each = points * (training.xpScale || 1) * advancedValue(world.campaign, 'advXp', 1) * lineValue(world.campaign, 'xpRate') / workers.length;
+    workers.forEach(function (builder) {
+      builder.xp += each;
+      settleRank(builder, world, false);
+    });
+  }
+
+  // After a meta purchase (cap, power): every worker's rank and efficiency anew.
+  function refreshRanks(world) {
+    for (let i = 0; i < world.builders.length; i++) {
+      if (world.builders[i].trade !== 'engineer') settleRank(world.builders[i], world, true);
+    }
+  }
+
+  // Experience of the workers in hiring order (the site snapshot keeps it).
+  function workerXpList(world) {
+    if (!world) return [];
+    return world.builders.filter(function (builder) { return builder.trade !== 'engineer'; })
+      .map(function (builder) { return Math.round((builder.xp || 0) * 10) / 10; });
+  }
+
+  // For the worker card: rank, experience and the next threshold (null — the cap or the top).
+  function workerRankInfo(builder, campaign) {
+    const training = campaign && campaign.training;
+    const cap = training && training.on ? training.cap : 1;
+    const next = builder.rank < cap && builder.rank < TRAINING.ranks.length ? TRAINING.ranks[builder.rank].xp : null;
+    return { on: !!(training && training.on), rank: builder.rank || 1, xp: builder.xp || 0, from: rankXp(builder.rank || 1), next: next, cap: cap,
+      work: rankWork(builder.rank || 1, campaign) };
   }
 
   function createVehicle(index, cell) {
@@ -1971,7 +2961,7 @@ function statsOf(campaign, pace) {
     const index = world.index;
     if (!index.inside(x, 0, z)) return false;
     const id = index.id(x, 0, z);
-    if (world.solidGrid[id] === 1 || world.waterGrid[id] === 1) return false;
+    if (world.solidGrid[id] === 1 || world.waterGrid[id] === 1 || (world.campGrid[id] & CAMP_PAD) !== 0) return false;
     return world.blockGrid[id] === undefined;
   }
 
@@ -2934,6 +3924,7 @@ function statsOf(campaign, pace) {
 
   function beginDroneFlight(builder, world, target, purpose, cruise) {
     builder.phase = 'fly';
+    builder.droneWork = null;
     builder.flyTarget = target;
     builder.flyPurpose = purpose;
     builder.flyCruise = Math.max(cruise, builder.cell[1], target[1]);
@@ -3027,7 +4018,7 @@ function statsOf(campaign, pace) {
     beginDroneFlight(builder, world, droneMineSpot(builder, mine), 'mine', droneBaseCruise(builder));
   }
 
-  // Every machine keeps one drone free for its patterns; only the rest may take slow build jobs.
+  // Keep one standby drone for machine patterns; active build jobs are never interrupted.
   function droneMayBuild(world) {
     let drones = 0;
     let building = 0;
@@ -3037,7 +4028,7 @@ function statsOf(campaign, pace) {
       drones += 1;
       if (builder.droneJob === 'build') building += 1;
     }
-    return building < drones - Math.min(drones, world.vehicles.length);
+    return building < drones - (world.vehicles.length > 0 ? 1 : 0);
   }
 
   // Flying builders only set a cube that stands on a built cube or the ground, sits at most two
@@ -3097,6 +4088,7 @@ function statsOf(campaign, pace) {
     invalidateNav(world, block.x, block.y, block.z);
     pullOut(world, block, builder);
     world.remaining -= 1;
+    cubeSet(world);
     world.foremanBuilt.push(block);
     world.stats.droneBlocks = (world.stats.droneBlocks || 0) + 1;
     world.constructionStallElapsed = 0;
@@ -3113,6 +4105,45 @@ function statsOf(campaign, pace) {
       capitalCoin: pay.capitalCoin,
     });
     if (world.remaining === 0) finishLevel(world);
+  }
+
+  function droneWorkRate(builder, world) {
+    const campaign = world.campaign;
+    return (builder.phase === 'pick'
+      ? sessionValue('gather', campaign.purchases.gather) * campaign.metaPickupSpeed * droneWork(world, 'droneGather')
+      : sessionValue('droneBuild', campaign.purchases.droneBuild) * campaign.metaPlaceSpeed * droneWork(world, 'machines', true)) / world.level.pace;
+  }
+
+  function beginDroneWork(builder, world, restored) {
+    const mass = MATERIAL[builder.droneBlock.materialId].weight;
+    const delay = builder.phase === 'pick' ? 0.6 : 0;
+    // Old/restored phases may only have their elapsed and remaining timers. Recover the
+    // completed work at their original rate, with the fixed pickup delay after the work.
+    const duration = restored ? Math.max(0, builder.actionT + builder.timer - delay) : mass / droneWorkRate(builder, world);
+    const elapsed = restored ? builder.actionT : 0;
+    builder.droneWork = {
+      phase: builder.phase,
+      total: mass,
+      remaining: mass * (1 - (duration > 0 ? Math.min(1, elapsed / duration) : 1)),
+      workDuration: duration,
+      delayTotal: delay,
+      delay: Math.max(0, delay - Math.max(0, elapsed - duration)),
+    };
+  }
+
+  function advanceDroneWork(builder, world, dt) {
+    if (!builder.droneWork || builder.droneWork.phase !== builder.phase) beginDroneWork(builder, world, true);
+    const work = builder.droneWork;
+    const rate = droneWorkRate(builder, world);
+    const done = Math.min(work.remaining, dt * rate);
+    work.remaining -= done;
+    work.delay = Math.max(0, work.delay - Math.max(0, dt - done / rate));
+    builder.timer = work.remaining / rate + work.delay;
+    // Project actual completed work onto the existing animation timer interface. Using
+    // the initial phase weights keeps its fraction monotonic even when rates slow down.
+    const elapsed = (1 - work.remaining / work.total) * work.workDuration + work.delayTotal - work.delay;
+    const left = work.remaining / work.total * work.workDuration + work.delay;
+    builder.actionT = left > 0 ? builder.timer * elapsed / left : work.workDuration + work.delayTotal;
   }
 
   function arriveDrone(builder, world) {
@@ -3132,9 +4163,9 @@ function statsOf(campaign, pace) {
       builder.phase = 'pick';
       builder.carryMaterial = block.materialId;
       builder.carryColor = MATERIAL[block.materialId].color;
-      builder.timer = MATERIAL[block.materialId].weight /
-        (sessionValue('gather', world.campaign.purchases.gather) * droneWork(world, 'droneGather')) * world.level.pace + 0.6;
       builder.actionT = 0;
+      beginDroneWork(builder, world, false);
+      advanceDroneWork(builder, world, 0);
       return;
     }
     if (purpose === 'slot') {
@@ -3144,11 +4175,10 @@ function statsOf(campaign, pace) {
       return;
     }
     if (purpose === 'block') {
-      const block = builder.droneBlock;
       builder.phase = 'place';
-      builder.timer = MATERIAL[block.materialId].weight /
-        (sessionValue('droneBuild', world.campaign.purchases.droneBuild) * droneWork(world, 'machines', true)) * world.level.pace;
       builder.actionT = 0;
+      beginDroneWork(builder, world, false);
+      advanceDroneWork(builder, world, 0);
     }
   }
 
@@ -3176,8 +4206,11 @@ function statsOf(campaign, pace) {
       builder.wait = 1;
       return;
     }
-    builder.timer -= dt;
-    builder.actionT += dt;
+    if (builder.phase === 'pick' || builder.phase === 'place') advanceDroneWork(builder, world, dt);
+    else {
+      builder.timer -= dt;
+      builder.actionT += dt;
+    }
     if (builder.droneJob === 'build') world.constructionStallElapsed = 0;
     if (builder.timer > 0) return;
     if (builder.phase === 'pick') {
@@ -3303,6 +4336,7 @@ function statsOf(campaign, pace) {
       world.built.add(cellKey(block.x, block.y, block.z));
       occupyBuiltBlock(block, world);
       world.remaining -= 1;
+      cubeSet(world);
       world.foremanBuilt.push(block);
       world.stats.vehicleBlocks += 1;
       placed.push(block);
@@ -3485,19 +4519,31 @@ function statsOf(campaign, pace) {
   }
 
   function arrive(builder, world) {
+    // The first walk after a smoke ends here: the way back is over.
+    if (builder.walkPurpose !== 'smoke') builder.fromSmoke = false;
     builder.cell = builder.to.slice();
     builder.from = builder.cell.slice();
     builder.segmentT = 1;
+    if (builder.walkPurpose === 'campFetch') {
+      beginCampFetch(builder, world);
+      return;
+    }
+    if (builder.walkPurpose === 'kitchen') {
+      builder.walkPurpose = '';
+      builder.phase = 'kitchen';
+      if (world.canteen) {
+        builder.faceX = world.canteen.x + Math.floor(world.canteen.w / 2);
+        builder.faceZ = world.canteen.z;
+      }
+      return;
+    }
     if (builder.walkPurpose === 'mine') {
       const group = builder.mineQueue[0];
       builder.phase = 'mine';
       // Picking up goes by mass, like placing: every mini-cube of the group weighs one cell.
       let mass = 0;
       for (let i = 0; i < group.blocks.length; i++) mass += MATERIAL[group.blocks[i].materialId].cell;
-      builder.timer = workSeconds(
-        builder,
-        mass * world.level.pace / (sessionValue('pickup', world.campaign.purchases.pickup) * world.campaign.metaPickupSpeed)
-      );
+      builder.timer = pickSeconds(builder, world, mass);
       builder.actionT = 0;
       builder.faceX = group.mine.x;
       builder.faceZ = group.mine.z;
@@ -3506,27 +4552,87 @@ function statsOf(campaign, pace) {
     if (builder.walkPurpose === 'erect') {
       const piece = builder.erectPiece;
       builder.phase = 'erect';
-      builder.timer = workSeconds(builder, scaffoldSeconds(world.campaign, world.level.pace));
+      builder.timer = erectSeconds(piece, world, builder);
       builder.actionT = 0;
       builder.faceX = piece.x;
       builder.faceZ = piece.z;
       return;
     }
+    // A grand dinner seats everyone.
+    if (builder.walkPurpose === 'meal' && builder.mealPlace === 'canteen' && !builder.grandDue && canteenEating(world) >= canteenSeats(world)) {
+      // Every seat is taken: he forgets the canteen till his next meal (canteenTried stays) — very
+      // hungry, on to town from here; else back to work, still hungry.
+      builder.mealPlace = '';
+      world.canteen.turnedAway += 1;
+      world.events.push({ type: 'canteenFull', builder: builder });
+      if (builder.hunger >= builder.hungerScale) {
+        root.MicroBuildersWorkerLog.record(builder, world, 'В столовой нет мест; пошёл обедать в город');
+        startNeedTrip(builder, world, 'meal');
+        return;
+      }
+      builder.needTrip = '';
+      builder.awayCell = null;
+      root.MicroBuildersWorkerLog.record(builder, world, 'В столовой нет мест; вернулся к работе голодным');
+      beginExit(builder, world);
+      return;
+    }
     if (builder.walkPurpose === 'meal') {
       builder.phase = 'meal';
-      builder.timer = BALANCE.mealSeconds;
+      // «Быстрый обед»: any meal a second shorter a level (not under 5 s).
+      builder.timer = Math.max(5, (builder.mealPlace === 'canteen' ? canteenMealSeconds(world) : BALANCE.mealSeconds) - lineValue(world.campaign, 'mealFast'));
+      builder.actionT = 0;
+      builder.faceX = builder.cell[0];
+      // At the canteen he faces its door.
+      builder.faceZ = builder.cell[2] + (builder.mealPlace === 'canteen' ? -1 : 1);
+      return;
+    }
+    if (builder.walkPurpose === 'sleep') {
+      builder.phase = 'break';
+      builder.breakKind = 'sleep';
+      builder.sleepFrom = builder.fatigue;
+      // «Здоровый сон»: a second shorter a level.
+      builder.sleepTotal = Math.max(60, sleepSeconds() * (builder.sleepPlace === 'dorm' ? dormSleepScale(world.campaign) : 1) - lineValue(world.campaign, 'sleepFast'));
+      builder.timer = builder.sleepTotal;
       builder.actionT = 0;
       builder.faceX = builder.cell[0];
       builder.faceZ = builder.cell[2] + 1;
       return;
     }
-    if (builder.walkPurpose === 'smoke') {
+    // The hospital: INJURY.hospitalSeconds lying there; hunger and fatigue grow on (accrueNeeds).
+    if (builder.walkPurpose === 'heal') {
       builder.phase = 'break';
-      builder.breakKind = 'smoke';
-      builder.timer = smokeDuration(world.campaign);
+      builder.breakKind = 'heal';
+      builder.timer = INJURY.hospitalSeconds;
       builder.actionT = 0;
       builder.faceX = builder.cell[0];
       builder.faceZ = builder.cell[2] + 1;
+      world.stats.hospital = (world.stats.hospital || 0) + 1;
+      return;
+    }
+    if (builder.walkPurpose === 'smokeMeet') {
+      waitForSmokeCompany(builder, world);
+      return;
+    }
+    if (builder.walkPurpose === 'smoke' && builder.smokePlace === 'lounge' && loungeSmokers(world) >= loungeSeats(world)) {
+      // Every seat at the lounge is taken: off to the usual spot off the site instead.
+      builder.smokePlace = '';
+      if (world.lounge) world.lounge.turnedAway += 1;
+      world.events.push({ type: 'loungeFull', builder: builder });
+      root.MicroBuildersWorkerLog.record(builder, world, 'В зоне отдыха нет мест; пошёл курить на обычное место');
+      // No way to a spot from here: he smokes where he stands.
+      if (startSmokeOverflow(builder, world)) return;
+    }
+    if (builder.walkPurpose === 'smoke') {
+      const lounge = builder.smokePlace === 'lounge';
+      builder.phase = 'break';
+      builder.breakKind = 'smoke';
+      builder.timer = smokeDuration(world.campaign) * (1 + SMOKING.habitDuration * (builder.habit || 0)) *
+        (1 + SMOKING.chat * Math.min(SMOKING.chatMax, smokeCompanions(builder, world))) *
+        (lounge ? LOUNGE.smokeScale || 1 : 1);
+      builder.actionT = 0;
+      builder.faceX = builder.cell[0];
+      // At the lounge he faces it.
+      builder.faceZ = builder.cell[2] + (lounge ? -1 : 1);
       return;
     }
     if (builder.walkPurpose === 'out') {
@@ -3534,6 +4640,14 @@ function statsOf(campaign, pace) {
       return;
     }
     if (builder.walkPurpose === 'recover') {
+      builder.escapeKind = '';
+      if (builder.unwall) {
+        builder.unwall = false;
+        builder.phase = 'idle';
+        builder.wait = 0;
+        requestWork(builder, world);
+        return;
+      }
       beginPlanning(builder);
       return;
     }
@@ -3541,6 +4655,11 @@ function statsOf(campaign, pace) {
       builder.phase = 'idle';
       builder.wait = 0;
       requestWork(builder, world);
+      return;
+    }
+    if (builder.walkPurpose === 'taxi') {
+      builder.walkPurpose = '';
+      reachTaxi(builder, world);
       return;
     }
     const block = builder.carry[0];
@@ -3553,98 +4672,121 @@ function statsOf(campaign, pace) {
     builder.actionT = 0;
     builder.faceX = block.x;
     builder.faceZ = block.z;
-    builder.timer = block.poured >= pourTotal(block) ? 0 : workSeconds(builder, placeSeconds(world.campaign, world.level.pace, block));
+    builder.timer = block.poured >= pourTotal(block) ? 0 : builderPlaceSeconds(builder, world, block);
   }
 
-  function elevatorPadBy(world, x, z, side) {
-    const pads = world.elevatorPads;
-    if (!pads) return null;
-    for (let i = 0; i < pads.length; i++) {
-      const pad = pads[i];
-      if (side === 'enter' && pad.enterX === x && pad.enterZ === z) return pad;
-      if (side === 'exit' && pad.exitX === x && pad.exitZ === z) return pad;
-      if (side === 'lobby' && ((pad.enterX === x && pad.enterZ === z) || (pad.exitX === x && pad.exitZ === z))) return pad;
-    }
-    return null;
-  }
-
-  function elevatorFloors(world) {
-    return sessionValue('elevatorHeight', world.campaign.purchases.elevatorHeight);
-  }
-
-  function isElevatorHop(from, to, world) {
-    const pad = elevatorPadBy(world, from[0], from[2], 'enter');
-    if (!pad) return false;
-    if (to[0] !== pad.exitX || to[2] !== pad.exitZ) return false;
-    if (from[1] === to[1]) return false;
-    const height = elevatorFloors(world);
-    return from[1] >= 0 && to[1] >= 0 && from[1] < height && to[1] < height;
-  }
-
-  function pushElevatorRides(world, x, y, z, price, state, push) {
-    const pad = elevatorPadBy(world, x, z, 'enter');
-    if (!pad) return;
-    const height = elevatorFloors(world);
-    if (y < 0 || y >= height) return;
-    const index = world.index;
-    for (let floor = 0; floor < height; floor++) {
-      if (floor === y) continue;
-      if (!index.inside(pad.exitX, floor, pad.exitZ)) continue;
-      const nextId = index.id(pad.exitX, floor, pad.exitZ);
-      const nextMode = buildSurfaceMode(pad.exitX, floor, pad.exitZ, world);
-      push(nextId * SURFACE_STATE_COUNT + nextMode, price + Math.abs(floor - y) * SCAFFOLD.elevatorFloorPrice, state, null);
-    }
-  }
-
-function segmentSpeed(from, to, world) {
-  if (isElevatorHop(from, to, world)) {
-    const floors = Math.abs(to[1] - from[1]);
-    const perFloor = sessionValue('elevatorSpeed', world.campaign.purchases.elevatorSpeed);
-    return 1 / (floors * perFloor);
-  }
-  const walk = walkSpeedNow(world);
-  const climb = climbSpeedNow(world);
-  const vertical = from[0] === to[0] && from[2] === to[2];
-  if (vertical) return climb;
-  // Onto a cube: walk up to its face, climb it, step on — the honest sum, no diagonal. Off a cube
-  // he jumps down: the drop takes half the climb's time.
-  if (from[1] !== to[1]) return 1 / (1 / walk + Math.abs(to[1] - from[1]) / (to[1] > from[1] ? climb : climb * JUMP_DOWN));
-  return walk;
+// Soft tempo cap (balance.json → tuning.builders: walkSoftCap, climbSoftCap, softCapPower): the
+// crew's factor of walking and climbing (session upgrade × meta) counts in full up to the threshold
+// T, above it only as a root — T · (v / T)^power (T = 2, power 0,5: ×4 → ×2,83, ×8 → ×4). The
+// worker's characteristic, the trip's foremen and the efforts multiply after it. The same as
+// sim.js → softCap.
+function softCap(value, threshold) {
+  if (!(threshold > 0) || !(value > threshold)) return value;
+  return threshold * Math.pow(value / threshold, BALANCE.softCapPower || 0.5);
 }
 
-// Cells per second on flat ground and on a climb (ladder, cube face), with meta, weather and foremen.
-function walkSpeedNow(world) {
+// The night and the heat on every step and climb (campaign.environmentMove; «Кофе ночной смены» —
+// half the night's for him) and the level's pace.
+function moveEffortFactor(world, builder) {
   const campaign = world.campaign;
-  return sessionValue('horizontal', campaign.purchases.horizontal) *
-    campaign.metaMovement * campaign.environmentMoveMultiplier * campaign.foremanRush / world.level.pace;
+  let factor = (campaign.environmentMove || 1) * world.level.pace;
+  if (seasonOn(builder, campaign, 'night')) factor *= halfPenalty(campaign.environmentNightMove || 1);
+  return factor;
 }
 
-function climbSpeedNow(world) {
+// Effort of a flat step at level y: on the ground EFFORT.ground, up on the building (cubes and decks,
+// y ≥ 1) EFFORT.deck + deckPerFloor a floor above the first. «Уверенный шаг» (advanced) walks there as
+// on the ground, «Уверенные настилы» take their share of the extra off, «Гарнир «Высотник»» half of
+// it. The weather on that surface (snow: campaign.environmentGround, environmentDeck; «Горячий
+// сбитень» — half of it), the night, the heat and the pace (moveEffortFactor) multiply it. The same
+// as sim.js → flatEffort. `builder` optional (his dishes).
+function flatEffort(world, builder, y) {
   const campaign = world.campaign;
-  return sessionValue('vertical', campaign.purchases.vertical) *
-    campaign.metaMovement * campaign.environmentMoveMultiplier * campaign.foremanRush * campaign.metaClimb / world.level.pace;
+  const snowDish = seasonOn(builder, campaign, 'snow');
+  let points;
+  if (y <= 0 || advancedOwned(campaign, 'advDeck')) {
+    const ground = campaign.environmentGround || 1;
+    points = EFFORT.ground * (snowDish ? (1 + ground) / 2 : ground);
+  } else {
+    let extra = (EFFORT.deck + EFFORT.deckPerFloor * (y - 1) - EFFORT.ground) * (1 - Math.min(1, lineValue(campaign, 'deckWalk')));
+    if (ateDish(builder, function (dish) { return dish.effect === 'deck'; })) extra /= 2;
+    const deck = campaign.environmentDeck || 1;
+    points = (EFFORT.ground + Math.max(0, extra)) * (snowDish ? (1 + deck) / 2 : deck);
+  }
+  return points * moveEffortFactor(world, builder);
 }
 
-// Jumping off a cube is this many times faster than climbing it.
-const JUMP_DOWN = 2;
+// Effort of climbing |dy| floors (a ladder, a cube's face); jumping off a cube (down, not a ladder)
+// takes EFFORT.jump of it. Snow leaves the climbs alone.
+function climbEffort(world, builder, dy, ladder) {
+  return EFFORT.climb * Math.abs(dy) * (dy < 0 && !ladder ? EFFORT.jump : 1) * moveEffortFactor(world, builder);
+}
+
+// The trip's foremen and lines on his tempo: «Кладовщик» on the way to the quarry and with a load,
+// «Дорожки на перекур» to a smoke and back.
+function tripTempo(builder, world) {
+  return builder ? haulFactor(builder, world) * smokeWalk(builder, world) : 1;
+}
+
+// A step from `from` to `to` by this worker (no builder — the crew at 100), without the overload:
+// the flat part at the higher of its two levels at his walking tempo, plus the climb or the jump at
+// his climbing tempo — the honest sum, no diagonal; onto a piece worn to nothing — wornEffort times
+// both. Fills `out` (or a shared scratch) with flat / rise seconds, flatEffort / riseEffort and the
+// worn factor; returns it.
+const STEP_SCRATCH = { flat: 0, rise: 0, flatEffort: 0, riseEffort: 0, worn: 1 };
+function stepTimes(world, builder, from, to, out) {
+  const parts = out || STEP_SCRATCH;
+  const campaign = world.campaign;
+  const dy = to[1] - from[1];
+  const ladder = from[0] === to[0] && from[2] === to[2];
+  const trip = tripTempo(builder, world);
+  // A scaffold piece worn to nothing under the step: WEAR.wornEffort times the effort.
+  parts.worn = WEAR.wornEffort > 1 && wornPieceUnder(from, to, world) ? WEAR.wornEffort : 1;
+  parts.flatEffort = ladder ? 0 : flatEffort(world, builder, Math.max(from[1], to[1])) * parts.worn;
+  parts.riseEffort = dy === 0 ? 0 : climbEffort(world, builder, dy, ladder) * parts.worn;
+  parts.flat = parts.flatEffort > 0 ? parts.flatEffort / (actionTempo(builder, campaign, 'walk') * trip) : 0;
+  parts.rise = parts.riseEffort > 0 ? parts.riseEffort / (actionTempo(builder, campaign, 'climb') * trip) : 0;
+  return parts;
+}
+
+function stepSeconds(world, builder, from, to) {
+  const parts = stepTimes(world, builder, from, to);
+  return parts.flat + parts.rise;
+}
+
+// Seconds of the crew (at 100) on a flat step on the ground and on a floor of ladder: the planner's
+// units (refreshPathPrices), the air taxi's pace.
+function groundStepSeconds(world) {
+  return flatEffort(world, null, 0) / actionTempo(null, world.campaign, 'walk');
+}
+
+function climbFloorSeconds(world) {
+  return climbEffort(world, null, 1, true) / actionTempo(null, world.campaign, 'climb');
+}
 
 // View: where a walking builder is within its segment. A step onto or off a cube is three parts in
 // time — walk to the face (feet stay at the lower height going up, at the upper height going down),
 // climb straight up or down at the face, then walk onto the cell — so nobody slides diagonally.
 // Writes into `out` {x, y, z, mode: 'walk' | 'climb' | 'descend' | 'ladder' | 'ride', climb: 0..1}.
-const FACE_GAP = 0.24;
+const FACE_GAP = 0.26; // how far from the cube face he climbs (cubes fill their cells)
+const VIEW_STEP = { flat: 0, rise: 0, flatEffort: 0, riseEffort: 0 };
 function builderPosition(builder, world, out) {
   const from = builder.from;
   const to = builder.to;
   const t = builder.segmentT;
   out.climb = 0;
+  // Falling (stepFall): straight down from fromY, speeding up as in free fall.
+  if (builder.phase === 'fall' && builder.fall) {
+    const fall = builder.fall;
+    const share = fall.stage === 'drop' && fall.seconds > 0 ? Math.min(1, fall.t / fall.seconds) : 0;
+    out.x = builder.cell[0]; out.z = builder.cell[2];
+    out.y = fall.stage === 'freeze' ? fall.fromY : fall.stage === 'drop' ? fall.fromY - (fall.fromY - fall.toY) * share * share : builder.cell[1];
+    out.mode = 'fall';
+    return out;
+  }
   if (builder.phase !== 'walk' || t >= 1) {
     out.x = to[0]; out.y = to[1]; out.z = to[2]; out.mode = 'walk';
     if (builder.phase !== 'walk') { out.x = builder.cell[0]; out.y = builder.cell[1]; out.z = builder.cell[2]; }
-    return out;
-  }
-  if (isElevatorHop(from, to, world)) {
-    out.x = from[0]; out.y = from[1]; out.z = from[2]; out.mode = 'ride';
     return out;
   }
   const dx = to[0] - from[0];
@@ -3656,8 +4798,9 @@ function builderPosition(builder, world, out) {
     out.climb = dy === 0 ? 0 : t;
     return out;
   }
-  const flat = 1 / walkSpeedNow(world);
-  const rise = Math.abs(dy) / (dy > 0 ? climbSpeedNow(world) : climbSpeedNow(world) * JUMP_DOWN);
+  const times = stepTimes(world, builder, from, to, VIEW_STEP);
+  const flat = times.flat;
+  const rise = times.rise;
   const total = flat + rise;
   let u;
   if (dy > 0) {
@@ -3705,7 +4848,6 @@ function builderPosition(builder, world, out) {
 }
 
   function canFollowPathStep(builder, from, to, world) {
-    if (isElevatorHop(from, to, world)) return true;
     if (!world.index.inside(to[0], to[1], to[2])) return false;
     const nextId = world.index.id(to[0], to[1], to[2]);
     if (builder.walkPurpose === 'recover' &&
@@ -3721,6 +4863,10 @@ function builderPosition(builder, world, out) {
   }
 
   function replanWalk(builder, world) {
+    if (builder.walkPurpose === 'smokeMeet' && builder.smokeGroup) {
+      updateSmokeCompany(builder.smokeGroup, world);
+      if (builder.smokeGroup.departed && walkToSmoke(builder, world, false)) return;
+    }
     let path = null;
     if (builder.walkPurpose === 'mine') {
       const group = builder.mineQueue[0];
@@ -3734,8 +4880,14 @@ function builderPosition(builder, world, out) {
       if (route && !route.complete && route.stepIndex < route.steps.length) {
         path = findPathToCell(builder.cell, route.steps[route.stepIndex].cell, world);
       }
-    } else if (builder.walkPurpose === 'meal' || builder.walkPurpose === 'smoke') {
+    } else if (builder.walkPurpose === 'taxi') {
+      if (builder.taxi) path = findPathToCell(builder.cell, taxiBoardCell(world, builder.taxi), world);
+    } else if (builder.walkPurpose === 'meal' || builder.walkPurpose === 'smoke' || builder.walkPurpose === 'smokeMeet' || builder.walkPurpose === 'sleep' || builder.walkPurpose === 'heal') {
       path = findPathToCell(builder.cell, builder.awayCell, world);
+    } else if (builder.walkPurpose === 'campFetch') {
+      // On to the camp stack: the way home would end the walk there, and he would pick the cubes
+      // from the spawn.
+      path = findPathToCell(builder.cell, builder.path[builder.path.length - 1], world);
     } else {
       const spawn = world.level.spawnPoints[builder.index % world.level.spawnPoints.length];
       path = findPathToCell(builder.cell, spawn, world);
@@ -3744,8 +4896,29 @@ function builderPosition(builder, world, out) {
       beginWalk(builder, path, builder.walkPurpose, world);
       return;
     }
+    rerouteOrAbandon(builder, world, 'Повторный поиск пути не нашёл маршрут');
+  }
+
+  // A blocked walk on a route or on the way home: lay a fresh way from here — to the cubes still in
+  // hand (requestRoute, scaffolds and passages included) or home — instead of dropping the load.
+  // A few tries in a row without a single step made fall back to the old recovery.
+  const REROUTE_TRIES = 3;
+  function rerouteOrAbandon(builder, world, reason) {
     if (sealCommittedCube(builder, world)) return;
-    abandonJobAndRecover(builder, world, 'Повторный поиск пути не нашёл маршрут', 'path');
+    const purpose = builder.walkPurpose;
+    if (purpose === 'taxi') leaveTaxi(builder);
+    if ((purpose === 'route' || purpose === 'taxi' || purpose === 'out' || purpose === 'recover') && (builder.reroutes || 0) < REROUTE_TRIES) {
+      builder.reroutes = (builder.reroutes || 0) + 1;
+      cancelRoute(builder, world);
+      builder.path = null;
+      builder.walkPurpose = '';
+      builder.phase = 'idle';
+      builder.wait = 0;
+      requestWork(builder, world);
+      return;
+    }
+    builder.reroutes = 0;
+    abandonJobAndRecover(builder, world, reason, 'path');
   }
 
   function advanceWalk(builder, world, dt) {
@@ -3760,16 +4933,13 @@ function builderPosition(builder, world, out) {
       if (builder.segmentT === 0 && !canFollowPathStep(builder, builder.from, builder.to, world)) {
         builder.blockedWalkAttempts += 1;
         if (builder.blockedWalkAttempts >= 2) {
-          if (sealCommittedCube(builder, world)) return;
-          abandonJobAndRecover(builder, world, 'Путь дважды заблокирован в начале шага', 'path');
+          rerouteOrAbandon(builder, world, 'Путь дважды заблокирован в начале шага');
           return;
         }
         replanWalk(builder, world);
         return;
       }
-      const riding = isElevatorHop(builder.from, builder.to, world);
-      const speed = segmentSpeed(builder.from, builder.to, world) /
-        (riding ? 1 : overload) * haulFactor(builder, world) * (riding ? 1 : builder.timeEfficiency || 1);
+      const speed = 1 / (stepSeconds(world, builder, builder.from, builder.to) * overload);
       const remain = (1 - builder.segmentT) / speed;
       if (left < remain) {
         builder.segmentT += left * speed;
@@ -3781,9 +4951,20 @@ function builderPosition(builder, world, out) {
       left -= remain;
       builder.segmentT = 1;
       builder.cell = builder.to.slice();
+      // A piece worn to nothing gives way under him: the fall takes over (stepFall).
+      if (scaffoldGivesWay(builder, world)) return;
+      wearScaffold(builder, world);
       builder.blockedWalkAttempts = 0;
+      builder.reroutes = 0;
       world.constructionStallElapsed = 0;
       builder.pathIndex += 1;
+      if (builder.walkPurpose === 'smokeMeet' && builder.smokeGroup) {
+        updateSmokeCompany(builder.smokeGroup, world);
+        if (builder.smokeGroup.departed && walkToSmoke(builder, world, false)) return;
+      }
+      // A step done: an urgent need or a smoke (his own or a call) may turn him off the way.
+      if (!unbroken(builder) && urgentNeed(builder, world) && divertToNeed(builder, world)) return;
+      if ((builder.smokeCall || builder.smokeNeed >= builder.smokeThreshold) && divertToSmoke(builder, world)) return;
       if (builder.pathIndex >= builder.path.length - 1) {
         builder.to = builder.cell.slice();
         arrive(builder, world);
@@ -3794,8 +4975,7 @@ function builderPosition(builder, world, out) {
       if (!canFollowPathStep(builder, builder.from, next, world)) {
         builder.blockedWalkAttempts += 1;
         if (builder.blockedWalkAttempts >= 2) {
-          if (sealCommittedCube(builder, world)) return;
-          abandonJobAndRecover(builder, world, 'Следующая клетка пути дважды заблокирована', 'path');
+          rerouteOrAbandon(builder, world, 'Следующая клетка пути дважды заблокирована');
           return;
         }
         replanWalk(builder, world);
@@ -3806,6 +4986,11 @@ function builderPosition(builder, world, out) {
       builder.faceX = builder.to[0];
       builder.faceZ = builder.to[2];
     }
+  }
+
+  // «Дорожки на перекур»: faster on the way to a smoke and back — only the trip, no buff after it.
+  function smokeWalk(builder, world) {
+    return builder.walkPurpose === 'smoke' || builder.walkPurpose === 'smokeMeet' || builder.fromSmoke ? campBoost(world.campaign, 'smokePath') : 1;
   }
 
   function releaseUnpicked(builder) {
@@ -3853,6 +5038,7 @@ function builderPosition(builder, world, out) {
       piece.reserved = false;
       piece.built = false;
       piece.removed = true;
+      resetWear(piece, world);
       world.mastGrid[world.index.id(piece.x, piece.y, piece.z)] = 0;
     }
     for (let i = 0; i < world.scaffoldDecks.length; i++) {
@@ -3860,6 +5046,7 @@ function builderPosition(builder, world, out) {
       deck.reserved = false;
       deck.built = false;
       deck.removed = true;
+      resetWear(deck, world);
       world.deckGrid[world.index.id(deck.x, deck.y, deck.z)] = 0;
     }
     world.events.push({ type: 'strip' });
@@ -3899,6 +5086,7 @@ function builderPosition(builder, world, out) {
         if (builder.droneJob === 'build') return true;
         continue;
       }
+      if (builder.camp) continue;
       if (builder.carry.length > 0) return true;
       if (builder.mineQueue.length > 0 || builder.erectPiece || builder.routeId >= 0) return true;
       if (builder.phase === 'recover') return true;
@@ -3946,6 +5134,20 @@ function builderPosition(builder, world, out) {
     finishLevel(world);
   }
 
+  // No whole cube set for a while: if what is left can never stand (floating islands — levels 30, 32
+  // and 35 have some), it is finished. The stall timer of resolveConstructionStall cannot see this:
+  // every walk, meal and break sets it back to zero, so with a crew that eats and smokes it never ran
+  // out and such a site hung at its last cubes. (A long trip to the top may well set no cube for a
+  // minute, so a sliver that can still be built is left to the crew.)
+  const LEFTOVER_ISLAND_SECONDS = 30;
+  function finishLeftovers(world) {
+    if (world.remaining <= 0 || world.campaign.status !== 'play' || !(world.noCubeElapsed >= LEFTOVER_ISLAND_SECONDS)) return;
+    // The support search is a sweep of the grid: once a stretch.
+    if (world.noCubeElapsed - (world.leftoverChecked || 0) < LEFTOVER_ISLAND_SECONDS) return;
+    world.leftoverChecked = world.noCubeElapsed;
+    if (unbuildableBlocks(world).length === world.remaining) autoCompleteUnreachable(world);
+  }
+
   function resolveConstructionStall(world) {
     if (world.remaining === 0) return;
     if (hasActiveConstruction(world)) {
@@ -3962,7 +5164,7 @@ function builderPosition(builder, world, out) {
       }
       for (let i = 0; i < world.builders.length; i++) {
         const builder = world.builders[i];
-        if (builder.trade === 'engineer') continue;
+        if (builder.trade === 'engineer' || builder.camp) continue;
         if (builder.carry.length === 0 &&
             builder.mineQueue.length === 0 &&
             !builder.erectPiece &&
@@ -4041,7 +5243,7 @@ function builderPosition(builder, world, out) {
     builder.passageBlock = block;
     builder.passageVertical = vertical;
     builder.phase = 'passage';
-    builder.timer = workSeconds(builder, scaffoldSeconds(world.campaign, world.level.pace));
+    builder.timer = erectSeconds(null, world, builder);
     builder.actionT = 0;
     builder.faceX = block.x;
     builder.faceZ = block.z;
@@ -4109,7 +5311,7 @@ function builderPosition(builder, world, out) {
         if (piece.reserved) {
           let reservationActive = false;
           for (let i = 0; i < world.builders.length; i++) {
-            if (world.builders[i].erectPiece === piece) {
+            if (world.builders[i] !== builder && world.builders[i].erectPiece === piece) {
               reservationActive = true;
               break;
             }
@@ -4200,7 +5402,7 @@ function builderPosition(builder, world, out) {
       // A cube heavier than the carry: this is trip `part` of `parts` for it, otherwise null.
       part: builder.haulSplit ? builder.haulSplit.trip : 0,
       parts: builder.haulSplit ? builder.haulSplit.trips : 0,
-      overload: overloadFactor(kg, world),
+      overload: overloadFactor(kg, world, builder),
       doubled: builder.haulDoubled,
     });
   }
@@ -4251,6 +5453,8 @@ function builderPosition(builder, world, out) {
       load[i].reserved = true;
       load[i].owner = builder.index;
       load[i].loadBatchId = builder.loadBatchId;
+      if (load[i].planLeft > 0) load[i].planLeft -= 1;
+      if (i === 0 || load[i] !== load[i - 1]) load[i].haulTrips += 1;
     }
     const groups = groupPlan(load, world);
     groups.sort(function (a, b) {
@@ -4264,6 +5468,11 @@ function builderPosition(builder, world, out) {
 
   function assignJob(builder, world) {
     builder.waitReason = '';
+    // On a camp building: his route, his cubes and the stack (resumeCamp).
+    if (builder.camp) {
+      resumeCamp(builder, world);
+      return;
+    }
     if (builder.carry.length > 0) {
       const routeProgress = continueRoute(builder, world);
       if (routeProgress === ROUTE_STARTED) return;
@@ -4275,6 +5484,7 @@ function builderPosition(builder, world, out) {
       }
       const targets = carriedRouteTargets(builder, world);
       const route = requestRoute(builder, world, targets);
+      if (route && boardTaxi(builder, world, targets, route)) return;
       if (route) {
         const nextProgress = continueRoute(builder, world);
         if (nextProgress === ROUTE_STARTED) return;
@@ -4315,6 +5525,11 @@ function builderPosition(builder, world, out) {
       return;
     }
     if (world.remaining > 0) {
+      if (builder.routeId >= 0 && world.routes[builder.routeId].home && continueHomeRoute(builder, world)) return;
+      // A camp building short of the crew its slider asks for takes him as soon as his hands are
+      // free and no cube of his is started, mid-plan too (the rest of the plan goes back to the
+      // crew): a plan of heavy cubes carried in parts would otherwise keep him for many trips.
+      if (planHasWork(builder) && campShort(world) && joinCamp(builder, world)) return;
       if (planHasWork(builder)) {
         const load = haulFromPlan(builder, world);
         if (load.length > 0) {
@@ -4330,11 +5545,15 @@ function builderPosition(builder, world, out) {
         beginExit(builder, world);
         return;
       }
-      reservePlan(builder, world);
-      builder.planTaken = builder.plan.length;
+      // A smoke or a meal first, before the plan: cubes reserved by someone away hold up the crew.
+      if (departIfNeeded(builder, world)) return;
+      if (joinCamp(builder, world)) return;
+      builder.planTaken = reservePlan(builder, world);
       builder.planLimit = planCubeLimit(world.campaign);
       if (builder.planTaken > 0) {
-        world.events.push({ type: 'plan', builder: builder.index, cubes: builder.planTaken, limit: builder.planLimit, reason: builder.planReason });
+        let cubes = 0;
+        for (let i = 0; i < builder.plan.length; i++) if (builder.plan[i].planLeft > 0) cubes += 1;
+        world.events.push({ type: 'plan', builder: builder.index, minis: builder.planTaken, cubes: cubes, limit: builder.planLimit, reason: builder.planReason });
       }
       const load = haulFromPlan(builder, world);
       if (load.length > 0) {
@@ -4401,7 +5620,7 @@ function builderPosition(builder, world, out) {
     builder.actionT = 0;
     builder.faceX = block.x;
     builder.faceZ = block.z;
-    builder.timer = workSeconds(builder, placeSeconds(world.campaign, world.level.pace, block));
+    builder.timer = builderPlaceSeconds(builder, world, block);
     return true;
   }
 
@@ -4411,6 +5630,8 @@ function builderPosition(builder, world, out) {
     builder.walkPurpose = '';
     builder.path = null;
     if (builder.carry.length === 0) finishTrip(builder, world);
+    if (urgentNeed(builder, world) && divertToNeed(builder, world)) return;
+    if (divertToSmoke(builder, world)) return;
     if (builder.exitAfterPlace) {
       builder.exitAfterPlace = false;
       if (builder.carry.length === 0) builder.loadBatchId = -1;
@@ -4443,7 +5664,9 @@ function builderPosition(builder, world, out) {
     block.poured += 1;
     block.owner = builder.index;
     block.reserved = true;
-    const pay = grantPlacePay(world, block, 1);
+    // «Золотая уха»: his cube is a likelier find (meta.js → capitalRoll).
+    if (builder.signature === 'ukha' && DISH.ukha) block.findBoost = DISH.ukha.value;
+    const pay = grantPlacePay(world, block, 1, builder);
     const gained = pay.coins;
     world.events.push({
       type: 'pour',
@@ -4470,7 +5693,10 @@ function builderPosition(builder, world, out) {
     world.constructionStallElapsed = 0;
     if (block.poured < total) {
       if (builder.carry.length > 0 && builder.carry[0] === block) {
-        builder.timer = workSeconds(builder, placeSeconds(world.campaign, world.level.pace, block));
+        // The mini-cube is set: an urgent need or a smoke may come in between (the cube waits for him).
+        if (urgentNeed(builder, world) && divertToNeed(builder, world)) return;
+        if (divertToSmoke(builder, world)) return;
+        builder.timer = builderPlaceSeconds(builder, world, block);
         builder.actionT = 0;
         return;
       }
@@ -4487,15 +5713,18 @@ function builderPosition(builder, world, out) {
     block.built = true;
     block.reserved = false;
     block.owner = -1;
+    if (world.campaign.spellWeightless > 0) world.campaign.spellWeightless -= 1;
     world.built.add(cellKey(block.x, block.y, block.z));
     occupyBuiltBlock(block, world);
     refreshReadyAround(world, block.x, block.y, block.z);
     invalidateNav(world, block.x, block.y, block.z);
     pullOut(world, block, builder);
     world.remaining -= 1;
+    cubeSet(world);
     world.foremanBuilt.push(block);
     wakeVehicles(world);
     world.events.push({ type: 'place', block: block, gained: 0, builder: builder.index });
+    gainWorkerXp(builder, world, block);
     refreshPlan(builder);
     builder.blockedWalkAttempts = 0;
     continueAfterPlace(builder, world);
@@ -4523,7 +5752,9 @@ function builderPosition(builder, world, out) {
   function builderNeed(builder) {
     if (builder.phase === 'meal' || builder.walkPurpose === 'meal') return 'meal';
     if (builder.phase === 'break') return builder.breakKind;
-    if (builder.walkPurpose === 'smoke') return 'smoke';
+    if (builder.phase === 'smokeCall' || builder.phase === 'smokeWait' || builder.walkPurpose === 'smokeMeet' || builder.walkPurpose === 'smoke') return 'smoke';
+    if (builder.walkPurpose === 'sleep') return 'sleep';
+    if (builder.walkPurpose === 'heal') return 'heal';
     return '';
   }
 
@@ -4555,54 +5786,2147 @@ function builderPosition(builder, world, out) {
     return [x, 0, z];
   }
 
-  function startNeedTrip(builder, world, kind) {
-    const minDist = kind === 'meal' ? BALANCE.mealMinSquares : BALANCE.smokeMinSquares;
-    const maxDist = kind === 'meal' ? BALANCE.mealMaxSquares : BALANCE.smokeMaxSquares;
-    const cell = pickPerimeterCell(world, minDist, maxDist);
-    builder.awayCell = cell;
+  // A bed in the dorm if one stands and a bed is free: a short way to its door (and inside) instead
+  // of the far trailers, and a shorter sleep (DORM.sleepScale).
+  function startDormSleep(builder, world) {
+    const dorm = world.dorm;
+    if (!dorm || dormSleepers(world) >= dormBeds(world)) return false;
+    const path = sameCell(builder.cell, dorm.door) ? [builder.cell.slice()] : findPathToCell(builder.cell, dorm.door, world);
+    if (!path) return false;
+    builder.sleepPlace = 'dorm';
+    builder.awayCell = dorm.door.slice();
+    builder.needTrip = 'sleep';
+    beginWalk(builder, path, 'sleep', world);
+    return true;
+  }
+
+  // A spot off the site for a trip of `kind` (town, trailers, hospital, a smoke) and his way there
+  // from where he stands: { cell, path } — path null when there is none from here.
+  function needTripWay(builder, world, kind) {
+    const minDist = kind === 'meal' ? BALANCE.mealMinSquares : kind === 'sleep' ? SLEEP.minSquares : kind === 'heal' ? INJURY.hospitalMinSquares : BALANCE.smokeMinSquares;
+    const maxDist = kind === 'meal' ? BALANCE.mealMaxSquares : kind === 'sleep' ? SLEEP.maxSquares : kind === 'heal' ? INJURY.hospitalMaxSquares : BALANCE.smokeMaxSquares;
+    let cell = pickPerimeterCell(world, minDist, maxDist);
+    for (let tries = 0; tries < 6 && !canStand(cell[0], cell[1], cell[2], world); tries++) cell = pickPerimeterCell(world, minDist, maxDist);
+    return { cell: cell, path: findPathToCell(builder.cell, cell, world) };
+  }
+
+  // `way` — one needTripWay already found.
+  function startNeedTrip(builder, world, kind, way) {
+    const trip = way || needTripWay(builder, world, kind);
+    builder.awayCell = trip.cell;
     builder.needTrip = kind;
-    const path = findPathToCell(builder.cell, cell, world);
-    if (path) {
-      beginWalk(builder, path, kind, world);
+    if (trip.path) {
+      beginWalk(builder, trip.path, kind, world);
       return;
     }
     builder.phase = 'recover';
     builder.wait = 0.2;
   }
 
+  // Off to eat or smoke: the plan's cubes not started yet go back to the crew; a started one stays
+  // with him (whoever started a cube finishes it).
+  function releaseUnstartedPlan(builder, world) {
+    const kept = [];
+    let released = 0;
+    for (let i = 0; i < builder.plan.length; i++) {
+      const block = builder.plan[i];
+      if (block.built) continue;
+      if (block.poured > 0 && block.owner === builder.index) {
+        kept.push(block);
+        continue;
+      }
+      if (block.owner === builder.index) {
+        releasePlanBlock(block);
+        released += 1;
+      }
+    }
+    builder.plan = kept;
+    builder.planTaken = planMinis(builder);
+    if (released > 0) wakeVehicles(world);
+  }
+
   function departIfNeeded(builder, world) {
     if (builder.carry.length > 0) return false;
-    if (builder.hunger >= BALANCE.hungerMax) {
-      if (world.campaign.purchases.kitchen > 0) {
-        builder.needTrip = 'meal';
-        builder.phase = 'meal';
-        builder.walkPurpose = '';
-        builder.timer = world.campaign.mealKitchenSeconds / sessionValue('kitchen', world.campaign.purchases.kitchen);
-        builder.actionT = 0;
-        return true;
-      }
+    const hungry = builder.hunger >= builder.hungerScale;
+    const canteen = canteenDue(builder, world) || (builder.grandDue && canteenActive(world));
+    const smoke = smokeWanted(builder, world);
+    const sleep = sleepDue(builder, world);
+    if (hungry || canteen || smoke || sleep) releaseUnstartedPlan(builder, world);
+    if (canteen && startCanteenMeal(builder, world)) return true;
+    // At the top of hunger: the classic meal in town, far and long, with no dish.
+    if (hungry) {
       startNeedTrip(builder, world, 'meal');
       return true;
     }
-    if (builder.smokeNeed >= builder.smokeThreshold) {
-      startNeedTrip(builder, world, 'smoke');
+    // Worn out: off to the trailers to sleep (a call to smoke he heard is forgotten).
+    if (sleep) {
+      builder.smokeCall = null;
+      builder.sleepPlace = '';
+      if (!startDormSleep(builder, world)) startNeedTrip(builder, world, 'sleep');
+      return true;
+    }
+    if (smoke) {
+      if (!startSmoke(builder, world)) startNeedTrip(builder, world, 'smoke');
       return true;
     }
     return false;
   }
 
+  // ---------- states nothing breaks (docs/gdd/08-needs-weather-events.md → «Что не прерывается») ----------
+  // A worker is never pulled out of these — not by a smoke, nor by his urgent hunger or fatigue, nor
+  // by the player's order: setting a mini-cube (the one transaction of the build; between two
+  // mini-cubes of a cube he may go, the cube stays his) or a camp cube; a meal, a smoke, a sleep, the
+  // hospital and the way to them; a taxi trip (the walk to it and the flight); the kitchen; an
+  // emergency way back (recover); a fall. Anything else stops at the next safe moment: a walk at the
+  // end of the step he is on, picking, planning, a scaffold piece or a passage at once.
+  const UNBROKEN_PHASES = { smokeCall: true, smokeWait: true, place: true, campBuild: true, meal: true, break: true, taxi: true, kitchen: true, recover: true, fall: true };
+  const UNBROKEN_WALKS = { meal: true, smoke: true, smokeMeet: true, sleep: true, heal: true, taxi: true, kitchen: true, recover: true };
+  function unbroken(builder) {
+    if (builder.kitchen || UNBROKEN_PHASES[builder.phase]) return true;
+    return builder.phase === 'walk' && !!UNBROKEN_WALKS[builder.walkPurpose];
+  }
+
+  // ---------- urgent needs and the player's orders ----------
+  // No health left (the hospital), very hungry (the full scale) or worn out (sleepDue): off at the
+  // next moment he is not in an unbroken state (divertToNeed) — unlike a smoke, the unbuilt cubes in
+  // his hands and his plan go back to the crew; a cube he started stays his, and he finishes it back
+  // at work. A meal goes to the canteen when it stands and he has not been turned away there this
+  // hunger cycle, else to town; a sleep — to a free dorm bed, else to the far trailers. The player's
+  // order from the worker card (sendWorker) makes a hungry worker very hungry, a tired one worn out:
+  // the same way off.
+  function urgentNeed(builder, world) {
+    if (builder.trade !== 'builder' || builder.kitchen) return '';
+    if (builder.health <= 0) return 'heal';
+    if (needOpen(world.campaign, 'hunger') && builder.hunger >= builder.hungerScale) return 'meal';
+    if (sleepDue(builder, world)) return 'sleep';
+    return '';
+  }
+
+  function divertToNeed(builder, world) {
+    const need = urgentNeed(builder, world);
+    if (!need || builderNeed(builder)) return false;
+    // No way off from here (high on the building): try again in a few seconds, not every step.
+    if ((builder.needRetryAt || 0) > world.campaign.levelElapsed) return false;
+    // His way off is found before anything is dropped: cut off up on the scaffolds (a ladder under him
+    // broke), he goes on with what he does — the way down — and tries again in a few seconds.
+    const way = canStand(builder.cell[0], builder.cell[1], builder.cell[2], world) ? needTripWay(builder, world, need) : null;
+    if (!way || !way.path) {
+      builder.needRetryAt = world.campaign.levelElapsed + 3;
+      return false;
+    }
+    cancelRoute(builder, world);
+    releaseBuilderDuties(builder, world, need === 'heal' ? 'Ушёл в больницу' : need === 'meal' ? 'Ушёл обедать' : 'Ушёл спать', 'need', true);
+    builder.smokeCall = null;
+    builder.reroutes = 0;
+    builder.wait = 0;
+    builder.waitReason = '';
+    if (need === 'heal') {
+      startNeedTrip(builder, world, 'heal', way);
+    } else if (need === 'meal') {
+      // The canteen unless he forgot it this cycle (canteenTried; a grand dinner seats everyone); its
+      // seats are counted when he is there.
+      if ((builder.canteenTried && !builder.grandDue) || !startCanteenMeal(builder, world)) {
+        builder.mealPlace = '';
+        startNeedTrip(builder, world, 'meal', way);
+      }
+    } else {
+      builder.sleepPlace = '';
+      if (!startDormSleep(builder, world)) startNeedTrip(builder, world, 'sleep', way);
+    }
+    return true;
+  }
+
+  // The order from the card: a hungry worker (not very hungry yet) may be sent to eat, a tired one
+  // (not worn out yet) to sleep.
+  function canSend(builder, world, need) {
+    if (builder.trade !== 'builder' || builder.kitchen) return false;
+    if (world.kitchen && world.kitchen.staff.indexOf(builder.index) >= 0) return false;
+    if (need === 'meal') return needOpen(world.campaign, 'hunger') && hungerStatus(builder) === 'hungry' && builderNeed(builder) !== 'meal';
+    if (need === 'sleep') return needOpen(world.campaign, 'sleep') && fatigueStatus(builder) === 'tired' && builderNeed(builder) !== 'sleep';
+    return false;
+  }
+
+  function sendWorker(world, builder, need) {
+    if (!canSend(builder, world, need)) return false;
+    if (need === 'meal') builder.hunger = builder.hungerScale;
+    else builder.fatigue = builder.fatigueScale;
+    return true;
+  }
+
+  // His own desire is due, or he heard a call that is still fresh.
+  function smokeWanted(builder, world) {
+    if (builder.trade !== 'builder') return false;
+    // A company keeps its invitation after the gathering deadline: late members go to the spot.
+    if (builder.smokeCall && !builder.smokeCall.group.members && builder.smokeCall.until < world.campaign.levelElapsed) builder.smokeCall = null;
+    return builder.smokeNeed >= builder.smokeThreshold || !!builder.smokeCall;
+  }
+
+  // Join the company he heard, or start a new one. Find a way before interrupting his work; only
+  // the first caller calls, and stands still for callPause before heading to the gathering.
+  function startSmoke(builder, world) {
+    let group = builder.smokeCall ? builder.smokeCall.group : null;
+    const caller = !group;
+    if (group && group.lounge && loungeSeats(world) === 0 &&
+        (!group.meeting || group.departed || world.campaign.levelElapsed >= group.until)) group = smokeOverflowGroup(group, world);
+    if (!group) {
+      world.smokeSerial = (world.smokeSerial || 0) + 1;
+      group = loungeSeats(world) > 0
+        ? { id: world.smokeSerial, spot: world.lounge.smokeCells[0].slice(), size: 0, lounge: true, overflow: null }
+        : { id: world.smokeSerial, spot: smokeSpot(world), size: 0 };
+      group.members = [builder.index];
+      group.arrived = {};
+      group.until = world.campaign.levelElapsed + SMOKING.callSeconds;
+      group.meeting = smokeMeeting(builder, group, world);
+      group.departed = !group.meeting;
+    }
+    const gathering = !caller && group.meeting && !group.departed && world.campaign.levelElapsed < group.until;
+    const cell = gathering ? smokeMeetingCell(builder, group, world) : group.lounge ? loungeCell(builder, world) : smokeCell(group, world);
+    const path = sameCell(builder.cell, cell) ? [builder.cell.slice()] : findPathToCell(builder.cell, cell, world);
+    if (!path) return false;
+    builder.smokeCall = null;
+    builder.smokeGroup = group;
+    builder.smokeSlot = group.size;
+    builder.smokeRetryAt = 0;
+    builder.smokeGathered = false;
+    builder.smokePlace = gathering || caller ? '' : group.lounge ? 'lounge' : '';
+    group.size += 1;
+    builder.awayCell = cell.slice();
+    builder.needTrip = 'smoke';
+    if (caller) {
+      builder.phase = 'smokeCall';
+      builder.walkPurpose = '';
+      builder.from = builder.cell.slice();
+      builder.to = builder.cell.slice();
+      builder.segmentT = 1;
+      builder.actionT = 0;
+      // Older balance files have no calling pause; keep the new tuning local to smoking.
+      builder.timer = SMOKING.callPause === undefined ? 1.2 : SMOKING.callPause;
+      builder.faceX = group.spot[0];
+      builder.faceZ = group.spot[2];
+      callToSmoke(builder, world);
+      if (group.members.length === 1) group.departed = true;
+    } else {
+      beginWalk(builder, path, gathering ? 'smokeMeet' : 'smoke', world);
+    }
+    return true;
+  }
+
+  // A reachable ground cell just outside the footprint, favouring the caller and the smoke side.
+  function smokeMeeting(builder, group, world) {
+    const f = world.level.footprint;
+    const cells = [];
+    for (let gap = 1; gap <= 3; gap++) {
+      for (let x = f.minX - gap; x <= f.maxX + gap; x++) {
+        cells.push([x, 0, f.minZ - gap], [x, 0, f.maxZ + gap]);
+      }
+      for (let z = f.minZ - gap + 1; z < f.maxZ + gap; z++) {
+        cells.push([f.minX - gap, 0, z], [f.maxX + gap, 0, z]);
+      }
+    }
+    function distance(cell) {
+      return Math.abs(cell[0] - builder.cell[0]) + Math.abs(cell[2] - builder.cell[2]) +
+        0.5 * (Math.abs(cell[0] - group.spot[0]) + Math.abs(cell[2] - group.spot[2]));
+    }
+    cells.sort(function (a, b) { return distance(a) - distance(b); });
+    for (let i = 0; i < cells.length; i++) {
+      const cell = cells[i];
+      if (canStand(cell[0], 0, cell[2], world) && findPathToCell(builder.cell, cell, world)) return cell;
+    }
+    return null;
+  }
+
+  // Give each member a nearby ground cell; the meeting centre is always a reachable fallback.
+  function smokeMeetingCell(builder, group, world) {
+    const slot = Math.max(0, group.members.indexOf(builder.index));
+    const cell = smokeCell({ spot: group.meeting, size: slot }, world);
+    return findPathToCell(builder.cell, cell, world) ? cell : group.meeting.slice();
+  }
+
+  // Begin the next leg, reserving lounge seats only when the company actually leaves the meeting.
+  function walkToSmoke(builder, world, gathering) {
+    let group = builder.smokeGroup;
+    if (group.lounge && loungeSeats(world) === 0 && !gathering) {
+      group.size = Math.max(0, group.size - 1);
+      group = smokeOverflowGroup(group, world);
+      builder.smokeGroup = group;
+      builder.smokeSlot = group.size++;
+    }
+    const cell = gathering ? smokeMeetingCell(builder, group, world)
+      : group.lounge ? loungeCell(builder, world) : smokeCell(group, world, builder.smokeSlot);
+    const path = sameCell(builder.cell, cell) ? [builder.cell.slice()] : findPathToCell(builder.cell, cell, world);
+    if (!path) return false;
+    builder.smokeRetryAt = 0;
+    builder.smokePlace = !gathering && group.lounge ? 'lounge' : '';
+    builder.awayCell = cell.slice();
+    beginWalk(builder, path, gathering ? 'smokeMeet' : 'smoke', world);
+    return true;
+  }
+
+  // Arrivals wait facing the meeting centre. The last arrival or callSeconds releases everyone.
+  function waitForSmokeCompany(builder, world) {
+    const group = builder.smokeGroup;
+    builder.phase = 'smokeWait';
+    builder.walkPurpose = 'smokeMeet';
+    builder.faceX = group.meeting[0];
+    builder.faceZ = group.meeting[2];
+    if (sameCell(builder.cell, group.meeting)) builder.faceZ += 1;
+    builder.smokeGathered = true;
+    group.arrived[builder.index] = true;
+    updateSmokeCompany(group, world);
+  }
+
+  // All waiting members start in the same simulation step; late walkers turn at their next step.
+  function updateSmokeCompany(group, world) {
+    if (!group.members) group.departed = true;
+    if (group.departed) return;
+    const ready = group.members.every(function (index) { return group.arrived[index]; });
+    if (!ready && world.campaign.levelElapsed < group.until) return;
+    group.departed = true;
+    for (let i = 0; i < world.builders.length; i++) {
+      const other = world.builders[i];
+      if (other.smokeGroup === group && other.phase === 'smokeWait') continueSmokeTrip(other, world);
+    }
+  }
+
+  // Retry a blocked departure briefly, then use the existing smoke-in-place fallback.
+  function continueSmokeTrip(builder, world) {
+    const group = builder.smokeGroup;
+    const gathering = group.meeting && !group.departed && world.campaign.levelElapsed < group.until;
+    const retry = builder.smokeRetryAt || 0;
+    if (world.campaign.levelElapsed < retry) return;
+    if (walkToSmoke(builder, world, gathering)) return;
+    builder.phase = 'smokeWait';
+    builder.walkPurpose = gathering ? 'smokeMeet' : 'smoke';
+    if (!retry) {
+      builder.smokeRetryAt = world.campaign.levelElapsed + 3;
+      return;
+    }
+    builder.smokeRetryAt = 0;
+    if (gathering) {
+      group.departed = true;
+      continueSmokeTrip(builder, world);
+      return;
+    }
+    builder.smokePlace = '';
+    builder.awayCell = builder.cell.slice();
+    beginWalk(builder, [builder.cell.slice()], 'smoke', world);
+  }
+
+  // A random standable spot 10–20 cells off the building (the usual smoke place).
+  function smokeSpot(world) {
+    let spot = pickPerimeterCell(world, BALANCE.smokeMinSquares, BALANCE.smokeMaxSquares);
+    for (let tries = 0; tries < 6 && !canStand(spot[0], spot[1], spot[2], world); tries++) {
+      spot = pickPerimeterCell(world, BALANCE.smokeMinSquares, BALANCE.smokeMaxSquares);
+    }
+    return spot;
+  }
+
+  // Those of a lounge group who found no seat smoke together at one usual spot (made by the first
+  // of them).
+  function smokeOverflowGroup(group, world) {
+    if (!group.overflow) {
+      world.smokeSerial = (world.smokeSerial || 0) + 1;
+      group.overflow = { id: world.smokeSerial, spot: smokeSpot(world), size: 0, departed: true };
+    }
+    return group.overflow;
+  }
+
+  // Turned away at the lounge: on to his group's usual spot. False — no way there.
+  function startSmokeOverflow(builder, world) {
+    const lounge = builder.smokeGroup;
+    const group = lounge && lounge.lounge ? smokeOverflowGroup(lounge, world) : { id: 0, spot: smokeSpot(world), size: 0 };
+    const cell = smokeCell(group, world);
+    const path = sameCell(builder.cell, cell) ? [builder.cell.slice()] : findPathToCell(builder.cell, cell, world);
+    if (!path) return false;
+    if (lounge) lounge.size = Math.max(0, lounge.size - 1);
+    builder.smokeGroup = group;
+    group.size += 1;
+    builder.awayCell = cell.slice();
+    beginWalk(builder, path, 'smoke', world);
+    return true;
+  }
+
+  // A seat cell in front of the lounge nobody else is heading to or smoking at (the first standable
+  // one if all are taken: he finds out at the door).
+  function loungeCell(builder, world) {
+    const cells = world.lounge.smokeCells;
+    let fallback = null;
+    for (let i = 0; i < cells.length; i++) {
+      const cell = cells[i];
+      if (!canStand(cell[0], cell[1], cell[2], world)) continue;
+      if (!fallback) fallback = cell;
+      let taken = false;
+      for (let k = 0; k < world.builders.length && !taken; k++) {
+        const other = world.builders[k];
+        if (other === builder || other.smokePlace !== 'lounge' || !other.awayCell || !sameCell(other.awayCell, cell)) continue;
+        taken = (other.phase === 'walk' && other.walkPurpose === 'smoke') || (other.phase === 'break' && other.breakKind === 'smoke');
+      }
+      if (!taken) return cell.slice();
+    }
+    return (fallback || cells[0]).slice();
+  }
+
+  // The group gathers around its spot: the first at the spot, the next ones on the cells around it.
+  const SMOKE_RING = [[0, 0], [1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1], [2, 0], [0, 2], [-2, 0], [0, -2]];
+  function smokeCell(group, world, slot) {
+    if (slot === undefined) slot = group.size;
+    for (let i = 0; i < SMOKE_RING.length; i++) {
+      const offset = SMOKE_RING[(slot + i) % SMOKE_RING.length];
+      const cell = [group.spot[0] + offset[0], group.spot[1], group.spot[2] + offset[1]];
+      if (canStand(cell[0], cell[1], cell[2], world)) return cell;
+    }
+    return group.spot.slice();
+  }
+
+  // The call: everyone in range who wants a smoke enough and has no call yet (the first call wins;
+  // those already smoking, eating or on the way there do not hear it).
+  function callToSmoke(builder, world) {
+    const radius = SMOKING.callRadius;
+    const r2 = radius * radius;
+    const until = world.campaign.levelElapsed + SMOKING.callSeconds;
+    let heard = 0;
+    for (let i = 0; i < world.builders.length; i++) {
+      const other = world.builders[i];
+      if (other === builder || other.trade !== 'builder' || other.kitchen || other.smokeCall || other.smokeGroup) continue;
+      if (other.phase === 'meal' || other.phase === 'break' || other.phase === 'fall' || other.walkPurpose === 'meal' || other.walkPurpose === 'smoke' ||
+          other.walkPurpose === 'sleep' || other.walkPurpose === 'heal') continue;
+      const dx = other.cell[0] - builder.cell[0];
+      const dy = other.cell[1] - builder.cell[1];
+      const dz = other.cell[2] - builder.cell[2];
+      if (dx * dx + dy * dy + dz * dz > r2) continue;
+      // «Сила воли»: a call is heard only past a higher share of his own threshold.
+      if (other.smokeNeed < Math.max(SMOKING.callDesire, lineValue(world.campaign, 'willpower')) * other.smokeThreshold) continue;
+      other.smokeCall = { group: builder.smokeGroup, until: until };
+      builder.smokeGroup.members.push(other.index);
+      heard += 1;
+    }
+    world.events.push({ type: 'smokeCall', builder: builder, x: builder.cell[0], y: builder.cell[1], z: builder.cell[2], radius: radius, heard: heard });
+  }
+
+  // Others of his group on the way to the spot or smoking there.
+  function smokeCompanions(builder, world) {
+    const group = builder.smokeGroup;
+    if (!group) return 0;
+    let count = 0;
+    for (let i = 0; i < world.builders.length; i++) {
+      const other = world.builders[i];
+      if (other !== builder && other.smokeGroup === group) count += 1;
+    }
+    return count;
+  }
+
+  // Between actions anywhere on the site (a step of a walk, a mini-cube just set): off to smoke if
+  // due. A mini-cube being set is always finished first; cubes in the pack go along and wait for
+  // him (so do the plan's cubes reserved for him); quarry picks not made yet go back to the crew.
+  // Off to a smoke at any moment but an unbroken one (unbroken); from a mini-cube only between two
+  // (finishPlace calls it then).
+  function smokeDivertible(builder) {
+    return builder.phase === 'place' || !unbroken(builder);
+  }
+
+  function divertToSmoke(builder, world) {
+    if (!smokeWanted(builder, world) || !smokeDivertible(builder)) return false;
+    // No way to a spot from here (high on the building): try again in a few seconds, not every step.
+    if ((builder.smokeRetryAt || 0) > world.campaign.levelElapsed) return false;
+    if (!canStand(builder.cell[0], builder.cell[1], builder.cell[2], world) || !startSmoke(builder, world)) {
+      builder.smokeRetryAt = world.campaign.levelElapsed + 3;
+      return false;
+    }
+    cancelRoute(builder, world);
+    releaseUnpicked(builder);
+    if (builder.erectPiece && !builder.erectPiece.removed) builder.erectPiece.reserved = false;
+    builder.erectPiece = null;
+    builder.passageBlock = null;
+    builder.exitAfterPlace = false;
+    builder.forcePlace = false;
+    if (builder.carry.length === 0) releaseUnstartedPlan(builder, world);
+    return true;
+  }
+
+  // ---------- site camp: buildings the crew builds by the desk (docs/gdd/20-site-camp.md) ----------
+  // The canteen and the sales office. Each stands at a fixed place next to the desk; only workers
+  // build it, as many as the player asks for (0 at the start, the slider of its sheet); they take its
+  // cubes from its own stack beside it and set them bottom-up in a fixed order. Camp cubes pay
+  // nothing: the price is the crew's time. world.camp lists the site's buildings in placing order;
+  // world.canteen / world.sales point at them (null while closed for the company).
+  const CAMP_H = 3;
+  const SALES_W = 4;
+  const SALES_D = 4;
+  const SALES = window.MicroBuildersBalance.sales || {
+    forms: [], payoutSeconds: 5, levelRate: 3, levelBonus: 0.1,
+    upgrades: {
+      managers: { name: 'Менеджеры', max: 25, gain: 5, gainGrowth: 1.25, payback: 60, paybackGrowth: 1.15 },
+      showroom: { name: 'Шоу-рум', max: 5, perCube: 0.02, cost: 400, costGrowth: 2.5 },
+    },
+  };
+
+  // Dorm (where the crew sleeps near the site) and the lighting masts (two, on both sides of the
+  // building: they take off the night penalty), balance.json → dorm / light.
+  const DORM = window.MicroBuildersBalance.dorm || { forms: [], beds: 3, sleepScale: 0.85 };
+  const LIGHT = window.MicroBuildersBalance.light || { forms: [], reliefPerLevel: 0.1 };
+  // Lounge: where the crew smokes near the site — a lean-to growing into an entertainment centre
+  // (balance.json → lounge: seats per level, a shorter smoke there).
+  const LOUNGE = window.MicroBuildersBalance.lounge || { forms: [], seats: 2, smokeScale: 0.85 };
+  // Reactor (techno-magic): a camp building whose standing form fills the site with mana
+  // (balance.json → meta.reactor: forms, manaPerLevel, manaMaxBase, manaMaxPerLevel).
+  const REACTOR_SITE = (window.MicroBuildersBalance.meta && window.MicroBuildersBalance.meta.reactor) || { forms: [], manaPerLevel: 6, manaMaxBase: 40, manaMaxPerLevel: 20 };
+  const CAMP_SPECS = { canteen: CANTEEN, sales: SALES, dorm: DORM, lounge: LOUNGE, light: LIGHT, reactor: REACTOR_SITE };
+
+  function campCellFree(world, x, z, taken) {
+    const level = world.level;
+    const fp = level.footprint;
+    if (!world.index.inside(x, 0, z) || !world.index.inside(x, CAMP_H, z)) return false;
+    if (taken.has(cellKey(x, 0, z))) return false;
+    if (x >= fp.minX - 3 && x <= fp.maxX + 3 && z >= fp.minZ - 3 && z <= fp.maxZ + 3) return false;
+    for (let i = 0; i < level.spawnPoints.length; i++) {
+      if (level.spawnPoints[i][0] === x && level.spawnPoints[i][2] === z) return false;
+    }
+    for (let i = 0; i < level.rocks.length; i++) {
+      if (Math.abs(level.rocks[i].x - x) <= 1 && Math.abs(level.rocks[i].z - z) <= 1) return false;
+    }
+    for (let i = 0; i < level.mines.length; i++) {
+      if (Math.abs(level.mines[i].standX - x) <= 1 && Math.abs(level.mines[i].standZ - z) <= 1) return false;
+    }
+    const pads = level.elevators || [];
+    for (let i = 0; i < pads.length; i++) {
+      const pad = pads[i];
+      if (x >= pad.x - 1 && x <= pad.x + 3 && z >= pad.z - 1 && z <= pad.z + 3) return false;
+    }
+    return true;
+  }
+
+  // Right of the desk (the camera side) if there is room, else left of it, never on a pad taken by
+  // another camp building; the stack stands two cells east of the house. Row 1 is the second row,
+  // further toward the camera, the pads centred on the desk first.
+  function campPad(world, w, d, taken, row) {
+    const fp = world.level.footprint;
+    const cx = Math.round((fp.minX + fp.maxX) / 2);
+    const z0 = fp.maxZ + 5 + (row ? 14 : 0);
+    for (let shift = 0; shift < 48; shift++) {
+      const options = row
+        ? [cx - Math.floor(w / 2) + shift, cx - Math.floor(w / 2) - shift]
+        : [cx + 8 + shift, cx - 8 - (w + 2) - shift];
+      for (let k = 0; k < options.length; k++) {
+        const x0 = options[k];
+        let clear = true;
+        for (let z = z0 - 1; z <= z0 + d && clear; z++) {
+          for (let x = x0 - 1; x <= x0 + w + 2 && clear; x++) clear = campCellFree(world, x, z, taken);
+        }
+        if (clear) return { x: x0, z: z0 };
+      }
+    }
+    return null;
+  }
+
+  // The outer ring of a w × d house, starting at its front-left corner.
+  function campRing(x0, z0, w, d) {
+    const ring = [];
+    for (let x = x0; x < x0 + w; x++) ring.push([x, z0]);
+    for (let z = z0 + 1; z < z0 + d; z++) ring.push([x0 + w - 1, z]);
+    for (let x = x0 + w - 2; x >= x0; x--) ring.push([x, z0 + d - 1]);
+    for (let z = z0 + d - 2; z > z0; z--) ring.push([x0, z]);
+    return ring;
+  }
+
+  // The ground cell a cube is set from: across its wall; a roof cube from the nearest side.
+  function campStand(cube, x0, z0, w, d) {
+    const toWest = cube.x - x0;
+    const toEast = x0 + w - 1 - cube.x;
+    const toFront = cube.z - z0;
+    const toBack = z0 + d - 1 - cube.z;
+    const near = Math.min(toWest, toEast, toFront, toBack);
+    if (near === toBack) return [cube.x, 0, z0 + d];
+    if (near === toFront) return [cube.x, 0, z0 - 1];
+    if (near === toWest) return [x0 - 1, 0, cube.z];
+    return [x0 + w, 0, cube.z];
+  }
+
+  // ---------- the camp buildings' forms ----------
+  // Every level of a camp building is a building of its own (levels.js → MicroBuilderCampForms:
+  // canteen — a log canteen, a café, a bistro, a restaurant, a grand restaurant; sales — high-tech
+  // offices from a glass box to twisting skyscrapers) of voxels CAMP_VOXEL of a cell. The pad is
+  // sized for the building's largest form; each form stands centred on it, its façade on the camera
+  // side. A new level rebuilds it: the old building is gone at once (the view collapses it with a
+  // show), the new one goes up from nothing; the building works at its old level meanwhile.
+  const CAMP_FORMS = root.MicroBuilderCampForms || {};
+  // The site upgrade that builds and raises each camp building.
+  const CAMP_NODES = { canteen: 'kitchen', sales: 'sales', dorm: 'dorm', lounge: 'lounge', light: 'light', reactor: 'reactor' };
+  const CANTEEN_FORMS = CAMP_FORMS.canteen || [];
+  // Camp cubes are whole cells of the site grid (CANTEEN.voxel = 1): set ones are solid cells.
+  const CAMP_VOXEL = CANTEEN.voxel || 1;
+  // world.campGrid bits: the pad's ground (vehicles keep off it) and a cube of the form still to set
+  // (no ladder or deck may go there).
+  const CAMP_PAD = 1;
+  const CAMP_FUTURE = 2;
+  const campFormCache = {};
+
+  function campFormCount(id) {
+    return (CAMP_FORMS[id] || []).length;
+  }
+
+  // Form n (1…) of camp building id: its voxels {x, y, z, materialId, drawn} from 0, in the main site's
+  // building order, and its size in voxels. A form is set by the main site's
+  // laws, its cubes by their real mass; how long it takes is set by its balance (the camp building's
+  // forms[n]: the day of the campaign, the minute of the session and the minutes the whole crew of
+  // the reference player needs). tools/calibrate-camp.sh finds the form's mass for that (forms[n].mass,
+  // .grid), and its materials are picked for the mass like a campaign building's (pickMaterials: the
+  // drawing's colours and textures; its gems and diamonds stay trim). `drawn` — the drawn material.
+  function campForm(id, n) {
+    const key = id + ':' + n;
+    if (campFormCache[key]) return campFormCache[key];
+    const spec = CAMP_FORMS[id][n - 1];
+    const bp = createBlueprint();
+    spec.build(bp);
+    let minX = Infinity;
+    let minZ = Infinity;
+    let maxX = -Infinity;
+    let maxZ = -Infinity;
+    let maxY = 0;
+    for (const cell of bp.cells.values()) {
+      minX = Math.min(minX, cell.x);
+      maxX = Math.max(maxX, cell.x);
+      minZ = Math.min(minZ, cell.z);
+      maxZ = Math.max(maxZ, cell.z);
+      maxY = Math.max(maxY, cell.y);
+    }
+    // The building order of the main site (startLevel's priority): floor by floor, the inside before
+    // the shell, from the centre out.
+    const shell = classifyShell(bp.cells, bp.seals);
+    let cx = 0;
+    let cz = 0;
+    for (const cell of bp.cells.values()) {
+      cx += cell.x;
+      cz += cell.z;
+    }
+    cx /= bp.cells.size;
+    cz /= bp.cells.size;
+    const voxels = [];
+    for (const cell of bp.cells.values()) {
+      if (cell.y < 0 || !MATERIAL[cell.materialId]) continue;
+      const dist = Math.abs(cell.x - cx) + Math.abs(cell.z - cz);
+      const priority = cell.y * 100000 + (shell.has(cellKey(cell.x, cell.y, cell.z)) ? 5000 : 0) + dist * 10;
+      voxels.push({ id: voxels.length, x: cell.x - minX, y: cell.y, z: cell.z - minZ, materialId: cell.materialId, drawn: cell.materialId, priority: priority });
+    }
+    // Before the first calibration: the drawing's own mass (its gems aside — they go as light trim).
+    const timing = (CAMP_SPECS[id].forms || [])[n - 1] || {};
+    let mass = timing.mass;
+    if (!(mass > 0)) {
+      mass = 0;
+      for (let i = 0; i < voxels.length; i++) {
+        const material = MATERIAL[voxels[i].drawn];
+        if (material.id !== GLASS.id && !material.accent) mass += material.weight;
+      }
+    }
+    if (mass > 0) pickMaterials(voxels, mass, timing.grid || 1);
+    voxels.sort(function (a, b) { return a.priority - b.priority || a.id - b.id; });
+    campFormCache[key] = { name: spec.name, voxels: voxels, w: maxX - minX + 1, d: maxZ - minZ + 1, h: maxY + 1 };
+    return campFormCache[key];
+  }
+
+  function canteenForm(n) {
+    return campForm('canteen', n);
+  }
+
+  // The tallest camp building (any form) of those open on this site, in cells.
+  function campTop(campaign) {
+    let top = 0;
+    [['canteen', campaign.canteenOpen], ['sales', campaign.salesOpen], ['dorm', campaign.dormOpen],
+      ['lounge', campaign.loungeOpen], ['light', campaign.lightOpen], ['reactor', campaign.reactorOpen]].forEach(function (pair) {
+      if (pair[1] && campFormCount(pair[0]) > 0) top = Math.max(top, Math.ceil(campPadSize(pair[0]).h));
+    });
+    return top;
+  }
+
+  // The pad of camp building id in cells (its largest form) and its height.
+  function campPadSize(id) {
+    let w = 1;
+    let d = 1;
+    let h = 1;
+    for (let n = 1; n <= campFormCount(id); n++) {
+      const form = campForm(id, n);
+      w = Math.max(w, form.w);
+      d = Math.max(d, form.d);
+      h = Math.max(h, form.h);
+    }
+    return { w: Math.ceil(w * CAMP_VOXEL), d: Math.ceil(d * CAMP_VOXEL), h: h * CAMP_VOXEL };
+  }
+
+  // The cubes of form n on this site: centres in the world (wx, wy, wz), the cell they are in and
+  // the ground cell they are set from.
+  function campFormCubes(site, n) {
+    const form = campForm(site.kind, n);
+    const gridW = Math.floor(site.w / CAMP_VOXEL);
+    const gridD = Math.floor(site.d / CAMP_VOXEL);
+    const offX = Math.floor((gridW - form.w) / 2);
+    const offZ = site.kind === 'light' ? Math.floor((gridD - form.d) / 2) : gridD - form.d;
+    const marginX = (site.w - gridW * CAMP_VOXEL) / 2;
+    const marginZ = site.d - gridD * CAMP_VOXEL;
+    return form.voxels.map(function (v) {
+      // The right-hand mast is mirrored, so its lamps face the building too.
+      const gx = offX + (site.flip ? form.w - 1 - v.x : v.x);
+      const gz = offZ + v.z;
+      const cube = {
+        wx: site.x + marginX + (gx + 0.5) * CAMP_VOXEL,
+        wy: (v.y + 0.5) * CAMP_VOXEL,
+        wz: site.z + marginZ + (gz + 0.5) * CAMP_VOXEL,
+        materialId: v.materialId,
+        drawn: v.drawn,
+        // Set already; who has it in his hands (-1 — on the stack); the navigation it had no route
+        // under (the main site's failedNavSerial: put off until the site changes).
+        done: false,
+        owner: -1,
+        failedNavSerial: -1,
+      };
+      cube.x = Math.floor(cube.wx);
+      cube.y = Math.floor(cube.wy);
+      cube.z = Math.floor(cube.wz);
+      cube.stand = campStand(cube, site.x, site.z, site.w, site.d);
+      return cube;
+    });
+  }
+
+  // The world size of what stands (or is going up) on the pad: for the outline, the sign, the tap.
+  function campBox(site) {
+    let x0 = Infinity;
+    let x1 = -Infinity;
+    let z0 = Infinity;
+    let z1 = -Infinity;
+    let h = 0;
+    const half = (site.voxel || 1) / 2;
+    const add = function (cube) {
+      x0 = Math.min(x0, cube.wx - half);
+      x1 = Math.max(x1, cube.wx + half);
+      z0 = Math.min(z0, cube.wz - half);
+      z1 = Math.max(z1, cube.wz + half);
+      h = Math.max(h, cube.wy + half);
+    };
+    site.cubes.forEach(add);
+    site.box = { x0: x0, x1: x1, z0: z0, z1: z1, h: h };
+  }
+
+  // Start building form n from nothing (the standing one, if any, is gone).
+  function setCampForm(world, site, n) {
+    const cubes = campFormCubes(site, n);
+    // The old building is gone from the grid: its cells are free, nothing waits for them.
+    const old = site.cubes || [];
+    for (let i = 0; i < old.length; i++) campCell(world, old[i], 0);
+    site.target = n;
+    site.cubes = cubes;
+    site.total = cubes.length;
+    site.built = 0;
+    site.taken = 0;
+    site.ready = false;
+    site.cellIndex = new Map();
+    for (let i = 0; i < cubes.length; i++) {
+      site.cellIndex.set(cellKey(cubes[i].x, cubes[i].y, cubes[i].z), i);
+      campCell(world, cubes[i], CAMP_FUTURE);
+    }
+    if (old.length + cubes.length > 0) invalidateNavBatch(world, old.concat(cubes));
+    // The stack is back for the new build.
+    for (let i = 0; i < site.pile.length; i++) world.waterGrid[world.index.id(site.pile[i][0], 0, site.pile[i][2])] = 1;
+    campBox(site);
+  }
+
+  // A camp cube's cell in the grid: 0 — nothing (the building came down), CAMP_FUTURE — still to
+  // set, 1 — set (a solid cell). Navigation is refreshed by the caller.
+  function campCell(world, cube, state) {
+    const index = world.index;
+    if (!index.inside(cube.x, cube.y, cube.z)) return;
+    const id = index.id(cube.x, cube.y, cube.z);
+    world.solidGrid[id] = state === 1 ? 1 : 0;
+    world.campGrid[id] = (world.campGrid[id] & ~CAMP_FUTURE) | (state === CAMP_FUTURE ? CAMP_FUTURE : 0);
+  }
+
+  // The first `count` cubes of the form stand but `gaps` (a restored site, a dev form).
+  function markCampBuilt(world, site, count, gaps) {
+    const skip = new Set(gaps || []);
+    let built = 0;
+    for (let i = 0; i < site.cubes.length; i++) {
+      const done = i < count && !skip.has(i);
+      if (done) built += 1;
+      site.cubes[i].done = done;
+      site.cubes[i].owner = -1;
+      campCell(world, site.cubes[i], done ? 1 : CAMP_FUTURE);
+    }
+    site.built = built;
+    site.taken = 0;
+    if (site.cubes.length > 0) invalidateNavBatch(world, site.cubes);
+  }
+
+  // The level bought for a camp building («Полевая кухня» / «Офис продаж» on the site).
+  function campBoughtLevel(world, site) {
+    return world.campaign.purchases[CAMP_NODES[site.kind]] || 0;
+  }
+
+  // A level bought above the standing form starts the rebuild (straight to the level bought); the
+  // event carries the old cubes for the view's collapse.
+  function stepCampForms(world) {
+    for (let i = 0; i < world.camp.length; i++) {
+      const site = world.camp[i];
+      if (!site.forms || !site.ready || !campActive(world, site)) continue;
+      const want = Math.min(campFormCount(site.kind), campBoughtLevel(world, site));
+      if (want > site.form) {
+        const old = site.cubes;
+        setCampForm(world, site, want);
+        world.events.push({ type: 'campReform', site: site, old: old });
+      }
+    }
+  }
+
+  // Sales office: sandstone walls, a two-storey shop window and the door in the back wall (towards
+  // the camera), small windows in the side walls, an oak roof.
+  function salesCubes(x0, z0) {
+    const ring = campRing(x0, z0, SALES_W, SALES_D);
+    const back = z0 + SALES_D - 1;
+    const cubes = [];
+    for (let y = 0; y < 2; y++) {
+      for (let i = 0; i < ring.length; i++) {
+        const x = ring[i][0];
+        const z = ring[i][1];
+        if (z === back && x === x0 + 1) continue;
+        const glass = (z === back && x === x0 + 2) || (y === 1 && z === z0 + 1 && (x === x0 || x === x0 + SALES_W - 1));
+        cubes.push({ x: x, y: y, z: z, wx: x + 0.5, wy: y + 0.5, wz: z + 0.5, materialId: glass ? 'glass' : 'ladder-sandstone' });
+      }
+    }
+    for (let z = z0; z < z0 + SALES_D; z++) {
+      for (let x = x0; x < x0 + SALES_W; x++) cubes.push({ x: x, y: 2, z: z, wx: x + 0.5, wy: 2.5, wz: z + 0.5, materialId: 'ladder-oak' });
+    }
+    return cubes;
+  }
+
+  function createCampSite(world, id, w, d, cubes, taken, at) {
+    const pad = at || campPad(world, w, d, taken, id === 'dorm' || id === 'lounge' || id === 'reactor' ? 1 : 0);
+    if (!pad) return null;
+    const x0 = pad.x;
+    const z0 = pad.z;
+    for (let z = z0 - 1; z <= z0 + d; z++) {
+      for (let x = x0 - 1; x <= x0 + w + 2; x++) taken.add(cellKey(x, 0, z));
+    }
+    const site = {
+      id: id,
+      kind: id,
+      x: x0,
+      z: z0,
+      w: w,
+      d: d,
+      h: CAMP_H,
+      cubes: cubes ? cubes(x0, z0) : [],
+      total: 0,
+      built: 0,
+      // Workers the player put on it (the slider); the crew follows it at the next desk visit.
+      assigned: 0,
+      ready: false,
+      pile: [[x0 + w + 2, 0, z0 + 1], [x0 + w + 2, 0, z0 + 2]],
+      pickStand: [x0 + w + 1, 0, z0 + 1],
+    };
+    site.total = site.cubes.length;
+    for (let i = 0; i < site.cubes.length; i++) site.cubes[i].stand = campStand(site.cubes[i], x0, z0, w, d);
+    site.voxel = 1;
+    campBox(site);
+    // Workers walk the pad like the main site (its set cubes are solid cells); vehicles keep off it.
+    // The stack blocks its cells until the house stands.
+    const index = world.index;
+    for (let z = z0; z < z0 + d; z++) {
+      for (let x = x0; x < x0 + w; x++) world.campGrid[index.id(x, 0, z)] |= CAMP_PAD;
+    }
+    for (let i = 0; i < site.pile.length; i++) world.waterGrid[index.id(site.pile[i][0], 0, site.pile[i][2])] = 1;
+    world.camp.push(site);
+    return site;
+  }
+
+  function createCamp(world) {
+    const campaign = world.campaign;
+    world.camp = [];
+    world.canteen = null;
+    world.sales = null;
+    world.dorm = null;
+    world.lounge = null;
+    world.reactor = null;
+    world.lights = [];
+    const taken = new Set();
+    if (campaign.canteenOpen && CANTEEN_FORMS.length > 0) {
+      const pad = campPadSize('canteen');
+      const canteen = createCampSite(world, 'canteen', pad.w, pad.d, null, taken);
+      if (canteen) {
+        const dishes = campaign.canteenDishes || [];
+        canteen.dish = dishes.indexOf('kasha') >= 0 ? 'kasha' : dishes[0] || '';
+        // The rows above the dish of the day; empty until the player picks (the pastry — the free pirozhok).
+        canteen.dish2 = '';
+        canteen.snack = dishes.indexOf('pirozhok') >= 0 ? 'pirozhok' : '';
+        canteen.signature = '';
+        canteen.grand = '';
+        // The standing form (0 — nothing yet) and the one going up.
+        canteen.form = 0;
+        canteen.forms = true;
+        canteen.voxel = CAMP_VOXEL;
+        canteen.h = pad.h;
+        setCampForm(world, canteen, 1);
+        const mid = canteen.x + Math.floor(canteen.w / 2);
+        const back = canteen.z + canteen.d;
+        canteen.eatCells = [[mid, 0, back], [mid - 1, 0, back], [mid + 1, 0, back], [mid - 2, 0, back], [mid + 2, 0, back]];
+        canteen.nextEat = 0;
+        // Times a worker came to the door and found every seat taken (this site).
+        canteen.turnedAway = 0;
+        world.canteen = canteen;
+      }
+    }
+    if (campaign.salesOpen) {
+      const forms = campFormCount('sales') > 0;
+      const pad = forms ? campPadSize('sales') : { w: SALES_W, d: SALES_D, h: CAMP_H };
+      const sales = createCampSite(world, 'sales', pad.w, pad.d, forms ? null : salesCubes, taken);
+      if (sales && forms) {
+        sales.form = 0;
+        sales.forms = true;
+        sales.voxel = CAMP_VOXEL;
+        sales.h = pad.h;
+        setCampForm(world, sales, 1);
+      }
+      if (sales) {
+        sales.upgrades = { managers: 0, showroom: 0 };
+        // Coins earned but not paid yet (paid every SALES.payoutSeconds), the clock of the payout
+        // and everything the office has paid on this site.
+        sales.bank = 0;
+        sales.clock = 0;
+        sales.earned = 0;
+        world.sales = sales;
+      }
+    }
+    if (campaign.dormOpen && campFormCount('dorm') > 0) {
+      const dorm = createFormSite(world, 'dorm', 'dorm', taken, null, false);
+      if (dorm) {
+        dorm.door = [dorm.x + Math.floor(dorm.w / 2), 0, dorm.z + dorm.d];
+        world.dorm = dorm;
+      }
+    }
+    if (campaign.loungeOpen && campFormCount('lounge') > 0) {
+      const lounge = createFormSite(world, 'lounge', 'lounge', taken, null, false);
+      if (lounge) {
+        // Seats in front of it, facing it: a row along its front from the middle out, then a second row.
+        const mid = lounge.x + Math.floor(lounge.w / 2);
+        lounge.smokeCells = [];
+        for (let row = 0; row < 2; row++) {
+          for (let k = 0; k < lounge.w; k++) {
+            const offset = k % 2 === 1 ? -(k + 1) / 2 : k / 2;
+            lounge.smokeCells.push([mid + offset, 0, lounge.z + lounge.d + row]);
+          }
+        }
+        // Times a worker came and found every seat taken (this site).
+        lounge.turnedAway = 0;
+        world.lounge = lounge;
+      }
+    }
+    if (campaign.reactorOpen && campFormCount('reactor') > 0) {
+      const reactor = createFormSite(world, 'reactor', 'reactor', taken, null, false);
+      if (reactor) world.reactor = reactor;
+    }
+    if (campaign.lightOpen && campFormCount('light') > 0) {
+      const pads = lightPads(world, taken);
+      world.lights = [];
+      pads.forEach(function (pad) {
+        const mast = createFormSite(world, 'light-' + pad.side, 'light', taken, pad, pad.side === 'right');
+        if (mast) world.lights.push(mast);
+      });
+    }
+  }
+
+  // A camp building with forms: its pad (sized for the largest form), form 1 to build.
+  function createFormSite(world, id, kind, taken, at, flip) {
+    const pad = campPadSize(kind);
+    const site = createCampSite(world, id, pad.w, pad.d, null, taken, at);
+    if (!site) return null;
+    site.kind = kind;
+    site.flip = !!flip;
+    site.form = 0;
+    site.forms = true;
+    site.voxel = CAMP_VOXEL;
+    site.h = pad.h;
+    setCampForm(world, site, 1);
+    return site;
+  }
+
+  // The two lighting masts: left and right of the building, level with its middle, a little out
+  // from it (further out if something is in the way).
+  function lightPads(world, taken) {
+    const pad = campPadSize('light');
+    const fp = world.level.footprint;
+    const z0 = Math.round((fp.minZ + fp.maxZ) / 2 - pad.d / 2);
+    const pads = [];
+    [['left', -1], ['right', 1]].forEach(function (side) {
+      for (let shift = 0; shift < 24; shift++) {
+        const x0 = side[1] < 0 ? fp.minX - 5 - pad.w - shift : fp.maxX + 5 + shift;
+        let clear = true;
+        for (let z = z0 - 1; z <= z0 + pad.d && clear; z++) {
+          for (let x = x0 - 1; x <= x0 + pad.w + 2 && clear; x++) clear = campCellFree(world, x, z, taken);
+        }
+        if (clear) {
+          pads.push({ x: x0, z: z0, side: side[0] });
+          break;
+        }
+      }
+    });
+    return pads;
+  }
+
+  function campSite(world, id) {
+    for (let i = 0; i < (world.camp || []).length; i++) if (world.camp[i].id === id) return world.camp[i];
+    return null;
+  }
+
+  // Shown and buildable once its site upgrade is bought.
+  function campActive(world, site) {
+    if (!site) return false;
+    return (world.campaign.purchases[CAMP_NODES[site.kind]] || 0) >= 1;
+  }
+
+  // A level of a camp building above 1 + its meta «Уровни …» cannot be bought.
+  function campCapped(campaign, node) {
+    const max = { kitchen: campaign.canteenMaxLevel, sales: campaign.salesMaxLevel, dorm: campaign.dormMaxLevel, lounge: campaign.loungeMaxLevel, light: campaign.lightMaxLevel }[node];
+    if (max === undefined) return false;
+    return (campaign.purchases[node] || 0) >= (max || 1);
+  }
+
+  // ---------- dorm, lounge and lighting ----------
+  // The dorm's beds: DORM.beds per level of the dorm that stands; who has one tonight (on the way or
+  // asleep inside).
+  // + «Двухъярусные койки».
+  function dormBeds(world) {
+    const dorm = world.dorm;
+    return dorm && campActive(world, dorm) ? (DORM.beds || 3) * (dorm.form || 0) + campBoost(world.campaign, 'dormBeds') : 0;
+  }
+
+  // Sleep in the dorm: DORM.sleepScale as long, shorter with «Крепкий сон».
+  function dormSleepScale(campaign) {
+    return (DORM.sleepScale || 1) / campBoost(campaign, 'dormSleep');
+  }
+
+  function dormSleepers(world) {
+    let count = 0;
+    for (let i = 0; i < world.builders.length; i++) {
+      const builder = world.builders[i];
+      if (builder.sleepPlace !== 'dorm') continue;
+      if ((builder.phase === 'walk' && builder.walkPurpose === 'sleep') || (builder.phase === 'break' && builder.breakKind === 'sleep')) count += 1;
+    }
+    return count;
+  }
+
+  // The lounge's seats: LOUNGE.seats per level of the lounge that stands (the old level keeps
+  // working while a new one goes up); who smokes at it now.
+  function loungeSeats(world) {
+    const lounge = world.lounge;
+    return lounge && campActive(world, lounge) ? (LOUNGE.seats || 2) * (lounge.form || 0) + campBoost(world.campaign, 'loungeSeats') : 0;
+  }
+
+  function loungeSmokers(world) {
+    let count = 0;
+    for (let i = 0; i < world.builders.length; i++) {
+      const builder = world.builders[i];
+      if (builder.phase === 'break' && builder.breakKind === 'smoke' && builder.smokePlace === 'lounge') count += 1;
+    }
+    return count;
+  }
+
+  // The night penalty the masts take off: lightReliefPerLevel per level of each standing mast.
+  function lightRelief(world) {
+    let relief = 0;
+    const perLevel = lightReliefPerLevel(world.campaign);
+    (world.lights || []).forEach(function (mast) {
+      if (campActive(world, mast)) relief += perLevel * (mast.form || 0);
+    });
+    return Math.min(1, relief);
+  }
+
+  // A lighting mast stands on the site (any level).
+  function lightStands(world) {
+    return (world.lights || []).some(function (mast) { return campActive(world, mast) && (mast.form || 0) > 0; });
+  }
+
+  // LIGHT.reliefPerLevel, more with «Мощные прожекторы».
+  function lightReliefPerLevel(campaign) {
+    return (LIGHT.reliefPerLevel || 0.1) * campBoost(campaign, 'lightPower');
+  }
+
+  // The stack is taken away once the house stands: its cells are free ground again.
+  function clearCampPile(world, site) {
+    for (let i = 0; i < site.pile.length; i++) world.waterGrid[world.index.id(site.pile[i][0], 0, site.pile[i][2])] = 0;
+  }
+
+  // ---------- canteen ----------
+  // Once it stands, the hungry eat at its door (a short meal) and take the dish of the day
+  // (world.canteen.dish) until their next meal.
+
+  // The meal there (meta «Короче обед»): CANTEEN.mealSeconds less a second per level.
+  function canteenMealSeconds(world) {
+    return world.campaign.canteenMealSeconds || CANTEEN.mealSeconds;
+  }
+
+  // «Полевая кухня» on the site: level 1 lets the crew build the canteen, every next level is a
+  // canteen level (CANTEEN.seats seats each). A level above 1 + meta «Уровни столовой» cannot be bought.
+  function canteenLevel(world) {
+    return world.campaign.purchases.kitchen || 0;
+  }
+
+  function canteenActive(world) {
+    return !!world.canteen && canteenLevel(world) >= 1;
+  }
+
+  function kitchenCapped(campaign) {
+    return (campaign.purchases.kitchen || 0) >= (campaign.canteenMaxLevel || 1);
+  }
+
+  // Seats: CANTEEN.seats per level of the canteen that stands (a bought level counts once its
+  // building is up) + meta «Места в столовой»; and who is eating there now.
+  function canteenSeats(world) {
+    const built = world.canteen ? world.canteen.form || 0 : 0;
+    // «Раздача» (⬡ «Городок» of the site graph): seats on top.
+    return (CANTEEN.seats || 2) * Math.max(1, built) + (world.campaign.canteenSeatBonus || 0) + lineValue(world.campaign, 'campServe');
+  }
+
+  // The level of the canteen that stands (0 — none yet).
+  function canteenBuiltLevel(world) {
+    return world.canteen ? world.canteen.form || 0 : 0;
+  }
+
+  function canteenEating(world) {
+    let count = 0;
+    for (let i = 0; i < world.builders.length; i++) {
+      const builder = world.builders[i];
+      if (builder.phase === 'meal' && builder.mealPlace === 'canteen') count += 1;
+    }
+    return count;
+  }
+
+  // One try per hunger cycle, as soon as he is hungry (hungryPoints of satiety left; at a desk visit with free
+  // hands). The seats are counted only when he is there (arrive): a worker who finds every seat taken
+  // forgets the canteen till his next meal — back to work hungry, and at the top of hunger he eats
+  // the classic way (far away in town), with no dish.
+  function canteenDue(builder, world) {
+    const canteen = world.canteen;
+    return canteenActive(world) && canteen.form >= 1 && !builder.canteenTried && hungerStatus(builder) !== '';
+  }
+
+  function startCanteenMeal(builder, world) {
+    const canteen = world.canteen;
+    if (!canteenActive(world) || canteen.form < 1) return false;
+    builder.canteenTried = true;
+    const cell = canteen.eatCells[canteen.nextEat % canteen.eatCells.length];
+    canteen.nextEat += 1;
+    const path = sameCell(builder.cell, cell) ? [builder.cell.slice()] : findPathToCell(builder.cell, cell, world);
+    if (!path) return false;
+    builder.needTrip = 'meal';
+    builder.mealPlace = 'canteen';
+    builder.awayCell = cell.slice();
+    beginWalk(builder, path, 'meal', world);
+    return true;
+  }
+
+  // A meal ends: at the canteen the worker takes the menu of its standing level — the day dish(es) as a
+  // bonus map, a pastry for later, the seasonal dishes, the chef's signature (with its per-meal effect);
+  // a meal elsewhere leaves him nothing but the pastry he may still carry.
+  function serveMenu(builder, world, atCanteen) {
+    const canteen = world.canteen;
+    const level = atCanteen && canteen ? Math.max(1, canteen.form || 0) : 0;
+    builder.dish2 = level >= ROWS.dish2 ? canteen.dish2 || '' : '';
+    builder.dishBonus = {};
+    if (builder.dish) dayDishBonus(builder.dishBonus, builder.dish, world);
+    if (builder.dish2) dayDishBonus(builder.dishBonus, builder.dish2, world);
+    builder.ateTorte = builder.dish === 'napoleon' || builder.dish2 === 'napoleon';
+    const kitchen = kitchenOf(world);
+    builder.signature = level >= ROWS.signature && kitchen.level >= (KITCHEN.signatureKitchen || 5) ? canteen.signature || '' : '';
+    if (!atCanteen) return;
+    builder.grandDue = false;
+    cookMeal(world);
+    builder.snack = level >= ROWS.snack ? canteen.snack || '' : '';
+    const signature = DISH[builder.signature];
+    if (signature && signature.effect === 'feast') world.feastDishUntil = world.campaign.levelElapsed + (signature.seconds || 30);
+    if (signature && signature.effect === 'mana' && world.campaign.manaMax > 0) {
+      world.campaign.mana = Math.min(world.campaign.manaMax, (world.campaign.mana || 0) + signature.value);
+    }
+  }
+
+  // The pastry, eaten where he stands once the hunger comes: the hunger closes (half a scale; «Шаурма» —
+  // a full one), «Пончик» rushes his legs, «Кофе с собой» clears the wish to smoke. Not if the menu
+  // changed since his meal: then he goes for the new dish and keeps the pastry. Next hunger — the canteen.
+  function eatSnack(builder, world) {
+    const canteen = world.canteen;
+    const dish = DISH[builder.snack];
+    if (!dish || !canteen) return;
+    const dish2 = Math.max(1, canteen.form || 0) >= ROWS.dish2 ? canteen.dish2 || '' : '';
+    if (canteen.dish !== builder.dish || dish2 !== (builder.dish2 || '')) return;
+    const scale = rollHunger() + lineValue(world.campaign, 'satiety');
+    builder.hunger = 0;
+    builder.hungerScale = dish.snack === 'full' ? scale : scale / 2;
+    if (dish.snack === 'rush') builder.rushUntil = world.campaign.levelElapsed + (dish.seconds || 40);
+    if (dish.snack === 'smoke') builder.smokeNeed = 0;
+    builder.snack = '';
+    builder.canteenTried = false;
+    world.events.push({ type: 'snack', builder: builder.index, dish: dish.id });
+  }
+
+  // A whole cube set: «Подарок за куб» rolls, and «Торт «Наполеон»» counts to its moment.
+  function cubeSet(world) {
+    // Whole cubes of the site (the kitchen calibration measures them a minute).
+    world.cubesSet = (world.cubesSet || 0) + 1;
+    rollCubeGift(world);
+    countGrandDinner(world);
+    const torte = DISH.napoleon;
+    const canteen = world.canteen;
+    if (!torte || !canteen || (canteen.dish !== 'napoleon' && canteen.dish2 !== 'napoleon')) return;
+    world.torteCubes = (world.torteCubes || 0) + 1;
+    if (world.torteCubes < (torte.cubes || 100)) return;
+    world.torteCubes = 0;
+    world.torteUntil = world.campaign.levelElapsed + (torte.seconds || 40);
+    world.events.push({ type: 'torte' });
+  }
+
+  // ---------- the kitchen ----------
+  function kitchenOf(world) {
+    return world.kitchen || (world.kitchen = { level: 0, staff: [], xp: 0 });
+  }
+
+  // The chef's level by his experience (a canteen meal — 1).
+  function chefLevel(world) {
+    const xp = kitchenOf(world).xp;
+    let level = 0;
+    while (level < KITCHEN.chefLevels.length && xp >= KITCHEN.chefLevels[level]) level += 1;
+    return level;
+  }
+
+  // How much stronger the chef makes the dishes: a share a chef level, bigger with a bigger kitchen.
+  function chefPower(world) {
+    const kitchen = kitchenOf(world);
+    if (kitchen.level < 1) return 1;
+    return 1 + chefLevel(world) * (KITCHEN.dishPerLevel[kitchen.level - 1] || 0);
+  }
+
+  // Workers the next kitchen level asks on top of those already in it; «Повар артели» in the crew stands
+  // for the first level's staff.
+  function kitchenStaffNeeded(world) {
+    const kitchen = kitchenOf(world);
+    if (kitchen.level >= KITCHEN.staff.length) return Infinity;
+    const cook = world.campaign.foremen && world.campaign.foremen.feast ? KITCHEN.staff[0] : 0;
+    // «Кухонный штат» of the office: fewer hands for every level.
+    const office = world.campaign.office ? world.campaign.office.kitchenStaff || 0 : 0;
+    return Math.max(0, KITCHEN.staff[kitchen.level] - cook - office - kitchen.staff.length);
+  }
+
+  // Who can go to the kitchen: plain workers (no foreman rank) at work, the last hired first.
+  function kitchenCandidates(world) {
+    return world.builders.filter(function (builder) {
+      return builder.trade === 'builder' && !builder.kitchen && !builder.camp && !(builder.expertiseRank > 0) &&
+        builder.phase !== 'taxi' && builder.phase !== 'meal' && builder.phase !== 'break';
+    }).sort(function (a, b) { return b.index - a.index; });
+  }
+
+  // The kitchen never takes the last hands: KITCHEN.keepCrew plain workers stay on the site.
+  function kitchenOpenable(world) {
+    const canteen = world.canteen;
+    return !!canteen && Math.max(1, canteen.form || 0) >= ROWS.kitchen && kitchenOf(world).level < KITCHEN.staff.length &&
+      kitchenCandidates(world).length >= kitchenStaffNeeded(world) + kitchenKeep();
+  }
+
+  function kitchenKeep() {
+    return KITCHEN.keepCrew === undefined ? 2 : KITCHEN.keepCrew;
+  }
+
+  // The next kitchen level: the workers it asks leave the crew for the site (their hands are emptied).
+  function buyKitchen(world) {
+    if (!kitchenOpenable(world)) return false;
+    const kitchen = kitchenOf(world);
+    const need = kitchenStaffNeeded(world);
+    const pool = kitchenCandidates(world);
+    for (let i = 0; i < need; i++) {
+      kitchen.staff.push(pool[i].index);
+      sendToKitchen(pool[i], world);
+    }
+    kitchen.level += 1;
+    world.events.push({ type: 'kitchen', level: kitchen.level });
+    return true;
+  }
+
+  function sendToKitchen(builder, world) {
+    if (builder.carry.length > 0 || builder.plan.length > 0) {
+      releaseBuilderDuties(builder, world, 'ушёл на кухню', 'kitchen');
+      // Not an abandoned trip for the view: no «бросил ношу».
+      world.events = world.events.filter(function (event) { return !(event.type === 'abandon' && event.builder === builder.index); });
+    } else releaseHands(builder);
+    builder.kitchen = true;
+    builder.smokeNeed = 0;
+    builder.hunger = 0;
+    builder.fatigue = 0;
+    const canteen = world.canteen;
+    const cells = canteen ? canteen.eatCells : null;
+    const cell = cells && cells.length ? cells[(cells.length - 1 - kitchenOf(world).staff.indexOf(builder.index) % cells.length + cells.length) % cells.length] : null;
+    const path = cell ? (sameCell(builder.cell, cell) ? [builder.cell.slice()] : findPathToCell(builder.cell, cell, world)) : null;
+    if (path && path.length > 1) beginWalk(builder, path, 'kitchen', world);
+    else builder.phase = 'kitchen';
+  }
+
+  // A canteen meal is the chef's work: experience; from canteen level 4 every meal rolls for each secret
+  // dish not found yet — its own chance (dish.chance, by its target day) × the company's discovery
+  // multiplier (meta: grows a little with every cube) × the kitchen's own factor.
+  function cookMeal(world) {
+    const kitchen = kitchenOf(world);
+    if (kitchen.level < 1) return;
+    const before = chefLevel(world);
+    // «Школа поваров» of the office: more experience a meal.
+    kitchen.xp += world.campaign.office ? world.campaign.office.chef : 1;
+    if (chefLevel(world) > before) world.events.push({ type: 'chefLevel', level: chefLevel(world) });
+    const canteen = world.canteen;
+    if (!canteen || Math.max(1, canteen.form || 0) < ROWS.secrets) return;
+    const owned = world.campaign.canteenDishes || (world.campaign.canteenDishes = []);
+    const factor = (world.campaign.discoveryMultiplier || 1) * (KITCHEN.discovery[kitchen.level - 1] || 1);
+    CANTEEN.dishes.forEach(function (dish) {
+      if (!dish.secret || owned.indexOf(dish.id) >= 0 || Math.random() >= (dish.chance || 0) * factor) return;
+      owned.push(dish.id);
+      world.events.push({ type: 'secretDish', dish: dish.id });
+    });
+  }
+
+  // Grand dinners (canteen 5, kitchen 5, a grand dish picked): every KITCHEN.grandCubes whole cubes the
+  // whole crew goes to dine; the dish's bonus stacks for the crew till the hand-over.
+  function grandReady(world) {
+    const canteen = world.canteen;
+    return !!canteen && Math.max(1, canteen.form || 0) >= ROWS.grand && kitchenOf(world).level >= (KITCHEN.grandKitchen || 5) && !!DISH[canteen.grand];
+  }
+
+  function countGrandDinner(world) {
+    if (!grandReady(world)) return;
+    world.grandCubes = (world.grandCubes || 0) + 1;
+    if (world.grandCubes < (KITCHEN.grandCubes || 200)) return;
+    world.grandCubes = 0;
+    const dish = DISH[world.canteen.grand];
+    world.grandStacks = world.grandStacks || {};
+    world.grandStacks[dish.effect] = (world.grandStacks[dish.effect] || 0) + dish.value;
+    world.grandDinners = (world.grandDinners || 0) + 1;
+    world.builders.forEach(function (builder) { if (builder.trade === 'builder' && !builder.kitchen && !builder.camp) builder.grandDue = true; });
+    world.events.push({ type: 'grandDinner', dish: dish.id, count: world.grandDinners });
+  }
+
+  function setCanteenDish(world, id) {
+    return setCanteenSlot(world, 'dish', id);
+  }
+
+  // A row of the menu: 'dish' and 'dish2' take day dishes, 'snack' a pastry ('' — «Без выпечки»),
+  // 'signature' a chef's dish. A row opens with its canteen level; a dish needs a building of its level.
+  const SLOT_ROW = { dish: 'day', dish2: 'day', snack: 'snack', signature: 'signature', grand: 'grand' };
+  const SLOT_LEVEL = { dish: 'day', dish2: 'dish2', snack: 'snack', signature: 'signature', grand: 'grand' };
+  function setCanteenSlot(world, slot, id) {
+    const canteen = world.canteen;
+    if (!canteen || !SLOT_ROW[slot]) return false;
+    if (id === '' && slot !== 'dish') {
+      canteen[slot] = '';
+      return true;
+    }
+    const dish = DISH[id];
+    if (!dish || (world.campaign.canteenDishes || []).indexOf(id) < 0 || dish.row !== SLOT_ROW[slot]) return false;
+    if (Math.max(1, canteen.form || 0) < Math.max(dish.level || 1, ROWS[SLOT_LEVEL[slot]] || 1)) return false;
+    if ((dish.kitchen || 0) > kitchenOf(world).level) return false;
+    canteen[slot] = id;
+    return true;
+  }
+
+  // ---------- sales office ----------
+  // The same pattern as the canteen: the site upgrade «Офис продаж» (opened by the technology of the
+  // same name) — level 1 lets the crew build it, every next level is an office level; a level above
+  // 1 + meta «Уровни офиса продаж» cannot be bought. Once it stands it earns site coins on its own,
+  // paid every SALES.payoutSeconds:
+  //   (SALES.levelRate × office level + «Менеджеры» + «Шоу-рум» × built cubes of the main building)
+  //   × (1 + SALES.levelBonus × (office level − 1)).
+  // «Менеджеры» and «Шоу-рум» are bought in the office for site coins; a manager level costs its
+  // gain × payback (the first: +5 coins/s for 300 — back in a minute). Fixed numbers for now.
+  function salesLevel(world) {
+    return world.campaign.purchases.sales || 0;
+  }
+
+  function salesActive(world) {
+    return !!world.sales && salesLevel(world) >= 1;
+  }
+
+  // The level of the office that stands (0 — none yet): its income counts from it. An office of
+  // whole cells (no forms) is at the level bought once built.
+  function salesBuiltLevel(world) {
+    const sales = world.sales;
+    if (!sales) return 0;
+    if (sales.forms) return sales.form || 0;
+    return sales.ready ? salesLevel(world) : 0;
+  }
+
+  function salesCapped(campaign) {
+    return (campaign.purchases.sales || 0) >= (campaign.salesMaxLevel || 1);
+  }
+
+  function salesBuiltCubes(world) {
+    return world.blocks.length - world.remaining;
+  }
+
+  // Income of «Менеджеры» at `level`, coins per second: the sum of their per-level gains.
+  function salesManagersIncome(level) {
+    const spec = SALES.upgrades.managers;
+    let income = 0;
+    for (let i = 0; i < level; i++) income += spec.gain * Math.pow(spec.gainGrowth, i);
+    return income;
+  }
+
+  // «Шоу-рум»: coins per second for every cube of the main building already built.
+  function salesShowroomIncome(world) {
+    const sales = world.sales;
+    return sales ? SALES.upgrades.showroom.perCube * sales.upgrades.showroom * salesBuiltCubes(world) : 0;
+  }
+
+  // The office level's share of everything: +SALES.levelBonus per level above the first, times
+  // «Реклама» of the site graph.
+  function salesMultiplier(world) {
+    return (1 + (SALES.levelBonus || 0) * Math.max(0, salesBuiltLevel(world) - 1)) * campBoost(world.campaign, 'salesAds');
+  }
+
+  // Coins per second now (0 until the office stands).
+  function salesRate(world) {
+    const sales = world.sales;
+    if (!salesActive(world) || salesBuiltLevel(world) < 1) return 0;
+    const base = SALES.levelRate * salesBuiltLevel(world) + salesManagersIncome(sales.upgrades.managers) + salesShowroomIncome(world);
+    // «Тендерный отдел» of the office.
+    return base * salesMultiplier(world) * (world.campaign.office ? world.campaign.office.sales : 1);
+  }
+
+  // «Дежурный менеджер» (⬡ «Городок»): coins the standing office pays while the player is away —
+  // its share of the rate for `seconds` (game.js → catchUpWorld).
+  function salesAwayCoins(world, seconds) {
+    const share = lineValue(world.campaign, 'campSalesAway');
+    return share > 0 && seconds > 0 ? salesRate(world) * share * seconds : 0;
+  }
+
+  // The next level of an office upgrade: managers — +coins/s (with the office multiplier) and the
+  // payback in seconds; showroom — +coins/s per built cube. Null at the maximum.
+  function salesOffer(world, kind) {
+    const sales = world.sales;
+    const spec = SALES.upgrades[kind];
+    if (!sales || !spec) return null;
+    const level = sales.upgrades[kind];
+    if (level >= spec.max) return null;
+    const mult = salesMultiplier(world);
+    if (kind === 'managers') {
+      const gain = spec.gain * Math.pow(spec.gainGrowth, level);
+      const cost = Math.max(1, Math.round(gain * spec.payback * Math.pow(spec.paybackGrowth, level)));
+      return { level: level, max: spec.max, gain: gain * mult, payback: cost / (gain * mult), cost: cost };
+    }
+    return { level: level, max: spec.max, gain: spec.perCube * mult, cost: Math.max(1, Math.round(spec.cost * Math.pow(spec.costGrowth, level))) };
+  }
+
+  function buySalesUpgrade(world, kind) {
+    const campaign = world.campaign;
+    const offer = salesOffer(world, kind);
+    if (!offer || salesBuiltLevel(world) < 1 || (!campaign.freePurchases && campaign.coins < offer.cost)) return false;
+    if (!campaign.freePurchases) campaign.coins -= offer.cost;
+    world.sales.upgrades[kind] += 1;
+    world.events.push({ type: 'salesUpgrade', kind: kind, cost: campaign.freePurchases ? 0 : offer.cost });
+    return true;
+  }
+
+  function stepSales(world, dt) {
+    const sales = world.sales;
+    if (!sales || salesBuiltLevel(world) < 1 || !salesActive(world)) return;
+    sales.bank += salesRate(world) * dt;
+    sales.clock += dt;
+    if (sales.clock < SALES.payoutSeconds) return;
+    sales.clock -= SALES.payoutSeconds;
+    const coins = Math.floor(sales.bank);
+    if (coins <= 0) return;
+    sales.bank -= coins;
+    sales.earned += coins;
+    world.campaign.coins += coins;
+    world.campaign.coinsEarned = (world.campaign.coinsEarned || 0) + coins;
+    world.events.push({ type: 'salesPay', coins: coins });
+  }
+
+  // ---------- camp construction ----------
+  // The crew builds a camp building by the laws of the main site: a cube is set from a cell next to
+  // it that the pattern of reach allows (canBuildBlockFrom), reached by the same routes that erect
+  // ladders and decks (findRouteAStar); set cubes are solid cells (walls to lean ladders on, roofs
+  // to walk on). Only the material differs: it comes from the building's own stack. Each worker
+  // takes the next free cubes of the form (cube.owner) and sets them bottom-up: a cube waits for
+  // the one under it, if the form has one.
+  function workerCount(world) {
+    let count = 0;
+    for (let i = 0; i < world.builders.length; i++) if (world.builders[i].trade === 'builder') count += 1;
+    return count;
+  }
+
+  function campCrew(world, site) {
+    let count = 0;
+    for (let i = 0; i < world.builders.length; i++) if (world.builders[i].camp === site) count += 1;
+    return count;
+  }
+
+  // Cubes nobody has: not set and not in anyone's hands (site.taken — cubes in hands).
+  function campLeft(world, site) {
+    return site ? site.total - site.built - (site.taken || 0) : 0;
+  }
+
+  // Some camp building going up has fewer workers than its slider asks for.
+  function campShort(world) {
+    if (!world.camp) return false;
+    for (let i = 0; i < world.camp.length; i++) {
+      const site = world.camp[i];
+      if (campActive(world, site) && !site.ready && campCrew(world, site) < site.assigned && campLeft(world, site) > 0) return true;
+    }
+    return false;
+  }
+
+  // Free hands and no started cube (at the desk or between trips of a plan): joins the crew of the
+  // first camp building that is short of the workers its slider asks for.
+  function joinCamp(builder, world) {
+    if (builder.trade !== 'builder' || !world.camp || world.camp.length === 0) return false;
+    for (let i = 0; i < builder.plan.length; i++) {
+      if (!builder.plan[i].built && builder.plan[i].poured > 0) return false;
+    }
+    for (let i = 0; i < world.camp.length; i++) {
+      const site = world.camp[i];
+      if (!campActive(world, site) || site.ready) continue;
+      if (campCrew(world, site) >= site.assigned || campLeft(world, site) <= 0) continue;
+      releaseUnstartedPlan(builder, world);
+      cancelRoute(builder, world);
+      builder.camp = site;
+      builder.campCubes = [];
+      if (startCampTrip(builder, world)) return true;
+      builder.camp = null;
+    }
+    return false;
+  }
+
+  // Seconds to set a camp cube: as on the main site, by its material — a camp cube is set whole, so
+  // as all grid³ mini-cubes of a main-site cube. «Типовые проекты» speed up every camp building.
+  function campPieceSeconds(builder, world, site, cube) {
+    const grid = MATERIAL[cube.materialId].grid;
+    const tempo = placeTempo(builder, world, cube) * campBoost(world.campaign, 'campPrefab') * (world.campaign.office ? world.campaign.office.camp : 1);
+    return workTimer(builder, 'place', placeEffort(builder, world, cube) * grid * grid * grid, tempo);
+  }
+
+  // The cube can go in now — the main site's rule (isSupported): on the ground, or a set cube of the
+  // building under it or beside it.
+  function campSupported(site, cube) {
+    if (cube.y === 0) return true;
+    if (campDoneAt(site, cube.x, cube.y - 1, cube.z)) return true;
+    for (let d = 0; d < DIRS.length; d++) {
+      if (campDoneAt(site, cube.x + DIRS[d][0], cube.y, cube.z + DIRS[d][1])) return true;
+    }
+    return false;
+  }
+
+  function campCubeAt(site, x, y, z) {
+    const k = site.cellIndex ? site.cellIndex.get(cellKey(x, y, z)) : undefined;
+    return k === undefined ? null : site.cubes[k];
+  }
+
+  function campDoneAt(site, x, y, z) {
+    const cube = campCubeAt(site, x, y, z);
+    return !!cube && cube.done;
+  }
+
+  // The main site's canCompleteAfter for a camp cube: it can go in once the set cubes and the ones
+  // taken for this trip (`chosen` — their cell keys) are in.
+  function campCanCompleteAfter(site, cube, chosen) {
+    if (campSupported(site, cube)) return true;
+    if (chosen.has(cellKey(cube.x, cube.y - 1, cube.z))) return true;
+    for (let d = 0; d < DIRS.length; d++) {
+      if (chosen.has(cellKey(cube.x + DIRS[d][0], cube.y, cube.z + DIRS[d][1]))) return true;
+    }
+    return false;
+  }
+
+  // The camp building's cubes as the main site's planning rules see them (sealsOther).
+  function campCubesView(site) {
+    if (!site.cubesView) {
+      site.cubesView = {
+        at: function (world, x, y, z) { return campCubeAt(site, x, y, z); },
+        built: function (cube) { return cube.done; },
+        ready: function (cube) { return campSupported(site, cube); },
+        reserved: function (cube) { return cube.owner >= 0; },
+      };
+    }
+    return site.cubesView;
+  }
+
+  // Cubes still to set that can never get support (the main site's unbuildableBlocks): support
+  // spreads from the set cubes through the rest by the same rule; whatever it never reaches floats.
+  function campUnbuildable(site) {
+    const reached = new Set();
+    const solid = function (x, y, z) {
+      const k = site.cellIndex.get(cellKey(x, y, z));
+      return k !== undefined && (site.cubes[k].done || reached.has(k));
+    };
+    let grew = true;
+    while (grew) {
+      grew = false;
+      for (let k = 0; k < site.cubes.length; k++) {
+        const cube = site.cubes[k];
+        if (cube.done || reached.has(k)) continue;
+        let ok = cube.y === 0 || solid(cube.x, cube.y - 1, cube.z);
+        for (let d = 0; d < DIRS.length && !ok; d++) ok = solid(cube.x + DIRS[d][0], cube.y, cube.z + DIRS[d][1]);
+        if (ok) {
+          reached.add(k);
+          grew = true;
+        }
+      }
+    }
+    let left = 0;
+    for (let k = 0; k < site.cubes.length; k++) if (!site.cubes[k].done && !reached.has(k)) left += 1;
+    return left;
+  }
+
+  // His cubes go back to the stack (a break, the slider, the building came down).
+  function releaseCampCubes(builder) {
+    const site = builder.camp;
+    const cubes = builder.campCubes || [];
+    if (site && site.cubes) {
+      for (let i = 0; i < cubes.length; i++) {
+        const cube = site.cubes[cubes[i]];
+        if (cube && !cube.done && cube.owner === builder.index) {
+          cube.owner = -1;
+          site.taken = Math.max(0, (site.taken || 0) - 1);
+        }
+      }
+    }
+    builder.campCubes = [];
+    builder.campCarry = 0;
+  }
+
+  // From this cell (and its ladder or deck) the cube is within reach, as on the main site.
+  function canSetCampFrom(cell, cube, world) {
+    const index = world.index;
+    if (!index.inside(cell[0], cell[1], cell[2])) return false;
+    return canBuildBlockFrom(cell[0], cell[1], cell[2], buildSurfaceMode(cell[0], cell[1], cell[2], world), cube, world);
+  }
+
+  // To a cell (the stack): an ordinary path, else a route that erects ladders and decks (down off a
+  // roof). The walk's purpose (or the route's camp goal) says what he does there.
+  function campWalkTo(builder, world, cell, purpose) {
+    const path = sameCell(builder.cell, cell) ? [builder.cell.slice()] : findPathToCell(builder.cell, cell, world);
+    if (path) {
+      beginWalk(builder, path, purpose, world);
+      return true;
+    }
+    if (!SCAFFOLD.enabled) return false;
+    const started = performance.now();
+    const route = findRouteAStar(world, null, builder.cell, true, [world.index.id(cell[0], cell[1], cell[2])], Infinity, false, false, true);
+    world.metrics.scaffoldSearch += performance.now() - started;
+    if (!route) return false;
+    route.home = false;
+    route.camp = purpose;
+    route.owner = builder.index;
+    builder.routeId = route.id;
+    builder.routeTargetId = -1;
+    return continueCampRoute(builder, world);
+  }
+
+  // A route to a cell one of `targets` (his cubes that can go in now: x, y, z, id — the cube's index)
+  // can be set from: the main site's search (routeToPending).
+  function campRouteTo(builder, world, targets) {
+    const route = routeToPending(builder, world, targets);
+    if (!route) return null;
+    route.camp = 'set';
+    return route;
+  }
+
+  // One more step of a camp route (a walk step or a piece to erect); false once it is over.
+  function continueCampRoute(builder, world) {
+    const progress = continueRoute(builder, world);
+    if (progress === ROUTE_STARTED) return true;
+    if (progress === ROUTE_WAITING) {
+      builder.phase = 'idle';
+      builder.wait = 0.1;
+      builder.waitReason = 'path';
+      return true;
+    }
+    return false;
+  }
+
+  // A camp worker between steps (a route step walked, a piece erected, a wait over): on along his
+  // route, then to his next cube or back to the stack.
+  function resumeCamp(builder, world) {
+    const site = builder.camp;
+    if (campStalled(builder, world)) return;
+    if (builder.routeId >= 0 && world.routes[builder.routeId].camp) {
+      if (continueCampRoute(builder, world)) return;
+    }
+    if (!site || site.ready) {
+      leaveCamp(builder, world);
+      return;
+    }
+    if (builder.campCarry > 0) {
+      walkToCampCube(builder, world);
+      return;
+    }
+    if (sameCell(builder.cell, site.pickStand)) {
+      beginCampFetch(builder, world);
+      return;
+    }
+    continueCamp(builder, world);
+  }
+
+  function startCampTrip(builder, world) {
+    const site = builder.camp;
+    if (!site || campLeft(world, site) <= 0) return false;
+    return campWalkTo(builder, world, site.pickStand, 'campFetch');
+  }
+
+  // At the stack: the cubes of the trip, chosen as the main site plans its cubes (reservePlan): the
+  // first free cube in the building order that can go in now and walls in no other, then, near it
+  // (loadRadius), the next ones that will stand on the set cubes or on the ones taken — as many as
+  // the carry takes (at least one, at most CANTEEN.maxCarry; a camp cube is whole: its full mass in
+  // the hands). Cubes put off for having no route wait until the site changes (failedNavSerial).
+  // Picking goes by mass like at a quarry. Nothing to take now: he waits a moment.
+  function beginCampFetch(builder, world) {
+    const site = builder.camp;
+    if (!site || campLeft(world, site) <= 0) {
+      leaveCamp(builder, world);
+      return;
+    }
+    const capacity = carryKg(world.campaign, builder);
+    const view = campCubesView(site);
+    const picks = [];
+    const chosen = new Set();
+    const planned = new Set();
+    let kg = 0;
+    let mass = 0;
+    const free = function (cube) {
+      return !cube.done && cube.owner < 0 && cube.failedNavSerial !== world.navSerial;
+    };
+    const take = function (k, weight) {
+      const cube = site.cubes[k];
+      kg += weight;
+      mass += MATERIAL[cube.materialId].weight;
+      picks.push(k);
+      chosen.add(cellKey(cube.x, cube.y, cube.z));
+      planned.add(world.index.id(cube.x, cube.y, cube.z));
+    };
+    const weightOf = function (cube) {
+      const material = MATERIAL[cube.materialId];
+      return carryWeight(world.campaign, cube.materialId) * material.weight / material.cell;
+    };
+    let anchor = null;
+    for (let k = 0; k < site.cubes.length; k++) {
+      const cube = site.cubes[k];
+      if (!free(cube) || !campSupported(site, cube) || sealsOther(cube, world, planned, view)) continue;
+      anchor = cube;
+      take(k, weightOf(cube));
+      break;
+    }
+    let added = anchor !== null && kg <= capacity;
+    while (added && picks.length < CANTEEN.maxCarry) {
+      added = false;
+      for (let k = 0; k < site.cubes.length && picks.length < CANTEEN.maxCarry; k++) {
+        const cube = site.cubes[k];
+        if (!free(cube) || chosen.has(cellKey(cube.x, cube.y, cube.z))) continue;
+        if (Math.max(Math.abs(cube.x - anchor.x), Math.abs(cube.z - anchor.z)) > BALANCE.loadRadius) continue;
+        const weight = weightOf(cube);
+        if (kg + weight > capacity) continue;
+        if (!campCanCompleteAfter(site, cube, chosen)) continue;
+        if (sealsOther(cube, world, planned, view)) continue;
+        take(k, weight);
+        added = true;
+      }
+    }
+    if (picks.length === 0) {
+      builder.phase = 'idle';
+      builder.wait = 0.5;
+      builder.waitReason = 'front';
+      return;
+    }
+    for (let i = 0; i < picks.length; i++) site.cubes[picks[i]].owner = builder.index;
+    site.taken = (site.taken || 0) + picks.length;
+    builder.campCubes = picks;
+    builder.campCarry = picks.length;
+    builder.campHops = 0;
+    builder.campStall = 0;
+    builder.phase = 'campFetch';
+    builder.actionT = 0;
+    builder.timer = pickSeconds(builder, world, mass);
+    builder.faceX = site.pile[0][0];
+    builder.faceZ = site.pile[0][2];
+  }
+
+  // Routes in a row to his cubes that ended without one of them in reach (the site changed on the way).
+  const CAMP_ROUTE_TRIES = 4;
+
+  // To his cubes, as on the main site: one that can go in now and is in reach from where he stands is
+  // set; else a route to a cell one of them can be set from (all of them at once). None of them can go
+  // in yet (the cube under it is someone else's): he waits a moment. No route: they are put off until
+  // the site changes and he drops them and gets out (abandonJobAndRecover), as on the main site.
+  function walkToCampCube(builder, world) {
+    const site = builder.camp;
+    if (!site || builder.campCarry <= 0 || site.built >= site.total) {
+      releaseCampCubes(builder);
+      continueCamp(builder, world);
+      return;
+    }
+    const targets = [];
+    const cubes = builder.campCubes;
+    for (let i = 0; i < cubes.length; i++) {
+      const cube = site.cubes[cubes[i]];
+      if (cube.done || !campSupported(site, cube)) continue;
+      if (canSetCampFrom(builder.cell, cube, world)) {
+        builder.campIndex = cubes[i];
+        beginCampBuild(builder, world);
+        return;
+      }
+      targets.push({ x: cube.x, y: cube.y, z: cube.z, id: cubes[i] });
+    }
+    if (targets.length === 0) {
+      builder.phase = 'idle';
+      builder.wait = 0.5;
+      builder.waitReason = 'front';
+      return;
+    }
+    if (builder.campHops < CAMP_ROUTE_TRIES && campRouteTo(builder, world, targets)) {
+      builder.campHops += 1;
+      if (continueCampRoute(builder, world)) return;
+      builder.phase = 'idle';
+      builder.wait = 0.1;
+      builder.waitReason = 'path';
+      return;
+    }
+    for (let i = 0; i < cubes.length; i++) site.cubes[cubes[i]].failedNavSerial = world.navSerial;
+    abandonJobAndRecover(builder, world, 'Не найден маршрут к кубам городка из ноши', 'route');
+  }
+
+  // Someone else stands in the cube's cell (or steps into it): the cube waits for him to leave. As on
+  // the main site the crew may stand where a cube is still to go; one who only waits there is asked
+  // to step aside.
+  function campCellTaken(builder, world, cube) {
+    const cell = [cube.x, cube.y, cube.z];
+    for (let i = 0; i < world.builders.length; i++) {
+      const other = world.builders[i];
+      if (other === builder || other.trade !== 'builder') continue;
+      if (other.phase === 'walk' && other.to && sameCell(other.to, cell)) return true;
+      if (!sameCell(other.cell, cell)) continue;
+      if (other.phase === 'idle' || other.phase === 'plan') stepAside(other, world, cell);
+      return true;
+    }
+    return false;
+  }
+
+  // One step off `cell` to a free cell to stand in (not another cube still to set, if he can help it).
+  function stepAside(builder, world, cell) {
+    const index = world.index;
+    let best = null;
+    for (let dy = 0; dy <= 1 && !best; dy++) {
+      for (let d = 0; d < DIRS.length; d++) {
+        const x = cell[0] + DIRS[d][0];
+        const y = cell[1] + dy;
+        const z = cell[2] + DIRS[d][1];
+        if (!canStand(x, y, z, world)) continue;
+        const path = findPathToCell(builder.cell, [x, y, z], world);
+        if (!path || path.length > 4) continue;
+        const future = (world.campGrid[index.id(x, y, z)] & CAMP_FUTURE) !== 0;
+        if (!best || (best.future && !future)) best = { path: path, future: future };
+        if (!future) break;
+      }
+    }
+    if (!best) return false;
+    cancelRoute(builder, world);
+    beginWalk(builder, best.path, 'route', world);
+    return true;
+  }
+
+  function beginCampBuild(builder, world) {
+    const site = builder.camp;
+    const cube = site && site.cubes[builder.campIndex];
+    if (!cube || cube.done) {
+      walkToCampCube(builder, world);
+      return;
+    }
+    // Out of reach (the site changed): to his cubes again.
+    if (!canSetCampFrom(builder.cell, cube, world)) {
+      walkToCampCube(builder, world);
+      return;
+    }
+    if (campCellTaken(builder, world, cube)) {
+      builder.phase = 'idle';
+      builder.wait = 0.3;
+      builder.waitReason = 'path';
+      return;
+    }
+    builder.phase = 'campBuild';
+    builder.actionT = 0;
+    builder.timer = campPieceSeconds(builder, world, site, cube);
+    builder.faceX = cube.x;
+    builder.faceZ = cube.z;
+  }
+
+  function finishCampBuild(builder, world) {
+    const site = builder.camp;
+    const cube = site && site.cubes[builder.campIndex];
+    if (cube && !cube.done) {
+      if (campCellTaken(builder, world, cube)) {
+        builder.campStall = (builder.campStall || 0) + 0.3;
+        if (campStalled(builder, world)) return;
+        builder.timer = 0.3;
+        return;
+      }
+      builder.campStall = 0;
+      if (cube.owner === builder.index) site.taken = Math.max(0, (site.taken || 0) - 1);
+      setCampCube(world, site, builder.campIndex);
+      world.events.push({ type: 'campCube', site: site, index: builder.campIndex, builder: builder });
+      campReadyCheck(world, site);
+    }
+    builder.campCubes = (builder.campCubes || []).filter(function (k) { return !site.cubes[k].done; });
+    builder.campCarry = builder.campCubes.length;
+    if (builder.campCarry > 0 && !site.ready) {
+      builder.campHops = 0;
+      walkToCampCube(builder, world);
+      return;
+    }
+    releaseCampCubes(builder);
+    continueCamp(builder, world);
+  }
+
+  // Cube k of the camp building is set: a solid cell.
+  function setCampCube(world, site, k) {
+    const cube = site.cubes[k];
+    cube.done = true;
+    cube.owner = -1;
+    site.built += 1;
+    site.stall = 0;
+    campCell(world, cube, 1);
+    invalidateNav(world, cube.x, cube.y, cube.z);
+  }
+
+  function campReadyCheck(world, site) {
+    if (site.built < site.total) return;
+    site.ready = true;
+    site.scaffolded = true;
+    if (site.target) site.form = site.target;
+    clearCampPile(world, site);
+    world.events.push({ type: 'campReady', site: site });
+  }
+
+  // The main site's stall rule for the camp building as a whole (resolveConstructionStall): nobody
+  // has had its cubes in hand for constructionStallSeconds and no cube went in, and what is left is
+  // only floating cubes (nothing can ever support them) or a sliver of the building — it is finished
+  // so the building never hangs.
+  function stepCampStall(world, dt) {
+    for (let i = 0; i < world.camp.length; i++) {
+      const site = world.camp[i];
+      if (!site.cubes || site.ready || !site.assigned || !campActive(world, site)) continue;
+      let busy = false;
+      for (let b = 0; b < world.builders.length && !busy; b++) busy = world.builders[b].camp === site && world.builders[b].campCarry > 0;
+      site.stall = busy ? 0 : (site.stall || 0) + dt;
+      if (site.stall < BALANCE.constructionStallSeconds) continue;
+      site.stall = 0;
+      const left = site.total - site.built;
+      if (left / site.total >= BALANCE.unreachableCompletionRatio && campUnbuildable(site) < left) continue;
+      for (let b = 0; b < world.builders.length; b++) {
+        if (world.builders[b].camp === site) releaseCampCubes(world.builders[b]);
+      }
+      for (let k = 0; k < site.cubes.length; k++) if (!site.cubes[k].done) setCampCube(world, site, k);
+      site.taken = 0;
+      world.events.push({ type: 'campAutofill', site: site, cubes: left });
+      campReadyCheck(world, site);
+    }
+  }
+
+  // After a trip: another one while the building still wants him (hunger or a smoke first).
+  function continueCamp(builder, world) {
+    const site = builder.camp;
+    if (!site || site.ready || campCrew(world, site) > site.assigned || campLeft(world, site) <= 0) {
+      leaveCamp(builder, world);
+      return;
+    }
+    if (departIfNeeded(builder, world)) return;
+    if (!startCampTrip(builder, world)) leaveCamp(builder, world);
+  }
+
+  // Back to the desk and the main building (releaseHands gives the cubes back and clears the flags).
+  function leaveCamp(builder, world) {
+    cancelRoute(builder, world);
+    beginExit(builder, world);
+  }
+
+  // The scaffolds round a finished camp building come down once nobody stands on them.
+  function stripCampScaffolds(world) {
+    for (let s = 0; s < world.camp.length; s++) {
+      const site = world.camp[s];
+      if (!site.ready || !site.scaffolded) continue;
+      const x0 = site.x - 1;
+      const x1 = site.x + site.w;
+      const z0 = site.z - 1;
+      const z1 = site.z + site.d;
+      const inside = function (x, z) { return x >= x0 && x <= x1 && z >= z0 && z <= z1; };
+      let busy = false;
+      for (let i = 0; i < world.builders.length && !busy; i++) {
+        const b = world.builders[i];
+        if (b.trade !== 'builder') continue;
+        if ((b.cell[1] > 0 && inside(b.cell[0], b.cell[2])) || (b.erectPiece && inside(b.erectPiece.x, b.erectPiece.z))) busy = true;
+      }
+      if (busy) continue;
+      let removed = 0;
+      const strip = function (piece, grid) {
+        if (piece.removed || !inside(piece.x, piece.z)) return;
+        piece.reserved = false;
+        piece.built = false;
+        piece.removed = true;
+        resetWear(piece, world);
+        grid[world.index.id(piece.x, piece.y, piece.z)] = 0;
+        invalidateNav(world, piece.x, piece.y, piece.z);
+        removed += 1;
+      };
+      world.scaffoldPieces.forEach(function (piece) { strip(piece, world.mastGrid); });
+      world.scaffoldDecks.forEach(function (deck) { strip(deck, world.deckGrid); });
+      site.scaffolded = false;
+      if (removed > 0) world.events.push({ type: 'strip' });
+    }
+  }
+
+  // The main site's stall rule for a camp worker: waited constructionStallSeconds without setting a
+  // cube (the one under his never comes, a cell never clears) — he drops his cubes and gets out as on
+  // the main site (abandonJobAndRecover), then comes back for a new trip.
+  function campStalled(builder, world) {
+    if (!(builder.campStall >= BALANCE.constructionStallSeconds)) return false;
+    builder.campStall = 0;
+    abandonJobAndRecover(builder, world, 'Ждал на городке ' + BALANCE.constructionStallSeconds + ' секунд', 'stall');
+    return true;
+  }
+
+  function setCampCrew(world, id, count) {
+    const site = campSite(world, id);
+    if (!site) return;
+    site.assigned = Math.max(0, Math.min(workerCount(world), Math.round(count)));
+  }
+
+  // Saved with the site: progress and the slider of every camp building, the canteen's dish, the
+  // sales office's upgrades and earnings.
+  function campState(world) {
+    const state = {};
+    (world.camp || []).forEach(function (site) {
+      const entry = { built: site.built, assigned: site.assigned };
+      if (site.target) {
+        entry.form = site.form;
+        entry.target = site.target;
+        // Cubes are set out of order a little (each worker his own): the unset ones before the
+        // last set one.
+        let last = -1;
+        for (let i = 0; i < site.cubes.length; i++) if (site.cubes[i].done) last = i;
+        const gaps = [];
+        for (let i = 0; i < last; i++) if (!site.cubes[i].done) gaps.push(i);
+        if (gaps.length) entry.gaps = gaps;
+      }
+      if (site.id === 'canteen') {
+        entry.dish = site.dish;
+        entry.dish2 = site.dish2 || '';
+        entry.snack = site.snack || '';
+        entry.signature = site.signature || '';
+        entry.grand = site.grand || '';
+        entry.kitchen = world.kitchen ? { level: world.kitchen.level, staff: world.kitchen.staff.slice(), xp: world.kitchen.xp } : null;
+        entry.grandCubes = world.grandCubes || 0;
+        entry.grandStacks = Object.assign({}, world.grandStacks || {});
+        entry.grandDinners = world.grandDinners || 0;
+      }
+      if (site.id === 'sales') {
+        entry.upgrades = Object.assign({}, site.upgrades);
+        entry.bank = site.bank;
+        entry.earned = site.earned;
+      }
+      state[site.id] = entry;
+    });
+    return state;
+  }
+
+  // A camp building with forms on a saved site: the standing form and the one going up. A save from
+  // before the forms: a finished building (the old canteen of 46 cubes, office of 38) is form 1.
+  function restoreCampForm(world, site, entry) {
+    const max = campFormCount(site.kind);
+    const legacy = entry.form === undefined;
+    const old = site.kind === 'canteen' ? 46 : site.kind === 'sales' ? 38 : Infinity;
+    const form = Math.max(0, Math.min(max, Math.floor(legacy ? (entry.built >= old ? 1 : 0) : entry.form || 0)));
+    const target = Math.max(1, Math.min(max, Math.floor(legacy ? Math.max(1, form) : entry.target || 1)));
+    site.form = form;
+    setCampForm(world, site, Math.max(form, target));
+    const building = target > form;
+    const gaps = building && Array.isArray(entry.gaps) ? entry.gaps : [];
+    markCampBuilt(world, site, building ? (legacy ? 0 : Math.max(0, Math.min(site.total, Math.floor(entry.built || 0) + gaps.length))) : site.total, gaps);
+    site.ready = site.built >= site.total;
+    if (site.ready) {
+      site.form = site.target;
+      clearCampPile(world, site);
+    }
+  }
+
+  function restoreCamp(world, data) {
+    if (!data) return;
+    (world.camp || []).forEach(function (site) {
+      const entry = data[site.id];
+      if (!entry) return;
+      if (site.target) {
+        restoreCampForm(world, site, entry);
+      } else {
+        site.built = Math.max(0, Math.min(site.total, Math.floor(entry.built || 0)));
+        site.ready = site.built >= site.total;
+        if (site.ready) clearCampPile(world, site);
+      }
+      site.assigned = Math.max(0, Math.floor(entry.assigned || 0));
+      if (site.id === 'canteen' && entry.dish && (world.campaign.canteenDishes || []).indexOf(entry.dish) >= 0) site.dish = entry.dish;
+      if (site.id === 'canteen') {
+        if (entry.kitchen) world.kitchen = { level: entry.kitchen.level || 0, staff: (entry.kitchen.staff || []).slice(), xp: entry.kitchen.xp || 0 };
+        world.grandCubes = entry.grandCubes || 0;
+        world.grandStacks = Object.assign({}, entry.grandStacks || {});
+        world.grandDinners = entry.grandDinners || 0;
+        ['dish2', 'snack', 'signature', 'grand'].forEach(function (slot) {
+          if (entry[slot] !== undefined && (entry[slot] === '' || (world.campaign.canteenDishes || []).indexOf(entry[slot]) >= 0)) site[slot] = entry[slot];
+        });
+      }
+      if (site.id === 'sales' && entry.upgrades) {
+        Object.keys(site.upgrades).forEach(function (kind) {
+          site.upgrades[kind] = Math.max(0, Math.min(SALES.upgrades[kind].max, Math.floor(entry.upgrades[kind] || 0)));
+        });
+        site.bank = entry.bank || 0;
+        site.earned = entry.earned || 0;
+      }
+    });
+  }
+
+  // Dev: camp building id stands finished as form n (MicroBuildersDebug.campForm); collapse — the
+  // old one comes down with the show.
+  function debugCampForm(world, id, n, collapse) {
+    const sites = id === 'light' ? world.lights || [] : [campSite(world, id)];
+    if (!sites[0] || !sites[0].target) return false;
+    sites.forEach(function (site) {
+      world.builders.forEach(function (builder) { if (builder.camp === site) releaseHands(builder); });
+      const old = collapse && site.form >= 1 ? site.cubes : [];
+      setCampForm(world, site, Math.max(1, Math.min(campFormCount(site.kind), n)));
+      markCampBuilt(world, site, site.total);
+      site.form = site.target;
+      site.ready = true;
+      clearCampPile(world, site);
+      const node = CAMP_NODES[site.kind];
+      world.campaign.purchases[node] = Math.max(world.campaign.purchases[node] || 0, site.form);
+      world.events.push({ type: 'campReform', site: site, old: old });
+    });
+    return true;
+  }
+
   // Level info «Тайминги»: worker-seconds of every state and sub-state, summed over the crew.
   function timeEntry(builder) {
     const phase = builder.phase;
+    if (builder.kitchen) return ['Городок', 'Кухня'];
     const purpose = builder.walkPurpose;
     const loaded = builder.carry.length > 0;
+    if (phase === 'smokeCall') return ['Перекур', 'Зовёт на перекур'];
+    if (phase === 'smokeWait') return ['Перекур', 'Ждёт компанию на перекур'];
     if (phase === 'meal') return ['Обед', 'Еда'];
-    if (phase === 'break') return builder.breakKind === 'rest' ? ['Отдых', 'Отдых'] : ['Перекур', 'Курение'];
+    if (phase === 'campFetch') return ['Городок', 'Набор материала'];
+    if (phase === 'campBuild') return ['Городок', 'Укладка'];
+    // On a camp building: its scaffolds, routes and waits count to the camp.
+    if (builder.camp && phase === 'erect') return ['Городок', builder.erectPiece && builder.erectPiece.broken ? 'Ремонт лесов' : 'Установка лесов'];
+    if (builder.camp && phase === 'idle') return ['Городок', 'Ожидание'];
+    if (builder.camp && phase === 'walk' && (purpose === 'route' || purpose === 'erect')) return ['Городок', 'Ходьба'];
+    if (phase === 'break' && builder.breakKind === 'heal') return ['Травмы', 'Больница'];
+    if (phase === 'break') return builder.breakKind === 'sleep' ? ['Сон', 'Сон'] : builder.breakKind === 'rest' ? ['Отдых', 'Отдых'] : ['Перекур', 'Курение'];
+    if (phase === 'fall') return ['Травмы', 'Падение'];
     // An empty re-plan is the same desk cycle, but the worker is waiting for free cubes.
     if (phase === 'plan') return builder.waitReason === 'front' ? ['Ожидание', 'Нет свободных кубов'] : ['План работ', 'Получение плана'];
     if (phase === 'mine') return ['Набор материала', 'Набор в карьере'];
     if (phase === 'place') return ['Укладка', 'Установка куба'];
-    if (phase === 'erect') return ['Леса и проходы', 'Установка лесов'];
+    if (phase === 'erect') return ['Леса и проходы', builder.erectPiece && builder.erectPiece.broken ? 'Ремонт лесов' : 'Установка лесов'];
     if (phase === 'passage') return ['Леса и проходы', 'Пробивка прохода'];
     if (phase === 'idle') {
       if (builder.waitReason === 'path') return ['Ожидание', 'Ждёт проход'];
@@ -4610,26 +7934,112 @@ function builderPosition(builder, world, out) {
       return ['Ожидание', loaded ? 'С грузом, ждёт место' : 'Без задачи'];
     }
     if (phase === 'recover') return ['Аварийный возврат', 'Поиск выхода'];
+    if (phase === 'taxi') return ['Аэротакси', builder.taxiRiding ? 'Полёт' : 'Посадка'];
     if (phase !== 'walk') return ['Прочее', phase];
     if (purpose === 'meal') return ['Обед', 'Путь к месту обеда'];
+    if (purpose === 'sleep') return ['Сон', 'Путь в бытовки'];
+    if (purpose === 'heal') return ['Травмы', 'Путь в больницу'];
+    if (purpose === 'campFetch') return ['Городок', 'Ходьба'];
+    if (purpose === 'smokeMeet') return ['Перекур', 'Идёт к компании на перекур'];
     if (purpose === 'smoke') return ['Перекур', 'Путь на перекур'];
     if (purpose === 'mine') return ['Набор материала', loaded ? 'Переход между карьерами' : 'Путь к карьеру'];
     if (purpose === 'route') return loaded ? ['Укладка', 'Путь с грузом к месту'] : ['Леса и проходы', 'Путь по маршруту'];
+    if (purpose === 'taxi') return ['Аэротакси', 'Путь к стоянке'];
     if (purpose === 'erect') return ['Леса и проходы', 'Путь к лесам'];
     if (purpose === 'recover') return ['Аварийный возврат', 'Путь к столу'];
     if (purpose === 'out') {
       if (builder.needTrip === 'meal') return ['Обед', 'Путь обратно'];
       if (builder.needTrip === 'smoke') return ['Перекур', 'Путь обратно'];
+      if (builder.needTrip === 'sleep') return ['Сон', 'Путь обратно'];
+      if (builder.needTrip === 'heal') return ['Травмы', 'Путь обратно'];
       return ['План работ', 'Путь к столу за планом'];
     }
     return ['Прочее', 'Ходьба'];
   }
 
+  function addTime(ledger, name, sub, seconds) {
+    if (!(seconds > 0)) return;
+    let state = ledger[name];
+    if (!state) state = ledger[name] = {};
+    state[sub] = (state[sub] || 0) + seconds;
+  }
+
+  // Where a walk is heading, for the sub-rows of the movement categories.
+  function walkGoal(builder) {
+    const purpose = builder.walkPurpose;
+    const loaded = builder.carry.length > 0;
+    if (purpose === 'meal' || (purpose === 'out' && builder.needTrip === 'meal')) return 'К обеду и обратно';
+    if (purpose === 'smokeMeet') return 'К компании на перекур';
+    if (purpose === 'smoke' || (purpose === 'out' && builder.needTrip === 'smoke')) return 'На перекур и обратно';
+    if (purpose === 'sleep' || (purpose === 'out' && builder.needTrip === 'sleep')) return 'В бытовки и обратно';
+    if (purpose === 'heal' || (purpose === 'out' && builder.needTrip === 'heal')) return 'В больницу и обратно';
+    if (purpose === 'campFetch' || (builder.camp && (purpose === 'route' || purpose === 'erect'))) return 'На стройке городка';
+    if (purpose === 'mine') return loaded ? 'Между карьерами' : 'К карьеру';
+    if (purpose === 'route') return loaded ? 'С грузом к месту' : 'По маршруту';
+    if (purpose === 'taxi') return 'К стоянке аэротакси';
+    if (purpose === 'erect') return 'К лесам';
+    if (purpose === 'recover') return 'Аварийный возврат';
+    if (purpose === 'out') return 'К столу за планом';
+    return 'Прочее';
+  }
+
+  // «Тайминги» by category: the same worker-seconds regrouped by what speeds them up. A walking step
+  // splits into its flat and climb parts the way stepTimes adds them up, the extra time of an
+  // overloaded trip goes to «Перегруз»; any other phase keeps its state (a taxi trip — «Аэротакси»).
+  function recordCategoryTime(builder, world, dt) {
+    const ledger = world.timeCategories;
+    if (builder.phase !== 'walk') {
+      const entry = timeEntry(builder);
+      addTime(ledger, entry[0], entry[1], dt);
+      return;
+    }
+    const from = builder.from;
+    const to = builder.to;
+    const goal = walkGoal(builder);
+    const moving = builder.carry.length > 0 ? dt / carryOverload(builder, world) : dt;
+    addTime(ledger, 'Перегруз', goal, dt - moving);
+    const dy = to[1] - from[1];
+    let climbShare = 0;
+    if (dy !== 0) {
+      const times = stepTimes(world, builder, from, to);
+      climbShare = times.flat + times.rise > 0 ? times.rise / (times.flat + times.rise) : 0;
+    }
+    addTime(ledger, 'Горизонтальное движение', goal, moving * (1 - climbShare));
+    addTime(ledger, 'Подъёмы и спуски', dy > 0 ? 'Подъём' : 'Спуск', moving * climbShare);
+  }
+
   function recordTime(builder, world, dt) {
     const entry = timeEntry(builder);
-    let state = world.timeLedger[entry[0]];
-    if (!state) state = world.timeLedger[entry[0]] = {};
-    state[entry[1]] = (state[entry[1]] || 0) + dt;
+    addTime(world.timeLedger, entry[0], entry[1], dt);
+    recordCategoryTime(builder, world, dt);
+  }
+
+  // The needs fill all the time, through each other's breaks: hunger stops only on the way to a meal
+  // and at it (in sleep it fills at half speed), fatigue only in sleep (it drains there), the urge to
+  // smoke on the way to a smoke and at it, on the way to a meal and at it, on the way to sleep and in
+  // it, on the way to the hospital and in it (hunger and fatigue fill there as usual). Back from any
+  // of them everything fills again.
+  function accrueNeeds(builder, world, dt) {
+    const purpose = builder.walkPurpose;
+    const breakKind = builder.phase === 'break' ? builder.breakKind : '';
+    const eating = builder.phase === 'meal' || purpose === 'meal';
+    const asleep = breakKind === 'sleep' || breakKind === 'rest';
+    const smoking = breakKind === 'smoke' || purpose === 'smoke' || purpose === 'smokeMeet' || builder.phase === 'smokeCall' || builder.phase === 'smokeWait';
+    const healing = breakKind === 'heal' || purpose === 'heal';
+    const campaign = world.campaign;
+    // In sleep hunger fills SLEEP.sleepHunger as fast.
+    if (!eating && needOpen(campaign, 'hunger')) {
+      const rate = hungerRate(builder, world) * (asleep ? (SLEEP.sleepHunger === undefined ? 1 : SLEEP.sleepHunger) : 1);
+      builder.hunger = Math.min(builder.hungerScale, builder.hunger + dt * rate);
+      // A pastry from the cafe in his pocket: eaten where he stands once the hunger comes.
+      if (builder.snack && !asleep && hungerStatus(builder) !== '') eatSnack(builder, world);
+    }
+    if (builder.trade === 'builder' && !asleep && needOpen(campaign, 'sleep')) {
+      builder.fatigue = Math.min(builder.fatigueScale, builder.fatigue + dt * fatigueRate(builder, world));
+    }
+    if (!smoking && !eating && !asleep && !healing && purpose !== 'sleep' && needOpen(campaign, 'smoke')) {
+      builder.smokeNeed += dt * smokeRate(builder, world);
+    }
   }
 
   function updateBuilder(builder, world, dt) {
@@ -4637,58 +8047,120 @@ function builderPosition(builder, world, out) {
       updateEngineer(builder, world, dt);
       return;
     }
+    // The kitchen's hands: they walk to the canteen and stay there (no needs, no work).
+    if (builder.kitchen || (world.kitchen && world.kitchen.staff.indexOf(builder.index) >= 0)) {
+      if (!builder.kitchen) sendToKitchen(builder, world);
+      recordTime(builder, world, dt);
+      if (builder.phase === 'walk') advanceWalk(builder, world, dt);
+      return;
+    }
     // waitReason describes a plan/idle wait only; any other phase means the wait is over.
     if (builder.waitReason !== '' && builder.phase !== 'plan' && builder.phase !== 'idle') builder.waitReason = '';
+    // The canteen crew is busy: the main building standing still meanwhile is not a stall.
+    if (builder.camp) world.constructionStallElapsed = 0;
     recordTime(builder, world, dt);
     if (builder.fedLeft > 0) builder.fedLeft -= dt;
+    accrueNeeds(builder, world, dt);
+    if (builder.phase === 'smokeCall' || builder.phase === 'smokeWait') {
+      world.constructionStallElapsed = 0;
+      builder.actionT += dt;
+      if (builder.phase === 'smokeCall') {
+        builder.timer -= dt;
+        if (builder.timer > 0) return;
+        continueSmokeTrip(builder, world);
+      } else {
+        updateSmokeCompany(builder.smokeGroup, world);
+        if (builder.phase === 'smokeWait' && (builder.smokeGroup.departed || !builder.smokeGathered)) continueSmokeTrip(builder, world);
+      }
+      return;
+    }
+    // Very hungry or worn out: off at once unless in an unbroken state; walking — from where he stands.
+    if (!unbroken(builder) && (builder.phase !== 'walk' || builder.segmentT === 0) && urgentNeed(builder, world) && divertToNeed(builder, world)) return;
     if (builder.phase === 'meal' || builder.phase === 'break') {
       world.constructionStallElapsed = 0;
       builder.timer -= dt;
       builder.actionT += dt;
+      if (builder.breakKind === 'sleep' && builder.sleepTotal > 0) {
+        builder.fatigue = builder.sleepFrom * Math.max(0, builder.timer) / builder.sleepTotal;
+      }
       if (builder.timer <= 0) {
         if (builder.phase === 'meal') {
           builder.hunger = 0;
-          builder.hungerClock = 0;
+          // «Запас сытости»: the scale is longer by the line's points.
+          builder.hungerScale = rollHunger() + lineValue(world.campaign, 'satiety');
           // «Повар артели»: after anyone's meal the whole crew works faster for a while.
           const feast = world.campaign.foremen.feast;
           if (feast) world.feastUntil = world.campaign.levelElapsed + feast.second;
-          builder.hungerGrace = rollSpan(BALANCE.hungerGraceMin, BALANCE.hungerGraceMax) * world.campaign.metaHunger;
+          // The canteen serves the dish of the day; a meal anywhere else leaves no dish.
+          builder.dish = builder.mealPlace === 'canteen' && world.canteen ? world.canteen.dish : '';
+          builder.dishPower = builder.dish ? campBoost(world.campaign, 'chef') * chefPower(world) : 1;
+          serveMenu(builder, world, builder.mealPlace === 'canteen');
+          builder.mealPlace = '';
+          builder.canteenTried = false;
           builder.mealCount += 1;
           builder.awayCell = null;
           beginExit(builder, world);
+        } else if (builder.breakKind === 'sleep') {
+          builder.fatigue = 0;
+          builder.fatigueScale = rollFatigue();
+          builder.restCount += 1;
+          builder.breakKind = '';
+          builder.showered = builder.sleepPlace === 'dorm';
+          builder.sleepPlace = '';
+          refreshAfterBreak(builder, world);
+          builder.awayCell = null;
+          beginExit(builder, world);
+        } else if (builder.breakKind === 'heal') {
+          // Whole again; back to the desk (the way back counts to the hospital: needTrip).
+          builder.health = INJURY.health;
+          builder.breakKind = '';
+          builder.awayCell = null;
+          world.events.push({ type: 'healed', builder: builder.index });
+          root.MicroBuildersWorkerLog.record(builder, world, 'Выписался из больницы');
+          beginExit(builder, world);
         } else if (builder.breakKind === 'rest') {
           builder.fatigue = 0;
+          builder.fatigueScale = rollFatigue();
           builder.restCount += 1;
           refreshAfterBreak(builder, world);
           beginPlanning(builder);
         } else {
           builder.smokeNeed = 0;
           refreshAfterBreak(builder, world);
-          builder.smokeThreshold = rollSmoke(world.campaign);
+          // «Чайный уголок» (⬡ «Городок»): a smoke at the lounge grows the habit less.
+          builder.habit = Math.min(SMOKING.habitCap, (builder.habit || 0) + habitGrowth(world.campaign) *
+            (builder.smokePlace === 'lounge' ? lineValue(world.campaign, 'campTea') : 1));
+          builder.smokeThreshold = rollSmoke();
           builder.smokeCount += 1;
+          builder.fromSmoke = true;
           builder.awayCell = null;
-          beginExit(builder, world);
+          builder.smokeGroup = null;
+          builder.smokePlace = '';
+          builder.needTrip = '';
+          // Cubes he went off with: straight back to setting them; empty hands — to the desk.
+          if (builder.carry.length > 0) {
+            builder.phase = 'idle';
+            builder.wait = 0;
+            builder.walkPurpose = '';
+            requestWork(builder, world);
+          } else {
+            beginExit(builder, world);
+          }
         }
       }
       return;
     }
-    if (builder.walkPurpose !== 'meal') {
-      builder.hungerClock += dt;
-      builder.hunger = builder.hungerClock < builder.hungerGrace ? 0 : builder.hungerClock - builder.hungerGrace;
-    }
-    builder.fatigue += dt;
-    if (builder.walkPurpose !== 'smoke') builder.smokeNeed += dt;
-    if (builder.fatigue >= world.campaign.restInterval + builder.index * BALANCE.restStagger &&
-        (builder.phase === 'idle' || builder.phase === 'plan') &&
-        builder.carry.length === 0) {
-      builder.waitReason = '';
-      builder.phase = 'break';
-      builder.breakKind = 'rest';
-      builder.timer = world.campaign.restSeconds;
-      builder.actionT = 0;
+    if (builder.phase === 'campFetch' || builder.phase === 'campBuild') {
+      builder.actionT += dt;
+      builder.timer -= dt;
+      if (builder.timer > 0) return;
+      if (builder.phase === 'campFetch') walkToCampCube(builder, world);
+      else finishCampBuild(builder, world);
       return;
     }
     if (builder.phase === 'idle') {
+      // Only with cubes in hand: one waiting at the stack for a cube to take waits like one at the desk.
+      if (builder.camp && builder.campCarry > 0) builder.campStall = (builder.campStall || 0) + dt;
       builder.wait -= dt;
       if (builder.wait <= 0) {
         requestWork(builder, world);
@@ -4700,6 +8172,10 @@ function builderPosition(builder, world, out) {
       if (builder.wait <= 0) continueRecovery(builder, world);
       return;
     }
+    if (builder.phase === 'fall') {
+      stepFall(builder, world, dt);
+      return;
+    }
     if (builder.phase === 'plan') {
       builder.actionT += dt;
       builder.timer -= dt;
@@ -4708,6 +8184,15 @@ function builderPosition(builder, world, out) {
     }
     if (builder.phase === 'walk') {
       advanceWalk(builder, world, dt);
+      return;
+    }
+    // Waiting for his taxi or flying in it: the taxi moves him (stepTaxis).
+    if (builder.phase === 'taxi') {
+      world.constructionStallElapsed = 0;
+      if (!builder.taxi) {
+        builder.phase = 'idle';
+        builder.wait = 0;
+      }
       return;
     }
     builder.actionT += dt;
@@ -4812,6 +8297,9 @@ function builderPosition(builder, world, out) {
   }
 
   function releaseHands(builder) {
+    releaseCampCubes(builder);
+    builder.camp = null;
+    builder.campCarry = 0;
     builder.forcePlace = false;
     builder.exitAfterPlace = false;
     if (builder.erectPiece && !builder.erectPiece.removed) builder.erectPiece.reserved = false;
@@ -4822,13 +8310,14 @@ function builderPosition(builder, world, out) {
   }
 
   // kind (view): 'path' — the way got blocked, 'route' — no route to the carried cubes,
-  // 'stall' — the whole site stopped progressing.
-  function releaseBuilderDuties(builder, world, reason, kind) {
+  // 'stall' — the whole site stopped progressing. `quiet` — the player sent him off (sendWorker): no
+  // abandon event, no log line.
+  function releaseBuilderDuties(builder, world, reason, kind, quiet) {
     // View: what the broken trip already earned is reported as usual, then what was dropped.
     finishTrip(builder, world);
     let dropped = 0;
     for (let i = 0; i < builder.carry.length; i++) if (!builder.carry[i].built) dropped += 1;
-    world.events.push({
+    if (!quiet) world.events.push({
       type: 'abandon',
       builder: builder.index,
       dropped: dropped,
@@ -4843,7 +8332,7 @@ function builderPosition(builder, world, out) {
       const block = builder.plan[i];
       if (!block.built && block.poured === 0 && block.owner === builder.index) releasedPlanBlocks += 1;
     }
-    if (releasedPlanBlocks > 0) {
+    if (releasedPlanBlocks > 0 && !quiet) {
       root.MicroBuildersWorkerLog.record(
         builder,
         world,
@@ -4873,12 +8362,11 @@ function builderPosition(builder, world, out) {
         kept.push(block);
         block.reserved = true;
       } else if (block.owner === builder.index) {
-        block.reserved = false;
-        block.owner = -1;
+        releasePlanBlock(block);
       }
     }
     builder.plan = kept;
-    builder.planTaken = kept.length;
+    builder.planTaken = planMinis(builder);
     if (releasedPlanBlocks > 0) wakeVehicles(world);
     builder.loadBatchId = -1;
     if (builder.routeId >= 0) {
@@ -4898,38 +8386,154 @@ function builderPosition(builder, world, out) {
   }
 
   function continueRecovery(builder, world) {
-    if (sameCell(builder.cell, builder.homeCell)) {
+    beginWayHome(builder, world);
+  }
+
+  function beginExit(builder, world) {
+    releaseHands(builder);
+    beginWayHome(builder, world);
+  }
+
+  // Back to the desk: an ordinary path; else a route that erects ladders and decks (also down off a
+  // roof); else a short escape through at most ESCAPE_SOLID_CELLS cubes at its start onto ground
+  // walked on as usual (escapeKind 'short' — yellow «!»); else straight through the building as
+  // before ('full' — red «!»).
+  function beginWayHome(builder, world) {
+    const home = builder.homeCell;
+    builder.escapeKind = '';
+    if (sameCell(builder.cell, home)) {
       beginPlanning(builder);
       return;
     }
-    const path = escapePath(builder.cell, builder.homeCell, world);
-    if (path && path.length > 1) {
-      beginWalk(builder, path, 'recover', world);
+    // Walled in (a cube was set in his cell): no ordinary way starts here — straight to the escape.
+    const cell = builder.cell;
+    const walled = world.solidGrid[world.index.id(cell[0], cell[1], cell[2])] === 1;
+    const clear = walled ? null : findPathToCell(cell, home, world);
+    if (clear && clear.length > 1) {
+      beginWalk(builder, clear, 'out', world);
+      return;
+    }
+    if (!walled && beginHomeRoute(builder, world)) return;
+    const short = shortEscapePath(builder.cell, home, world);
+    if (short && short.length > 1) {
+      builder.escapeKind = 'short';
+      beginWalk(builder, short, 'recover', world);
+      return;
+    }
+    builder.escapeKind = 'full';
+    const through = escapePath(builder.cell, home, world);
+    if (through && through.length > 1) {
+      beginWalk(builder, through, 'recover', world);
       return;
     }
     builder.phase = 'recover';
     builder.wait = 0.1;
   }
 
-  function beginExit(builder, world) {
-    const spawn = builder.homeCell;
-    if (sameCell(builder.cell, spawn)) {
+  // The way home as a route that may erect ladders and decks; false if there is none.
+  function beginHomeRoute(builder, world) {
+    if (!SCAFFOLD.enabled) return false;
+    const home = builder.homeCell;
+    const started = performance.now();
+    const route = findRouteAStar(world, null, builder.cell, true, [world.index.id(home[0], home[1], home[2])], Infinity, false, false, true);
+    world.metrics.scaffoldSearch += performance.now() - started;
+    if (!route) return false;
+    cancelRoute(builder, world);
+    route.owner = builder.index;
+    builder.routeId = route.id;
+    builder.routeTargetId = -1;
+    return continueHomeRoute(builder, world);
+  }
+
+  // One more step of the way home (after a walk step or an erected piece); false once it is done.
+  function continueHomeRoute(builder, world) {
+    const progress = continueRoute(builder, world);
+    if (progress === ROUTE_STARTED) return true;
+    if (progress === ROUTE_WAITING) {
+      builder.phase = 'idle';
+      builder.wait = 0.1;
+      builder.waitReason = 'path';
+      return true;
+    }
+    if (sameCell(builder.cell, builder.homeCell)) {
       beginPlanning(builder);
-      return;
+      return true;
     }
-    releaseHands(builder);
-    const clear = findPathToCell(builder.cell, spawn, world);
-    if (clear && clear.length > 1) {
-      beginWalk(builder, clear, 'out', world);
-      return;
+    return false;
+  }
+
+  // A way home through at most ESCAPE_SOLID_CELLS cubes, and only at its start: from the start or a
+  // cube it steps into the next cube or a cell to stand in; once it stands on a free cell it walks on
+  // ordinary moves only. target null: just out, to the first free cell to stand in. Null if none.
+  const ESCAPE_SOLID_CELLS = 3;
+  function shortEscapePath(from, target, world) {
+    const index = world.index;
+    const size = index.size;
+    const trail = ESCAPE_SOLID_CELLS + 1;
+    const total = size * (trail + 1);
+    const seen = new Uint8Array(total);
+    const prev = new Int32Array(total);
+    const startId = index.id(from[0], from[1], from[2]);
+    const goalId = target ? index.id(target[0], target[1], target[2]) : -1;
+    const queue = [startId];
+    seen[startId] = 1;
+    prev[startId] = -1;
+    const at = [0, 0, 0];
+    const steps = [[1, 0, 0], [-1, 0, 0], [0, 0, 1], [0, 0, -1], [0, 1, 0], [0, -1, 0]];
+    let goal = -1;
+    function visit(state, fromState) {
+      if (seen[state] === 1) return;
+      seen[state] = 1;
+      prev[state] = fromState;
+      queue.push(state);
     }
-    const through = escapePath(builder.cell, spawn, world);
-    if (through && through.length > 1) {
-      beginWalk(builder, through, 'out', world);
-      return;
+    for (let head = 0; head < queue.length && goal < 0; head++) {
+      const state = queue[head];
+      const layer = Math.floor(state / size);
+      const id = state - layer * size;
+      if (id === goalId || (!target && layer === trail)) {
+        goal = state;
+        break;
+      }
+      index.decodeInto(id, at);
+      const x = at[0];
+      const y = at[1];
+      const z = at[2];
+      const solid = world.solidGrid[id] === 1;
+      if (layer === trail) {
+        const neighbors = standNeighbors(x, y, z, world).slice();
+        for (let n = 0; n < neighbors.length; n++) visit(trail * size + neighbors[n], state);
+        continue;
+      }
+      if (!solid && id !== startId) {
+        if (canStand(x, y, z, world)) visit(trail * size + id, state);
+        continue;
+      }
+      for (let d = 0; d < steps.length; d++) {
+        const nx = x + steps[d][0];
+        const ny = y + steps[d][1];
+        const nz = z + steps[d][2];
+        if (!index.inside(nx, ny, nz)) continue;
+        const nextId = index.id(nx, ny, nz);
+        if (world.solidGrid[nextId] === 1) {
+          if (layer < ESCAPE_SOLID_CELLS) visit((layer + 1) * size + nextId, state);
+        } else if (canStand(nx, ny, nz, world)) {
+          visit(layer * size + nextId, state);
+        }
+      }
+      if (id === startId && !solid && canStand(x, y, z, world)) visit(trail * size + id, state);
     }
-    builder.phase = 'recover';
-    builder.wait = 0.1;
+    if (goal < 0) return null;
+    const path = [];
+    for (let state = goal; state >= 0; state = prev[state]) {
+      const id = state % size;
+      index.decodeInto(id, at);
+      const last = path[path.length - 1];
+      if (!last || last[0] !== at[0] || last[1] !== at[1] || last[2] !== at[2]) path.push([at[0], at[1], at[2]]);
+      if (state === startId) break;
+    }
+    path.reverse();
+    return path;
   }
 
   function pullOut(world, block, placer) {
@@ -4942,8 +8546,26 @@ function builderPosition(builder, world, out) {
         other.exitAfterPlace = true;
         continue;
       }
+      if (beginUnwall(other, world)) continue;
       beginExit(other, world);
     }
+  }
+
+  // Walled in while carrying: out onto the nearest free cell (through at most a few cubes), then on
+  // with the load from there — no trip home.
+  function beginUnwall(builder, world) {
+    if (builder.carry.length === 0) return false;
+    const path = shortEscapePath(builder.cell, null, world);
+    if (!path || path.length < 2) return false;
+    cancelRoute(builder, world);
+    // Walled in while erecting: the piece is let go (else his own booking keeps him waiting for it).
+    if (builder.erectPiece && !builder.erectPiece.removed) builder.erectPiece.reserved = false;
+    builder.erectPiece = null;
+    builder.passageBlock = null;
+    builder.escapeKind = 'short';
+    builder.unwall = true;
+    beginWalk(builder, path, 'recover', world);
+    return true;
   }
 
   function pullOutBatch(world, blocks) {
@@ -4959,7 +8581,7 @@ function builderPosition(builder, world, out) {
         builder.exitAfterPlace = true;
         continue;
       }
-      beginExit(builder, world);
+      if (!beginUnwall(builder, world)) beginExit(builder, world);
     }
   }
 
@@ -4967,14 +8589,26 @@ function builderPosition(builder, world, out) {
     const ids = world.standIds;
     ids.length = 0;
     const index = world.index;
-    if (!canStand(piece.x, piece.y, piece.z, world)) return ids;
-    const id = index.id(piece.x, piece.y, piece.z);
-    const hardFloor = piece.y === 0 ||
-      world.deckGrid[id] === 1 ||
-      world.solidGrid[index.id(piece.x, piece.y - 1, piece.z)] === 1 ||
-      world.bridgeGrid[index.id(piece.x, piece.y - 1, piece.z)] === 1 ||
-      world.doorGrid[index.id(piece.x, piece.y - 1, piece.z)] === 1;
-    if (hardFloor || ladderColumn(piece.x, piece.y, piece.z, world)) ids.push(id);
+    if (canStand(piece.x, piece.y, piece.z, world)) {
+      const id = index.id(piece.x, piece.y, piece.z);
+      const hardFloor = piece.y === 0 ||
+        world.deckGrid[id] === 1 ||
+        world.solidGrid[index.id(piece.x, piece.y - 1, piece.z)] === 1 ||
+        world.bridgeGrid[index.id(piece.x, piece.y - 1, piece.z)] === 1 ||
+        world.doorGrid[index.id(piece.x, piece.y - 1, piece.z)] === 1;
+      if (hardFloor || ladderColumn(piece.x, piece.y, piece.z, world)) ids.push(id);
+    }
+    // A ladder going down is set from the floor above it: straight above or one cell aside.
+    const up = piece.y + 1;
+    if (!index.inside(piece.x, up, piece.z)) return ids;
+    if (canStand(piece.x, up, piece.z, world)) ids.push(index.id(piece.x, up, piece.z));
+    for (let d = 0; d < DIRS.length; d++) {
+      const x = piece.x + DIRS[d][0];
+      const z = piece.z + DIRS[d][1];
+      if (!index.inside(x, up, z)) continue;
+      const id = index.id(x, up, z);
+      if (world.solidGrid[id] !== 1 && canStand(x, up, z, world)) ids.push(id);
+    }
     return ids;
   }
 
@@ -4986,6 +8620,7 @@ function builderPosition(builder, world, out) {
         known.removed = false;
         known.reserved = false;
         known.built = false;
+        resetWear(known, world);
       }
       return known;
     }
@@ -5000,7 +8635,12 @@ function builderPosition(builder, world, out) {
       built: false,
       reserved: false,
       removed: false,
+      durability: 0,
+      cracked: false,
+      broken: false,
+      worn: false,
     };
+    piece.durability = pieceDurability(piece);
     const index = world.index;
     if (index.inside(x - 1, y, z) && (world.solidGrid[index.id(x - 1, y, z)] === 1 || world.doorGrid[index.id(x - 1, y, z)] === 1)) {
       piece.ox = -1;
@@ -5028,6 +8668,7 @@ function builderPosition(builder, world, out) {
         known.removed = false;
         known.reserved = false;
         known.built = false;
+        resetWear(known, world);
       }
       return known;
     }
@@ -5044,7 +8685,12 @@ function builderPosition(builder, world, out) {
       built: false,
       reserved: false,
       removed: false,
+      durability: 0,
+      cracked: false,
+      broken: false,
+      worn: false,
     };
+    deck.durability = pieceDurability(deck);
     world.scaffoldDecks.push(deck);
     world.deckByKey.set(key, deck);
     return deck;
@@ -5283,7 +8929,9 @@ function builderPosition(builder, world, out) {
       ' (' + cells.join('; ') + ')';
   }
 
-  function findRouteAStar(world, pending, start, allowScaffolds, exactGoalIds, maxCost, greedy, allowPassages) {
+  // asRoute: with exactGoalIds, return a route (with its scaffold pieces) instead of a bare path —
+  // the way home that erects ladders and decks.
+  function findRouteAStar(world, pending, start, allowScaffolds, exactGoalIds, maxCost, greedy, allowPassages, asRoute) {
     const index = world.index;
     if (pending && pending.length === 0) return false;
     if (exactGoalIds && exactGoalIds.length === 0) return null;
@@ -5332,6 +8980,8 @@ function builderPosition(builder, world, out) {
     }
     function free(x, y, z) {
       if (!index.inside(x, y, z)) return false;
+      // A camp cube still to set: no ladder or deck goes into its cell.
+      if ((world.campGrid[index.id(x, y, z)] & CAMP_FUTURE) !== 0) return false;
       const future = world.blockGrid[index.id(x, y, z)];
       if (future && future.feature !== 'door' && future.feature !== 'hatch' && future.feature !== 'bridge') return false;
       return world.solidGrid[index.id(x, y, z)] !== 1;
@@ -5479,6 +9129,10 @@ function builderPosition(builder, world, out) {
           actionKind[state] = 2;
           actionAx[state] = action.ax;
           actionAz[state] = action.az;
+        } else if (action.kind === 'mastDown') {
+          actionKind[state] = 5;
+          actionAx[state] = action.ax;
+          actionAz[state] = action.az;
         } else if (action.kind === 'door') {
           actionKind[state] = 3;
           actionAx[state] = 0;
@@ -5518,12 +9172,11 @@ function builderPosition(builder, world, out) {
       const y = at[1];
       const z = at[2];
       const price = distance[state];
-      pushElevatorRides(world, x, y, z, price, state, push);
       if (goalTargets.has(state)) {
         goal = state;
         break;
       }
-      if (!exactGoalIds && expansions >= SCAFFOLD.expansionBudget) break;
+      if ((!exactGoalIds || asRoute) && expansions >= SCAFFOLD.expansionBudget) break;
         const passageHere = actionKind[state] === 3 || actionKind[state] === 4;
         if (canStand(x, y, z, world) || passageHere) {
           const neighbors = collectNeighbors(x, y, z, world);
@@ -5578,17 +9231,47 @@ function builderPosition(builder, world, out) {
             (hardFloor(x, y, z) || mode !== 0) &&
             (free(x, y, z) || passageHere) &&
             touchesCube(x, y, z) &&
-            free(x, y + 1, z)) {
+            free(x, y + 1, z) &&
+            Features.allowsPassageStep(x, y, z, x, y + 1, z, world)) {
+          // (Not up out of a door: the walk would never take that step — standNeighbors.)
           const ladderId = index.id(x, y, z);
-          const mastPrice = world.mastGrid[ladderId] === 1 ? 0 : SCAFFOLD.ladderPrice;
+          const mastPrice = world.mastGrid[ladderId] === 1 ? 0 : erectPrice(world, SCAFFOLD.ladderPrice, ladderId, y, BROKEN_MAST);
           const nextId = index.id(x, y + 1, z);
           const action = world.mastGrid[ladderId] === 1 ? null : { kind: 'mast', ax: 0, az: 0 };
           const nextMode = SURFACE_LADDER | (world.deckGrid[nextId] === 1 ? SURFACE_DECK : 0);
           push(nextId * SURFACE_STATE_COUNT + nextMode, price + SCAFFOLD.verticalPrice + mastPrice, state, action);
         }
+        // Ladders down (a piece spans its floor and the one above; it is set from above): off a roof
+        // or floor edge into the free column beside it, then on down from a ladder. 'mastDown' puts
+        // the piece one floor under the cell it is set from, ax/az aside.
+        if (allowScaffolds && y > 0) {
+          if ((mode & SURFACE_LADDER) !== 0 && free(x, y - 1, z) && touchesCube(x, y - 1, z) &&
+              world.mastGrid[index.id(x, y - 1, z)] !== 1) {
+            const downId = index.id(x, y - 1, z);
+            push(downId * SURFACE_STATE_COUNT + (SURFACE_LADDER | (world.deckGrid[downId] === 1 ? SURFACE_DECK : 0)),
+              price + SCAFFOLD.verticalPrice + erectPrice(world, SCAFFOLD.ladderPrice, downId, y - 1, BROKEN_MAST), state, { kind: 'mastDown', ax: 0, az: 0 });
+          }
+          if (canStand(x, y, z, world) || mode !== 0) {
+            for (let d = 0; d < DIRS.length; d++) {
+              const nx = x + DIRS[d][0];
+              const nz = z + DIRS[d][1];
+              if (!free(nx, y, nz) || !free(nx, y - 1, nz) || !touchesCube(nx, y - 1, nz)) continue;
+              if (world.mastGrid[index.id(nx, y - 1, nz)] === 1 || canStand(nx, y, nz, world)) continue;
+              push(index.id(nx, y, nz) * SURFACE_STATE_COUNT + SURFACE_LADDER,
+                price + SCAFFOLD.horizontalPrice + erectPrice(world, SCAFFOLD.ladderPrice, index.id(nx, y - 1, nz), y - 1, BROKEN_MAST), state,
+                { kind: 'mastDown', ax: DIRS[d][0], az: DIRS[d][1] });
+            }
+          }
+          // On top of the ladder just planned below (the step aside): climb down it.
+          if (actionKind[state] === 5 && (actionAx[state] !== 0 || actionAz[state] !== 0)) {
+            const downId = index.id(x, y - 1, z);
+            push(downId * SURFACE_STATE_COUNT + (SURFACE_LADDER | (world.deckGrid[downId] === 1 ? SURFACE_DECK : 0)),
+              price + SCAFFOLD.verticalPrice, state, null);
+          }
+        }
         if (allowScaffolds && (mode & SURFACE_LADDER) !== 0 && (mode & SURFACE_DECK) === 0) {
           if (free(x, y, z) || passageHere) {
-            push(id * SURFACE_STATE_COUNT + (mode | SURFACE_DECK), price + SCAFFOLD.deckPrice, state, {
+            push(id * SURFACE_STATE_COUNT + (mode | SURFACE_DECK), price + erectPrice(world, SCAFFOLD.deckPrice, id, y, BROKEN_DECK), state, {
               kind: 'deck',
               x: x,
               y: y,
@@ -5610,7 +9293,7 @@ function builderPosition(builder, world, out) {
             push(nextId * SURFACE_STATE_COUNT + nextMode, price + SCAFFOLD.horizontalPrice, state, null);
             continue;
           }
-          const deckPrice = world.deckGrid[nextId] === 1 ? 0 : SCAFFOLD.deckPrice;
+          const deckPrice = world.deckGrid[nextId] === 1 ? 0 : erectPrice(world, SCAFFOLD.deckPrice, nextId, y, BROKEN_DECK);
           const action = world.deckGrid[nextId] === 1 ? null : {
             kind: 'deck',
             x: nx,
@@ -5636,6 +9319,9 @@ function builderPosition(builder, world, out) {
         piece = rungPiece(world, next[0] + actionAx[cursor], next[1], next[2] + actionAz[cursor]);
       } else if (actionKind[cursor] === 2) {
         piece = deckPiece(world, at[0], at[1], at[2], actionAx[cursor], actionAz[cursor]);
+      } else if (actionKind[cursor] === 5) {
+        index.decodeInto(Math.floor(from / SURFACE_STATE_COUNT), next);
+        piece = rungPiece(world, next[0] + actionAx[cursor], next[1] - 1, next[2] + actionAz[cursor]);
       }
       const passageBlock = actionKind[cursor] === 3 || actionKind[cursor] === 4
         ? world.blockGrid[index.id(at[0], at[1], at[2])]
@@ -5649,6 +9335,11 @@ function builderPosition(builder, world, out) {
       cursor = from;
     }
     steps.reverse();
+    if (exactGoalIds && asRoute) {
+      const home = { id: world.routes.length, targetId: -1, home: true, owner: -1, steps: steps, stepIndex: 0, complete: false, cost: distance[goal] };
+      world.routes.push(home);
+      return finishSearch(home, goal, steps);
+    }
     if (exactGoalIds) {
       const path = [start.slice()];
       for (let i = 0; i < steps.length; i++) path.push(steps[i].cell);
@@ -5673,6 +9364,12 @@ function builderPosition(builder, world, out) {
     if (pending.length === 0) {
       return null;
     }
+    return routeToPending(builder, world, pending);
+  }
+
+  // A worker's route to a cell one of the cubes `pending` (x, y, z, id) can be set from: plain, with
+  // scaffolds if cheaper, greedy, with passages.
+  function routeToPending(builder, world, pending) {
     const search = {
       builderIndex: builder.index,
     };
@@ -5721,27 +9418,349 @@ function builderPosition(builder, world, out) {
       if (!index.inside(x, y, z)) continue;
       const id = index.id(x, y, z);
       if (!canStand(x, y, z, world)) continue;
-      if (ladderColumn(x, y, z, world) && !deckCell(x, y, z, world)) continue;
+      // Hanging on a ladder (a piece in this cell) is no place to set a deck from; its top is.
+      if (world.mastGrid[id] === 1 && !deckCell(x, y, z, world)) continue;
       ids.push(id);
     }
     return ids;
+  }
+
+  // The scaffold piece a step puts its weight on: the ladder of a climb straight up or down; else
+  // what holds the cell he steps into — a deck, the ladder he hangs on there, the ladder top under him.
+  function supportPiece(from, to, world) {
+    const index = world.index;
+    if (from[0] === to[0] && from[2] === to[2]) {
+      if (from[1] === to[1]) return null;
+      const low = Math.min(from[1], to[1]);
+      return world.mastGrid[index.id(to[0], low, to[2])] === 1 ? world.rungByKey.get(cellKey(to[0], low, to[2])) : null;
+    }
+    const x = to[0];
+    const y = to[1];
+    const z = to[2];
+    if (y <= 0 || !index.inside(x, y, z)) return null;
+    const id = index.id(x, y, z);
+    if (world.deckGrid[id] === 1) return world.deckByKey.get(cellKey(x, y, z));
+    const below = index.id(x, y - 1, z);
+    if (world.solidGrid[below] === 1 || world.bridgeGrid[below] === 1 || world.doorGrid[below] === 1) return null;
+    if (world.mastGrid[id] === 1) return world.rungByKey.get(cellKey(x, y, z));
+    return world.mastGrid[below] === 1 ? world.rungByKey.get(cellKey(x, y - 1, z)) : null;
+  }
+
+  // A step done (builder.from → builder.to): the piece under him loses his weight and his load.
+  function wearScaffold(builder, world) {
+    // «Вечные леса» (advanced): no wear.
+    if (!(WEAR.durability > 0) || advancedOwned(world.campaign, 'advScaffold')) return;
+    const piece = supportPiece(builder.from, builder.to, world);
+    // A piece mending by the player's order (repairScaffold) does not wear meanwhile.
+    if (!piece || !piece.built || piece.repair) return;
+    // «Прочный крепёж»: the same pass wears the piece less.
+    // «Крепкие леса» of the materials lab: a share less.
+    const lab = world.campaign.lab && world.campaign.lab.wear ? world.campaign.lab.wear : 1;
+    // «Прочные леса» of the office, «Техника безопасности» of the training centre and «Закалка лесов»
+    // (each cast + its share till the end of the site).
+    const sturdy = (world.campaign.office ? world.campaign.office.scaffoldDurability || 1 : 1) *
+      (world.campaign.training ? world.campaign.training.safety || 1 : 1) * (1 + (world.campaign.spellScaffold || 0));
+    piece.durability = Math.max(0, piece.durability - (WEAR.workerWeight + carriedWeight(builder, world)) * lab /
+      (lineValue(world.campaign, 'scaffoldDurability') * sturdy));
+    if (!piece.cracked && piece.durability <= pieceDurability(piece) * WEAR.crackShare) {
+      piece.cracked = true;
+      world.events.push({ type: 'scaffoldWear', id: piece.id, x: piece.x, y: piece.y, z: piece.z });
+    }
+    // Worn to nothing: it still holds the one who wore it there; any next step onto it may throw him
+    // down (scaffoldGivesWay).
+    if (piece.durability <= 0 && !piece.worn) {
+      piece.durability = 0;
+      piece.worn = true;
+      world.events.push({ type: 'scaffoldWear', id: piece.id, x: piece.x, y: piece.y, z: piece.z, worn: true });
+    }
+  }
+
+  // ---------- falls (docs/gdd/08-needs-weather-events.md → «Травмы») ----------
+  // A step onto a piece worn to nothing (its durability at 0): with fallChance he froze on it
+  // (startFall), else he passes. Not the kitchen's hands; none with «Вечные леса».
+  function scaffoldGivesWay(builder, world) {
+    if (builder.trade !== 'builder' || builder.kitchen || builder.walkPurpose === 'kitchen') return false;
+    if (!(WEAR.durability > 0) || advancedOwned(world.campaign, 'advScaffold')) return false;
+    const piece = wornPieceUnder(builder.from, builder.to, world);
+    if (!piece || Math.random() >= fallChance(world.campaign)) return false;
+    startFall(builder, world, piece);
+    return true;
+  }
+
+  // The piece worn to nothing a step from → to puts its weight on (standing, not mending); null — none.
+  function wornPieceUnder(from, to, world) {
+    const piece = supportPiece(from, to, world);
+    return piece && piece.built && piece.worn && !piece.repair ? piece : null;
+  }
+
+  // The chance a step onto a piece worn to nothing throws him down (INJURY.fallChance; the place for
+  // an upgrade to lower it).
+  function fallChance(campaign) {
+    return INJURY.fallChance === undefined ? 1 : INJURY.fallChance;
+  }
+
+  // The fall (builder.fall, phase 'fall' — unbroken): 'freeze' — he stands frozen on the piece for
+  // INJURY.freezeSeconds (a repair the player starts meanwhile holds it, and he walks on); 'drop' —
+  // the piece breaks and he falls straight down to the nearest deck, cube or the ground (landingY,
+  // FALL_GRAVITY cells/s²), and so does anyone else it held (dropStanders); 'down' — he lies there
+  // crying out (lieSeconds); 'up' — he gets up (getUpSeconds). He keeps his load through it and goes
+  // on from where he landed — with his walk (replanWalk) or to the desk for work — or to the hospital
+  // at 0 health.
+  const FALL_GRAVITY = 20;
+
+  function startFall(builder, world, piece) {
+    // Climbing a ladder he freezes halfway up the rung that gives way, not at the end of the climb.
+    const climb = builder.from[0] === builder.to[0] && builder.from[2] === builder.to[2];
+    if (climb) builder.cell = [piece.x, piece.y, piece.z];
+    const fromY = climb ? piece.y + 0.5 : builder.cell[1];
+    builder.phase = 'fall';
+    builder.fall = { stage: 'freeze', t: 0, seconds: INJURY.freezeSeconds, piece: piece, fromY: fromY, toY: fromY, walk: true };
+    builder.actionT = 0;
+    world.events.push({ type: 'fallStart', builder: builder.index, x: piece.x, y: piece.y, z: piece.z });
+  }
+
+  function dropFall(fall, cell, world) {
+    fall.stage = 'drop';
+    fall.t = 0;
+    fall.toY = landingY(cell, world);
+    fall.seconds = Math.sqrt(2 * Math.max(0.25, fall.fromY - fall.toY) / FALL_GRAVITY);
+  }
+
+  // The piece broke: whoever else stood or hung on it with nothing else under him (or was stepping
+  // onto it) falls at once. One busy there drops his job: his route and the scaffold or passage he
+  // was on go back to the crew; his load stays with him.
+  const STANDER_PHASES = { walk: true, idle: true, place: true, erect: true, passage: true, campBuild: true, campFetch: true, plan: true };
+  function dropStanders(piece, world, faller) {
+    for (let i = 0; i < world.builders.length; i++) {
+      const other = world.builders[i];
+      if (other === faller || other.trade !== 'builder' || other.kitchen || !STANDER_PHASES[other.phase]) continue;
+      const walking = other.phase === 'walk';
+      const cell = walking ? other.to : other.cell;
+      if (cell[0] !== piece.x || cell[2] !== piece.z || (cell[1] !== piece.y && cell[1] !== piece.y + 1)) continue;
+      if (canStand(cell[0], cell[1], cell[2], world)) continue;
+      other.cell = cell.slice();
+      other.from = cell.slice();
+      other.to = cell.slice();
+      other.segmentT = 1;
+      if (!walking) {
+        cancelRoute(other, world);
+        if (other.erectPiece && !other.erectPiece.removed) other.erectPiece.reserved = false;
+        other.erectPiece = null;
+        other.passageBlock = null;
+        other.passageVertical = false;
+        other.walkPurpose = '';
+      }
+      other.phase = 'fall';
+      other.actionT = 0;
+      other.fall = { stage: 'drop', t: 0, seconds: 0, piece: piece, fromY: cell[1], toY: cell[1], walk: walking };
+      dropFall(other.fall, cell, world);
+    }
+  }
+
+  // Where a worker falling from `cell` lands: the first floor below him — a deck, a cube, a bridge, a
+  // door — or the ground.
+  function landingY(cell, world) {
+    const index = world.index;
+    for (let y = cell[1]; y > 0; y--) {
+      const id = index.id(cell[0], y, cell[2]);
+      if (world.deckGrid[id] === 1 || world.doorGrid[id] === 1) return y;
+      const below = index.id(cell[0], y - 1, cell[2]);
+      if (world.solidGrid[below] === 1 || world.bridgeGrid[below] === 1 || world.doorGrid[below] === 1) return y;
+    }
+    return 0;
+  }
+
+  function stepFall(builder, world, dt) {
+    const fall = builder.fall;
+    world.constructionStallElapsed = 0;
+    builder.actionT += dt;
+    fall.t += dt;
+    if (fall.t < fall.seconds) return;
+    if (fall.stage === 'freeze') {
+      // The player's repair got there in time: the piece holds, the step goes on.
+      if (fall.piece.repair) {
+        builder.fall = null;
+        builder.phase = 'walk';
+        return;
+      }
+      if (fall.piece.built) {
+        breakScaffold(fall.piece, world);
+        dropStanders(fall.piece, world, builder);
+      }
+      dropFall(fall, builder.cell, world);
+      return;
+    }
+    if (fall.stage === 'drop') {
+      landFall(builder, world);
+      return;
+    }
+    if (fall.stage === 'down') {
+      fall.stage = 'up';
+      fall.t = 0;
+      fall.seconds = INJURY.getUpSeconds;
+      return;
+    }
+    builder.fall = null;
+    afterFall(builder, world, fall.walk);
+  }
+
+  // Down: fallDamage + fallDamagePerFloor a whole floor fallen off his health.
+  function landFall(builder, world) {
+    const fall = builder.fall;
+    const floors = Math.max(0, Math.floor(fall.fromY - fall.toY + 1e-9));
+    const damage = INJURY.fallDamage + INJURY.fallDamagePerFloor * floors;
+    builder.health = Math.max(0, builder.health - damage);
+    builder.cell = [builder.cell[0], fall.toY, builder.cell[2]];
+    builder.from = builder.cell.slice();
+    builder.to = builder.cell.slice();
+    builder.segmentT = 1;
+    world.stats.injuries = (world.stats.injuries || 0) + 1;
+    world.events.push({ type: 'injury', builder: builder.index, damage: damage, floors: floors, health: builder.health,
+      x: builder.cell[0], y: builder.cell[1], z: builder.cell[2] });
+    root.MicroBuildersWorkerLog.record(builder, world, 'Сорвался с лесов: ' + floors + ' эт. вниз, −' + damage + ' здоровья, осталось ' +
+      Math.round(builder.health));
+    fall.stage = 'down';
+    fall.t = 0;
+    fall.seconds = INJURY.lieSeconds;
+  }
+
+  // On his feet: on with his walk from here, or to the desk for work; no health left — the trip he
+  // was on is dropped and he goes to the hospital (divertToNeed), his cubes back to the crew.
+  function afterFall(builder, world, walking) {
+    if (builder.health > 0) {
+      builder.phase = walking ? 'walk' : 'idle';
+      builder.wait = 0;
+      if (walking) replanWalk(builder, world);
+      return;
+    }
+    if (builder.walkPurpose === 'taxi') leaveTaxi(builder);
+    builder.phase = 'idle';
+    builder.wait = 0;
+    builder.walkPurpose = '';
+    builder.path = null;
+    builder.needTrip = '';
+    builder.awayCell = null;
+    builder.mealPlace = '';
+    builder.sleepPlace = '';
+    builder.smokePlace = '';
+    builder.smokeGroup = null;
+    builder.needRetryAt = 0;
+    divertToNeed(builder, world);
+  }
+
+  function breakScaffold(piece, world) {
+    const id = world.index.id(piece.x, piece.y, piece.z);
+    piece.built = false;
+    piece.reserved = false;
+    piece.worn = false;
+    piece.broken = true;
+    if (piece.deck) {
+      world.deckGrid[id] = 0;
+      world.scaffoldBroken[id] |= BROKEN_DECK;
+    } else {
+      world.mastGrid[id] = 0;
+      world.scaffoldBroken[id] |= BROKEN_MAST;
+    }
+    world.stats.scaffoldBreaks += 1;
+    world.events.push({ type: 'scaffoldWear', id: piece.id, x: piece.x, y: piece.y, z: piece.z, broken: true });
+    invalidateNav(world, piece.x, piece.y, piece.z);
+  }
+
+  // A new, repaired or taken-down piece: full durability, no cracks, nothing to repair.
+  function resetWear(piece, world) {
+    piece.durability = pieceDurability(piece);
+    piece.cracked = false;
+    piece.worn = false;
+    if (piece.broken) {
+      piece.broken = false;
+      world.scaffoldBroken[world.index.id(piece.x, piece.y, piece.z)] &= piece.deck ? ~BROKEN_DECK : ~BROKEN_MAST;
+    }
+  }
+
+  // ---------- the player's repairs (docs/gdd/02-construction-session.md → «Леса: типы и износ») ----------
+  // A cracked or broken piece the player taps can be repaired from its card (repairScaffold): it
+  // mends itself in WEAR.manualRepairSeconds — no worker, nothing to pay — its durability climbing to
+  // full (piece.repair: { t, seconds, from }); a broken one opens again at the end. world.repairs —
+  // the pieces mending now (stepRepairs); the view draws a ring and a hammer over each.
+  function scaffoldPieceOf(world, id) {
+    const parts = String(id).split(':');
+    const key = cellKey(Number(parts[1]), Number(parts[2]), Number(parts[3]));
+    return (parts[0] === 'd' ? world.deckByKey : world.rungByKey).get(key) || null;
+  }
+
+  // Cracked, worn through or broken, standing on the site and not mending already.
+  function scaffoldRepairable(piece) {
+    return !!piece && !piece.removed && !piece.repair && (piece.built || piece.broken) && (piece.cracked || piece.worn || piece.broken);
+  }
+
+  function repairScaffold(world, id) {
+    const piece = scaffoldPieceOf(world, id);
+    if (!scaffoldRepairable(piece)) return false;
+    piece.repair = { t: 0, seconds: WEAR.manualRepairSeconds > 0 ? WEAR.manualRepairSeconds : 5, from: Math.max(0, piece.durability) };
+    // Worn through: it throws nobody down any more.
+    piece.worn = false;
+    world.repairs.push(piece);
+    world.events.push({ type: 'scaffoldRepairStart', id: piece.id, x: piece.x, y: piece.y, z: piece.z });
+    return true;
+  }
+
+  function stepRepairs(world, dt) {
+    const list = world.repairs;
+    for (let i = list.length - 1; i >= 0; i--) {
+      const piece = list[i];
+      const repair = piece.repair;
+      if (!repair || piece.removed) {
+        piece.repair = null;
+        list.splice(i, 1);
+        continue;
+      }
+      repair.t += dt;
+      const share = Math.min(1, repair.t / repair.seconds);
+      piece.durability = repair.from + (pieceDurability(piece) - repair.from) * share;
+      if (share < 1) continue;
+      list.splice(i, 1);
+      piece.repair = null;
+      const broken = piece.broken;
+      resetWear(piece, world);
+      if (broken) {
+        const id = world.index.id(piece.x, piece.y, piece.z);
+        piece.built = true;
+        piece.reserved = false;
+        if (piece.deck) world.deckGrid[id] = 1;
+        else world.mastGrid[id] = 1;
+        world.stats.scaffoldRepairs += 1;
+        invalidateNav(world, piece.x, piece.y, piece.z);
+      }
+      world.events.push({ type: 'scaffold', ids: [piece.id], x: piece.x, y: piece.y, z: piece.z, repair: true, manual: true });
+    }
   }
 
   function finishErect(builder, world) {
     const piece = builder.erectPiece;
     world.constructionStallElapsed = 0;
     builder.erectPiece = null;
+    // The player's repair (repairScaffold) got there first: nothing left to set.
+    if (piece.built && !piece.broken) {
+      piece.reserved = false;
+      requestWork(builder, world);
+      return;
+    }
     piece.reserved = false;
     piece.built = true;
+    if (world.campaign.spellInstantScaffold > 0) world.campaign.spellInstantScaffold -= 1;
     const id = world.index.id(piece.x, piece.y, piece.z);
+    const repair = Boolean(piece.broken);
+    rollDurability(piece);
+    resetWear(piece, world);
+    if (repair) world.stats.scaffoldRepairs += 1;
     if (piece.deck) {
       world.deckGrid[id] = 1;
-      world.stats.decks += 1;
+      if (!repair) world.stats.decks += 1;
     } else {
       world.mastGrid[id] = 1;
-      world.stats.ladders += 1;
+      if (!repair) world.stats.ladders += 1;
     }
-    world.events.push({ type: 'scaffold', ids: [piece.id], x: piece.x, y: piece.y, z: piece.z });
+    world.events.push({ type: 'scaffold', ids: [piece.id], x: piece.x, y: piece.y, z: piece.z, repair: repair });
     invalidateNav(world, piece.x, piece.y, piece.z);
     requestWork(builder, world);
   }
@@ -5778,30 +9797,349 @@ function builderPosition(builder, world, out) {
     return purchases;
   }
 
-  function activateElevators(world) {
-    const count = sessionValue('elevators', world.campaign.purchases.elevators);
-    const pads = world.level.elevators;
-    world.elevatorPads = [];
-    for (let i = 0; i < count && i < pads.length; i++) {
-      const pad = pads[i];
-      world.elevatorPads.push(pad);
-      const shaftTop = sessionValue('elevatorHeight', world.campaign.purchases.elevatorHeight);
-      for (let y = 0; y <= shaftTop; y++) {
-        for (let dz = 0; dz < 3; dz++) {
-          for (let dx = 0; dx < 3; dx++) {
-            const x = pad.x + dx;
-            const z = pad.z + dz;
-            if (!world.index.inside(x, y, z)) continue;
-            const id = world.index.id(x, y, z);
-            if (world.blockGrid[id]) continue;
-            world.solidGrid[id] = 1;
+  // ---------- air taxis (docs/gdd/02-construction-session.md → «Аэротакси») ----------
+  // The stand is the helipad by the quarries (level.elevators[0], taxiHelipad), up to four
+  // taxis on it. «Аэротакси» — how many, «Скорость аэротакси» — how fast they fly, «Потолок
+  // аэротакси» — the highest floor they land on. Positions are world units (a cell's centre is +0.5;
+  // y is the floor a taxi stands on). A taxi flies up, across and down, always above everything
+  // built on its way (cubes and scaffolds), so it never passes through a cube.
+  const TAXI_SPOTS = [[0.75, 0.75], [2.25, 2.25], [2.25, 0.75], [0.75, 2.25]];
+
+  function activateTaxis(world) {
+    const pad = world.level.elevators && world.level.elevators[0];
+    if (!pad) return;
+    const count = Math.min(TAXI_SPOTS.length, sessionValue('elevators', world.campaign.purchases.elevators));
+    world.taxiPad = pad;
+    while (world.taxis.length < count) {
+      const i = world.taxis.length;
+      const spot = [pad.x + TAXI_SPOTS[i][0], 0, pad.z + TAXI_SPOTS[i][1]];
+      world.taxis.push({ index: i, spot: spot, pos: spot.slice(), state: 'parked', legs: [], leg: 0, t: 0,
+        passenger: null, drop: null, heading: Math.PI * i / 2 });
+    }
+    world.events.push({ type: 'taxis' });
+  }
+
+  function taxiCeiling(world) {
+    return sessionValue('elevatorHeight', world.campaign.purchases.elevatorHeight);
+  }
+
+  // Cells a second (horizontal, vertical): TAXI.fly / TAXI.rise times the ground walk, «Скорость
+  // аэротакси» on top — its share of the first level's time.
+  function taxiSpeeds(world) {
+    const walk = 1 / groundStepSeconds(world);
+    const up = sessionValue('elevatorSpeed', 0) / sessionValue('elevatorSpeed', world.campaign.purchases.elevatorSpeed);
+    return [TAXI.fly * walk * up, TAXI.rise * walk * up];
+  }
+
+  // The top of what stands in a column (cubes, ladders, decks): the first free height above it.
+  // boardTaxi weighs many flights at once: their columns are read once (taxiTops).
+  let taxiTops = null;
+  function columnTop(world, x, z) {
+    const key = x * 4096 + z;
+    if (taxiTops && taxiTops.has(key)) return taxiTops.get(key);
+    const top = scanColumn(world, x, z);
+    if (taxiTops) taxiTops.set(key, top);
+    return top;
+  }
+
+  function scanColumn(world, x, z) {
+    const index = world.index;
+    for (let y = world.level.footprint.maxY + 3; y >= 0; y--) {
+      if (!index.inside(x, y, z)) continue;
+      const id = index.id(x, y, z);
+      if (world.solidGrid[id] === 1 || world.mastGrid[id] === 1 || world.deckGrid[id] === 1) return y + 1;
+    }
+    return 0;
+  }
+
+  // The height a flight from a to b crosses at: above every column under its line (the taxi's width
+  // too), clear by TAXI.clearance.
+  function taxiCruise(world, a, b) {
+    let top = Math.max(a[1], b[1]);
+    const dx = b[0] - a[0];
+    const dz = b[2] - a[2];
+    const steps = Math.max(1, Math.ceil(Math.hypot(dx, dz) * 2));
+    const seen = new Set();
+    for (let i = 0; i <= steps; i++) {
+      const x = a[0] + dx * i / steps;
+      const z = a[2] + dz * i / steps;
+      for (let ox = -0.45; ox <= 0.45; ox += 0.9) {
+        for (let oz = -0.45; oz <= 0.45; oz += 0.9) {
+          const cx = Math.floor(x + ox);
+          const cz = Math.floor(z + oz);
+          const key = cx * 4096 + cz;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          top = Math.max(top, columnTop(world, cx, cz));
+        }
+      }
+    }
+    return top + TAXI.clearance;
+  }
+
+  // A flight: straight up, across at the cruise height, straight down. → { legs, seconds }.
+  function taxiFlight(world, a, b) {
+    const cruise = taxiCruise(world, a, b);
+    const speeds = taxiSpeeds(world);
+    const up = [a[0], cruise, a[2]];
+    const over = [b[0], cruise, b[2]];
+    const legs = [
+      { from: a.slice(), to: up, seconds: (cruise - a[1]) / speeds[1] },
+      { from: up, to: over, seconds: Math.hypot(b[0] - a[0], b[2] - a[2]) / speeds[0] },
+      { from: over, to: b.slice(), seconds: (cruise - b[1]) / speeds[1] },
+    ];
+    return { legs: legs, seconds: legs[0].seconds + legs[1].seconds + legs[2].seconds };
+  }
+
+  function cellCentre(cell) {
+    return [cell[0] + 0.5, cell[1], cell[2] + 0.5];
+  }
+
+  // Where a taxi can put him down to set one of his cubes: a cell he can set it from, with open sky
+  // above (nothing over it), up to the ceiling. The quickest flight from `from`. → { cell, seconds }.
+  function taxiDrop(builder, world, targets, from) {
+    const index = world.index;
+    const ceiling = taxiCeiling(world);
+    const pending = collectRouteTargets(world, targets);
+    let best = null;
+    const seen = new Set();
+    for (let p = 0; p < pending.length; p++) {
+      const block = pending[p];
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dz = -1; dz <= 1; dz++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            const x = block.x + dx;
+            const y = block.y + dy;
+            const z = block.z + dz;
+            if (y < 1 || y >= ceiling || !index.inside(x, y, z)) continue;
+            const id = index.id(x, y, z);
+            if (seen.has(id)) continue;
+            seen.add(id);
+            if (!canStand(x, y, z, world)) continue;
+            if (!canBuildBlockFrom(x, y, z, buildSurfaceMode(x, y, z, world), block, world)) continue;
+            if (columnTop(world, x, z) > y) continue;
+            const flight = taxiFlight(world, from, cellCentre([x, y, z]));
+            if (!best || flight.seconds < best.seconds) best = { cell: [x, y, z], seconds: flight.seconds };
           }
         }
       }
     }
-    world.navEpoch += 1;
-    world.navSerial += 1;
-    world.events.push({ type: 'elevators' });
+    return best;
+  }
+
+  // The building's height in floors: its highest built cube (floor = y + 1), read again after a change.
+  function builtFloors(world) {
+    if (world.floorsSerial !== world.navSerial) {
+      let top = 0;
+      for (let i = 0; i < world.blocks.length; i++) {
+        if (world.blocks[i].built && world.blocks[i].y + 1 > top) top = world.blocks[i].y + 1;
+      }
+      world.floors = top;
+      world.floorsSerial = world.navSerial;
+    }
+    return world.floors;
+  }
+
+  // Floors still to build before the taxi line opens (TAXI.minFloors); 0 — it is open.
+  function taxiFloorsShort(world) {
+    return Math.max(0, TAXI.minFloors - builtFloors(world));
+  }
+
+  // Where he gets in: the pad cell next to the taxi's corner (one per taxi, clockwise).
+  const TAXI_BOARD = [[1, 0], [1, 2], [2, 1], [0, 1]];
+  function taxiBoardCell(world, taxi) {
+    const pad = world.taxiPad;
+    return [pad.x + TAXI_BOARD[taxi.index][0], 0, pad.z + TAXI_BOARD[taxi.index][1]];
+  }
+
+  // A walk's seconds with the load (the same speeds as advanceWalk, overload counted).
+  function pathSeconds(builder, world, path) {
+    let seconds = 0;
+    for (let i = 1; i < path.length; i++) seconds += stepSeconds(world, null, path[i - 1], path[i]);
+    return seconds * carryOverload(builder, world);
+  }
+
+  // His route's seconds with the load: its price (flat steps at the ground walk, climbs, scaffolds to
+  // set, passages) plus the decks — up on the building a step takes more effort (flatEffort), which
+  // the planner's flat price leaves out.
+  function routeSeconds(builder, world, route) {
+    const ground = groundStepSeconds(world);
+    let seconds = route.cost * ground;
+    let from = builder.cell;
+    for (let i = 0; i < route.steps.length; i++) {
+      const to = route.steps[i].cell;
+      if (from[1] > 0 || to[1] > 0) {
+        seconds += stepSeconds(world, null, from, to) - moveCost(from[0], from[1], from[2], to[0], to[1], to[2]) * ground;
+      }
+      from = to;
+    }
+    return seconds * carryOverload(builder, world);
+  }
+
+  // With a load on the ground (at the quarry): on foot (his route) or by air — a walk to a taxi on
+  // the pad, boarding, the flight, getting off. Only with a taxi standing on the pad; the taxi wins
+  // while it is no slower than walking × TAXI.prefer, and is booked for him while he walks to it.
+  function boardTaxi(builder, world, targets, route) {
+    if (!world.taxis || world.taxis.length === 0 || builder.cell[1] !== 0 || builder.camp) return false;
+    let taxi = null;
+    let best = Infinity;
+    for (let i = 0; i < world.taxis.length; i++) {
+      const t = world.taxis[i];
+      if (t.state !== 'parked') continue;
+      const board = taxiBoardCell(world, t);
+      const d = Math.abs(board[0] - builder.cell[0]) + Math.abs(board[2] - builder.cell[2]);
+      if (d < best) {
+        best = d;
+        taxi = t;
+      }
+    }
+    if (!taxi) return false;
+    const onFoot = routeSeconds(builder, world, route) * TAXI.prefer;
+    // The flight alone (with boarding) already slower: no need to look for the way to the pad.
+    taxiTops = new Map();
+    const drop = taxiDrop(builder, world, targets, taxi.spot);
+    taxiTops = null;
+    if (!drop || !(drop.seconds + 2 * TAXI.board < onFoot)) return false;
+    const path = findPathToCell(builder.cell, taxiBoardCell(world, taxi), world);
+    if (!path || !(pathSeconds(builder, world, path) + drop.seconds + 2 * TAXI.board < onFoot)) return false;
+    cancelRoute(builder, world);
+    builder.taxi = taxi;
+    builder.taxiRiding = false;
+    builder.wait = 0;
+    taxi.passenger = builder;
+    taxi.drop = drop.cell;
+    taxi.state = 'booked';
+    taxi.legs = [];
+    taxi.t = 0;
+    world.events.push({ type: 'taxiCall', builder: builder, taxi: taxi.index });
+    beginWalk(builder, path, 'taxi', world);
+    return true;
+  }
+
+  // At the taxi: in he gets (boarding), unless it was let go meanwhile — then back to work.
+  function reachTaxi(builder, world) {
+    const taxi = builder.taxi;
+    if (!taxi || taxi.passenger !== builder || taxi.state !== 'booked') {
+      builder.taxi = null;
+      builder.phase = 'idle';
+      builder.wait = 0;
+      requestWork(builder, world);
+      return;
+    }
+    builder.phase = 'taxi';
+    builder.wait = 0;
+    builder.faceX = taxi.spot[0];
+    builder.faceZ = taxi.spot[2];
+    taxiHold(taxi, 'boarding');
+  }
+
+  // Off the way to his taxi (a reroute): the booking is let go.
+  function leaveTaxi(builder) {
+    const taxi = builder.taxi;
+    builder.taxi = null;
+    builder.taxiRiding = false;
+    if (taxi && taxi.passenger === builder && taxi.state === 'booked') {
+      taxi.passenger = null;
+      taxi.drop = null;
+      taxi.state = 'parked';
+    }
+  }
+
+  function taxiFly(world, taxi, to, state) {
+    const flight = taxiFlight(world, taxi.pos, to);
+    taxi.legs = flight.legs;
+    taxi.leg = 0;
+    taxi.t = 0;
+    taxi.state = state;
+  }
+
+  // A pause on the spot (boarding, getting off): one leg standing still.
+  function taxiHold(taxi, state) {
+    taxi.legs = [{ from: taxi.pos.slice(), to: taxi.pos.slice(), seconds: TAXI.board }];
+    taxi.leg = 0;
+    taxi.t = 0;
+    taxi.state = state;
+  }
+
+  function stepTaxis(world, dt) {
+    for (let i = 0; i < world.taxis.length; i++) {
+      const taxi = world.taxis[i];
+      if (taxi.state === 'parked') continue;
+      // Booked: it waits on the pad while he walks to it; anything else he turned to lets it go.
+      if (taxi.state === 'booked') {
+        const walker = taxi.passenger;
+        if (!walker || walker.taxi !== taxi || walker.phase !== 'walk' || walker.walkPurpose !== 'taxi') {
+          if (walker && walker.taxi === taxi) walker.taxi = null;
+          taxi.passenger = null;
+          taxi.drop = null;
+          taxi.state = 'parked';
+        }
+        continue;
+      }
+      // The passenger was taken off the job (a new site, an emergency): the taxi goes home.
+      if (taxi.passenger && taxi.passenger.taxi !== taxi) {
+        taxi.passenger = null;
+        taxiFly(world, taxi, taxi.spot, 'return');
+      }
+      taxi.t += dt;
+      while (taxi.state !== 'parked' && taxi.t >= taxi.legs[taxi.leg].seconds) {
+        taxi.t -= taxi.legs[taxi.leg].seconds;
+        taxi.leg += 1;
+        if (taxi.leg < taxi.legs.length) continue;
+        const end = taxi.legs[taxi.legs.length - 1].to;
+        taxi.pos[0] = end[0];
+        taxi.pos[1] = end[1];
+        taxi.pos[2] = end[2];
+        taxiArrive(world, taxi);
+        if (taxi.state === 'parked') taxi.t = 0;
+      }
+      if (taxi.state === 'parked') continue;
+      const leg = taxi.legs[taxi.leg];
+      const u = leg.seconds > 0 ? Math.min(1, taxi.t / leg.seconds) : 1;
+      taxi.pos[0] = leg.from[0] + (leg.to[0] - leg.from[0]) * u;
+      taxi.pos[1] = leg.from[1] + (leg.to[1] - leg.from[1]) * u;
+      taxi.pos[2] = leg.from[2] + (leg.to[2] - leg.from[2]) * u;
+      if (leg.to[0] !== leg.from[0] || leg.to[2] !== leg.from[2]) taxi.heading = Math.atan2(leg.to[0] - leg.from[0], leg.to[2] - leg.from[2]);
+    }
+  }
+
+  function taxiArrive(world, taxi) {
+    const builder = taxi.passenger;
+    if (taxi.state === 'boarding' && builder) {
+      builder.taxiRiding = true;
+      taxiFly(world, taxi, cellCentre(taxi.drop), 'carry');
+    } else if (taxi.state === 'carry' && builder) taxiHold(taxi, 'alighting');
+    else if (taxi.state === 'alighting' && builder) {
+      // Off at the drop; if a cube took the cell meanwhile — a free one next to it, else the ground.
+      let cell = taxi.drop;
+      if (!canStand(cell[0], cell[1], cell[2], world)) {
+        cell = null;
+        for (let d = 0; d < DIRS.length && !cell; d++) {
+          const x = taxi.drop[0] + DIRS[d][0];
+          const z = taxi.drop[2] + DIRS[d][1];
+          if (canStand(x, taxi.drop[1], z, world)) cell = [x, taxi.drop[1], z];
+        }
+        if (!cell) cell = [Math.floor(taxi.spot[0]), 0, Math.floor(taxi.spot[2])];
+      }
+      builder.cell = cell.slice();
+      builder.from = cell.slice();
+      builder.to = cell.slice();
+      builder.segmentT = 0;
+      builder.taxi = null;
+      builder.taxiRiding = false;
+      builder.phase = 'idle';
+      builder.wait = 0;
+      taxi.passenger = null;
+      taxi.drop = null;
+      world.events.push({ type: 'taxiDrop', builder: builder, taxi: taxi.index });
+      taxiFly(world, taxi, taxi.spot, 'return');
+    } else {
+      taxi.passenger = null;
+      if (taxi.state === 'return') {
+        taxi.state = 'parked';
+        taxi.legs = [];
+      } else taxiFly(world, taxi, taxi.spot, 'return');
+    }
   }
 
   function dronePad(world, slot) {
@@ -5823,7 +10161,6 @@ function builderPosition(builder, world, out) {
     builder.currentSpeed = 0;
     builder.heading = 0;
     builder.headingReady = true;
-    builder.smokeThreshold = rollSmoke(world.campaign);
     world.builders.push(builder);
     world.events.push({ type: 'spawn', builder: builder });
     return builder;
@@ -5881,6 +10218,13 @@ function builderPosition(builder, world, out) {
       levelTimes: [],
       levelStats: [],
       freePurchases: false,
+      // Tokens of this construction (meta.js → configureNewCampaign: balance.tokens.start) and the
+      // graph's passes opened with them (buyGate).
+      tokens: 0,
+      gates: {},
+      // Advanced key nodes bought on this site (buyAdvanced) and those the tech center researched.
+      advanced: {},
+      advancedOpen: [],
       runMode: 'campaign',
       runPayload: null,
       metaPlaceSpeed: 1,
@@ -5890,6 +10234,7 @@ function builderPosition(builder, world, out) {
       metaCarryScale: 1,
       metaClimb: 1,
       metaSmokeShort: 1,
+      lab: null,
       metaHunger: 1,
       metaSmoke: 1,
       foremen: {},
@@ -5897,13 +10242,26 @@ function builderPosition(builder, world, out) {
       foremanRush: 1,
       bonusDrones: 0,
       coinsEarned: 0,
+      coinRewardRemainder: 0,
       metaMovement: 1,
       metaScaffold: 1,
       metaPlan: 0,
       metaNightRelief: 0,
       metaCoinMultiplier: 1,
-      environmentWorkMultiplier: 1,
-      environmentMoveMultiplier: 1,
+      metaCapitalChance: 0,
+      metaCapitalValue: 1,
+      environmentWork: 1,
+      environmentMove: 1,
+      environmentGround: 1,
+      environmentDeck: 1,
+      environmentCarry: 1,
+      environmentNightWork: 1,
+      environmentNightMove: 1,
+      environmentBoost: null,
+      environmentLightning: 0,
+      environmentHungerRate: 1,
+      environmentSmokeRate: 1,
+      environmentFatigueRate: 1,
       mealInterval: 240,
       mealAwaySeconds: 60,
       mealKitchenSeconds: BALANCE.mealKitchenSeconds,
@@ -5912,6 +10270,24 @@ function builderPosition(builder, world, out) {
       smokeInterval: 120,
       smokeSeconds: BALANCE.smokeSeconds,
       kitchenUnlocked: false,
+      // Canteen (meta.js applyCardStats): the personnel centre is built; dishes of the cookbook.
+      canteenOpen: false,
+      canteenDishes: ['kasha'],
+      canteenSeatBonus: 0,
+      // Sales office: the personnel centre stands (the office may stand on this site); the highest
+      // level of the site's «Офис продаж» (1 + meta «Уровни офиса продаж»).
+      salesOpen: false,
+      dormOpen: false,
+      dormMaxLevel: 1,
+      loungeOpen: false,
+      loungeMaxLevel: 1,
+      lightOpen: false,
+      lightMaxLevel: 1,
+      siteNightRelief: 0,
+      siteWeatherRelief: 0,
+      salesMaxLevel: 1,
+      canteenMaxLevel: 1,
+      canteenMealSeconds: CANTEEN.mealSeconds,
       resumeBuiltIds: [],
     };
   }
@@ -5966,6 +10342,7 @@ function builderPosition(builder, world, out) {
       world.built.add(cellKey(block.x, block.y, block.z));
       occupyBuiltBlock(block, world);
       world.remaining -= 1;
+      cubeSet(world);
       block.capitalPay = pay.capital;
       built.push(block);
       count -= 1;
@@ -5992,7 +10369,8 @@ function builderPosition(builder, world, out) {
       maxX: level.bounds.maxX + 2,
       minZ: level.bounds.minZ - 2,
       maxZ: level.bounds.maxZ + 2,
-      maxY: level.bounds.maxY + 2,
+      // Tall enough for the tallest camp building this site may raise, with scaffolds over it.
+      maxY: Math.max(level.bounds.maxY + 2, campTop(campaign) + 2),
     };
     const index = createIndex(bounds);
     const size = index.size;
@@ -6052,6 +10430,9 @@ function builderPosition(builder, world, out) {
       routeSearchStamp: 0,
       routeHeap: createHeap(),
       routes: [],
+      // Air taxis on the helipad (activateTaxis).
+      taxis: [],
+      taxiPad: null,
       deckByKey: new Map(),
       blocks: level.blocks.map(function (block) {
         return {
@@ -6075,6 +10456,10 @@ function builderPosition(builder, world, out) {
           failedNavSerial: -1,
           poured: 0,
           owner: -1,
+          // Mini-cubes of this cube still to be picked up in its owner's current plan.
+          planLeft: 0,
+          // Trips already made for this cube (view: «несёт частями: 2 из 5»).
+          haulTrips: 0,
         };
       }),
       built: new Set(),
@@ -6084,8 +10469,10 @@ function builderPosition(builder, world, out) {
       remaining: level.blocks.length,
       constructionProgressRemaining: level.blocks.length,
       timeLedger: {},
+      timeCategories: {},
       foremanBuilt: [],
       foremanCubes: 0,
+      labCubes: 0,
       foremanTrips: 0,
       tripStats: [],
       floorStack: 0,
@@ -6099,11 +10486,16 @@ function builderPosition(builder, world, out) {
       blocked: false,
       scaffoldPieces: [],
       scaffoldDecks: [],
+      // Pieces mending by the player's order (repairScaffold).
+      repairs: [],
       mastGrid: new Uint8Array(size),
       deckGrid: new Uint8Array(size),
+      // Broken scaffold pieces waiting for repair: BROKEN_MAST | BROKEN_DECK by cell.
+      scaffoldBroken: new Uint8Array(size),
       doorGrid: new Uint8Array(size),
       bridgeGrid: new Uint8Array(size),
       waterGrid: new Uint8Array(size),
+      campGrid: new Uint8Array(size),
       rungByKey: new Map(),
       cubeSet: new Set(),
       blockByKey: new Map(),
@@ -6116,10 +10508,18 @@ function builderPosition(builder, world, out) {
       stats: {
         ladders: 0,
         decks: 0,
+        scaffoldBreaks: 0,
+        scaffoldRepairs: 0,
+        // Falls through worn scaffolds and hospital stays.
+        injuries: 0,
+        hospital: 0,
         additionalDoors: 0,
         verticalHatches: 0,
         vehicleBlocks: 0,
+        lightningStrikes: 0,
+        lightningCubes: 0,
       },
+      lightningTimer: null,
       metrics: {
         scheduler: 0,
         path: 0,
@@ -6156,6 +10556,7 @@ function builderPosition(builder, world, out) {
     }
     // Mine piles are visual pickup points, not obstacles or scaffold supports.
     restoreBuiltBlocks(world, campaign.resumeBuiltIds);
+    createCamp(world);
     campaign.builderCount = campaign.metaBuilders + sessionGain('builders', campaign.purchases.builders);
     for (let i = 0; i < campaign.builderCount; i++) spawnBuilder(world);
     campaign.vehicleCount = campaign.metaVehicles + sessionGain('vehicles', campaign.purchases.vehicles);
@@ -6164,7 +10565,7 @@ function builderPosition(builder, world, out) {
     for (let i = 0; i < engineers; i++) spawnEngineer(world);
     const helicopters = sessionValue('helicopters', campaign.purchases.helicopters);
     for (let i = 0; i < helicopters; i++) spawnHelicopter(world);
-    activateElevators(world);
+    activateTaxis(world);
     // «Механик» brings drones from the start (they stay until the order is done).
     for (let i = 0; i < campaign.bonusDrones; i++) spawnEngineer(world);
     return world;
@@ -6185,20 +10586,235 @@ function builderPosition(builder, world, out) {
     const started = performance.now();
     world.campaign.totalElapsed += dt;
     world.campaign.levelElapsed += dt;
+    // Techno-magic: mana fills only while a reactor form stands on the site — manaPerLevel a minute
+    // and manaMaxBase + manaMaxPerLevel stored per level of the standing form.
+    const reactorLevel = world.reactor && campActive(world, world.reactor) ? world.reactor.form || 0 : 0;
+    // ⬡ «Реактор» of the site graph: «Теплообменник» fills it faster, «Накопители» hold more.
+    world.campaign.manaRate = reactorLevel > 0 ? REACTOR_SITE.manaPerLevel * reactorLevel * (1 + advancedValue(world.campaign, 'advMana', 0)) *
+      (world.campaign.lab && world.campaign.lab.mana ? world.campaign.lab.mana : 1) * lineValue(world.campaign, 'manaFlow') *
+      // «Подпитка» and «Резервуар» (spells): shares added till the end of the site.
+      (1 + (world.campaign.spellManaRate || 0)) : 0;
+    world.campaign.manaMax = (REACTOR_SITE.manaMaxBase + REACTOR_SITE.manaMaxPerLevel * reactorLevel) * lineValue(world.campaign, 'manaStore') *
+      (1 + (world.campaign.spellManaMax || 0));
+    if (world.campaign.manaRate > 0) {
+      world.campaign.mana = Math.min(world.campaign.manaMax, (world.campaign.mana || 0) + dt * world.campaign.manaRate / 60);
+    }
     world.campaign.foremanRush = foremanRush(world);
+    spellHasteNow = (world.campaign.spellHasteUntil || 0) > world.campaign.levelElapsed ? world.campaign.spellHaste || 2 : 1;
+    canteenNow.elapsed = world.campaign.levelElapsed;
+    canteenNow.torte = (world.torteUntil || 0) > world.campaign.levelElapsed;
+    canteenNow.feast = (world.feastDishUntil || 0) > world.campaign.levelElapsed;
+    canteenNow.grand = world.grandStacks || {};
     const builders = world.builders;
     for (let i = 0; i < builders.length; i++) updateBuilder(builders[i], world, dt);
+    stepTaxis(world, dt);
+    if (world.repairs.length > 0) stepRepairs(world, dt);
+    if (world.sales) stepSales(world, dt);
+    if (world.camp && world.camp.length > 0) {
+      stepCampForms(world);
+      stepCampStall(world, dt);
+      stripCampScaffolds(world);
+    }
+    world.campaign.siteNightRelief = lightRelief(world);
+    // «Дежурный свет» (⬡ «Городок»): a standing mast takes a share of bad weather's penalties
+    // (meta.js → applyEnvironment).
+    world.campaign.siteWeatherRelief = lightStands(world) ? lineValue(world.campaign, 'campLightRain') : 0;
     const vehicles = world.vehicles;
     for (let i = 0; i < vehicles.length; i++) updateVehicle(vehicles[i], world, dt);
     if (world.remaining < world.constructionProgressRemaining) {
       world.constructionProgressRemaining = world.remaining;
       world.constructionStallElapsed = 0;
+      world.noCubeElapsed = 0;
+      world.leftoverChecked = 0;
     } else {
       world.constructionStallElapsed += dt;
+      world.noCubeElapsed = (world.noCubeElapsed || 0) + dt;
     }
+    finishLeftovers(world);
     resolveConstructionStall(world);
     if (world.foremanBuilt.length > 0) stepForemen(world);
+    stepLightning(world, dt);
     world.metrics.simulation += performance.now() - started;
+  }
+
+  // ---------- lightning (storm) ----------
+  // A storm (campaign.environmentLightning — the rate, Meta.applyEnvironment) strikes lightning about
+  // every strikeSeconds (±50 %, balance.json → tuning.environment.lightning) into a cube that tops its
+  // column, from floor minFloor up, and knocks it out together with its built neighbours of the 3×3×3
+  // around it. Knocked-out cubes go back into the plan and pay again when set
+  // (docs/gdd/08-needs-weather-events.md → «Разрушительные события»). Only what can go without harm
+  // goes (canKnockOut); a strike that would take nothing finds another cube.
+  const LIGHTNING = TUNING.environment.lightning;
+
+  function lightningInterval(rate) {
+    return LIGHTNING.strikeSeconds * (0.5 + Math.random()) / rate;
+  }
+
+  function stepLightning(world, dt) {
+    const rate = world.campaign.environmentLightning || 0;
+    if (!(rate > 0) || world.remaining <= 0 || world.completed) {
+      world.lightningTimer = null;
+      return;
+    }
+    // «Громоотводы»: strikes come that many times more rarely.
+    const rods = lineValue(world.campaign, 'lightningRods') * (world.campaign.office ? world.campaign.office.lightning : 1);
+    if (world.lightningTimer === null || world.lightningTimer === undefined) world.lightningTimer = lightningInterval(rate) * rods;
+    world.lightningTimer -= dt;
+    if (world.lightningTimer > 0) return;
+    world.lightningTimer = lightningInterval(rate) * rods;
+    strikeLightning(world);
+  }
+
+  function blockAt(world, x, y, z) {
+    if (y < 0 || !world.index.inside(x, y, z)) return null;
+    return world.blockGrid[world.index.id(x, y, z)] || null;
+  }
+
+  // A plain built cube: not a feature, not a window or its wall cube.
+  function strikableCube(block) {
+    return !!block && block.built && !block.feature && block.glassOf === undefined && block.glassId === undefined;
+  }
+
+  // The top cube of every column, from floor minFloor up.
+  function lightningTargets(world) {
+    const tops = new Map();
+    for (let i = 0; i < world.blocks.length; i++) {
+      const block = world.blocks[i];
+      if (!block.built || block.glassOf !== undefined) continue;
+      const key = block.x + ',' + block.z;
+      const top = tops.get(key);
+      if (!top || block.y > top.y) tops.set(key, block);
+    }
+    const result = [];
+    tops.forEach(function (block) {
+      if (block.y + 1 >= LIGHTNING.minFloor && strikableCube(block)) result.push(block);
+    });
+    return result;
+  }
+
+  const KNOCK_SIDES = [[0, 1, 0], [1, 0, 0], [-1, 0, 0], [0, 0, 1], [0, 0, -1]];
+
+  // A cube may go with the others of `chosen` if nothing is left hanging and nobody is hurt:
+  // - nothing built stays on it, and a built side neighbour that stays keeps a cube under it (no
+  //   overhang loses its hold);
+  // - no feature or window around (they lean on cubes by their own rules);
+  // - no cube next to or on it is taken into work (a worker's plan, a machine's pattern, a drone) or
+  //   half set — its support must not go from under it;
+  // - nobody stands on it or is stepping onto it, nobody cuts a passage through it.
+  function canKnockOut(world, block, chosen) {
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dz = -1; dz <= 1; dz++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const x = block.x + dx;
+          const y = block.y + dy;
+          const z = block.z + dz;
+          if (world.glassByKey.has(cellKey(x, y, z))) return false;
+          const near = blockAt(world, x, y, z);
+          if (near && (near.feature || near.glassId !== undefined)) return false;
+        }
+      }
+    }
+    for (let i = 0; i < KNOCK_SIDES.length; i++) {
+      const side = KNOCK_SIDES[i];
+      const near = blockAt(world, block.x + side[0], block.y + side[1], block.z + side[2]);
+      if (!near || chosen.has(near)) continue;
+      if (near.built) {
+        if (side[1] === 1) return false;
+        const below = blockAt(world, near.x, near.y - 1, near.z);
+        if (near.y > 0 && !(below && below.built && !chosen.has(below))) return false;
+      } else if (near.reserved || near.owner !== -1 || near.poured > 0) {
+        return false;
+      }
+    }
+    function onTop(cell) {
+      return !!cell && cell[0] === block.x && cell[1] === block.y + 1 && cell[2] === block.z;
+    }
+    for (let i = 0; i < world.builders.length; i++) {
+      const builder = world.builders[i];
+      if (builder.trade === 'engineer') continue;
+      if (builder.passageBlock === block) return false;
+      if (onTop(builder.cell)) return false;
+      if (builder.phase === 'walk' && (onTop(builder.from) || onTop(builder.to))) return false;
+    }
+    return true;
+  }
+
+  // The cubes a strike into `target` knocks out: the plain built ones of the 3×3×3 around it, less
+  // those that must stay — dropping one can hold up others, so until nothing changes. Null when the
+  // target itself has to stay.
+  function lightningCubes(world, target) {
+    const chosen = new Set();
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dz = -1; dz <= 1; dz++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const block = blockAt(world, target.x + dx, target.y + dy, target.z + dz);
+          if (strikableCube(block)) chosen.add(block);
+        }
+      }
+    }
+    let changed = true;
+    while (changed && chosen.has(target)) {
+      changed = false;
+      chosen.forEach(function (block) {
+        if (canKnockOut(world, block, chosen)) return;
+        chosen.delete(block);
+        changed = true;
+      });
+    }
+    return chosen.has(target) ? Array.from(chosen) : null;
+  }
+
+  // Into a column top, the higher the likelier; up to a few tries if the cube can't go.
+  function strikeLightning(world) {
+    const targets = lightningTargets(world);
+    for (let tries = 0; tries < 8 && targets.length > 0; tries++) {
+      let total = 0;
+      for (let i = 0; i < targets.length; i++) total += targets[i].y + 2 - LIGHTNING.minFloor;
+      let roll = Math.random() * total;
+      let pick = targets.length - 1;
+      for (let i = 0; i < targets.length; i++) {
+        roll -= targets[i].y + 2 - LIGHTNING.minFloor;
+        if (roll < 0) {
+          pick = i;
+          break;
+        }
+      }
+      const target = targets[pick];
+      targets.splice(pick, 1);
+      const blocks = lightningCubes(world, target);
+      if (!blocks) continue;
+      // «Громоотвод» of the materials lab: by chance the bolt goes into the ground, no cube knocked out.
+      if (world.campaign.lab && Math.random() < (world.campaign.lab.lightning || 0)) {
+        world.events.push({ type: 'lightning', block: target, blocks: [], grounded: true });
+        return true;
+      }
+      knockOutBlocks(world, blocks);
+      world.stats.lightningStrikes += 1;
+      world.stats.lightningCubes += blocks.length;
+      world.events.push({ type: 'lightning', block: target, blocks: blocks });
+      return true;
+    }
+    return false;
+  }
+
+  // Back into the plan: unbuilt, nothing set of it, nobody's, ready by its support again.
+  function knockOutBlocks(world, blocks) {
+    for (let i = 0; i < blocks.length; i++) {
+      const block = blocks[i];
+      block.built = false;
+      block.poured = 0;
+      block.reserved = false;
+      block.owner = -1;
+      block.planLeft = 0;
+      world.built.delete(cellKey(block.x, block.y, block.z));
+      world.solidGrid[world.index.id(block.x, block.y, block.z)] = 0;
+    }
+    world.remaining += blocks.length;
+    world.constructionProgressRemaining = world.remaining;
+    world.constructionStallElapsed = 0;
+    refreshReadyBatch(world, blocks);
+    invalidateNavBatch(world, blocks);
+    wakeVehicles(world);
   }
 
   // ---------- foremen ----------
@@ -6244,7 +10860,9 @@ function builderPosition(builder, world, out) {
   // «Механик»: drones and machines move faster.
   function machineFactor(world) {
     const machines = world.campaign.foremen.machines;
-    return machines ? machines.value : 1;
+    // «Моторы» of the materials lab on top.
+    const lab = world.campaign.lab && world.campaign.lab.machines ? world.campaign.lab.machines : 1;
+    return (machines ? machines.value : 1) * lab;
   }
 
   function every(trigger, count, second) {
@@ -6261,7 +10879,12 @@ function builderPosition(builder, world, out) {
     for (let i = 0; i < campaign.foremanKinds.length; i++) {
       const kind = campaign.foremanKinds[i];
       const spec = SESSION_BALANCE[kind];
-      if (campaign.purchases[kind] >= spec.max || (kind === 'kitchen' && !campaign.kitchenUnlocked)) continue;
+      if (campaign.purchases[kind] >= spec.max || (kind === 'kitchen' && (!campaign.kitchenUnlocked || kitchenCapped(campaign)))) continue;
+      // The camp is the player's choice (its window); a closed pass keeps its lines shut.
+      if (CAMP_LINES[kind] || CAMP_UPGRADE_OF[kind] || campBranchShut(campaign, kind) || lineGated(campaign, kind) || kind === 'tokenBuy') continue;
+      if (kind === 'elevators' && !(campaign.purchases.elevators > 0) && taxiFloorsShort(world) > 0) continue;
+      if (kind === 'sales' && salesCapped(campaign)) continue;
+      if ((kind === 'dorm' || kind === 'lounge' || kind === 'light') && campCapped(campaign, kind)) continue;
       const minute = spec.pricedTimings ? spec.pricedTimings[campaign.purchases[kind]] : campaign.purchases[kind];
       if (minute < bestMinute) {
         bestMinute = minute;
@@ -6284,18 +10907,15 @@ function builderPosition(builder, world, out) {
         campaign.metaBuilders += 1;
         campaign.builderCount += 1;
         spawnBuilder(world);
-        world.events.push({ type: 'foreman', card: foremen.recruit.card });
+        world.events.push({ type: 'foreman', card: foremen.recruit.card, office: foremen.recruit.office });
       }
       if (every(foremen.contractor, count)) {
         const kind = giftUpgrade(world);
-        if (kind) world.events.push({ type: 'foreman', card: foremen.contractor.card, kind: kind });
+        if (kind) world.events.push({ type: 'foreman', card: foremen.contractor.card, office: foremen.contractor.office, kind: kind });
       }
       if (every(foremen.golden, count)) {
-        const pay = grantPlacePay(world, block, pourTotal(block) * 24);
-        world.events.push({
-          type: 'foreman', card: foremen.golden.card, block: block, gained: pay.coins, capital: pay.capital,
-          lucky: pay.lucky, luckyMultiplier: pay.luckyMultiplier,
-        });
+        world.events.push({ type: 'foreman', card: foremen.golden.card, office: foremen.golden.office, block: block,
+          gained: 0, findMultiplier: foremen.golden.factor || 3 });
       }
       if (every(foremen.jackpot, count)) {
         const pay = grantPlacePay(world, block, pourTotal(block) * ((foremen.jackpot.second || 10) - 1));
@@ -6307,11 +10927,27 @@ function builderPosition(builder, world, out) {
       if (foremen.windowRush && block.feature) world.windowRushUntil = campaign.levelElapsed + 45;
       if (foremen.floorStack && floorDone(world, block.y)) {
         world.floorStack += foremen.floorStack.value;
-        world.events.push({ type: 'foreman', card: foremen.floorStack.card, stack: world.floorStack });
+        world.events.push({ type: 'foreman', card: foremen.floorStack.card, office: foremen.floorStack.office, stack: world.floorStack });
       }
       if (every(foremen.crane, count) && world.remaining > 0) {
         const placed = applyOfflineBlocks(world, Math.round(foremen.crane.second));
-        world.events.push({ type: 'foreman', card: foremen.crane.card, count: placed.length });
+        world.events.push({ type: 'foreman', card: foremen.crane.card, office: foremen.crane.office, count: placed.length });
+      }
+      // The materials lab's counters of the site's whole cubes (any material): «Рабочий ритм» sets the
+      // next cube at once, «Стеклянный жетон» gives a token, «Счастливая жила» an extra chest (game.js).
+      const lab = campaign.lab;
+      if (lab && (lab.instant || lab.token || lab.extraChest)) {
+        world.labCubes += 1;
+        const n = world.labCubes;
+        if (lab.instant && n % lab.instant === 0 && world.remaining > 0) {
+          const placed = applyOfflineBlocks(world, 1);
+          if (placed.length) world.events.push({ type: 'lab', perk: 'instant', block: placed[0] });
+        }
+        if (lab.token && n % lab.token === 0) {
+          campaign.tokens = (campaign.tokens || 0) + 1;
+          world.events.push({ type: 'lab', perk: 'token', block: block });
+        }
+        if (lab.extraChest && n % lab.extraChest === 0) world.events.push({ type: 'lab', perk: 'chest', block: block });
       }
     }
   }
@@ -6337,27 +10973,258 @@ function builderPosition(builder, world, out) {
     world.metrics.invalidations = 0;
   }
 
+  // ---------- tokens: the graph's passes and the camp buildings' starts ----------
+  const TOKENS = window.MicroBuildersBalance.tokens || { start: 0, campStart: 0 };
+  const GATES = window.MicroBuildersBalance.gates || {};
+  const TREE_PARENT = {};
+  window.MicroBuildersBalance.upgradeTree.forEach(function (pair) { TREE_PARENT[pair[0]] = pair[1]; });
+  // The camp buildings' site lines (level 1 starts the building, higher levels rebuild it) and the
+  // upgrades of each; they are bought in the building's window, not in the graph.
+  const CAMP_LINES = { kitchen: 'canteen', sales: 'sales', dorm: 'dorm', lounge: 'lounge', light: 'light', reactor: 'reactor' };
+  const CAMP_UPGRADE_OF = { portions: 'kitchen', chef: 'kitchen', salesAds: 'sales', lightPower: 'light', loungeSeats: 'lounge',
+    smokePath: 'lounge', dormBeds: 'dorm', dormSleep: 'dorm' };
+  // The camp's own branch of the graph (⬡ «Городок», ⬡ «Реактор»): each line works for its building
+  // and is bought once that building is started on this site.
+  const CAMP_BRANCH_OF = { campServe: 'kitchen', campSalesAway: 'sales', campShower: 'dorm', campTea: 'lounge', campLightRain: 'light',
+    manaStore: 'reactor', manaFlow: 'reactor', spellTune: 'reactor', spellSpan: 'reactor' };
+  function campBranchShut(campaign, kind) {
+    return !!CAMP_BRANCH_OF[kind] && !(campaign.purchases[CAMP_BRANCH_OF[kind]] > 0);
+  }
+
+  // The way into the block of a pass: the lines right behind it (through a pass right behind it).
+  // Every other line of the block opens after one of them, on the site and in the tech center alike.
+  const GATE_LINES = {};
+  function gateEntries(id) {
+    const lines = [];
+    window.MicroBuildersBalance.upgradeTree.forEach(function (pair) {
+      if (TREE_PARENT[pair[0]] !== id) return;
+      if (GATES[pair[0]]) Array.prototype.push.apply(lines, gateEntries(pair[0]));
+      else lines.push(pair[0]);
+    });
+    return lines;
+  }
+  Object.keys(GATES).forEach(function (id) { GATE_LINES[id] = gateEntries(id); });
+
+  function gatePassed(campaign, id) {
+    return !!(campaign.gates && campaign.gates[id]);
+  }
+
+  // A pass is worth a token only once the meta has opened something of its block (a technology of
+  // the tech center) — that is, one of its entry lines; till then it stays shut and nothing behind
+  // it shows. devOpen(kind) — the dev panel's group switches (game.js): a line they open counts too.
+  function gateResearched(campaign, id, devOpen) {
+    if (campaign.devGroups && campaign.devGroups.all === true) return true;
+    return (GATE_LINES[id] || []).some(function (kind) { return lineOpenByMeta(campaign, kind) || (!!devOpen && devOpen(kind)); });
+  }
+
+  // A pass costs its tokens (balance.gates[id].tokens) once the line before it has a level and its
+  // block has something researched.
+  function gateOpenable(campaign, id, devOpen) {
+    if (!GATES[id] || gatePassed(campaign, id) || !gateResearched(campaign, id, devOpen)) return false;
+    const parent = TREE_PARENT[id];
+    return !parent || (GATES[parent] ? gatePassed(campaign, parent) : (campaign.purchases[parent] || 0) >= 1);
+  }
+
+  function buyGate(campaign, id, devOpen) {
+    const cost = GATES[id] ? GATES[id].tokens || 1 : Infinity;
+    if (!gateOpenable(campaign, id, devOpen) || (campaign.tokens || 0) < cost) return false;
+    campaign.tokens -= cost;
+    campaign.gates[id] = 1;
+    return true;
+  }
+
+  // ---------- advanced upgrades (docs/gdd/29-tokens-draft.md) ----------
+  // «Продвинутые улучшения»: the centre pass is a site line bought for coins (session.advanced, priced
+  // at the reference's minute 500); around it the key nodes, ADVANCED.tokens each, that the tech
+  // center's advanced technologies open (campaign.advancedOpen, meta.js → applyCardStats; from story
+  // level ADVANCED.unlockLevel). Each changes a rule of this site only.
+  const ADVANCED = window.MicroBuildersBalance.advanced || { nodes: [], tokens: 2 };
+  const ADVANCED_NODE = {};
+  ADVANCED.nodes.forEach(function (node) { ADVANCED_NODE[node.id] = node; });
+
+  function advancedOwned(campaign, id) {
+    return !!(campaign && campaign.advanced && campaign.advanced[id]);
+  }
+
+  // The node's number (balance advanced.nodes[].value) once it is bought here, else `otherwise`.
+  function advancedValue(campaign, id, otherwise) {
+    return advancedOwned(campaign, id) ? ADVANCED_NODE[id].value : otherwise;
+  }
+
+  function advancedResearched(campaign, id) {
+    return (campaign.advancedOpen || []).indexOf(id) >= 0;
+  }
+
+  // The centre is bought; the node researched in the tech center and not bought yet.
+  function advancedOpenable(campaign, id) {
+    return !!ADVANCED_NODE[id] && campaign.purchases.advanced > 0 && advancedResearched(campaign, id) && !advancedOwned(campaign, id);
+  }
+
+  function buyAdvanced(campaign, world, id) {
+    const cost = ADVANCED.tokens || 2;
+    if (!advancedOpenable(campaign, id) || (campaign.tokens || 0) < cost) return false;
+    campaign.tokens -= cost;
+    campaign.advanced = Object.assign({}, campaign.advanced);
+    campaign.advanced[id] = 1;
+    if (world) world.events.push({ type: 'advanced', id: id });
+    return true;
+  }
+
+  // A line behind a pass that is not open yet cannot be bought.
+  function lineGated(campaign, kind) {
+    for (let parent = TREE_PARENT[kind]; parent; parent = TREE_PARENT[parent]) {
+      if (GATES[parent] && !gatePassed(campaign, parent)) return true;
+    }
+    return false;
+  }
+
+  // The meta has opened this site line (meta.js → applyCardStats: campaign.foremanKinds).
+  function lineOpenByMeta(campaign, kind) {
+    return (campaign.foremanKinds || []).indexOf(kind) >= 0;
+  }
+
+  // A camp building stands as a foundation until it is started: 1 token (balance.tokens.campStart)
+  // and the coins of its first level; then its blue blueprint goes up for the workers.
+  function campStartable(campaign, kind) {
+    return !!CAMP_LINES[kind] && !(campaign.purchases[kind] > 0) && (kind !== 'kitchen' || campaign.kitchenUnlocked) &&
+      lineOpenByMeta(campaign, kind) && (campaign.tokens || 0) >= (TOKENS.campStart || 0);
+  }
+
+  // A camp building the meta opened but this site has not started yet: its foundation stands.
+  function campFoundation(world, site) {
+    if (!site) return false;
+    const kind = CAMP_NODES[site.kind];
+    const campaign = world.campaign;
+    return !!kind && !(campaign.purchases[kind] > 0) && lineOpenByMeta(campaign, kind) && (kind !== 'kitchen' || campaign.kitchenUnlocked);
+  }
+
+  // Tokens a camp building's level asks on top of its coins (balance.tokens.campLevels: level → tokens).
+  function campLevelTokens(kind, level) {
+    return CAMP_LINES[kind] ? (TOKENS.campLevels || {})[String(level)] || 0 : 0;
+  }
+
+  // «Подарок за куб»: a whole cube set — with the line's chance the cheapest open level of the site graph
+  // comes free (not the camp, the passes, «Жетон стройки» or the advanced centre; its graph parent must
+  // have a level).
+  function rollCubeGift(world) {
+    const campaign = world.campaign;
+    if (!(campaign.purchases.cubeGift > 0) || Math.random() >= lineValue(campaign, 'cubeGift')) return;
+    const best = cheapestGift(world);
+    if (best) buyUpgrade(campaign, world, best, true);
+  }
+
+  // «Щедрость» (a spell): the cheapest open levels of the graph, `count` of them, for nothing.
+  function giftCheapest(world, count) {
+    let given = 0;
+    for (let n = 0; n < count; n++) {
+      const kind = cheapestGift(world);
+      if (!kind || !buyUpgrade(world.campaign, world, kind, true)) break;
+      given += 1;
+    }
+    return given;
+  }
+
+  // «Перевязка» (a spell): every worker gets `amount` health back (never above whole).
+  function healCrew(world, amount) {
+    world.builders.forEach(function (builder) {
+      builder.health = Math.min(INJURY.health, (builder.health === undefined ? INJURY.health : builder.health) + amount);
+    });
+  }
+
+  // «Второе дыхание» (a spell): `points` more on every worker's hunger, smoke and fatigue scales —
+  // the next meal, smoke and sleep come later; nothing is reset.
+  function delayNeeds(world, points) {
+    world.builders.forEach(function (builder) {
+      if (typeof builder.hungerScale === 'number') builder.hungerScale += points;
+      if (typeof builder.smokeThreshold === 'number') builder.smokeThreshold += points;
+      if (typeof builder.fatigueScale === 'number') builder.fatigueScale += points;
+    });
+  }
+
+  // «Мгновенные леса» (a spell): every cracked, worn or broken piece mends at once.
+  function repairAllScaffolds(world) {
+    let count = 0;
+    [world.deckByKey, world.rungByKey].forEach(function (pieces) {
+      pieces.forEach(function (piece) {
+        if (!scaffoldRepairable(piece)) return;
+        piece.repair = { t: 0, seconds: 0.6, from: Math.max(0, piece.durability) };
+        piece.worn = false;
+        world.repairs.push(piece);
+        count += 1;
+      });
+    });
+    return count;
+  }
+
+  // The cheapest level of an open graph line (not the camp's own, not behind a shut pass).
+  function cheapestGift(world) {
+    const campaign = world.campaign;
+    let best = null;
+    let bestCost = Infinity;
+    for (let i = 0; i < campaign.foremanKinds.length; i++) {
+      const kind = campaign.foremanKinds[i];
+      const spec = SESSION_BALANCE[kind];
+      if (!spec || campaign.purchases[kind] >= spec.max || kind === 'tokenBuy' || kind === 'advanced') continue;
+      if (CAMP_LINES[kind] || CAMP_UPGRADE_OF[kind] || campBranchShut(campaign, kind) || lineGated(campaign, kind)) continue;
+      let parent = TREE_PARENT[kind];
+      while (parent && GATES[parent]) parent = TREE_PARENT[parent];
+      if (parent && !(campaign.purchases[parent] > 0)) continue;
+      const cost = upgradeCost(kind, campaign.purchases[kind], campaign);
+      if (cost < bestCost) {
+        bestCost = cost;
+        best = kind;
+      }
+    }
+    return best;
+  }
+
+  function startCamp(campaign, world, kind) {
+    if (!campStartable(campaign, kind)) return false;
+    if (!buyUpgrade(campaign, world, kind, 'camp')) return false;
+    campaign.tokens -= TOKENS.campStart || 0;
+    return true;
+  }
+
   function buyUpgrade(campaign, world, kind, gift) {
+    if (!SESSION_BALANCE[kind]) return false;
+    // A camp building's first level is its start (startCamp, a token); its upgrades come with it.
+    if (CAMP_LINES[kind] && !(campaign.purchases[kind] > 0) && gift !== 'camp') return false;
+    if (CAMP_UPGRADE_OF[kind] && !(campaign.purchases[CAMP_UPGRADE_OF[kind]] > 0)) return false;
+    if (campBranchShut(campaign, kind)) return false;
+    if (lineGated(campaign, kind)) return false;
+    // The advanced centre: only once the tech center has researched one of its nodes.
+    if (kind === 'advanced' && !(campaign.advancedOpen && campaign.advancedOpen.length)) return false;
+    // The air taxi waits for the building to stand TAXI.minFloors floors high.
+    if (kind === 'elevators' && !(campaign.purchases.elevators > 0) && world && taxiFloorsShort(world) > 0) return false;
     const devKitchen = campaign.devGroups.all === true || campaign.devGroups.site === true;
     if (kind === 'kitchen' && !campaign.kitchenUnlocked && !devKitchen) return false;
+    if (kind === 'kitchen' && kitchenCapped(campaign)) return false;
+    if (kind === 'sales' && salesCapped(campaign)) return false;
+    if ((kind === 'dorm' || kind === 'lounge' || kind === 'light') && campCapped(campaign, kind)) return false;
     if (campaign.purchases[kind] >= SESSION_BALANCE[kind].max) return false;
-    const cost = upgradeCost(kind, campaign.purchases[kind]);
-    let freeRoll = gift === true || Math.random() < sessionValue('freeBuy', campaign.purchases.freeBuy);
+    const cost = upgradeCost(kind, campaign.purchases[kind], campaign);
+    let freeRoll = gift === true || (gift !== 'camp' && Math.random() < sessionValue('freeBuy', campaign.purchases.freeBuy));
     // View: why this level cost nothing ('gift' «Подрядчик», 'roll' «Бесплатная покупка», 'lucky').
     let freeBy = gift === true ? 'gift' : freeRoll ? 'roll' : '';
     if (!campaign.freePurchases && !freeRoll && campaign.coins < cost) return false;
+    // The 3rd and 5th levels of a camp building cost tokens too (balance.tokens.campLevels); no roll waives them.
+    const levelTokens = gift === 'camp' ? 0 : campLevelTokens(kind, campaign.purchases[kind] + 1);
+    if ((campaign.tokens || 0) < levelTokens) return false;
     // «Счастливчик»: a bought level is sometimes on the house.
     const lucky = campaign.foremen.lucky;
     let luckyEvent = null;
     if (!freeRoll && !campaign.freePurchases && lucky && Math.random() < lucky.value) {
       freeRoll = true;
       freeBy = 'lucky';
-      luckyEvent = { type: 'foreman', card: lucky.card, kind: kind, free: true, cost: cost, level: 0 };
+      luckyEvent = { type: 'foreman', card: lucky.card, office: lucky.office, kind: kind, free: true, cost: cost, level: 0 };
       if (world) world.events.push(luckyEvent);
     }
     if (campaign.freePurchases) freeBy = '';
     if (!campaign.freePurchases && !freeRoll) campaign.coins -= cost;
     campaign.purchases[kind] += 1;
+    campaign.tokens = (campaign.tokens || 0) - levelTokens;
+    // «Жетон стройки»: a level is a token of this site.
+    if (kind === 'tokenBuy') campaign.tokens += 1;
     if (luckyEvent) luckyEvent.level = campaign.purchases[kind];
     if (kind === 'builders') {
       const before = campaign.builderCount;
@@ -6385,7 +11252,7 @@ function builderPosition(builder, world, out) {
       const add = next - countKind(world, 'heli');
       for (let i = 0; i < add; i++) spawnHelicopter(world);
     }
-    if (world && (kind === 'elevators' || kind === 'elevatorHeight')) activateElevators(world);
+    if (world && kind === 'elevators') activateTaxis(world);
     if (world && (kind === 'plan' || kind === 'vehicleHeight' || kind === 'vehicleReach' || kind === 'bucket' || kind === 'loaderMass' || kind === 'patternHeight' || kind === 'heliMass' || kind === 'heliWidth' || kind === 'heliHeight')) {
       wakeVehicles(world);
     }
@@ -6432,10 +11299,23 @@ function builderPosition(builder, world, out) {
     SCAFFOLD: SCAFFOLD,
     pourGrid: pourGrid,
     pourTotal: pourTotal,
+    strikeLightning: strikeLightning,
+    EFFORT: EFFORT,
+    STAT_NAMES: STAT_NAMES,
+    TEMPO_UPGRADES: TEMPO_UPGRADES,
+    workerStat: workerStat,
+    actionTempo: actionTempo,
+    crewFactor: crewFactor,
+    currentEffort: currentEffort,
     pourCoord: pourCoord,
     UPGRADES: UPGRADES,
     LEVELS: LEVELS,
     HQ_LEVELS: HQ_LEVELS,
+    TRAINING_RANKS: TRAINING.ranks,
+    workerXpList: workerXpList,
+    workerRankInfo: workerRankInfo,
+    refreshRanks: refreshRanks,
+    shareWorkerXp: shareWorkerXp,
     SCHOOL_LEVELS: SCHOOL_LEVELS,
     SCHOOL_LEVEL_VARIANTS: SCHOOL_LEVEL_VARIANTS,
     schoolLevel: schoolLevel,
@@ -6445,15 +11325,137 @@ function builderPosition(builder, world, out) {
     beginFrame: beginFrame,
     stepWorld: stepWorld,
     buyUpgrade: buyUpgrade,
+    TOKENS: TOKENS,
+    CAMP_LINES: CAMP_LINES,
+    CAMP_UPGRADE_OF: CAMP_UPGRADE_OF,
+    CAMP_BRANCH_OF: CAMP_BRANCH_OF,
+    campBranchShut: campBranchShut,
+    gatePassed: gatePassed,
+    gateOpenable: gateOpenable,
+    ADVANCED: ADVANCED,
+    advancedOwned: advancedOwned,
+    advancedResearched: advancedResearched,
+    advancedOpenable: advancedOpenable,
+    buyAdvanced: buyAdvanced,
+    campLevelTokens: campLevelTokens,
+    gateResearched: gateResearched,
+    TAXI: TAXI,
+    gateEntries: function (id) { return (GATE_LINES[id] || []).slice(); },
+    buyGate: buyGate,
+    taxiFloorsShort: taxiFloorsShort,
+    TAXI_FLOORS: TAXI.minFloors,
+    lineGated: lineGated,
+    campStartable: campStartable,
+    startCamp: startCamp,
+    campFoundation: campFoundation,
     upgradeCost: upgradeCost,
-    statsOf: statsOf,
+    scaffoldTier: scaffoldTier,
+    needOpen: needOpen,
     upgradeValue: upgradeValue,
+    sessionValue: sessionValue,
+    lineValue: lineValue,
     carryOverload: carryOverload,
     carryLoad: carryLoad,
     carryWeight: carryWeight,
     tripLimitShare: tripLimitShare,
     carryKg: carryKg,
     planCubeLimit: planCubeLimit,
+    planMinis: planMinis,
+    CANTEEN: CANTEEN,
+    SALES: SALES,
+    DISH: DISH,
+    dishText: dishText,
+    campBoost: campBoost,
+    dormSleepScale: dormSleepScale,
+    lightReliefPerLevel: lightReliefPerLevel,
+    workerCount: workerCount,
+    campSite: campSite,
+    campActive: campActive,
+    campCrew: campCrew,
+    setCampCrew: setCampCrew,
+    campState: campState,
+    restoreCamp: restoreCamp,
+    canteenSeats: canteenSeats,
+    canteenBuiltLevel: canteenBuiltLevel,
+    canteenForm: canteenForm,
+    CANTEEN_FORMS: CANTEEN_FORMS,
+    debugCampForm: debugCampForm,
+    campForm: campForm,
+    campFormCount: campFormCount,
+    setCampForm: setCampForm,
+    campUnbuildable: campUnbuildable,
+    // Forget the camp forms' materials (they are picked once per form): after the balance's form
+    // masses change (camp calibration).
+    resetCampForms: function () { Object.keys(campFormCache).forEach(function (key) { delete campFormCache[key]; }); },
+    levelGrid: levelGrid,
+    salesBuiltLevel: salesBuiltLevel,
+    campCapped: campCapped,
+    campFormCubes: campFormCubes,
+    dormBeds: dormBeds,
+    dormSleepers: dormSleepers,
+    loungeSeats: loungeSeats,
+    loungeSmokers: loungeSmokers,
+    lightRelief: lightRelief,
+    DORM: DORM,
+    LOUNGE: LOUNGE,
+    REACTOR_SITE: REACTOR_SITE,
+    LIGHT: LIGHT,
+    canteenEating: canteenEating,
+    canteenLevel: canteenLevel,
+    canteenActive: canteenActive,
+    kitchenCapped: kitchenCapped,
+    setCanteenDish: setCanteenDish,
+    setCanteenSlot: setCanteenSlot,
+    KITCHEN: KITCHEN,
+    kitchenOf: kitchenOf,
+    chefLevel: chefLevel,
+    chefPower: chefPower,
+    kitchenStaffNeeded: kitchenStaffNeeded,
+    kitchenCandidates: kitchenCandidates,
+    kitchenOpenable: kitchenOpenable,
+    buyKitchen: buyKitchen,
+    grandReady: grandReady,
+    CANTEEN_ROWS: ROWS,
+    SMOKING: SMOKING,
+    SLEEP: SLEEP,
+    fatigueDebuff: fatigueDebuff,
+    fatigueStatus: fatigueStatus,
+    canSend: canSend,
+    urgentNeed: urgentNeed,
+    unbroken: unbroken,
+    scaffoldPieceOf: scaffoldPieceOf,
+    scaffoldRepairable: scaffoldRepairable,
+    repairScaffold: repairScaffold,
+    pieceDurability: pieceDurability,
+    INJURY: INJURY,
+    WEAR_EFFORT: WEAR.wornEffort || 1,
+    healthFill: healthFill,
+    injuryStatus: injuryStatus,
+    injuryPerf: injuryPerf,
+    sendWorker: sendWorker,
+    hungerStatus: hungerStatus,
+    fatigueFill: fatigueFill,
+    hungerFill: hungerFill,
+    hungerDebuff: hungerDebuff,
+    satietyLeft: satietyLeft,
+    cubeCoins: cubeCoins,
+    energyLeft: energyLeft,
+    needState: needState,
+    needSecondsLeft: needSecondsLeft,
+    salesActive: salesActive,
+    salesLevel: salesLevel,
+    salesCapped: salesCapped,
+    salesRate: salesRate,
+    salesAwayCoins: salesAwayCoins,
+    giftCheapest: giftCheapest,
+    healCrew: healCrew,
+    delayNeeds: delayNeeds,
+    repairAllScaffolds: repairAllScaffolds,
+    salesShowroomIncome: salesShowroomIncome,
+    salesMultiplier: salesMultiplier,
+    salesBuiltCubes: salesBuiltCubes,
+    salesOffer: salesOffer,
+    buySalesUpgrade: buySalesUpgrade,
     focusBlock: focusBlock,
     formatClock: formatClock,
     applyOfflineBlocks: applyOfflineBlocks,
@@ -6461,7 +11463,6 @@ function builderPosition(builder, world, out) {
     unbuildableBlocks: unbuildableBlocks,
     isSupported: isSupported,
     cellKey: cellKey,
-    elevatorRide: isElevatorHop,
     builderPosition: builderPosition,
     builderNeed: builderNeed,
     cranePose: cranePose,

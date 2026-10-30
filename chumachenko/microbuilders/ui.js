@@ -22,6 +22,7 @@
     exit: svg('<path d="M10 4H5v16h5"/><path d="M9 12h11"/><path d="M16 8l4 4-4 4"/>'),
     lock: svg('<rect x="5.5" y="10.5" width="13" height="9.5" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/>'),
     crane: svg('<path d="M7 21V4M4 21h7M7 4h13M7 4l4 4M17 4v6M15.5 12h3"/>'),
+    smoke: svg('<path d="M3 14h15v4H3zM15 14v4M20 14v4M8 10c-3-3 3-3 0-6M13 10c-3-3 3-3 0-6"/>'),
     // weather badges on the day clock
     snow: svg('<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.5 4.5 12 7l2.5-2.5M9.5 19.5 12 17l2.5 2.5"/>'),
     heat: svg('<path d="M10 14.5V5a2 2 0 0 1 4 0v9.5a4 4 0 1 1-4 0z"/><path d="M12 9v7"/>'),
@@ -30,6 +31,7 @@
     quake: svg('<path d="M2.5 12h3l2-5 3.5 10 3-8 2 3h5.5"/>'),
     sun: svg('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>'),
     moon: svg('<path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z"/>'),
+    health: svg('<path d="M9.5 4h5v5.5H20v5h-5.5V20h-5v-5.5H4v-5h5.5z"/>'),
     chevronUp: svg('<path d="M6 14.5 12 9l6 5.5"/>'),
   };
   window.MicroBuildersIcons = ICONS;
@@ -81,16 +83,30 @@
 <section id="worker-card" hidden aria-label="Рабочий">
   <header class="worker-card-head">
     <p class="worker-card-name"><b id="worker-card-title">Рабочий</b><span class="worker-card-status" id="worker-card-status"></span></p>
-    <button type="button" id="worker-card-follow" class="worker-card-follow" aria-pressed="false">Следовать</button>
+    <button type="button" id="worker-info-toggle" class="info-btn" aria-label="Подробнее о рабочем" aria-expanded="false" aria-controls="worker-card-info">i</button>
     <button type="button" id="worker-card-close" class="worker-card-close" aria-label="Закрыть">×</button>
   </header>
+  <div class="worker-stats" id="worker-card-stats" aria-label="Характеристики"></div>
+  <p class="worker-card-line worker-effort" id="worker-card-effort" hidden></p>
   <div class="worker-card-meters">
     <div class="worker-card-meter"><span id="worker-card-plan"></span><i><b id="worker-card-plan-bar"></b></i></div>
     <div class="worker-card-meter" id="worker-card-load-meter"><span id="worker-card-load"></span><i><b id="worker-card-load-bar"></b></i></div>
+    <div class="worker-card-meter" id="worker-card-xp-meter" hidden><span><img src="icons/icon-training-rankup.jpg" alt=""><span id="worker-card-xp"></span></span><i><b id="worker-card-xp-bar"></b></i></div>
   </div>
   <p class="worker-card-line" id="worker-card-limit"></p>
-  <p class="worker-card-line worker-card-pair"><span id="worker-card-pay"></span><span id="worker-card-needs"></span></p>
+  <p class="worker-card-line" id="worker-card-pay"></p>
+  <div id="worker-card-needs" class="worker-needs" aria-label="Потребности"></div>
+  <div id="worker-card-orders" class="worker-orders" hidden></div>
+  <p class="worker-card-line worker-info" id="worker-card-info" hidden></p>
   <p class="worker-card-legend" id="worker-card-legend"><span><i class="plan"></i>синий — в плане</span><span><i class="part"></i>жёлтый — несёт часть</span><span><i class="whole"></i>зелёный — несёт весь куб</span></p>
+</section>
+<section id="scaffold-card" hidden aria-label="Леса">
+  <header class="worker-card-head">
+    <p class="worker-card-name"><b id="scaffold-card-title">Настил</b><span class="worker-card-status" id="scaffold-card-status"></span></p>
+    <button type="button" id="scaffold-card-close" class="worker-card-close" aria-label="Закрыть">×</button>
+  </header>
+  <div class="worker-card-meter scaffold-card-meter" id="scaffold-card-meter"><span id="scaffold-card-durability"></span><i><b id="scaffold-card-bar"></b></i></div>
+  <button type="button" id="scaffold-card-repair" class="worker-order scaffold-repair">Починить</button>
 </section>
 <details class="dev-only dev-tools">
   <summary>Dev</summary>
@@ -106,7 +122,7 @@
   <div class="scaffold-bar">
     <label class="check"><input type="checkbox" id="scaffold-toggle" checked>Леса</label>
     <label class="check">шаг<input id="scaffold-step" type="number" value="1"></label>
-    <label class="check">лестница<input id="scaffold-erect" type="number" value="1.15" step="0.01">с</label>
+    <label class="check">лестница<input id="scaffold-erect" type="number" value="450" step="10">трудоёмк.</label>
   </div>
   <div class="plan-card">
     <label class="check"><input type="checkbox" id="scaffold-shortcut-routes" checked>Срезы</label>
@@ -124,7 +140,7 @@
     <label class="check"><input type="checkbox" data-dev-group="drones">Дроны</label>
     <label class="check"><input type="checkbox" data-dev-group="loaders">Погрузчики</label>
     <label class="check"><input type="checkbox" data-dev-group="helicopters">Вертолёты</label>
-    <label class="check"><input type="checkbox" data-dev-group="elevators">Лифты</label>
+    <label class="check"><input type="checkbox" data-dev-group="elevators">Аэротакси</label>
     <label class="check"><input type="checkbox" data-dev-group="site">Площадка</label>
     <button type="button" class="ghost-btn" id="build-patterns">Паттерны строительства</button>
     <button type="button" class="ghost-btn" id="material-row">Материалы</button>
@@ -145,29 +161,34 @@
         <span class="coins-text"><b id="coin-value">0</b><small id="coin-rate"></small></span>
         <span class="coin-fx" id="coin-fx" aria-hidden="true"></span>
       </div>
-      <button type="button" id="day-clock" class="pill day-clock" aria-haspopup="true" aria-expanded="false" aria-controls="day-pop" aria-label="Время суток, погода и скорость">
+      <div class="pill tokens-pill" id="tokens" title="Жетоны стройки: проходы графа и старт зданий городка">
+        <img class="game-icon currency-icon" src="icons/icon-gate-token.jpg" alt="Жетоны"><b id="token-value">0</b>
+      </div>
+      <button type="button" id="day-clock" class="pill day-clock" aria-haspopup="true" aria-expanded="false" aria-controls="day-pop" aria-label="Время суток и скорость">
         <span class="day-dial" id="day-dial">
           <svg viewBox="0 0 36 36" aria-hidden="true">
             <circle class="dial-track" cx="18" cy="18" r="14"></circle>
-            <path class="dial-day" d="M18 4A14 14 0 0 1 18 32"></path>
-            <path class="dial-night" d="M18 32A14 14 0 0 1 18 4"></path>
+            <path class="dial-night" id="dial-night"></path>
+            <path class="dial-dawn" id="dial-dawn"></path>
+            <path class="dial-day" id="dial-day"></path>
+            <path class="dial-dusk" id="dial-dusk"></path>
             <g class="dial-marker" id="dial-marker">
               <circle class="dial-sun" cx="18" cy="4" r="4.4"></circle>
               <circle class="dial-moon" cx="18" cy="4" r="4.4"></circle>
               <circle class="dial-bite" cx="20.2" cy="2.6" r="3.4"></circle>
             </g>
           </svg>
-          <span class="day-weather" id="day-weather" hidden></span>
         </span>
-        <b id="level-time">0:00</b>
+        <span class="day-clock-text"><b id="level-time">0:00</b></span>
         <em class="day-tempo" id="day-tempo" hidden></em>
       </button>
       <button type="button" id="settings-toggle" class="round-btn" aria-label="Меню" aria-expanded="false">${ICONS.gear}</button>
       <div id="day-pop" class="hud-pop" hidden>
-        <p class="day-pop-phase" id="day-pop-phase"></p>
+        <div class="day-pop-head"><p class="day-pop-phase" id="day-pop-phase"></p><button type="button" id="weather-info-toggle" class="info-btn" aria-label="Как погода влияет на стройку" aria-expanded="false" aria-controls="day-pop-info">i</button></div>
         <p id="day-pop-night"></p>
         <p id="day-pop-weather"></p>
         <p id="day-pop-time"></p>
+        <div id="day-pop-info" class="sheet-info" hidden><p id="day-pop-details"></p><p id="day-pop-help"></p></div>
         <div class="tempo" role="group" aria-label="Скорость времени">
           <button type="button" data-tempo="0" aria-label="Пауза">${ICONS.pause}</button>
           <button type="button" data-tempo="1" class="on">×1</button>
@@ -182,6 +203,14 @@
         <button type="button" id="abandon-run" hidden>Бросить заказ</button>
         <div class="times">
           <div><span>Время смены</span><b id="total-time">0:00</b></div>
+        </div>
+        <div class="menu-jump">
+          <label for="jump-level">Перемотать на уровень</label>
+          <div class="menu-jump-row">
+            <input type="number" id="jump-level" min="1" step="1" inputmode="numeric" placeholder="11">
+            <button type="button" id="jump-level-go">Перемотать</button>
+          </div>
+          <p>Пройдёт уровни до него и вкачает мету по эталонным таймингам: офис, техцентр, биржу и здания штаба.</p>
         </div>
         <p class="menu-danger-label">Опасная зона</p>
         <button type="button" id="reset-company" class="danger">Сбросить прогресс</button>
@@ -212,13 +241,17 @@
       </div>
     </section>
     <button type="button" id="hq-btn" aria-label="В штаб" title="В штаб">${ICONS.exit}</button>
+    <button type="button" id="mana-btn" hidden aria-label="Техно-магия: заклинания"><img src="icons/icon-mana.jpg" alt=""><b id="mana-value">0</b></button>
+    <button type="button" id="camp-btn" hidden aria-label="Городок: здания стройки" title="Городок"><img src="icons/icon-gate-camp.jpg" alt=""><b id="camp-ready" hidden>0</b></button>
   </div>
   <div class="bottom">
     <button type="button" id="upgrades-open" class="upgrades-btn">${ICONS.chevronUp}<span>Улучшения</span><b id="upgrades-ready" hidden></b></button>
     <section id="upgrade-sheet" hidden>
-      <header class="upgrade-sheet-head"><b>Улучшения</b><button type="button" id="upgrades-close" class="round-btn" aria-label="Свернуть улучшения">${ICONS.chevron}</button></header>
-      <div id="upgrade-graph"><div class="graph-canvas" id="graph-canvas"><svg class="graph-links" id="graph-links" aria-hidden="true"></svg></div></div>
+      <header class="upgrade-sheet-head"><b id="upgrade-sheet-title">Улучшения</b><button type="button" id="advanced-toggle" class="advanced-toggle" hidden>★ Продвинутые<i class="advanced-dot"></i></button><button type="button" id="upgrades-close" class="round-btn" aria-label="Свернуть улучшения">${ICONS.chevron}</button></header>
+      <div id="upgrade-graph"></div>
       <p id="graph-tip" hidden></p>
+      <div id="advanced-graph" hidden></div>
+      <div id="advanced-tip" hidden></div>
       <div class="dock-head">
         <div class="dock-tabs" id="upgrade-tabs" role="tablist"></div>
         <button type="button" id="dock-handle" class="dock-handle" aria-expanded="false" aria-label="Развернуть прокачки">${ICONS.chevronUp}</button>
@@ -248,7 +281,10 @@
     </div>
     <div class="level-info-pane" id="level-info-time" hidden>
       <div class="level-info-summary" id="level-info-time-summary"></div>
-      <p class="level-info-label">Время рабочих по состояниям, сумма по бригаде</p>
+      <div class="level-time-tools">
+        <p class="level-info-label" id="level-info-time-label">Время рабочих по состояниям, сумма по бригаде</p>
+        <label class="check"><input type="checkbox" id="level-time-categories">По прокачкам</label>
+      </div>
       <ul class="level-time-rows" id="level-info-time-rows"></ul>
     </div>
   </div>
@@ -261,6 +297,7 @@
     </div>
     <button type="button" class="overlay-close" id="panel-close" aria-label="Закрыть">×</button>
     <div class="panel-wallet" id="panel-wallet" hidden></div>
+    <span class="coin-fx wallet-fx" id="wallet-fx" aria-hidden="true"></span>
   </header>
   <div id="meta-content"></div>
 </section>
@@ -280,21 +317,42 @@
       ['vertical', 'Вертикаль'],
       ['smokeRare', 'Реже перекуры'],
       ['smokeShort', 'Короче перекуры'],
+      ['smokeHabit', 'Медленнее привычка'],
+      ['willpower', 'Сила воли'],
       ['plan', 'План работ'],
     ]},
     { id: 'cubes', title: 'Кубы', items: [
       ['lightCarry', 'Снижение веса'],
       ['cubePay', 'Деньги за куб'],
-      ['cubeCapital', 'Монетка с куба'],
+      ['cubeCapital', 'Сортировка находок'],
+      ['findValue', 'Ценные находки'],
     ]},
     { id: 'economy', title: 'Экономика', items: [
-      ['payMultiplier', 'Множитель стройки'],
       ['floorPay', 'Множитель этажа'],
       ['freeBuy', 'Бесплатная покупка'],
-      ['capitalChance', 'Шанс капитала'],
       ['triplePay', 'Шанс удачи'],
       ['triplePower', 'Множитель удачи'],
-      ['budgetCapital', 'Бюджет в капитал'],
+      ['handoverPay', 'Премия за сдачу'],
+      ['cubeGift', 'Подарок за куб'],
+      ['tokenBuy', 'Жетон стройки'],
+    ]},
+    { id: 'needs', title: 'Быт', items: [
+      ['satiety', 'Запас сытости'],
+      ['mealFast', 'Быстрый обед'],
+      ['sleepFast', 'Здоровый сон'],
+      ['coffee', 'Термос с кофе'],
+      ['nightGear', 'Каски с фонарями'],
+    ]},
+    { id: 'training', title: 'Обучение', items: [
+      ['xpRate', 'Быстрое обучение'],
+      ['hireXp', 'Опыт при найме'],
+      ['rankFast', 'Ускоренная аттестация'],
+    ]},
+    { id: 'weather', title: 'Погода', items: [
+      ['winterGear', 'Зимняя спецовка'],
+      ['rainTents', 'Тенты над раствором'],
+      ['heatGear', 'Вода и панамы'],
+      ['lightningRods', 'Громоотводы'],
     ]},
     { id: 'drones', title: 'Дроны', items: [
       ['engineers', 'Число дронов'],
@@ -319,14 +377,29 @@
       ['heliWidth', 'Ширина груза'],
       ['heliHeight', 'Высота груза'],
     ]},
-    { id: 'elevators', title: 'Лифты', items: [
-      ['elevators', 'Число лифтов'],
-      ['elevatorSpeed', 'Секунды на этаж'],
-      ['elevatorHeight', 'Высота лифта'],
-    ]},
-    { id: 'site', title: 'Площадка', items: [
+    { id: 'elevators', title: 'Леса и аэротакси', items: [
       ['scaffold', 'Леса и настилы'],
-      ['kitchen', 'Полевая кухня'],
+      ['scaffoldDurability', 'Прочный крепёж'],
+      ['deckWalk', 'Уверенные настилы'],
+      ['elevators', 'Аэротакси'],
+      ['elevatorSpeed', 'Скорость аэротакси'],
+      ['elevatorHeight', 'Потолок аэротакси'],
+    ]},
+    // The camp buildings, their levels and upgrades are bought in each building's window (game.js →
+    // campUpgradesHtml); only the shared «Типовые проекты» stay a card here.
+    { id: 'site', title: 'Городок', items: [
+      ['campPrefab', 'Типовые проекты'],
+      ['campServe', 'Раздача'],
+      ['campSalesAway', 'Дежурный менеджер'],
+      ['campShower', 'Душевые'],
+      ['campTea', 'Чайный уголок'],
+      ['campLightRain', 'Дежурный свет'],
+    ]},
+    { id: 'reactor', title: 'Реактор', items: [
+      ['manaStore', 'Накопители'],
+      ['manaFlow', 'Теплообменник'],
+      ['spellTune', 'Тонкая настройка'],
+      ['spellSpan', 'Стабилизатор поля'],
     ]},
   ];
   window.MicroBuildersUpgradeGroups = upgradeGroups;
@@ -370,50 +443,7 @@
     });
     dock.appendChild(column);
   });
-  const upgradeIcons = {
-    builders: 'icon-up-builders.jpg',
-    speed: 'icon-up-speed.jpg',
-    carry: 'icon-up-carry.jpg',
-    horizontal: 'icon-up-horizontal.jpg',
-    vertical: 'icon-up-vertical.jpg',
-    plan: 'icon-up-plan.jpg',
-    vehicles: 'icon-up-vehicles.jpg',
-    vehicleHeight: 'icon-up-vehicle-height.jpg',
-    vehicleReach: 'icon-up-vehicle-reach.jpg',
-    scaffold: 'icon-up-scaffold.jpg',
-    kitchen: 'icon-up-kitchen.jpg',
-    // Stand-ins from other art until these lines get their own icons.
-    pickup: 'icon-foreman-quarry.jpg',
-    lightCarry: 'icon-foreman-heavy.jpg',
-    smokeRare: 'icon-foreman-timekeeper.jpg',
-    smokeShort: 'icon-foreman-shift.jpg',
-    cubePay: 'icon-coins.jpg',
-    payMultiplier: 'icon-office-income.jpg',
-    floorPay: 'icon-rare-highrise.jpg',
-    cubeCapital: 'icon-capital.jpg',
-    capitalChance: 'icon-office-capital-chance.jpg',
-    budgetCapital: 'icon-office-capital-value.jpg',
-    freeBuy: 'icon-foreman-lucky.jpg',
-    triplePay: 'icon-chest-50.jpg',
-    triplePower: 'icon-foreman-golden.jpg',
-    engineers: 'icon-office-machines.jpg',
-    droneBuild: 'icon-foreman-mechanic.jpg',
-    gather: 'icon-foreman-storekeeper.jpg',
-    droneSpeed: 'icon-foreman-runner.jpg',
-    loaderMass: 'icon-foreman-carrier.jpg',
-    bucket: 'icon-foreman-builder.jpg',
-    patternHeight: 'icon-foreman-surveyor.jpg',
-    loaderSpeed: 'icon-office-speed.jpg',
-    boomSpeed: 'icon-foreman-crane.jpg',
-    helicopters: 'icon-foreman-meteo.jpg',
-    heliMass: 'icon-rare-industrial.jpg',
-    heliWidth: 'icon-rare-residential.jpg',
-    heliHeight: 'icon-rare-landmark.jpg',
-    heliSpeed: 'icon-foreman-night.jpg',
-    elevators: 'icon-office-heights.jpg',
-    elevatorSpeed: 'icon-office-routes.jpg',
-    elevatorHeight: 'icon-foreman-scaffolder.jpg',
-  };
+  const upgradeIcons = window.MicroBuildersUpgradeIcons;
   document.querySelectorAll('.upgrade').forEach(function (button) {
     const kind = button.id.slice(3);
     const img = document.createElement('img');
@@ -423,127 +453,56 @@
     button.insertBefore(img, button.firstChild);
   });
 
+
   // ---------- upgrade graph (docs/gdd/02-construction-session.md «Граф прокачек») ----------
   // A tree from «План работ»: every node opens once its parent has a level. Shown: what is bought,
-  // what can be bought now (or waits for the office), and one node deeper as a dim preview.
+  // what can be bought now (or waits for the office), and one node deeper as a dim preview. The
+  // layout and the nodes are upgrade-graph.js (the tech center draws the same tree).
   // [kind, parent] — parents come before their children.
   const UPGRADE_TREE = window.MicroBuildersBalance.upgradeTree;
-  const GRAPH_PAD = 36;
-  const treeParent = {};
-  const treeChildren = {};
-  UPGRADE_TREE.forEach(function (pair) {
-    treeParent[pair[0]] = pair[1];
-    treeChildren[pair[0]] = [];
-    if (pair[1]) treeChildren[pair[1]].push(pair[0]);
-  });
-  const graphCanvas = document.getElementById('graph-canvas');
-  const graphLinks = document.getElementById('graph-links');
+  // Gateway nodes: empty passes to a themed block of lines («Парк техники», «Экономика», …), drawn as
+  // hexagons with their own icon; never two in a row. A pass is opened with the site's tokens
+  // (logic.js → buyGate; states[id] = { passed, researched, needs, ready, cost }). A pass whose block has
+  // nothing researched in the tech center is shut: grey with a lock, nothing behind it shows.
+  const GATES = window.MicroBuildersBalance.gates || {};
   const graphTip = document.getElementById('graph-tip');
-  const graphNodes = {};
   const cardName = {};
   upgradeGroups.forEach(function (group) { group.items.forEach(function (item) { cardName[item[0]] = item[1]; }); });
-  UPGRADE_TREE.forEach(function (pair) {
-    const kind = pair[0];
-    const node = document.createElement('button');
-    node.type = 'button';
-    node.className = 'graph-node';
-    node.dataset.kind = kind;
-    node.setAttribute('aria-label', cardName[kind] || kind);
-    node.innerHTML = '<img alt="" src="icons/' + (upgradeIcons[kind] || 'icon-up-speed.jpg') + '"><i class="graph-level"></i><i class="graph-q">?</i><i class="graph-lock">' + ICONS.lock + '</i><i class="graph-dot"></i>';
-    node.hidden = true;
-    graphCanvas.appendChild(node);
-    graphNodes[kind] = node;
+  const graph = window.MicroBuildersGraph.create({
+    root: document.getElementById('upgrade-graph'),
+    tree: UPGRADE_TREE,
+    gates: GATES,
+    // Hand-placed in the graph tool (graph-tool.html); none — the radial layout.
+    layout: window.MicroBuildersBalance.upgradeLayout,
+    icon: function (kind) { return upgradeIcons[kind] || 'icon-up-speed.jpg'; },
+    name: function (kind) { return cardName[kind]; },
+    onSelect: function (kind) { selectGraphNode(kind); },
   });
+  const treeParent = graph.parent;
+  const graphNodes = graph.nodes;
   let graphView = {};
-  let graphKey = '';
   let graphSelected = null;
   let graphStates = null;
+  // What the tip of the tapped node was written for: redrawn when its view (or a pass's state) changes.
+  let graphTipKey = '';
 
-  // Radial tree, laid out once over the whole tree (so buying never moves a node): «План работ» in
-  // the centre, its three branches 120° apart, each spreading its leaves evenly over its own 120°
-  // sector; a parent sits at the middle angle of its children, one ring per depth.
-  const GRAPH_RING = 72;
-  const graphPos = {};
-  (function layoutGraph() {
-    const angle = { plan: 0 };
-    const depth = { plan: 0 };
-    const branches = treeChildren.plan;
-    const sector = Math.PI * 2 / branches.length;
-    branches.forEach(function (branch, b) {
-      const leaves = [];
-      (function collect(kind) {
-        if (treeChildren[kind].length === 0) leaves.push(kind);
-        treeChildren[kind].forEach(collect);
-      })(branch);
-      const start = b * sector - sector / 2;
-      (function place(kind, level) {
-        depth[kind] = level;
-        const kids = treeChildren[kind];
-        kids.forEach(function (child) { place(child, level + 1); });
-        if (kids.length === 0) angle[kind] = start + (leaves.indexOf(kind) + 0.5) * sector / leaves.length;
-        else angle[kind] = (angle[kids[0]] + angle[kids[kids.length - 1]]) / 2;
-      })(branch, 1);
-      // The branch itself points straight at its sector's middle.
-      angle[branch] = b * sector;
-    });
-    let minX = 0;
-    let maxX = 0;
-    let minY = 0;
-    let maxY = 0;
-    UPGRADE_TREE.forEach(function (pair) {
-      const kind = pair[0];
-      const r = depth[kind] * GRAPH_RING;
-      // 0 rad points up, so the first branch grows upward and the rest go round clockwise.
-      const x = Math.sin(angle[kind]) * r;
-      const y = -Math.cos(angle[kind]) * r;
-      graphPos[kind] = { x: x, y: y, r: r, a: angle[kind] };
-      minX = Math.min(minX, x); maxX = Math.max(maxX, x);
-      minY = Math.min(minY, y); maxY = Math.max(maxY, y);
-    });
-    const width = maxX - minX + GRAPH_PAD * 2;
-    const height = maxY - minY + GRAPH_PAD * 2;
-    UPGRADE_TREE.forEach(function (pair) {
-      const p = graphPos[pair[0]];
-      p.x += GRAPH_PAD - minX;
-      p.y += GRAPH_PAD - minY;
-      graphNodes[pair[0]].style.left = p.x + 'px';
-      graphNodes[pair[0]].style.top = p.y + 'px';
-    });
-    graphPos.centre = { x: GRAPH_PAD - minX, y: GRAPH_PAD - minY };
-    graphCanvas.style.width = width + 'px';
-    graphCanvas.style.height = height + 'px';
-    graphLinks.setAttribute('width', width);
-    graphLinks.setAttribute('height', height);
-  })();
-
-  // Soft radial links: from the parent's ring to the child's ring along an S-curve whose control
-  // points sit on the middle ring at the parent's and the child's angles.
-  function drawGraphLinks() {
-    const cx = graphPos.centre.x;
-    const cy = graphPos.centre.y;
-    let paths = '';
-    UPGRADE_TREE.forEach(function (pair) {
-      const kind = pair[0];
-      const parent = pair[1];
-      const view = graphView[kind];
-      graphNodes[kind].hidden = view === 'hidden';
-      if (!parent || view === 'hidden') return;
-      const a = graphPos[parent];
-      const b = graphPos[kind];
-      const mid = (a.r + b.r) / 2;
-      const c1x = cx + Math.sin(a.a) * mid;
-      const c1y = cy - Math.cos(a.a) * mid;
-      const c2x = cx + Math.sin(b.a) * mid;
-      const c2y = cy - Math.cos(b.a) * mid;
-      paths += '<path class="' + (view === 'preview' || view === 'office' ? 'dim' : 'lit') + '" d="M' + a.x.toFixed(1) + ' ' + a.y.toFixed(1) +
-        ' C' + c1x.toFixed(1) + ' ' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ' ' + c2y.toFixed(1) + ' ' + b.x.toFixed(1) + ' ' + b.y.toFixed(1) + '"/>';
-    });
-    graphLinks.innerHTML = paths;
+  function graphTipKeyOf(kind) {
+    const s = graphStates && graphStates[kind];
+    return graphView[kind] + (GATES[kind] && s ? ':' + !!s.passed + ':' + !!s.ready + ':' + s.researched : '');
   }
 
   function graphViewOf(kind, states) {
-    const s = states[kind];
     const parent = treeParent[kind];
+    // A gateway: passed — like a bought line; can be opened (its line has a level) — available, or
+    // locked while its block has nothing researched; one step further it shows as «?».
+    if (GATES[kind]) {
+      const gate = states[kind] || {};
+      if (gate.passed) return 'owned';
+      const above = graphView[parent];
+      if (above === 'owned') return gate.researched === false ? 'office' : 'available';
+      return above === 'available' ? 'preview' : 'hidden';
+    }
+    const s = states[kind];
     const own = s.state === 'office' ? 'office' : s.level > 0 ? 'owned' : 'available';
     if (!parent || s.level > 0) return own;
     const above = graphView[parent];
@@ -560,17 +519,33 @@
 
   function selectGraphNode(kind) {
     if (graphSelected) {
-      graphNodes[graphSelected].classList.remove('on');
       const card = document.getElementById('up-' + graphSelected);
       if (card) card.classList.remove('pop');
     }
     graphSelected = kind;
+    graph.select(kind);
     showGraphTip('');
+    graphTipKey = kind ? graphTipKeyOf(kind) : '';
     if (!kind) return;
-    graphNodes[kind].classList.add('on');
     const view = graphView[kind];
     const s = graphStates && graphStates[kind];
-    if (view === 'preview') {
+    if (GATES[kind]) {
+      // Short: a pass is the shared door into its block; it opens once the tech center has researched
+      // at least one technology of the block.
+      const gate = s || {};
+      const cost = GATES[kind].tokens || 1;
+      const head = '«' + GATES[kind].name + '» — общий блок.';
+      const needs = ' Станет доступен, когда в техцентре изучена хотя бы одна технология из блока.';
+      if (gate.passed) showGraphTip(head + ' Открыт.');
+      else if (view === 'office') showGraphTip(head + needs);
+      else if (view === 'available') {
+        showGraphTip(head);
+        graphTip.insertAdjacentHTML('beforeend', ' <button type="button" class="gate-open-btn' + (gate.ready ? '' : ' short') + '" data-gate-open="' + kind + '">' +
+          'Открыть за <img src="icons/icon-gate-token.jpg" alt="жетон">' + cost + '</button>');
+      } else {
+        showGraphTip(head + ' Откроется после «' + (cardName[window.MicroBuildersUpgradeGraph.parent(kind)] || '') + '».' + (gate.researched === false ? needs : ''));
+      }
+    } else if (view === 'preview') {
       showGraphTip('Что здесь — узнаете, когда прокачаете «' + (cardName[treeParent[kind]] || '') + '»');
     } else if (view === 'office') {
       showGraphTip((cardName[kind] || '') + ' откроется ' + (s && s.lockText ? s.lockText : 'позже'));
@@ -579,13 +554,11 @@
     }
   }
 
-  graphCanvas.addEventListener('click', function (event) {
-    const node = event.target.closest('.graph-node');
-    if (!node) return;
-    selectGraphNode(graphSelected === node.dataset.kind ? null : node.dataset.kind);
-  });
-  document.getElementById('upgrade-graph').addEventListener('click', function (event) {
-    if (!event.target.closest('.graph-node')) selectGraphNode(null);
+  // «Открыть за 1 жетон» in the tip of a pass (game.js sets MicroBuildersUpgradeGraph.onGate).
+  graphTip.addEventListener('click', function (event) {
+    const button = event.target.closest('[data-gate-open]');
+    if (!button || !window.MicroBuildersUpgradeGraph.onGate) return;
+    if (window.MicroBuildersUpgradeGraph.onGate(button.dataset.gateOpen)) selectGraphNode(button.dataset.gateOpen);
   });
 
   let graphCentred = false;
@@ -596,48 +569,54 @@
     if (open && !graphCentred) {
       // First look: the root in the middle of the sheet.
       graphCentred = true;
-      const graph = document.getElementById('upgrade-graph');
-      graph.scrollLeft = Math.max(0, graphPos.centre.x - graph.clientWidth / 2);
-      graph.scrollTop = Math.max(0, graphPos.centre.y - graph.clientHeight / 2);
+      graph.centre();
     }
   }
   document.getElementById('upgrades-open').addEventListener('click', function () { setUpgradeSheet(true); });
   document.getElementById('upgrades-close').addEventListener('click', function () { setUpgradeSheet(false); });
 
   window.MicroBuildersUpgradeGraph = {
-    parent: function (kind) { return treeParent[kind] || null; },
+    // The nearest line above (gateways are passes, not lines).
+    parent: function (kind) {
+      let parent = treeParent[kind] || null;
+      while (parent && GATES[parent]) parent = treeParent[parent] || null;
+      return parent;
+    },
     // states[kind] = { state: 'open' | 'office', level, ready, maxed, lockText («в техцентре: «…»») }
     paint: function (states) {
       graphStates = states;
       graphView = {};
-      let key = '';
       let ready = 0;
       UPGRADE_TREE.forEach(function (pair) {
         const kind = pair[0];
         const view = graphViewOf(kind, states);
         graphView[kind] = view;
-        key += view[0];
+        if (GATES[kind]) {
+          // A pass that can be opened now (tokens enough) pulses like an affordable line.
+          const gateReady = view === 'available' && !!(states[kind] && states[kind].ready);
+          if (gateReady) ready += 1;
+          graphNodes[kind].classList.toggle('is-ready', gateReady);
+          return;
+        }
         const node = graphNodes[kind];
         const s = states[kind];
         const canBuy = (view === 'owned' || view === 'available') && s.ready;
         if (canBuy) ready += 1;
-        node.classList.toggle('is-owned', view === 'owned');
         node.classList.toggle('is-ready', canBuy);
         // Open but the coins are short: the icon dims a quarter, still in colour.
         node.classList.toggle('is-short', (view === 'owned' || view === 'available') && !canBuy && !s.maxed);
         node.classList.toggle('is-max', s.maxed);
-        node.classList.toggle('is-preview', view === 'preview');
-        node.classList.toggle('is-office', view === 'office');
         const level = node.firstElementChild.nextElementSibling;
         const text = view === 'owned' ? String(s.level) : '';
         if (level.textContent !== text) level.textContent = text;
       });
-      if (key !== graphKey) {
-        graphKey = key;
-        drawGraphLinks();
-        if (graphSelected && graphView[graphSelected] === 'hidden') selectGraphNode(null);
-      }
+      // is-owned / is-preview / is-office, the links and what is hidden: upgrade-graph.js.
+      if (graph.paint(graphView) && graphSelected && graphView[graphSelected] === 'hidden') selectGraphNode(null);
+      // A tapped node whose view changed under the tip (a pass researched in the HQ, its line bought): new tip.
+      else if (graphSelected && graphTipKeyOf(graphSelected) !== graphTipKey) selectGraphNode(graphSelected);
+      // game.js → paintAdvanced adds what the advanced star offers to this count.
       const badge = document.getElementById('upgrades-ready');
+      badge.dataset.graph = String(ready);
       badge.hidden = ready === 0;
       if (!badge.hidden) badge.textContent = String(ready);
     },
@@ -710,6 +689,16 @@
   setDockExpanded(dockStored === '1', false);
   dockHandle.addEventListener('click', function () {
     setDockExpanded(!document.body.classList.contains('dock-expanded'), true);
+  });
+
+  [['worker-info-toggle', 'worker-card-info'], ['weather-info-toggle', 'day-pop-info']].forEach(function (ids) {
+    const button = document.getElementById(ids[0]);
+    const panel = document.getElementById(ids[1]);
+    button.addEventListener('click', function () {
+      panel.hidden = !panel.hidden;
+      button.classList.toggle('on', !panel.hidden);
+      button.setAttribute('aria-expanded', String(!panel.hidden));
+    });
   });
 
   // HUD popovers: the menu ☰ and the day clock. One at a time; a tap anywhere else closes them.

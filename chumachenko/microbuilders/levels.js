@@ -408,11 +408,11 @@ function levelTownHall(bp) {
   bp.box(-7, 5, -3, 5, 5, 4, 'ladder-brick-red');
   bp.box(-5, 6, -2, 3, 6, 3, 'ladder-pine');
   bp.box(-3, 0, 5, 2, 0, 7, 'ladder-stone');
-  bp.post(-3, 6, 1, 4, 'ladder-oak');
-  bp.post(2, 6, 1, 4, 'ladder-oak');
-  bp.post(-3, 5, 1, 4, 'ladder-oak');
-  bp.post(2, 5, 1, 4, 'ladder-oak');
-  bp.box(-3, 5, 5, 2, 5, 7, 'ladder-pine');
+  bp.post(-3, 6, 1, 4, 'ladder-iron');
+  bp.post(2, 6, 1, 4, 'ladder-iron');
+  bp.post(-3, 5, 1, 4, 'ladder-iron');
+  bp.post(2, 5, 1, 4, 'ladder-iron');
+  bp.box(-3, 5, 5, 2, 5, 7, 'ladder-iron');
   bp.put(-3, 6, 6, 'ladder-brick-white');
   bp.put(2, 6, 6, 'ladder-brick-white');
   bp.box(6, 0, -1, 9, 0, 2, 'ladder-granite');
@@ -493,16 +493,16 @@ function levelShipyard(bp) {
   bp.box(-1, 3, 0, 1, 4, 2, 'ladder-sandstone');
   bp.walls(-1, 4, 3, 1, 5, 5, 'ladder-oak');
   bp.box(-1, 6, 3, 1, 6, 5, 'ladder-brick-red');
-  bp.post(0, 1, 5, 12, 'ladder-brick-white');
-  bp.box(-3, 8, 1, 3, 8, 1, 'ladder-stone');
+  bp.post(0, 1, 5, 12, 'ladder-iron');
+  bp.box(-3, 8, 1, 3, 8, 1, 'ladder-iron');
   bp.put(-3, 8, 1, 'ladder-brick-white');
   bp.put(3, 8, 1, 'ladder-brick-white');
   bp.put(0, 13, 1, 'ladder-concrete');
-  bp.post(7, 2, 5, 11, 'ladder-granite');
-  bp.box(3, 9, 2, 7, 9, 2, 'ladder-brick-red');
+  bp.post(7, 2, 5, 11, 'ladder-iron');
+  bp.box(3, 9, 2, 7, 9, 2, 'ladder-iron');
   bp.put(3, 9, 2, 'ladder-brick-white');
-  bp.post(7, -6, 5, 8, 'ladder-brick-yellow');
-  bp.post(7, 6, 5, 8, 'ladder-brick-yellow');
+  bp.post(7, -6, 5, 8, 'ladder-iron');
+  bp.post(7, 6, 5, 8, 'ladder-iron');
   bp.put(-8, 5, 7, 'ladder-brick-white');
   bp.put(8, 5, 7, 'ladder-brick-white');
 }
@@ -671,6 +671,9 @@ function levelGlassFoundry(bp) {
   panoramaX(bp, -4, 4, 2, 4, 4, 'ladder-oak', 1);
   panoramaZ(bp, -2, 2, 2, 4, -5, 'ladder-oak', -1);
   panoramaZ(bp, -2, 2, 2, 4, 5, 'ladder-oak', 1);
+  // Steel roof edges frame the glazing; the higher chimneys keep the gem accent.
+  bp.box(-5, 6, -4, 5, 6, -4, 'ladder-steel');
+  bp.box(-5, 6, 4, 5, 6, 4, 'ladder-steel');
   bp.post(-3, 0, 7, 10, 'ladder-granite');
   bp.post(3, 0, 7, 10, 'ladder-granite');
 }
@@ -726,7 +729,7 @@ function levelIronCrossing(bp) {
   bridgeTower(bp, -8, -4, -3, 3, 7, 'ladder-granite');
   bridgeTower(bp, 4, 8, -3, 3, 7, 'ladder-granite');
   for (let x = -3; x <= 3; x++) {
-    for (let z = -1; z <= 1; z++) bp.bridge(x, 7, z, 'ladder-brick-red', 'metal');
+    for (let z = -1; z <= 1; z++) bp.bridge(x, 7, z, 'ladder-bronze', 'metal');
   }
   bp.post(-6, 0, 8, 12, 'ladder-brick-white');
   bp.post(6, 0, 8, 12, 'ladder-brick-white');
@@ -988,10 +991,11 @@ function levelEiffelTower(bp) {
       }
     }
     if (y % 3 === 0) {
-      bp.box(-spread, y, -spread, spread, y, -spread, 'ladder-pine');
-      bp.box(-spread, y, spread, spread, y, spread, 'ladder-pine');
-      bp.box(-spread, y, -spread, -spread, y, spread, 'ladder-pine');
-      bp.box(spread, y, -spread, spread, y, spread, 'ladder-pine');
+      const bandMaterial = y <= 6 ? 'ladder-bronze' : 'ladder-pine';
+      bp.box(-spread, y, -spread, spread, y, -spread, bandMaterial);
+      bp.box(-spread, y, spread, spread, y, spread, bandMaterial);
+      bp.box(-spread, y, -spread, -spread, y, spread, bandMaterial);
+      bp.box(spread, y, -spread, spread, y, spread, bandMaterial);
     }
   }
   bp.box(-9, 7, -9, 9, 7, 9, 'ladder-pine');
@@ -1691,15 +1695,15 @@ function levelEiffelMasterwork(bp) {
     const y = stages[i][0];
     const radius = stages[i][1];
     towerDeck(bp, y, radius + (i === 0 ? 2 : 1), i === 2 ? 'ladder-oak' : 'ladder-brick-red');
-    for (let edge = -radius; edge <= radius; edge++) {
-      bp.put(edge, y, -radius, 'ladder-brick-red');
-      bp.put(edge, y, radius, 'ladder-brick-red');
-      bp.put(-radius, y, edge, 'ladder-brick-red');
-      bp.put(radius, y, edge, 'ladder-brick-red');
-    }
     for (let step = -radius; step <= radius; step += 3) {
       strut(bp, -radius, y, step, radius, y + 3, step, 'ladder-pine');
       strut(bp, step, y, -radius, step, y + 3, radius, 'ladder-pine');
+    }
+    for (let edge = -radius; edge <= radius; edge++) {
+      bp.put(edge, y, -radius, 'ladder-iron');
+      bp.put(edge, y, radius, 'ladder-iron');
+      bp.put(-radius, y, edge, 'ladder-iron');
+      bp.put(radius, y, edge, 'ladder-iron');
     }
   }
 
@@ -2099,13 +2103,15 @@ function levelBridgeCourt(bp) {
   bp.box(6, 1, -1, 8, 7, 1, 'ladder-brick-red');
   bp.box(-1, 0, -8, 1, 7, -6, 'ladder-brick-red');
   bp.box(-1, 0, 6, 1, 7, 8, 'ladder-brick-red');
-  const decks = [[3, 'stone'], [5, 'metal'], [7, 'glass']];
+  // Keep the metal span low and the two timber decks one large part: neither becomes gems.
+  const decks = [[3, 'metal'], [5, 'stone'], [7, 'glass']];
   for (let i = 0; i < decks.length; i++) {
+    const materialId = i === 0 ? 'ladder-steel' : 'ladder-oak';
     for (let x = -5; x <= 5; x++) {
-      for (let z = -1; z <= 1; z++) bp.bridge(x, decks[i][0], z, 'ladder-oak', decks[i][1]);
+      for (let z = -1; z <= 1; z++) bp.bridge(x, decks[i][0], z, materialId, decks[i][1]);
     }
     for (let z = -5; z <= 5; z++) {
-      for (let x = -1; x <= 1; x++) bp.bridge(x, decks[i][0], z, 'ladder-stone', decks[i][1]);
+      for (let x = -1; x <= 1; x++) bp.bridge(x, decks[i][0], z, materialId, decks[i][1]);
     }
   }
 }
@@ -2330,7 +2336,7 @@ function levelCableBridge(bp) {
   bp.box(-8, 4, -1, 8, 4, 1, 'ladder-pine');
   for (let z = -1; z <= 1; z++) {
     for (let x = -8; x <= 8; x++) {
-      bp.cable(x, 9, z, 'ladder-brick-yellow', 1, 0, 'straight');
+      bp.cable(x, 9, z, 'ladder-iron', 1, 0, 'straight');
       bp.cable(x, 5, z, 'ladder-oak', 1, 0, 'sag');
     }
   }
@@ -2374,6 +2380,69 @@ function levelCableBridge(bp) {
     bp.window(-2, 1, 0, 'ladder-stone', -1, 0, 'panorama');
     bp.window(2, 1, 0, 'ladder-stone', 1, 0, 'panorama');
     bp.box(-2, 2, -2, 2, 2, 2, 'ladder-stone');
+  }
+
+  // «Снабжение»: a red-brick warehouse with a wide loading door to the camera and crates by the ramp.
+  function levelHqSupply(bp) {
+    bp.box(-2, 0, -2, 2, 0, 1, 'ladder-concrete');
+    bp.put(0, 0, 2, 'ladder-concrete');
+    bp.walls(-2, 1, -2, 2, 1, 1, 'ladder-brick-red');
+    bp.door(0, 1, 1, 'ladder-brick-red', 0, 1);
+    bp.window(-2, 1, -1, 'ladder-brick-red', -1, 0, 'panorama');
+    bp.box(-2, 2, -2, 2, 2, 1, 'ladder-iron');
+    bp.post(3, 1, 0, 1, 'ladder-oak');
+    bp.post(3, 0, 0, 0, 'ladder-oak');
+    bp.post(-3, 1, 0, 0, 'ladder-pine');
+  }
+
+  // «Учебный центр»: a two-storey yellow-brick school on a concrete footing, windows on both floors,
+  // a red-brick gable with the clock over the door and a pine flagpole by the steps.
+  function levelHqTraining(bp) {
+    bp.box(-3, 0, -2, 3, 0, 1, 'ladder-concrete');
+    bp.put(0, 0, 2, 'ladder-concrete');
+    bp.walls(-3, 1, -2, 3, 2, 1, 'ladder-brick-yellow');
+    bp.door(0, 1, 1, 'ladder-brick-yellow', 0, 1);
+    bp.window(-2, 1, 1, 'ladder-brick-yellow', 0, 1, 'panorama');
+    bp.window(2, 1, 1, 'ladder-brick-yellow', 0, 1, 'panorama');
+    bp.window(-2, 2, 1, 'ladder-brick-yellow', 0, 1, 'panorama');
+    bp.window(2, 2, 1, 'ladder-brick-yellow', 0, 1, 'panorama');
+    bp.box(-3, 3, -2, 3, 3, 1, 'ladder-stone');
+    bp.box(-1, 4, 0, 1, 4, 1, 'ladder-brick-red');
+    bp.put(0, 5, 1, 'ladder-brick-red');
+    bp.post(-4, 0, 0, 3, 'ladder-pine');
+  }
+
+  // Material samples on a compact lab: stone plinth, brick walls, steel posts,
+  // concrete roof, oak eaves, glass panes and a crystal beacon above the entrance.
+  function levelHqMaterials(bp) {
+    bp.box(-2, 0, -2, 2, 0, 1, 'ladder-granite');
+    bp.put(0, 0, 2, 'ladder-stone');
+    bp.walls(-2, 1, -2, 2, 2, 1, 'ladder-brick-red');
+    bp.door(0, 1, 1, 'ladder-brick-red', 0, 1);
+    bp.window(-1, 2, 1, 'ladder-brick-red', 0, 1, 'panorama');
+    bp.window(1, 2, 1, 'ladder-brick-red', 0, 1, 'panorama');
+    bp.window(-2, 2, -1, 'ladder-brick-red', -1, 0, 'panorama');
+    bp.window(2, 2, -1, 'ladder-brick-red', 1, 0, 'panorama');
+    [[-2, -2], [2, -2], [-2, 1], [2, 1]].forEach(function (c) {
+      bp.post(c[0], c[1], 1, 2, 'ladder-steel');
+    });
+    bp.box(-2, 3, -2, 2, 3, 1, 'ladder-concrete');
+    bp.box(-2, 3, 1, 2, 3, 1, 'ladder-oak');
+    bp.box(-2, 3, -2, 2, 3, -2, 'ladder-oak');
+    bp.lamp(0, 4, 1, 'ladder-rock-crystal', 'cold');
+  }
+
+  // Реактор: a steel drum, a glass dome on top and a glowing core inside it, copper pipes at the corners.
+  function levelHqReactor(bp) {
+    bp.box(-2, 0, -2, 2, 0, 2, 'ladder-concrete');
+    bp.put(0, 0, 3, 'ladder-concrete');
+    bp.walls(-2, 1, -2, 2, 2, 2, 'ladder-steel');
+    bp.door(0, 1, 2, 'ladder-steel', 0, 1);
+    bp.box(-2, 3, -2, 2, 3, 2, 'ladder-steel');
+    bp.walls(-1, 4, -1, 1, 5, 1, 'glass');
+    bp.post(0, 0, 4, 5, 'ladder-diamond-royal');
+    bp.box(-1, 6, -1, 1, 6, 1, 'glass');
+    [[-2, -2], [2, -2], [-2, 2], [2, 2]].forEach(function (c) { bp.post(c[0], c[1], 4, 4, 'ladder-jade'); });
   }
 
   function levelHqRecruiting(bp) {
@@ -2593,6 +2662,1014 @@ function levelCableBridge(bp) {
     bp.box(-3, 5, -2, 3, 5, 2, 'ladder-oak');
   }
 
+  // ---------- site camp: the canteen's five forms (docs/gdd/20-site-camp.md) ----------
+  // Built by the crew next to the desk out of voxels of 0.8 cell (logic.js → CAMP_VOXEL). x runs
+  // left to right as the camera sees it, z grows toward the camera: the façade and the door are on
+  // the largest z. Each form is richer than the last: a log canteen, a café, a bistro, a fine
+  // restaurant, a grand restaurant.
+
+  function campRect(bp, x0, x1, z0, z1, y, materialId) {
+    for (let x = x0; x <= x1; x++) {
+      bp.put(x, y, z0, materialId);
+      bp.put(x, y, z1, materialId);
+    }
+    for (let z = z0 + 1; z < z1; z++) {
+      bp.put(x0, y, z, materialId);
+      bp.put(x1, y, z, materialId);
+    }
+  }
+
+  function campDel(bp, x, y, z) {
+    bp.cells.delete(x + ',' + y + ',' + z);
+  }
+
+  // A hollow layer of an outline (plan-shape) at y; mid — the inner cells as well (a floor).
+  function campShape(bp, y, x0, x1, z0, z1, inside, solid, materialId) {
+    for (let z = z0; z <= z1; z++) {
+      for (let x = x0; x <= x1; x++) {
+        if (!inside(x, z)) continue;
+        if (!solid && enclosedInPlan(inside, x, z)) continue;
+        bp.put(x, y, z, materialId);
+      }
+    }
+  }
+
+  // Form 1 — «Столовая»: a small pine house in two rows with windows and a door to the camera, a red
+  // gable roof with pine gable ends and a brick chimney.
+  function canteenCabin(bp) {
+    const x0 = 0;
+    const x1 = 5;
+    const z0 = 0;
+    const z1 = 3;
+    for (let y = 0; y <= 1; y++) campRect(bp, x0, x1, z0, z1, y, 'ladder-pine');
+    campDel(bp, 2, 0, z1);
+    campDel(bp, 2, 1, z1);
+    bp.paint(4, 1, z1, 'glass');
+    bp.paint(x0, 1, 1, 'glass');
+    bp.paint(x1, 1, 2, 'glass');
+    bp.paint(2, 1, z0, 'glass');
+    for (let i = 0; i <= 2; i++) {
+      for (let z = z0; z <= z1; z++) {
+        bp.put(i, 2 + i, z, 'ladder-brick-red');
+        bp.put(5 - i, 2 + i, z, 'ladder-brick-red');
+      }
+      for (let x = i + 1; x <= 4 - i; x++) {
+        bp.put(x, 2 + i, z0, 'ladder-pine');
+        bp.put(x, 2 + i, z1, 'ladder-pine');
+      }
+    }
+    bp.post(4, 1, 4, 5, 'ladder-brick-red');
+  }
+
+  // Form 2 — «Кафе»: a white-brick room with shop windows and a striped awning over a paved terrace,
+  // a small timber room on the roof under a hipped roof, a roof deck with a parasol.
+  function canteenCafe(bp) {
+    const z1 = 5;
+    for (let y = 0; y <= 2; y++) campRect(bp, 0, 8, 0, z1, y, 'ladder-brick-white');
+    for (let x = 1; x <= 7; x++) {
+      if (x % 3 === 0) continue;
+      bp.paint(x, 0, z1, 'glass');
+      bp.paint(x, 1, z1, 'glass');
+    }
+    campDel(bp, 4, 0, z1);
+    campDel(bp, 4, 1, z1);
+    [2, 3].forEach(function (z) { bp.paint(0, 1, z, 'glass'); bp.paint(8, 1, z, 'glass'); });
+    bp.box(0, 0, 6, 8, 0, 7, 'ladder-sandstone');
+    for (let x = 0; x <= 8; x++) {
+      const stripe = x % 2 === 0 ? 'ladder-brick-red' : 'ladder-brick-white';
+      bp.put(x, 3, 6, stripe);
+      bp.put(x, 2, 7, stripe);
+    }
+    // Poles under the awning's front edge: it is set from them out (nothing hangs on a corner only).
+    [0, 8].forEach(function (x) { bp.post(x, 7, 1, 1, 'ladder-oak'); });
+    campRect(bp, 0, 8, 0, z1, 3, 'ladder-sandstone');
+    bp.box(5, 3, 1, 7, 3, z1 - 1, 'ladder-oak');
+    // The room on the roof and its hipped roof.
+    for (let y = 4; y <= 5; y++) campRect(bp, 0, 4, 0, 3, y, 'ladder-pine');
+    bp.paint(2, 5, 3, 'glass');
+    bp.box(0, 6, 0, 4, 6, 3, 'ladder-brick-red');
+    bp.box(1, 7, 1, 3, 7, 2, 'ladder-brick-red');
+    // Parasol on the roof deck.
+    bp.post(6, 3, 4, 5, 'ladder-oak');
+    bp.box(5, 6, 2, 7, 6, 4, 'ladder-brick-red');
+  }
+
+  // Form 3 — «Бистро»: two storeys of sandstone on a granite plinth with white marble pilasters and
+  // string course, tall windows with flower boxes, a slate mansard with dormers and chimneys, an
+  // iron-and-glass conservatory with a glass vault, a glass canopy over the door, parasols and lamps.
+  function canteenBistro(bp) {
+    const z1 = 6;
+    campRect(bp, 0, 8, 0, z1, 0, 'ladder-granite');
+    for (let y = 1; y <= 5; y++) campRect(bp, 0, 8, 0, z1, y, 'ladder-sandstone');
+    [0, 3, 5, 8].forEach(function (x) {
+      for (let y = 1; y <= 5; y++) bp.paint(x, y, z1, 'ladder-marble-white');
+    });
+    for (let x = 0; x <= 8; x++) bp.paint(x, 3, z1, 'ladder-marble-white');
+    [1, 2, 6, 7].forEach(function (x) {
+      [1, 2, 4, 5].forEach(function (y) { bp.paint(x, y, z1, 'glass'); });
+      bp.put(x, 3, z1 + 1, 'ladder-malachite');
+    });
+    campDel(bp, 4, 1, z1);
+    campDel(bp, 4, 2, z1);
+    bp.paint(4, 4, z1, 'glass');
+    bp.paint(4, 5, z1, 'glass');
+    [2, 4].forEach(function (z) { [2, 4].forEach(function (y) { bp.paint(0, y, z, 'glass'); }); });
+    // Mansard: two slate courses and a flat top; dormers; chimneys.
+    campRect(bp, 1, 7, 1, z1 - 1, 6, 'ladder-marble-black');
+    bp.box(1, 7, 1, 7, 7, z1 - 1, 'ladder-marble-black');
+    bp.box(2, 8, 2, 6, 8, z1 - 2, 'ladder-marble-black');
+    [2, 6].forEach(function (x) {
+      bp.put(x, 7, z1, 'glass');
+      bp.put(x - 1, 7, z1, 'ladder-sandstone');
+      bp.put(x + 1, 7, z1, 'ladder-sandstone');
+      bp.box(x - 1, 8, z1, x + 1, 8, z1, 'ladder-marble-black');
+    });
+    bp.post(1, 1, 7, 9, 'ladder-brick-red');
+    bp.post(7, 1, 7, 9, 'ladder-brick-red');
+    // Conservatory on the right: iron frame, glass walls, a glass vault with iron ribs.
+    for (let y = 0; y <= 3; y++) {
+      for (let z = 1; z <= 5; z++) bp.put(11, y, z, z % 2 === 1 ? 'ladder-iron' : 'glass');
+      [9, 10].forEach(function (x) {
+        bp.put(x, y, 1, 'glass');
+        bp.put(x, y, 5, 'glass');
+      });
+    }
+    for (let z = 1; z <= 5; z++) {
+      const rib = z % 2 === 1 ? 'ladder-iron' : 'glass';
+      bp.put(9, 4, z, rib);
+      bp.put(10, 4, z, 'glass');
+      bp.put(11, 4, z, rib);
+      bp.put(10, 5, z, rib);
+    }
+    // A slim corner turret with a patina dome.
+    const turret = disk(0, z1, 1.5);
+    for (let y = 1; y <= 7; y++) campShape(bp, y, -2, 2, z1 - 2, z1 + 2, turret, false, y === 4 ? 'ladder-marble-white' : 'ladder-sandstone');
+    bp.paint(-1, 5, z1, 'glass');
+    bp.paint(0, 5, z1 + 1, 'glass');
+    campShape(bp, 8, -2, 2, z1 - 2, z1 + 2, turret, true, 'ladder-jade');
+    bp.put(0, 9, z1, 'ladder-jade');
+    bp.put(0, 10, z1, 'ladder-brick-yellow');
+    // Glass canopy over the door, parasols and lamps on the paved terrace.
+    bp.box(0, 0, 7, 8, 0, 8, 'ladder-granite');
+    bp.box(3, 3, z1 + 1, 5, 3, z1 + 2, 'glass');
+    [[1, 'ladder-brick-red'], [7, 'ladder-brick-white']].forEach(function (u) {
+      bp.post(u[0], 8, 1, 2, 'ladder-oak');
+      bp.box(u[0] - 1, 3, 7, u[0] + 1, 3, 9, u[1]);
+    });
+    [0, 8].forEach(function (x) {
+      bp.post(x, 9, 0, 2, 'ladder-iron');
+      bp.put(x, 3, 9, 'ladder-brick-yellow');
+    });
+  }
+
+  // Form 4 — «Ресторан»: a marble hall behind a portico of five polished columns with gold
+  // capitals, an entablature and a pediment trimmed in gold, a bronze roof; a glass-domed rotunda with
+  // steel ribs and a gold lantern; raised steps, topiary and glowing lamps at the entrance.
+  function canteenRestaurant(bp) {
+    const hx0 = 4;
+    const hx1 = 14;
+    const z1 = 7;
+    // Podium and steps.
+    campRect(bp, hx0, hx1, 0, z1, 0, 'ladder-marble-white');
+    bp.box(hx0, 0, 8, hx1, 0, 10, 'ladder-marble-white');
+    bp.box(hx0 + 1, 1, 8, hx1 - 1, 1, 9, 'ladder-marble-polished');
+    // The hall.
+    for (let y = 1; y <= 7; y++) campRect(bp, hx0, hx1, 0, z1, y, 'ladder-marble');
+    [6, 8, 10, 12].forEach(function (x) {
+      for (let y = 2; y <= 6; y++) bp.paint(x, y, z1, 'glass');
+    });
+    [2, 5].forEach(function (z) {
+      for (let y = 2; y <= 6; y++) bp.paint(hx1, y, z, 'glass');
+    });
+    for (let y = 2; y <= 4; y++) campDel(bp, 9, y, z1);
+    campDel(bp, 9, 1, z1);
+    bp.paint(9, 5, z1, 'ladder-diamond-royal');
+    bp.paint(8, 5, z1, 'ladder-diamond-royal');
+    bp.paint(10, 5, z1, 'ladder-diamond-royal');
+    // Portico: columns, capitals, the entablature over portico and hall front.
+    [5, 7, 9, 11, 13].forEach(function (x) {
+      bp.post(x, 9, 2, 6, 'ladder-marble-polished');
+      bp.put(x, 7, 9, 'ladder-diamond-royal');
+    });
+    campRect(bp, hx0, hx1, 0, 9, 8, 'ladder-marble-white');
+    for (let x = hx0; x <= hx1; x++) bp.paint(x, 8, 9, 'ladder-diamond-royal');
+    // Pediment over the portico, gold on its edges.
+    for (let i = 0; i <= 5; i++) {
+      for (let x = 4 + i; x <= 14 - i; x++) {
+        const edge = x === 4 + i || x === 14 - i;
+        bp.put(x, 9 + i, 9, edge ? 'ladder-diamond-royal' : 'ladder-marble-white');
+      }
+    }
+    // Bronze gable roof of the hall (ridge toward the camera).
+    for (let i = 0; i <= 5; i++) {
+      for (let z = 0; z <= 8; z++) {
+        bp.put(4 + i, 9 + i, z, 'ladder-jade');
+        bp.put(14 - i, 9 + i, z, 'ladder-jade');
+      }
+      for (let x = 5 + i; x <= 13 - i; x++) bp.put(x, 9 + i, 0, 'ladder-marble');
+    }
+    // Rotunda: a white drum with windows, a gold cornice, a glass dome on steel ribs, a lantern.
+    const drum = disk(2, 4, 3.2);
+    for (let y = 0; y <= 10; y++) campShape(bp, y, -2, 6, 0, 8, drum, y === 0, 'ladder-marble-white');
+    for (let y = 3; y <= 9; y++) {
+      if (y === 6) continue;
+      for (const cell of Array.from(bp.cells.values())) {
+        if (cell.y !== y || cell.x > 3 || !drum(cell.x, cell.z) || enclosedInPlan(drum, cell.x, cell.z)) continue;
+        if ((cell.x + cell.z) % 2 === 0) bp.paint(cell.x, cell.y, cell.z, 'glass');
+      }
+    }
+    campShape(bp, 11, -2, 6, 0, 8, disk(2, 4, 3.4), false, 'ladder-diamond-royal');
+    const domeRadius = [3.1, 2.8, 2.3, 1.5];
+    for (let k = 0; k < domeRadius.length; k++) {
+      const y = 12 + k;
+      campShape(bp, y, -2, 6, 0, 8, disk(2, 4, domeRadius[k]), k === domeRadius.length - 1, 'glass');
+      for (const cell of Array.from(bp.cells.values())) {
+        if (cell.y !== y || cell.materialId !== 'glass') continue;
+        if (cell.x === 2 || cell.z === 4 || Math.abs(cell.x - 2) === Math.abs(cell.z - 4)) bp.paint(cell.x, y, cell.z, 'ladder-marble-white');
+      }
+    }
+    bp.post(2, 4, 16, 17, 'ladder-diamond-royal');
+    bp.put(2, 18, 4, 'ladder-diamond');
+    // Topiary and glowing lamps at the steps.
+    [[hx0, 10], [hx1, 10]].forEach(function (c) {
+      bp.post(c[0], c[1], 1, 3, 'ladder-jade');
+      bp.put(c[0], 4, c[1], 'ladder-diamond');
+    });
+    [[hx0 + 1, 10], [hx1 - 1, 10]].forEach(function (c) {
+      bp.put(c[0], 1, c[1], 'ladder-jade');
+      bp.put(c[0], 2, c[1], 'ladder-malachite');
+    });
+  }
+
+  // Form 5 — «Гранд-ресторан»: a cascade of rounded tiers — black-and-polished marble with ribbon
+  // windows and a gold band, a rose-marble storey of tall windows under a platinum cornice, a glass
+  // drum — crowned by a gold onion dome with a platinum spire and a diamond; a mirror-steel sky ring
+  // on gold struts around the dome, slender towers, a cantilevered glass dining pod, a gold arch
+  // portal, glass balustrades with diamond lamps, a red carpet and two fountains.
+  function canteenGrand(bp) {
+    const cx = 7;
+    const cz = 5;
+    const tier1 = superEllipse(cx, cz, 7, 5, 3.2);
+    const tier2 = superEllipse(cx, cz, 5, 3.4, 2.6);
+    const drum = disk(cx, cz, 2.6);
+    campShape(bp, 0, 0, 14, 0, 10, tier1, false, 'ladder-marble-black');
+    for (let y = 1; y <= 3; y++) campShape(bp, y, 0, 14, 0, 10, tier1, false, 'ladder-marble-polished');
+    for (const cell of Array.from(bp.cells.values())) {
+      if (cell.y < 2 || cell.y > 3) continue;
+      if ((cell.x + cell.z) % 3 !== 0) bp.paint(cell.x, cell.y, cell.z, 'glass');
+    }
+    campShape(bp, 4, 0, 14, 0, 10, tier1, false, 'ladder-diamond-royal');
+    // Tier-1 roof terrace: a marble floor round tier 2, a glass balustrade, diamond lamps.
+    campShape(bp, 5, 0, 14, 0, 10, function (x, z) { return tier1(x, z) && !tier2(x, z); }, true, 'ladder-marble-white');
+    let lamp = 0;
+    for (const cell of Array.from(bp.cells.values())) {
+      if (cell.y !== 5 || enclosedInPlan(tier1, cell.x, cell.z)) continue;
+      bp.put(cell.x, 6, cell.z, lamp++ % 4 === 0 ? 'ladder-diamond' : 'glass');
+    }
+    // Tier 2: rose marble, tall windows between platinum piers, a platinum cornice.
+    for (let y = 5; y <= 8; y++) campShape(bp, y, 1, 13, 1, 9, tier2, false, 'ladder-marble-rose');
+    for (const cell of Array.from(bp.cells.values())) {
+      if (cell.y < 6 || cell.y > 8 || cell.materialId !== 'ladder-marble-rose') continue;
+      bp.paint(cell.x, cell.y, cell.z, (cell.x + cell.z) % 3 === 0 ? 'ladder-marble-polished' : 'glass');
+    }
+    campShape(bp, 9, 1, 13, 1, 9, tier2, false, 'ladder-diamond-royal');
+    campShape(bp, 10, 1, 13, 1, 9, function (x, z) { return tier2(x, z) && !drum(x, z); }, true, 'ladder-marble-white');
+    // Glass drum with gold mullions, a gold cornice, the onion dome, the spire and the diamond.
+    for (let y = 10; y <= 11; y++) {
+      campShape(bp, y, 3, 11, 1, 9, drum, false, 'glass');
+      for (const cell of Array.from(bp.cells.values())) {
+        if (cell.y === y && cell.materialId === 'glass' && drum(cell.x, cell.z) && (cell.x === cx || cell.z === cz)) {
+          bp.paint(cell.x, y, cell.z, 'ladder-diamond-royal');
+        }
+      }
+    }
+    campShape(bp, 12, 3, 11, 1, 9, disk(cx, cz, 2.9), false, 'ladder-diamond-royal');
+    const onion = [2.6, 3.2, 3.4, 3.1, 2.5, 1.7, 1.0];
+    for (let k = 0; k < onion.length; k++) {
+      campShape(bp, 13 + k, 2, 12, 0, 10, disk(cx, cz, onion[k]), k === onion.length - 1, 'ladder-diamond-imperial');
+    }
+    bp.post(cx, cz, 20, 21, 'ladder-marble-polished');
+    bp.put(cx, 22, cz, 'ladder-diamond-pure');
+    // Sky ring round the dome on four gold struts.
+    torus(bp, cx, 13, cz, 'y', 5.3, 0.7, 0, 'ladder-diamond');
+    [[3, 2], [11, 2], [3, 8], [11, 8]].forEach(function (c) {
+      const tx = cx + Math.round((c[0] - cx) * 1.25);
+      const tz = cz + Math.round((c[1] - cz) * 1.25);
+      strut(bp, c[0], 10, c[1], tx, 12, tz, 'ladder-diamond-royal');
+    });
+    // Slender towers at the back corners.
+    [[2, 2], [12, 2]].forEach(function (c) {
+      bp.post(c[0], c[1], 6, 13, 'ladder-marble-polished');
+      bp.put(c[0], 14, c[1], 'ladder-diamond-royal');
+      bp.put(c[0], 15, c[1], 'ladder-diamond-royal');
+      bp.put(c[0], 16, c[1], 'ladder-diamond');
+    });
+    // Cantilevered glass dining pod at the front right on a gold strut.
+    for (let y = 7; y <= 9; y++) {
+      for (let z = 8; z <= 10; z++) {
+        for (let x = 12; x <= 14; x++) {
+          const edges = (x === 12 || x === 14 ? 1 : 0) + (z === 8 || z === 10 ? 1 : 0) + (y === 7 || y === 9 ? 1 : 0);
+          if (edges === 0) continue;
+          bp.put(x, y, z, edges >= 2 ? 'ladder-marble-polished' : 'glass');
+        }
+      }
+    }
+    strut(bp, 11, 5, 9, 12, 7, 9, 'ladder-diamond-royal');
+    // Gold arch portal on the façade, the door under it, a red carpet, fountains on the plaza.
+    for (let y = 1; y <= 3; y++) {
+      for (let x = cx - 1; x <= cx + 1; x++) campDel(bp, x, y, 10);
+    }
+    catenaryArch(bp, cx, 10, 11, 1, 2, 5, 1, 'ladder-diamond-royal');
+    for (let y = 1; y <= 3; y++) {
+      for (let x = cx - 1; x <= cx + 1; x++) {
+        campDel(bp, x, y, 10);
+        campDel(bp, x, y, 11);
+      }
+    }
+    bp.box(cx - 3, 0, 11, cx + 3, 0, 11, 'ladder-marble-white');
+    for (let x = cx - 1; x <= cx + 1; x++) bp.paint(x, 0, 11, 'ladder-brick-red');
+    [1, 13].forEach(function (x) {
+      bp.put(x, 0, 11, 'ladder-marble-white');
+      bp.put(x, 1, 11, 'ladder-diamond');
+    });
+  }
+
+  // ---------- site camp: the sales office's five forms ----------
+  // High-tech, of the same 0.8-cell voxels: concrete, glass, black frames, glass skybridges and
+  // light-blue LED lines. Façade toward the camera (largest z), as the canteen's.
+
+  // Form 1 — «Офис продаж»: a concrete box with a glass front and the door, a side window, a flat
+  // roof slab running out over the door with an LED edge and a roof unit.
+  function salesKiosk(bp) {
+    const x1 = 4;
+    const z1 = 3;
+    for (let y = 0; y <= 2; y++) campRect(bp, 0, x1, 0, z1, y, 'ladder-concrete');
+    for (let x = 1; x <= 3; x++) {
+      for (let y = 0; y <= 2; y++) bp.paint(x, y, z1, 'glass');
+    }
+    campDel(bp, 2, 0, z1);
+    campDel(bp, 2, 1, z1);
+    bp.paint(x1, 1, 1, 'glass');
+    bp.paint(x1, 1, 2, 'glass');
+    bp.box(0, 3, 0, x1, 3, z1 + 1, 'ladder-concrete');
+    for (let x = 0; x <= x1; x++) bp.paint(x, 3, z1 + 1, 'ladder-diamond');
+    bp.box(1, 4, 0, 2, 4, 1, 'ladder-marble-black');
+  }
+
+  // Form 2 — «Шоурум»: an all-glass ground floor between concrete corner columns, a concrete upper
+  // box with a ribbon window that juts out over the entrance on black posts, an LED line under the
+  // jut, solar panels on the roof.
+  function salesShowroom(bp) {
+    for (let y = 0; y <= 2; y++) {
+      campRect(bp, 0, 7, 0, 5, y, 'glass');
+      [[0, 0], [7, 0], [0, 5], [7, 5]].forEach(function (c) { bp.put(c[0], y, c[1], 'ladder-concrete'); });
+    }
+    [3, 4].forEach(function (x) {
+      campDel(bp, x, 0, 5);
+      campDel(bp, x, 1, 5);
+    });
+    for (let y = 3; y <= 5; y++) campRect(bp, 0, 7, 1, 7, y, y === 4 ? 'glass' : 'ladder-concrete');
+    [[0, 1], [7, 1], [0, 7], [7, 7]].forEach(function (c) { bp.put(c[0], 4, c[1], 'ladder-concrete'); });
+    bp.post(0, 7, 0, 2, 'ladder-marble-black');
+    bp.post(7, 7, 0, 2, 'ladder-marble-black');
+    for (let x = 1; x <= 6; x++) bp.paint(x, 3, 7, 'ladder-diamond');
+    campRect(bp, 0, 7, 1, 7, 6, 'ladder-concrete');
+    for (let x = 1; x <= 6; x++) {
+      bp.put(x, 6, 3, 'ladder-marble-black');
+      bp.put(x, 6, 5, 'ladder-marble-black');
+    }
+  }
+
+  // Form 3 — «Бизнес-центр»: two glass towers with concrete corner columns and a concrete band every
+  // third floor, joined by a glass skybridge; a canopy over the plaza between them, an antenna with
+  // a light on the tall one, LED crowns.
+  function salesTwinTowers(bp) {
+    for (let y = 0; y <= 9; y++) campRect(bp, 0, 4, 0, 4, y, y % 3 === 0 ? 'ladder-concrete' : 'glass');
+    for (let y = 0; y <= 6; y++) campRect(bp, 8, 11, 1, 4, y, y % 3 === 0 ? 'ladder-concrete' : 'glass');
+    [[0, 0], [4, 0], [0, 4], [4, 4]].forEach(function (c) { bp.post(c[0], c[1], 0, 9, 'ladder-concrete'); });
+    [[8, 1], [11, 1], [8, 4], [11, 4]].forEach(function (c) { bp.post(c[0], c[1], 0, 6, 'ladder-concrete'); });
+    bp.box(0, 10, 0, 4, 10, 4, 'ladder-concrete');
+    bp.box(8, 7, 1, 11, 7, 4, 'ladder-concrete');
+    campRect(bp, 0, 4, 0, 4, 10, 'ladder-diamond');
+    campRect(bp, 8, 11, 1, 4, 7, 'ladder-diamond');
+    [[2, 4], [9, 4], [10, 4]].forEach(function (c) {
+      campDel(bp, c[0], 0, c[1]);
+      campDel(bp, c[0], 1, c[1]);
+    });
+    // The skybridge: a concrete floor, glass sides and roof.
+    for (let x = 5; x <= 7; x++) {
+      [2, 3].forEach(function (z) {
+        bp.put(x, 4, z, 'ladder-concrete');
+        bp.put(x, 5, z, 'glass');
+        bp.put(x, 6, z, 'glass');
+      });
+    }
+    // Plaza, a canopy on black posts, the antenna.
+    bp.box(0, 0, 5, 11, 0, 6, 'ladder-concrete');
+    bp.post(5, 6, 1, 2, 'ladder-marble-black');
+    bp.post(7, 6, 1, 2, 'ladder-marble-black');
+    bp.box(4, 3, 5, 8, 3, 6, 'glass');
+    bp.post(2, 2, 11, 13, 'ladder-marble-black');
+    bp.put(2, 14, 2, 'ladder-diamond');
+  }
+
+  // Form 4 — «Технопарк»: a round ring of glass storeys between concrete slabs, its roof a terrace
+  // with planters, a gate cut through it toward the camera under the upper floors, trees in the
+  // courtyard; two slim glass towers outside, joined to the ring by glass skybridges.
+  function salesCampus(bp) {
+    const cx = 7;
+    const cz = 6;
+    const outer = disk(cx, cz, 6.6);
+    const inner = disk(cx, cz, 3.6);
+    const ring = function (x, z) { return outer(x, z) && !inner(x, z); };
+    for (let y = 0; y <= 5; y++) campShape(bp, y, 0, 14, 0, 12, ring, false, y === 0 || y === 3 ? 'ladder-concrete' : 'glass');
+    campShape(bp, 6, 0, 14, 0, 12, ring, true, 'ladder-concrete');
+    for (let k = 0; k < 16; k++) {
+      const a = k / 16 * Math.PI * 2;
+      bp.put(Math.round(cx + Math.cos(a) * 5.1), 7, Math.round(cz + Math.sin(a) * 5.1), k % 2 === 0 ? 'ladder-jade' : 'ladder-malachite');
+    }
+    for (let y = 0; y <= 2; y++) {
+      for (let x = cx - 1; x <= cx + 1; x++) {
+        for (let z = cz + 3; z <= cz + 7; z++) campDel(bp, x, y, z);
+      }
+    }
+    [[7, 6], [6, 5], [8, 7]].forEach(function (t, i) {
+      bp.post(t[0], t[1], 0, 1, 'ladder-oak');
+      bp.put(t[0], 2, t[1], i === 0 ? 'ladder-jade' : 'ladder-malachite');
+      if (i === 0) bp.put(t[0], 3, t[1], 'ladder-jade');
+    });
+    // Slim towers at the back corners and skybridges to the ring roof.
+    [[13, 1, 13], [1, 1, 10]].forEach(function (t) {
+      for (let y = 0; y <= t[2]; y++) campRect(bp, t[0] - 1, t[0] + 1, t[1] - 1, t[1] + 1, y, y % 4 === 0 ? 'ladder-concrete' : 'glass');
+      campRect(bp, t[0] - 1, t[0] + 1, t[1] - 1, t[1] + 1, t[2] + 1, 'ladder-diamond-pure');
+    });
+    strut(bp, 12, 6, 2, 10, 6, 2, 'glass');
+    strut(bp, 2, 6, 2, 3, 6, 2, 'glass');
+    for (let x = 10; x <= 12; x++) bp.put(x, 7, 2, 'glass');
+    for (let x = 2; x <= 3; x++) bp.put(x, 7, 2, 'glass');
+  }
+
+  // Form 5 — «Небоскрёб»: two twisting glass towers — every floor a rounded square turned a little
+  // further, a concrete slab every fourth — on a glass podium, joined by two glass skybridges; LED
+  // crowns, a black spire with a light, an LED line along the podium.
+  function salesSkyscraper(bp) {
+    for (let y = 0; y <= 2; y++) campRect(bp, 0, 14, 4, 10, y, y === 0 ? 'ladder-concrete' : 'glass');
+    [[0, 4], [14, 4], [0, 10], [14, 10]].forEach(function (c) { bp.post(c[0], c[1], 0, 2, 'ladder-concrete'); });
+    for (let x = 6; x <= 8; x++) {
+      campDel(bp, x, 0, 10);
+      campDel(bp, x, 1, 10);
+    }
+    bp.box(0, 3, 4, 14, 3, 10, 'ladder-concrete');
+    for (let x = 0; x <= 14; x++) bp.paint(x, 3, 10, 'ladder-diamond');
+    const towers = [
+      { cx: 4, cz: 6, half: 3.0, turn: 0.075, top: 24 },
+      { cx: 11, cz: 7, half: 2.3, turn: -0.09, top: 17 },
+    ];
+    towers.forEach(function (t) {
+      for (let y = 4; y <= t.top; y++) {
+        const floor = squircle(t.cx, t.cz, t.half, (y - 4) * t.turn, 8);
+        const material = y === t.top ? 'ladder-diamond-pure' : y % 4 === 0 ? 'ladder-concrete' : 'glass';
+        campShape(bp, y, t.cx - 5, t.cx + 5, t.cz - 5, t.cz + 5, floor, y === t.top, material);
+      }
+    });
+    [10, 15].forEach(function (y) {
+      for (let x = 7; x <= 9; x++) {
+        [6, 7].forEach(function (z) {
+          bp.put(x, y, z, 'ladder-concrete');
+          bp.put(x, y + 1, z, 'glass');
+          bp.put(x, y + 2, z, 'glass');
+        });
+      }
+    });
+    bp.post(4, 6, 25, 28, 'ladder-marble-black');
+    bp.put(4, 29, 6, 'ladder-diamond');
+  }
+
+  // ---------- site camp: the dorm's five forms ----------
+  // Where the crew sleeps near the site: from a yellow site trailer to a capsule hotel.
+
+  // Form 1 — «Вагончик»: a yellow site trailer on blocks with windows, a door and a step.
+  function dormTrailer(bp) {
+    [[0, 0], [6, 0], [0, 2], [6, 2]].forEach(function (c) { bp.put(c[0], 0, c[1], 'ladder-stone'); });
+    for (let y = 1; y <= 2; y++) campRect(bp, 0, 6, 0, 2, y, 'ladder-brick-yellow');
+    bp.box(0, 3, 0, 6, 3, 2, 'ladder-concrete');
+    campDel(bp, 2, 1, 2);
+    campDel(bp, 2, 2, 2);
+    [4, 5].forEach(function (x) { bp.paint(x, 2, 2, 'glass'); bp.paint(x, 2, 0, 'glass'); });
+    bp.paint(0, 2, 1, 'glass');
+    bp.put(2, 0, 3, 'ladder-oak');
+  }
+
+  // Form 2 — «Модульный городок»: site containers in two rows — two below, one on top — in red,
+  // yellow and white, an outside stair and a walkway with a railing.
+  function dormContainers(bp) {
+    function container(x0, y0, z0, material) {
+      for (let y = y0; y <= y0 + 1; y++) campRect(bp, x0, x0 + 5, z0, z0 + 2, y, material);
+      bp.box(x0, y0 + 2, z0, x0 + 5, y0 + 2, z0 + 2, 'ladder-concrete');
+      bp.paint(x0 + 2, y0 + 1, z0 + 2, 'glass');
+      bp.paint(x0 + 4, y0 + 1, z0 + 2, 'glass');
+      campDel(bp, x0 + 1, y0, z0 + 2);
+      campDel(bp, x0 + 1, y0 + 1, z0 + 2);
+    }
+    container(0, 0, 0, 'ladder-brick-red');
+    container(6, 0, 0, 'ladder-brick-yellow');
+    container(0, 3, 0, 'ladder-brick-white');
+    for (let x = 0; x <= 6; x++) bp.put(x, 2, 3, 'ladder-oak');
+    for (let x = 0; x <= 6; x += 2) bp.put(x, 3, 3, 'ladder-oak');
+    for (let i = 0; i < 3; i++) bp.put(7 + i, 2 - i, 3, 'ladder-oak');
+  }
+
+  // Form 3 — «Общежитие»: three storeys of red brick with white string courses and rows of
+  // windows, balconies on the front, a canopy over the door, a water tank and vents on the roof.
+  function dormHostel(bp) {
+    const x1 = 8;
+    const z1 = 4;
+    for (let y = 0; y <= 8; y++) campRect(bp, 0, x1, 0, z1, y, y === 3 || y === 6 ? 'ladder-brick-white' : 'ladder-brick-red');
+    for (let x = 1; x < x1; x++) {
+      if (x === 4) continue;
+      [1, 4, 7].forEach(function (y) {
+        if (x % 2 === 1) bp.paint(x, y, z1, 'glass');
+        if (x % 2 === 1) bp.paint(x, y, 0, 'glass');
+      });
+    }
+    [1, 3].forEach(function (z) { [1, 4, 7].forEach(function (y) { bp.paint(0, y, z, 'glass'); bp.paint(x1, y, z, 'glass'); }); });
+    campDel(bp, 4, 0, z1);
+    campDel(bp, 4, 1, z1);
+    bp.box(3, 2, z1 + 1, 5, 2, z1 + 1, 'ladder-concrete');
+    [3, 6].forEach(function (y) {
+      [1, 6].forEach(function (x) {
+        bp.box(x, y, z1 + 1, x + 1, y, z1 + 1, 'ladder-concrete');
+        bp.put(x, y + 1, z1 + 1, 'ladder-oak');
+        bp.put(x + 1, y + 1, z1 + 1, 'ladder-oak');
+      });
+    });
+    bp.box(0, 9, 0, x1, 9, z1, 'ladder-concrete');
+    const tank = disk(6, 2, 1.2);
+    for (let y = 10; y <= 11; y++) campShape(bp, y, 4, 8, 0, 4, tank, y === 11, 'ladder-pine');
+    bp.post(2, 2, 10, 11, 'ladder-concrete');
+  }
+
+  // Form 4 — «Гостиница»: a glass lobby podium, a hotel slab of white floors with balconies and
+  // glass, a pool with a glass «water» on the podium roof, a glowing sign on the roof.
+  function dormHotel(bp) {
+    for (let y = 0; y <= 2; y++) campRect(bp, 0, 12, 0, 7, y, y === 0 ? 'ladder-concrete' : 'glass');
+    [[0, 0], [12, 0], [0, 7], [12, 7]].forEach(function (c) { bp.post(c[0], c[1], 0, 2, 'ladder-concrete'); });
+    [5, 6, 7].forEach(function (x) { campDel(bp, x, 0, 7); campDel(bp, x, 1, 7); });
+    bp.box(0, 3, 0, 12, 3, 7, 'ladder-concrete');
+    for (let y = 4; y <= 14; y++) campRect(bp, 1, 7, 0, 5, y, y % 2 === 0 ? 'ladder-marble-polished' : 'glass');
+    [1, 7].forEach(function (x) { for (let y = 4; y <= 14; y++) { bp.paint(x, y, 0, 'ladder-marble-polished'); bp.paint(x, y, 5, 'ladder-marble-polished'); } });
+    for (let y = 5; y <= 13; y += 2) {
+      for (let x = 2; x <= 6; x++) bp.put(x, y, 6, 'ladder-marble-polished');
+    }
+    bp.box(1, 15, 0, 7, 15, 5, 'ladder-concrete');
+    bp.box(2, 16, 2, 6, 17, 2, 'ladder-diamond');
+    campRect(bp, 8, 12, 1, 6, 4, 'ladder-marble-white');
+    bp.box(9, 4, 2, 11, 4, 5, 'glass');
+  }
+
+  // Form 5 — «Хай-тек отель»: smooth and in big pieces — a rounded glass podium on a white plinth with
+  // a white roof running out into an entrance canopy, a rounded tower of continuous glass ribbons
+  // between white bands, a tall white blade along one end, a glass sky lounge overhanging the top
+  // with a glowing band under it and a white roof.
+  function dormHotelTower(bp) {
+    const cx = 7;
+    const podium = superEllipse(cx, 6, 7, 5, 4);
+    campShape(bp, 0, 0, 14, 0, 12, podium, false, 'ladder-marble-polished');
+    for (let y = 1; y <= 2; y++) campShape(bp, y, 0, 14, 0, 12, podium, false, 'glass');
+    for (let y = 1; y <= 2; y++) {
+      for (let x = cx - 1; x <= cx + 1; x++) campDel(bp, x, y, 11);
+    }
+    campShape(bp, 3, 0, 14, 0, 12, podium, true, 'ladder-marble-polished');
+    bp.box(cx - 3, 3, 12, cx + 3, 3, 12, 'ladder-marble-polished');
+    const tower = superEllipse(cx, 5, 4.6, 3, 3.5);
+    for (let y = 4; y <= 15; y++) campShape(bp, y, 1, 13, 1, 9, tower, false, y % 4 === 3 ? 'ladder-marble-polished' : 'glass');
+    for (let y = 4; y <= 18; y++) bp.box(2, y, 4, 3, y, 6, 'ladder-marble-polished');
+    const lounge = superEllipse(cx, 5, 5.6, 3.8, 3.5);
+    campShape(bp, 16, 0, 14, 0, 10, lounge, false, 'ladder-diamond-pure');
+    for (let y = 17; y <= 18; y++) campShape(bp, y, 0, 14, 0, 10, lounge, false, 'glass');
+    campShape(bp, 19, 0, 14, 0, 10, lounge, true, 'ladder-marble-polished');
+  }
+
+  // ---------- site camp: the lounge's five forms ----------
+  // Where the crew goes to smoke: from a lean-to with a bench to an entertainment centre, smaller
+  // than the dorm on average. The front (+z, the door) faces the camera.
+
+  // Form 1 — «Курилка»: a lean-to of pine boards on oak posts under an iron roof, a bench inside,
+  // a red board on the roof and an ash bin by the side.
+  function loungeShelter(bp) {
+    [0, 5].forEach(function (x) {
+      bp.post(x, 0, 0, 2, 'ladder-oak');
+      bp.post(x, 2, 0, 2, 'ladder-oak');
+    });
+    for (let y = 1; y <= 2; y++) {
+      for (let x = 1; x <= 4; x++) bp.put(x, y, 0, 'ladder-pine');
+    }
+    bp.box(0, 3, 0, 5, 3, 2, 'ladder-iron');
+    for (let x = 1; x <= 4; x++) bp.put(x, 0, 1, 'ladder-oak');
+    bp.box(2, 4, 2, 3, 4, 2, 'ladder-brick-red');
+    bp.put(6, 0, 2, 'ladder-iron');
+  }
+
+  // Form 2 — «Беседка»: an eight-sided pine deck with an oak railing open to the front steps, eight
+  // oak posts, a stepped red roof with a gold finial, a table between two benches, an ash bin.
+  function loungeGazebo(bp) {
+    const plan = function (r) { return superEllipse(3, 3, r, r, 2.6); };
+    // The deck reaches the eaves and the posts stand under them: ladders lean on the posts and the
+    // eaves all the way up (a roof hanging out over the posts left the crew no way onto it).
+    campShape(bp, 0, -1, 7, -1, 7, plan(4.5), true, 'ladder-pine');
+    campShape(bp, 1, -1, 7, -1, 7, plan(4.5), false, 'ladder-oak');
+    [2, 3, 4].forEach(function (x) { campDel(bp, x, 1, 7); });
+    [[1, -1], [5, -1], [7, 1], [7, 5], [5, 7], [1, 7], [-1, 5], [-1, 1]].forEach(function (c) { bp.post(c[0], c[1], 2, 4, 'ladder-oak'); });
+    // The roof: rings one cell narrower a step up, each course two rings wide so the next one lies
+    // on its inner ring (a ring over the hollow of the one below would hang on its corners).
+    [[5, 4.5], [6, 3.5]].forEach(function (c) {
+      campShape(bp, c[0], -1, 7, -1, 7, plan(c[1]), false, 'ladder-brick-red');
+      campShape(bp, c[0], -1, 7, -1, 7, plan(c[1] - 1), false, 'ladder-brick-red');
+    });
+    campShape(bp, 7, 1, 5, 1, 5, plan(2.5), true, 'ladder-brick-red');
+    campShape(bp, 8, 2, 4, 2, 4, disk(3, 3, 1.5), true, 'ladder-brick-red');
+    bp.put(3, 9, 3, 'ladder-gold');
+    bp.put(3, 1, 3, 'ladder-oak');
+    bp.put(2, 1, 3, 'ladder-pine');
+    bp.put(4, 1, 3, 'ladder-pine');
+    bp.put(8, 0, 5, 'ladder-iron');
+  }
+
+  // Form 3 — «Комната отдыха»: a yellow-brick pavilion with wide windows and a glazed door, a flat
+  // concrete roof behind a white parapet with a gold sign over the door, a striped awning, a table
+  // under a sun umbrella with two stools and an ash bin by the side.
+  function loungeClubroom(bp) {
+    const x1 = 8;
+    const z1 = 5;
+    for (let y = 0; y <= 2; y++) campRect(bp, 0, x1, 0, z1, y, 'ladder-brick-yellow');
+    [1, 2, 3, 5, 6, 7].forEach(function (x) { bp.paint(x, 1, z1, 'glass'); });
+    for (let x = 2; x <= 6; x++) bp.paint(x, 1, 0, 'glass');
+    [2, 3].forEach(function (z) {
+      bp.paint(0, 1, z, 'glass');
+      bp.paint(x1, 1, z, 'glass');
+    });
+    campDel(bp, 4, 0, z1);
+    campDel(bp, 4, 1, z1);
+    bp.box(0, 3, 0, x1, 3, z1, 'ladder-concrete');
+    campRect(bp, 0, x1, 0, z1, 4, 'ladder-brick-white');
+    bp.box(3, 4, z1, 5, 4, z1, 'ladder-diamond-royal');
+    bp.put(4, 5, z1, 'ladder-diamond-royal');
+    [3, 4, 5].forEach(function (x) { bp.put(x, 2, z1 + 1, x === 4 ? 'ladder-brick-white' : 'ladder-brick-red'); });
+    bp.put(2, 4, 2, 'ladder-steel');
+    bp.post(10, 3, 0, 2, 'ladder-oak');
+    campShape(bp, 3, 9, 11, 2, 4, disk(10, 3, 1.5), true, 'ladder-brick-red');
+    bp.paint(10, 3, 3, 'ladder-brick-white');
+    bp.put(9, 0, 3, 'ladder-pine');
+    bp.put(11, 0, 3, 'ladder-pine');
+    bp.put(10, 0, 5, 'ladder-iron');
+  }
+
+  // Form 4 — «Клуб»: two storeys — a glazed ground floor on a granite plinth with granite corners,
+  // a pink neon band, a red-brick upper floor with windows and a balcony over the wide door, a flat
+  // roof with a railing to the front, a blue neon sign and a sun umbrella on the roof terrace.
+  function loungeClub(bp) {
+    const x1 = 10;
+    const z1 = 6;
+    campRect(bp, 0, x1, 0, z1, 0, 'ladder-granite');
+    for (let y = 1; y <= 2; y++) campRect(bp, 0, x1, 0, z1, y, 'glass');
+    [[0, 0], [x1, 0], [0, z1], [x1, z1]].forEach(function (c) { bp.post(c[0], c[1], 1, 2, 'ladder-granite'); });
+    for (let x = 4; x <= 6; x++) {
+      campDel(bp, x, 0, z1);
+      campDel(bp, x, 1, z1);
+    }
+    campRect(bp, 0, x1, 0, z1, 3, 'ladder-marble-rose');
+    for (let y = 4; y <= 5; y++) campRect(bp, 0, x1, 0, z1, y, 'ladder-brick-red');
+    for (let x = 1; x < x1; x += 2) {
+      bp.paint(x, 5, z1, 'glass');
+      bp.paint(x, 5, 0, 'glass');
+    }
+    [2, 4].forEach(function (z) {
+      bp.paint(0, 5, z, 'glass');
+      bp.paint(x1, 5, z, 'glass');
+    });
+    bp.box(3, 3, z1 + 1, 7, 3, z1 + 1, 'ladder-concrete');
+    bp.box(3, 4, z1 + 1, 7, 4, z1 + 1, 'ladder-iron');
+    bp.box(0, 6, 0, x1, 6, z1, 'ladder-concrete');
+    for (let x = 0; x <= x1; x++) bp.put(x, 7, z1, 'ladder-iron');
+    bp.box(3, 7, z1, 7, 8, z1, 'ladder-diamond');
+    bp.post(2, 2, 7, 8, 'ladder-steel');
+    campShape(bp, 9, 1, 3, 1, 3, disk(2, 2, 1.5), true, 'ladder-brick-red');
+    bp.paint(2, 9, 2, 'ladder-brick-white');
+  }
+
+  // Form 5 — «Развлекательный центр»: a rounded glazed podium on a white plinth under a gold neon
+  // band, an entrance canopy, a blue sign on the front of the roof, a ferris wheel with coloured
+  // cabins on the roof and a giant bowling pin at the front corner.
+  function loungeFunCentre(bp) {
+    const podium = superEllipse(6, 4, 6.5, 4.5, 3.5);
+    campShape(bp, 0, 0, 12, 0, 8, podium, false, 'ladder-marble-polished');
+    for (let y = 1; y <= 3; y++) campShape(bp, y, 0, 12, 0, 8, podium, false, y === 3 ? 'ladder-diamond-royal' : 'glass');
+    for (let x = 5; x <= 7; x++) {
+      campDel(bp, x, 0, 8);
+      campDel(bp, x, 1, 8);
+    }
+    campShape(bp, 4, 0, 12, 0, 8, podium, true, 'ladder-marble-polished');
+    bp.box(4, 2, 9, 8, 2, 9, 'ladder-marble-polished');
+    bp.box(4, 5, 8, 8, 6, 8, 'ladder-diamond');
+    // Ferris wheel in the x–y plane at z 2: a white rim, spokes and a gold hub, eight coloured cabins
+    // in front of the rim, a white A-frame behind it down to the roof. The rim stands on a plinth on
+    // the roof and is set from it up.
+    bp.box(7, 5, 2, 9, 5, 2, 'ladder-marble-white');
+    for (let y = 6; y <= 14; y++) {
+      for (let x = 4; x <= 12; x++) {
+        if (Math.abs(Math.hypot(x - 8, y - 10) - 4) < 0.5) bp.put(x, y, 2, 'ladder-marble-white');
+      }
+    }
+    for (let r = 1; r <= 3; r++) {
+      [[r, 0], [-r, 0], [0, r], [0, -r]].forEach(function (d) { bp.put(8 + d[0], 10 + d[1], 2, 'ladder-marble-polished'); });
+    }
+    [[1, 1], [2, 2], [-1, 1], [-2, 2], [1, -1], [2, -2], [-1, -1], [-2, -2]].forEach(function (d) { bp.put(8 + d[0], 10 + d[1], 2, 'ladder-marble-polished'); });
+    bp.put(8, 10, 2, 'ladder-gold');
+    const cabins = ['ladder-brick-red', 'ladder-jade', 'ladder-diamond-royal', 'ladder-diamond'];
+    [[12, 10], [11, 13], [8, 14], [5, 13], [4, 10], [5, 7], [8, 6], [11, 7]].forEach(function (c, i) { bp.put(c[0], c[1], 3, cabins[i % cabins.length]); });
+    [[5, 5], [6, 6], [6, 7], [7, 7], [7, 8], [7, 9], [11, 5], [10, 6], [10, 7], [9, 7], [9, 8], [9, 9]].forEach(function (c) { bp.put(c[0], c[1], 1, 'ladder-marble-polished'); });
+    bp.put(8, 10, 1, 'ladder-gold');
+    // The bowling pin: white with a red neck stripe.
+    [[5, 1.2], [6, 1.5], [7, 1.2], [8, 0.8], [9, 0.8], [10, 1.1], [11, 0.6]].forEach(function (row) {
+      campShape(bp, row[0], 0, 4, 4, 8, disk(2, 6, row[1]), true, row[0] === 8 ? 'ladder-brick-red' : 'ladder-marble-white');
+    });
+  }
+
+  // ---------- site camp: the lighting masts' five forms ----------
+  // Two masts light the building from both sides. Lamps (ladder-diamond-pure) face +x; the mast
+  // on the right is mirrored. The game hangs a spotlight and its beam on the lamps at night.
+
+  // Form 1 — «Фонарный столб»: a wooden pole with an arm and a lamp.
+  function lightPole(bp) {
+    bp.put(0, 0, 0, 'ladder-stone');
+    bp.post(0, 0, 1, 8, 'ladder-oak');
+    bp.put(1, 8, 0, 'ladder-oak');
+    bp.put(2, 8, 0, 'ladder-diamond-pure');
+    bp.put(2, 9, 0, 'ladder-marble-black');
+  }
+
+  // Form 2 — «Прожекторная вышка»: a timber tower on four legs with braces, a platform with a
+  // railing and two floodlights.
+  function lightTower(bp) {
+    [[0, 0], [2, 0], [0, 2], [2, 2]].forEach(function (c) { bp.post(c[0], c[1], 0, 9, 'ladder-oak'); });
+    [3, 6].forEach(function (y) { campRect(bp, 0, 2, 0, 2, y, 'ladder-pine'); });
+    bp.box(0, 10, 0, 2, 10, 2, 'ladder-pine');
+    campRect(bp, 0, 2, 0, 2, 11, 'ladder-oak');
+    bp.put(3, 11, 0, 'ladder-diamond-pure');
+    bp.put(3, 11, 2, 'ladder-diamond-pure');
+    bp.put(3, 12, 0, 'ladder-marble-black');
+    bp.put(3, 12, 2, 'ladder-marble-black');
+  }
+
+  // Form 3 — «Мачта освещения»: a concrete mast on a footing with a ladder, a lower lamp bar and a
+  // top bank of six floodlights in a black frame.
+  function lightMast(bp) {
+    bp.box(0, 0, 0, 2, 0, 2, 'ladder-concrete');
+    bp.post(1, 1, 1, 14, 'ladder-concrete');
+    for (let y = 1; y <= 12; y++) bp.put(0, y, 1, 'ladder-iron');
+    bp.box(2, 9, 0, 2, 9, 2, 'ladder-diamond-pure');
+    for (let z = -1; z <= 3; z++) {
+      for (let y = 14; y <= 16; y++) {
+        const edge = z === -1 || z === 3 || y === 16;
+        bp.put(2, y, z, edge ? 'ladder-marble-black' : 'ladder-diamond-pure');
+      }
+    }
+    bp.put(1, 15, 1, 'ladder-concrete');
+  }
+
+  // Form 4 — «Стадионная мачта»: a tall tapering mast with a service platform and a big tilted
+  // bank of fifteen floodlights in a black frame, a second bank lower down.
+  function lightStadium(bp) {
+    bp.box(0, 0, 0, 3, 0, 3, 'ladder-concrete');
+    for (let y = 1; y <= 10; y++) campRect(bp, 1, 2, 1, 2, y, 'ladder-concrete');
+    bp.post(1, 1, 11, 18, 'ladder-concrete');
+    campRect(bp, 0, 3, 0, 3, 12, 'ladder-marble-black');
+    for (let z = -2; z <= 4; z++) {
+      for (let k = 0; k <= 3; k++) {
+        const y = 17 + k;
+        const x = 2 + Math.floor(k / 2);
+        const edge = z === -2 || z === 4 || k === 3;
+        bp.put(x, y, z, edge ? 'ladder-marble-black' : 'ladder-diamond-pure');
+      }
+      // The frame under the bank's upper half: it stands on it, not on the lower half's corner.
+      bp.put(3, 18, z, 'ladder-marble-black');
+    }
+    for (let z = 0; z <= 2; z++) bp.put(3, 9, z, 'ladder-diamond-pure');
+  }
+
+  // Form 5 — «Световая башня»: a slender white-and-glass tower with LED rings, a crown of lamps
+  // turned to the building, a beacon on top, a round footing.
+  function lightBeacon(bp) {
+    // The footing is a ring: the hollow shaft stands on the ground (a cube in it would be walled in).
+    campShape(bp, 0, 0, 4, 0, 4, disk(2, 2, 2.2), true, 'ladder-concrete');
+    campDel(bp, 2, 0, 2);
+    const shaft = disk(2, 2, 1.5);
+    for (let y = 1; y <= 19; y++) campShape(bp, y, 0, 4, 0, 4, shaft, false, y % 4 === 0 ? 'ladder-diamond' : y % 2 === 0 ? 'ladder-marble-polished' : 'glass');
+    // The crown is flush with the shaft (ladders go up its sides to the top) and the lamps stand out
+    // one cell to the building, set from the crown.
+    for (let y = 20; y <= 21; y++) {
+      campShape(bp, y, 0, 4, 0, 4, shaft, true, 'ladder-marble-black');
+      for (let z = 1; z <= 3; z++) bp.put(4, y, z, 'ladder-diamond-pure');
+    }
+    bp.post(2, 2, 22, 24, 'ladder-marble-polished');
+    bp.put(2, 25, 2, 'ladder-diamond');
+  }
+
+  // ---------- site camp: the reactor's five forms ----------
+  // A techno-magic reactor: its mark is a glowing magic sphere on top (ladder-diamond keeps its glow
+  // at every level), in a glass shell once it grows big. Each form is taller and grander.
+
+  // A voxel sphere at (cx, cy, cz): a glowing core of radius core, a glass shell out to radius r, the
+  // core hollow out to radius hollow (a cube deep in a solid ball is walled in by the ones round it
+  // before the crew gets to it).
+  function reactorOrb(bp, cx, cy, cz, r, core, hollow) {
+    const n = Math.ceil(r);
+    for (let dy = -n; dy <= n; dy++) {
+      for (let dz = -n; dz <= n; dz++) {
+        for (let dx = -n; dx <= n; dx++) {
+          const d2 = dx * dx + dy * dy + dz * dz;
+          if (d2 > r * r + 0.25 || (hollow > 0 && d2 <= hollow * hollow)) continue;
+          bp.put(cx + dx, cy + dy, cz + dz, d2 <= core * core + 0.25 ? 'ladder-diamond' : 'glass');
+        }
+      }
+    }
+  }
+
+  // Form 1 — «Искра»: a round sandstone step, a brass plinth, a steel stem with a small glowing orb
+  // held by four brass claws with glowing tips.
+  function reactorSpark(bp) {
+    campShape(bp, 0, 0, 4, 0, 4, disk(2, 2, 2.3), true, 'ladder-sandstone');
+    bp.box(1, 1, 1, 3, 1, 3, 'ladder-brick-yellow');
+    bp.put(2, 2, 2, 'ladder-steel-hard');
+    [[1, 1], [3, 1], [1, 3], [3, 3]].forEach(function (c) {
+      bp.post(c[0], c[1], 2, 3, 'ladder-brick-yellow');
+      bp.put(c[0], 4, c[1], 'ladder-diamond');
+    });
+    reactorOrb(bp, 2, 4, 2, 1, 1);
+  }
+
+  // Form 2 — «Генератор маны»: a round stone base, four copper-green pillars in a cage of two rings,
+  // a glowing sphere on a mirror-steel stem, a cross over it and glowing lights on the corners.
+  function reactorManaGenerator(bp) {
+    campShape(bp, 0, 0, 6, 0, 6, disk(3, 3, 3.2), true, 'ladder-stone');
+    campShape(bp, 1, 0, 6, 0, 6, disk(3, 3, 2.3), true, 'ladder-brick-white');
+    bp.post(3, 3, 2, 3, 'ladder-steel-mirror');
+    [[1, 1], [5, 1], [1, 5], [5, 5]].forEach(function (c) { bp.post(c[0], c[1], 1, 6, 'ladder-jade'); });
+    campRect(bp, 1, 5, 1, 5, 4, 'ladder-jade');
+    campRect(bp, 1, 5, 1, 5, 7, 'ladder-platinum');
+    bp.box(3, 7, 1, 3, 7, 5, 'ladder-platinum');
+    bp.box(1, 7, 3, 5, 7, 3, 'ladder-platinum');
+    reactorOrb(bp, 3, 5, 3, 1.5, 1.5);
+    [[1, 1], [5, 1], [1, 5], [5, 5], [3, 3]].forEach(function (c) { bp.put(c[0], 8, c[1], 'ladder-diamond'); });
+  }
+
+  // Form 3 — «Реактор»: a round concrete footing, a steel drum with bronze bands, portholes and a
+  // door, three pipes up its sides into a bronze collar, glowing mana tanks at the corners, a glass
+  // dome round a glowing core and an antenna with a glowing tip.
+  function reactorCore(bp) {
+    campShape(bp, 0, 0, 8, 0, 8, disk(4, 4, 4.3), true, 'ladder-concrete');
+    const drum = disk(4, 4, 3.2);
+    for (let y = 1; y <= 4; y++) campShape(bp, y, 0, 8, 0, 8, drum, false, y === 1 || y === 4 ? 'ladder-bronze' : 'ladder-steel-hard');
+    [[1, 4], [7, 4], [4, 1]].forEach(function (c) { bp.paint(c[0], 3, c[1], 'glass'); });
+    campDel(bp, 4, 1, 7);
+    campDel(bp, 4, 2, 7);
+    campShape(bp, 5, 0, 8, 0, 8, drum, true, 'ladder-steel-mirror');
+    campShape(bp, 6, 0, 8, 0, 8, disk(4, 4, 2.3), false, 'ladder-bronze');
+    [[0, 4, 1, 4], [8, 4, 7, 4], [4, 0, 4, 1]].forEach(function (p) {
+      bp.post(p[0], p[1], 1, 6, 'ladder-bronze');
+      bp.put(p[2], 6, p[3], 'ladder-bronze');
+    });
+    [[1, 1], [7, 1], [1, 7], [7, 7]].forEach(function (c) {
+      bp.put(c[0], 1, c[1], 'ladder-bronze');
+      bp.put(c[0], 2, c[1], 'glass');
+      bp.put(c[0], 3, c[1], 'ladder-diamond');
+    });
+    reactorOrb(bp, 4, 8, 4, 2.5, 2, 1.5);
+    // The sphere rests on the collar ring: its bottom tip inside the ring would be walled in by it.
+    [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) { campDel(bp, 4 + d[0], 6, 4 + d[1]); });
+    bp.put(4, 11, 4, 'ladder-steel-mirror');
+    bp.put(4, 12, 4, 'ladder-diamond');
+  }
+
+  // Form 4 — «Резонатор»: a granite footing, a steel-and-jade tower with windows and a door, four
+  // stepped granite buttresses, a mirror cornice, a big glass-shelled glowing sphere ringed by a
+  // platinum halo on four arms with glowing nodes, a spire with a glowing tip.
+  function reactorResonator(bp) {
+    campShape(bp, 0, 0, 10, 0, 10, disk(5, 5, 5.3), true, 'ladder-granite');
+    const tower = disk(5, 5, 2.5);
+    for (let y = 1; y <= 7; y++) campShape(bp, y, 0, 10, 0, 10, tower, false, y % 3 === 0 ? 'ladder-jade' : 'ladder-steel-stainless');
+    [[3, 5], [7, 5], [5, 3]].forEach(function (c) {
+      bp.paint(c[0], 2, c[1], 'glass');
+      bp.paint(c[0], 5, c[1], 'glass');
+    });
+    campDel(bp, 5, 1, 7);
+    campDel(bp, 5, 2, 7);
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (s) {
+      bp.post(5 + 2 * s[0], 5 + 2 * s[1], 1, 7, 'ladder-granite');
+      bp.post(5 + 3 * s[0], 5 + 3 * s[1], 1, 4, 'ladder-granite');
+      bp.put(5 + 3 * s[0], 5, 5 + 3 * s[1], 'ladder-jade');
+    });
+    campShape(bp, 8, 0, 10, 0, 10, disk(5, 5, 3.2), true, 'ladder-steel-mirror');
+    campShape(bp, 9, 0, 10, 0, 10, disk(5, 5, 2.3), false, 'ladder-jade');
+    reactorOrb(bp, 5, 12, 5, 3, 2.3, 1.6);
+    // The sphere rests on the collar: its bottom tip inside the ring would be walled in by it.
+    campDel(bp, 5, 9, 5);
+    for (let z = 0; z <= 10; z++) {
+      for (let x = 0; x <= 10; x++) {
+        const dx = Math.abs(x - 5);
+        const dz = Math.abs(z - 5);
+        const d = Math.hypot(dx, dz);
+        if (d < 4.4 || d > 5.4) continue;
+        bp.put(x, 12, z, dx > 0 && dz > 0 && Math.abs(dx - dz) <= 1 ? 'ladder-diamond' : 'ladder-platinum');
+      }
+    }
+    [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (s) { bp.put(5 + 4 * s[0], 12, 5 + 4 * s[1], 'ladder-platinum'); });
+    bp.put(5, 16, 5, 'ladder-platinum');
+    bp.put(5, 17, 5, 'ladder-diamond');
+  }
+
+  // Form 5 — «Сердце мира»: a stepped granite-and-marble temple base, a glass-and-jade shaft with a
+  // glowing conduit inside, four onyx corner pylons with glowing tips holding a huge glass-shelled
+  // glowing sphere on platinum arms, a platinum crown with glowing points and a spire on top.
+  function reactorHeartOfWorld(bp) {
+    campShape(bp, 0, 0, 12, 0, 10, superEllipse(6, 5, 6.5, 5.5, 4), true, 'ladder-granite');
+    campShape(bp, 1, 0, 12, 0, 10, superEllipse(6, 5, 5.5, 4.5, 4), true, 'ladder-marble-polished');
+    campShape(bp, 2, 0, 12, 0, 10, superEllipse(6, 5, 4.5, 3.5, 4), false, 'ladder-onyx');
+    const shaft = disk(6, 5, 2.5);
+    for (let y = 2; y <= 10; y++) {
+      campShape(bp, y, 0, 12, 0, 10, shaft, false, y % 2 === 1 ? 'glass' : y % 4 === 0 ? 'ladder-marble-polished' : 'ladder-jade');
+      bp.put(6, y, 5, 'ladder-diamond');
+    }
+    campDel(bp, 6, 2, 7);
+    campDel(bp, 6, 3, 7);
+    campShape(bp, 11, 0, 12, 0, 10, disk(6, 5, 3.2), true, 'ladder-platinum');
+    campShape(bp, 12, 0, 12, 0, 10, disk(6, 5, 2.3), false, 'ladder-jade');
+    reactorOrb(bp, 6, 16, 5, 4, 3, 2.3);
+    campDel(bp, 6, 12, 5);
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(function (s) {
+      const px = 6 + 5 * s[0];
+      const pz = 5 + 4 * s[1];
+      for (let y = 1; y <= 17; y++) bp.put(px, y, pz, y % 5 === 0 ? 'ladder-jade' : 'ladder-onyx');
+      bp.put(px, 18, pz, 'ladder-diamond');
+      [[4, 4], [4, 3], [3, 3]].forEach(function (a) {
+        for (let y = 15; y <= 16; y++) bp.put(6 + a[0] * s[0], y, 5 + a[1] * s[1], 'ladder-platinum');
+      });
+    });
+    campShape(bp, 20, 0, 12, 0, 10, disk(6, 5, 2.3), false, 'ladder-platinum');
+    [[2, 0], [-2, 0], [0, 2], [0, -2]].forEach(function (d) {
+      bp.put(6 + d[0], 21, 5 + d[1], 'ladder-platinum');
+      bp.put(6 + d[0], 22, 5 + d[1], 'ladder-diamond');
+    });
+    [[2, 1], [2, -1], [-2, 1], [-2, -1], [1, 2], [-1, 2], [1, -2], [-1, -2]].forEach(function (d) { bp.put(6 + d[0], 21, 5 + d[1], 'ladder-diamond'); });
+    bp.post(6, 5, 21, 22, 'ladder-platinum');
+    bp.put(6, 23, 5, 'ladder-diamond');
+  }
+
+  root.MicroBuilderCampForms = {
+    canteen: [
+      { name: 'Столовая', build: canteenCabin },
+      { name: 'Кафе', build: canteenCafe },
+      { name: 'Бистро', build: canteenBistro },
+      { name: 'Ресторан', build: canteenRestaurant },
+      { name: 'Гранд-ресторан', build: canteenGrand },
+    ],
+    sales: [
+      { name: 'Офис продаж', build: salesKiosk },
+      { name: 'Шоурум', build: salesShowroom },
+      { name: 'Бизнес-центр', build: salesTwinTowers },
+      { name: 'Технопарк', build: salesCampus },
+      { name: 'Небоскрёб', build: salesSkyscraper },
+    ],
+    dorm: [
+      { name: 'Вагончик', build: dormTrailer },
+      { name: 'Модульный городок', build: dormContainers },
+      { name: 'Общежитие', build: dormHostel },
+      { name: 'Гостиница', build: dormHotel },
+      { name: 'Хай-тек отель', build: dormHotelTower },
+    ],
+    lounge: [
+      { name: 'Курилка', build: loungeShelter },
+      { name: 'Беседка', build: loungeGazebo },
+      { name: 'Комната отдыха', build: loungeClubroom },
+      { name: 'Клуб', build: loungeClub },
+      { name: 'Развлекательный центр', build: loungeFunCentre },
+    ],
+    light: [
+      { name: 'Фонарный столб', build: lightPole },
+      { name: 'Прожекторная вышка', build: lightTower },
+      { name: 'Мачта освещения', build: lightMast },
+      { name: 'Стадионная мачта', build: lightStadium },
+      { name: 'Световая башня', build: lightBeacon },
+    ],
+    reactor: [
+      { name: 'Искра', build: reactorSpark },
+      { name: 'Генератор маны', build: reactorManaGenerator },
+      { name: 'Реактор', build: reactorCore },
+      { name: 'Резонатор', build: reactorResonator },
+      { name: 'Сердце мира', build: reactorHeartOfWorld },
+    ],
+  };
+
   const LEVEL_SPECS = [
     { name: 'Маленький дом', pace: 1, mineGap: 5, blurb: 'Низкий каменный дом: дверь, окна и крыша в три блока.', build: levelHome },
     { name: 'Изба', pace: 1, mineGap: 6, blurb: 'К каменному дому добавляется песчаниковая крыша.', build: levelCottage },
@@ -2653,29 +3730,26 @@ function levelCableBridge(bp) {
     { name: 'Вантовый мост', pace: 1, mineGap: 14, blurb: 'Прямые светящиеся канаты и провисшие гирлянды', build: levelCableBridge },
   ];
 
-  // Heaviest material of a campaign level, by the calendar (docs/gdd/13-timeline.md): the level's
-  // whole material set is shifted up the ladder so its heaviest material lands here. Levels 1–12
-  // keep their hand-picked materials. Day 1: stone → white brick; day 2: bronze → steel; days 3–4:
-  // marble; days 5–7: grid 2; days 8–12: grid 3; days 15–20: grid 4; days 25–30: grid 5.
-  const LEVEL_MATERIAL_TOPS = {
-    13: 'ladder-marble', 14: 'ladder-marble', 15: 'ladder-marble-white', 16: 'ladder-marble-white',
-    17: 'ladder-marble-black', 18: 'ladder-marble-black', 19: 'ladder-steel-stainless',
-    20: 'ladder-steel-hard', 21: 'ladder-steel-mirror', 22: 'ladder-marble-polished',
-    23: 'ladder-marble-rose', 24: 'ladder-silver', 25: 'ladder-malachite', 26: 'ladder-malachite',
-    27: 'ladder-jade', 28: 'ladder-jade', 29: 'ladder-onyx', 30: 'ladder-obsidian',
-    31: 'ladder-obsidian', 32: 'ladder-obsidian-black', 33: 'ladder-diamond', 34: 'ladder-diamond',
-    35: 'ladder-diamond-pure', 36: 'ladder-diamond-black', 37: 'ladder-platinum',
-    38: 'ladder-platinum', 39: 'ladder-platinum-pure', 40: 'ladder-platinum-pure',
-    41: 'ladder-platinum-white', 42: 'ladder-platinum-mirror', 43: 'ladder-platinum-mirror',
-    44: 'ladder-platinum-black', 45: 'ladder-platinum-royal', 46: 'ladder-platinum-royal',
-    47: 'ladder-platinum-imperial', 48: 'ladder-platinum-imperial', 49: 'ladder-platinum-imperial',
-    50: 'ladder-diamond-royal', 51: 'ladder-diamond-royal', 52: 'ladder-diamond-royal',
-    53: 'ladder-diamond-imperial', 54: 'ladder-diamond-imperial', 55: 'ladder-diamond-imperial',
-    56: 'ladder-diamond-final', 57: 'ladder-diamond-final',
+  // Mass of a campaign building, kg without window glass: it sets how long the level is built, and
+  // logic.js picks the materials for it (docs/gdd/12-materials.md) — the blueprint's colours and
+  // textures in heavier materials, an accent on top. Levels 1–12 keep their hand-picked materials.
+  // The masses are those of the calendar (docs/gdd/13-timeline.md), as the levels were built when
+  // their materials were shifted up the ladder.
+  const LEVEL_MASS = {
+    13: 9967, 14: 15818, 15: 30787, 16: 15089, 17: 18841, 18: 24039, 19: 27048, 20: 71045,
+    21: 15329, 22: 30560, 23: 29745, 24: 49721, 25: 73484, 26: 128192, 27: 224238, 28: 464078,
+    29: 773580, 30: 986706, 31: 540023, 32: 601180, 33: 1505855, 34: 1145948, 35: 2111481,
+    36: 1963362, 37: 1420884, 38: 3258462, 39: 2572136, 40: 2799234, 41: 5724618, 42: 13184204,
+    43: 13829466, 44: 3955612, 45: 1410000, 46: 1307322, 47: 2934276, 48: 2839995, 49: 3875340,
+    50: 4786392, 51: 5831021, 52: 2595028, 53: 13020437, 54: 12864804, 55: 16588384, 56: 23394240,
+    57: 10429840,
   };
+  // The heaviest cube grid of a level by the calendar: [from level, grid].
+  const LEVEL_GRID_FROM = [[13, 1], [19, 2], [25, 3], [37, 4], [45, 5]];
 
   root.MicroBuilderLevelSpecs = LEVEL_SPECS;
-  root.MicroBuilderLevelMaterialTops = LEVEL_MATERIAL_TOPS;
+  root.MicroBuilderLevelMass = LEVEL_MASS;
+  root.MicroBuilderLevelGridFrom = LEVEL_GRID_FROM;
   root.MicroBuilderSchoolSpecs = [
     { id: 'tower', name: 'Ступенчатый маяк', pace: 1, mineGap: 5, blurb: 'Тонкая башня в 44 яруса, спиральная лестница и открытый фонарь. Испытание высотой.', build: schoolLanternTower },
     { id: 'foundation', name: 'Каменный акведук', pace: 1, mineGap: 5, blurb: 'Вытянутый акведук в пять этажей: четыре арки, водный канал и приёмный бассейн.', build: schoolAqueduct },
@@ -2689,5 +3763,9 @@ function levelCableBridge(bp) {
     { id: 'recruiting', name: 'Школа бригадиров', pace: 1, mineGap: 6, blurb: 'Учебный класс и тренировочная башня. Здесь бригады проходят испытания на время.', build: levelHqRecruiting },
     { id: 'garage', name: 'Гараж', pace: 1, mineGap: 6, blurb: 'Бокс для первой машины.', build: levelHqGarage },
     { id: 'contracts', name: 'Контрактное бюро', pace: 1, mineGap: 7, blurb: 'Дом испытаний.', build: levelHqContracts },
+    { id: 'supply', name: 'Снабжение', pace: 1, mineGap: 6, blurb: 'Склад бустеров для строек.', build: levelHqSupply },
+    { id: 'reactor', name: 'Реактор', pace: 1, mineGap: 7, blurb: 'Сердце техно-магии компании.', build: levelHqReactor },
+    { id: 'materials', name: 'Лаборатория материалов', pace: 1, mineGap: 6, blurb: 'Перки семейств материалов', build: levelHqMaterials },
+    { id: 'training', name: 'Учебный центр', pace: 1, mineGap: 6, blurb: 'Школа рабочих: здесь они растут в разрядах.', build: levelHqTraining },
   ];
 })(typeof globalThis !== 'undefined' ? globalThis : this);

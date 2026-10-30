@@ -30,6 +30,14 @@
   const POLAR_MAX = 1.38;
   const EYE_MIN_Y = 0.6;
   const SITE_POLAR = 1.0;
+  // Worker focus (setTrack): near orbit distance, zoom range, tilt range and drag-to-tilt rate.
+  const TRACK_DISTANCE = 11;
+  const TRACK_MIN = 3;
+  const TRACK_MAX = 40;
+  const TRACK_POLAR = 0.95;
+  const TRACK_POLAR_MIN = 0.15;
+  const TRACK_POLAR_MAX = 1.45;
+  const TRACK_TILT = 0.006;
   const SITE_AZIMUTH = 0.55;
   const CITY_POLAR = 0.85;
   const CITY_ORBIT = 0.35;
@@ -467,6 +475,9 @@
 
     let workerView = false;
     let savedOrbit = null;
+    // The orbit centred on a moving point — the selected worker (setTrack): the target rides with
+    // him, the player only turns, tilts and zooms. `saved` — the view before, for saveState.
+    let track = null;
     const worker = {
       yaw: 0, x: 0, y: 0, z: 0,
       distance: WORKER_DISTANCE, yawOffset: 0, lift: 0,
@@ -576,7 +587,19 @@
       return home;
     }
 
+    function trackPoint() {
+      const point = track && track.point();
+      return point && Number.isFinite(point.x) && Number.isFinite(point.y) && Number.isFinite(point.z) ? point : null;
+    }
+
     function limits() {
+      if (track) {
+        const point = trackPoint() || (flight ? flight.to.target : goal.target);
+        return {
+          kind: 'circle', cx: point.x, cz: point.z, radius: 0.01, yMin: point.y - 0.01, yMax: point.y + 0.01,
+          minD: TRACK_MIN, maxD: TRACK_MAX, polarMin: TRACK_POLAR_MIN, polarMax: TRACK_POLAR_MAX,
+        };
+      }
       if (focus) {
         return {
           kind: 'circle', cx: focus.x, cz: focus.z, radius: Math.max(focus.radius * 1.5, 12),
@@ -601,7 +624,7 @@
     }
 
     function isAwayFromHome() {
-      if (workerView || focus) return true;
+      if (workerView || focus || track) return true;
       if (!bounds) return false;
       const state = flight ? flight.to : goal;
       const home = homeState(state.azimuth);
@@ -620,7 +643,7 @@
     // Keeps a following camera framed after the layout changed (resize, safe area): the view moves
     // with home, so a camera at home stays at home and a small player offset is kept.
     function rehome() {
-      if (!autoFollow || !bounds || focus || workerView || pointers.size) return;
+      if (!autoFollow || !bounds || focus || workerView || track || pointers.size) return;
       if (flight && flight.user) return;
       const home = homeState(goal.azimuth);
       if (flight) {
@@ -722,7 +745,7 @@
       followPoll -= dt;
       if (followPoll > 0) return;
       followPoll = 0.25;
-      if (!autoFollow || focus || workerView || !bounds || bounds.mode !== 'site') return;
+      if (!autoFollow || focus || workerView || track || !bounds || bounds.mode !== 'site') return;
       if (busy(now) || now - lastInputAt < FOLLOW_IDLE_MS) return;
       const home = homeState(goal.azimuth);
       if (!followRef) {
@@ -742,7 +765,7 @@
     function settle(now) {
       if (!inputDirty || busy(now) || now - lastInputAt < SETTLE_MS) return;
       inputDirty = false;
-      if (workerView || focus || !bounds) return;
+      if (workerView || focus || track || !bounds) return;
       autoFollow = !isAwayFromHome();
       if (autoFollow) markFollow();
     }
@@ -802,6 +825,7 @@
       const settings = opts || {};
       if (workerView) leaveWorkerView(true);
       focus = null;
+      track = null;
       autoFollow = true;
       let azimuth = (flight ? flight.to : goal).azimuth;
       if (bounds && bounds.fresh) azimuth = SITE_AZIMUTH;
@@ -838,7 +862,7 @@
     }
 
     function saveState() {
-      const state = flight ? flight.to : workerView && savedOrbit ? savedOrbit : goal;
+      const state = track && track.saved ? track.saved : flight ? flight.to : workerView && savedOrbit ? savedOrbit : goal;
       // The home the view is measured from: a following view restored later moves by what home did meanwhile.
       const home = bounds && !focus ? followRef || homeState(0) : null;
       return {
@@ -864,6 +888,7 @@
       const settings = opts || {};
       if (workerView) leaveWorkerView(true);
       focus = null;
+      track = null;
       autoFollow = saved.autoFollow !== false;
       let state = saved;
       if (autoFollow && bounds) {
@@ -894,6 +919,13 @@
     // (debug look, material row, the old HQ entry) that is the framed point, not the site.
     function recenter() {
       interact('home');
+      // Following a worker: back onto him at the near distance.
+      const point = track ? trackPoint() : null;
+      if (point) {
+        const state = flight ? flight.to : goal;
+        startFlight(makeState(point.x, point.y, point.z, TRACK_DISTANCE, state.azimuth, TRACK_POLAR), 0.6, null, false);
+        return;
+      }
       if (focus && focus.home) {
         if (workerView) leaveWorkerView(true);
         startFlight(focus.home, 0.8, null, false);
@@ -1034,7 +1066,7 @@
 
     // Ground-plane pan, 1:1 with the finger at the target's depth.
     function panBy(dx, dy) {
-      if (workerView) return;
+      if (workerView || track) return;
       const step = worldPerPx();
       const deep = step / Math.max(Math.cos(goal.polar), 0.35);
       const sa = Math.sin(goal.azimuth);
@@ -1080,6 +1112,12 @@
       if (workerView) {
         worker.yawOffset = clamp(worker.yawOffset - dx / viewW * ORBIT_PER_WIDTH, -Math.PI, Math.PI);
         worker.lift = clamp(worker.lift + ELEVATOR_SIGN * dy * 0.02, -1.2, 4);
+        return;
+      }
+      if (track) {
+        // Around the worker: sideways turns, up and down tilts (down — more from above).
+        goal.azimuth -= dx / viewW * ORBIT_PER_WIDTH;
+        goal.polar = clamp(goal.polar - dy * TRACK_TILT, TRACK_POLAR_MIN, TRACK_POLAR_MAX);
         return;
       }
       if (mode === 'pan') {
@@ -1440,6 +1478,10 @@
       }
       goal.azimuth += turn * KEY_ORBIT * dt;
       if (!rise) return;
+      if (track) {
+        goal.polar = clamp(goal.polar - rise * 0.9 * dt, TRACK_POLAR_MIN, TRACK_POLAR_MAX);
+        return;
+      }
       if (cityRail()) moveAhead(rise * goal.distance * 0.7 * dt);
       else goal.target.y += rise * ((bounds ? bounds.topY : 6) + 4) / 2 * dt;
     }
@@ -1466,6 +1508,34 @@
       safariGesture = null;
       lastTap = null;
       setCursor('grab');
+    }
+
+    // ---- worker focus: the orbit around the selected worker ----
+
+    // pointFn() → { x, y, z } of the worker now (null once he is gone). The camera flies in closer
+    // than the site view and keeps him in the centre; turning, tilting and zoom stay with the player.
+    function setTrack(pointFn) {
+      if (workerView) leaveWorkerView(true);
+      const first = pointFn && pointFn();
+      if (!first) return false;
+      const from = flight ? flight.to : goal;
+      if (!track) track = { point: pointFn, saved: copyState(from) };
+      else track.point = pointFn;
+      focus = null;
+      autoFollow = false;
+      inertia = null;
+      const state = makeState(first.x, first.y, first.z, Math.min(TRACK_DISTANCE, from.distance), from.azimuth,
+        clamp(from.polar, TRACK_POLAR_MIN + 0.2, TRACK_POLAR_MAX - 0.2));
+      startFlight(state, 0.6, null, false);
+      return true;
+    }
+
+    // Back to the site view (silent: just drop the focus, e.g. the site is being replaced).
+    function clearTrack(silent) {
+      if (!track) return;
+      track = null;
+      if (silent) return;
+      frameHome({ animate: true });
     }
 
     // ---- worker follow view ----
@@ -1663,6 +1733,17 @@
       const blocked = inputBlocked();
       if (blocked && !wasBlocked) dropInput(); // a window opened mid-drag: the drag must not go on under it
       wasBlocked = blocked;
+      if (track) {
+        const point = trackPoint();
+        if (point) {
+          const state = flight ? flight.to : goal;
+          state.target.x = point.x;
+          state.target.y = point.y;
+          state.target.z = point.z;
+        } else {
+          clearTrack();
+        }
+      }
       if (workerView) {
         if (updateWorker(dt, now)) {
           smoothOffset(dt);
@@ -1754,6 +1835,11 @@
         return !!flight;
       },
       setWorkerView: setWorkerView,
+      setTrack: setTrack,
+      clearTrack: clearTrack,
+      isTracking: function () {
+        return !!track;
+      },
       isWorkerView: function () {
         return workerView;
       },

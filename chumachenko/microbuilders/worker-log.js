@@ -32,12 +32,20 @@
   }
 
   function statusOf(builder) {
-    const planLeft = uniqueCount(builder.plan);
+    const planLeft = root.MicroBuilders.planMinis(builder);
     if (builder.phase === 'meal') return 'Обед';
     if (builder.phase === 'walk' && builder.walkPurpose === 'meal') return 'Идёт есть';
+    if (builder.phase === 'smokeCall') return 'Зовёт на перекур';
+    if (builder.phase === 'smokeWait') return 'Ждёт компанию на перекур';
+    if (builder.phase === 'walk' && builder.walkPurpose === 'smokeMeet') return 'Идёт к компании на перекур';
     if (builder.phase === 'walk' && builder.walkPurpose === 'smoke') return 'Идёт на перекур';
+    if (builder.phase === 'walk' && builder.walkPurpose === 'sleep') return 'Идёт спать';
+    if (builder.phase === 'break' && builder.breakKind === 'sleep') return 'Спит';
     if (builder.phase === 'break' && builder.breakKind === 'rest') return 'Отдых';
     if (builder.phase === 'break' && builder.breakKind === 'smoke') return 'Перекур';
+    if (builder.phase === 'break' && builder.breakKind === 'heal') return 'В больнице';
+    if (builder.phase === 'walk' && builder.walkPurpose === 'heal') return 'Идёт в больницу';
+    if (builder.phase === 'fall') return 'Падает с лесов';
     if (builder.phase === 'plan') {
       if (builder.waitReason === 'front') return 'Ждёт: нет свободных кубов';
       return planLeft > 0 ? 'Обновляет план' : 'Получает план';
@@ -50,6 +58,8 @@
       return planLeft > 0 ? 'Ждёт следующую ходку' : 'Получает план';
     }
     if (builder.phase === 'mine') return 'Набирает в карьере';
+    if (builder.phase === 'campFetch') return 'Берёт материал для столовой';
+    if (builder.phase === 'campBuild') return 'Строит столовую';
     if (builder.phase === 'place') return 'Кладёт куб';
     if (builder.phase === 'erect') return 'Ставит леса';
     if (builder.phase === 'passage') return 'Пробивает проход';
@@ -57,7 +67,7 @@
     if (builder.phase === 'walk' && builder.walkPurpose === 'out') {
       return planLeft > 0 ? 'Идёт к столу' : 'Идёт за новым планом';
     }
-    if (builder.phase === 'walk' && builder.walkPurpose === 'recover') return 'Аварийный план';
+    if (builder.phase === 'walk' && builder.walkPurpose === 'recover') return builder.escapeKind === 'short' ? 'Аварийный выход' : 'Аварийный план';
     if (builder.phase === 'walk' && builder.walkPurpose === 'erect') return 'Идёт к лесам';
     if (builder.phase === 'walk' && builder.walkPurpose === 'route') {
       return builder.carry.length > 0 ? 'Несёт к месту' : 'Идёт по маршруту';
@@ -69,7 +79,7 @@
 
   function linesOf(builder, world) {
     const api = root.MicroBuilders;
-    const planLeft = uniqueCount(builder.plan);
+    const planLeft = api.planMinis(builder);
     const limit = api.planCubeLimit(world.campaign);
     const carryCubes = uniqueCount(builder.carry);
     const load = api.carryLoad(builder, world);
@@ -99,9 +109,9 @@
     if (builder.blockedWalkAttempts > 0) lines.push('Проход закрыт, ищет обход');
     lines.push('Клетка ' + builder.cell[0] + ', ' + builder.cell[1] + ', ' + builder.cell[2]);
     lines.push(
-      hungerText(builder) +
-      ' · усталость ' + needClock(builder.fatigue, world.campaign.restInterval + builder.index * window.MicroBuildersBalance.tuning.builders.restStagger) +
-      ' · перекур ' + needClock(builder.smokeNeed, builder.smokeThreshold)
+      needText(builder, world, 'hunger', 'Голод') +
+      ' · ' + needText(builder, world, 'fatigue', 'усталость') +
+      ' · ' + needText(builder, world, 'smoke', 'перекур')
     );
     return lines;
   }
@@ -118,17 +128,12 @@
     return 'кубов';
   }
 
-  function hungerText(builder) {
-    if (builder.hungerClock < builder.hungerGrace) {
-      return 'Без голода ' + formatTime(builder.hungerGrace - builder.hungerClock);
-    }
-    return 'Голод ' + needClock(builder.hunger, root.MicroBuilders.BALANCE.hungerMax);
-  }
-
-  function needClock(value, limit) {
-    const left = limit - value;
-    if (left <= 0) return 'пора';
-    return formatTime(left);
+  // «Голод 310/750, 7:20»: points of the need's scale and the time to its top at the rate now.
+  function needText(builder, world, need, label) {
+    const api = root.MicroBuilders;
+    const state = api.needState(builder, world, need);
+    const left = api.needSecondsLeft(builder, world, need);
+    return label + ' ' + Math.round(state.points) + '/' + Math.round(state.max) + ', ' + (left > 0 ? formatTime(left) : 'пора');
   }
 
   function formatTime(seconds) {
