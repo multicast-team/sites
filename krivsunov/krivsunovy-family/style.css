@@ -92,3 +92,45 @@ html[dir=rtl]{--serif:Tahoma,Arial,sans-serif;--sans:Tahoma,Arial,sans-serif}
 
 .game-platform-group{display:flex;flex-direction:column;gap:4px}
 .mobile-stores{display:flex;gap:8px;flex-wrap:wrap;font-size:10px}
+
+.more-about{color:var(--muted)}
+.photo-band{margin-top:16px}
+.photo-label{font-size:12px;font-weight:700;margin-bottom:8px;color:var(--muted)}
+.photo-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;overflow-x:auto;scrollbar-width:thin;scroll-snap-type:x proximity}
+.photo-strip figure{min-width:0;scroll-snap-align:start}
+.photo-strip a{display:block;overflow:hidden;border-radius:12px;background:var(--green)}
+.photo-strip img{display:block;width:100%;height:170px;object-fit:cover}
+.photo-strip figcaption{margin-top:6px;font-size:12px;color:var(--muted)}
+.photo-strip:focus-visible{outline:3px solid var(--coral);outline-offset:4px}
+html:has(dialog[open]){overflow:hidden}
+dialog{overscroll-behavior:contain}
+.dialog-head{position:sticky;top:0;z-index:2;background:var(--paper);padding-bottom:10px}
+.dialog-head h2{min-width:0}
+.dialog-head form{flex-shrink:0;margin:0}
+@media(max-width:600px){
+ .page{padding:0 12px;margin:12px auto}.sheet{padding:16px}
+ .languages a{min-height:54px;font-size:15px}.language-code{display:none}
+ .masthead{flex-direction:column;align-items:flex-start;gap:10px}h1{font-size:35px}.subtitle{font-size:13px}
+ .home-label{display:flex;gap:9px;flex-wrap:wrap;text-align:start;font-size:13px}.home-label strong{font-size:14px}
+ .identity{grid-template-columns:minmax(0,1fr);gap:12px}.couple{grid-column:auto;height:290px}
+ .person{padding:18px}.person h2{font-size:28px}.age{font-size:16px}.profession{font-size:15px;line-height:1.6;margin-top:10px}
+ .hobbies{gap:7px}.hobbies li{font-size:13px;padding:7px 9px;line-height:1.4}
+ .metrics{gap:8px;margin-top:16px}.metric{min-height:92px;flex-direction:column;text-align:center;padding:12px 6px;gap:6px}.metric strong{font-size:31px}.metric span{font-size:12px;line-height:1.4;max-width:none}
+ .lifestyle{gap:8px 12px}.fact{font-size:12px;line-height:1.5;align-items:flex-start}.fact strong{font-size:14px}.fact-icon{width:30px;height:30px;flex-basis:30px;font-size:15px}
+ .section-heading{align-items:flex-start;flex-direction:column;gap:12px}.section-heading h2{font-size:28px}.section-heading p{font-size:14px;line-height:1.55;margin-top:7px}
+ .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:9px}
+ .button,.pet .button{min-height:44px;font-size:14px;padding:10px 12px;touch-action:manipulation}
+ .pet-grid{grid-template-columns:minmax(0,1fr);gap:14px}.pet:last-child{grid-column:auto;display:block}
+ .pet-image,.pet:last-child .pet-image{height:230px;min-height:0}.pet-body{padding:16px}.pet-line{gap:9px}.pet h3{font-size:22px}.pet small{font-size:14px}.pet p{font-size:14px;line-height:1.65;margin-top:9px}.soon{font-size:12px;padding:4px 8px}.pet .button{margin-top:12px}
+ .photo-band{margin-top:19px}.photo-label{font-size:14px}.photo-strip{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:86%;gap:12px;padding-bottom:9px}.photo-strip img{height:250px;object-fit:contain}.photo-strip figcaption{font-size:13px;margin-top:8px}
+ .footnote{font-size:13px;line-height:1.6;gap:15px;margin-top:18px}.games{gap:12px;font-size:13px}.games a{display:inline-flex;align-items:center;min-height:44px;padding:5px 2px}.mobile-stores{font-size:13px;gap:10px}.game-platform-group{gap:2px}.tiny{font-size:10px}
+ dialog{width:calc(100% - 16px);max-height:92dvh;padding:14px;border-radius:16px}.dialog-head h2{font-size:24px;line-height:1.3}.close{min-width:44px;min-height:44px;touch-action:manipulation}.gallery{grid-template-columns:minmax(0,1fr);gap:20px}.gallery img{height:auto;max-height:none;object-fit:contain}.gallery figcaption{font-size:14px}.video-dialog video{max-height:62dvh}.video-dialog p{font-size:14px;line-height:1.6}
+ [dir=rtl] h1{font-size:31px}[dir=rtl] .person h2{font-size:26px}
+}
+@media print{.profession{font-size:11px;line-height:1.4}.pet-image,.pet:last-child .pet-image{height:95px}.pet p{font-size:10.5px;line-height:1.4}}
+@media(max-width:1100px) and (max-height:520px){
+ .profession,.pet p{font-size:14px;line-height:1.55}.pet small{font-size:13px}
+ .button,.pet .button,.close{min-height:44px}.close{min-width:44px}.button,.pet .button{font-size:13px}
+ .fact{font-size:12px}.fact strong{font-size:13px}.games,.mobile-stores{font-size:12px}.games a{display:inline-flex;align-items:center;min-height:44px}
+ .video-dialog video{max-height:55dvh}
+}
