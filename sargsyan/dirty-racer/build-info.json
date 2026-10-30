@@ -1,23 +1,8 @@
 {
-  "release": "shop-2026-10-31-v1",
-  "built_at_utc": "2026-10-30T21:19:44.350669+00:00",
+  "release": "welcome-back-2026-10-31-v1",
+  "built_at_utc": "2026-10-30T21:32:47.844103+00:00",
+  "welcome_back": "title, subtitle, cash illustration, amount, offline time vs limit, ad x2 and collect",
   "shop": {
-    "carbon": {
-      "ad": "10 x3/day",
-      "iap": {
-        "100": 1.99,
-        "255": 5.99,
-        "520": 11.99,
-        "1100": 22.99,
-        "2750": 59.99
-      }
-    },
-    "cash_for_carbon": {
-      "10": "1900 s income",
-      "30": "7630 s",
-      "50": "15200 s"
-    },
-    "store": "test, no payment",
     "doc": "Docs/Impl/SHOP.md"
   },
   "crew": {
@@ -27,29 +12,28 @@
     "doc": "Docs/Impl/GARAGE.md"
   },
   "checks": {
-    "domain_shop_garage_packs_config": "49/49",
-    "unity_garage_and_packs": "2/2"
+    "unity_reward_offers_and_stock_return": "passed"
   },
   "files": [
-    {
-      "path": "Build/36db3327da483fb466836a4fe9eba603.data.unityweb",
-      "bytes": 15182317,
-      "sha256": "7d66acff3076fd5b5a11b35283559599746deff88a965b162589e6a6870f9e44"
-    },
     {
       "path": "Build/9eb93e8ded5e97bfd46bfe3585438173.loader.js",
       "bytes": 48779,
       "sha256": "3ee0c8d1bb2c07c2504ad10540feee32c1fee9711d408b82c9ab9ef4ec3ae8aa"
     },
     {
-      "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
-      "bytes": 77286,
-      "sha256": "7f55789e82bfe6ddf1bb6d2187c14b5cfe3ac7d28d71070aa734dda743684cdd"
+      "path": "Build/b8267b2310b345d8aca058ec1e07d088.data.unityweb",
+      "bytes": 15186476,
+      "sha256": "da8d31edc000847f685b0e91f3170aec603a8daa71893b67f3e97634822c6068"
     },
     {
-      "path": "Build/e95fc296c3c6252fdeb3b05589a556a4.wasm.unityweb",
-      "bytes": 11709215,
-      "sha256": "fe7a82d727377a70bd480baa779bd4924ff6b295efe87aedad912ecf18c5bf94"
+      "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
+      "bytes": 77286,
+      "sha256": "4362a1fdabc114811a6ca83b0b44a052f84533bb6fae5bdd703d50be38ffa87f"
+    },
+    {
+      "path": "Build/dbd8a2aaf39949d6ee4725f32ca1d2a0.wasm.unityweb",
+      "bytes": 11708101,
+      "sha256": "66c6f9721e20ca89b0219b7044a790866fe4078e5f6db06343d70d3fe432bce4"
     }
   ]
 }
