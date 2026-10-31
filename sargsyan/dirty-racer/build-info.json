@@ -1,37 +1,38 @@
 {
-  "release": "cars-2026-10-31-v1",
-  "built_at_utc": "2026-10-30T23:08:11.272576+00:00",
-  "fixes": [
-    "cars stay visible after Reset progress from the garage (StageViewRoot showroom visibility)",
-    "open races always have crew and car; a save with an empty slot is repaired instead of starting a new profile"
+  "release": "pages-art-2026-10-31-v1",
+  "built_at_utc": "2026-10-31T01:08:18.065237+00:00",
+  "changes": [
+    "garage and shop open as full pages (wallets on top, no race band)",
+    "nav order HQ, Crew, Compete, Garage, Shop; red dot on HQ while an upgrade is affordable",
+    "upgrade info text readable (body, bold, main text colour)",
+    "crew tab lists only the current race (CrewState.Home, save roster[].home)",
+    "painted currency art (carbon tile, banknote, stacks) and helmet busts (ArtPainter)"
   ],
   "docs": [
-    "Docs/Impl/RACE_UNLOCKS.md"
+    "Docs/Impl/UI.md#12",
+    "Docs/Impl/CREW_PACKS.md",
+    "Docs/Impl/SHOP.md"
   ],
-  "checks": {
-    "unity_garage_experience": "5/5",
-    "domain_players_day_fuzz": "4/4 (2 inline as WebGL)"
-  },
   "files": [
     {
-      "path": "Build/1b6af70bf402c9466bcad9d053f0c14b.data.unityweb",
-      "bytes": 15185808,
-      "sha256": "21e88c03b10813e4e6d466a2540d8a3284271fb400c6fea34eeefbd946470130"
+      "path": "Build/22b29df85e489983bfe8faf60b047865.data.unityweb",
+      "bytes": 15195459,
+      "sha256": "80bdb171f479aafc01f595d6eac0fb6f0501420c3344a1ec9407acb86c39e615"
     },
     {
-      "path": "Build/1fc5e7a2ece876b7cded3e76c979d3fb.wasm.unityweb",
-      "bytes": 11712146,
-      "sha256": "43041360f1fa4b81a1564ea873886c188e11a3e4462e43489bcb076872320587"
-    },
-    {
-      "path": "Build/9eb93e8ded5e97bfd46bfe3585438173.loader.js",
+      "path": "Build/2c9fbb6903f73b15fd655894b9a6378e.loader.js",
       "bytes": 48779,
-      "sha256": "3ee0c8d1bb2c07c2504ad10540feee32c1fee9711d408b82c9ab9ef4ec3ae8aa"
+      "sha256": "250c2f840a78a2a7ffa44279091e61c86c805832321d32ebcaced885de9bed59"
+    },
+    {
+      "path": "Build/abcdc214ce119ab6e5a85ee0ec3d5ae1.wasm.unityweb",
+      "bytes": 11724380,
+      "sha256": "cbc9546459887b30d461b6c99537aecc2ca4d0885d1650103d14f777c3275a9f"
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "035a7258c1ce4e483b0a97d99d4706ed13c9040d802781acc05963d57747c7b0"
+      "sha256": "9963bc19be152cd53fdf75909c67b5f5b0ce37aafe3559dccc5e9efd5377bc78"
     }
   ]
 }
