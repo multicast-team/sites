@@ -171,6 +171,58 @@
      65
     ]
    ]
+  },
+  "gradeCap": {
+   "columns": [
+    "suit",
+    "cell"
+   ],
+   "rows": [
+    [
+     0,
+     "stat.bearDroneGradeCapBonus"
+    ],
+    [
+     1,
+     "stat.chainDroneGradeCapBonus"
+    ],
+    [
+     2,
+     "stat.midasDroneGradeCapBonus"
+    ],
+    [
+     3,
+     "stat.froggerDroneGradeCapBonus"
+    ],
+    [
+     4,
+     "stat.veinDroneGradeCapBonus"
+    ],
+    [
+     5,
+     "stat.starburstDroneGradeCap"
+    ],
+    [
+     6,
+     "stat.elixirDroneGradeCapBonus"
+    ],
+    [
+     7,
+     "stat.voidDroneGradeCapBonus"
+    ],
+    [
+     8,
+     "stat.anglerDroneGradeCapBonus"
+    ],
+    [
+     9,
+     "stat.prismDroneGradeCapBonus"
+    ],
+    [
+     10,
+     "stat.minotaurDroneGradeCapBonus"
+    ]
+   ]
   }
  }
 }

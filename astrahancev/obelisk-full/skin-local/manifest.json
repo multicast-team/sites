@@ -1,0 +1,56 @@
+{
+ "version": "2.2.50",
+ "stage": "1.30",
+ "input": {
+  "base_apk_sha256": "34930271790b93e13c0a8013ceaac0e75a5ee8e8d1d76fb2c1baa821a4f0882d",
+  "base_apk_in_SHA256SUMS": true,
+  "droid_in_apk_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "droid_file_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "expected": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "ok": true
+ },
+ "note": "Материалы оригинала Idle Obelisk Miner 2.2.50. Только локально, не публиковать.",
+ "counts": {
+  "sprites": 1078,
+  "frames": 4147,
+  "tpag": 4166,
+  "atlases": 6
+ },
+ "atlases": {
+  "atlases/texture_00.png": {
+   "rgba_sha256": "f31e3117f4c83cce038f9c01b9abe6a929b9c65bac786f7f813a13b51e1fca65",
+   "width": 64,
+   "height": 64
+  },
+  "atlases/texture_01.png": {
+   "rgba_sha256": "f82038cf27b87a44e4bd9a0918bc3170225e99feb1f77358d8faab67cdb826ef",
+   "width": 2048,
+   "height": 2048
+  },
+  "atlases/texture_02.png": {
+   "rgba_sha256": "b4c945ee7f0a2e7699bde2e58d2ca545c1aa12ae620006d34f7a171ed25a70ad",
+   "width": 2048,
+   "height": 2048
+  },
+  "atlases/texture_03.png": {
+   "rgba_sha256": "45f6a173417089a2caf108dbd2f12c82be09f978bcc8a89bb37ffb2a1de53a86",
+   "width": 2048,
+   "height": 2048
+  },
+  "atlases/texture_04.png": {
+   "rgba_sha256": "c1e9de7214cb5639fdac7d379edf2a9b06134fe9318b317c728314d4d6ac1f8f",
+   "width": 2048,
+   "height": 2048
+  },
+  "atlases/texture_05.png": {
+   "rgba_sha256": "06f948f781b1b6cf3013464b8a4e74736e4b91006257d8d09317a425ddd42fb9",
+   "width": 2048,
+   "height": 2048
+  }
+ },
+ "json_sha256": {
+  "tpag.json": "8be1a8c0cbe52e0b203090c747245052f8d3c5f83616c3a542ba04bf2174c9af",
+  "sprites.json": "b215797b03b5c7de3e453154393acaeb85d764eb1293cda355d963930afef9ac",
+  "map.json": "7be1d418472af844b895b2ae92c839d308d344f35e49b3d51aec66ec4083eedc"
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "$schema": "systems/worlds",
+ "system": "worlds",
+ "version": "2.2.50",
+ "constants": {
+  "spawn.die": 9999,
+  "spawn.scale": 1000,
+  "spawn.perScreenBase": 10,
+  "flag.die": 999,
+  "flag.scale": 10,
+  "income.die": 9999,
+  "income.scale": 10000,
+  "zones": 21,
+  "card.polyLevel": 3,
+  "card.infernalLevel": 4,
+  "card.infernalBase": 1
+ },
+ "tables": {
+  "cardMulti": {
+   "columns": [
+    "level",
+    "multi"
+   ],
+   "rows": [
+    [
+     0,
+     1
+    ],
+    [
+     1,
+     1.5
+    ],
+    [
+     2,
+     2
+    ]
+   ]
+  }
+ }
+}

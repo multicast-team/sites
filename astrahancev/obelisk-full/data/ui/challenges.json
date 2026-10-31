@@ -1,0 +1,1536 @@
+{
+ "$schema": "ui-challenges",
+ "screen": "challenges",
+ "version": "2.2.50",
+ "comment": "Меню испытаний (этап 8.3): шапка текущего испытания (подложки ступени, полоса прогресса, Peek, прогресс, награда, «Complete Challenge»), список 52 улучшений испытаний по трём ступеням с заголовками, прокрутка и ползунок, верхняя полоса (монеты ступеней, Info, ☰), меню ☰ (Hide maxed), окно Upcoming. Координаты — px комнаты 500×960, y шапки и списка — до вычета прокрутки. Числа — из листьев события Draw меню O (oracle/challenges83, генератор mkdata83.py); источники и ?? — oracle/sources.json → ui.challenges83.",
+ "cull": {
+  "top": -300,
+  "bottom": 1260
+ },
+ "back": {
+  "component": "rect",
+  "x1": 0,
+  "y1": 0,
+  "x2": 500,
+  "y2": 930,
+  "color": "#000000",
+  "alpha": 0.850000024
+ },
+ "noise": {
+  "sprite": "sprite.noise_test",
+  "x": 32,
+  "step": 784,
+  "count": 12,
+  "sx": 6,
+  "sy": 6,
+  "alpha": 0.150000006
+ },
+ "header": {
+  "backings": [
+   "sprite.patch_backing_challenge_a",
+   "sprite.patch_backing_challenge_b",
+   "sprite.patch_backing_challenge_c"
+  ],
+  "backing": [
+   {
+    "x": 250,
+    "y": 180,
+    "sx": 20,
+    "sy": 4
+   },
+   {
+    "x": 250,
+    "y": 292,
+    "sx": 26,
+    "sy": 3
+   },
+   {
+    "x": 250,
+    "y": 230,
+    "sx": 28,
+    "sy": 7
+   }
+  ],
+  "plates": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 250,
+    "y": 165,
+    "sx": 13,
+    "sy": 1.10000002
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 250,
+    "y": 210,
+    "sx": 27,
+    "sy": 3
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 250,
+    "y": 297,
+    "sx": 20,
+    "sy": 1.20000005
+   }
+  ],
+  "descSyBase": 1,
+  "descFont": "font.size12",
+  "title": {
+   "component": "text",
+   "font": "font.size12",
+   "halign": "center",
+   "valign": "middle",
+   "x": 250,
+   "y": 165
+  },
+  "desc": {
+   "component": "text",
+   "font": "font.size12",
+   "halign": "center",
+   "valign": "middle",
+   "x": 250,
+   "y": 210,
+   "sep": 18,
+   "width": 430
+  },
+  "bar": {
+   "sprite": "sprite.chest_meter2x_size",
+   "back": 1,
+   "fill": 0,
+   "w": 120,
+   "h": 14,
+   "x": 130,
+   "y": 242,
+   "sx": 2,
+   "sy": 2
+  },
+  "peek": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_button",
+    "x": 90,
+    "y": 256,
+    "sx": 3.4000001,
+    "sy": 1.60000002
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.eye",
+    "frame": 1,
+    "x": 73,
+    "y": 254
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "halign": "center",
+    "valign": "middle",
+    "x": 98,
+    "y": 256,
+    "text": "t.peek",
+    "color": "#000000"
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "halign": "center",
+    "valign": "middle",
+    "x": 97,
+    "y": 255,
+    "text": "t.peek"
+   }
+  ],
+  "progress": {
+   "component": "text",
+   "font": "font.size12",
+   "halign": "center",
+   "valign": "middle",
+   "x": 250,
+   "y": 257
+  },
+  "reward": {
+   "component": "text",
+   "font": "font.size12",
+   "halign": "center",
+   "valign": "middle",
+   "x": 250,
+   "y": 297
+  },
+  "rewardOutline": [
+   false,
+   false,
+   true
+  ],
+  "outline": [
+   [
+    -1,
+    -1
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    -1,
+    1
+   ],
+   [
+    1,
+    -1
+   ]
+  ],
+  "rewardParts": [
+   "t.reward",
+   "t.challenge_coins_3",
+   "t.extreme_challenge_coins_2",
+   "t.divine_challenge_coins_2"
+  ],
+  "complete": {
+   "y": 365,
+   "glow": {
+    "sprite": "sprite.circle",
+    "x": 250,
+    "sx": 4.6875,
+    "sy": 2.5,
+    "color": "#ffff00"
+   },
+   "button": {
+    "sprite": "sprite.patch_button",
+    "x": 250,
+    "sx": 8,
+    "sy": 4
+   },
+   "text": {
+    "font": "font.size12",
+    "x": 250,
+    "dy": -2,
+    "text": "t.complete_challenge",
+    "sep": 21,
+    "width": 1000
+   }
+  }
+ },
+ "list": {
+  "firstRow": 510,
+  "rowStep": 100,
+  "sectionGap": 60,
+  "titleDy": -80,
+  "subtitleDy": 20,
+  "sections": [
+   {
+    "title": "t.challenge_upgrades",
+    "color": "#f5788c",
+    "lines": [
+     [
+      25,
+      155
+     ],
+     [
+      345,
+      475
+     ]
+    ],
+    "subtitle": null
+   },
+   {
+    "title": "t.extreme_challenge_upgrades",
+    "color": "#be8cfa",
+    "lines": [
+     [
+      25,
+      119
+     ],
+     [
+      381,
+      475
+     ]
+    ],
+    "subtitle": "t.challenge_50_plus"
+   },
+   {
+    "title": "t.divine_challenge_upgrades",
+    "color": "#b4cdf0",
+    "lines": [
+     [
+      25,
+      123.5
+     ],
+     [
+      376.5,
+      475
+     ]
+    ],
+    "subtitle": "t.challenge_76_plus"
+   }
+  ],
+  "lineW": 2,
+  "lineAlpha": 0.600000024,
+  "subtitleColor": "#c0c0c0",
+  "subtitleFont": "font.size10",
+  "row": {
+   "bg": {
+    "component": "sprite",
+    "sprite": "sprite.challenge_backgrounds",
+    "x": 250,
+    "sx": 2,
+    "sy": 2
+   },
+   "button": {
+    "x": 445,
+    "sx": 4.19999981,
+    "sy": 3.20000005
+   },
+   "icon": {
+    "x": 38,
+    "sx": 2,
+    "sy": 2
+   },
+   "small": [
+    {
+     "x": 369,
+     "dy": -13
+    },
+    {
+     "x": 369,
+     "dy": 13
+    }
+   ],
+   "smallSx": 4,
+   "smallSy": 1.39999998,
+   "plate": {
+    "x": 200,
+    "sx": 16.5,
+    "sy": 3
+   },
+   "descX": 199,
+   "coin": {
+    "x": 445,
+    "dy": -11,
+    "sx": 2,
+    "sy": 2
+   },
+   "cost": {
+    "x": 445,
+    "dy": 11
+   },
+   "maxed": {
+    "x": 445,
+    "dy": -1,
+    "text": "t.maxed"
+   },
+   "lock": {
+    "bg": "#404040",
+    "plate": {
+     "x": 250,
+     "sx": 25,
+     "sy": 3,
+     "color": "#808080"
+    },
+    "text": {
+     "x": 246,
+     "key": "t.one_level_in_previous_upgrade_to_unlock",
+     "color": "#808080"
+    }
+   },
+   "poor": "#808080",
+   "maxedButton": "sprite.patch_button_green",
+   "normalButton": "sprite.patch_button"
+  },
+  "coins": [
+   "sprite.challenge_coin",
+   "sprite.extreme_challenge_coin",
+   "sprite.divine_challenge_coin"
+  ],
+  "yesNo": [
+   "t.no",
+   "t.yes"
+  ]
+ },
+ "upgrades": {
+  "columns": [
+   "id",
+   "tier",
+   "icon",
+   "frame",
+   "desc",
+   "cap",
+   "cost",
+   "effect"
+  ],
+  "rows": [
+   [
+    0,
+    0,
+    "sprite.bar_cost_reduc",
+    0,
+    "t.bar_upgrade_costs_minus_5_pct",
+    3,
+    10,
+    [
+     "num",
+     "-",
+     5,
+     "%",
+     1
+    ]
+   ],
+   [
+    1,
+    0,
+    "sprite.bomb_chain",
+    0,
+    "t.chain_bomb_amount_plus_1",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     1,
+     "",
+     1
+    ]
+   ],
+   [
+    2,
+    0,
+    "sprite.pickaxe_super_crit_damage",
+    0,
+    "t.pickaxe_super_crit_damage_plus_10_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     10,
+     "%",
+     1
+    ]
+   ],
+   [
+    3,
+    0,
+    "sprite.prestige_point_gain",
+    0,
+    "t.exp_gain_and_pp_gain_plus_10_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     10,
+     "%",
+     1
+    ]
+   ],
+   [
+    4,
+    0,
+    "sprite.bomb_capacity",
+    0,
+    "t.bomb_capacity_plus_3",
+    1,
+    20,
+    [
+     "num",
+     "+",
+     3,
+     "",
+     1
+    ]
+   ],
+   [
+    5,
+    0,
+    "sprite.bomb_crit_damage",
+    0,
+    "t.bomb_crit_damage_plus_20_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     20,
+     "%",
+     1
+    ]
+   ],
+   [
+    6,
+    0,
+    "sprite.pickaxe_damage",
+    0,
+    "t.pickaxe_damage_per_challenge_complete_plus_1_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     1,
+     "%",
+     "completed"
+    ]
+   ],
+   [
+    7,
+    0,
+    "sprite.skill_shard",
+    0,
+    "t.skill_bit_chance_plus_1_pct",
+    1,
+    20,
+    [
+     "num",
+     "+",
+     1,
+     "%",
+     1
+    ]
+   ],
+   [
+    8,
+    0,
+    "sprite.ore_sell_price",
+    0,
+    "t.ore_sell_price_plus_15_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     15,
+     "%",
+     1
+    ]
+   ],
+   [
+    9,
+    0,
+    "sprite.double_craft_chance",
+    0,
+    "t.double_craft_chance_plus_3_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     3,
+     "%",
+     1
+    ]
+   ],
+   [
+    10,
+    0,
+    "sprite.bomb_ultra_crit_chance",
+    0,
+    "t.bomb_super_crit_chance_plus_25_pct_bomb_ultra",
+    1,
+    30,
+    [
+     "pair",
+     "+",
+     [
+      25,
+      5
+     ],
+     "%",
+     1
+    ]
+   ],
+   [
+    11,
+    0,
+    "sprite.pickaxe_damage",
+    0,
+    "t.pickaxe_dmg_per_skill_tree_node_unlocked_plus_1",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     1,
+     "%",
+     "skillNodes"
+    ]
+   ],
+   [
+    12,
+    0,
+    "sprite.pickaxe_super_crit_chance",
+    0,
+    "t.pickaxe_super_crit_chance_plus_2_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     2,
+     "%",
+     1
+    ]
+   ],
+   [
+    13,
+    0,
+    "sprite.obelisk_armor_down",
+    0,
+    "t.obelisk_armor_minus_12_pct",
+    1,
+    30,
+    [
+     "num",
+     "-",
+     12,
+     "%",
+     1
+    ]
+   ],
+   [
+    14,
+    0,
+    "sprite.golden_vein_multi",
+    0,
+    "t.golden_vein_multi_plus_5_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     5,
+     "%",
+     1
+    ]
+   ],
+   [
+    15,
+    0,
+    "sprite.pickaxe_and_bomb_super_crit_chance",
+    0,
+    "t.pickaxe_and_bomb_super_crit_chance_plus_2_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     2,
+     "%",
+     1
+    ]
+   ],
+   [
+    16,
+    0,
+    "sprite.bar_craft_cost",
+    0,
+    "t.bar_craft_costs_minus_5_pct",
+    2,
+    10,
+    [
+     "num",
+     "-",
+     5,
+     "%",
+     1
+    ]
+   ],
+   [
+    17,
+    0,
+    "sprite.gems_bonus_gems_freebie_pack",
+    0,
+    "t.gems_from_freebie_pack_plus_1",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     1,
+     "",
+     1
+    ]
+   ],
+   [
+    18,
+    1,
+    "sprite.pickaxe_obelisk_damage",
+    0,
+    "t.pickaxe_damage_per_obelisk_level_plus_2_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     2,
+     "%",
+     "obelisk"
+    ]
+   ],
+   [
+    19,
+    1,
+    "sprite.golden_floor_multi",
+    0,
+    "t.golden_floor_multiplier_plus_1x",
+    2,
+    10,
+    [
+     "num",
+     "+",
+     1,
+     "x",
+     1
+    ]
+   ],
+   [
+    20,
+    1,
+    "sprite.lootbug_spawn_rate",
+    0,
+    "t.lootbug_spawn_rate_plus_10_pct",
+    1,
+    30,
+    [
+     "num",
+     "+",
+     10,
+     "%",
+     1
+    ]
+   ],
+   [
+    21,
+    1,
+    "sprite.gems_banked",
+    0,
+    "t.banked_freebie_cap_plus_1",
+    1,
+    30,
+    [
+     "num",
+     "+",
+     1,
+     "",
+     1
+    ]
+   ],
+   [
+    22,
+    1,
+    "sprite.star_super_spawn_rate",
+    0,
+    "t.super_star_spawn_rate_plus_10_pct",
+    1,
+    30,
+    [
+     "num",
+     "+",
+     10,
+     "%",
+     1
+    ]
+   ],
+   [
+    23,
+    1,
+    "sprite.pet_cap",
+    0,
+    "t.pet_level_cap_plus_1",
+    1,
+    30,
+    [
+     "num",
+     "+",
+     1,
+     "",
+     1
+    ]
+   ],
+   [
+    24,
+    1,
+    "sprite.rainbow_floor_multi",
+    0,
+    "t.rainbow_floor_multiplier_plus_5_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     5,
+     "%",
+     1
+    ]
+   ],
+   [
+    25,
+    1,
+    "sprite.bomb_ultra_crit_chance",
+    0,
+    "t.bomb_ultra_crit_chance_plus_4_pct",
+    3,
+    10,
+    [
+     "num",
+     "+",
+     4,
+     "%",
+     1
+    ]
+   ],
+   [
+    26,
+    1,
+    "sprite.galactic_floor_chance",
+    0,
+    "t.galactic_rainbow_chance_plus_2_pct",
+    1,
+    30,
+    [
+     "num",
+     "+",
+     2,
+     "%",
+     1
+    ]
+   ],
+   [
+    27,
+    2,
+    "sprite.star_super_supergiant_chance",
+    0,
+    "t.super_star_supergiant_chance_plus_1_50_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     1.5,
+     "%",
+     1
+    ]
+   ],
+   [
+    28,
+    2,
+    "sprite.fish_shiny_multi",
+    0,
+    "t.shiny_fish_multiplier_plus_10_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     10,
+     "%",
+     1
+    ]
+   ],
+   [
+    29,
+    2,
+    "sprite.golden_ore_chance",
+    0,
+    "t.golden_ore_chance_plus_1_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     1,
+     "%",
+     1
+    ]
+   ],
+   [
+    30,
+    2,
+    "sprite.star_supergiant_chance",
+    0,
+    "t.star_supergiant_chance_plus_2_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     2,
+     "%",
+     1
+    ]
+   ],
+   [
+    31,
+    2,
+    "sprite.star_spawn_rate",
+    0,
+    "t.star_spawn_rate_plus_10_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     10,
+     "%",
+     1
+    ]
+   ],
+   [
+    32,
+    2,
+    "sprite.frog_golden_chance",
+    0,
+    "t.golden_frog_chance_plus_1_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     1,
+     "%",
+     1
+    ]
+   ],
+   [
+    33,
+    2,
+    "sprite.stonks_super_crit_chance",
+    0,
+    "t.super_stonks_chance_plus_1_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     1,
+     "%",
+     1
+    ]
+   ],
+   [
+    34,
+    2,
+    "sprite.star_novagiant_combo_multi",
+    0,
+    "t.novagiant_combo_multi_plus_20_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     20,
+     "%",
+     1
+    ]
+   ],
+   [
+    35,
+    2,
+    "sprite.ring_divine",
+    0,
+    "t.divine_relic_caps_plus_2",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     2,
+     "",
+     1
+    ]
+   ],
+   [
+    36,
+    2,
+    "sprite.starfruit",
+    0,
+    "t.unlock_item_golden_starfruit",
+    1,
+    10,
+    [
+     "yesno",
+     "",
+     0,
+     "",
+     1
+    ]
+   ],
+   [
+    37,
+    2,
+    "sprite.frog_big_chance",
+    0,
+    "t.big_lootfrog_chance_plus_0_50_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     0.5,
+     "%",
+     1
+    ]
+   ],
+   [
+    38,
+    2,
+    "sprite.stonks_all_multi",
+    0,
+    "t.all_stonks_multipliers_1_15x",
+    1,
+    10,
+    [
+     "num",
+     "",
+     1.15,
+     "x",
+     1
+    ]
+   ],
+   [
+    39,
+    2,
+    "sprite.pet_cap",
+    0,
+    "t.dwarf_pet_cap_plus_5_prism_drone_grade_cap_plus",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     5,
+     "",
+     1
+    ]
+   ],
+   [
+    40,
+    2,
+    "sprite.arch_fragment_gain",
+    0,
+    "t.archaeology_fragment_gain_plus_10_pct",
+    1,
+    10,
+    [
+     "num",
+     "",
+     10,
+     "%",
+     1
+    ]
+   ],
+   [
+    41,
+    2,
+    "sprite.portal_galactic_multi",
+    0,
+    "t.galactic_portal_multi_plus_15_pct",
+    1,
+    10,
+    [
+     "num",
+     "",
+     15,
+     "%",
+     1
+    ]
+   ],
+   [
+    42,
+    2,
+    "sprite.star_radiant_multi",
+    0,
+    "t.star_radiant_multi_plus_12_pct",
+    1,
+    10,
+    [
+     "num",
+     "",
+     12,
+     "%",
+     1
+    ]
+   ],
+   [
+    43,
+    2,
+    "sprite.infernal_multi",
+    0,
+    "t.infernal_card_multi_plus_5_pct",
+    1,
+    10,
+    [
+     "num",
+     "",
+     5,
+     "%",
+     1
+    ]
+   ],
+   [
+    44,
+    2,
+    "sprite.minotaur_head",
+    0,
+    "t.minotaur_drone_grade_cap_plus_3",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     3,
+     "",
+     1
+    ]
+   ],
+   [
+    45,
+    2,
+    "sprite.blind_wizard_chance",
+    0,
+    "t.blind_wizard_chance_plus_1_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     1,
+     "",
+     1
+    ]
+   ],
+   [
+    46,
+    2,
+    "sprite.portal_gold_chance",
+    0,
+    "t.golden_void_portal_chance_plus_10_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     10,
+     "%",
+     1
+    ]
+   ],
+   [
+    47,
+    2,
+    "sprite.spells",
+    8,
+    "t.unlock_spell_draconic_hoard",
+    1,
+    10,
+    [
+     "yesno",
+     "",
+     0,
+     "",
+     1
+    ]
+   ],
+   [
+    48,
+    2,
+    "sprite.rainbow_ore_multi",
+    0,
+    "t.rainbow_ore_multi_plus_12_5_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     12.5,
+     "%",
+     1
+    ]
+   ],
+   [
+    49,
+    2,
+    "sprite.star_super_supergiant_multi",
+    0,
+    "t.super_star_supergiant_multi_plus_7_5_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     7.5,
+     "%",
+     1
+    ]
+   ],
+   [
+    50,
+    2,
+    "sprite.arcanist_unlock_spell_icon",
+    0,
+    "t.arcanist_spell_power_plus_4_pct",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     4,
+     "%",
+     1
+    ]
+   ],
+   [
+    51,
+    2,
+    "sprite.arcanist_all_shiny_multi",
+    0,
+    "t.all_shiny_essence_loot_plus_2",
+    1,
+    10,
+    [
+     "num",
+     "+",
+     2,
+     "",
+     1
+    ]
+   ]
+  ]
+ },
+ "thumb": {
+  "x1": 492,
+  "x2": 502,
+  "top": 99,
+  "bottom": 882,
+  "view": 930,
+  "maxScroll": 5180,
+  "color": "#c0c0c0",
+  "alpha": 0.349999994
+ },
+ "topbar": {
+  "rects": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 62,
+    "x2": 500,
+    "y2": 97,
+    "color": "#957c7d"
+   },
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 62,
+    "x2": 500,
+    "y2": 95,
+    "color": "#695051"
+   }
+  ],
+  "coinX": [
+   80,
+   205,
+   330
+  ],
+  "y": 80,
+  "plate": {
+   "sprite": "sprite.patch_desc_ml",
+   "sx": 6,
+   "sy": 1.60000002
+  },
+  "coinS": 2,
+  "textDx": 22,
+  "showFrom": [
+   0,
+   49,
+   75
+  ],
+  "info": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_button",
+    "x": 468,
+    "y": 80,
+    "sx": 1.60000002,
+    "sy": 1.79999995
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.info_icon",
+    "x": 468,
+    "y": 79
+   }
+  ],
+  "menuButton": {
+   "x": 28,
+   "y": 80,
+   "sx": 1.60000002,
+   "sy": 1.79999995
+  },
+  "burger": [
+   {
+    "component": "rect",
+    "x1": 20,
+    "y1": 71,
+    "x2": 35,
+    "y2": 73
+   },
+   {
+    "component": "rect",
+    "x1": 20,
+    "y1": 77,
+    "x2": 35,
+    "y2": 79
+   },
+   {
+    "component": "rect",
+    "x1": 20,
+    "y1": 83,
+    "x2": 35,
+    "y2": 85
+   }
+  ]
+ },
+ "menu": [
+  {
+   "component": "roundrect",
+   "x1": 14,
+   "y1": 101,
+   "x2": 277,
+   "y2": 177,
+   "xrad": 10,
+   "yrad": 10,
+   "outline": false,
+   "color": "#000000",
+   "alpha": 0.920000017
+  },
+  {
+   "component": "roundrect",
+   "x1": 14,
+   "y1": 101,
+   "x2": 277,
+   "y2": 177,
+   "xrad": 10,
+   "yrad": 10,
+   "outline": true,
+   "color": "#957c7d"
+  },
+  {
+   "component": "text",
+   "font": "font.size10",
+   "x": 26,
+   "y": 117,
+   "text": "t.menu_options",
+   "valign": "middle",
+   "color": "#ffff00"
+  },
+  {
+   "component": "sprite",
+   "sprite": "sprite.unchecked_checked",
+   "id": "check",
+   "x": 38,
+   "y": 147,
+   "sx": 2,
+   "sy": 2
+  },
+  {
+   "component": "text",
+   "font": "font.size10",
+   "x": 59,
+   "y": 148,
+   "text": "t.hide_maxed_challenge_upgrades",
+   "valign": "middle",
+   "color": "#000000"
+  },
+  {
+   "component": "text",
+   "font": "font.size10",
+   "x": 58,
+   "y": 147,
+   "text": "t.hide_maxed_challenge_upgrades",
+   "valign": "middle"
+  }
+ ],
+ "upcoming": {
+  "head": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 0,
+    "x2": 500,
+    "y2": 960,
+    "color": "#000000",
+    "alpha": 0.800000012
+   },
+   {
+    "component": "stretched",
+    "sprite": "sprite.patch_backing_brownish",
+    "x": 5,
+    "y": 177,
+    "w": 490,
+    "h": 606
+   },
+   {
+    "component": "stretched",
+    "sprite": "sprite.patch_desc",
+    "x": 11,
+    "y": 183,
+    "w": 478,
+    "h": 594,
+    "alpha": 0.6
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "halign": "center",
+    "valign": "middle",
+    "x": 251,
+    "y": 208,
+    "text": "t.upcoming_challenges",
+    "color": "#000000"
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "halign": "center",
+    "valign": "middle",
+    "x": 250,
+    "y": 207,
+    "text": "t.upcoming_challenges",
+    "color": "#ffff00"
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "halign": "center",
+    "valign": "middle",
+    "x": 250,
+    "y": 229,
+    "text": "t.your_current_challenge_and_the_next_three_ex",
+    "color": "#c0c0c0"
+   }
+  ],
+  "firstY": 249,
+  "step": 124,
+  "card": {
+   "component": "stretched",
+   "x": 20,
+   "w": 460,
+   "h": 116
+  },
+  "titlePlate": {
+   "component": "stretched",
+   "sprite": "sprite.patch_desc",
+   "x": 140,
+   "dy": 8,
+   "w": 220,
+   "h": 22
+  },
+  "title": {
+   "component": "text",
+   "font": "font.size12",
+   "halign": "center",
+   "valign": "middle",
+   "x": 250,
+   "dy": 19
+  },
+  "current": [
+   {
+    "component": "stretched",
+    "sprite": "sprite.patch_desc",
+    "x": 28,
+    "dy": 10,
+    "w": 66,
+    "h": 20
+   },
+   {
+    "component": "text",
+    "font": "font.size10",
+    "halign": "center",
+    "valign": "middle",
+    "x": 61,
+    "dy": 20,
+    "text": "t.current",
+    "color": "#00ff00"
+   },
+   {
+    "component": "stretched",
+    "sprite": "sprite.patch_desc",
+    "dy": 10,
+    "h": 20
+   }
+  ],
+  "progress": {
+   "component": "text",
+   "font": "font.size10",
+   "halign": "center",
+   "valign": "middle",
+   "dy": 20
+  },
+  "progressRight": 472,
+  "progressPad": 12,
+  "descPlate": {
+   "component": "stretched",
+   "sprite": "sprite.patch_desc",
+   "x": 26,
+   "dy": 32,
+   "w": 448,
+   "h": 56
+  },
+  "desc": {
+   "component": "text",
+   "font": "font.size12",
+   "halign": "center",
+   "valign": "middle",
+   "x": 250,
+   "dy": 60,
+   "sep": 18,
+   "width": 430,
+   "snap": false
+  },
+  "rewardPlate": {
+   "component": "stretched",
+   "sprite": "sprite.patch_desc",
+   "dy": 89,
+   "h": 20
+  },
+  "rewardCenter": 250,
+  "rewardPad": 40,
+  "coin": {
+   "dx": 14,
+   "dy": 99
+  },
+  "reward": {
+   "component": "text",
+   "font": "font.size10",
+   "halign": "center",
+   "valign": "middle",
+   "x": 258,
+   "dy": 99
+  },
+  "end": {
+   "alpha": 0.5,
+   "text": {
+    "component": "text",
+    "font": "font.size12",
+    "halign": "center",
+    "valign": "middle",
+    "x": 250,
+    "dy": 58,
+    "text": "t.more_challenges_to_come_ex",
+    "color": "#c0c0c0"
+   }
+  },
+  "close": {
+   "component": "text",
+   "font": "font.size10",
+   "halign": "center",
+   "valign": "middle",
+   "x": 250,
+   "y": 765,
+   "text": "t.tap_anywhere_to_close",
+   "color": "#c0c0c0"
+  }
+ }
+}

@@ -1,0 +1,2081 @@
+{
+ "droid_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+ "fields": "modes: лево, верх, право, низ, центр",
+ "note": "Материалы оригинала Idle Obelisk Miner 2.2.50. Только локально, не публиковать.",
+ "sprites": {
+  "sprite.arcana_essence": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.arcana_essence_plus": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.arcana_orb": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.arcana_rune": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.arcana_rune_craft_multi": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.arch_cards": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.arch_crosshair": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.arch_crosshair_auto": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.arch_crosshair_golden_chance": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.arch_crosshair_golden_multi": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.arrow_green": {
+   "bottom": 4,
+   "enabled": 0,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.button_fishing_log_toggle": {
+   "bottom": 9,
+   "enabled": 1,
+   "left": 33,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 33,
+   "top": 5
+  },
+  "sprite.button_hub_menu": {
+   "bottom": 9,
+   "enabled": 1,
+   "left": 18,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 18,
+   "top": 6
+  },
+  "sprite.button_unassign_all_drones": {
+   "bottom": 9,
+   "enabled": 1,
+   "left": 39,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 39,
+   "top": 5
+  },
+  "sprite.cap_up": {
+   "bottom": 4,
+   "enabled": 0,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.challenge_backgrounds": {
+   "bottom": 7,
+   "enabled": 0,
+   "left": 108,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 108,
+   "top": 7
+  },
+  "sprite.cloud_large": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.craft_menu_main_backing": {
+   "bottom": 4,
+   "enabled": 0,
+   "left": 62,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 62,
+   "top": 5
+  },
+  "sprite.drone_frog": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.drone_prism": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.fairy_ability": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.fairy_ability16x16": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.fairy_crosshair": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.fairy_crosshair16x16": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.fish": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.fish_box": {
+   "bottom": 36,
+   "enabled": 0,
+   "left": 2,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 1,
+   "top": 8
+  },
+  "sprite.fish_easy_notice_chance": {
+   "bottom": 36,
+   "enabled": 0,
+   "left": 2,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 1,
+   "top": 8
+  },
+  "sprite.fish_selected": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.founder_parachute": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.founders_badge": {
+   "bottom": 6,
+   "enabled": 0,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 6,
+   "top": 6
+  },
+  "sprite.frog": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.inventory_item_inside": {
+   "bottom": 3,
+   "enabled": 0,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 4,
+   "top": 3
+  },
+  "sprite.inventory_item_outline": {
+   "bottom": 3,
+   "enabled": 0,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 4,
+   "top": 3
+  },
+  "sprite.lootbug": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_christmas": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_easter": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_gold": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_gold_christmas": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_gold_easter": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_gold_halloween": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_gold_magma": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_gold_summer": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_gold_valentines": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_halloween": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_magma": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_summer": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.lootbug_valentines": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.notice_backing": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.patch9a": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 4,
+   "top": 4
+  },
+  "sprite.patch9b": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 5,
+   "top": 4
+  },
+  "sprite.patch9c": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 4,
+   "top": 4
+  },
+  "sprite.patch_backing_blue": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_blue_dupe": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_blue_ml": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_blue_tc": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_blue_with_desc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_blue_with_desc_tc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_brownish": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_brownish_bc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_brownish_gold_tc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_brownish_ml": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_brownish_mr": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_brownish_tc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_brownish_tl": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_brownish_with_desc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_brownish_with_desc_ml": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_brownish_with_desc_tc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_challenge_a": {
+   "bottom": 6,
+   "enabled": 1,
+   "left": 7,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 7,
+   "top": 7
+  },
+  "sprite.patch_backing_challenge_b": {
+   "bottom": 7,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 7
+  },
+  "sprite.patch_backing_challenge_c": {
+   "bottom": 7,
+   "enabled": 1,
+   "left": 7,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 7,
+   "top": 7
+  },
+  "sprite.patch_backing_fishin": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_fishin_full_size": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 90,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 90,
+   "top": 5
+  },
+  "sprite.patch_backing_fishin_full_size_brighter": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 90,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 90,
+   "top": 5
+  },
+  "sprite.patch_backing_fishin_full_size_brighter_purp": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 90,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 90,
+   "top": 5
+  },
+  "sprite.patch_backing_fishin_full_size_purp": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 90,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 90,
+   "top": 5
+  },
+  "sprite.patch_backing_fishin_ml": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_fishin_mr": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_fishin_tc": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_fishin_with_desc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_fishin_with_desc_ml": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_fishin_with_desc_purp": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_fishing_enhance2": {
+   "bottom": 7,
+   "enabled": 1,
+   "left": 7,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 7,
+   "top": 8
+  },
+  "sprite.patch_backing_fishing_enhance2_purp": {
+   "bottom": 7,
+   "enabled": 1,
+   "left": 7,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 7,
+   "top": 8
+  },
+  "sprite.patch_backing_fishing_enhance_full_size": {
+   "bottom": 7,
+   "enabled": 0,
+   "left": 196,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 196,
+   "top": 8
+  },
+  "sprite.patch_backing_fishing_test": {
+   "bottom": 7,
+   "enabled": 1,
+   "left": 7,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 7,
+   "top": 8
+  },
+  "sprite.patch_backing_fishing_test_bc": {
+   "bottom": 7,
+   "enabled": 1,
+   "left": 7,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 7,
+   "top": 8
+  },
+  "sprite.patch_backing_fishing_test_full_size": {
+   "bottom": 7,
+   "enabled": 0,
+   "left": 196,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 196,
+   "top": 8
+  },
+  "sprite.patch_backing_fishing_test_tc": {
+   "bottom": 7,
+   "enabled": 1,
+   "left": 7,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 7,
+   "top": 8
+  },
+  "sprite.patch_backing_gold": {
+   "bottom": 6,
+   "enabled": 1,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 4,
+   "top": 5
+  },
+  "sprite.patch_backing_gold2": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_green": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_green_with_desc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 4,
+   "top": 4
+  },
+  "sprite.patch_backing_grey": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_grey_ml": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_grey_mr": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_grey_tl": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_light_gray": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_magma": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 6,
+   "top": 6
+  },
+  "sprite.patch_backing_magma_with_desc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_purple": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_backing_purple_with_desc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_sky": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_sky_ml": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_sky_mr": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_sky_tc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_sky_with_desc": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_sky_with_desc_ml": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_sky_with_desc_ml_lighter": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_white": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_backing_white_ml": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 5,
+   "modes": [
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat",
+    "repeat"
+   ],
+   "right": 5,
+   "top": 5
+  },
+  "sprite.patch_button": {
+   "bottom": 9,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 6
+  },
+  "sprite.patch_button_event": {
+   "bottom": 7,
+   "enabled": 0,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_button_fishing": {
+   "bottom": 9,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 5
+  },
+  "sprite.patch_button_green": {
+   "bottom": 9,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 5
+  },
+  "sprite.patch_button_orange": {
+   "bottom": 9,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 5
+  },
+  "sprite.patch_button_pushed_in": {
+   "bottom": 9,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 6
+  },
+  "sprite.patch_button_real_blue": {
+   "bottom": 9,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 5
+  },
+  "sprite.patch_desc": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_behind_bomb": {
+   "bottom": 3,
+   "enabled": 0,
+   "left": 8,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 8,
+   "top": 3
+  },
+  "sprite.patch_desc_gold_frame": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_gold_frame546_ml": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_green": {
+   "bottom": 6,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 5
+  },
+  "sprite.patch_desc_green_ml325": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_grey": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_highlight": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 4,
+   "top": 3
+  },
+  "sprite.patch_desc_infernal_frame": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 4,
+   "top": 4
+  },
+  "sprite.patch_desc_item_outside": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_ml": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_mr": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_outline_only": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_poly_frame": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 4,
+   "top": 3
+  },
+  "sprite.patch_desc_red": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_silver_frame": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_tc": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_tl": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_desc_white": {
+   "bottom": 3,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "repeat"
+   ],
+   "right": 3,
+   "top": 3
+  },
+  "sprite.patch_iap_backing_new": {
+   "bottom": 5,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 7
+  },
+  "sprite.patch_iap_backing_new_2": {
+   "bottom": 6,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 6
+  },
+  "sprite.patch_iap_backing_new_2_ml": {
+   "bottom": 6,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 6
+  },
+  "sprite.patch_iap_backing_new_3": {
+   "bottom": 7,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 6
+  },
+  "sprite.patch_iap_backing_new_5": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 4
+  },
+  "sprite.patch_iap_backing_new_6": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 6,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 6,
+   "top": 4
+  },
+  "sprite.patch_infernal": {
+   "bottom": 6,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 4,
+   "top": 5
+  },
+  "sprite.patch_poly": {
+   "bottom": 6,
+   "enabled": 1,
+   "left": 3,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 4,
+   "top": 5
+  },
+  "sprite.patch_white_border": {
+   "bottom": 4,
+   "enabled": 1,
+   "left": 4,
+   "modes": [
+    "stretch",
+    "repeat",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 4,
+   "top": 4
+  },
+  "sprite.shop_fill_up": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.star32x32_with_signs": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  },
+  "sprite.stun_block": {
+   "bottom": 0,
+   "enabled": 0,
+   "left": 0,
+   "modes": [
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch",
+    "stretch"
+   ],
+   "right": 0,
+   "top": 0
+  }
+ },
+ "stage": "4.1",
+ "version": "2.2.50"
+}

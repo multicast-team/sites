@@ -1,0 +1,91 @@
+{
+ "$id": "ui-challenges",
+ "title": "Меню испытаний (data/ui/challenges.json, этап 8.3)",
+ "description": "Вёрстка меню испытаний: фон и шум, шапка текущего испытания (подложки ступени, полоса прогресса, Peek, прогресс, награда, «Complete Challenge»), список 52 улучшений испытаний по трём ступеням (ряд — шаблон, таблица upgrades: значок, описание, кап, цена, ступень, вид эффекта), ползунок, верхняя полоса (монеты ступеней, Info, ☰), меню ☰ (Hide maxed), окно Upcoming. Привязки — ui/screens/challenges.mjs. Координаты — px комнаты 500×960, сняты с листьев события Draw меню O генератором oracle/challenges83/mkdata83.py (ui.challenges83 в oracle/sources.json). Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "comment",
+  "cull",
+  "back",
+  "noise",
+  "header",
+  "list",
+  "upgrades",
+  "thumb",
+  "topbar",
+  "menu",
+  "upcoming"
+ ],
+ "properties": {
+  "$schema": {
+   "const": "ui-challenges"
+  },
+  "screen": {
+   "const": "challenges"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "cull": {
+   "type": "object"
+  },
+  "back": {
+   "type": "object"
+  },
+  "noise": {
+   "type": "object"
+  },
+  "header": {
+   "type": "object"
+  },
+  "list": {
+   "type": "object"
+  },
+  "thumb": {
+   "type": "object"
+  },
+  "topbar": {
+   "type": "object"
+  },
+  "upcoming": {
+   "type": "object"
+  },
+  "menu": {
+   "type": "array",
+   "items": {
+    "type": "object"
+   }
+  },
+  "upgrades": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "columns",
+    "rows"
+   ],
+   "properties": {
+    "columns": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "rows": {
+     "type": "array",
+     "minItems": 52,
+     "maxItems": 52,
+     "items": {
+      "type": "array"
+     }
+    }
+   }
+  }
+ }
+}

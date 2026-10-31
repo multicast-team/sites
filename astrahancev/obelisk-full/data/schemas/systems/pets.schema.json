@@ -1,0 +1,16 @@
+{
+ "$id": "systems/pets",
+ "title": "Питомцы, ч. 1: шанс и бросок повышения уровня, требование и опыт квеста (data/systems/pets.json, этап 8.14)",
+ "description": "Данные спеки oracle/specs/pets-xp.md: 16 питомцев (наш ключ, база шанса, база и рост требования квеста, максимум уровня квеста), константы броска (минимальный уровень и число бросков, шкала шанса 5), шанса (минимальный уровень и множитель, доля бонуса скина A), округления требования (5), значения по умолчанию. Сняты с O (oracle/sources.json, группы pets-xp и data.pets814).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "system": {"const": "pets"},
+    "constants": {"required": ["count", "generator.first", "chance.minLevel", "chance.minMulti", "chance.skinPercent", "roll.minLevel", "roll.minRolls", "roll.scale", "quest.round"]},
+    "tables": {"required": ["pets"]}
+   }
+  }
+ ]
+}

@@ -24,7 +24,7 @@
         {"type": "string", "pattern": "^stat\\.[a-z0-9][A-Za-z0-9]*$"},
         {"type": "integer", "minimum": 0},
         {"enum": ["start", "add", "addDiv", "mulTerm", "mulSum", "mulChain", "mulInvChain", "tri", "mulCell", "round", "scale", "mulCellTerm", "scaleUntilTask", "mulPow"]},
-        {"enum": ["upgrades", "workshop", "skilltree", "artifacts", "gemUpgrades", "gemUnlocks", "drones", "coal", null]},
+        {"enum": ["upgrades", "workshop", "skilltree", "artifacts", "gemUpgrades", "gemUnlocks", "drones", "coal", "droneGrade", null]},
         {"type": ["integer", "null"], "minimum": 0},
         {"type": ["number", "null"]},
         {"type": ["string", "null"], "pattern": "^stat\\.[a-z0-9][A-Za-z0-9]*$"}

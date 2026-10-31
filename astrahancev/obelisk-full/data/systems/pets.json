@@ -1,0 +1,162 @@
+{
+ "$schema": "systems/pets",
+ "system": "pets",
+ "version": "2.2.50",
+ "constants": {
+  "count": 16,
+  "generator.first": 8,
+  "chance.minLevel": 1,
+  "chance.minMulti": 1,
+  "chance.skinPercent": 0.01,
+  "roll.minLevel": 1,
+  "roll.minRolls": 1,
+  "roll.scale": 5,
+  "quest.round": 5,
+  "default.levelCap": 10,
+  "default.skinBonus": 15,
+  "default.chanceMulti": 1,
+  "default.questMulti": 1
+ },
+ "tables": {
+  "pets": {
+   "columns": [
+    "id",
+    "key",
+    "chanceBase",
+    "questBase",
+    "questGrowth",
+    "questMax"
+   ],
+   "rows": [
+    [
+     0,
+     "crab",
+     5000,
+     25,
+     2,
+     10
+    ],
+    [
+     1,
+     "dwarf",
+     50,
+     350,
+     1.8,
+     10
+    ],
+    [
+     2,
+     "duck",
+     500,
+     1000,
+     2,
+     10
+    ],
+    [
+     3,
+     "rabbit",
+     200,
+     650,
+     1.8,
+     10
+    ],
+    [
+     4,
+     "penguin",
+     4500,
+     2500,
+     2,
+     10
+    ],
+    [
+     5,
+     "goat",
+     6660000,
+     250,
+     1.8,
+     10
+    ],
+    [
+     6,
+     "whale",
+     500,
+     1000,
+     2.9,
+     10
+    ],
+    [
+     7,
+     "golem",
+     450,
+     325,
+     1.8,
+     10
+    ],
+    [
+     8,
+     "happybot",
+     400,
+     150,
+     1.5,
+     10
+    ],
+    [
+     9,
+     "leprechaun",
+     5000,
+     6500,
+     2.4,
+     10
+    ],
+    [
+     10,
+     "starfish",
+     1000,
+     125,
+     1.6,
+     10
+    ],
+    [
+     11,
+     "dino",
+     25000000,
+     925,
+     1.8,
+     10
+    ],
+    [
+     12,
+     "shark",
+     2600,
+     500,
+     1.5,
+     10
+    ],
+    [
+     13,
+     "medusa",
+     162500,
+     2500,
+     1.85,
+     10
+    ],
+    [
+     14,
+     "butterfly",
+     150,
+     15,
+     1.5,
+     10
+    ],
+    [
+     15,
+     "rhino",
+     425,
+     30,
+     1.65,
+     10
+    ]
+   ]
+  }
+ }
+}

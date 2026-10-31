@@ -1,0 +1,55 @@
+{
+ "$schema": "ui-menuinfo",
+ "screen": "menuinfo",
+ "version": "2.2.50",
+ "comment": "Этап 8.4: инфо-страницы меню (кнопка i / вкладка Info) испытаний, статуй и звёзд. Числа — из листьев события Draw меню O (записи oracle/info84, record84.py; группа ui.info84). Высота плашки раздела = bodyDy + строк текста · sep + pad (П на 26 разделах 11 состояний).",
+ "box": {"x1": 25, "x2": 475, "gap": 6, "color": "#000000", "alpha": 0.25, "iconX": 47, "iconScale": 2, "textX": 77, "titleDy": 5, "bodyDy": 26, "pad": 7,
+  "titleFont": "font.size12", "titleColor": "#ffff00", "bodyFont": "font.size10", "sep": 16, "width": 395},
+ "foot": {"font": "font.size10", "x": 250, "y": 860, "text": "t.tap_anywhere_to_close", "color": "#c0c0c0"},
+ "pages": {
+  "challenges": {
+   "rects": [[0, 0, 500, 960, "#000000", 0.9], [13, 99, 487, 892, "#957c7d", 1], [15, 101, 485, 890, "#695051", 1]],
+   "head": {"font": "font.size24", "x": 250, "y": 139, "text": "t.challenges", "color": "#ffff00", "icon": "sprite.challenge_coin", "iconL": [125, 2], "iconR": [375, 2], "iconScale": 2},
+   "top0": 167,
+   "boxes": [
+    {"icon": "sprite.challenge_coin", "title": "t.one_challenge_at_a_time", "body": ["t.challenges_come_one_at_a_time_fill_the_progress"]},
+    {"icon": "sprite.pickaxe_damage", "title": "t.work_down_the_upgrade_list", "body": ["t.spend_your_challenge_coins_on_the_permanent"]},
+    {"icon": "sprite.hourglass", "title": "t.too_tough_q_come_back_later", "body": ["t.if_a_challenge_is_too_difficult_right_now_don_t"]},
+    {"icon": "sprite.extreme_challenge_coin", "title": "t.harder_challenges", "minTier": 1,
+     "body": ["t.after_the_regular_challenges_come_extreme", {"var": "tier", "minTier": 2, "text": "t.divine_challenges_follow_with_divine_challenge"}]}
+   ],
+   "extra": []
+  },
+  "statues": {
+   "rects": [[0, 0, 500, 960, "#000000", 0.9], [13, 58, 487, 892, "#957c7d", 1], [15, 60, 485, 890, "#695051", 1]],
+   "head": {"font": "font.size24", "x": 250, "y": 98, "text": "t.statues", "color": "#ffff00", "icon": "sprite.statue16x16", "iconL": [145, 2], "iconR": [355, 2], "iconScale": 2},
+   "top0": 140,
+   "boxes": [
+    {"icon": "sprite.statue16x16", "title": "t.build_statues_for_permanent_bonuses", "body": ["t.each_statue_gives_its_own_permanent_bonus_tap_a"]},
+    {"icon": "sprite.statue16x16", "title": "t.every_statue_built_is_a_surprise", "body": ["t.the_build_statue_button_picks_a_random_locked"]},
+    {"icon": "sprite.veins", "title": "t.how_do_i_build_a_statue_q", "body": ["t.at_the_bottom_of_the_statue_screen_you_ll_see"]},
+    {"icon": "sprite.star", "title": "t.upgrade_your_statues_ex", "body": ["t.once_all_9_statues_in_a_set_are_built_the"]},
+    {"icon": "sprite.world2_statue16x16", "title": "t.more_sets_unlock_in_new_worlds_ex",
+     "body": ["t.building_the_world_3_and_world_4_monuments", {"var": "worlds", "worlds": [1, 3, 4], "line": "\nWorld ", "colon": ": ",
+      "levels": ["t.standard", "t.gilded", "t.platinum"], "of": "/", "per": 9, "join": "  ", "locked": "t.locked"}]},
+    {"icon": "sprite.pickaxe_damage", "title": "t.why_should_i_care_about_building_statues_q", "body": ["t.statues_provide_some_of_the_biggest_benefits_in"]}
+   ],
+   "extra": []
+  },
+  "stars": {
+   "rects": [[0, 0, 500, 960, "#000000", 0.9], [13, 99, 487, 892, "#957c7d", 1], [15, 101, 485, 890, "#695051", 1], [15, 101, 485, 890, "#13306c", 0.6]],
+   "head": {"font": "font.size24", "x": 250, "y": 139, "text": "t.stargazing", "color": "#ffff00", "icon": "sprite.star", "iconL": [125, 2], "iconR": [375, 2], "iconScale": 2},
+   "top0": 167,
+   "boxes": [
+    {"icon": "sprite.star", "title": "t.stars_appear_while_you_mine", "body": ["t.every_star_you_discover_is_sighted_on_one_floor"]},
+    {"icon": "sprite.star_plain", "title": "t.level_up_your_stars", "body": ["t.each_star_collects_its_own_currency_spend_it_on"]},
+    {"icon": "sprite.star_map", "frame": 1, "title": "t.sightings_move_every_30_minutes", "body": ["t.on_the_hour_and_half_hour_the_stars_move_to_new"]},
+    {"icon": "sprite.star_autocatch", "title": "t.stars_offline", "body": ["t.stars_are_earned_offline_too_based_on_your_star"]},
+    {"icon": "sprite.gem", "title": "t.discover_more_stars", "body": ["t.upgrade_your_telescope_in_the_upgrades_tab_then", {"var": "starsDiscovered", "label": "t.stars_discovered", "of": "/", "total": 23}]},
+    {"icon": "sprite.star_super16x16", "title": "t.super_stars", "body": ["t.sometimes_a_super_star_flies_by_alongside_a", {"var": "superStars", "label": "t.super_stars_3"}]},
+    {"icon": "sprite.supernova", "title": "t.rare_stars", "body": ["t.stars_can_become_supernova_supergiant_or"]}
+   ],
+   "extra": [{"sprite": "sprite.star32x32_radiant", "x": 455, "y": 860, "alpha": 0.2}]
+  }
+ }
+}

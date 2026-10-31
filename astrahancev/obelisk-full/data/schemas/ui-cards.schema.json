@@ -1,0 +1,119 @@
+{
+ "$id": "ui-cards",
+ "title": "Меню карт (data/ui/cards.json, этап 8.13)",
+ "description": "Вёрстка меню карт: фон, полосы шума, ползунок, наборы карт сеткой 9 × N, панель выбранной карты, нижние вкладки, верхняя полоса. Привязки — ui/screens/cards.mjs. Координаты — px комнаты 500×960, y панелей — от верха меню. Команд рисования нет. 8.13b: значки и порядок всех 15 наборов, осколки полихрома (grid.shard), окно Gild (confirm), справка (info), меню ☰ (options).",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "$schema",
+  "screen",
+  "version",
+  "backdrop",
+  "noise",
+  "scrollbar",
+  "sets",
+  "header",
+  "grid",
+  "panel",
+  "tabs",
+  "topbar"
+ ],
+ "properties": {
+  "$schema": {
+   "const": "ui-cards"
+  },
+  "screen": {
+   "const": "cards"
+  },
+  "version": {
+   "$ref": "common#/$defs/version"
+  },
+  "comment": {
+   "type": "string"
+  },
+  "backdrop": {
+   "type": "object"
+  },
+  "noise": {
+   "type": "object"
+  },
+  "scrollbar": {
+   "type": "object"
+  },
+  "header": {
+   "type": "object"
+  },
+  "grid": {
+   "type": "object"
+  },
+  "panel": {
+   "type": "object"
+  },
+  "tabs": {
+   "type": "object"
+  },
+  "topbar": {
+   "type": "object"
+  },
+  "sets": {
+   "type": "array",
+   "minItems": 15,
+   "maxItems": 15,
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "set",
+     "title",
+     "sprite"
+    ],
+    "properties": {
+     "set": {
+      "type": "string"
+     },
+     "title": {
+      "type": "string"
+     },
+     "sprite": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "order": {
+      "type": [
+       "array",
+       "null"
+      ],
+      "items": {
+       "type": "integer"
+      }
+     },
+     "unowned": {
+      "enum": [
+       "question",
+       "hide"
+      ],
+      "description": "неоткрытая карта: question — знак вопроса вместо значка (кадр = номер карты), hide — карта не показывается (8.13b, П)"
+     },
+     "unknownFrom": {
+      "type": "string",
+      "description": "вход вида: с какого номера карта набора показана знаком вопроса (рыбы: view.known.fish, ??)"
+     }
+    }
+   }
+  },
+  "confirm": {
+   "type": "object",
+   "description": "8.13b: окно подтверждения Gild"
+  },
+  "info": {
+   "type": "object",
+   "description": "8.13b: справка (i)"
+  },
+  "options": {
+   "type": "object",
+   "description": "8.13b: меню ☰"
+  }
+ }
+}

@@ -1,0 +1,807 @@
+{
+ "$schema": "ui-contracts",
+ "screen": "contracts",
+ "version": "2.2.50",
+ "comment": "Меню контрактов (этап 8.11): вёрстка из листьев события Draw меню O (mkdata811.py). Координаты — px комнаты 500×960; ряды списка — от верха ряда y1 (до прокрутки), шапка, полосы и кнопки — без прокрутки.",
+ "back": {
+  "component": "rect",
+  "x1": 0,
+  "y1": 0,
+  "x2": 500,
+  "y2": 930,
+  "color": "#000000",
+  "alpha": 0.850000024
+ },
+ "noise": {
+  "sprite": "sprite.noise_test",
+  "x": 32,
+  "step": 784,
+  "count": 12,
+  "sx": 6,
+  "sy": 6,
+  "alpha": 0.150000006
+ },
+ "list": {
+  "firstRow": 440,
+  "rowStep": 90,
+  "worldGap": 60,
+  "worlds": [
+   [
+    0,
+    9
+   ],
+   [
+    10,
+    19
+   ],
+   [
+    20,
+    25
+   ],
+   [
+    26,
+    33
+   ]
+  ],
+  "cull": {
+   "top": -217,
+   "bottom": 1190,
+   "centerDy": 30
+  },
+  "section": {
+   "dy": -44,
+   "lines": [
+    [
+     25,
+     164
+    ],
+    [
+     336,
+     475
+    ]
+   ],
+   "lineW": 2,
+   "lineAlpha": 0.600000024,
+   "font": "font.size12",
+   "shadow": [
+    1,
+    1
+   ],
+   "parts": [
+    "World ",
+    " Upgrades"
+   ],
+   "colors": [
+    "#e1c3b9",
+    "#f5788c",
+    "#78d77d",
+    "#c38cfa"
+   ]
+  },
+  "row": {
+   "shadow": {
+    "component": "rect",
+    "x1": 10,
+    "dy1": 0,
+    "x2": 492,
+    "dy2": 62,
+    "color": "#000000"
+   },
+   "bg": {
+    "component": "rect",
+    "x1": 10,
+    "dy1": 0,
+    "x2": 490,
+    "dy2": 60,
+    "color": "#695051"
+   },
+   "bgColors": [
+    "#695051",
+    "#9d2f41",
+    "#116617",
+    "#662d91"
+   ],
+   "button": {
+    "x": 445,
+    "dy": 30,
+    "sx": 4.19999981,
+    "sy": 3,
+    "sprite": "sprite.patch_button",
+    "maxed": "sprite.patch_button_green"
+   },
+   "icon": {
+    "x": 38,
+    "dy": 30,
+    "sx": 2,
+    "sy": 2
+   },
+   "plates": [
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc",
+     "x": 369,
+     "dy": 17,
+     "sx": 4.19999981,
+     "sy": 1.39999998
+    },
+    {
+     "component": "sprite",
+     "sprite": "sprite.patch_desc",
+     "x": 369,
+     "dy": 43,
+     "sx": 4.4000001,
+     "sy": 1.39999998
+    }
+   ],
+   "level": {
+    "x": 369,
+    "dy": 17,
+    "snap": false
+   },
+   "effect": {
+    "x": 369,
+    "dy": 43
+   },
+   "descBack": {
+    "component": "rect",
+    "x1": 68,
+    "dy1": 4,
+    "x2": 328,
+    "dy2": 56,
+    "color": "#0f1419"
+   },
+   "desc": {
+    "x": 199,
+    "dy": 30,
+    "sep": 20,
+    "width": 300
+   },
+   "maxed": {
+    "text": "t.maxed",
+    "x": 445,
+    "dy": 30,
+    "shadow": [
+     1,
+     1
+    ]
+   },
+   "point": {
+    "sprite": "sprite.contract_point",
+    "x": 445,
+    "dy": 18
+   },
+   "price": {
+    "x": 445,
+    "dy": 39,
+    "shadow": [
+     1,
+     1
+    ]
+   },
+   "font": "font.size12",
+   "poor": "#808080"
+  },
+  "lock": {
+   "shade": {
+    "color": "#000000",
+    "alpha": 0.5
+   },
+   "plate": {
+    "sprite": "sprite.patch_desc",
+    "x": 250,
+    "dy": 30,
+    "sx": 25,
+    "sy": 3,
+    "color": "#808080"
+   },
+   "text": {
+    "x": 246,
+    "dy": 30,
+    "sep": 18,
+    "width": 144,
+    "color": "#808080"
+   },
+   "previous": [
+    "Need ",
+    " of Previous Upgrade"
+   ],
+   "world": [
+    "Unlock World ",
+    ""
+   ],
+   "obelisk": null
+  }
+ },
+ "panel": {
+  "back": {
+   "component": "rect",
+   "x1": -20,
+   "y1": 95,
+   "x2": 520,
+   "y2": 244,
+   "color": "#695051"
+  },
+  "plates": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 250,
+    "y": 172,
+    "sx": 26,
+    "sy": 2.20000005
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 250,
+    "y": 124,
+    "sx": 10,
+    "sy": 1.5
+   }
+  ],
+  "goal": {
+   "x": 250,
+   "y": 172,
+   "bars": "t.bars"
+  },
+  "ores": [
+   "t.tin",
+   "t.copper",
+   "t.mithril",
+   "t.adamant",
+   "t.runite",
+   "t.citrine",
+   "t.amethyst",
+   "t.topaz",
+   "t.obsidian",
+   "t.demonite",
+   "t.vr_tin",
+   "t.vr_amethyst",
+   "t.vr_demonite",
+   "t.vr_error",
+   "t.lunarium",
+   "t.earth_c_137",
+   "t.meteorite",
+   "t.singularity",
+   "t.halium",
+   "t.blasphemite",
+   "t.angelite",
+   "t.elysium",
+   "t.enemite",
+   "t.beepboopium",
+   "t.radion_73",
+   "t.cranium"
+  ],
+  "barIcons": [
+   {
+    "x": 70,
+    "y": 170
+   },
+   {
+    "x": 430,
+    "y": 170
+   }
+  ],
+  "barIcon": {
+   "sprite": "sprite.bar",
+   "sx": 2,
+   "sy": 2
+  },
+  "floor": {
+   "button": {
+    "component": "sprite",
+    "sprite": "sprite.patch_button",
+    "x": 88,
+    "y": 218,
+    "sx": 2.5999999,
+    "sy": 1.39999998
+   },
+   "arrow": {
+    "component": "sprite",
+    "sprite": "sprite.small_arrow",
+    "frame": 1,
+    "x": 76,
+    "y": 216
+   },
+   "text": {
+    "x": 94,
+    "y": 217
+   }
+  },
+  "bar": {
+   "sprite": "sprite.chest_meter2x_size",
+   "back": 1,
+   "fill": 0,
+   "w": 120,
+   "h": 14,
+   "x": 130,
+   "y": 204,
+   "sx": 2,
+   "sy": 2
+  },
+  "progress": {
+   "x": 250,
+   "y": 219
+  },
+  "reward": {
+   "x": 245,
+   "y": 124,
+   "parts": [
+    "Reward: ",
+    ""
+   ]
+  },
+  "rewardPoint": {
+   "component": "sprite",
+   "sprite": "sprite.contract_point",
+   "x": 308,
+   "y": 124
+  },
+  "gem": {
+   "button": {
+    "sprite": "sprite.patch_button",
+    "x": 412,
+    "y": 218,
+    "sx": 3,
+    "sy": 1.39999998
+   },
+   "icon": {
+    "sprite": "sprite.gem",
+    "x": 404,
+    "y": 216
+   },
+   "text": {
+    "x": 422,
+    "y": 217
+   },
+   "poor": "#808080"
+  },
+  "skip": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 470,
+    "y": 218,
+    "sx": 3.20000005,
+    "sy": 1.39999998
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 470,
+    "y": 218,
+    "text": "t.skip",
+    "halign": "center",
+    "valign": "middle"
+   }
+  ],
+  "complete": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_backing_brownish",
+    "x": 250,
+    "y": 276,
+    "sx": 12,
+    "sy": 4
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_button",
+    "x": 250,
+    "y": 276,
+    "sx": 8,
+    "sy": 2.4000001
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 250,
+    "y": 276,
+    "text": "t.complete",
+    "halign": "center",
+    "valign": "middle",
+    "snap": false
+   }
+  ],
+  "auto": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.unchecked_checked",
+    "x": 70,
+    "y": 138,
+    "sx": 2,
+    "sy": 2
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc",
+    "x": 70,
+    "y": 110,
+    "sx": 7.5999999,
+    "sy": 1.39999998
+   },
+   {
+    "component": "text",
+    "font": "font.size12",
+    "x": 70,
+    "y": 110,
+    "text": "t.auto_complete",
+    "halign": "center",
+    "valign": "middle",
+    "sep": 21,
+    "width": 1000
+   }
+  ]
+ },
+ "thumb": {
+  "x1": 492,
+  "x2": 502,
+  "top": 247,
+  "bottom": 880,
+  "view": 930,
+  "maxScroll": 2990,
+  "color": "#c0c0c0",
+  "alpha": 0.349999994
+ },
+ "topbar": {
+  "rects": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 62,
+    "x2": 500,
+    "y2": 97,
+    "color": "#957c7d"
+   },
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 62,
+    "x2": 500,
+    "y2": 95,
+    "color": "#695051"
+   }
+  ],
+  "title": {
+   "sprite": "sprite.patch_desc",
+   "x": 250,
+   "y": 80,
+   "pad": 24,
+   "div": 16,
+   "sy": 1.60000002,
+   "parts": [
+    "Contract ",
+    ""
+   ]
+  },
+  "points": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_desc_ml",
+    "x": 358,
+    "y": 80,
+    "sx": 6,
+    "sy": 1.60000002
+   },
+   {
+    "component": "sprite",
+    "sprite": "sprite.contract_point",
+    "x": 358,
+    "y": 80,
+    "sx": 2,
+    "sy": 2
+   }
+  ],
+  "pointsText": {
+   "x": 380,
+   "y": 80
+  },
+  "menu": [
+   {
+    "component": "sprite",
+    "sprite": "sprite.patch_button",
+    "x": 28,
+    "y": 80,
+    "sx": 1.60000002,
+    "sy": 1.79999995
+   },
+   {
+    "component": "rect",
+    "x1": 20,
+    "y1": 71,
+    "x2": 35,
+    "y2": 73
+   },
+   {
+    "component": "rect",
+    "x1": 20,
+    "y1": 77,
+    "x2": 35,
+    "y2": 79
+   },
+   {
+    "component": "rect",
+    "x1": 20,
+    "y1": 83,
+    "x2": 35,
+    "y2": 85
+   }
+  ]
+ },
+ "buybar": {
+  "rects": [
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 839,
+    "x2": 500,
+    "y2": 880,
+    "color": "#957c7d"
+   },
+   {
+    "component": "rect",
+    "x1": -1,
+    "y1": 840,
+    "x2": 501,
+    "y2": 881,
+    "color": "#503738"
+   },
+   {
+    "component": "rect",
+    "x1": 0,
+    "y1": 840,
+    "x2": 500,
+    "y2": 880,
+    "color": "#695051"
+   }
+  ],
+  "buttons": [
+   {
+    "mode": 1,
+    "x": 100,
+    "text": "t.buy_1"
+   },
+   {
+    "mode": 5,
+    "x": 200,
+    "text": "t.buy_5"
+   },
+   {
+    "mode": 10,
+    "x": 300,
+    "text": "t.buy_10"
+   },
+   {
+    "mode": "max",
+    "x": 400,
+    "text": "t.buy_max"
+   }
+  ],
+  "button": {
+   "sprite": "sprite.patch_button",
+   "y": 860,
+   "sx": 4,
+   "sy": 2,
+   "selectedFrame": 2,
+   "textDy": -1,
+   "shadow": [
+    1,
+    1
+   ]
+  }
+ },
+ "upgrades": {
+  "columns": [
+   "id",
+   "icon",
+   "desc",
+   "kind"
+  ],
+  "rows": [
+   [
+    0,
+    "sprite.pickaxe_damage",
+    "t.pickaxe_damage_per_contract_complete_plus_1_pct",
+    "+"
+   ],
+   [
+    1,
+    "sprite.triple_craft_chance",
+    "t.triple_craft_chance_plus_1_pct",
+    "+"
+   ],
+   [
+    2,
+    "sprite.pickaxe_super_crit_chance",
+    "t.pickaxe_super_crit_chance_plus_2_pct",
+    "+"
+   ],
+   [
+    3,
+    "sprite.bomb_recharge_rate",
+    "t.bomb_recharge_rate_plus_3_pct",
+    "+"
+   ],
+   [
+    4,
+    "sprite.xp",
+    "t.exp_gain_plus_10_pct",
+    "+"
+   ],
+   [
+    5,
+    "sprite.pickaxe_crit_damage",
+    "t.pickaxe_crit_damage_plus_8_pct",
+    "+"
+   ],
+   [
+    6,
+    "sprite.pickaxe_damage",
+    "t.pickaxe_damage_plus_15_pct",
+    "+"
+   ],
+   [
+    7,
+    "sprite.bar_cost_reduc",
+    "t.upgrade_bar_costs_minus_5_pct",
+    "-"
+   ],
+   [
+    8,
+    "sprite.prestige_point_gain",
+    "t.prestige_point_gain_plus_10_pct",
+    "+"
+   ],
+   [
+    9,
+    "sprite.10x_craft_chance",
+    "t.10x_craft_chance_plus_1_pct",
+    "+"
+   ],
+   [
+    10,
+    "sprite.bomb_damage",
+    "t.bomb_damage_per_contract_complete_plus_1_pct",
+    "+"
+   ],
+   [
+    11,
+    "sprite.ore_sell_price",
+    "t.ore_sell_price_plus_15_pct",
+    "+"
+   ],
+   [
+    12,
+    "sprite.vein_income_multi",
+    "t.vein_income_multiplier_plus_4_pct",
+    "+"
+   ],
+   [
+    13,
+    "sprite.pickaxe_and_bomb_ultra_crit_chance",
+    "t.pickaxe_and_bomb_ultra_crit_chance_plus_1_pct",
+    "+"
+   ],
+   [
+    14,
+    "sprite.golden_floor_multi",
+    "t.golden_floor_multiplier_plus_3_pct",
+    "+"
+   ],
+   [
+    15,
+    "sprite.golden_vein",
+    "t.golden_vein_chance_plus_1_pct",
+    "+"
+   ],
+   [
+    16,
+    "sprite.star_super_spawn_rate",
+    "t.super_star_spawn_rate_plus_3_pct",
+    "+"
+   ],
+   [
+    17,
+    "sprite.game_speed2x",
+    "t.base_game_speed_plus_1_pct",
+    "+"
+   ],
+   [
+    18,
+    "sprite.rainbow_floor_multi",
+    "t.rainbow_floor_multi_plus_2_pct",
+    "+"
+   ],
+   [
+    19,
+    "sprite.supernova_super_star",
+    "t.super_star_supernova_chance_plus_0_15_pct",
+    "+"
+   ],
+   [
+    20,
+    "sprite.rainbow_floor_chance",
+    "t.rainbow_floor_chance_plus_0_30_pct",
+    "+"
+   ],
+   [
+    21,
+    "sprite.golden_ore_chance",
+    "t.golden_ore_chance_plus_0_20_pct",
+    "+"
+   ],
+   [
+    22,
+    "sprite.pickaxe_and_bomb_omega_crit_chance",
+    "t.pickaxe_and_bomb_omega_crit_chance_plus_2_pct",
+    "+"
+   ],
+   [
+    23,
+    "sprite.pickaxe_and_bomb_damage",
+    "t.pickaxe_and_bomb_damage_1_08x",
+    "x"
+   ],
+   [
+    24,
+    "sprite.star_supergiant_chance",
+    "t.star_supergiant_chance_plus_0_20_pct",
+    "+"
+   ],
+   [
+    25,
+    "sprite.star_super_supergiant_chance",
+    "t.super_star_supergiant_chance_plus_0_10_pct",
+    "+"
+   ],
+   [
+    26,
+    "sprite.rainbow_vein_multi",
+    "t.rainbow_vein_multiplier_plus_1_pct",
+    "+"
+   ],
+   [
+    27,
+    "sprite.prismatic_floor_multi",
+    "t.prismatic_floor_multi_plus_0_50_pct",
+    "+"
+   ],
+   [
+    28,
+    "sprite.star_all_star_multi",
+    "t.all_star_multiplier_plus_0_65_pct",
+    "+"
+   ],
+   [
+    29,
+    "sprite.frog_triple_chance",
+    "t.lootfrog_triple_spawn_chance_plus_0_10_pct",
+    "+"
+   ],
+   [
+    30,
+    "sprite.portal_gold_chance",
+    "t.golden_void_portal_chance_plus_0_10_pct",
+    "+"
+   ],
+   [
+    31,
+    "sprite.star_all_radiant_multi",
+    "t.all_radiant_multis_plus_1_pct",
+    "+"
+   ],
+   [
+    32,
+    "sprite.arcana_rune_craft_multi",
+    "t.rune_craft_multi_plus_0_50_pct",
+    "+"
+   ],
+   [
+    33,
+    "sprite.portal_all_portal_multi",
+    "t.all_portal_multi_plus_0_40_pct",
+    "+"
+   ]
+  ]
+ }
+}

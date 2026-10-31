@@ -64,6 +64,21 @@ function axisSegments(mode, s0, s1, t0, t1, len) {
 }
 
 /**
+ * Радиус отсечения спрайта (spec sprite-layout п.6, v9): расстояние от точки привязки до дальнего угла холста, округлённое вверх
+ * до целого px холста, × больший из |sx|, |sy|. Холст, а не кадр: обрезка кадра (dst) радиус не меняет.
+ */
+export function cullRadius(s, sx, sy) {
+  const [ox, oy] = s.origin;
+  return Math.ceil(Math.hypot(Math.max(ox, s.width - ox), Math.max(oy, s.height - oy))) * Math.max(Math.abs(sx), Math.abs(sy));
+}
+
+/** Вызов отсечён окном вида list.view = [лево, верх, право, низ] (п.6, v9): окно полуоткрытое — y − ρ = низ отсекается, y + ρ = верх рисуется. */
+export function culledByView(list, x, y, rad) {
+  const [vl, vt, vr, vb] = list.view;
+  return y - rad >= vb || y + rad < vt || x - rad >= vr || x + rad < vl;
+}
+
+/**
  * Спрайт key (кадр frame) в (x, y), масштаб (sx, sy), оттенок rgb, альфа alpha → вершины в list (VertexList ui/kit).
  * angle — градусы (double, к [0, 360) не приводится): ≠ 0 у кадра без nine-slice — п.1а (v8); с nine-slice — ?? в спеке.
  */
@@ -72,15 +87,12 @@ export function drawSprite(list, skin, key, frame, x, y, sx, sy, rgb, alpha, ang
   const fr = s.frames[frame];
   if (!fr) throw new Error(`кадр ${frame} спрайта ${key}`);
   const [ox, oy] = s.origin;
-  const w = s.width, h = s.height;
   x = F(x); y = F(y); sx = F(sx); sy = F(sy);
 
-  // п.6 (v2, этап 4.3): отсечение целиком по радиусу от точки привязки до дальнего угла холста, отодвинутого на list.cullPad px
-  // по обеим осям, × больший масштаб.
-  const pad = list.cullPad;
-  const rad = Math.hypot(Math.max(ox, w - ox) + pad, Math.max(oy, h - oy) + pad) * Math.max(Math.abs(sx), Math.abs(sy));
-  const [vl, vt, vr, vb] = list.view;
-  const culled = y - rad > vb || y + rad < vt || x - rad > vr || x + rad < vl;
+  // п.6 (v9, этап 8.3): отсечение целиком по радиусу ρ = ⌈|точка привязки → дальний угол холста|⌉ · больший масштаб;
+  // окно полуоткрытое [лево, право) × [верх, низ) — см. cullRadius / culledByView
+  const rad = cullRadius(s, sx, sy);
+  const culled = culledByView(list, x, y, rad);
   // журнал вызовов для проверок (oracle/): включается list.trace = []; на вершины не влияет
   if (list.trace) list.trace.push({ key, frame, x, y, sx, sy, angle, rad, culled, at: list.count });
   if (culled) { list.culled++; return; }
@@ -134,11 +146,13 @@ function layoutFrame(list, s, fr, x, y, sx, sy, ox, oy, color) {
 
   if (!s.nine) {
     // п.1: целый кадр.
-    const l = add(x, mul(dstX - ox, sx));
-    const t = add(y, mul(dstY - oy, sy));
-    // v4: правый и нижний края — от x (y), а не от левого (верхнего): «лево + dst.w · sx» расходится с O на 1 ulp
-    const r = add(x, mul(dstX + dstW - ox, sx));
-    const b = add(y, mul(dstY + dstH - oy, sy));
+    // v10 (этап 8.17b): смещение правого (нижнего) края = смещение левого (верхнего) + ширина (высота) · масштаб, всё в float32;
+    // края — от x (y), а не от левого (верхнего) на экране: «лево + dst.w · sx» расходится с O на 1 ulp. (v4 было одним произведением.)
+    const a = mul(dstX - ox, sx), c = mul(dstY - oy, sy);
+    const l = add(x, a);
+    const t = add(y, c);
+    const r = add(x, add(a, mul(dstW, sx)));
+    const b = add(y, add(c, mul(dstH, sy)));
     emit(list, WHOLE, [l, t, r, b], [srcX, srcY, srcX + srcW, srcY + srcH], fr.atlasSize, color, fr.atlas);
     return;
   }

@@ -8,7 +8,7 @@ import { createPresenter, fitStyle } from '../render/present.mjs';
 // корень проекта на сервере страницы: страница лежит в ui/main/, данные — data/, пакеты — skin/, skin-gray/, skin-local/
 const ROOT = location.href.replace(/ui\/main\/[^/]*$/, '');
 const qs = new URLSearchParams(location.search);
-const pack = 'gray';
+const pack = qs.get('pack') === 'gray' ? 'gray' : 'local';
 const W = qs.get('w') === '1000' ? 1000 : 500, H = W === 1000 ? 1920 : 960;
 const $ = (id) => document.getElementById(id);
 const status = (t) => { $('status').textContent = t; };
@@ -21,7 +21,7 @@ async function fetchJson(p) {
 
 async function main() {
   $('pack').value = pack; $('size').value = String(W);
-  for (const id of ['pack', 'size']) $(id).onchange = () => { location.search = `?pack=gray&w=${$('size').value}`; };
+  for (const id of ['pack', 'size']) $(id).onchange = () => { location.search = `?pack=${$('pack').value}&w=${$('size').value}`; };
   const bins = new Map();
   const L = await loadGame({ pack, read: fetchJson, readBinary: (p) => { if (!bins.has(p)) throw new Error(`атлас не загружен: ${p}`); return bins.get(p); } });
   if (pack === 'local') {

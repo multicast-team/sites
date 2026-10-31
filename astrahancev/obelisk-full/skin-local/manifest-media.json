@@ -1,0 +1,26 @@
+{
+ "version": "2.2.50",
+ "stage": "1.31",
+ "input": {
+  "base_apk_sha256": "34930271790b93e13c0a8013ceaac0e75a5ee8e8d1d76fb2c1baa821a4f0882d",
+  "base_apk_in_SHA256SUMS": true,
+  "droid_in_apk_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "droid_file_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "expected": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "ok": true
+ },
+ "note": "Материалы оригинала Idle Obelisk Miner 2.2.50. Только локально, не публиковать.",
+ "counts": {
+  "fonts": 4,
+  "glyphs": 384,
+  "sounds": 25,
+  "audio_bytes": 21374948,
+  "shaders": 12
+ },
+ "json_sha256": {
+  "fonts.json": "4f0fd5607a5e1b4093d2fe8159610bec55bf09f760d3ed352d09ad3592995b4c",
+  "audio.json": "0a889accba8e378c8a5577c6086c6d5e3837cc88ed5725040e535e4f5144c140",
+  "shaders.json": "c1e237071d6bf045e9336ca7e351593e8fa45f91a04988561382b02c40ab91e1",
+  "map-media.json": "e268560cf05d618ab45f11fcb48aa35222f5c0f30054157b9a604002cdc97319"
+ }
+}

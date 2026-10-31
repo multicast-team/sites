@@ -1,0 +1,393 @@
+{
+ "$schema": "systems/fx",
+ "system": "fx",
+ "version": "2.2.50",
+ "constants": {
+  "card.cx": 250,
+  "card.cy": 460,
+  "card.black": "#000000",
+  "card.white": "#ffffff",
+  "card.yellow": "#ffff00",
+  "card.orange": "#ffa040",
+  "card.gray": "#c0c0c0",
+  "card.dimW": 500,
+  "card.dimH": 960,
+  "card.bgAlpha": 0.9,
+  "card.growMs": 300,
+  "card.rays": 16,
+  "card.rayStep": 22.5,
+  "card.rayHalf": 6,
+  "card.rayMsPerDeg": 70,
+  "card.rayR": 300,
+  "card.rayAlpha": 0.34,
+  "card.glowSprite": "sprite.circle",
+  "card.glowMsPerRad": 300,
+  "card.glow1Base": 8.4375,
+  "card.glow1Amp": 0.3125,
+  "card.glow1Color": "#ffa040",
+  "card.glow1A": 0.2,
+  "card.glow1AAmp": 0.04,
+  "card.glow2Base": 5.84375,
+  "card.glow2Amp": 0.21875,
+  "card.glow2Color": "#ffff00",
+  "card.glow2A": 0.3,
+  "card.glow2AAmp": 0.06,
+  "card.cardScale": 5,
+  "card.cardMs": 420,
+  "card.backC1": 1.70158,
+  "card.starSprite": "sprite.star16x16",
+  "card.starCount": 30,
+  "card.starMsPerFrame": 16.67,
+  "card.starDist": 160,
+  "card.starTau": 16,
+  "card.starFallFrom": 12,
+  "card.starFall": 0.012,
+  "card.starFadeFrom": 50,
+  "card.starFadeLen": 40,
+  "card.starEnd": 90,
+  "card.sparkSprite": "sprite.sparkle_anim",
+  "card.sparkles": 6,
+  "card.sparkFrameMs": 90,
+  "card.sparkFrames": 8,
+  "card.sparkFrameStep": 3,
+  "card.sparkMsPerDeg": 40,
+  "card.sparkStep": 60,
+  "card.sparkR": 130,
+  "card.sparkAmp": 10,
+  "card.sparkMsPerRad": 400,
+  "card.sparkScale": 1.2,
+  "card.sparkEvenColor": "#ffff00",
+  "card.sparkOddColor": "#ffffff",
+  "card.gildedFont": "font.size24",
+  "card.gildedKey": "t.gilded_ex",
+  "card.gildedAt": 150,
+  "card.gildedMs": 320,
+  "card.gildedX": 250,
+  "card.gildedY": 290,
+  "card.gildedTop": "#ffff00",
+  "card.gildedBottom": "#ffa040",
+  "card.nameFont": "font.size12",
+  "card.nameAt": 350,
+  "card.nameMs": 300,
+  "card.nameX": 250,
+  "card.nameY": 610,
+  "card.nameColor": "#ffff00",
+  "card.shadowDx": 1,
+  "card.shadowDy": 1,
+  "card.shadowColor": "#000000",
+  "card.noteFont": "font.size10",
+  "card.noteAt": 500,
+  "card.noteMs": 300,
+  "card.noteX": 250,
+  "card.beforeKey": "t.before",
+  "card.beforeY": 638,
+  "card.beforeColor": "#c0c0c0",
+  "card.afterKey": "t.after",
+  "card.afterY": 660,
+  "card.afterColor": "#ffff00",
+  "card.tapFont": "font.size10",
+  "card.tapKey": "t.tap_anywhere_to_continue",
+  "card.tapAt": 700,
+  "card.tapX": 250,
+  "card.tapY": 700,
+  "card.tapColor": "#c0c0c0",
+  "card.tapA": 0.6,
+  "card.tapAmp": 0.25,
+  "card.tapMsPerRad": 300,
+  "card.closeAt": 700
+ },
+ "tables": {
+  "card.gildedShadow": {
+   "columns": [
+    "dx",
+    "dy"
+   ],
+   "rows": [
+    [
+     -2,
+     -2
+    ],
+    [
+     -2,
+     0
+    ],
+    [
+     -2,
+     2
+    ],
+    [
+     0,
+     -2
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     2,
+     -2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     2
+    ]
+   ]
+  },
+  "card.stars": {
+   "columns": [
+    "i",
+    "dir",
+    "reach",
+    "scale",
+    "color",
+    "spin"
+   ],
+   "rows": [
+    [
+     0,
+     0.0,
+     1,
+     0.8,
+     "#ffff00",
+     4
+    ],
+    [
+     1,
+     139.5,
+     1.35,
+     0.92,
+     "#ffa040",
+     -5
+    ],
+    [
+     2,
+     279.0,
+     1.7,
+     1.04,
+     "#ffffff",
+     6
+    ],
+    [
+     3,
+     418.5,
+     1.0875,
+     1.16,
+     "#ffdc78",
+     -7
+    ],
+    [
+     4,
+     558.0,
+     1.4375,
+     1.28,
+     "#ffff00",
+     8
+    ],
+    [
+     5,
+     697.5,
+     1.7875,
+     1.4,
+     "#ffa040",
+     -4
+    ],
+    [
+     6,
+     837.0,
+     1.175,
+     1.52,
+     "#ffffff",
+     5
+    ],
+    [
+     7,
+     976.5,
+     1.525,
+     0.8,
+     "#ffdc78",
+     -6
+    ],
+    [
+     8,
+     1116.0,
+     1.875,
+     0.92,
+     "#ffff00",
+     7
+    ],
+    [
+     9,
+     1238.5,
+     1.2625,
+     1.04,
+     "#ffa040",
+     -8
+    ],
+    [
+     10,
+     1378.0,
+     1.6124999999999998,
+     1.16,
+     "#ffffff",
+     4
+    ],
+    [
+     11,
+     1517.5,
+     1,
+     1.28,
+     "#ffdc78",
+     -5
+    ],
+    [
+     12,
+     1657.0,
+     1.35,
+     1.4,
+     "#ffff00",
+     6
+    ],
+    [
+     13,
+     1796.5,
+     1.7,
+     1.52,
+     "#ffa040",
+     -7
+    ],
+    [
+     14,
+     1936.0,
+     1.0875,
+     0.8,
+     "#ffffff",
+     8
+    ],
+    [
+     15,
+     2075.5,
+     1.4375,
+     0.92,
+     "#ffdc78",
+     -4
+    ],
+    [
+     16,
+     2215.0,
+     1.7875,
+     1.04,
+     "#ffff00",
+     5
+    ],
+    [
+     17,
+     2337.5,
+     1.175,
+     1.16,
+     "#ffa040",
+     -6
+    ],
+    [
+     18,
+     2477.0,
+     1.525,
+     1.28,
+     "#ffffff",
+     7
+    ],
+    [
+     19,
+     2616.5,
+     1.875,
+     1.4,
+     "#ffdc78",
+     -8
+    ],
+    [
+     20,
+     2756.0,
+     1.2625,
+     1.52,
+     "#ffff00",
+     4
+    ],
+    [
+     21,
+     2895.5,
+     1.6124999999999998,
+     0.8,
+     "#ffa040",
+     -5
+    ],
+    [
+     22,
+     3035.0,
+     1,
+     0.92,
+     "#ffffff",
+     6
+    ],
+    [
+     23,
+     3174.5,
+     1.35,
+     1.04,
+     "#ffdc78",
+     -7
+    ],
+    [
+     24,
+     3314.0,
+     1.7,
+     1.16,
+     "#ffff00",
+     8
+    ],
+    [
+     25,
+     3453.5,
+     1.0875,
+     1.28,
+     "#ffa040",
+     -4
+    ],
+    [
+     26,
+     3576.0,
+     1.4375,
+     1.4,
+     "#ffffff",
+     5
+    ],
+    [
+     27,
+     3715.5,
+     1.7875,
+     1.52,
+     "#ffdc78",
+     -6
+    ],
+    [
+     28,
+     3855.0,
+     1.175,
+     0.8,
+     "#ffff00",
+     7
+    ],
+    [
+     29,
+     3994.5,
+     1.525,
+     0.92,
+     "#ffa040",
+     -8
+    ]
+   ]
+  }
+ }
+}

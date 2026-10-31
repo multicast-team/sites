@@ -25,7 +25,9 @@ export function makeShortFormat(fmt) {
     const k = Math.floor(Math.floor(Math.log10(a)) / groupDigits);
     const v = x / pow10(groupDigits * k);
     const d = (decimals.find(([lt]) => Math.abs(v) < lt) || decimals[decimals.length - 1])[1];
-    const m = Math.floor(Number((v * pow10(d)).toPrecision(digits)));   // вниз от числа, округлённого до digits значащих цифр
+    // вниз от числа, округлённого до digits значащих цифр; у отрицательных — −(⌊|v|·10^d⌋ + 1): целое тоже уходит на шаг вниз
+    // (−2.70m → «−2.71m», −1.00b → «−1.01b»; П: короткий вывод O, этап 8.16b, probe816b — 40 значений, 38 отрицательных)
+    const m = x < 0 ? -(Math.floor(Number((-v * pow10(d)).toPrecision(digits))) + 1) : Math.floor(Number((v * pow10(d)).toPrecision(digits)));
     const suf = k <= suffixes.length ? suffixes[k - 1] : sciPrefix + groupDigits * k;
     return (d ? formatFixed(m / pow10(d), d) : String(m)) + suf;
   };

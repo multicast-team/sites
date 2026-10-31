@@ -1,0 +1,4327 @@
+{
+ "version": "2.2.50",
+ "stage": "1.30",
+ "input": {
+  "base_apk_sha256": "34930271790b93e13c0a8013ceaac0e75a5ee8e8d1d76fb2c1baa821a4f0882d",
+  "base_apk_in_SHA256SUMS": true,
+  "droid_in_apk_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "droid_file_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "expected": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "ok": true
+ },
+ "note": "Материалы оригинала Idle Obelisk Miner 2.2.50. Только локально, не публиковать.",
+ "keys": {
+  "sprite.gameicon_144x144": {
+   "index": 0,
+   "name": "gameicon_144x144"
+  },
+  "sprite.gameicon_300x300": {
+   "index": 1,
+   "name": "gameicon_300x300"
+  },
+  "sprite.gameicon_36x36": {
+   "index": 2,
+   "name": "gameicon_36x36"
+  },
+  "sprite.gameicon_48x48": {
+   "index": 3,
+   "name": "gameicon_48x48"
+  },
+  "sprite.gameicon_72x72": {
+   "index": 4,
+   "name": "gameicon_72x72"
+  },
+  "sprite.gameicon_96x96": {
+   "index": 5,
+   "name": "gameicon_96x96"
+  },
+  "sprite.gameicon_bigtest": {
+   "index": 6,
+   "name": "gameicon_bigtest"
+  },
+  "sprite.my_car": {
+   "index": 7,
+   "name": "my_car"
+  },
+  "sprite.patch9a": {
+   "index": 8,
+   "name": "patch9a"
+  },
+  "sprite.patch9b": {
+   "index": 9,
+   "name": "patch9b"
+  },
+  "sprite.patch9c": {
+   "index": 10,
+   "name": "patch9c"
+  },
+  "sprite.patch_backing_blue_dupe": {
+   "index": 11,
+   "name": "patchBackingBlue_dupe"
+  },
+  "sprite.patch_backing_blue_ml": {
+   "index": 12,
+   "name": "patchBackingBlue_ML"
+  },
+  "sprite.patch_backing_blue_tc": {
+   "index": 13,
+   "name": "patchBackingBlue_TC"
+  },
+  "sprite.patch_backing_blue": {
+   "index": 14,
+   "name": "patchBackingBlue"
+  },
+  "sprite.patch_backing_blue_with_desc_tc": {
+   "index": 15,
+   "name": "patchBackingBlueWithDesc_TC"
+  },
+  "sprite.patch_backing_blue_with_desc": {
+   "index": 16,
+   "name": "patchBackingBlueWithDesc"
+  },
+  "sprite.patch_backing_brownish_bc": {
+   "index": 17,
+   "name": "patchBackingBrownish_BC"
+  },
+  "sprite.patch_backing_brownish_ml": {
+   "index": 18,
+   "name": "patchBackingBrownish_ML"
+  },
+  "sprite.patch_backing_brownish_mr": {
+   "index": 19,
+   "name": "patchBackingBrownish_MR"
+  },
+  "sprite.patch_backing_brownish_tc": {
+   "index": 20,
+   "name": "patchBackingBrownish_TC"
+  },
+  "sprite.patch_backing_brownish_tl": {
+   "index": 21,
+   "name": "patchBackingBrownish_TL"
+  },
+  "sprite.patch_backing_brownish": {
+   "index": 22,
+   "name": "patchBackingBrownish"
+  },
+  "sprite.patch_backing_brownish_gold_tc": {
+   "index": 23,
+   "name": "patchBackingBrownishGold_TC"
+  },
+  "sprite.patch_backing_brownish_with_desc_tc": {
+   "index": 24,
+   "name": "patchBackingBrownishWithDesc_TC"
+  },
+  "sprite.patch_backing_brownish_with_desc": {
+   "index": 25,
+   "name": "patchBackingBrownishWithDesc"
+  },
+  "sprite.patch_backing_brownish_with_desc_ml": {
+   "index": 26,
+   "name": "patchBackingBrownishWithDescML"
+  },
+  "sprite.patch_backing_challenge_a": {
+   "index": 27,
+   "name": "patchBackingChallengeA"
+  },
+  "sprite.patch_backing_challenge_b": {
+   "index": 28,
+   "name": "patchBackingChallengeB"
+  },
+  "sprite.patch_backing_challenge_c": {
+   "index": 29,
+   "name": "patchBackingChallengeC"
+  },
+  "sprite.patch_backing_fishin_full_size_purp": {
+   "index": 30,
+   "name": "patchBackingFishin_FullSize_purp"
+  },
+  "sprite.patch_backing_fishin_full_size": {
+   "index": 31,
+   "name": "patchBackingFishin_FullSize"
+  },
+  "sprite.patch_backing_fishin_full_size_brighter_purp": {
+   "index": 32,
+   "name": "patchBackingFishin_FullSizeBrighter_Purp"
+  },
+  "sprite.patch_backing_fishin_full_size_brighter": {
+   "index": 33,
+   "name": "patchBackingFishin_FullSizeBrighter"
+  },
+  "sprite.patch_backing_fishin_ml": {
+   "index": 34,
+   "name": "patchBackingFishin_ML"
+  },
+  "sprite.patch_backing_fishin_mr": {
+   "index": 35,
+   "name": "patchBackingFishin_MR"
+  },
+  "sprite.patch_backing_fishin_tc": {
+   "index": 36,
+   "name": "patchBackingFishin_TC"
+  },
+  "sprite.patch_backing_fishin": {
+   "index": 37,
+   "name": "patchBackingFishin"
+  },
+  "sprite.patch_backing_fishing_enhance2_purp": {
+   "index": 38,
+   "name": "patchBackingFishingEnhance2_purp"
+  },
+  "sprite.patch_backing_fishing_enhance2": {
+   "index": 39,
+   "name": "patchBackingFishingEnhance2"
+  },
+  "sprite.patch_backing_fishing_enhance_full_size": {
+   "index": 40,
+   "name": "patchBackingFishingEnhanceFullSize"
+  },
+  "sprite.patch_backing_fishing_test_bc": {
+   "index": 41,
+   "name": "patchBackingFishingTest_BC"
+  },
+  "sprite.patch_backing_fishing_test_full_size": {
+   "index": 42,
+   "name": "patchBackingFishingTest_FullSize"
+  },
+  "sprite.patch_backing_fishing_test_tc": {
+   "index": 43,
+   "name": "patchBackingFishingTest_TC"
+  },
+  "sprite.patch_backing_fishing_test": {
+   "index": 44,
+   "name": "patchBackingFishingTest"
+  },
+  "sprite.patch_backing_fishin_with_desc_ml": {
+   "index": 45,
+   "name": "patchBackingFishinWithDesc_ML"
+  },
+  "sprite.patch_backing_fishin_with_desc_purp": {
+   "index": 46,
+   "name": "patchBackingFishinWithDesc_purp"
+  },
+  "sprite.patch_backing_fishin_with_desc": {
+   "index": 47,
+   "name": "patchBackingFishinWithDesc"
+  },
+  "sprite.patch_backing_gold": {
+   "index": 48,
+   "name": "patchBackingGold"
+  },
+  "sprite.patch_backing_gold2": {
+   "index": 49,
+   "name": "patchBackingGold2"
+  },
+  "sprite.patch_backing_green": {
+   "index": 50,
+   "name": "patchBackingGreen"
+  },
+  "sprite.patch_backing_green_with_desc": {
+   "index": 51,
+   "name": "patchBackingGreenWithDesc"
+  },
+  "sprite.patch_backing_grey_ml": {
+   "index": 52,
+   "name": "patchBackingGrey_ML"
+  },
+  "sprite.patch_backing_grey_mr": {
+   "index": 53,
+   "name": "patchBackingGrey_MR"
+  },
+  "sprite.patch_backing_grey_tl": {
+   "index": 54,
+   "name": "patchBackingGrey_TL"
+  },
+  "sprite.patch_backing_grey": {
+   "index": 55,
+   "name": "patchBackingGrey"
+  },
+  "sprite.patch_backing_light_gray": {
+   "index": 56,
+   "name": "patchBackingLightGray"
+  },
+  "sprite.patch_backing_magma": {
+   "index": 57,
+   "name": "patchBackingMagma"
+  },
+  "sprite.patch_backing_magma_with_desc": {
+   "index": 58,
+   "name": "patchBackingMagmaWithDesc"
+  },
+  "sprite.patch_backing_purple": {
+   "index": 59,
+   "name": "patchBackingPurple"
+  },
+  "sprite.patch_backing_purple_with_desc": {
+   "index": 60,
+   "name": "patchBackingPurpleWithDesc"
+  },
+  "sprite.patch_backing_sky_ml": {
+   "index": 61,
+   "name": "patchBackingSky_ML"
+  },
+  "sprite.patch_backing_sky_mr": {
+   "index": 62,
+   "name": "patchBackingSky_MR"
+  },
+  "sprite.patch_backing_sky_tc": {
+   "index": 63,
+   "name": "patchBackingSky_TC"
+  },
+  "sprite.patch_backing_sky": {
+   "index": 64,
+   "name": "patchBackingSky"
+  },
+  "sprite.patch_backing_sky_with_desc_ml_lighter": {
+   "index": 65,
+   "name": "patchBackingSkyWithDesc_ML_lighter"
+  },
+  "sprite.patch_backing_sky_with_desc_ml": {
+   "index": 66,
+   "name": "patchBackingSkyWithDesc_ML"
+  },
+  "sprite.patch_backing_sky_with_desc": {
+   "index": 67,
+   "name": "patchBackingSkyWithDesc"
+  },
+  "sprite.patch_backing_white_ml": {
+   "index": 68,
+   "name": "patchBackingWhite_ML"
+  },
+  "sprite.patch_backing_white": {
+   "index": 69,
+   "name": "patchBackingWhite"
+  },
+  "sprite.patch_button": {
+   "index": 70,
+   "name": "patchButton"
+  },
+  "sprite.patch_button_event": {
+   "index": 71,
+   "name": "patchButtonEvent"
+  },
+  "sprite.patch_button_fishing": {
+   "index": 72,
+   "name": "patchButtonFishing"
+  },
+  "sprite.patch_button_green": {
+   "index": 73,
+   "name": "patchButtonGreen"
+  },
+  "sprite.patch_button_orange": {
+   "index": 74,
+   "name": "patchButtonOrange"
+  },
+  "sprite.patch_button_pushed_in": {
+   "index": 75,
+   "name": "patchButtonPushedIn"
+  },
+  "sprite.patch_button_real_blue": {
+   "index": 76,
+   "name": "patchButtonRealBlue"
+  },
+  "sprite.patch_desc_ml": {
+   "index": 77,
+   "name": "patchDesc_ML"
+  },
+  "sprite.patch_desc_mr": {
+   "index": 78,
+   "name": "patchDesc_MR"
+  },
+  "sprite.patch_desc_tc": {
+   "index": 79,
+   "name": "patchDesc_TC"
+  },
+  "sprite.patch_desc_tl": {
+   "index": 80,
+   "name": "patchDesc_TL"
+  },
+  "sprite.patch_desc": {
+   "index": 81,
+   "name": "patchDesc"
+  },
+  "sprite.patch_desc_behind_bomb": {
+   "index": 82,
+   "name": "patchDescBehindBomb"
+  },
+  "sprite.patch_desc_gold_frame": {
+   "index": 83,
+   "name": "patchDescGoldFrame"
+  },
+  "sprite.patch_desc_gold_frame546_ml": {
+   "index": 84,
+   "name": "patchDescGoldFrame546_ML"
+  },
+  "sprite.patch_desc_green_ml325": {
+   "index": 85,
+   "name": "patchDescGreen_ML325"
+  },
+  "sprite.patch_desc_green": {
+   "index": 86,
+   "name": "patchDescGreen"
+  },
+  "sprite.patch_desc_grey": {
+   "index": 87,
+   "name": "patchDescGrey"
+  },
+  "sprite.patch_desc_highlight": {
+   "index": 88,
+   "name": "patchDescHighlight"
+  },
+  "sprite.patch_desc_infernal_frame": {
+   "index": 89,
+   "name": "patchDescInfernalFrame"
+  },
+  "sprite.patch_desc_item_outside": {
+   "index": 90,
+   "name": "patchDescItemOutside"
+  },
+  "sprite.patch_desc_outline_only": {
+   "index": 91,
+   "name": "patchDescOutlineOnly"
+  },
+  "sprite.patch_desc_poly_frame": {
+   "index": 92,
+   "name": "patchDescPolyFrame"
+  },
+  "sprite.patch_desc_red": {
+   "index": 93,
+   "name": "patchDescRed"
+  },
+  "sprite.patch_desc_silver_frame": {
+   "index": 94,
+   "name": "patchDescSilverFrame"
+  },
+  "sprite.patch_desc_white": {
+   "index": 95,
+   "name": "patchDescWhite"
+  },
+  "sprite.patch_iap_backing_new_2_ml": {
+   "index": 96,
+   "name": "patchIapBackingNew_2_ML"
+  },
+  "sprite.patch_iap_backing_new_2": {
+   "index": 97,
+   "name": "patchIapBackingNew_2"
+  },
+  "sprite.patch_iap_backing_new_3": {
+   "index": 98,
+   "name": "patchIapBackingNew_3"
+  },
+  "sprite.patch_iap_backing_new_5": {
+   "index": 99,
+   "name": "patchIapBackingNew_5"
+  },
+  "sprite.patch_iap_backing_new_6": {
+   "index": 100,
+   "name": "patchIapBackingNew_6"
+  },
+  "sprite.patch_iap_backing_new": {
+   "index": 101,
+   "name": "patchIapBackingNew"
+  },
+  "sprite.patch_infernal": {
+   "index": 102,
+   "name": "patchInfernal"
+  },
+  "sprite.patch_poly": {
+   "index": 103,
+   "name": "patchPoly"
+  },
+  "sprite.patch_white_border": {
+   "index": 104,
+   "name": "patchWhiteBorder"
+  },
+  "sprite.arabian_extras": {
+   "index": 105,
+   "name": "spr_arabian_extras"
+  },
+  "sprite.arch_behind_skills": {
+   "index": 106,
+   "name": "spr_arch_behind_skills"
+  },
+  "sprite.arch_button_new": {
+   "index": 107,
+   "name": "spr_arch_button_new"
+  },
+  "sprite.enemy": {
+   "index": 108,
+   "name": "spr_enemy"
+  },
+  "sprite.pirate_extras": {
+   "index": 109,
+   "name": "spr_pirate_extras"
+  },
+  "sprite.player": {
+   "index": 110,
+   "name": "spr_player"
+  },
+  "sprite.scroll_replace": {
+   "index": 111,
+   "name": "spr_scroll_replace"
+  },
+  "sprite.test_vyd": {
+   "index": 112,
+   "name": "spr_test_vyd"
+  },
+  "sprite.top_middle": {
+   "index": 113,
+   "name": "spr_top_middle"
+  },
+  "sprite.wonderland_extras": {
+   "index": 114,
+   "name": "spr_wonderland_extras"
+  },
+  "sprite.100x_craft_chance": {
+   "index": 115,
+   "name": "spr100xCraftChance"
+  },
+  "sprite.10x_craft_chance": {
+   "index": 116,
+   "name": "spr10xCraftChance"
+  },
+  "sprite.20x_craft_chance": {
+   "index": 117,
+   "name": "spr20xCraftChance"
+  },
+  "sprite.5x_craft_chance": {
+   "index": 118,
+   "name": "spr5xCraftChance"
+  },
+  "sprite.ace_of_spades": {
+   "index": 119,
+   "name": "sprAceOfSpades"
+  },
+  "sprite.ace_of_spades2": {
+   "index": 120,
+   "name": "sprAceOfSpades2"
+  },
+  "sprite.ace_of_spades3": {
+   "index": 121,
+   "name": "sprAceOfSpades3"
+  },
+  "sprite.all_debuff_negate": {
+   "index": 122,
+   "name": "sprAllDebuffNegate"
+  },
+  "sprite.all_floor_multis": {
+   "index": 123,
+   "name": "sprAllFloorMultis"
+  },
+  "sprite.anvil": {
+   "index": 124,
+   "name": "sprAnvil"
+  },
+  "sprite.app_store": {
+   "index": 125,
+   "name": "sprAppStore"
+  },
+  "sprite.arcana_essence": {
+   "index": 126,
+   "name": "sprArcanaEssence"
+  },
+  "sprite.arcana_essence_all_max_loot": {
+   "index": 127,
+   "name": "sprArcanaEssenceAllMaxLoot"
+  },
+  "sprite.arcana_essence_all_min_loot": {
+   "index": 128,
+   "name": "sprArcanaEssenceAllMinLoot"
+  },
+  "sprite.arcana_essence_plus": {
+   "index": 129,
+   "name": "sprArcanaEssencePlus"
+  },
+  "sprite.arcana_essence_regen_down_v2": {
+   "index": 130,
+   "name": "sprArcanaEssenceRegenDown_v2"
+  },
+  "sprite.arcana_essence_regen_down": {
+   "index": 131,
+   "name": "sprArcanaEssenceRegenDown"
+  },
+  "sprite.arcana_essence_respawn_faster": {
+   "index": 132,
+   "name": "sprArcanaEssenceRespawnFaster"
+  },
+  "sprite.arcana_menu_icon": {
+   "index": 133,
+   "name": "sprArcanaMenuIcon"
+  },
+  "sprite.arcana_menu_tabs": {
+   "index": 134,
+   "name": "sprArcanaMenuTabs"
+  },
+  "sprite.arcana_orb": {
+   "index": 135,
+   "name": "sprArcanaOrb"
+  },
+  "sprite.arcana_rune": {
+   "index": 136,
+   "name": "sprArcanaRune"
+  },
+  "sprite.arcana_rune_craft_multi": {
+   "index": 137,
+   "name": "sprArcanaRuneCraftMulti"
+  },
+  "sprite.arcana_rune_stone": {
+   "index": 138,
+   "name": "sprArcanaRuneStone"
+  },
+  "sprite.arcana_runner_ash": {
+   "index": 139,
+   "name": "sprArcanaRunnerAsh"
+  },
+  "sprite.arcana_runner_brine": {
+   "index": 140,
+   "name": "sprArcanaRunnerBrine"
+  },
+  "sprite.arcana_runner_chasm": {
+   "index": 141,
+   "name": "sprArcanaRunnerChasm"
+  },
+  "sprite.arcana_runner_drift": {
+   "index": 142,
+   "name": "sprArcanaRunnerDrift"
+  },
+  "sprite.arcana_runner_echo": {
+   "index": 143,
+   "name": "sprArcanaRunnerEcho"
+  },
+  "sprite.arcana_runner_flora": {
+   "index": 144,
+   "name": "sprArcanaRunnerFlora"
+  },
+  "sprite.arcana_runner_ghost": {
+   "index": 145,
+   "name": "sprArcanaRunnerGhost"
+  },
+  "sprite.arcana_wizard": {
+   "index": 146,
+   "name": "sprArcanaWizard"
+  },
+  "sprite.arcanist_all_shiny_multi": {
+   "index": 147,
+   "name": "sprArcanistAllShinyMulti"
+  },
+  "sprite.arcanist_altar_backgrounds": {
+   "index": 148,
+   "name": "sprArcanistAltarBackgrounds"
+  },
+  "sprite.arcanist_altars": {
+   "index": 149,
+   "name": "sprArcanistAltars"
+  },
+  "sprite.arcanist_brittle_chance": {
+   "index": 150,
+   "name": "sprArcanistBrittleChance"
+  },
+  "sprite.arcanist_brittle_reduction": {
+   "index": 151,
+   "name": "sprArcanistBrittleReduction"
+  },
+  "sprite.arcanist_essence_backgrounds": {
+   "index": 152,
+   "name": "sprArcanistEssenceBackgrounds"
+  },
+  "sprite.arcanist_mana_regen": {
+   "index": 153,
+   "name": "sprArcanistManaRegen"
+  },
+  "sprite.arcanist_shiny_chance": {
+   "index": 154,
+   "name": "sprArcanistShinyChance"
+  },
+  "sprite.arcanist_shiny_multi": {
+   "index": 155,
+   "name": "sprArcanistShinyMulti"
+  },
+  "sprite.arcanist_spell_level_chance": {
+   "index": 156,
+   "name": "sprArcanistSpellLevelChance"
+  },
+  "sprite.arcanist_super_shiny_chance": {
+   "index": 157,
+   "name": "sprArcanistSuperShinyChance"
+  },
+  "sprite.arcanist_super_shiny_multi": {
+   "index": 158,
+   "name": "sprArcanistSuperShinyMulti"
+  },
+  "sprite.arcanist_ultra_shiny_chance": {
+   "index": 159,
+   "name": "sprArcanistUltraShinyChance"
+  },
+  "sprite.arcanist_ultra_shiny_multi": {
+   "index": 160,
+   "name": "sprArcanistUltraShinyMulti"
+  },
+  "sprite.arcanist_unlock_spell_icon": {
+   "index": 161,
+   "name": "sprArcanistUnlockSpellIcon"
+  },
+  "sprite.arcanist_wizard_loot_multi": {
+   "index": 162,
+   "name": "sprArcanistWizardLootMulti"
+  },
+  "sprite.arch_ability0": {
+   "index": 163,
+   "name": "sprArchAbility0"
+  },
+  "sprite.arch_ability1": {
+   "index": 164,
+   "name": "sprArchAbility1"
+  },
+  "sprite.arch_ability2": {
+   "index": 165,
+   "name": "sprArchAbility2"
+  },
+  "sprite.arch_ability_bars": {
+   "index": 166,
+   "name": "sprArchAbilityBars"
+  },
+  "sprite.archaeology": {
+   "index": 167,
+   "name": "sprArchaeology"
+  },
+  "sprite.arch_agility_skill": {
+   "index": 168,
+   "name": "sprArchAgilitySkill"
+  },
+  "sprite.arch_all_mod_multis": {
+   "index": 169,
+   "name": "sprArchAllModMultis"
+  },
+  "sprite.arch_arch_level": {
+   "index": 170,
+   "name": "sprArchArchLevel"
+  },
+  "sprite.arch_armor": {
+   "index": 171,
+   "name": "sprArchArmor"
+  },
+  "sprite.arch_armor_pen_add": {
+   "index": 172,
+   "name": "sprArchArmorPenAdd"
+  },
+  "sprite.arch_armor_pen_mult": {
+   "index": 173,
+   "name": "sprArchArmorPenMult"
+  },
+  "sprite.arch_ascension": {
+   "index": 174,
+   "name": "sprArchAscension"
+  },
+  "sprite.arch_bar_stamina": {
+   "index": 175,
+   "name": "sprArchBarStamina"
+  },
+  "sprite.arch_bar_xp": {
+   "index": 176,
+   "name": "sprArchBarXp"
+  },
+  "sprite.arch_big_background_tile": {
+   "index": 177,
+   "name": "sprArchBigBackgroundTile"
+  },
+  "sprite.arch_common_block": {
+   "index": 178,
+   "name": "sprArchCommonBlock"
+  },
+  "sprite.arch_corruption_skill": {
+   "index": 179,
+   "name": "sprArchCorruptionSkill"
+  },
+  "sprite.arch_crit_chance": {
+   "index": 180,
+   "name": "sprArchCritChance"
+  },
+  "sprite.arch_crit_multi": {
+   "index": 181,
+   "name": "sprArchCritMulti"
+  },
+  "sprite.arch_crosshair": {
+   "index": 182,
+   "name": "sprArchCrosshair"
+  },
+  "sprite.arch_crosshair_auto": {
+   "index": 183,
+   "name": "sprArchCrosshairAuto"
+  },
+  "sprite.arch_crosshair_golden_chance": {
+   "index": 184,
+   "name": "sprArchCrosshairGoldenChance"
+  },
+  "sprite.arch_crosshair_golden_multi": {
+   "index": 185,
+   "name": "sprArchCrosshairGoldenMulti"
+  },
+  "sprite.arch_damage_add": {
+   "index": 186,
+   "name": "sprArchDamageAdd"
+  },
+  "sprite.arch_damage_multi": {
+   "index": 187,
+   "name": "sprArchDamageMulti"
+  },
+  "sprite.arch_damage_no_symbol": {
+   "index": 188,
+   "name": "sprArchDamageNoSymbol"
+  },
+  "sprite.arch_digsite_icon": {
+   "index": 189,
+   "name": "sprArchDigsiteIcon"
+  },
+  "sprite.arch_dirt": {
+   "index": 190,
+   "name": "sprArchDirt"
+  },
+  "sprite.arch_divine_block": {
+   "index": 191,
+   "name": "sprArchDivineBlock"
+  },
+  "sprite.arch_divinity_skill": {
+   "index": 192,
+   "name": "sprArchDivinitySkill"
+  },
+  "sprite.arch_epic_block": {
+   "index": 193,
+   "name": "sprArchEpicBlock"
+  },
+  "sprite.arch_exp_and_cap": {
+   "index": 194,
+   "name": "sprArchExpAndCap"
+  },
+  "sprite.arch_fragment_gain": {
+   "index": 195,
+   "name": "sprArchFragmentGain"
+  },
+  "sprite.arch_fragment_gain5x": {
+   "index": 196,
+   "name": "sprArchFragmentGain5x"
+  },
+  "sprite.arch_fragment_strip": {
+   "index": 197,
+   "name": "sprArchFragmentStrip"
+  },
+  "sprite.arch_gleaming_chance": {
+   "index": 198,
+   "name": "sprArchGleamingChance"
+  },
+  "sprite.arch_gleaming_multi": {
+   "index": 199,
+   "name": "sprArchGleamingMulti"
+  },
+  "sprite.arch_highest_stage": {
+   "index": 200,
+   "name": "sprArchHighestStage"
+  },
+  "sprite.arch_hp": {
+   "index": 201,
+   "name": "sprArchHp"
+  },
+  "sprite.arch_idol_bgs": {
+   "index": 202,
+   "name": "sprArchIdolBgs"
+  },
+  "sprite.arch_idol_quest_complete": {
+   "index": 203,
+   "name": "sprArchIdolQuestComplete"
+  },
+  "sprite.arch_idols": {
+   "index": 204,
+   "name": "sprArchIdols"
+  },
+  "sprite.arch_idol_small": {
+   "index": 205,
+   "name": "sprArchIdolSmall"
+  },
+  "sprite.arch_instacharge_chance": {
+   "index": 206,
+   "name": "sprArchInstachargeChance"
+  },
+  "sprite.arch_intellect_skill": {
+   "index": 207,
+   "name": "sprArchIntellectSkill"
+  },
+  "sprite.arch_legendary_block": {
+   "index": 208,
+   "name": "sprArchLegendaryBlock"
+  },
+  "sprite.arch_loot": {
+   "index": 209,
+   "name": "sprArchLoot"
+  },
+  "sprite.arch_lucky_token": {
+   "index": 210,
+   "name": "sprArchLuckyToken"
+  },
+  "sprite.arch_lvl": {
+   "index": 211,
+   "name": "sprArchLvl"
+  },
+  "sprite.arch_lvl_up": {
+   "index": 212,
+   "name": "sprArchLvlUp"
+  },
+  "sprite.arch_max_stamina": {
+   "index": 213,
+   "name": "sprArchMaxStamina"
+  },
+  "sprite.arch_menu_icon": {
+   "index": 214,
+   "name": "sprArchMenuIcon"
+  },
+  "sprite.arch_mod_all_mod_chance": {
+   "index": 215,
+   "name": "sprArchModAllModChance"
+  },
+  "sprite.arch_mod_loot": {
+   "index": 216,
+   "name": "sprArchModLoot"
+  },
+  "sprite.arch_mod_loot_chance": {
+   "index": 217,
+   "name": "sprArchModLootChance"
+  },
+  "sprite.arch_mod_speed": {
+   "index": 218,
+   "name": "sprArchModSpeed"
+  },
+  "sprite.arch_mod_speed_chance": {
+   "index": 219,
+   "name": "sprArchModSpeedChance"
+  },
+  "sprite.arch_mod_stamina": {
+   "index": 220,
+   "name": "sprArchModStamina"
+  },
+  "sprite.arch_mod_stamina_chance": {
+   "index": 221,
+   "name": "sprArchModStaminaChance"
+  },
+  "sprite.arch_mod_xp": {
+   "index": 222,
+   "name": "sprArchModXp"
+  },
+  "sprite.arch_mod_xp_chance": {
+   "index": 223,
+   "name": "sprArchModXpChance"
+  },
+  "sprite.arch_mythic_block": {
+   "index": 224,
+   "name": "sprArchMythicBlock"
+  },
+  "sprite.arch_node": {
+   "index": 225,
+   "name": "sprArchNode"
+  },
+  "sprite.arch_ohko_chance": {
+   "index": 226,
+   "name": "sprArchOhkoChance"
+  },
+  "sprite.arch_perception_skill": {
+   "index": 227,
+   "name": "sprArchPerceptionSkill"
+  },
+  "sprite.arch_rare_block": {
+   "index": 228,
+   "name": "sprArchRareBlock"
+  },
+  "sprite.arch_skill_strip": {
+   "index": 229,
+   "name": "sprArchSkillStrip"
+  },
+  "sprite.arch_speed": {
+   "index": 230,
+   "name": "sprArchSpeed"
+  },
+  "sprite.arch_stamina": {
+   "index": 231,
+   "name": "sprArchStamina"
+  },
+  "sprite.arch_stat_point": {
+   "index": 232,
+   "name": "sprArchStatPoint"
+  },
+  "sprite.arch_strength_skill": {
+   "index": 233,
+   "name": "sprArchStrengthSkill"
+  },
+  "sprite.arch_strip_stat_dots": {
+   "index": 234,
+   "name": "sprArchStripStatDots"
+  },
+  "sprite.arch_super_crit_chance": {
+   "index": 235,
+   "name": "sprArchSuperCritChance"
+  },
+  "sprite.arch_super_crit_damage": {
+   "index": 236,
+   "name": "sprArchSuperCritDamage"
+  },
+  "sprite.arch_symbols": {
+   "index": 237,
+   "name": "sprArchSymbols"
+  },
+  "sprite.arch_tile_test1": {
+   "index": 238,
+   "name": "sprArchTileTest1"
+  },
+  "sprite.arch_ultra_crit_chance": {
+   "index": 239,
+   "name": "sprArchUltraCritChance"
+  },
+  "sprite.arch_ultra_crit_damage": {
+   "index": 240,
+   "name": "sprArchUltraCritDamage"
+  },
+  "sprite.arch_xp": {
+   "index": 241,
+   "name": "sprArchXp"
+  },
+  "sprite.arch_xp_and_frag_gain": {
+   "index": 242,
+   "name": "sprArchXpAndFragGain"
+  },
+  "sprite.arch_xp_and_stamina": {
+   "index": 243,
+   "name": "sprArchXpAndStamina"
+  },
+  "sprite.arch_xp_text_only": {
+   "index": 244,
+   "name": "sprArchXpTextOnly"
+  },
+  "sprite.arrow_green": {
+   "index": 245,
+   "name": "sprArrowGreen"
+  },
+  "sprite.artifact_workshop_cap": {
+   "index": 246,
+   "name": "sprArtifactWorkshopCap"
+  },
+  "sprite.ash_test": {
+   "index": 247,
+   "name": "sprAshTest"
+  },
+  "sprite.auto_bomber": {
+   "index": 248,
+   "name": "sprAutoBomber"
+  },
+  "sprite.auto_bomber_no_bomb": {
+   "index": 249,
+   "name": "sprAutoBomberNoBomb"
+  },
+  "sprite.background0": {
+   "index": 250,
+   "name": "sprBackground0"
+  },
+  "sprite.backpack24x24": {
+   "index": 251,
+   "name": "sprBackpack24x24"
+  },
+  "sprite.backpack24x24_gold": {
+   "index": 252,
+   "name": "sprBackpack24x24Gold"
+  },
+  "sprite.backspace": {
+   "index": 253,
+   "name": "sprBackspace"
+  },
+  "sprite.bag16x16": {
+   "index": 254,
+   "name": "sprBag16x16"
+  },
+  "sprite.bag_skin_unlock": {
+   "index": 255,
+   "name": "sprBagSkinUnlock"
+  },
+  "sprite.baller16x16": {
+   "index": 256,
+   "name": "sprBaller16x16"
+  },
+  "sprite.banked_stuff": {
+   "index": 257,
+   "name": "sprBankedStuff"
+  },
+  "sprite.banner_arch": {
+   "index": 258,
+   "name": "sprBannerArch"
+  },
+  "sprite.bar": {
+   "index": 259,
+   "name": "sprBar"
+  },
+  "sprite.bar2x": {
+   "index": 260,
+   "name": "sprBar2x"
+  },
+  "sprite.bar_cost_reduc": {
+   "index": 261,
+   "name": "sprBarCostReduc"
+  },
+  "sprite.bar_craft_cost": {
+   "index": 262,
+   "name": "sprBarCraftCost"
+  },
+  "sprite.bar_up": {
+   "index": 263,
+   "name": "sprBarUp"
+  },
+  "sprite.battery_levels": {
+   "index": 264,
+   "name": "sprBatteryLevels"
+  },
+  "sprite.bg_behindbags_g": {
+   "index": 265,
+   "name": "sprbg_behindbags_g"
+  },
+  "sprite.bg_behindbags": {
+   "index": 266,
+   "name": "sprbg_behindbags"
+  },
+  "sprite.bg_behindfloorselect_g": {
+   "index": 267,
+   "name": "sprbg_behindfloorselect_g"
+  },
+  "sprite.bg_behindfloorselect": {
+   "index": 268,
+   "name": "sprbg_behindfloorselect"
+  },
+  "sprite.bg_behindobelisk_g": {
+   "index": 269,
+   "name": "sprbg_behindobelisk_g"
+  },
+  "sprite.bg_behindobelisk": {
+   "index": 270,
+   "name": "sprbg_behindobelisk"
+  },
+  "sprite.bg_newfloors_g": {
+   "index": 271,
+   "name": "sprbg_newfloors_g"
+  },
+  "sprite.bg_newfloors": {
+   "index": 272,
+   "name": "sprbg_newfloors"
+  },
+  "sprite.bg_floor": {
+   "index": 273,
+   "name": "sprBgFloor"
+  },
+  "sprite.black_hole16x16": {
+   "index": 274,
+   "name": "sprBlackHole16x16"
+  },
+  "sprite.black_hole_bar_fill": {
+   "index": 275,
+   "name": "sprBlackHoleBarFill"
+  },
+  "sprite.black_hole_blessings": {
+   "index": 276,
+   "name": "sprBlackHoleBlessings"
+  },
+  "sprite.black_hole_bottom_ui": {
+   "index": 277,
+   "name": "sprBlackHoleBottomUI"
+  },
+  "sprite.black_hole_rewards": {
+   "index": 278,
+   "name": "sprBlackHoleRewards"
+  },
+  "sprite.black_hole_temp": {
+   "index": 279,
+   "name": "sprBlackHoleTemp"
+  },
+  "sprite.black_hole_ui": {
+   "index": 280,
+   "name": "sprBlackHoleUi"
+  },
+  "sprite.black_hole_vyd": {
+   "index": 281,
+   "name": "sprBlackHoleVyd"
+  },
+  "sprite.blah_blue_blee": {
+   "index": 282,
+   "name": "sprBlahBlueBlee"
+  },
+  "sprite.blank_arch": {
+   "index": 283,
+   "name": "sprBlankArch"
+  },
+  "sprite.blind_wizard_chance": {
+   "index": 284,
+   "name": "sprBlindWizardChance"
+  },
+  "sprite.blue_cow": {
+   "index": 285,
+   "name": "sprBlueCow"
+  },
+  "sprite.blue_cow100x": {
+   "index": 286,
+   "name": "sprBlueCow100x"
+  },
+  "sprite.bluesky": {
+   "index": 287,
+   "name": "sprBluesky"
+  },
+  "sprite.bomb_basic": {
+   "index": 288,
+   "name": "sprBombBasic"
+  },
+  "sprite.bomb_battery": {
+   "index": 289,
+   "name": "sprBombBattery"
+  },
+  "sprite.bomb_battery_icon": {
+   "index": 290,
+   "name": "sprBombBatteryIcon"
+  },
+  "sprite.bomb_capacity": {
+   "index": 291,
+   "name": "sprBombCapacity"
+  },
+  "sprite.bomb_cap_multiplier": {
+   "index": 292,
+   "name": "sprBombCapMultiplier"
+  },
+  "sprite.bomb_chain": {
+   "index": 293,
+   "name": "sprBombChain"
+  },
+  "sprite.bomb_charge_meter": {
+   "index": 294,
+   "name": "sprBombChargeMeter"
+  },
+  "sprite.bomb_charge_meter_auto": {
+   "index": 295,
+   "name": "sprBombChargeMeterAuto"
+  },
+  "sprite.bomb_cherry": {
+   "index": 296,
+   "name": "sprBombCherry"
+  },
+  "sprite.bomb_crit_chance": {
+   "index": 297,
+   "name": "sprBombCritChance"
+  },
+  "sprite.bomb_crit_damage": {
+   "index": 298,
+   "name": "sprBombCritDamage"
+  },
+  "sprite.bomb_d20": {
+   "index": 299,
+   "name": "sprBombD20"
+  },
+  "sprite.bomb_damage": {
+   "index": 300,
+   "name": "sprBombDamage"
+  },
+  "sprite.bomb_damage_statue": {
+   "index": 301,
+   "name": "sprBombDamageStatue"
+  },
+  "sprite.bomb_exp": {
+   "index": 302,
+   "name": "sprBombExp"
+  },
+  "sprite.bomb_exp_gold": {
+   "index": 303,
+   "name": "sprBombExpGold"
+  },
+  "sprite.bomb_founders": {
+   "index": 304,
+   "name": "sprBombFounders"
+  },
+  "sprite.bomb_gem_bomb": {
+   "index": 305,
+   "name": "sprBombGemBomb"
+  },
+  "sprite.bomb_gem_bomb_golden": {
+   "index": 306,
+   "name": "sprBombGemBombGolden"
+  },
+  "sprite.bomb_infinity": {
+   "index": 307,
+   "name": "sprBombInfinity"
+  },
+  "sprite.bomb_mega": {
+   "index": 308,
+   "name": "sprBombMega"
+  },
+  "sprite.bomb_multi_add": {
+   "index": 309,
+   "name": "sprBombMultiAdd"
+  },
+  "sprite.bomb_of_plenty": {
+   "index": 310,
+   "name": "sprBombOfPlenty"
+  },
+  "sprite.bomb_of_plenty_gold": {
+   "index": 311,
+   "name": "sprBombOfPlentyGold"
+  },
+  "sprite.bomb_omega_crit_chance": {
+   "index": 312,
+   "name": "sprBombOmegaCritChance"
+  },
+  "sprite.bomb_omega_crit_damage": {
+   "index": 313,
+   "name": "sprBombOmegaCritDamage"
+  },
+  "sprite.bomb_pack24x24": {
+   "index": 314,
+   "name": "sprBombPack24x24"
+  },
+  "sprite.bomb_recharge10x_1": {
+   "index": 315,
+   "name": "sprBombRecharge10x_1"
+  },
+  "sprite.bomb_recharge10x": {
+   "index": 316,
+   "name": "sprBombRecharge10x"
+  },
+  "sprite.bomb_recharge_rate": {
+   "index": 317,
+   "name": "sprBombRechargeRate"
+  },
+  "sprite.bomb_super_crit_chance": {
+   "index": 318,
+   "name": "sprBombSuperCritChance"
+  },
+  "sprite.bomb_super_crit_damage": {
+   "index": 319,
+   "name": "sprBombSuperCritDamage"
+  },
+  "sprite.bomb_transmuter": {
+   "index": 320,
+   "name": "sprBombTransmuter"
+  },
+  "sprite.bomb_transmuter_gold": {
+   "index": 321,
+   "name": "sprBombTransmuterGold"
+  },
+  "sprite.bomb_transmuter_test": {
+   "index": 322,
+   "name": "sprBombTransmuterTest"
+  },
+  "sprite.bomb_ultra_crit_chance": {
+   "index": 323,
+   "name": "sprBombUltraCritChance"
+  },
+  "sprite.bomb_ultra_crit_damage": {
+   "index": 324,
+   "name": "sprBombUltraCritDamage"
+  },
+  "sprite.bomb_vein": {
+   "index": 325,
+   "name": "sprBombVein"
+  },
+  "sprite.bomb_vein_gold": {
+   "index": 326,
+   "name": "sprBombVeinGold"
+  },
+  "sprite.bubble": {
+   "index": 327,
+   "name": "sprBubble"
+  },
+  "sprite.bubble_test": {
+   "index": 328,
+   "name": "sprBubbleTest"
+  },
+  "sprite.button_feed": {
+   "index": 329,
+   "name": "sprButtonFeed"
+  },
+  "sprite.button_fishing_log_toggle": {
+   "index": 330,
+   "name": "sprButtonFishingLogToggle"
+  },
+  "sprite.button_hub_menu": {
+   "index": 331,
+   "name": "sprButtonHubMenu"
+  },
+  "sprite.button_unassign_all_drones": {
+   "index": 332,
+   "name": "sprButtonUnassignAllDrones"
+  },
+  "sprite.candy": {
+   "index": 333,
+   "name": "sprCandy"
+  },
+  "sprite.candy_cane": {
+   "index": 334,
+   "name": "sprCandyCane"
+  },
+  "sprite.candyland_middle_path": {
+   "index": 335,
+   "name": "sprCandylandMiddlePath"
+  },
+  "sprite.cap_up": {
+   "index": 336,
+   "name": "sprCapUp"
+  },
+  "sprite.card_backing": {
+   "index": 337,
+   "name": "sprCardBacking"
+  },
+  "sprite.card_damage": {
+   "index": 338,
+   "name": "sprCardDamage"
+  },
+  "sprite.card_damage_poly": {
+   "index": 339,
+   "name": "sprCardDamagePoly"
+  },
+  "sprite.card_level_behind_tributes": {
+   "index": 340,
+   "name": "sprCardLevelBehindTributes"
+  },
+  "sprite.cart": {
+   "index": 341,
+   "name": "sprCart"
+  },
+  "sprite.carts_new2": {
+   "index": 342,
+   "name": "sprCartsNew2"
+  },
+  "sprite.cart_world_cycle": {
+   "index": 343,
+   "name": "sprCartWorldCycle"
+  },
+  "sprite.caulwik_was_here": {
+   "index": 344,
+   "name": "sprCaulwikWasHere"
+  },
+  "sprite.celio_hat": {
+   "index": 345,
+   "name": "sprCelioHat"
+  },
+  "sprite.center_gem": {
+   "index": 346,
+   "name": "sprCenterGem"
+  },
+  "sprite.challenge_backgrounds": {
+   "index": 347,
+   "name": "sprChallengeBackgrounds"
+  },
+  "sprite.challenge_coin": {
+   "index": 348,
+   "name": "sprChallengeCoin"
+  },
+  "sprite.chaos_totem_gold": {
+   "index": 349,
+   "name": "sprChaosTotemGold"
+  },
+  "sprite.checked": {
+   "index": 350,
+   "name": "sprChecked"
+  },
+  "sprite.cherry2": {
+   "index": 351,
+   "name": "sprCherry2"
+  },
+  "sprite.cherry3x_chance": {
+   "index": 352,
+   "name": "sprCherry3xChance"
+  },
+  "sprite.chest": {
+   "index": 353,
+   "name": "sprChest"
+  },
+  "sprite.chest_frozen16x16": {
+   "index": 354,
+   "name": "sprChestFrozen16x16"
+  },
+  "sprite.chest_frozen32x32": {
+   "index": 355,
+   "name": "sprChestFrozen32x32"
+  },
+  "sprite.chest_hl": {
+   "index": 356,
+   "name": "sprChestHL"
+  },
+  "sprite.chest_meter": {
+   "index": 357,
+   "name": "sprChestMeter"
+  },
+  "sprite.chest_meter2x_size": {
+   "index": 358,
+   "name": "sprChestMeter2xSize"
+  },
+  "sprite.chest_meter_rate": {
+   "index": 359,
+   "name": "sprChestMeterRate"
+  },
+  "sprite.chest_meter_tutorial": {
+   "index": 360,
+   "name": "sprChestMeterTutorial"
+  },
+  "sprite.chest_multi": {
+   "index": 361,
+   "name": "sprChestMulti"
+  },
+  "sprite.chest_rare": {
+   "index": 362,
+   "name": "sprChestRare"
+  },
+  "sprite.chest_relic": {
+   "index": 363,
+   "name": "sprChestRelic"
+  },
+  "sprite.chest_relic_reroll": {
+   "index": 364,
+   "name": "sprChestRelicReroll"
+  },
+  "sprite.christmas_cracker16x16": {
+   "index": 365,
+   "name": "sprChristmasCracker16x16"
+  },
+  "sprite.christmas_cracker48x48": {
+   "index": 366,
+   "name": "sprChristmasCracker48x48"
+  },
+  "sprite.circle": {
+   "index": 367,
+   "name": "sprCircle"
+  },
+  "sprite.cloud": {
+   "index": 368,
+   "name": "sprCloud"
+  },
+  "sprite.cloud_large": {
+   "index": 369,
+   "name": "sprCloudLarge"
+  },
+  "sprite.coal": {
+   "index": 370,
+   "name": "sprCoal"
+  },
+  "sprite.coal3x": {
+   "index": 371,
+   "name": "sprCoal3x"
+  },
+  "sprite.coal_bar": {
+   "index": 372,
+   "name": "sprCoalBar"
+  },
+  "sprite.coal_capacity_multi": {
+   "index": 373,
+   "name": "sprCoalCapacityMulti"
+  },
+  "sprite.coal_generation_time": {
+   "index": 374,
+   "name": "sprCoalGenerationTime"
+  },
+  "sprite.coin": {
+   "index": 375,
+   "name": "sprCoin"
+  },
+  "sprite.coin2x": {
+   "index": 376,
+   "name": "sprCoin2x"
+  },
+  "sprite.company_logo": {
+   "index": 377,
+   "name": "sprCompanyLogo"
+  },
+  "sprite.contract10x_points": {
+   "index": 378,
+   "name": "sprContract10xPoints"
+  },
+  "sprite.contract5x_points": {
+   "index": 379,
+   "name": "sprContract5xPoints"
+  },
+  "sprite.contract_cap_up": {
+   "index": 380,
+   "name": "sprContractCapUp"
+  },
+  "sprite.contract_cost_reduction": {
+   "index": 381,
+   "name": "sprContractCostReduction"
+  },
+  "sprite.contract_double_points": {
+   "index": 382,
+   "name": "sprContractDoublePoints"
+  },
+  "sprite.contract_extra_points": {
+   "index": 383,
+   "name": "sprContractExtraPoints"
+  },
+  "sprite.contract_icon": {
+   "index": 384,
+   "name": "sprContractIcon"
+  },
+  "sprite.contract_point": {
+   "index": 385,
+   "name": "sprContractPoint"
+  },
+  "sprite.contract_refund": {
+   "index": 386,
+   "name": "sprContractRefund"
+  },
+  "sprite.contract_triple_points": {
+   "index": 387,
+   "name": "sprContractTriplePoints"
+  },
+  "sprite.contract_up": {
+   "index": 388,
+   "name": "sprContractUp"
+  },
+  "sprite.contract_upg_cheaper": {
+   "index": 389,
+   "name": "sprContractUpgCheaper"
+  },
+  "sprite.craft_menu_main_backing": {
+   "index": 390,
+   "name": "sprCraftMenuMainBacking"
+  },
+  "sprite.crater_test": {
+   "index": 391,
+   "name": "sprCraterTest"
+  },
+  "sprite.credit_shminers": {
+   "index": 392,
+   "name": "sprCreditShminers"
+  },
+  "sprite.credits_icon": {
+   "index": 393,
+   "name": "sprCreditsIcon"
+  },
+  "sprite.custom_miner_horse_fisher": {
+   "index": 394,
+   "name": "sprCustomMinerHorse_fisher"
+  },
+  "sprite.custom_miner_horse": {
+   "index": 395,
+   "name": "sprCustomMinerHorse"
+  },
+  "sprite.custom_miner_waste_fisher": {
+   "index": 396,
+   "name": "sprCustomMinerWaste_fisher"
+  },
+  "sprite.custom_miner_waste": {
+   "index": 397,
+   "name": "sprCustomMinerWaste"
+  },
+  "sprite.custom_shminer_fisher": {
+   "index": 398,
+   "name": "sprCustomShminer_fisher"
+  },
+  "sprite.custom_shminer": {
+   "index": 399,
+   "name": "sprCustomShminer"
+  },
+  "sprite.custom_shminer2_fisher": {
+   "index": 400,
+   "name": "sprCustomShminer2_fisher"
+  },
+  "sprite.custom_shminer2": {
+   "index": 401,
+   "name": "sprCustomShminer2"
+  },
+  "sprite.custom_yessa_fisher": {
+   "index": 402,
+   "name": "sprCustomYessa_fisher"
+  },
+  "sprite.custom_yessa": {
+   "index": 403,
+   "name": "sprCustomYessa"
+  },
+  "sprite.daze_block": {
+   "index": 404,
+   "name": "sprDazeBlock"
+  },
+  "sprite.direction_arrows_gem_game": {
+   "index": 405,
+   "name": "sprDirectionArrowsGemGame"
+  },
+  "sprite.disco_chance": {
+   "index": 406,
+   "name": "sprDiscoChance"
+  },
+  "sprite.discord": {
+   "index": 407,
+   "name": "sprDiscord"
+  },
+  "sprite.divine_challenge_coin": {
+   "index": 408,
+   "name": "sprDivineChallengeCoin"
+  },
+  "sprite.divine_chest": {
+   "index": 409,
+   "name": "sprDivineChest"
+  },
+  "sprite.divine_chest16x16": {
+   "index": 410,
+   "name": "sprDivineChest16x16"
+  },
+  "sprite.double_craft_chance": {
+   "index": 411,
+   "name": "sprDoubleCraftChance"
+  },
+  "sprite.drone": {
+   "index": 412,
+   "name": "sprDrone"
+  },
+  "sprite.drone16x16_strip": {
+   "index": 413,
+   "name": "sprDrone16x16Strip"
+  },
+  "sprite.drone_angler": {
+   "index": 414,
+   "name": "sprDroneAngler"
+  },
+  "sprite.drone_attack_speed": {
+   "index": 415,
+   "name": "sprDroneAttackSpeed"
+  },
+  "sprite.drone_bear": {
+   "index": 416,
+   "name": "sprDroneBear"
+  },
+  "sprite.drone_cap_up": {
+   "index": 417,
+   "name": "sprDroneCapUp"
+  },
+  "sprite.drone_chain": {
+   "index": 418,
+   "name": "sprDroneChain"
+  },
+  "sprite.drone_damage": {
+   "index": 419,
+   "name": "sprDroneDamage"
+  },
+  "sprite.drone_exp": {
+   "index": 420,
+   "name": "sprDroneExp"
+  },
+  "sprite.drone_frog": {
+   "index": 421,
+   "name": "sprDroneFrog"
+  },
+  "sprite.drone_icon": {
+   "index": 422,
+   "name": "sprDroneIcon"
+  },
+  "sprite.drone_midas": {
+   "index": 423,
+   "name": "sprDroneMidas"
+  },
+  "sprite.drone_minotaur": {
+   "index": 424,
+   "name": "sprDroneMinotaur"
+  },
+  "sprite.drone_movespeed": {
+   "index": 425,
+   "name": "sprDroneMovespeed"
+  },
+  "sprite.drone_point": {
+   "index": 426,
+   "name": "sprDronePoint"
+  },
+  "sprite.drone_potion": {
+   "index": 427,
+   "name": "sprDronePotion"
+  },
+  "sprite.drone_prism": {
+   "index": 428,
+   "name": "sprDronePrism"
+  },
+  "sprite.drone_radius": {
+   "index": 429,
+   "name": "sprDroneRadius"
+  },
+  "sprite.drone_rapid_fire": {
+   "index": 430,
+   "name": "sprDroneRapidFire"
+  },
+  "sprite.drone_stargazing": {
+   "index": 431,
+   "name": "sprDroneStargazing"
+  },
+  "sprite.drone_triple_damage_chance": {
+   "index": 432,
+   "name": "sprDroneTripleDamageChance"
+  },
+  "sprite.drone_upgrade_icon": {
+   "index": 433,
+   "name": "sprDroneUpgradeIcon"
+  },
+  "sprite.drone_vein": {
+   "index": 434,
+   "name": "sprDroneVein"
+  },
+  "sprite.drone_void": {
+   "index": 435,
+   "name": "sprDroneVoid"
+  },
+  "sprite.dungeon_currency": {
+   "index": 436,
+   "name": "sprDungeonCurrency"
+  },
+  "sprite.earth": {
+   "index": 437,
+   "name": "sprEarth"
+  },
+  "sprite.elixir_crit_chance": {
+   "index": 438,
+   "name": "sprElixirCritChance"
+  },
+  "sprite.elixir_crit_multi": {
+   "index": 439,
+   "name": "sprElixirCritMulti"
+  },
+  "sprite.enchanted_middle_path": {
+   "index": 440,
+   "name": "sprEnchantedMiddlePath"
+  },
+  "sprite.enchanted_windows": {
+   "index": 441,
+   "name": "sprEnchantedWindows"
+  },
+  "sprite.enemies_christmas": {
+   "index": 442,
+   "name": "sprEnemies_Christmas"
+  },
+  "sprite.enemies_easter": {
+   "index": 443,
+   "name": "sprEnemies_Easter"
+  },
+  "sprite.enemies_halloween": {
+   "index": 444,
+   "name": "sprEnemies_Halloween"
+  },
+  "sprite.enemies_magma": {
+   "index": 445,
+   "name": "sprEnemies_Magma"
+  },
+  "sprite.enemies_summer": {
+   "index": 446,
+   "name": "sprEnemies_Summer"
+  },
+  "sprite.enemies_valentines": {
+   "index": 447,
+   "name": "sprEnemies_Valentines"
+  },
+  "sprite.eridanus_gild": {
+   "index": 448,
+   "name": "sprEridanusGild"
+  },
+  "sprite.eridanus_poly": {
+   "index": 449,
+   "name": "sprEridanusPoly"
+  },
+  "sprite.essence_bank": {
+   "index": 450,
+   "name": "sprEssenceBank"
+  },
+  "sprite.essence_block": {
+   "index": 451,
+   "name": "sprEssenceBlock"
+  },
+  "sprite.essence_overlays": {
+   "index": 452,
+   "name": "sprEssenceOverlays"
+  },
+  "sprite.event_background_christmas": {
+   "index": 453,
+   "name": "sprEventBackground_Christmas"
+  },
+  "sprite.event_background_easter": {
+   "index": 454,
+   "name": "sprEventBackground_Easter"
+  },
+  "sprite.event_background_halloween": {
+   "index": 455,
+   "name": "sprEventBackground_Halloween"
+  },
+  "sprite.event_background_magma": {
+   "index": 456,
+   "name": "sprEventBackground_Magma"
+  },
+  "sprite.event_background_summer": {
+   "index": 457,
+   "name": "sprEventBackground_Summer"
+  },
+  "sprite.event_background_valentines": {
+   "index": 458,
+   "name": "sprEventBackground_Valentines"
+  },
+  "sprite.event_currencies_christmas": {
+   "index": 459,
+   "name": "sprEventCurrencies_Christmas"
+  },
+  "sprite.event_currencies_easter": {
+   "index": 460,
+   "name": "sprEventCurrencies_Easter"
+  },
+  "sprite.event_currencies_halloween": {
+   "index": 461,
+   "name": "sprEventCurrencies_Halloween"
+  },
+  "sprite.event_currencies_magma": {
+   "index": 462,
+   "name": "sprEventCurrencies_Magma"
+  },
+  "sprite.event_currencies_summer": {
+   "index": 463,
+   "name": "sprEventCurrencies_Summer"
+  },
+  "sprite.event_currencies_valentines": {
+   "index": 464,
+   "name": "sprEventCurrencies_Valentines"
+  },
+  "sprite.event_highest_wave": {
+   "index": 465,
+   "name": "sprEventHighestWave"
+  },
+  "sprite.event_hp": {
+   "index": 466,
+   "name": "sprEventHp"
+  },
+  "sprite.event_prestige_medal": {
+   "index": 467,
+   "name": "sprEventPrestigeMedal"
+  },
+  "sprite.event_skin_lootbug_unlock_icon": {
+   "index": 468,
+   "name": "sprEventSkinLootbugUnlockIcon"
+  },
+  "sprite.event_skin_unlock_icon": {
+   "index": 469,
+   "name": "sprEventSkinUnlockIcon"
+  },
+  "sprite.event_upgrades_christmas": {
+   "index": 470,
+   "name": "sprEventUpgrades_Christmas"
+  },
+  "sprite.event_upgrades_easter": {
+   "index": 471,
+   "name": "sprEventUpgrades_Easter"
+  },
+  "sprite.event_upgrades_halloween": {
+   "index": 472,
+   "name": "sprEventUpgrades_Halloween"
+  },
+  "sprite.event_upgrades_magma": {
+   "index": 473,
+   "name": "sprEventUpgrades_Magma"
+  },
+  "sprite.event_upgrades_summer": {
+   "index": 474,
+   "name": "sprEventUpgrades_Summer"
+  },
+  "sprite.event_upgrades_valentines": {
+   "index": 475,
+   "name": "sprEventUpgrades_Valentines"
+  },
+  "sprite.exit": {
+   "index": 476,
+   "name": "sprExit"
+  },
+  "sprite.exp_meter": {
+   "index": 477,
+   "name": "sprExpMeter"
+  },
+  "sprite.exp_meter2": {
+   "index": 478,
+   "name": "sprExpMeter2"
+  },
+  "sprite.extreme_challenge_coin": {
+   "index": 479,
+   "name": "sprExtremeChallengeCoin"
+  },
+  "sprite.eye": {
+   "index": 480,
+   "name": "sprEye"
+  },
+  "sprite.eye_line_through": {
+   "index": 481,
+   "name": "sprEyeLineThrough"
+  },
+  "sprite.f": {
+   "index": 482,
+   "name": "sprF"
+  },
+  "sprite.fairy_ability": {
+   "index": 483,
+   "name": "sprFairyAbility"
+  },
+  "sprite.fairy_ability16x16": {
+   "index": 484,
+   "name": "sprFairyAbility16x16"
+  },
+  "sprite.fairy_crosshair": {
+   "index": 485,
+   "name": "sprFairyCrosshair"
+  },
+  "sprite.fairy_crosshair16x16": {
+   "index": 486,
+   "name": "sprFairyCrosshair16x16"
+  },
+  "sprite.fence": {
+   "index": 487,
+   "name": "sprFence"
+  },
+  "sprite.fence_new": {
+   "index": 488,
+   "name": "sprFenceNew"
+  },
+  "sprite.fence_new_segment": {
+   "index": 489,
+   "name": "sprFenceNewSegment"
+  },
+  "sprite.fish5x_tick_chance": {
+   "index": 490,
+   "name": "sprFish5xTickChance"
+  },
+  "sprite.fish_backing": {
+   "index": 491,
+   "name": "sprFishBacking"
+  },
+  "sprite.fish_backing_wider_bottom": {
+   "index": 492,
+   "name": "sprFishBackingWiderBottom"
+  },
+  "sprite.fish_box": {
+   "index": 493,
+   "name": "sprFishBox"
+  },
+  "sprite.fish_double_tick_chance": {
+   "index": 494,
+   "name": "sprFishDoubleTickChance"
+  },
+  "sprite.fish_drone_base_power": {
+   "index": 495,
+   "name": "sprFishDroneBasePower"
+  },
+  "sprite.fish_drone_cloner": {
+   "index": 496,
+   "name": "sprFishDroneCloner"
+  },
+  "sprite.fish_easy_notice_chance": {
+   "index": 497,
+   "name": "sprFishEasyNoticeChance"
+  },
+  "sprite.fisher_blanket_female": {
+   "index": 498,
+   "name": "sprFisherBlanketFemale"
+  },
+  "sprite.fisher_blanket_male": {
+   "index": 499,
+   "name": "sprFisherBlanketMale"
+  },
+  "sprite.fisher_female": {
+   "index": 500,
+   "name": "sprFisherFemale"
+  },
+  "sprite.fisher_female_gilded": {
+   "index": 501,
+   "name": "sprFisherFemaleGilded"
+  },
+  "sprite.fisher_male": {
+   "index": 502,
+   "name": "sprFisherMale"
+  },
+  "sprite.fisher_male_gilded": {
+   "index": 503,
+   "name": "sprFisherMaleGilded"
+  },
+  "sprite.fishing": {
+   "index": 504,
+   "name": "sprFishing"
+  },
+  "sprite.fishing_boat_upgrade": {
+   "index": 505,
+   "name": "sprFishingBoatUpgrade"
+  },
+  "sprite.fishing_drone": {
+   "index": 506,
+   "name": "sprFishingDrone"
+  },
+  "sprite.fishing_drone_get": {
+   "index": 507,
+   "name": "sprFishingDroneGet"
+  },
+  "sprite.fishing_drone_power": {
+   "index": 508,
+   "name": "sprFishingDronePower"
+  },
+  "sprite.fishing_fish_multi": {
+   "index": 509,
+   "name": "sprFishingFishMulti"
+  },
+  "sprite.fishing_inventory": {
+   "index": 510,
+   "name": "sprFishingInventory"
+  },
+  "sprite.fishing_inventory_desc": {
+   "index": 511,
+   "name": "sprFishingInventoryDesc"
+  },
+  "sprite.fishing_menu": {
+   "index": 512,
+   "name": "sprFishingMenu"
+  },
+  "sprite.fishing_rod": {
+   "index": 513,
+   "name": "sprFishingRod"
+  },
+  "sprite.fishing_rod_upgrade": {
+   "index": 514,
+   "name": "sprFishingRodUpgrade"
+  },
+  "sprite.fishing_tick_meter_upgrade": {
+   "index": 515,
+   "name": "sprFishingTickMeterUpgrade"
+  },
+  "sprite.fishing_token_t2": {
+   "index": 516,
+   "name": "sprFishingToken_t2"
+  },
+  "sprite.fishing_token": {
+   "index": 517,
+   "name": "sprFishingToken"
+  },
+  "sprite.fish_lego_heads": {
+   "index": 518,
+   "name": "sprFishLegoHeads"
+  },
+  "sprite.fish_meter": {
+   "index": 519,
+   "name": "sprFishMeter"
+  },
+  "sprite.fish_meter2": {
+   "index": 520,
+   "name": "sprFishMeter2"
+  },
+  "sprite.fish_meter_just_inside": {
+   "index": 521,
+   "name": "sprFishMeterJustInside"
+  },
+  "sprite.fish_notice_fish_req": {
+   "index": 522,
+   "name": "sprFishNoticeFishReq"
+  },
+  "sprite.fish_poly_card_multi": {
+   "index": 523,
+   "name": "sprFishPolyCardMulti"
+  },
+  "sprite.fish_selected": {
+   "index": 524,
+   "name": "sprFishSelected"
+  },
+  "sprite.fish_shiny_chance": {
+   "index": 525,
+   "name": "sprFishShinyChance"
+  },
+  "sprite.fish_shiny_multi": {
+   "index": 526,
+   "name": "sprFishShinyMulti"
+  },
+  "sprite.fish_super_shiny_chance": {
+   "index": 527,
+   "name": "sprFishSuperShinyChance"
+  },
+  "sprite.fish_super_shiny_multi": {
+   "index": 528,
+   "name": "sprFishSuperShinyMulti"
+  },
+  "sprite.fish_tier2_boat_up": {
+   "index": 529,
+   "name": "sprFishTier2BoatUp"
+  },
+  "sprite.fish_tier2_dock_power": {
+   "index": 530,
+   "name": "sprFishTier2DockPower"
+  },
+  "sprite.fish_tier2_dock_tick_req": {
+   "index": 531,
+   "name": "sprFishTier2DockTickReq"
+  },
+  "sprite.fish_token_income": {
+   "index": 532,
+   "name": "sprFishTokenIncome"
+  },
+  "sprite.fish_tribute_ranks": {
+   "index": 533,
+   "name": "sprFishTributeRanks"
+  },
+  "sprite.fish_tribute_trophies": {
+   "index": 534,
+   "name": "sprFishTributeTrophies"
+  },
+  "sprite.fish_triple_tick_chance": {
+   "index": 535,
+   "name": "sprFishTripleTickChance"
+  },
+  "sprite.flashbang_chance": {
+   "index": 536,
+   "name": "sprFlashbangChance"
+  },
+  "sprite.floor_clear_req": {
+   "index": 537,
+   "name": "sprFloorClearReq"
+  },
+  "sprite.floor_down": {
+   "index": 538,
+   "name": "sprFloorDown"
+  },
+  "sprite.floor_galactic": {
+   "index": 539,
+   "name": "sprFloorGalactic"
+  },
+  "sprite.forbidden_sushi": {
+   "index": 540,
+   "name": "sprForbiddenSushi"
+  },
+  "sprite.founder_parachute": {
+   "index": 541,
+   "name": "sprFounderParachute"
+  },
+  "sprite.founders_badge": {
+   "index": 542,
+   "name": "sprFoundersBadge"
+  },
+  "sprite.founders_badge_small": {
+   "index": 543,
+   "name": "sprFoundersBadgeSmall"
+  },
+  "sprite.founders_badge_small_gold": {
+   "index": 544,
+   "name": "sprFoundersBadgeSmallGold"
+  },
+  "sprite.founders_bundle": {
+   "index": 545,
+   "name": "sprFoundersBundle"
+  },
+  "sprite.freebie_cooldown": {
+   "index": 546,
+   "name": "sprFreebieCooldown"
+  },
+  "sprite.freebie_full": {
+   "index": 547,
+   "name": "sprFreebieFull"
+  },
+  "sprite.freebie_pack_icon_small": {
+   "index": 548,
+   "name": "sprFreebiePackIconSmall"
+  },
+  "sprite.free_bomb_chance": {
+   "index": 549,
+   "name": "sprFreeBombChance"
+  },
+  "sprite.free_craft_chance": {
+   "index": 550,
+   "name": "sprFreeCraftChance"
+  },
+  "sprite.frog": {
+   "index": 551,
+   "name": "sprFrog"
+  },
+  "sprite.frog10x_chance": {
+   "index": 552,
+   "name": "sprFrog10xChance"
+  },
+  "sprite.frog_big_chance": {
+   "index": 553,
+   "name": "sprFrogBigChance"
+  },
+  "sprite.frog_big_multi": {
+   "index": 554,
+   "name": "sprFrogBigMulti"
+  },
+  "sprite.frog_bonus_gem_multi": {
+   "index": 555,
+   "name": "sprFrogBonusGemMulti"
+  },
+  "sprite.frog_capacity": {
+   "index": 556,
+   "name": "sprFrogCapacity"
+  },
+  "sprite.frog_golden_chance": {
+   "index": 557,
+   "name": "sprFrogGoldenChance"
+  },
+  "sprite.frog_golden_multi": {
+   "index": 558,
+   "name": "sprFrogGoldenMulti"
+  },
+  "sprite.frog_head16x16": {
+   "index": 559,
+   "name": "sprFrogHead16x16"
+  },
+  "sprite.frog_head_golden16x16": {
+   "index": 560,
+   "name": "sprFrogHeadGolden16x16"
+  },
+  "sprite.frog_loot_multi": {
+   "index": 561,
+   "name": "sprFrogLootMulti"
+  },
+  "sprite.frog_massive_chance": {
+   "index": 562,
+   "name": "sprFrogMassiveChance"
+  },
+  "sprite.frog_massive_multi": {
+   "index": 563,
+   "name": "sprFrogMassiveMulti"
+  },
+  "sprite.frog_small": {
+   "index": 564,
+   "name": "sprFrogSmall"
+  },
+  "sprite.frogspawn": {
+   "index": 565,
+   "name": "sprFrogspawn"
+  },
+  "sprite.frog_triple_chance": {
+   "index": 566,
+   "name": "sprFrogTripleChance"
+  },
+  "sprite.frogurt": {
+   "index": 567,
+   "name": "sprFrogurt"
+  },
+  "sprite.fuckmeimsickofthis": {
+   "index": 568,
+   "name": "sprFuckmeimsickofthis"
+  },
+  "sprite.fuel": {
+   "index": 569,
+   "name": "sprFuel"
+  },
+  "sprite.fuel_duration": {
+   "index": 570,
+   "name": "sprFuelDuration"
+  },
+  "sprite.fuel_save_chance": {
+   "index": 571,
+   "name": "sprFuelSaveChance"
+  },
+  "sprite.g": {
+   "index": 572,
+   "name": "sprG"
+  },
+  "sprite.galactic_floor_chance": {
+   "index": 573,
+   "name": "sprGalacticFloorChance"
+  },
+  "sprite.galactic_floor_chance_plain": {
+   "index": 574,
+   "name": "sprGalacticFloorChancePlain"
+  },
+  "sprite.galactic_floor_multi": {
+   "index": 575,
+   "name": "sprGalacticFloorMulti"
+  },
+  "sprite.galactic_gold_floor_plain": {
+   "index": 576,
+   "name": "sprGalacticGoldFloorPlain"
+  },
+  "sprite.galaxy_test": {
+   "index": 577,
+   "name": "sprGalaxyTest"
+  },
+  "sprite.game_speed2x": {
+   "index": 578,
+   "name": "sprGameSpeed2x"
+  },
+  "sprite.gas_guzzle": {
+   "index": 579,
+   "name": "sprGasGuzzle"
+  },
+  "sprite.gem": {
+   "index": 580,
+   "name": "sprGem"
+  },
+  "sprite.gem_mega_loot": {
+   "index": 581,
+   "name": "sprGemMegaLoot"
+  },
+  "sprite.gem_packs": {
+   "index": 582,
+   "name": "sprGemPacks"
+  },
+  "sprite.gem_packs_old": {
+   "index": 583,
+   "name": "sprGemPacksOld"
+  },
+  "sprite.gem_pile_for_gifts": {
+   "index": 584,
+   "name": "sprGemPileForGifts"
+  },
+  "sprite.gems5x_chance": {
+   "index": 585,
+   "name": "sprGems5xChance"
+  },
+  "sprite.gems_and_chests_small": {
+   "index": 586,
+   "name": "sprGemsAndChestsSmall"
+  },
+  "sprite.gems_banked": {
+   "index": 587,
+   "name": "sprGemsBanked"
+  },
+  "sprite.gems_bonus_gems_freebie_pack": {
+   "index": 588,
+   "name": "sprGemsBonusGemsFreebiePack"
+  },
+  "sprite.gems_instant_refresh": {
+   "index": 589,
+   "name": "sprGemsInstantRefresh"
+  },
+  "sprite.gems_upg_cap_up": {
+   "index": 590,
+   "name": "sprGemsUpgCapUp"
+  },
+  "sprite.gem_unlocks": {
+   "index": 591,
+   "name": "sprGemUnlocks"
+  },
+  "sprite.gem_upgrades": {
+   "index": 592,
+   "name": "sprGemUpgrades"
+  },
+  "sprite.generator": {
+   "index": 593,
+   "name": "sprGenerator"
+  },
+  "sprite.gift100x": {
+   "index": 594,
+   "name": "sprGift100x"
+  },
+  "sprite.gift_with_outline": {
+   "index": 595,
+   "name": "sprGiftWithOutline"
+  },
+  "sprite.gild_up": {
+   "index": 596,
+   "name": "sprGildUp"
+  },
+  "sprite.glow_test2": {
+   "index": 597,
+   "name": "sprGlowTest2"
+  },
+  "sprite.golden_and_rainbow_chance_plain": {
+   "index": 598,
+   "name": "sprGoldenAndRainbowChancePlain"
+  },
+  "sprite.golden_floor_chance": {
+   "index": 599,
+   "name": "sprGoldenFloorChance"
+  },
+  "sprite.golden_floor_chance_plain": {
+   "index": 600,
+   "name": "sprGoldenFloorChancePlain"
+  },
+  "sprite.golden_floor_chance_plain_with_pause": {
+   "index": 601,
+   "name": "sprGoldenFloorChancePlainWithPause"
+  },
+  "sprite.golden_floor_multi": {
+   "index": 602,
+   "name": "sprGoldenFloorMulti"
+  },
+  "sprite.golden_ore_chance": {
+   "index": 603,
+   "name": "sprGoldenOreChance"
+  },
+  "sprite.golden_ore_chance_plain": {
+   "index": 604,
+   "name": "sprGoldenOreChancePlain"
+  },
+  "sprite.golden_ore_multi": {
+   "index": 605,
+   "name": "sprGoldenOreMulti"
+  },
+  "sprite.golden_ore_multi3x": {
+   "index": 606,
+   "name": "sprGoldenOreMulti3x"
+  },
+  "sprite.golden_vein": {
+   "index": 607,
+   "name": "sprGoldenVein"
+  },
+  "sprite.golden_vein_multi": {
+   "index": 608,
+   "name": "sprGoldenVeinMulti"
+  },
+  "sprite.gold_ores": {
+   "index": 609,
+   "name": "sprGoldOres"
+  },
+  "sprite.google_play": {
+   "index": 610,
+   "name": "sprGooglePlay"
+  },
+  "sprite.hamburger": {
+   "index": 611,
+   "name": "sprHamburger"
+  },
+  "sprite.head_bonus_skins": {
+   "index": 612,
+   "name": "sprHeadBonusSkins"
+  },
+  "sprite.head_bonus_skins_gilded": {
+   "index": 613,
+   "name": "sprHeadBonusSkinsGilded"
+  },
+  "sprite.heart_pets": {
+   "index": 614,
+   "name": "sprHeartPets"
+  },
+  "sprite.heaven_doors": {
+   "index": 615,
+   "name": "sprHeavenDoors"
+  },
+  "sprite.hourglass": {
+   "index": 616,
+   "name": "sprHourglass"
+  },
+  "sprite.hub_icon": {
+   "index": 617,
+   "name": "sprHubIcon"
+  },
+  "sprite.industrial_path": {
+   "index": 618,
+   "name": "sprIndustrialPath"
+  },
+  "sprite.infernal_card_reg": {
+   "index": 619,
+   "name": "sprInfernalCardReg"
+  },
+  "sprite.infernal_lego_fish_card": {
+   "index": 620,
+   "name": "sprInfernalLegoFishCard"
+  },
+  "sprite.infernal_multi": {
+   "index": 621,
+   "name": "sprInfernalMulti"
+  },
+  "sprite.infernal_progress": {
+   "index": 622,
+   "name": "sprInfernalProgress"
+  },
+  "sprite.infernal_shard": {
+   "index": 623,
+   "name": "sprInfernalShard"
+  },
+  "sprite.infernal_shard_offset": {
+   "index": 624,
+   "name": "sprInfernalShardOffset"
+  },
+  "sprite.infinity_multi": {
+   "index": 625,
+   "name": "sprInfinityMulti"
+  },
+  "sprite.info_icon": {
+   "index": 626,
+   "name": "sprInfoIcon"
+  },
+  "sprite.info_icon_bigger": {
+   "index": 627,
+   "name": "sprInfoIconBigger"
+  },
+  "sprite.inventory_item_inside": {
+   "index": 628,
+   "name": "sprInventoryItemInside"
+  },
+  "sprite.inventory_item_outline": {
+   "index": 629,
+   "name": "sprInventoryItemOutline"
+  },
+  "sprite.sprite_useme": {
+   "index": 630,
+   "name": "SPRITE_USEME"
+  },
+  "sprite.item_chaos_totem": {
+   "index": 631,
+   "name": "sprItemChaosTotem"
+  },
+  "sprite.item_duration": {
+   "index": 632,
+   "name": "sprItemDuration"
+  },
+  "sprite.item_lobster": {
+   "index": 633,
+   "name": "sprItemLobster"
+  },
+  "sprite.item_magnet": {
+   "index": 634,
+   "name": "sprItemMagnet"
+  },
+  "sprite.item_meat": {
+   "index": 635,
+   "name": "sprItemMeat"
+  },
+  "sprite.items": {
+   "index": 636,
+   "name": "sprItems"
+  },
+  "sprite.items_gold": {
+   "index": 637,
+   "name": "sprItemsGold"
+  },
+  "sprite.item_steak": {
+   "index": 638,
+   "name": "sprItemSteak"
+  },
+  "sprite.items_used": {
+   "index": 639,
+   "name": "sprItemsUsed"
+  },
+  "sprite.julk": {
+   "index": 640,
+   "name": "sprJulk"
+  },
+  "sprite.jurassic_left": {
+   "index": 641,
+   "name": "sprJurassicLeft"
+  },
+  "sprite.jurassic_middle": {
+   "index": 642,
+   "name": "sprJurassicMiddle"
+  },
+  "sprite.jurassic_right": {
+   "index": 643,
+   "name": "sprJurassicRight"
+  },
+  "sprite.kfdjg": {
+   "index": 644,
+   "name": "sprkfdjg"
+  },
+  "sprite.kjk": {
+   "index": 645,
+   "name": "sprkjk"
+  },
+  "sprite.lantern": {
+   "index": 646,
+   "name": "sprLantern"
+  },
+  "sprite.lasagna": {
+   "index": 647,
+   "name": "sprLasagna"
+  },
+  "sprite.left_side_black_bg": {
+   "index": 648,
+   "name": "sprLeftSideBlackBg"
+  },
+  "sprite.limited_time_pack": {
+   "index": 649,
+   "name": "sprLimitedTimePack"
+  },
+  "sprite.lock_only": {
+   "index": 650,
+   "name": "sprLockOnly"
+  },
+  "sprite.locktest": {
+   "index": 651,
+   "name": "sprlocktest"
+  },
+  "sprite.lock_unlock": {
+   "index": 652,
+   "name": "sprLockUnlock"
+  },
+  "sprite.lootbug_christmas": {
+   "index": 653,
+   "name": "sprLootbug_christmas"
+  },
+  "sprite.lootbug_easter": {
+   "index": 654,
+   "name": "sprLootbug_easter"
+  },
+  "sprite.lootbug_halloween": {
+   "index": 655,
+   "name": "sprLootbug_halloween"
+  },
+  "sprite.lootbug_magma": {
+   "index": 656,
+   "name": "sprLootbug_magma"
+  },
+  "sprite.lootbug_summer": {
+   "index": 657,
+   "name": "sprLootbug_summer"
+  },
+  "sprite.lootbug_valentines": {
+   "index": 658,
+   "name": "sprLootbug_valentines"
+  },
+  "sprite.lootbug": {
+   "index": 659,
+   "name": "sprLootbug"
+  },
+  "sprite.lootbug16x16": {
+   "index": 660,
+   "name": "sprLootbug16x16"
+  },
+  "sprite.lootbug_banked": {
+   "index": 661,
+   "name": "sprLootbugBanked"
+  },
+  "sprite.lootbug_gem_reduction": {
+   "index": 662,
+   "name": "sprLootbugGemReduction"
+  },
+  "sprite.lootbug_gold_christmas": {
+   "index": 663,
+   "name": "sprLootbugGold_christmas"
+  },
+  "sprite.lootbug_gold_easter": {
+   "index": 664,
+   "name": "sprLootbugGold_easter"
+  },
+  "sprite.lootbug_gold_halloween": {
+   "index": 665,
+   "name": "sprLootbugGold_halloween"
+  },
+  "sprite.lootbug_gold_magma": {
+   "index": 666,
+   "name": "sprLootbugGold_magma"
+  },
+  "sprite.lootbug_gold_summer": {
+   "index": 667,
+   "name": "sprLootbugGold_summer"
+  },
+  "sprite.lootbug_gold_valentines": {
+   "index": 668,
+   "name": "sprLootbugGold_valentines"
+  },
+  "sprite.lootbug_gold": {
+   "index": 669,
+   "name": "sprLootbugGold"
+  },
+  "sprite.lootbug_golden_chance": {
+   "index": 670,
+   "name": "sprLootbugGoldenChance"
+  },
+  "sprite.lootbug_loot_multi": {
+   "index": 671,
+   "name": "sprLootbugLootMulti"
+  },
+  "sprite.lootbug_open_all": {
+   "index": 672,
+   "name": "sprLootbugOpenAll"
+  },
+  "sprite.lootbug_spawn_rate": {
+   "index": 673,
+   "name": "sprLootbugSpawnRate"
+  },
+  "sprite.lootbug_triple_chance": {
+   "index": 674,
+   "name": "sprLootbugTripleChance"
+  },
+  "sprite.luck": {
+   "index": 675,
+   "name": "sprLuck"
+  },
+  "sprite.luck2x": {
+   "index": 676,
+   "name": "sprLuck2x"
+  },
+  "sprite.luck3x": {
+   "index": 677,
+   "name": "sprLuck3x"
+  },
+  "sprite.lvl_back": {
+   "index": 678,
+   "name": "sprLvlBack"
+  },
+  "sprite.lvl_back2": {
+   "index": 679,
+   "name": "sprLvlBack2"
+  },
+  "sprite.mana": {
+   "index": 680,
+   "name": "sprMana"
+  },
+  "sprite.medal": {
+   "index": 681,
+   "name": "sprMedal"
+  },
+  "sprite.meter_infernal": {
+   "index": 682,
+   "name": "sprMeterInfernal"
+  },
+  "sprite.meter_infernal_progress": {
+   "index": 683,
+   "name": "sprMeterInfernalProgress"
+  },
+  "sprite.meter_poly": {
+   "index": 684,
+   "name": "sprMeterPoly"
+  },
+  "sprite.meter_poly_progress": {
+   "index": 685,
+   "name": "sprMeterPolyProgress"
+  },
+  "sprite.miner_blanket": {
+   "index": 686,
+   "name": "sprMinerBlanket"
+  },
+  "sprite.miner_blanket_female": {
+   "index": 687,
+   "name": "sprMinerBlanketFemale"
+  },
+  "sprite.mini_boat_test": {
+   "index": 688,
+   "name": "sprMiniBoatTest"
+  },
+  "sprite.minotaur_head": {
+   "index": 689,
+   "name": "sprMinotaurHead"
+  },
+  "sprite.minus": {
+   "index": 690,
+   "name": "sprMinus"
+  },
+  "sprite.miraheze": {
+   "index": 691,
+   "name": "sprMiraheze"
+  },
+  "sprite.mist": {
+   "index": 692,
+   "name": "sprMist"
+  },
+  "sprite.mithril_rock": {
+   "index": 693,
+   "name": "sprMithrilRock"
+  },
+  "sprite.multi_rock_chance": {
+   "index": 694,
+   "name": "sprMultiRockChance"
+  },
+  "sprite.music": {
+   "index": 695,
+   "name": "sprMusic"
+  },
+  "sprite.mythic_chest": {
+   "index": 696,
+   "name": "sprMythicChest"
+  },
+  "sprite.mythic_chest16x16": {
+   "index": 697,
+   "name": "sprMythicChest16x16"
+  },
+  "sprite.mythic_red": {
+   "index": 698,
+   "name": "sprMythicRed"
+  },
+  "sprite.neon_middle_path": {
+   "index": 699,
+   "name": "sprNeonMiddlePath"
+  },
+  "sprite.neon_sidewalk": {
+   "index": 700,
+   "name": "sprNeonSidewalk"
+  },
+  "sprite.new_card_icon": {
+   "index": 701,
+   "name": "sprNewCardIcon"
+  },
+  "sprite.new_card_icon_gold": {
+   "index": 702,
+   "name": "sprNewCardIconGold"
+  },
+  "sprite.new_chest_meter_filling": {
+   "index": 703,
+   "name": "sprNewChestMeterFilling"
+  },
+  "sprite.new_chest_meters": {
+   "index": 704,
+   "name": "sprNewChestMeters"
+  },
+  "sprite.new_chest_meter_toppers": {
+   "index": 705,
+   "name": "sprNewChestMeterToppers"
+  },
+  "sprite.new_lock_sprite": {
+   "index": 706,
+   "name": "sprNewLockSprite"
+  },
+  "sprite.noise_test": {
+   "index": 707,
+   "name": "sprNoiseTest"
+  },
+  "sprite.nothing": {
+   "index": 708,
+   "name": "sprNothing"
+  },
+  "sprite.notice_backing": {
+   "index": 709,
+   "name": "sprNoticeBacking"
+  },
+  "sprite.notice_icon": {
+   "index": 710,
+   "name": "sprNoticeIcon"
+  },
+  "sprite.notice_listing": {
+   "index": 711,
+   "name": "sprNoticeListing"
+  },
+  "sprite.notice_listing_expanded": {
+   "index": 712,
+   "name": "sprNoticeListingExpanded"
+  },
+  "sprite.notification_infernal": {
+   "index": 713,
+   "name": "sprNotificationInfernal"
+  },
+  "sprite.notification_poly": {
+   "index": 714,
+   "name": "sprNotificationPoly"
+  },
+  "sprite.obelisk": {
+   "index": 715,
+   "name": "sprObelisk"
+  },
+  "sprite.obelisk_armor_down": {
+   "index": 716,
+   "name": "sprObeliskArmorDown"
+  },
+  "sprite.obelisk_armor_strip": {
+   "index": 717,
+   "name": "sprObeliskArmorStrip"
+  },
+  "sprite.obeliskborn": {
+   "index": 718,
+   "name": "sprObeliskborn"
+  },
+  "sprite.obelisk_cooldown": {
+   "index": 719,
+   "name": "sprObeliskCooldown"
+  },
+  "sprite.obelisk_fight_length": {
+   "index": 720,
+   "name": "sprObeliskFightLength"
+  },
+  "sprite.obelisk_health_strip": {
+   "index": 721,
+   "name": "sprObeliskHealthStrip"
+  },
+  "sprite.obelisk_icon": {
+   "index": 722,
+   "name": "sprObeliskIcon"
+  },
+  "sprite.obelisk_mini_strip": {
+   "index": 723,
+   "name": "sprObeliskMiniStrip"
+  },
+  "sprite.obelisk_shadow": {
+   "index": 724,
+   "name": "sprObeliskShadow"
+  },
+  "sprite.offline_hourglass": {
+   "index": 725,
+   "name": "sprOfflineHourglass"
+  },
+  "sprite.omega_crit_chance": {
+   "index": 726,
+   "name": "sprOmegaCritChance"
+  },
+  "sprite.omega_crit_damage": {
+   "index": 727,
+   "name": "sprOmegaCritDamage"
+  },
+  "sprite.option_cog": {
+   "index": 728,
+   "name": "sprOptionCog"
+  },
+  "sprite.ore2x": {
+   "index": 729,
+   "name": "sprOre2x"
+  },
+  "sprite.ore_income100percent": {
+   "index": 730,
+   "name": "sprOreIncome100percent"
+  },
+  "sprite.ore_income_multi": {
+   "index": 731,
+   "name": "sprOreIncomeMulti"
+  },
+  "sprite.ore_per_screen": {
+   "index": 732,
+   "name": "sprOrePerScreen"
+  },
+  "sprite.ore_sell_price": {
+   "index": 733,
+   "name": "sprOreSellPrice"
+  },
+  "sprite.particle_obelisk_test": {
+   "index": 734,
+   "name": "sprParticleObeliskTest"
+  },
+  "sprite.party_wizard_chance": {
+   "index": 735,
+   "name": "sprPartyWizardChance"
+  },
+  "sprite.party_wizard_multi": {
+   "index": 736,
+   "name": "sprPartyWizardMulti"
+  },
+  "sprite.pause": {
+   "index": 737,
+   "name": "sprPause"
+  },
+  "sprite.pepsi": {
+   "index": 738,
+   "name": "sprPepsi"
+  },
+  "sprite.pet_butterfly_skin_a": {
+   "index": 739,
+   "name": "sprPetButterfly_skin_a"
+  },
+  "sprite.pet_butterfly_skin_b": {
+   "index": 740,
+   "name": "sprPetButterfly_skin_b"
+  },
+  "sprite.pet_butterfly": {
+   "index": 741,
+   "name": "sprPetButterfly"
+  },
+  "sprite.pet_cap": {
+   "index": 742,
+   "name": "sprPetCap"
+  },
+  "sprite.pet_crab_skin_a": {
+   "index": 743,
+   "name": "sprPetCrab_skin_a"
+  },
+  "sprite.pet_crab_skin_b": {
+   "index": 744,
+   "name": "sprPetCrab_skin_b"
+  },
+  "sprite.pet_crab": {
+   "index": 745,
+   "name": "sprPetCrab"
+  },
+  "sprite.pet_dino_skin_a": {
+   "index": 746,
+   "name": "sprPetDino_skin_a"
+  },
+  "sprite.pet_dino_skin_b": {
+   "index": 747,
+   "name": "sprPetDino_skin_b"
+  },
+  "sprite.pet_dino": {
+   "index": 748,
+   "name": "sprPetDino"
+  },
+  "sprite.pet_duck_skin_a": {
+   "index": 749,
+   "name": "sprPetDuck_skin_a"
+  },
+  "sprite.pet_duck_skin_b": {
+   "index": 750,
+   "name": "sprPetDuck_skin_b"
+  },
+  "sprite.pet_duck": {
+   "index": 751,
+   "name": "sprPetDuck"
+  },
+  "sprite.pet_dwarf_skin_a": {
+   "index": 752,
+   "name": "sprPetDwarf_skin_a"
+  },
+  "sprite.pet_dwarf_skin_b": {
+   "index": 753,
+   "name": "sprPetDwarf_skin_b"
+  },
+  "sprite.pet_dwarf": {
+   "index": 754,
+   "name": "sprPetDwarf"
+  },
+  "sprite.pet_goat_skin_a": {
+   "index": 755,
+   "name": "sprPetGoat_skin_a"
+  },
+  "sprite.pet_goat_skin_b": {
+   "index": 756,
+   "name": "sprPetGoat_skin_b"
+  },
+  "sprite.pet_goat": {
+   "index": 757,
+   "name": "sprPetGoat"
+  },
+  "sprite.pet_golem_skin_a": {
+   "index": 758,
+   "name": "sprPetGolem_skin_a"
+  },
+  "sprite.pet_golem_skin_b": {
+   "index": 759,
+   "name": "sprPetGolem_skin_b"
+  },
+  "sprite.pet_golem": {
+   "index": 760,
+   "name": "sprPetGolem"
+  },
+  "sprite.pet_happybot_skin_a": {
+   "index": 761,
+   "name": "sprPetHappybot_skin_a"
+  },
+  "sprite.pet_happybot_skin_b": {
+   "index": 762,
+   "name": "sprPetHappybot_skin_b"
+  },
+  "sprite.pet_happybot": {
+   "index": 763,
+   "name": "sprPetHappybot"
+  },
+  "sprite.pet_head_icons_skinset1": {
+   "index": 764,
+   "name": "sprPetHeadIcons_skinset1"
+  },
+  "sprite.pet_head_icons_skinset2": {
+   "index": 765,
+   "name": "sprPetHeadIcons_skinset2"
+  },
+  "sprite.pet_head_icons": {
+   "index": 766,
+   "name": "sprPetHeadIcons"
+  },
+  "sprite.pet_leprechaun_skin_a": {
+   "index": 767,
+   "name": "sprPetLeprechaun_skin_a"
+  },
+  "sprite.pet_leprechaun_skin_b": {
+   "index": 768,
+   "name": "sprPetLeprechaun_skin_b"
+  },
+  "sprite.pet_leprechaun": {
+   "index": 769,
+   "name": "sprPetLeprechaun"
+  },
+  "sprite.pet_luck": {
+   "index": 770,
+   "name": "sprPetLuck"
+  },
+  "sprite.pet_medusa_skin_a": {
+   "index": 771,
+   "name": "sprPetMedusa_skin_a"
+  },
+  "sprite.pet_medusa_skin_b": {
+   "index": 772,
+   "name": "sprPetMedusa_skin_b"
+  },
+  "sprite.pet_medusa": {
+   "index": 773,
+   "name": "sprPetMedusa"
+  },
+  "sprite.pet_menu_icon": {
+   "index": 774,
+   "name": "sprPetMenuIcon"
+  },
+  "sprite.pet_penguin_skin_a": {
+   "index": 775,
+   "name": "sprPetPenguin_skin_a"
+  },
+  "sprite.pet_penguin_skin_b": {
+   "index": 776,
+   "name": "sprPetPenguin_skin_b"
+  },
+  "sprite.pet_penguin": {
+   "index": 777,
+   "name": "sprPetPenguin"
+  },
+  "sprite.pet_quest_complete": {
+   "index": 778,
+   "name": "sprPetQuestComplete"
+  },
+  "sprite.pet_quest_icon": {
+   "index": 779,
+   "name": "sprPetQuestIcon"
+  },
+  "sprite.pet_rabbit_skin_a": {
+   "index": 780,
+   "name": "sprPetRabbit_skin_a"
+  },
+  "sprite.pet_rabbit_skin_b": {
+   "index": 781,
+   "name": "sprPetRabbit_skin_b"
+  },
+  "sprite.pet_rabbit": {
+   "index": 782,
+   "name": "sprPetRabbit"
+  },
+  "sprite.pet_rhino_skin_a": {
+   "index": 783,
+   "name": "sprPetRhino_skin_a"
+  },
+  "sprite.pet_rhino_skin_b": {
+   "index": 784,
+   "name": "sprPetRhino_skin_b"
+  },
+  "sprite.pet_rhino": {
+   "index": 785,
+   "name": "sprPetRhino"
+  },
+  "sprite.pet_shark_skin_a": {
+   "index": 786,
+   "name": "sprPetShark_skin_a"
+  },
+  "sprite.pet_shark_skin_b": {
+   "index": 787,
+   "name": "sprPetShark_skin_b"
+  },
+  "sprite.pet_shark": {
+   "index": 788,
+   "name": "sprPetShark"
+  },
+  "sprite.pet_skin_icon": {
+   "index": 789,
+   "name": "sprPetSkinIcon"
+  },
+  "sprite.pet_starfish_skin_a": {
+   "index": 790,
+   "name": "sprPetStarfish_skin_a"
+  },
+  "sprite.pet_starfish_skin_b": {
+   "index": 791,
+   "name": "sprPetStarfish_skin_b"
+  },
+  "sprite.pet_starfish": {
+   "index": 792,
+   "name": "sprPetStarfish"
+  },
+  "sprite.pet_whale_skin_a": {
+   "index": 793,
+   "name": "sprPetWhale_skin_a"
+  },
+  "sprite.pet_whale_skin_b": {
+   "index": 794,
+   "name": "sprPetWhale_skin_b"
+  },
+  "sprite.pet_whale": {
+   "index": 795,
+   "name": "sprPetWhale"
+  },
+  "sprite.pickaxe": {
+   "index": 796,
+   "name": "sprPickaxe"
+  },
+  "sprite.pickaxe_and_bomb_damage": {
+   "index": 797,
+   "name": "sprPickaxeAndBombDamage"
+  },
+  "sprite.pickaxe_and_bomb_omega_crit_chance": {
+   "index": 798,
+   "name": "sprPickaxeAndBombOmegaCritChance"
+  },
+  "sprite.pickaxe_and_bomb_super_crit_chance": {
+   "index": 799,
+   "name": "sprPickaxeAndBombSuperCritChance"
+  },
+  "sprite.pickaxe_and_bomb_ultra_crit_chance": {
+   "index": 800,
+   "name": "sprPickaxeAndBombUltraCritChance"
+  },
+  "sprite.pickaxe_attack_speed": {
+   "index": 801,
+   "name": "sprPickaxeAttackSpeed"
+  },
+  "sprite.pickaxe_crit_chance": {
+   "index": 802,
+   "name": "sprPickaxeCritChance"
+  },
+  "sprite.pickaxe_crit_damage": {
+   "index": 803,
+   "name": "sprPickaxeCritDamage"
+  },
+  "sprite.pickaxe_damage": {
+   "index": 804,
+   "name": "sprPickaxeDamage"
+  },
+  "sprite.pickaxe_damage_no_red": {
+   "index": 805,
+   "name": "sprPickaxeDamageNoRed"
+  },
+  "sprite.pickaxe_damage_relic_chest": {
+   "index": 806,
+   "name": "sprPickaxeDamageRelicChest"
+  },
+  "sprite.pickaxe_damage_relic_chest2": {
+   "index": 807,
+   "name": "sprPickaxeDamageRelicChest2"
+  },
+  "sprite.pickaxe_damage_statue": {
+   "index": 808,
+   "name": "sprPickaxeDamageStatue"
+  },
+  "sprite.pickaxe_obelisk_damage": {
+   "index": 809,
+   "name": "sprPickaxeObeliskDamage"
+  },
+  "sprite.pickaxe_quick_attack": {
+   "index": 810,
+   "name": "sprPickaxeQuickAttack"
+  },
+  "sprite.pickaxe_radius": {
+   "index": 811,
+   "name": "sprPickaxeRadius"
+  },
+  "sprite.pickaxe_super_crit_chance": {
+   "index": 812,
+   "name": "sprPickaxeSuperCritChance"
+  },
+  "sprite.pickaxe_super_crit_damage": {
+   "index": 813,
+   "name": "sprPickaxeSuperCritDamage"
+  },
+  "sprite.pickaxe_ultra_crit_chance": {
+   "index": 814,
+   "name": "sprPickaxeUltraCritChance"
+  },
+  "sprite.pickaxe_ultra_crit_damage": {
+   "index": 815,
+   "name": "sprPickaxeUltraCritDamage"
+  },
+  "sprite.pickaxe_up": {
+   "index": 816,
+   "name": "sprPickaxeUp"
+  },
+  "sprite.pickaxe_upgrade": {
+   "index": 817,
+   "name": "sprPickaxeUpgrade"
+  },
+  "sprite.pizza": {
+   "index": 818,
+   "name": "sprPizza"
+  },
+  "sprite.placeholder16x16": {
+   "index": 819,
+   "name": "sprPlaceholder16x16"
+  },
+  "sprite.placeholder32x32": {
+   "index": 820,
+   "name": "sprPlaceholder32x32"
+  },
+  "sprite.play": {
+   "index": 821,
+   "name": "sprPlay"
+  },
+  "sprite.player0": {
+   "index": 822,
+   "name": "sprPlayer0"
+  },
+  "sprite.plus": {
+   "index": 823,
+   "name": "sprPlus"
+  },
+  "sprite.poly_plus": {
+   "index": 824,
+   "name": "sprPolyPlus"
+  },
+  "sprite.poly_progress": {
+   "index": 825,
+   "name": "sprPolyProgress"
+  },
+  "sprite.poly_shard": {
+   "index": 826,
+   "name": "sprPolyShard"
+  },
+  "sprite.poo": {
+   "index": 827,
+   "name": "sprpoo"
+  },
+  "sprite.portal": {
+   "index": 828,
+   "name": "sprPortal"
+  },
+  "sprite.portal_all_portal_multi": {
+   "index": 829,
+   "name": "sprPortalAllPortalMulti"
+  },
+  "sprite.portal_galactic_chance": {
+   "index": 830,
+   "name": "sprPortalGalacticChance"
+  },
+  "sprite.portal_galactic_multi": {
+   "index": 831,
+   "name": "sprPortalGalacticMulti"
+  },
+  "sprite.portal_gold_chance": {
+   "index": 832,
+   "name": "sprPortalGoldChance"
+  },
+  "sprite.portal_gold_multi": {
+   "index": 833,
+   "name": "sprPortalGoldMulti"
+  },
+  "sprite.portal_inside": {
+   "index": 834,
+   "name": "sprPortalInside"
+  },
+  "sprite.portal_rainbow_chance": {
+   "index": 835,
+   "name": "sprPortalRainbowChance"
+  },
+  "sprite.portal_rainbow_multi": {
+   "index": 836,
+   "name": "sprPortalRainbowMulti"
+  },
+  "sprite.portal_small": {
+   "index": 837,
+   "name": "sprPortalSmall"
+  },
+  "sprite.portal_small_chance": {
+   "index": 838,
+   "name": "sprPortalSmallChance"
+  },
+  "sprite.portal_small_gold": {
+   "index": 839,
+   "name": "sprPortalSmallGold"
+  },
+  "sprite.portrait": {
+   "index": 840,
+   "name": "sprPortrait"
+  },
+  "sprite.premium2x_bar": {
+   "index": 841,
+   "name": "sprPremium2xBar"
+  },
+  "sprite.premium2x_ore": {
+   "index": 842,
+   "name": "sprPremium2xOre"
+  },
+  "sprite.premium2x_pickaxe_damage": {
+   "index": 843,
+   "name": "sprPremium2xPickaxeDamage"
+  },
+  "sprite.premium2x_pp": {
+   "index": 844,
+   "name": "sprPremium2xPP"
+  },
+  "sprite.premium3x_bomb_damage": {
+   "index": 845,
+   "name": "sprPremium3xBombDamage"
+  },
+  "sprite.premium_permanent_drone": {
+   "index": 846,
+   "name": "sprPremiumPermanentDrone"
+  },
+  "sprite.prestige_cap_up": {
+   "index": 847,
+   "name": "sprPrestigeCapUp"
+  },
+  "sprite.prestige_cap_up_tier4": {
+   "index": 848,
+   "name": "sprPrestigeCapUpTier4"
+  },
+  "sprite.prestige_counter": {
+   "index": 849,
+   "name": "sprPrestigeCounter"
+  },
+  "sprite.prestige_point": {
+   "index": 850,
+   "name": "sprPrestigePoint"
+  },
+  "sprite.prestige_point_gain": {
+   "index": 851,
+   "name": "sprPrestigePointGain"
+  },
+  "sprite.prestige_points2x": {
+   "index": 852,
+   "name": "sprPrestigePoints2x"
+  },
+  "sprite.prismatic_floor": {
+   "index": 853,
+   "name": "sprPrismaticFloor"
+  },
+  "sprite.prismatic_floor_chance": {
+   "index": 854,
+   "name": "sprPrismaticFloorChance"
+  },
+  "sprite.prismatic_floor_chance_plain": {
+   "index": 855,
+   "name": "sprPrismaticFloorChancePlain"
+  },
+  "sprite.prismatic_floor_multi": {
+   "index": 856,
+   "name": "sprPrismaticFloorMulti"
+  },
+  "sprite.quest_exp_bar": {
+   "index": 857,
+   "name": "sprQuestExpBar"
+  },
+  "sprite.question_mark": {
+   "index": 858,
+   "name": "sprQuestionMark"
+  },
+  "sprite.question_mark_darker": {
+   "index": 859,
+   "name": "sprQuestionMarkDarker"
+  },
+  "sprite.quest_ui": {
+   "index": 860,
+   "name": "sprQuestUI"
+  },
+  "sprite.rabbit_turtle": {
+   "index": 861,
+   "name": "sprRabbitTurtle"
+  },
+  "sprite.rabbit_turtle_arch": {
+   "index": 862,
+   "name": "sprRabbitTurtleArch"
+  },
+  "sprite.rainbow": {
+   "index": 863,
+   "name": "sprRainbow"
+  },
+  "sprite.rainbow_floor_chance": {
+   "index": 864,
+   "name": "sprRainbowFloorChance"
+  },
+  "sprite.rainbow_floor_chance_plain": {
+   "index": 865,
+   "name": "sprRainbowFloorChancePlain"
+  },
+  "sprite.rainbow_floor_multi": {
+   "index": 866,
+   "name": "sprRainbowFloorMulti"
+  },
+  "sprite.rainbow_galactic_test": {
+   "index": 867,
+   "name": "sprRainbowGalacticTest"
+  },
+  "sprite.rainbow_ore_chance": {
+   "index": 868,
+   "name": "sprRainbowOreChance"
+  },
+  "sprite.rainbow_ore_multi": {
+   "index": 869,
+   "name": "sprRainbowOreMulti"
+  },
+  "sprite.rainbow_ore_plain": {
+   "index": 870,
+   "name": "sprRainbowOrePlain"
+  },
+  "sprite.rainbow_ores": {
+   "index": 871,
+   "name": "sprRainbowOres"
+  },
+  "sprite.rainbow_vein_chance": {
+   "index": 872,
+   "name": "sprRainbowVeinChance"
+  },
+  "sprite.rainbow_vein_multi": {
+   "index": 873,
+   "name": "sprRainbowVeinMulti"
+  },
+  "sprite.rain_test": {
+   "index": 874,
+   "name": "sprRainTest"
+  },
+  "sprite.rain_test2": {
+   "index": 875,
+   "name": "sprRainTest2"
+  },
+  "sprite.red_card": {
+   "index": 876,
+   "name": "sprRedCard"
+  },
+  "sprite.reddit": {
+   "index": 877,
+   "name": "sprReddit"
+  },
+  "sprite.relic_chest_big": {
+   "index": 878,
+   "name": "sprRelicChestBig"
+  },
+  "sprite.resource_pack": {
+   "index": 879,
+   "name": "sprResourcePack"
+  },
+  "sprite.ring_divine": {
+   "index": 880,
+   "name": "sprRingDivine"
+  },
+  "sprite.rings": {
+   "index": 881,
+   "name": "sprRings"
+  },
+  "sprite.rings_centered": {
+   "index": 882,
+   "name": "sprRingsCentered"
+  },
+  "sprite.road": {
+   "index": 883,
+   "name": "sprRoad"
+  },
+  "sprite.road_new": {
+   "index": 884,
+   "name": "sprRoadNew"
+  },
+  "sprite.rock_shadow": {
+   "index": 885,
+   "name": "sprRockShadow"
+  },
+  "sprite.rock_test": {
+   "index": 886,
+   "name": "sprRockTest"
+  },
+  "sprite.rock_test3x": {
+   "index": 887,
+   "name": "sprRockTest3x"
+  },
+  "sprite.ruby": {
+   "index": 888,
+   "name": "sprRuby"
+  },
+  "sprite.s": {
+   "index": 889,
+   "name": "sprS"
+  },
+  "sprite.satchel": {
+   "index": 890,
+   "name": "sprSatchel"
+  },
+  "sprite.save_icon": {
+   "index": 891,
+   "name": "sprSaveIcon"
+  },
+  "sprite.sell_menu_icon": {
+   "index": 892,
+   "name": "sprSellMenuIcon"
+  },
+  "sprite.sfx": {
+   "index": 893,
+   "name": "sprSfx"
+  },
+  "sprite.shadows_z8_bags": {
+   "index": 894,
+   "name": "sprShadowsZ8Bags"
+  },
+  "sprite.shadows_z8_floor_select": {
+   "index": 895,
+   "name": "sprShadowsZ8FloorSelect"
+  },
+  "sprite.shadows_z8_obelisk": {
+   "index": 896,
+   "name": "sprShadowsZ8Obelisk"
+  },
+  "sprite.shop_banner": {
+   "index": 897,
+   "name": "sprShopBanner"
+  },
+  "sprite.shop_banners_backup": {
+   "index": 898,
+   "name": "sprShopBanners_backup"
+  },
+  "sprite.shop_banners": {
+   "index": 899,
+   "name": "sprShopBanners"
+  },
+  "sprite.shop_fill_up": {
+   "index": 900,
+   "name": "sprShopFillUp"
+  },
+  "sprite.shop_test2": {
+   "index": 901,
+   "name": "sprShopTest2"
+  },
+  "sprite.skill_bar": {
+   "index": 902,
+   "name": "sprSkillBar"
+  },
+  "sprite.skill_bari_os": {
+   "index": 903,
+   "name": "sprSkillBariOS"
+  },
+  "sprite.skill_bar_spender": {
+   "index": 904,
+   "name": "sprSkillBarSpender"
+  },
+  "sprite.skill_shard": {
+   "index": 905,
+   "name": "sprSkillShard"
+  },
+  "sprite.skill_tree_icon": {
+   "index": 906,
+   "name": "sprSkillTreeIcon"
+  },
+  "sprite.skin_selection_female": {
+   "index": 907,
+   "name": "sprSkinSelectionFemale"
+  },
+  "sprite.skin_selection_female_gilded": {
+   "index": 908,
+   "name": "sprSkinSelectionFemaleGilded"
+  },
+  "sprite.skin_selection_male": {
+   "index": 909,
+   "name": "sprSkinSelectionMale"
+  },
+  "sprite.skin_selection_male_gilded": {
+   "index": 910,
+   "name": "sprSkinSelectionMaleGilded"
+  },
+  "sprite.small_arrow": {
+   "index": 911,
+   "name": "sprSmallArrow"
+  },
+  "sprite.smile": {
+   "index": 912,
+   "name": "sprSmile"
+  },
+  "sprite.snooze": {
+   "index": 913,
+   "name": "sprSnooze"
+  },
+  "sprite.snow_test": {
+   "index": 914,
+   "name": "sprSnowTest"
+  },
+  "sprite.soda_piggy": {
+   "index": 915,
+   "name": "sprSodaPiggy"
+  },
+  "sprite.space": {
+   "index": 916,
+   "name": "sprSpace"
+  },
+  "sprite.sparkle_anim": {
+   "index": 917,
+   "name": "sprSparkleAnim"
+  },
+  "sprite.spell_duration_multi": {
+   "index": 918,
+   "name": "sprSpellDurationMulti"
+  },
+  "sprite.spell_unlock_tiny": {
+   "index": 919,
+   "name": "sprSpellUnlockTiny"
+  },
+  "sprite.star": {
+   "index": 920,
+   "name": "sprStar"
+  },
+  "sprite.star16x16": {
+   "index": 921,
+   "name": "sprStar16x16"
+  },
+  "sprite.star32x32_radiant": {
+   "index": 922,
+   "name": "sprStar32x32_radiant"
+  },
+  "sprite.star32x32": {
+   "index": 923,
+   "name": "sprStar32x32"
+  },
+  "sprite.star32x32_with_signs": {
+   "index": 924,
+   "name": "sprStar32x32WithSigns"
+  },
+  "sprite.star_all_radiant_multi": {
+   "index": 925,
+   "name": "sprStarAllRadiantMulti"
+  },
+  "sprite.star_all_star_multi": {
+   "index": 926,
+   "name": "sprStarAllStarMulti"
+  },
+  "sprite.star_all_supergiant_multi": {
+   "index": 927,
+   "name": "sprStarAllSupergiantMulti"
+  },
+  "sprite.star_autocatch": {
+   "index": 928,
+   "name": "sprStarAutocatch"
+  },
+  "sprite.star_autocatch_symbol": {
+   "index": 929,
+   "name": "sprStarAutocatchSymbol"
+  },
+  "sprite.star_cap_specific": {
+   "index": 930,
+   "name": "sprStarCapSpecific"
+  },
+  "sprite.star_cap_specific_inverted": {
+   "index": 931,
+   "name": "sprStarCapSpecificInverted"
+  },
+  "sprite.star_constellation_bg_test": {
+   "index": 932,
+   "name": "sprStarConstellationBgTest"
+  },
+  "sprite.star_constellations": {
+   "index": 933,
+   "name": "sprStarConstellations"
+  },
+  "sprite.star_diamond": {
+   "index": 934,
+   "name": "sprStarDiamond"
+  },
+  "sprite.star_double_chance": {
+   "index": 935,
+   "name": "sprStarDoubleChance"
+  },
+  "sprite.star_effect": {
+   "index": 936,
+   "name": "sprStarEffect"
+  },
+  "sprite.star_effect_supernova": {
+   "index": 937,
+   "name": "sprStarEffectSupernova"
+  },
+  "sprite.star_effect_super_star_supernova": {
+   "index": 938,
+   "name": "sprStarEffectSuperStarSupernova"
+  },
+  "sprite.starfruit": {
+   "index": 939,
+   "name": "sprStarfruit"
+  },
+  "sprite.stargazing_menu_icon_test": {
+   "index": 940,
+   "name": "sprStargazingMenuIconTest"
+  },
+  "sprite.stargazing_menu_icon_test16x16": {
+   "index": 941,
+   "name": "sprStargazingMenuIconTest16x16"
+  },
+  "sprite.stargazing_upgrades": {
+   "index": 942,
+   "name": "sprStargazingUpgrades"
+  },
+  "sprite.star_glow": {
+   "index": 943,
+   "name": "sprStarGlow"
+  },
+  "sprite.star_half_size": {
+   "index": 944,
+   "name": "sprStarHalfSize"
+  },
+  "sprite.star_half_size_diamond": {
+   "index": 945,
+   "name": "sprStarHalfSizeDiamond"
+  },
+  "sprite.star_half_size_platinum": {
+   "index": 946,
+   "name": "sprStarHalfSizePlatinum"
+  },
+  "sprite.star_luck": {
+   "index": 947,
+   "name": "sprStarLuck"
+  },
+  "sprite.star_map": {
+   "index": 948,
+   "name": "sprStarMap"
+  },
+  "sprite.star_novagiant_combo_multi": {
+   "index": 949,
+   "name": "sprStarNovagiantComboMulti"
+  },
+  "sprite.star_plain": {
+   "index": 950,
+   "name": "sprStarPlain"
+  },
+  "sprite.star_platinum": {
+   "index": 951,
+   "name": "sprStarPlatinum"
+  },
+  "sprite.star_radiant_chance": {
+   "index": 952,
+   "name": "sprStarRadiantChance"
+  },
+  "sprite.star_radiant_multi": {
+   "index": 953,
+   "name": "sprStarRadiantMulti"
+  },
+  "sprite.stars2x_spawn_rate": {
+   "index": 954,
+   "name": "sprStars2xSpawnRate"
+  },
+  "sprite.stars_anim": {
+   "index": 955,
+   "name": "sprStarsAnim"
+  },
+  "sprite.star_signs16x16": {
+   "index": 956,
+   "name": "sprStarSigns16x16"
+  },
+  "sprite.star_signs32x32": {
+   "index": 957,
+   "name": "sprStarSigns32x32"
+  },
+  "sprite.star_spawn_rate": {
+   "index": 958,
+   "name": "sprStarSpawnRate"
+  },
+  "sprite.star_super10x_chance": {
+   "index": 959,
+   "name": "sprStarSuper10xChance"
+  },
+  "sprite.star_super16x16": {
+   "index": 960,
+   "name": "sprStarSuper16x16"
+  },
+  "sprite.star_super48x48_radiant": {
+   "index": 961,
+   "name": "sprStarSuper48x48_radiant"
+  },
+  "sprite.star_super48x48": {
+   "index": 962,
+   "name": "sprStarSuper48x48"
+  },
+  "sprite.star_supergiant_chance": {
+   "index": 963,
+   "name": "sprStarSupergiantChance"
+  },
+  "sprite.star_supergiant_multi": {
+   "index": 964,
+   "name": "sprStarSupergiantMulti"
+  },
+  "sprite.star_super_luck": {
+   "index": 965,
+   "name": "sprStarSuperLuck"
+  },
+  "sprite.star_super_radiant_chance": {
+   "index": 966,
+   "name": "sprStarSuperRadiantChance"
+  },
+  "sprite.star_super_radiant_multi": {
+   "index": 967,
+   "name": "sprStarSuperRadiantMulti"
+  },
+  "sprite.star_super_spawn_rate": {
+   "index": 968,
+   "name": "sprStarSuperSpawnRate"
+  },
+  "sprite.star_super_supergiant_chance": {
+   "index": 969,
+   "name": "sprStarSuperSupergiantChance"
+  },
+  "sprite.star_super_supergiant_multi": {
+   "index": 970,
+   "name": "sprStarSuperSupergiantMulti"
+  },
+  "sprite.star_super_triple_chance": {
+   "index": 971,
+   "name": "sprStarSuperTripleChance"
+  },
+  "sprite.star_telescope_lvl": {
+   "index": 972,
+   "name": "sprStarTelescopeLvl"
+  },
+  "sprite.star_triple_chance": {
+   "index": 973,
+   "name": "sprStarTripleChance"
+  },
+  "sprite.star_wish": {
+   "index": 974,
+   "name": "sprStarWish"
+  },
+  "sprite.stat_super_supergiant_multi": {
+   "index": 975,
+   "name": "sprStatSuperSupergiantMulti"
+  },
+  "sprite.statue16x16": {
+   "index": 976,
+   "name": "sprStatue16x16"
+  },
+  "sprite.statue_alex_only": {
+   "index": 977,
+   "name": "sprStatueAlexOnly"
+  },
+  "sprite.statue_frame": {
+   "index": 978,
+   "name": "sprStatueFrame"
+  },
+  "sprite.statue_gold16x16": {
+   "index": 979,
+   "name": "sprStatueGold16x16"
+  },
+  "sprite.statue_platinum16x16": {
+   "index": 980,
+   "name": "sprStatuePlatinum16x16"
+  },
+  "sprite.statues": {
+   "index": 981,
+   "name": "sprStatues"
+  },
+  "sprite.statues2": {
+   "index": 982,
+   "name": "sprStatues2"
+  },
+  "sprite.statues3": {
+   "index": 983,
+   "name": "sprStatues3"
+  },
+  "sprite.statues_gilded": {
+   "index": 984,
+   "name": "sprStatuesGilded"
+  },
+  "sprite.statues_gilded2": {
+   "index": 985,
+   "name": "sprStatuesGilded2"
+  },
+  "sprite.statues_gilded3": {
+   "index": 986,
+   "name": "sprStatuesGilded3"
+  },
+  "sprite.statues_platinum": {
+   "index": 987,
+   "name": "sprStatuesPlatinum"
+  },
+  "sprite.statues_platinum2": {
+   "index": 988,
+   "name": "sprStatuesPlatinum2"
+  },
+  "sprite.statues_platinum3": {
+   "index": 989,
+   "name": "sprStatuesPlatinum3"
+  },
+  "sprite.steak": {
+   "index": 990,
+   "name": "sprSteak"
+  },
+  "sprite.sticker_backgrounds": {
+   "index": 991,
+   "name": "sprStickerBackgrounds"
+  },
+  "sprite.stickers": {
+   "index": 992,
+   "name": "sprStickers"
+  },
+  "sprite.stonks": {
+   "index": 993,
+   "name": "sprStonks"
+  },
+  "sprite.stonks_all_multi": {
+   "index": 994,
+   "name": "sprStonksAllMulti"
+  },
+  "sprite.stonks_chance": {
+   "index": 995,
+   "name": "sprStonksChance"
+  },
+  "sprite.stonks_multiplier": {
+   "index": 996,
+   "name": "sprStonksMultiplier"
+  },
+  "sprite.stonks_super": {
+   "index": 997,
+   "name": "sprStonksSuper"
+  },
+  "sprite.stonks_super_crit_chance": {
+   "index": 998,
+   "name": "sprStonksSuperCritChance"
+  },
+  "sprite.stonks_super_crit_multi": {
+   "index": 999,
+   "name": "sprStonksSuperCritMulti"
+  },
+  "sprite.stonks_ultra": {
+   "index": 1000,
+   "name": "sprStonksUltra"
+  },
+  "sprite.stonks_ultra_crit_chance": {
+   "index": 1001,
+   "name": "sprStonksUltraCritChance"
+  },
+  "sprite.stonks_ultra_crit_multi": {
+   "index": 1002,
+   "name": "sprStonksUltraCritMulti"
+  },
+  "sprite.stun_block": {
+   "index": 1003,
+   "name": "sprStunBlock"
+  },
+  "sprite.supernova": {
+   "index": 1004,
+   "name": "sprSupernova"
+  },
+  "sprite.supernova_glow_regular": {
+   "index": 1005,
+   "name": "sprSupernovaGlowRegular"
+  },
+  "sprite.supernova_multi": {
+   "index": 1006,
+   "name": "sprSupernovaMulti"
+  },
+  "sprite.supernova_multi_both": {
+   "index": 1007,
+   "name": "sprSupernovaMultiBoth"
+  },
+  "sprite.supernova_ontop_of_pack": {
+   "index": 1008,
+   "name": "sprSupernovaOntopOfPack"
+  },
+  "sprite.supernova_super_star": {
+   "index": 1009,
+   "name": "sprSupernovaSuperStar"
+  },
+  "sprite.supernova_super_star_multi": {
+   "index": 1010,
+   "name": "sprSupernovaSuperStarMulti"
+  },
+  "sprite.super_star_anim": {
+   "index": 1011,
+   "name": "sprSuperStarAnim"
+  },
+  "sprite.super_stars_anim": {
+   "index": 1012,
+   "name": "sprSuperStarsAnim"
+  },
+  "sprite.sushi": {
+   "index": 1013,
+   "name": "sprSushi"
+  },
+  "sprite.symbols": {
+   "index": 1014,
+   "name": "sprSymbols"
+  },
+  "sprite.talent_multinode": {
+   "index": 1015,
+   "name": "sprTalentMultinode"
+  },
+  "sprite.talent_normal_slot": {
+   "index": 1016,
+   "name": "sprTalentNormalSlot"
+  },
+  "sprite.talent_point": {
+   "index": 1017,
+   "name": "sprTalentPoint"
+  },
+  "sprite.talent_point_get": {
+   "index": 1018,
+   "name": "sprTalentPointGet"
+  },
+  "sprite.talent_special_slot": {
+   "index": 1019,
+   "name": "sprTalentSpecialSlot"
+  },
+  "sprite.the_logs": {
+   "index": 1020,
+   "name": "sprTheLogs"
+  },
+  "sprite.triangles": {
+   "index": 1021,
+   "name": "sprTriangles"
+  },
+  "sprite.triple_craft_chance": {
+   "index": 1022,
+   "name": "sprTripleCraftChance"
+  },
+  "sprite.twitter": {
+   "index": 1023,
+   "name": "sprTwitter"
+  },
+  "sprite.unchecked_checked": {
+   "index": 1024,
+   "name": "sprUncheckedChecked"
+  },
+  "sprite.upgrade": {
+   "index": 1025,
+   "name": "sprUpgrade"
+  },
+  "sprite.upgrade_price_discount": {
+   "index": 1026,
+   "name": "sprUpgradePriceDiscount"
+  },
+  "sprite.value_packs": {
+   "index": 1027,
+   "name": "sprValuePacks"
+  },
+  "sprite.vein_full_size": {
+   "index": 1028,
+   "name": "sprVeinFullSize"
+  },
+  "sprite.vein_full_size_gold": {
+   "index": 1029,
+   "name": "sprVeinFullSizeGold"
+  },
+  "sprite.vein_full_size_rainbow": {
+   "index": 1030,
+   "name": "sprVeinFullSizeRainbow"
+  },
+  "sprite.vein_gleaming_chance": {
+   "index": 1031,
+   "name": "sprVeinGleamingChance"
+  },
+  "sprite.vein_gleaming_multi": {
+   "index": 1032,
+   "name": "sprVeinGleamingMulti"
+  },
+  "sprite.vein_income_multi": {
+   "index": 1033,
+   "name": "sprVeinIncomeMulti"
+  },
+  "sprite.vein_poly_bonus": {
+   "index": 1034,
+   "name": "sprVeinPolyBonus"
+  },
+  "sprite.vein_rock_test": {
+   "index": 1035,
+   "name": "sprVeinRockTest"
+  },
+  "sprite.veins": {
+   "index": 1036,
+   "name": "sprVeins"
+  },
+  "sprite.veins3x": {
+   "index": 1037,
+   "name": "sprVeins3x"
+  },
+  "sprite.vein_spawn_rate": {
+   "index": 1038,
+   "name": "sprVeinSpawnRate"
+  },
+  "sprite.vein_up": {
+   "index": 1039,
+   "name": "sprVeinUp"
+  },
+  "sprite.vip_badge": {
+   "index": 1040,
+   "name": "sprVipBadge"
+  },
+  "sprite.vip_smaller": {
+   "index": 1041,
+   "name": "sprVipSmaller"
+  },
+  "sprite.vyd": {
+   "index": 1042,
+   "name": "sprVyd"
+  },
+  "sprite.weaken_block": {
+   "index": 1043,
+   "name": "sprWeakenBlock"
+  },
+  "sprite.wizard_backgrounds": {
+   "index": 1044,
+   "name": "sprWizardBackgrounds"
+  },
+  "sprite.wizard_exchange_bg": {
+   "index": 1045,
+   "name": "sprWizardExchangeBg"
+  },
+  "sprite.wizard_refresh": {
+   "index": 1046,
+   "name": "sprWizardRefresh"
+  },
+  "sprite.workshop": {
+   "index": 1047,
+   "name": "sprWorkshop"
+  },
+  "sprite.workshop_cap_up": {
+   "index": 1048,
+   "name": "sprWorkshopCapUp"
+  },
+  "sprite.world2_statue": {
+   "index": 1049,
+   "name": "sprWorld2Statue"
+  },
+  "sprite.world2_statue16x16": {
+   "index": 1050,
+   "name": "sprWorld2Statue16x16"
+  },
+  "sprite.world3_statue": {
+   "index": 1051,
+   "name": "sprWorld3Statue"
+  },
+  "sprite.world4_extras": {
+   "index": 1052,
+   "name": "sprWorld4Extras"
+  },
+  "sprite.world4_statue": {
+   "index": 1053,
+   "name": "sprWorld4Statue"
+  },
+  "sprite.world_statues": {
+   "index": 1054,
+   "name": "sprWorldStatues"
+  },
+  "sprite.xanz": {
+   "index": 1055,
+   "name": "sprXanz"
+  },
+  "sprite.xp": {
+   "index": 1056,
+   "name": "sprXp"
+  },
+  "sprite.xp3x": {
+   "index": 1057,
+   "name": "sprXp3x"
+  },
+  "sprite.xp_only": {
+   "index": 1058,
+   "name": "sprXpOnly"
+  },
+  "sprite.zone_banner": {
+   "index": 1059,
+   "name": "sprZoneBanner"
+  },
+  "sprite.bomb_bags_closed": {
+   "index": 1060,
+   "name": "strip_bomb_bags_closed"
+  },
+  "sprite.bomb_bags_opened": {
+   "index": 1061,
+   "name": "strip_bomb_bags_opened"
+  },
+  "sprite.inventory_bags_closed": {
+   "index": 1062,
+   "name": "strip_inventory_bags_closed"
+  },
+  "sprite.inventory_bags_opened": {
+   "index": 1063,
+   "name": "strip_inventory_bags_opened"
+  },
+  "sprite.purplenumbers": {
+   "index": 1064,
+   "name": "strip_purplenumbers"
+  },
+  "sprite.skilltree": {
+   "index": 1065,
+   "name": "strip_skilltree"
+  },
+  "sprite.arch_cards": {
+   "index": 1066,
+   "name": "stripArchCards"
+  },
+  "sprite.bombs": {
+   "index": 1067,
+   "name": "stripBombs"
+  },
+  "sprite.coal_upgs": {
+   "index": 1068,
+   "name": "stripCoalUpgs"
+  },
+  "sprite.docks": {
+   "index": 1069,
+   "name": "stripDocks"
+  },
+  "sprite.fish": {
+   "index": 1070,
+   "name": "stripFish"
+  },
+  "sprite.fishing_tabs": {
+   "index": 1071,
+   "name": "stripFishingTabs"
+  },
+  "sprite.lego_fish": {
+   "index": 1072,
+   "name": "stripLegoFish"
+  },
+  "sprite.lego_fish16x16": {
+   "index": 1073,
+   "name": "stripLegoFish16x16"
+  },
+  "sprite.lego_fish_homes": {
+   "index": 1074,
+   "name": "stripLegoFishHomes"
+  },
+  "sprite.misc_cards": {
+   "index": 1075,
+   "name": "stripMiscCards"
+  },
+  "sprite.spells": {
+   "index": 1076,
+   "name": "stripSpells"
+  },
+  "sprite.tellacon": {
+   "index": 1077,
+   "name": "tellacon"
+  }
+ }
+}

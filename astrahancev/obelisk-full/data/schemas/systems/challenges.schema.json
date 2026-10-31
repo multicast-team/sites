@@ -1,0 +1,128 @@
+{
+ "$id": "systems/challenges",
+ "title": "Испытания: цепочка, правила прогресса по состоянию (data/systems/challenges.json, этапы 8.1–8.2)",
+ "description": "Цепочка 0…100 (текст, требование, награда — ответы O funChallengeGetText/GetReq/GetReward), ступени (обычные/Extreme/Divine), подписи label.*, порог обелиска, предел готовности, эпсилон сравнения, режимы прогресса, число видимых строк; stateRules — испытание → источник состояния, индекс, преобразование (value, minus1, cap — слагаемые; eq, ge, le — условия), аргумент. Строки одного номера: сумма слагаемых или «все условия выполнены → 1». Источники — группы challenges-a, challenges-b, challenges-neg, data.challenges81, data.challenges82 в oracle/sources.json, спека oracle/specs/challenges.md.",
+ "allOf": [
+  {
+   "$ref": "system"
+  },
+  {
+   "properties": {
+    "system": {
+     "const": "challenges"
+    }
+   }
+  },
+  {
+   "required": [
+    "constants",
+    "tables"
+   ],
+   "properties": {
+    "constants": {
+     "required": [
+      "count",
+      "obeliskReq",
+      "readyIdLimit",
+      "epsilon",
+      "mode.add",
+      "mode.max",
+      "tier.extremeFrom",
+      "tier.divineFrom",
+      "visible.count",
+      "visible.idLimit",
+      "label.normal",
+      "label.extreme",
+      "label.divine"
+     ]
+    },
+    "tables": {
+     "required": [
+      "chain",
+      "stateRules"
+     ],
+     "properties": {
+      "chain": {
+       "properties": {
+        "columns": {
+         "const": [
+          "id",
+          "text",
+          "req",
+          "reward"
+         ]
+        },
+        "rows": {
+         "minItems": 1,
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "string"
+           },
+           {
+            "type": "number"
+           },
+           {
+            "type": "number"
+           }
+          ]
+         }
+        }
+       }
+      },
+      "stateRules": {
+       "properties": {
+        "columns": {
+         "const": [
+          "id",
+          "source",
+          "index",
+          "transform",
+          "arg"
+         ]
+        },
+        "rows": {
+         "items": {
+          "prefixItems": [
+           {
+            "$ref": "common#/$defs/count"
+           },
+           {
+            "type": "string"
+           },
+           {
+            "type": [
+             "integer",
+             "null"
+            ]
+           },
+           {
+            "enum": [
+             "value",
+             "minus1",
+             "cap",
+             "eq",
+             "ge",
+             "le"
+            ]
+           },
+           {
+            "type": [
+             "number",
+             "null"
+            ]
+           }
+          ]
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

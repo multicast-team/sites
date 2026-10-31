@@ -1,0 +1,24 @@
+{
+ "$id": "systems/lootbug",
+ "title": "Лутбаг: появление, банк, золотой и тройной, бросок лута free/paid, цена paid, активность баффов (data/systems/lootbug.json, этап 8.37)",
+ "description": "Данные спеки oracle/specs/lootbug.md: время появления, таймер банка, допуск сравнения, шанс «a из 100», число жуков тройного, число баффов, результат броска с другим аргументом, номера генераторов игры; таблица лута (вид награды, начальный вес, количество, цена, округление), условия ворот и правила ворот. Сняты с O (oracle/sources.json, группы lootbug и data.lootbug837).",
+ "allOf": [
+  {"$ref": "system"},
+  {"properties": {"system": {"const": "lootbug"}}},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "constants": {"required": ["time.required", "bank.spawnAt", "bank.step", "bank.cost", "compare.eps", "chance.of", "triple.extra", "buffs.count",
+                               "roll.other", "generator.loot", "generator.triple"]},
+    "tables": {
+     "required": ["loot", "conditions", "gates"],
+     "properties": {
+      "loot": {"properties": {"columns": {"const": ["table", "row", "kind", "weight", "amount", "price", "round"]}}},
+      "conditions": {"properties": {"columns": {"const": ["gate", "input", "min"]}}},
+      "gates": {"properties": {"columns": {"const": ["order", "gate", "table", "row", "op", "value"]}}}
+     }
+    }
+   }
+  }
+ ]
+}

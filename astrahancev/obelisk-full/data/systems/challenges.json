@@ -1,0 +1,887 @@
+{
+ "$schema": "systems/challenges",
+ "system": "challenges",
+ "version": "2.2.50",
+ "constants": {
+  "count": 100,
+  "obeliskReq": 10,
+  "readyIdLimit": 100,
+  "epsilon": 1e-05,
+  "mode.add": 0,
+  "mode.max": 1,
+  "tier.extremeFrom": 49,
+  "tier.divineFrom": 75,
+  "visible.count": 4,
+  "visible.idLimit": 100,
+  "label.normal": "Challenge ",
+  "label.extreme": "Extreme Challenge ",
+  "label.divine": "Divine Challenge "
+ },
+ "tables": {
+  "chain": {
+   "columns": [
+    "id",
+    "text",
+    "req",
+    "reward"
+   ],
+   "rows": [
+    [
+     0,
+     "Reach a 250 Chain Bomb Stack                  (Hint: You can pause these to stack them up!)",
+     250,
+     10
+    ],
+    [
+     1,
+     "Equip The Bomb Bear Drone Suit And               Let It Fire 100 Basic Bombs",
+     100,
+     10
+    ],
+    [
+     2,
+     "Enter Code 'OSRS'                        (Option Menu > Enter Code)",
+     1,
+     10
+    ],
+    [
+     3,
+     "Craft 10000 Tin Bars",
+     10000,
+     10
+    ],
+    [
+     4,
+     "Toggle 5 Options On/Off via the Options Menu\n(Hint: There are some great Quality Of Life options here.)",
+     5,
+     10
+    ],
+    [
+     5,
+     "Fire the MEGABOMB 666 Times                (Unlock bomb via Store for 500 Gems)",
+     666,
+     10
+    ],
+    [
+     6,
+     "Earn 30000 Prestige Points",
+     30000,
+     10
+    ],
+    [
+     7,
+     "Obtain 100 Gems from Freebie Packs!\n(Hint: Whenever the Store icon is green, you have Freebies to claim)",
+     100,
+     10
+    ],
+    [
+     8,
+     "Craft 20000 Copper Bars",
+     20000,
+     10
+    ],
+    [
+     9,
+     "Reach Level 5 in the Pickaxe Damage 1.20x Gem Upgrade (Hint: Store Menu)",
+     5,
+     10
+    ],
+    [
+     10,
+     "Have 1.00m Gold at once",
+     1000000,
+     10
+    ],
+    [
+     11,
+     "Summon Every Tier 1 & Tier 2 Artifact\n(Prestige Menu!)",
+     15,
+     10
+    ],
+    [
+     12,
+     "Reach 2.50m Pickaxe Damage",
+     2500000,
+     10
+    ],
+    [
+     13,
+     "Claim 10 Lootbug Rewards",
+     10,
+     10
+    ],
+    [
+     14,
+     "Make 5000 Mithril Bars Via The Transmuter Bomb   (Unlock bomb via Store for 750 Gems)",
+     5000,
+     10
+    ],
+    [
+     15,
+     "Complete 100 Contracts in one Prestige           (Every Contract done gives Pickaxe Damage!)",
+     100,
+     10
+    ],
+    [
+     16,
+     "Reach a 1000 Chain Bomb Stack                  (Hint: You can pause these to stack them up!)",
+     1000,
+     10
+    ],
+    [
+     17,
+     "Have 10.0m Gold at once",
+     10000000,
+     10
+    ],
+    [
+     18,
+     "Prestige Within 15 Seconds Of A Prestige",
+     1,
+     10
+    ],
+    [
+     19,
+     "Earn 3.00m Prestige Points\n(Hint: Don't forget to spend them!)",
+     3000000,
+     10
+    ],
+    [
+     20,
+     "Level up Crab Pet to level 3                  (Pets unlock at Obelisk 17!)",
+     3,
+     10
+    ],
+    [
+     21,
+     "Click Alex's Sprite until something special happens.\n(Hint: Options -> Credits. There are more of these hidden around, find them all!)",
+     1,
+     10
+    ],
+    [
+     22,
+     "Put 10 Fuel into the Midas Drone                 (Drone Fuel unlocks at Obelisk 18)",
+     10,
+     10
+    ],
+    [
+     23,
+     "Fire 2500 Battery Bombs                       (Unlock bomb via Store for 1000 Gems)",
+     2500,
+     10
+    ],
+    [
+     24,
+     "Unlock Stone Veins via the Construct Menu\n(Construct unlocks at Obelisk 19, click \"Vein Info\" on the menu to learn more)",
+     1,
+     10
+    ],
+    [
+     25,
+     "Reach a 10000 Chain Bomb Stack                  (Hint: You can pause these to stack them up!)",
+     10000,
+     10
+    ],
+    [
+     26,
+     "Have 250m Gold at once",
+     250000000,
+     10
+    ],
+    [
+     27,
+     "Fire 1000 Bombs with the Frogger Suit.\n(Hint: Drones Menu. Fueling the Drone will make this go quicker!)",
+     1000,
+     10
+    ],
+    [
+     28,
+     "Upgrade the Transmuter Bomb Multiplier to 8x\n(Hint: Workshop Upgrade)",
+     8,
+     10
+    ],
+    [
+     29,
+     "Craft 666k Demonite Bars",
+     666000,
+     10
+    ],
+    [
+     30,
+     "Obtain and Gild 3 Cards\n(Hint: Cards Menu)",
+     3,
+     10
+    ],
+    [
+     31,
+     "Earn 10.0m Prestige Points",
+     10000000,
+     10
+    ],
+    [
+     32,
+     "Roll a new Miner name 50 times             (Stats menu > New Name)",
+     50,
+     10
+    ],
+    [
+     33,
+     "Give a Pet a Miner Name, then pet it 100 times.\n(Hint: Click \"Name\" next to any pet in the Pets menu, then click the pet on the main screen)",
+     100,
+     10
+    ],
+    [
+     34,
+     "Fire 35000 Basic Bombs",
+     35000,
+     10
+    ],
+    [
+     35,
+     "Craft 1.00m Cranium Bars",
+     1000000,
+     10
+    ],
+    [
+     36,
+     "Prestige 10 times at or above level 120\n(Hint: Upgrade Pickaxe every prestige to level Dwarf)",
+     10,
+     10
+    ],
+    [
+     37,
+     "Build a Statue\n(Hint: Construct Menu -> Statues)",
+     1,
+     10
+    ],
+    [
+     38,
+     "Level up your Dwarf Pet to Level 4",
+     4,
+     10
+    ],
+    [
+     39,
+     "Reach Chain Drone Grade Level 5               (Drone Menu - Fuel Submenu)",
+     5,
+     10
+    ],
+    [
+     40,
+     "Mine 1000 Stone Veins Without Leaving Floor 1",
+     1000,
+     10
+    ],
+    [
+     41,
+     "Fire 20000 D20 Bombs",
+     20000,
+     10
+    ],
+    [
+     42,
+     "Reach Floor 40 With No Upgrades          (Contract Upgrades Are Allowed!)",
+     1,
+     10
+    ],
+    [
+     43,
+     "Do 200 Contracts With No Regular Upgrade In One Prestige (Contract Upgrades Are Allowed!)",
+     200,
+     10
+    ],
+    [
+     44,
+     "Build The World 2 Monument",
+     1,
+     10
+    ],
+    [
+     45,
+     "Mine 5.00m Sandcasium Ore",
+     5000000,
+     10
+    ],
+    [
+     46,
+     "Gain 25 Bomb Capacity Increases via         Battery Bomb",
+     25,
+     10
+    ],
+    [
+     47,
+     "Craft 10.0m Twinklestone Bars",
+     10000000,
+     10
+    ],
+    [
+     48,
+     "Mine 10000 Deepsea Veins",
+     10000,
+     10
+    ],
+    [
+     49,
+     "Reach Floor 46 With No Upgrades          (Contract Upgrades Are Allowed!)",
+     1,
+     10
+    ],
+    [
+     50,
+     "Mine 666m Demonite Ore",
+     666000000,
+     10
+    ],
+    [
+     51,
+     "Prestige 5 times at or above level 125",
+     5,
+     10
+    ],
+    [
+     52,
+     "Have 5.00t Gold at once",
+     5000000000000,
+     10
+    ],
+    [
+     53,
+     "Gild 15 Ore Cards and 15 Bar Cards",
+     30,
+     10
+    ],
+    [
+     54,
+     "Own 9 Gilded Statues",
+     9,
+     10
+    ],
+    [
+     55,
+     "Earn 100t Gold via the Midas drone",
+     100000000000000,
+     10
+    ],
+    [
+     56,
+     "Gain 1.00t Tin bars via the Transmuter bomb",
+     1000000000000,
+     10
+    ],
+    [
+     57,
+     "Reach Level 15 Taurus Star And Gemini Star",
+     30,
+     10
+    ],
+    [
+     58,
+     "Reach Starburst Drone Grade Level 10            (Drone Menu - Fuel Submenu)",
+     10,
+     10
+    ],
+    [
+     59,
+     "Use 350k Cherry Charges on the Battery Bomb",
+     350000,
+     10
+    ],
+    [
+     60,
+     "Mine 25.0b Adamant while in the Jungle Zone        (Hint: Use Void Drone!)",
+     25000000001,
+     10
+    ],
+    [
+     61,
+     "Auto-Catch 1000 Super Stars",
+     1000,
+     10
+    ],
+    [
+     62,
+     "Own 8 Gilded Star Cards",
+     8,
+     10
+    ],
+    [
+     63,
+     "Mine 6.66m Magma Veins while in the Deepsea Zone",
+     6660001,
+     10
+    ],
+    [
+     64,
+     "Polychrome 46 Ore Cards",
+     46,
+     10
+    ],
+    [
+     65,
+     "Reach 5000 Bomb Capacity",
+     5000,
+     10
+    ],
+    [
+     66,
+     "Mine 6.66t VR-Demonite Ore",
+     6660000000000.01,
+     10
+    ],
+    [
+     67,
+     "Prestige 10 times at or above level 200",
+     10,
+     10
+    ],
+    [
+     68,
+     "Deplete 75000 Rainbow Volcano Veins",
+     75000,
+     10
+    ],
+    [
+     69,
+     "Build The World 3 Monument",
+     1,
+     10
+    ],
+    [
+     70,
+     "Mine 222k Golden Ores",
+     222222,
+     10
+    ],
+    [
+     71,
+     "Mine 150m Stone Veins while in World 3",
+     150000000,
+     10
+    ],
+    [
+     72,
+     "Catch 2000 Supergiant Stars",
+     2000,
+     10
+    ],
+    [
+     73,
+     "Mine 5000 Galactic Rainbow Floors",
+     5000,
+     10
+    ],
+    [
+     74,
+     "Build 9 World 3 Statues",
+     9,
+     10
+    ],
+    [
+     75,
+     "Complete 888 Contracts in one Prestige without leaving Floor 1 and 2",
+     1,
+     10
+    ],
+    [
+     76,
+     "Catch 14144 Supernova Supergiant Stars",
+     14144,
+     10
+    ],
+    [
+     77,
+     "Mine 3773 Golden Crabrock Ores while on a     Galactic Rainbow Floor",
+     3773,
+     10
+    ],
+    [
+     78,
+     "Prestige on Floor 102, 12 times",
+     12,
+     10
+    ],
+    [
+     79,
+     "Have 100 days of Elixir Drone Fuel at once",
+     8640000,
+     10
+    ],
+    [
+     80,
+     "Use 16.6m Cherry Bomb Charges on the Gem Bomb",
+     16660000,
+     10
+    ],
+    [
+     81,
+     "Catch 15 Golden Frogs",
+     15,
+     10
+    ],
+    [
+     82,
+     "Prestige 33 times at or above level 330",
+     33,
+     10
+    ],
+    [
+     83,
+     "Deplete 2500 Rainbow Veins in Rainbow Void Portals on Rainbow Floors",
+     2500,
+     10
+    ],
+    [
+     84,
+     "Earn 5000 Relic Chests via Any Stonks Procs",
+     5000,
+     10
+    ],
+    [
+     85,
+     "Clear 1000 Golden Prismatic Galactic Rainbow Floors in World 4",
+     1000,
+     10
+    ],
+    [
+     86,
+     "Prestige on Floor 120, eight times",
+     8,
+     10
+    ],
+    [
+     87,
+     "Catch 12500 Radiant Supernova Supergiant Eridanus Stars",
+     12500,
+     10
+    ],
+    [
+     88,
+     "Get 5 Ultra Stonks Procs",
+     5,
+     10
+    ],
+    [
+     89,
+     "Catch a Golden Big Frog",
+     1,
+     10
+    ],
+    [
+     90,
+     "Destroy 50 Shiny Essence Blocks (Arcanist)",
+     50,
+     10
+    ],
+    [
+     91,
+     "Deplete 1000 Enchanted Zone Veins inside Galactic Portals",
+     1000,
+     10
+    ],
+    [
+     92,
+     "Reach Fishing Enhance Upgrade \"Fish Multiplier\" Level 255",
+     255,
+     10
+    ],
+    [
+     93,
+     "Own 38 Infernal Misc Cards",
+     38,
+     10
+    ],
+    [
+     94,
+     "Gather 20.0q Vulpecula Stars",
+     20000000000000000,
+     10
+    ],
+    [
+     95,
+     "Receive 2000 Orbs from Wizards ",
+     2000,
+     10
+    ],
+    [
+     96,
+     "Mine 2.00m Rainbow Ores on Prismatic Floors",
+     2000000,
+     10
+    ],
+    [
+     97,
+     "Catch 2000 Radiant Supernova Supergiant Super Stars",
+     2000,
+     10
+    ],
+    [
+     98,
+     "Spend 50000 Mana",
+     50000,
+     10
+    ],
+    [
+     99,
+     "Break 67 Ultra Shiny Necrotic Essence Blocks",
+     67,
+     10
+    ],
+    [
+     100,
+     "More Challenges to Come!",
+     999990,
+     10
+    ]
+   ]
+  },
+  "stateRules": {
+   "columns": [
+    "id",
+    "source",
+    "index",
+    "transform",
+    "arg"
+   ],
+   "rows": [
+    [
+     2,
+     "giftCodes",
+     34,
+     "eq",
+     1
+    ],
+    [
+     9,
+     "gemUpgrades",
+     0,
+     "value",
+     null
+    ],
+    [
+     10,
+     "gold",
+     null,
+     "value",
+     null
+    ],
+    [
+     11,
+     "artifactsOwned",
+     null,
+     "value",
+     null
+    ],
+    [
+     12,
+     "pickaxeDamage",
+     null,
+     "value",
+     null
+    ],
+    [
+     17,
+     "gold",
+     null,
+     "value",
+     null
+    ],
+    [
+     20,
+     "pets",
+     0,
+     "value",
+     null
+    ],
+    [
+     21,
+     "miscCards",
+     11,
+     "cap",
+     1
+    ],
+    [
+     24,
+     "veinResearch",
+     null,
+     "cap",
+     1
+    ],
+    [
+     26,
+     "gold",
+     null,
+     "value",
+     null
+    ],
+    [
+     28,
+     "transmuterMulti",
+     null,
+     "value",
+     null
+    ],
+    [
+     30,
+     "gildedCards",
+     null,
+     "value",
+     null
+    ],
+    [
+     37,
+     "statuesBuilt",
+     null,
+     "cap",
+     1
+    ],
+    [
+     38,
+     "pets",
+     1,
+     "value",
+     null
+    ],
+    [
+     39,
+     "fuelSuitLevels",
+     1,
+     "value",
+     null
+    ],
+    [
+     44,
+     "world",
+     null,
+     "minus1",
+     null
+    ],
+    [
+     52,
+     "gold",
+     null,
+     "value",
+     null
+    ],
+    [
+     53,
+     "gildedOreCards",
+     null,
+     "cap",
+     15
+    ],
+    [
+     53,
+     "gildedBarCards",
+     null,
+     "cap",
+     15
+    ],
+    [
+     54,
+     "gildedStatues",
+     null,
+     "value",
+     null
+    ],
+    [
+     54,
+     "gildedStatues2",
+     null,
+     "value",
+     null
+    ],
+    [
+     57,
+     "stars",
+     1,
+     "cap",
+     15
+    ],
+    [
+     57,
+     "stars",
+     2,
+     "cap",
+     15
+    ],
+    [
+     58,
+     "fuelSuitLevels",
+     5,
+     "value",
+     null
+    ],
+    [
+     62,
+     "gildedStarCards",
+     null,
+     "value",
+     null
+    ],
+    [
+     64,
+     "polyOreCards",
+     null,
+     "value",
+     null
+    ],
+    [
+     65,
+     "bombCapacity",
+     null,
+     "value",
+     null
+    ],
+    [
+     69,
+     "world",
+     null,
+     "ge",
+     3
+    ],
+    [
+     74,
+     "statues2Built",
+     null,
+     "value",
+     null
+    ],
+    [
+     75,
+     "contractsThisPrestige",
+     null,
+     "ge",
+     887
+    ],
+    [
+     75,
+     "screensUnlocked",
+     null,
+     "le",
+     4
+    ],
+    [
+     79,
+     "droneFuel",
+     6,
+     "value",
+     null
+    ],
+    [
+     92,
+     "fishEnh",
+     0,
+     "value",
+     null
+    ],
+    [
+     93,
+     "infernalMiscCards",
+     null,
+     "value",
+     null
+    ]
+   ]
+  }
+ }
+}

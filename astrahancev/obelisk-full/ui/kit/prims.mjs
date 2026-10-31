@@ -22,7 +22,7 @@ export const alphaByteRound = (a) => Math.round(f(Math.min(a, 1)) * 255);
  * view — окно вида [лево, верх, право, низ] для отсечения целых спрайтов (spec sprite-layout п.4).
  */
 export class VertexList {
-  // cullPad — запас радиуса отсечения спрайтов, px холста (spec sprite-layout п.6; значение кита — data/ui/kit.json → view.cullPad)
+  // cullPad — запас радиуса отсечения спрайтов sprite-layout v2; с v9 (этап 8.3) правило отсечения его не читает (п.6: ⌈ρ⌉, окно полуоткрытое)
   constructor(view = [0, 0, 500, 960], cullPad = 0.5) { this.view = view; this.cullPad = cullPad; this.culled = 0; this.x = []; this.y = []; this.u = []; this.v = []; this.rgba = []; this.atlas = []; }
   get count() { return this.x.length; }
   push(x, y, u, v, rgba, atlas) {
@@ -43,14 +43,21 @@ export { drawSprite, drawSpriteStretched, drawSpritePart } from './sprite.mjs';
 
 // ---------------- текст (spec text-layout) ----------------
 
-function wrapWords(font, line, width) {
+/**
+ * Перенос строки по словам на ширине width (spec text-layout п. 8 и 8а, v9 — этап 8.3, записи O challenges83). Слова — куски между
+ * одиночными пробелами (пробелы подряд дают пустые слова). Слово, с которым строка (вместе с соединяющим пробелом) шире width,
+ * начинает новую строку: соединяющий пробел пропадает, хвост пробелов законченной строки не рисуется и в ширину не входит.
+ * Пустое слово тоже начинает строку — тогда следующий пробел остаётся в её начале («And» + 15 пробелов + «Let» → « Let…»).
+ */
+export function wrapWords(font, line, width) {
   const words = line.split(' ');
   const out = [];
-  let cur = '';
   const w = (s) => [...s].reduce((a, ch) => a + (font.glyphs.get(ch.codePointAt(0))?.advance || 0), 0);
-  for (const word of words) {
-    const next = cur === '' ? word : cur + ' ' + word;
-    if (cur !== '' && w(next) > width) { out.push(cur); cur = word; } else cur = next;
+  const trim = (s) => s.replace(/ +$/, '');
+  let cur = words[0];
+  for (let i = 1; i < words.length; i++) {
+    const next = cur + ' ' + words[i];
+    if (trim(cur) !== '' && w(next) > width) { out.push(trim(cur)); cur = words[i]; } else cur = next;
   }
   out.push(cur);
   return out;
@@ -70,7 +77,9 @@ export function drawText(list, skin, p) {
   const SX = f(p.xscale ?? 1), SY = f(p.yscale ?? 1);
   // высота блока для сдвига по вертикали — spec text-layout п.3г (v8, уточняет п.3в): у «ext» (sep ≥ 0) при любом n ≥ 1 (n − 1)·sep + line_height шрифта (у одной строки line_height, а не sep); у обычного вывода n·шаг (п.2); шаг между строками на экране не меняется
   // половина блока при valign middle — п.3б (v6): у обычного вывода (без sep) со snap — n·⌊шаг/2⌋ (а не ⌊n·шаг/2⌋); «ext» и snap = false — как раньше
-  const H = ext ? (lines.length - 1) * step + font.lineHeight : lines.length * step;
+  // п.3д (v9, этап 8.3): у «ext» без округления (snap = false, текст с масштабом) и n ≥ 2 строк H = n · sep (П: «Complete\nChallenge»
+  // size12, lh 18, sep 21, масштаб k — верх первой строки y − 21·k, а не y − 19,5·k); у одной строки и со snap — п.3г
+  const H = ext ? (p.snap === false && lines.length > 1 ? lines.length * step : (lines.length - 1) * step + font.lineHeight) : lines.length * step;
   const half = (v) => (p.snap ? Math.floor(v / 2) : v / 2);
   const halfBlock = !ext && p.snap ? lines.length * Math.floor(step / 2) : half(H);
   const dy = p.valign === 1 ? -halfBlock : p.valign === 2 ? -H : 0;

@@ -1,0 +1,50 @@
+{
+ "$id": "systems/statues",
+ "title": "Construct (меню статуй): вкладка Research (data/systems/research.json, этап 8.21) и статуи набора 1 (data/systems/statues.json, этап 8.22)",
+ "description": "Данные спеки oracle/specs/research.md: цены уровней Research 0–20 (жила, два бара, требование мира) и Double 0–20 (самоцветы, два бара, требование мира), допуск сравнения «хватает», число касаний подтверждения, особенность цен баров уровней 16+ при обелиске ниже bigCost.obeliskMin, зоны жил (имя, делитель частоты), зоны касания кнопок Research/Double, замки вкладок, шаблоны записей журнала игрока. Сняты с O (oracle/sources.json, группы research и data.research821). Второй вид файла — data/systems/statues.json (спека oracle/specs/statues.md): статуи набора 1 — имена, ярусы, цены по ярусу и номеру k, тексты замков, зона кнопки Build, вклад в клетки сводки (effects) и места шагов в декларациях (steps); группы statues-1 и data.statues822. Монументы (8.24) — ещё один вид.",
+ "allOf": [
+  {"$ref": "system"},
+  {"properties": {"system": {"const": "statues"}}},
+  {
+   "anyOf": [
+    {
+     "required": ["constants", "tables"],
+     "properties": {
+      "constants": {"required": ["levels", "afford.eps", "confirm.taps", "bigCost.obeliskMin", "bigCost.fromLevel", "bigCost.lowValue", "rate.double",
+                                 "log.unlock.group", "log.unlock.first", "log.unlock.next", "log.gems.group", "log.gems", "log.double.group", "log.double"]},
+      "tables": {
+       "required": ["research", "double", "zones", "buttons", "tabs"],
+       "properties": {
+        "research": {"properties": {"columns": {"const": ["level", "vein", "veinCost", "barB", "costB", "barC", "costC", "worldReq"]}}},
+        "double": {"properties": {"columns": {"const": ["level", "gems", "barB", "costB", "barC", "costC", "worldReq"]}}},
+        "zones": {"properties": {"columns": {"const": ["zone", "name", "divisor"]}}},
+        "buttons": {"properties": {"columns": {"const": ["button", "tab", "x1", "y1", "x2", "y2"]}}},
+        "tabs": {"properties": {"columns": {"const": ["tab", "researchMin", "closedWhenCheating"]}}}
+       }
+      }
+     }
+    }
+    ,
+    {
+     "required": ["constants", "tables"],
+     "properties": {
+      "constants": {"required": ["set", "statues", "tiers", "platinum.obeliskMin", "afford.eps", "confirm.taps", "reveal.closableFrames", "tab",
+                                 "log.gems.group", "log.gems", "log.built.group", "log.built"]},
+      "tables": {
+       "required": ["statues", "tiers", "costs", "locked", "buttons", "effects", "steps"],
+       "properties": {
+        "statues": {"properties": {"columns": {"const": ["statue", "key", "name"]}}},
+        "tiers": {"properties": {"columns": {"const": ["tier", "costs", "prefix"]}}},
+        "costs": {"properties": {"columns": {"const": ["tier", "k", "item", "type", "id", "cost"]}}},
+        "locked": {"properties": {"columns": {"const": ["tier", "text"]}}},
+        "buttons": {"properties": {"columns": {"const": ["tab", "x1", "y1", "x2", "y2"]}}},
+        "effects": {"properties": {"columns": {"const": ["statue", "level", "cell", "op", "value", "ext"]}}},
+        "steps": {"properties": {"columns": {"const": ["cell", "op", "ext", "ref", "source", "row", "mode"]}}}
+       }
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

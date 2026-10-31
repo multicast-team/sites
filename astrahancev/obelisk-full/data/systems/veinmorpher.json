@@ -1,0 +1,13 @@
+{
+ "$schema": "systems/bombs",
+ "system": "bombs",
+ "version": "2.2.50",
+ "constants": {
+  "roll.scale": 100,
+  "roll.die": 100,
+  "compare.eps": 1e-05,
+  "sprite.plain": "sprite.vein_full_size",
+  "sprite.gold": "sprite.vein_full_size_gold",
+  "sprite.rainbow": "sprite.vein_full_size_rainbow"
+ }
+}

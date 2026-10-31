@@ -1,20 +1,41 @@
 {
  "$id": "systems/bombs",
- "title": "Бомбы: перезарядка 13 слотов и цепь (data/systems/bombs.json, этап 5.11)",
- "description": "Константы спеки oracle/specs/bombs.md: секунды перезарядки слотов, слот без капа по клетке ёмкости, порог цепи в кадрах, кадров в секунде, эпсилон сравнения, значения новой игры. Сняты с O (oracle/sources.json, группы bombs и data.bombs511).",
+ "title": "Бомбы: перезарядка 13 слотов и цепь (data/systems/bombs.json, этап 5.11) и действие Veinmorpher (data/systems/veinmorpher.json, этап 8.29)",
+ "description": "Константы спеки oracle/specs/bombs.md: секунды перезарядки слотов, слот без капа по клетке ёмкости, порог цепи в кадрах, кадров в секунде, эпсилон сравнения, значения новой игры. Сняты с O (oracle/sources.json, группы bombs и data.bombs511). Второй вид файла — data/systems/veinmorpher.json (спека oracle/specs/veinmorpher.md): множитель p и кубик шанса «a из b», допуск сравнений, ключи skin спрайта жилы (обычная, золотая, радужная); числа — группа data.veinmorpher829.",
  "allOf": [
   {"$ref": "system"},
+  {"properties": {"system": {"const": "bombs"}}},
   {
-   "required": ["constants", "tables"],
-   "properties": {
-    "system": {"const": "bombs"},
-    "constants": {
-     "required": ["slots", "uncappedSlot", "chainFrames", "framesPerSecond", "epsilon", "newGame.capacity", "newGame.uncappedCapacity", "newGame.rechargeMulti"]
+   "anyOf": [
+    {
+     "required": ["constants", "tables"],
+     "properties": {
+      "constants": {
+       "required": ["slots", "uncappedSlot", "chainFrames", "framesPerSecond", "epsilon", "newGame.capacity", "newGame.uncappedCapacity", "newGame.rechargeMulti"]
+      },
+      "tables": {
+       "required": ["slots"]
+      }
+     }
     },
-    "tables": {
-     "required": ["slots"]
+    {
+     "required": ["constants"],
+     "not": {"required": ["tables"]},
+     "properties": {
+      "constants": {
+       "required": ["roll.scale", "roll.die", "compare.eps", "sprite.plain", "sprite.gold", "sprite.rainbow"],
+       "properties": {
+        "roll.scale": {"type": "number", "exclusiveMinimum": 0},
+        "roll.die": {"type": "integer", "minimum": 1},
+        "compare.eps": {"type": "number", "minimum": 0},
+        "sprite.plain": {"type": "string", "pattern": "^sprite\\."},
+        "sprite.gold": {"type": "string", "pattern": "^sprite\\."},
+        "sprite.rainbow": {"type": "string", "pattern": "^sprite\\."}
+       }
+      }
+     }
     }
-   }
+   ]
   }
  ]
 }

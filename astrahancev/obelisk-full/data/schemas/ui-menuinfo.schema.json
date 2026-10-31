@@ -1,0 +1,55 @@
+{
+ "$id": "ui-menuinfo",
+ "title": "Инфо-страницы меню (data/ui/menuinfo.json, этап 8.4)",
+ "description": "Вёрстка инфо-страниц меню испытаний, статуй и звёзд (кнопка i / вкладка Info): затемнение и рамка, шапка (название и два значка), разделы (плашка, значок, заголовок, текст с переносом; части текста — ключи строк или переменные состояния), подпись «Tap anywhere to close», значки у подписи. Привязки — ui/screens/menuinfo.mjs. Координаты — px комнаты 500×960 при вырезе 0 (верх рамки, шапка и разделы ниже на вырез сверху), сняты с листьев события Draw меню O (записи oracle/info84, ui.info84 в oracle/sources.json). Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": ["$schema", "screen", "version", "comment", "box", "foot", "pages"],
+ "properties": {
+  "$schema": {"const": "ui-menuinfo"},
+  "screen": {"const": "menuinfo"},
+  "version": {"$ref": "common#/$defs/version"},
+  "comment": {"type": "string"},
+  "box": {"type": "object"},
+  "foot": {"type": "object"},
+  "pages": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": ["challenges", "statues", "stars"],
+   "properties": {
+    "challenges": {"$ref": "#/$defs/page"},
+    "statues": {"$ref": "#/$defs/page"},
+    "stars": {"$ref": "#/$defs/page"}
+   }
+  }
+ },
+ "$defs": {
+  "page": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": ["rects", "head", "top0", "boxes", "extra"],
+   "properties": {
+    "rects": {"type": "array", "minItems": 3},
+    "head": {"type": "object"},
+    "top0": {"type": "number"},
+    "boxes": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["icon", "title", "body"],
+      "properties": {
+       "icon": {"type": "string"},
+       "frame": {"type": "integer"},
+       "title": {"type": "string"},
+       "minTier": {"type": "integer"},
+       "body": {"type": "array", "minItems": 1}
+      }
+     }
+    },
+    "extra": {"type": "array"}
+   }
+  }
+ }
+}

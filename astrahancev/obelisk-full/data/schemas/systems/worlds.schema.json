@@ -1,0 +1,239 @@
+{
+ "$id": "systems/worlds",
+ "title": "Миры 2–4 (data/systems/worlds.json — этап 8.27) и жилы (data/systems/veins.json — этап 8.28)",
+ "description": "Дополнение к systems/mining (спека floors, правила 13–20). Таблица worlds: мир → первый и последний этаж (последний = кап этажей, когда открыто столько миров). floors: этаж 43..132 → базовая руда и зона. ores: руда 26..85 → прочность, опыт, цена. pools: зона → руды её пула по порядку choose (зон без строк пул пуст). strips: зона узкой полосы → чётность номера камня → столбцы. Имена наши; числа сняты с O (oracle/sources.json, группа data.worlds827). Второй вид файла — data/systems/veins.json (этап 8.28, спека oracle/specs/veins.md, правила V1–V6): кубики и масштабы бросков жилы и флагов жилы, дробной части дохода, число зон, множитель карты жилы по ступени (таблица cardMulti; ступень card.polyLevel — бонус полихрома, card.infernalLevel — card.infernalBase + (полихром − 1) · адский бонус); числа — группа data.veins828.",
+ "allOf": [
+  {
+   "$ref": "system"
+  },
+  {
+   "properties": {
+    "system": {
+     "const": "worlds"
+    }
+   }
+  },
+  {
+   "anyOf": [
+    {
+     "required": [
+      "constants",
+      "tables"
+     ],
+     "properties": {
+      "tables": {
+       "required": [
+        "worlds",
+        "floors",
+        "ores",
+        "pools",
+        "strips"
+       ],
+       "properties": {
+        "worlds": {
+         "properties": {
+          "columns": {
+           "const": [
+            "world",
+            "firstFloor",
+            "lastFloor"
+           ]
+          },
+          "rows": {
+           "minItems": 1,
+           "items": {
+            "prefixItems": [
+             {
+              "$ref": "common#/$defs/count"
+             },
+             {
+              "$ref": "common#/$defs/count"
+             },
+             {
+              "$ref": "common#/$defs/count"
+             }
+            ]
+           }
+          }
+         }
+        },
+        "floors": {
+         "properties": {
+          "columns": {
+           "const": [
+            "floor",
+            "baseOre",
+            "zone"
+           ]
+          },
+          "rows": {
+           "minItems": 1,
+           "items": {
+            "prefixItems": [
+             {
+              "$ref": "common#/$defs/count"
+             },
+             {
+              "type": "integer",
+              "minimum": 0
+             },
+             {
+              "type": "integer",
+              "minimum": 0
+             }
+            ]
+           }
+          }
+         }
+        },
+        "ores": {
+         "properties": {
+          "columns": {
+           "const": [
+            "ore",
+            "hp",
+            "xp",
+            "sell"
+           ]
+          },
+          "rows": {
+           "minItems": 1,
+           "items": {
+            "prefixItems": [
+             {
+              "type": "integer",
+              "minimum": 0
+             },
+             {
+              "$ref": "common#/$defs/nonneg"
+             },
+             {
+              "$ref": "common#/$defs/nonneg"
+             },
+             {
+              "$ref": "common#/$defs/nonneg"
+             }
+            ]
+           }
+          }
+         }
+        },
+        "pools": {
+         "properties": {
+          "columns": {
+           "const": [
+            "zone",
+            "ore"
+           ]
+          },
+          "rows": {
+           "minItems": 1,
+           "items": {
+            "prefixItems": [
+             {
+              "type": "integer",
+              "minimum": 0
+             },
+             {
+              "type": "integer",
+              "minimum": 0
+             }
+            ]
+           }
+          }
+         }
+        },
+        "strips": {
+         "properties": {
+          "columns": {
+           "const": [
+            "zone",
+            "parity",
+            "column"
+           ]
+          },
+          "rows": {
+           "minItems": 1,
+           "items": {
+            "prefixItems": [
+             {
+              "type": "integer",
+              "minimum": 0
+             },
+             {
+              "enum": [
+               "odd",
+               "even"
+              ]
+             },
+             {
+              "type": "integer",
+              "minimum": 0
+             }
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    },
+    {
+     "required": [
+      "constants",
+      "tables"
+     ],
+     "properties": {
+      "constants": {
+       "required": [
+        "spawn.die",
+        "spawn.scale",
+        "spawn.perScreenBase",
+        "flag.die",
+        "flag.scale",
+        "income.die",
+        "income.scale",
+        "zones",
+        "card.polyLevel",
+        "card.infernalLevel",
+        "card.infernalBase"
+       ]
+      },
+      "tables": {
+       "required": [
+        "cardMulti"
+       ],
+       "properties": {
+        "cardMulti": {
+         "properties": {
+          "columns": {
+           "const": [
+            "level",
+            "multi"
+           ]
+          },
+          "rows": {
+           "minItems": 1,
+           "items": {
+            "prefixItems": [
+             {
+              "type": "integer",
+              "minimum": 0
+             },
+             {
+              "$ref": "common#/$defs/nonneg"
+             }
+            ]
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

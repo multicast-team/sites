@@ -1,0 +1,16 @@
+{
+ "$id": "systems/contracts",
+ "title": "Контракты: бросок контракта, требование, награда, пропуск, пакетное завершение, 34 улучшения за очки контрактов (data/systems/contracts.json, этап 8.10)",
+ "description": "Данные спеки oracle/specs/contracts.md: пороги номера руды, рост требования по ветвям, шансы и множители награды, цена пропуска, 34 улучшения (база и рост цены, кап, шаг эффекта, замки мира, обелиска и предыдущего). Сняты с O (oracle/sources.json, группа data.contracts810).",
+ "allOf": [
+  {"$ref": "system"},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "system": {"const": "contracts"},
+    "constants": {"required": ["generator", "roll.capBase", "goal.base", "skip.gems", "price.highModeFromObelisk", "count"]},
+    "tables": {"required": ["goalGrowth", "upgrades"]}
+   }
+  }
+ ]
+}

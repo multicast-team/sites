@@ -1,0 +1,1602 @@
+{
+ "version": "2.2.50",
+ "stage": "1.31",
+ "input": {
+  "base_apk_sha256": "34930271790b93e13c0a8013ceaac0e75a5ee8e8d1d76fb2c1baa821a4f0882d",
+  "base_apk_in_SHA256SUMS": true,
+  "droid_in_apk_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "droid_file_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "expected": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "ok": true
+ },
+ "note": "Материалы оригинала Idle Obelisk Miner 2.2.50. Только локально, не публиковать.",
+ "shaders": {
+  "shader.yy_sdf_blur_shader": {
+   "index": 0,
+   "name": "__yy_sdf_blur_shader",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_Colour",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    },
+    {
+     "type": "vec2",
+     "name": "gm_SDF_Blur_MinMax",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_SDF_Blur_Col",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_SDF_Blur_Col",
+    "gm_SDF_Blur_MinMax",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/yy_sdf_blur_shader.vsh",
+     "sha256": "fb6a93b7218a6f847236c6da179656b5a69ce8a5b3cca6f8316b28fc6ebc8d7a"
+    },
+    "fsh": {
+     "file": "shaders/yy_sdf_blur_shader.fsh",
+     "sha256": "702030374dc10eaf4eee0a0cb236fced88df9fd769b19d28ef4d02eded3112b0"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.yy_sdf_effect_shader": {
+   "index": 1,
+   "name": "__yy_sdf_effect_shader",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_Colour",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    },
+    {
+     "type": "vec2",
+     "name": "gm_SDF_Dist_UV",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_SDF_DrawGlow",
+     "array": ""
+    },
+    {
+     "type": "vec2",
+     "name": "gm_SDF_Glow_MinMax",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_SDF_Glow_Col",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_SDF_DrawOutline",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_SDF_Outline_Thresh",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_SDF_Outline_Col",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_SDF_Core_Thresh",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_SDF_Core_Col",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_SDF_Core_Col",
+    "gm_SDF_Core_Thresh",
+    "gm_SDF_Dist_UV",
+    "gm_SDF_DrawGlow",
+    "gm_SDF_DrawOutline",
+    "gm_SDF_Glow_Col",
+    "gm_SDF_Glow_MinMax",
+    "gm_SDF_Outline_Col",
+    "gm_SDF_Outline_Thresh",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/yy_sdf_effect_shader.vsh",
+     "sha256": "fb6a93b7218a6f847236c6da179656b5a69ce8a5b3cca6f8316b28fc6ebc8d7a"
+    },
+    "fsh": {
+     "file": "shaders/yy_sdf_effect_shader.fsh",
+     "sha256": "4b08b1919c99fa484b57164ef0fada85cd7e83a4fd45e8bc34dcfecb483fc94d"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.yy_sdf_shader": {
+   "index": 2,
+   "name": "__yy_sdf_shader",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_Colour",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    },
+    {
+     "type": "vec2",
+     "name": "gm_SDF_Dist_UV",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_SDF_Dist_UV",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/yy_sdf_shader.vsh",
+     "sha256": "8551568888f6b0b3e759651d6133fd27142462117a7b2c67a3b1fdd2ee1e248a"
+    },
+    "fsh": {
+     "file": "shaders/yy_sdf_shader.fsh",
+     "sha256": "e3ab47158e12c394089e3b8f3804dcf3921e926f2487def47fd681294e43b3ac"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.scribble_jr": {
+   "index": 3,
+   "name": "__shdScribbleJr",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "u_vPositionAlphaScale",
+     "array": ""
+    },
+    {
+     "type": "int",
+     "name": "u_iColour",
+     "array": ""
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [
+    "u_iColour",
+    "u_vPositionAlphaScale"
+   ],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/scribble_jr.vsh",
+     "sha256": "8f71e125b49766dafe706f38fa26bdacf76e8ce28e7a486fb64ece40530ae1f1"
+    },
+    "fsh": {
+     "file": "shaders/scribble_jr.fsh",
+     "sha256": "1a20218e155a31708ce7a66c44c4756ac7049aab7eacc477dd2e9720b911d3af"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.scribble_jr_color": {
+   "index": 4,
+   "name": "__shdScribbleJrColor",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_Colour",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "u_vPositionAlphaScale",
+     "array": ""
+    },
+    {
+     "type": "int",
+     "name": "u_iColour",
+     "array": ""
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [
+    "u_iColour",
+    "u_vPositionAlphaScale"
+   ],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/scribble_jr_color.vsh",
+     "sha256": "547f0b0c0db86f7a09f1789702198a7171e5a54e0e4d516cec73fc8bb62c046e"
+    },
+    "fsh": {
+     "file": "shaders/scribble_jr_color.fsh",
+     "sha256": "1a20218e155a31708ce7a66c44c4756ac7049aab7eacc477dd2e9720b911d3af"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.scribble_jr_color_sdf": {
+   "index": 5,
+   "name": "__shdScribbleJrColorSDF",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_Colour",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "u_vPositionAlphaScale",
+     "array": ""
+    },
+    {
+     "type": "int",
+     "name": "u_iColour",
+     "array": ""
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [
+    "u_iColour",
+    "u_vPositionAlphaScale"
+   ],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/scribble_jr_color_sdf.vsh",
+     "sha256": "547f0b0c0db86f7a09f1789702198a7171e5a54e0e4d516cec73fc8bb62c046e"
+    },
+    "fsh": {
+     "file": "shaders/scribble_jr_color_sdf.fsh",
+     "sha256": "3ce351093c7d95caf56973ab3638faaded1bfc9fbdc58dad0371e87f8417373f"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.scribble_jr_color_sdf_shadow": {
+   "index": 6,
+   "name": "__shdScribbleJrColorSDFShadow",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_Colour",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "u_vPositionAlphaScale",
+     "array": ""
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "u_vColorSoftness",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [
+    "u_vColorSoftness",
+    "u_vPositionAlphaScale"
+   ],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/scribble_jr_color_sdf_shadow.vsh",
+     "sha256": "407d2a4e75b8a16ad896473bc0a3f613700ca60764cb6fe40dc7f33e4d941706"
+    },
+    "fsh": {
+     "file": "shaders/scribble_jr_color_sdf_shadow.fsh",
+     "sha256": "d6ddfc8f05f0601b19104320ea13f94e4c593e4bcdf60511869bfa8d7e2bd174"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.scribble_jr_sdf": {
+   "index": 7,
+   "name": "__shdScribbleJrSDF",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "u_vPositionAlphaScale",
+     "array": ""
+    },
+    {
+     "type": "int",
+     "name": "u_iColour",
+     "array": ""
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [
+    "u_iColour",
+    "u_vPositionAlphaScale"
+   ],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/scribble_jr_sdf.vsh",
+     "sha256": "8f71e125b49766dafe706f38fa26bdacf76e8ce28e7a486fb64ece40530ae1f1"
+    },
+    "fsh": {
+     "file": "shaders/scribble_jr_sdf.fsh",
+     "sha256": "3ce351093c7d95caf56973ab3638faaded1bfc9fbdc58dad0371e87f8417373f"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.scribble_jr_sdf_shadow": {
+   "index": 8,
+   "name": "__shdScribbleJrSDFShadow",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "u_vPositionAlphaScale",
+     "array": ""
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "u_vColorSoftness",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [
+    "u_vColorSoftness",
+    "u_vPositionAlphaScale"
+   ],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/scribble_jr_sdf_shadow.vsh",
+     "sha256": "1e8f16750e7ef79e448e196e1c0485a2cabc680772c221e7222d178b42495bc5"
+    },
+    "fsh": {
+     "file": "shaders/scribble_jr_sdf_shadow.fsh",
+     "sha256": "d6ddfc8f05f0601b19104320ea13f94e4c593e4bcdf60511869bfa8d7e2bd174"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.golden": {
+   "index": 9,
+   "name": "shd_golden",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_Colour",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/golden.vsh",
+     "sha256": "fb6a93b7218a6f847236c6da179656b5a69ce8a5b3cca6f8316b28fc6ebc8d7a"
+    },
+    "fsh": {
+     "file": "shaders/golden.fsh",
+     "sha256": "4185197c05e1976fd27ac790e1c2b819acd71ccd6c85ee8f29d771057f8ea1fb"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.kawase_downscale": {
+   "index": 10,
+   "name": "shd_kawase_downscale",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "texel",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [
+    "texel"
+   ],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/kawase_downscale.vsh",
+     "sha256": "a3511163aede3c5621b4f47eee0d7bc6dfdda534d079a866d768a9bef84471de"
+    },
+    "fsh": {
+     "file": "shaders/kawase_downscale.fsh",
+     "sha256": "01639b5309ab4df2eedc043a906f7facecb765368a950be7f2dde7c3d2a66928"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  },
+  "shader.kawase_upscale": {
+   "index": 11,
+   "name": "shd_kawase_upscale",
+   "type": 1,
+   "type_name": "GLSL ES",
+   "version": 2,
+   "attributes": [
+    "in_Position",
+    "in_TextureCoord"
+   ],
+   "uniforms_vertex": [
+    {
+     "type": "mat4",
+     "name": "gm_Matrices",
+     "array": "[MATRICES_MAX]"
+    },
+    {
+     "type": "bool",
+     "name": "gm_LightingEnabled",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_VS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_FogStart",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_RcpFogRange",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_AmbientColour",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Direction",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_PosRange",
+     "array": "[MAX_VS_LIGHTS]"
+    },
+    {
+     "type": "vec4",
+     "name": "gm_Lights_Colour",
+     "array": "[MAX_VS_LIGHTS]"
+    }
+   ],
+   "uniforms_fragment": [
+    {
+     "type": "sampler2D",
+     "name": "gm_BaseTexture",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_PS_FogEnabled",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "gm_FogColour",
+     "array": ""
+    },
+    {
+     "type": "bool",
+     "name": "gm_AlphaTestEnabled",
+     "array": ""
+    },
+    {
+     "type": "float",
+     "name": "gm_AlphaRefValue",
+     "array": ""
+    },
+    {
+     "type": "vec4",
+     "name": "texel",
+     "array": ""
+    }
+   ],
+   "own_uniforms": [
+    "texel"
+   ],
+   "gm_uniforms": [
+    "gm_AlphaRefValue",
+    "gm_AlphaTestEnabled",
+    "gm_AmbientColour",
+    "gm_BaseTexture",
+    "gm_FogColour",
+    "gm_FogStart",
+    "gm_LightingEnabled",
+    "gm_Lights_Colour",
+    "gm_Lights_Direction",
+    "gm_Lights_PosRange",
+    "gm_Matrices",
+    "gm_PS_FogEnabled",
+    "gm_RcpFogRange",
+    "gm_VS_FogEnabled"
+   ],
+   "files": {
+    "vsh": {
+     "file": "shaders/kawase_upscale.vsh",
+     "sha256": "a3511163aede3c5621b4f47eee0d7bc6dfdda534d079a866d768a9bef84471de"
+    },
+    "fsh": {
+     "file": "shaders/kawase_upscale.fsh",
+     "sha256": "4a956b7f9f2a572d4e3d0c03839095827addbe8dfbe38388488555da92ac2f95"
+    }
+   },
+   "other_sources": {
+    "glsl_vertex": false,
+    "glsl_fragment": false,
+    "hlsl9_vertex": true,
+    "hlsl9_fragment": true
+   }
+  }
+ }
+}

@@ -123,6 +123,15 @@
      null
     ],
     [
+     "stat.allVoidPortalMulti",
+     2,
+     "mulTerm",
+     "coal",
+     12,
+     0.005,
+     null
+    ],
+    [
      "stat.arcanistManaRegenMulti",
      0,
      "start",
@@ -1268,11 +1277,20 @@
     [
      "stat.droneVoidFueledMulti",
      1,
-     "mulChain",
-     "upgrades",
-     92,
-     0.001,
+     "add",
+     "droneGrade",
+     7,
+     1,
      null
+    ],
+    [
+     "stat.droneVoidFueledMulti",
+     2,
+     "mulCell",
+     null,
+     null,
+     null,
+     "stat.allVoidPortalMulti"
     ],
     [
      "stat.expBombMulti",
@@ -1790,11 +1808,11 @@
     [
      "stat.galacticVoidPortalMulti",
      2,
-     "mulChain",
-     "upgrades",
-     92,
-     0.001,
-     null
+     "mulCell",
+     null,
+     null,
+     null,
+     "stat.allVoidPortalMulti"
     ],
     [
      "stat.gameSpeed",
@@ -2060,11 +2078,11 @@
     [
      "stat.goldenVoidPortalMulti",
      1,
-     "mulChain",
-     "upgrades",
-     92,
-     0.001,
-     null
+     "mulCell",
+     null,
+     null,
+     null,
+     "stat.allVoidPortalMulti"
     ],
     [
      "stat.itemDurationMulti",
@@ -2123,10 +2141,10 @@
     [
      "stat.lootbugLootMult",
      1,
-     "add",
-     "upgrades",
-     42,
-     0.01,
+     "mulTerm",
+     "coal",
+     14,
+     0.0075,
      null
     ],
     [
@@ -2136,6 +2154,15 @@
      "skilltree",
      56,
      0.04,
+     null
+    ],
+    [
+     "stat.lootbugLootMult",
+     3,
+     "mulTerm",
+     "upgrades",
+     42,
+     0.01,
      null
     ],
     [
@@ -2870,11 +2897,11 @@
     [
      "stat.rainbowVoidPortalMulti",
      2,
-     "mulTerm",
-     "upgrades",
-     92,
-     0.001,
-     null
+     "mulCell",
+     null,
+     null,
+     null,
+     "stat.allVoidPortalMulti"
     ],
     [
      "stat.spellLevelUpMulti",
@@ -3435,6 +3462,15 @@
      null
     ],
     [
+     "stat.voidDroneBaseMulti",
+     2,
+     "mulTerm",
+     "coal",
+     7,
+     0.01,
+     null
+    ],
+    [
      "stat.voidDroneGradeCapBonus",
      0,
      "start",
@@ -3447,9 +3483,9 @@
      "stat.voidDroneGradeCapBonus",
      1,
      "add",
-     "skilltree",
-     64,
-     20.0,
+     "coal",
+     11,
+     1,
      null
     ],
     [
@@ -3457,8 +3493,17 @@
      2,
      "add",
      "skilltree",
+     64,
+     20,
+     null
+    ],
+    [
+     "stat.voidDroneGradeCapBonus",
+     3,
+     "add",
+     "skilltree",
      57,
-     4.0,
+     4,
      null
     ],
     [
@@ -4089,6 +4134,78 @@
      "drones",
      6,
      2,
+     null
+    ],
+    [
+     "stat.lootfrog10xSpawnChance",
+     0,
+     "start",
+     null,
+     null,
+     0,
+     null
+    ],
+    [
+     "stat.lootfrog10xSpawnChance",
+     1,
+     "add",
+     "coal",
+     9,
+     0.05,
+     null
+    ],
+    [
+     "stat.lootfrogGemBonusMulti",
+     0,
+     "start",
+     null,
+     null,
+     1,
+     null
+    ],
+    [
+     "stat.lootfrogGemBonusMulti",
+     1,
+     "add",
+     "coal",
+     13,
+     0.1,
+     null
+    ],
+    [
+     "stat.starburstDroneGradeCap",
+     0,
+     "start",
+     null,
+     null,
+     0,
+     null
+    ],
+    [
+     "stat.starburstDroneGradeCap",
+     1,
+     "add",
+     "coal",
+     6,
+     1,
+     null
+    ],
+    [
+     "stat.veinGleamingMulti",
+     0,
+     "start",
+     null,
+     null,
+     5,
+     null
+    ],
+    [
+     "stat.veinGleamingMulti",
+     1,
+     "mulTerm",
+     "coal",
+     8,
+     0.06,
      null
     ]
    ]

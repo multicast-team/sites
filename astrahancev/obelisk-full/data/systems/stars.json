@@ -1,0 +1,232 @@
+{
+ "$schema": "system",
+ "system": "stars",
+ "version": "2.2.50",
+ "constants": {
+  "count": 23,
+  "super.base": 100,
+  "double.scale": 10,
+  "double.die": 1000,
+  "triple.scale": 10,
+  "triple.die": 1000,
+  "nova.scale": 10,
+  "nova.die": 1000,
+  "giant.scale": 10,
+  "giant.die": 1000,
+  "radiant.scale": 100,
+  "radiant.die": 10000,
+  "auto.scale": 1,
+  "auto.die": 100,
+  "path.modes": 5,
+  "scale.normal": 2,
+  "scale.giant": 4,
+  "life": 1400,
+  "hp": 1,
+  "spinSpeed": 3,
+  "sizeMulti": 1,
+  "step.fps": 60,
+  "step.usPerSec": 1000000,
+  "auto.life": 900,
+  "anim.every": 3,
+  "caught.frames": 30,
+  "value.base": 1,
+  "hit.half": 40,
+  "roll.minBound": 10,
+  "roll.fixed": 3,
+  "double.count": 2,
+  "triple.count": 3,
+  "superTriple.scale": 1,
+  "superTriple.die": 100,
+  "super10x.scale": 10,
+  "super10x.die": 1000,
+  "superTriple.count": 3,
+  "super10x.count": 10,
+  "superNova.scale": 10,
+  "superNova.die": 1000,
+  "superGiant.scale": 10,
+  "superGiant.die": 1000,
+  "superRadiant.scale": 100,
+  "superRadiant.die": 10000,
+  "superCaught.frames": 35,
+  "card.gen": 63,
+  "card.found": 1
+ },
+ "tables": {
+  "paths": {
+   "columns": [
+    "mode",
+    "x0",
+    "xSign",
+    "xSpan",
+    "y0",
+    "ySign",
+    "ySpan",
+    "dir0",
+    "dirSign",
+    "dirSpan"
+   ],
+   "rows": [
+    [
+     0,
+     -100,
+     1,
+     0,
+     -50,
+     1,
+     0,
+     320,
+     -1,
+     20
+    ],
+    [
+     1,
+     -100,
+     1,
+     100,
+     980,
+     1,
+     70,
+     70,
+     -1,
+     20
+    ],
+    [
+     2,
+     200,
+     1,
+     100,
+     980,
+     1,
+     70,
+     75,
+     1,
+     30
+    ],
+    [
+     3,
+     550,
+     1,
+     50,
+     -100,
+     1,
+     50,
+     215,
+     1,
+     30
+    ],
+    [
+     4,
+     550,
+     1,
+     50,
+     980,
+     1,
+     50,
+     120,
+     1,
+     15
+    ]
+   ]
+  },
+  "cardDie": {
+   "columns": [
+    "star",
+    "die"
+   ],
+   "rows": [
+    [
+     0,
+     12345
+    ],
+    [
+     1,
+     12345
+    ],
+    [
+     2,
+     12345
+    ],
+    [
+     3,
+     12345
+    ],
+    [
+     4,
+     12345
+    ],
+    [
+     5,
+     12345
+    ],
+    [
+     6,
+     12345
+    ],
+    [
+     7,
+     12345
+    ],
+    [
+     8,
+     12345
+    ],
+    [
+     9,
+     12345
+    ],
+    [
+     10,
+     12345
+    ],
+    [
+     11,
+     12345
+    ],
+    [
+     12,
+     12345
+    ],
+    [
+     13,
+     500000
+    ],
+    [
+     14,
+     500000
+    ],
+    [
+     15,
+     500000
+    ],
+    [
+     16,
+     500000
+    ],
+    [
+     17,
+     500000
+    ],
+    [
+     18,
+     250000000000
+    ],
+    [
+     19,
+     2000000000000
+    ],
+    [
+     20,
+     4000000000000
+    ],
+    [
+     21,
+     8000000000000
+    ],
+    [
+     22,
+     16000000000000
+    ]
+   ]
+  }
+ }
+}

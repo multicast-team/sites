@@ -1,7 +1,7 @@
 {
  "$id": "systems/drones",
- "title": "Дроны и топливо мира 1 (data/systems/drones.json, этап 5.14)",
- "description": "Улучшения дрона (7 строк: клетка сводки, рост цены, кап, требование обелиска), строки угля мира 1 (0–5: клетка сводки); вид шага и коэффициенты клеток — в statrules.json (источники drones, coal; этап 5.25), костюмы (база опыта до следующего грейда и база топлива), константы цены строк и очков дронов, генератора угля, грейда и слотов. Источники — группы drones-w1 и data.drones514 в oracle/sources.json, спека oracle/specs/drones.md. Числа сняты с O.",
+ "title": "Дроны и топливо мира 1 (data/systems/drones.json, этап 5.14); костюмы 0–10 в сводке (data/systems/suits.json, этапы 8.19, 8.20)",
+ "description": "Улучшения дрона (7 строк: клетка сводки, рост цены, кап, требование обелиска), строки угля мира 1 (0–5: клетка сводки); вид шага и коэффициенты клеток — в statrules.json (источники drones, coal; этап 5.25), костюмы (база опыта до следующего грейда и база топлива), константы цены строк и очков дронов, генератора угля, грейда и слотов. Источники — группы drones-w1 и data.drones514 в oracle/sources.json, спека oracle/specs/drones.md. Числа сняты с O. Второй вариант (этап 8.19) — data/systems/suits.json: костюмы мира 1 (номер, наш ключ) и таблица эффектов костюмов в клетках сводки (костюм, условие worn/fueled/always, клетка, вид mul/add, начало, шаг, уровень upgrade/grade); спека oracle/specs/suits-a.md, группы suits-a и data.suits819. Раунд исправлений 8.19: константы autobomb.periodFrames, frog.baseFrames, frog.stepFrames и таблица abilities (костюм, способность autobomb/midasGold/frogBomb, индекс бомбы) — способности в кадре по покадровой записи O (oracle/suits819/play819.py, группа suits-a-play). Этап 8.20 (спека suits-b): костюмы 0–10 (count 11), в effects столбцы offset (сдвиг уровня: t = A + B·(L + offset)) и ext (null — вклад после движка; ключ — внешнее значение шага внутри декларации клетки), таблица steps (клетка, вид шага mulExt/addExt/mulTermExt, ключ, источник и строка шага-якоря, режим after/replace) — куда в statrules встают шаги костюмов; группы suits-b и data.suits820.",
  "allOf": [
   {
    "$ref": "system"
@@ -14,70 +14,256 @@
    }
   },
   {
-   "required": [
-    "constants",
-    "tables"
-   ],
-   "properties": {
-    "constants": {
+   "anyOf": [
+    {
      "required": [
-      "upgrade.costBase",
-      "upgrade.unlockCost",
-      "upgrade.levelReq",
-      "upgrade.levelReqUntilTask",
-      "points.base",
-      "points.step",
-      "coal.generatorSeconds",
-      "coal.capPerLevel",
-      "suit.fuelPerGrade",
-      "suit.gradeCap",
-      "slots.count"
-     ]
-    },
-    "tables": {
-     "required": [
-      "upgrades",
-      "coal",
-      "suits"
+      "constants",
+      "tables"
      ],
      "properties": {
-      "upgrades": {
+      "constants": {
+       "required": [
+        "upgrade.costBase",
+        "upgrade.unlockCost",
+        "upgrade.levelReq",
+        "upgrade.levelReqUntilTask",
+        "points.base",
+        "points.step",
+        "coal.generatorSeconds",
+        "coal.capPerLevel",
+        "suit.fuelPerGrade",
+        "suit.gradeCap",
+        "slots.count"
+       ]
+      },
+      "tables": {
+       "required": [
+        "upgrades",
+        "coal",
+        "suits"
+       ],
        "properties": {
-        "columns": {
-         "const": [
-          "row",
-          "cell",
-          "growth",
-          "cap",
-          "obeliskReq"
-         ]
+        "upgrades": {
+         "properties": {
+          "columns": {
+           "const": [
+            "row",
+            "cell",
+            "growth",
+            "cap",
+            "obeliskReq"
+           ]
+          }
+         }
+        },
+        "coal": {
+         "properties": {
+          "columns": {
+           "const": [
+            "row",
+            "cell"
+           ]
+          }
+         }
+        },
+        "suits": {
+         "properties": {
+          "columns": {
+           "const": [
+            "suit",
+            "expBase",
+            "fuelBase"
+           ]
+          }
+         }
         }
        }
+      }
+     }
+    },
+    {
+     "required": [
+      "constants",
+      "tables"
+     ],
+     "properties": {
+      "constants": {
+       "required": [
+        "count",
+        "slot.offset",
+        "fuel.min",
+        "autobomb.periodFrames",
+        "frog.baseFrames",
+        "frog.stepFrames"
+       ]
       },
-      "coal": {
+      "tables": {
+       "required": [
+        "suits",
+        "effects",
+        "steps",
+        "abilities"
+       ],
        "properties": {
-        "columns": {
-         "const": [
-          "row",
-          "cell"
-         ]
-        }
-       }
-      },
-      "suits": {
-       "properties": {
-        "columns": {
-         "const": [
-          "suit",
-          "expBase",
-          "fuelBase"
-         ]
+        "suits": {
+         "properties": {
+          "columns": {
+           "const": [
+            "suit",
+            "key"
+           ]
+          }
+         }
+        },
+        "effects": {
+         "properties": {
+          "columns": {
+           "const": [
+            "suit",
+            "when",
+            "cell",
+            "op",
+            "start",
+            "step",
+            "level",
+            "offset",
+            "ext"
+           ]
+          },
+          "rows": {
+           "items": {
+            "prefixItems": [
+             {
+              "type": "integer"
+             },
+             {
+              "enum": [
+               "worn",
+               "fueled",
+               "always"
+              ]
+             },
+             {
+              "type": "string"
+             },
+             {
+              "enum": [
+               "mul",
+               "add"
+              ]
+             },
+             {
+              "type": "number"
+             },
+             {
+              "type": "number"
+             },
+             {
+              "enum": [
+               "upgrade",
+               "grade"
+              ]
+             },
+             {
+              "type": "number"
+             },
+             {
+              "type": [
+               "string",
+               "null"
+              ]
+             }
+            ]
+           }
+          }
+         }
+        },
+        "abilities": {
+         "properties": {
+          "columns": {
+           "const": [
+            "suit",
+            "kind",
+            "bomb"
+           ]
+          },
+          "rows": {
+           "items": {
+            "prefixItems": [
+             {
+              "type": "integer"
+             },
+             {
+              "enum": [
+               "autobomb",
+               "midasGold",
+               "frogBomb"
+              ]
+             },
+             {
+              "type": "integer"
+             }
+            ]
+           }
+          }
+         }
+        },
+        "steps": {
+         "properties": {
+          "columns": {
+           "const": [
+            "cell",
+            "op",
+            "ext",
+            "source",
+            "row",
+            "mode"
+           ]
+          },
+          "rows": {
+           "items": {
+            "prefixItems": [
+             {
+              "type": "string"
+             },
+             {
+              "enum": [
+               "mulExt",
+               "addExt",
+               "mulTermExt"
+              ]
+             },
+             {
+              "type": "string"
+             },
+             {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             {
+              "type": [
+               "integer",
+               "null"
+              ]
+             },
+             {
+              "enum": [
+               "after",
+               "replace"
+              ]
+             }
+            ]
+           }
+          }
+         }
         }
        }
       }
      }
     }
-   }
+   ]
   }
  ]
 }

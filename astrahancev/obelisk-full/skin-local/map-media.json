@@ -1,0 +1,220 @@
+{
+ "version": "2.2.50",
+ "stage": "1.31",
+ "input": {
+  "base_apk_sha256": "34930271790b93e13c0a8013ceaac0e75a5ee8e8d1d76fb2c1baa821a4f0882d",
+  "base_apk_in_SHA256SUMS": true,
+  "droid_in_apk_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "droid_file_sha256": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "expected": "14b0e77037f3ff00ce0b2a51a2834ce8deff9bf55ec3a001c51cfa0e1c0f137a",
+  "ok": true
+ },
+ "note": "Материалы оригинала Idle Obelisk Miner 2.2.50. Только локально, не публиковать.",
+ "keys": {
+  "font.size10": {
+   "kind": "font",
+   "index": 0,
+   "name": "FontSize10"
+  },
+  "font.size12": {
+   "kind": "font",
+   "index": 1,
+   "name": "FontSize12"
+  },
+  "font.size24": {
+   "kind": "font",
+   "index": 2,
+   "name": "FontSize24"
+  },
+  "font.scribble_jr_default_font": {
+   "kind": "font",
+   "index": 3,
+   "name": "ScribbleJrDefaultFont"
+  },
+  "sound.music_defeatobelisk": {
+   "kind": "sound",
+   "index": 0,
+   "name": "music_defeatobelisk"
+  },
+  "sound.music_mainsong": {
+   "kind": "sound",
+   "index": 1,
+   "name": "music_mainsong"
+  },
+  "sound.music_obelisklooptest1": {
+   "kind": "sound",
+   "index": 2,
+   "name": "music_obelisklooptest1"
+  },
+  "sound.blip": {
+   "kind": "sound",
+   "index": 3,
+   "name": "sndBlip"
+  },
+  "sound.bomb19": {
+   "kind": "sound",
+   "index": 4,
+   "name": "sndBomb19"
+  },
+  "sound.bomb2": {
+   "kind": "sound",
+   "index": 5,
+   "name": "sndBomb2"
+  },
+  "sound.bomb3": {
+   "kind": "sound",
+   "index": 6,
+   "name": "sndBomb3"
+  },
+  "sound.bomb4": {
+   "kind": "sound",
+   "index": 7,
+   "name": "sndBomb4"
+  },
+  "sound.button": {
+   "kind": "sound",
+   "index": 8,
+   "name": "sndButton"
+  },
+  "sound.chest_item7": {
+   "kind": "sound",
+   "index": 9,
+   "name": "sndChestItem7"
+  },
+  "sound.chest_relic": {
+   "kind": "sound",
+   "index": 10,
+   "name": "sndChestRelic"
+  },
+  "sound.complete_challenge": {
+   "kind": "sound",
+   "index": 11,
+   "name": "sndCompleteChallenge"
+  },
+  "sound.craft5": {
+   "kind": "sound",
+   "index": 12,
+   "name": "sndCraft5"
+  },
+  "sound.freebie_get": {
+   "kind": "sound",
+   "index": 13,
+   "name": "sndFreebieGet"
+  },
+  "sound.lootbug": {
+   "kind": "sound",
+   "index": 14,
+   "name": "sndLootbug"
+  },
+  "sound.obelisk_hit6": {
+   "kind": "sound",
+   "index": 15,
+   "name": "sndObeliskHit6"
+  },
+  "sound.open_bag": {
+   "kind": "sound",
+   "index": 16,
+   "name": "sndOpenBag"
+  },
+  "sound.prestige": {
+   "kind": "sound",
+   "index": 17,
+   "name": "sndPrestige"
+  },
+  "sound.rock_hit": {
+   "kind": "sound",
+   "index": 18,
+   "name": "sndRockHit"
+  },
+  "sound.rock_hit2": {
+   "kind": "sound",
+   "index": 19,
+   "name": "sndRockHit2"
+  },
+  "sound.sell_ore_all": {
+   "kind": "sound",
+   "index": 20,
+   "name": "sndSellOreAll"
+  },
+  "sound.sell_ore_small": {
+   "kind": "sound",
+   "index": 21,
+   "name": "sndSellOreSmall"
+  },
+  "sound.upgrade_basic": {
+   "kind": "sound",
+   "index": 22,
+   "name": "sndUpgradeBasic"
+  },
+  "sound.upgrade_premium": {
+   "kind": "sound",
+   "index": 23,
+   "name": "sndUpgradePremium"
+  },
+  "sound.use_item": {
+   "kind": "sound",
+   "index": 24,
+   "name": "sndUseItem"
+  },
+  "shader.yy_sdf_blur_shader": {
+   "kind": "shader",
+   "index": 0,
+   "name": "__yy_sdf_blur_shader"
+  },
+  "shader.yy_sdf_effect_shader": {
+   "kind": "shader",
+   "index": 1,
+   "name": "__yy_sdf_effect_shader"
+  },
+  "shader.yy_sdf_shader": {
+   "kind": "shader",
+   "index": 2,
+   "name": "__yy_sdf_shader"
+  },
+  "shader.scribble_jr": {
+   "kind": "shader",
+   "index": 3,
+   "name": "__shdScribbleJr"
+  },
+  "shader.scribble_jr_color": {
+   "kind": "shader",
+   "index": 4,
+   "name": "__shdScribbleJrColor"
+  },
+  "shader.scribble_jr_color_sdf": {
+   "kind": "shader",
+   "index": 5,
+   "name": "__shdScribbleJrColorSDF"
+  },
+  "shader.scribble_jr_color_sdf_shadow": {
+   "kind": "shader",
+   "index": 6,
+   "name": "__shdScribbleJrColorSDFShadow"
+  },
+  "shader.scribble_jr_sdf": {
+   "kind": "shader",
+   "index": 7,
+   "name": "__shdScribbleJrSDF"
+  },
+  "shader.scribble_jr_sdf_shadow": {
+   "kind": "shader",
+   "index": 8,
+   "name": "__shdScribbleJrSDFShadow"
+  },
+  "shader.golden": {
+   "kind": "shader",
+   "index": 9,
+   "name": "shd_golden"
+  },
+  "shader.kawase_downscale": {
+   "kind": "shader",
+   "index": 10,
+   "name": "shd_kawase_downscale"
+  },
+  "shader.kawase_upscale": {
+   "kind": "shader",
+   "index": 11,
+   "name": "shd_kawase_upscale"
+  }
+ }
+}

@@ -1,0 +1,762 @@
+{
+ "$schema": "ui-cards",
+ "screen": "cards",
+ "version": "2.2.50",
+ "comment": "Меню карт (этап 8.13): фон, полосы шума, ползунок, наборы карт сеткой 9 × N (заголовок набора, рубашка по ступени, значок, выделение, пульс ада), панель выбранной карты (имя, бонусы, кнопка Gild), нижние вкладки, верхняя полоса. Координаты — px комнаты 500×960; y панелей — от верхнего края меню top (view.top). Источник каждого числа — записи O этапа 8.13 (oracle/cards813/index813.json, golden-2250/cards813) и каталог 1.29 (menu129-cards--*); группа ui.cards813 в oracle/sources.json. ?? — по одному-двум наблюдениям.",
+ "backdrop": {
+  "rect": [
+   0,
+   0,
+   500,
+   930
+  ],
+  "color": "#000000",
+  "alpha": 0.85
+ },
+ "noise": {
+  "sprite": "sprite.noise_test",
+  "x": 32,
+  "y0": 0,
+  "step": 784,
+  "count": 12,
+  "scale": 6,
+  "alpha": 0.15
+ },
+ "scrollbar": {
+  "x1": 492,
+  "x2": 502,
+  "color": "#c0c0c0",
+  "alpha": 0.35
+ },
+ "sets": [
+  {
+   "set": "ore",
+   "title": "t.ores",
+   "sprite": "sprite.rock_test"
+  },
+  {
+   "set": "bar",
+   "title": "t.bars_2",
+   "sprite": "sprite.bar"
+  },
+  {
+   "set": "bomb",
+   "title": "t.bombs",
+   "sprite": "sprite.bombs",
+   "order": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    12,
+    11
+   ]
+  },
+  {
+   "set": "misc",
+   "title": "t.misc",
+   "sprite": "sprite.misc_cards",
+   "unowned": "hide",
+   "order": [
+    0,
+    24,
+    1,
+    2,
+    41,
+    3,
+    4,
+    7,
+    29,
+    35,
+    5,
+    6,
+    23,
+    30,
+    42,
+    8,
+    9,
+    10,
+    31,
+    13,
+    48,
+    14,
+    15,
+    16,
+    17,
+    26,
+    18,
+    12,
+    11,
+    21,
+    22,
+    32,
+    33,
+    34,
+    45,
+    46,
+    49,
+    19,
+    20,
+    25,
+    27,
+    28,
+    36,
+    43,
+    37,
+    38,
+    39,
+    40,
+    44,
+    47
+   ]
+  },
+  {
+   "set": "drone",
+   "title": "t.drones",
+   "sprite": "sprite.drone16x16_strip",
+   "unowned": "question"
+  },
+  {
+   "set": "pet",
+   "title": "t.pets",
+   "sprite": "sprite.pet_head_icons",
+   "unowned": "question"
+  },
+  {
+   "set": "vein",
+   "title": "t.veins",
+   "sprite": "sprite.veins"
+  },
+  {
+   "set": "star",
+   "title": "t.stars",
+   "sprite": "sprite.star_signs16x16",
+   "unowned": "question"
+  },
+  {
+   "set": "arch",
+   "title": "t.archaeology",
+   "sprite": "sprite.arch_cards",
+   "order": [
+    0,
+    1,
+    2,
+    21,
+    3,
+    4,
+    5,
+    22,
+    6,
+    7,
+    8,
+    23,
+    9,
+    10,
+    11,
+    24,
+    12,
+    13,
+    14,
+    25,
+    15,
+    16,
+    17,
+    26,
+    18,
+    19,
+    20,
+    27
+   ]
+  },
+  {
+   "set": "fish",
+   "title": "t.fish",
+   "sprite": "sprite.fish",
+   "unknownFrom": "known"
+  },
+  {
+   "set": "legofish",
+   "title": "t.legendary_fish",
+   "sprite": "sprite.fish_lego_heads",
+   "unowned": "question"
+  },
+  {
+   "set": "essence",
+   "title": "t.essences",
+   "sprite": "sprite.arcana_essence"
+  },
+  {
+   "set": "rune",
+   "title": "t.runes",
+   "sprite": "sprite.arcana_rune"
+  },
+  {
+   "set": "spell",
+   "title": "t.spells",
+   "sprite": "sprite.spells"
+  },
+  {
+   "set": "orb",
+   "title": "t.orbs",
+   "sprite": "sprite.arcana_orb"
+  }
+ ],
+ "header": {
+  "sprite": "sprite.patch_backing_brownish_ml",
+  "x": 0,
+  "sx": 10,
+  "sy": 1.8,
+  "font": "font.size12",
+  "textX": 80,
+  "shadow": "#000000",
+  "dyFirst": 272
+ },
+ "grid": {
+  "cols": 9,
+  "x0": 50,
+  "dx": 50,
+  "firstRow": 70,
+  "dy": 75,
+  "afterRows": 21,
+  "emptySection": 66,
+  "cutBelow": 930,
+  "scale": 2,
+  "backing": "sprite.card_backing",
+  "frameOfLevel": [
+   0,
+   0,
+   1,
+   2,
+   5
+  ],
+  "selectedFrame": 3,
+  "unowned": {
+   "backing": "#404040",
+   "icon": "#000000",
+   "alpha": 0.5
+  },
+  "infernal": {
+   "color": "#ff0000",
+   "backingK": 1.2
+  },
+  "drawFrom": 0,
+  "question": "sprite.question_mark",
+  "shard": {
+   "frame": 4,
+   "need": 10,
+   "bar": {
+    "sprite": "sprite.poly_progress",
+    "dx": -20,
+    "dy": 30,
+    "left": 0,
+    "top": 0,
+    "w": 20,
+    "h": 4,
+    "scale": 2
+   }
+  }
+ },
+ "panel": {
+  "rects": [
+   [
+    0,
+    11,
+    500,
+    232,
+    "#957c7d"
+   ],
+   [
+    -1,
+    12,
+    501,
+    233,
+    "#503738"
+   ],
+   [
+    0,
+    12,
+    500,
+    232,
+    "#695051"
+   ],
+   [
+    0,
+    185,
+    500,
+    186,
+    "#957c7d"
+   ],
+   [
+    -1,
+    186,
+    501,
+    187,
+    "#503738"
+   ],
+   [
+    0,
+    186,
+    500,
+    186,
+    "#695051"
+   ],
+   [
+    6,
+    46,
+    495,
+    177,
+    "#0f1419"
+   ],
+   [
+    8,
+    48,
+    493,
+    175,
+    "#9d2f41"
+   ]
+  ],
+  "name": {
+   "patch": "sprite.patch_desc_ml",
+   "x": 15,
+   "dy": 70,
+   "sy": 1.2,
+   "padW": 1.55,
+   "divW": 15.5,
+   "textX": 20,
+   "font": "font.size12",
+   "prefix": [
+    "",
+    "t.standard",
+    "t.gilded",
+    "t.polychrome",
+    "t.infernal_2"
+   ],
+   "suffix": {
+    "ore": " Ore Card"
+   },
+   "names": {
+    "ore": [
+     "t.tin",
+     "t.copper",
+     "t.mithril",
+     "t.adamant",
+     "t.runite",
+     "t.citrine",
+     "t.amethyst",
+     "t.topaz",
+     "t.obsidian",
+     "t.demonite"
+    ]
+   }
+  },
+  "bonus": {
+   "patch": "sprite.patch_desc_ml",
+   "x": 81,
+   "sy": 2.4,
+   "divW": 15.5,
+   "textX": 84,
+   "font": "font.size12",
+   "rows": [
+    {
+     "dy": 106,
+     "label": "t.card_bonus",
+     "level": 1
+    },
+    {
+     "dy": 148,
+     "label": "t.gilded_bonus",
+     "level": 2,
+     "on": "#ffff00"
+    }
+   ],
+   "off": "#808080",
+   "line": {
+    "ore": "{name} Ore Gain {v}x"
+   }
+  },
+  "card": {
+   "x": 42,
+   "dy": 120
+  },
+  "gild": {
+   "sprite": "sprite.patch_button",
+   "x": 445,
+   "dy": 212,
+   "sx": 4,
+   "sy": 2,
+   "text": "t.gild",
+   "textDy": 211,
+   "font": "font.size12"
+  }
+ },
+ "tabs": {
+  "y": 838,
+  "iconY": 837,
+  "labelY": 868,
+  "items": [
+   {
+    "x": 170,
+    "icon": "sprite.ace_of_spades",
+    "label": "t.cards"
+   },
+   {
+    "x": 330,
+    "icon": "sprite.lock_only",
+    "label": "t.q_q_q_q_q",
+    "locked": true
+   }
+  ],
+  "rects": [
+   [
+    0,
+    817,
+    500,
+    890,
+    "#957c7d"
+   ],
+   [
+    0,
+    818,
+    500,
+    890,
+    "#695051"
+   ]
+  ],
+  "button": "sprite.patch_button",
+  "tint": "#808080",
+  "desc": "sprite.patch_desc",
+  "descSx": 5,
+  "descSy": 1.2,
+  "font": "font.size10"
+ },
+ "topbar": {
+  "rects": [
+   [
+    0,
+    0,
+    500,
+    35,
+    "#957c7d"
+   ],
+   [
+    0,
+    0,
+    500,
+    33,
+    "#695051"
+   ]
+  ],
+  "button": "sprite.patch_button",
+  "bsx": 1.6,
+  "bsy": 1.8,
+  "menuX": 28,
+  "infoX": 468,
+  "dy": 18,
+  "burger": [
+   [
+    20,
+    9,
+    35,
+    11
+   ],
+   [
+    20,
+    15,
+    35,
+    17
+   ],
+   [
+    20,
+    21,
+    35,
+    23
+   ]
+  ],
+  "info": "sprite.info_icon",
+  "infoDy": 17
+ },
+ "confirm": {
+  "shade": {
+   "sprite": "sprite.patch_desc",
+   "x": 250,
+   "y": 520,
+   "sx": 36,
+   "sy": 66,
+   "color": "#000000",
+   "alpha": 0.75
+  },
+  "back": {
+   "sprite": "sprite.patch_backing_magma",
+   "x": 250,
+   "y": 520,
+   "sx": 30,
+   "sy": 24
+  },
+  "title": {
+   "sprite": "sprite.patch_desc",
+   "x": 250,
+   "y": 360,
+   "sx": 28,
+   "sy": 2.4,
+   "font": "font.size12",
+   "head": "t.gild_your",
+   "tail": "t.q"
+  },
+  "card": {
+   "x": 160,
+   "y": 470,
+   "scale": 4
+  },
+  "cost": {
+   "sprite": "sprite.patch_desc",
+   "x": 365,
+   "y": 430,
+   "sx": 8,
+   "sy": 1.46,
+   "font": "font.size12",
+   "text": "t.gild_cost"
+  },
+  "rows": [
+   {
+    "y": 465,
+    "checkY": 465,
+    "icon": "sprite.coin",
+    "unit": "t.gold_2"
+   },
+   {
+    "y": 499,
+    "checkY": 498,
+    "icon": "sprite.prestige_point",
+    "unit": "t.pp_2"
+   },
+   {
+    "y": 533,
+    "checkY": 532,
+    "icon": "sprite.gem",
+    "unit": "t.gems_2"
+   }
+  ],
+  "row": {
+   "patch": "sprite.patch_desc_ml",
+   "patchX": 301,
+   "sx": 8,
+   "sy": 1.46,
+   "check": "sprite.unchecked_checked",
+   "checkX": 454,
+   "checkScale": 2,
+   "textX": 306,
+   "iconX": 280,
+   "iconScale": 2,
+   "font": "font.size12"
+  },
+  "button": {
+   "sprite": "sprite.patch_button",
+   "x": 250,
+   "y": 637,
+   "sx": 6,
+   "sy": 4,
+   "text": "t.gild_ex",
+   "textDy": -1,
+   "font": "font.size12"
+  }
+ },
+ "info": {
+  "rects": [
+   [
+    0,
+    0,
+    500,
+    960,
+    "#000000",
+    0.9
+   ],
+   [
+    13,
+    99,
+    487,
+    892,
+    "#957c7d",
+    1
+   ],
+   [
+    15,
+    101,
+    485,
+    890,
+    "#695051",
+    1
+   ],
+   [
+    15,
+    101,
+    485,
+    890,
+    "#9d2f41",
+    0.35
+   ]
+  ],
+  "head": {
+   "font": "font.size24",
+   "x": 250,
+   "y": 139,
+   "text": "t.cards",
+   "color": "#ffff00",
+   "icon": "sprite.ace_of_spades",
+   "iconL": [
+    170,
+    -2
+   ],
+   "iconR": [
+    330,
+    2
+   ],
+   "iconScale": 2
+  },
+  "box": {
+   "x1": 25,
+   "x2": 475,
+   "top0": 167,
+   "gap": 6,
+   "color": "#000000",
+   "alpha": 0.25,
+   "iconX": 47,
+   "iconScale": 2,
+   "textX": 77,
+   "titleDy": 5,
+   "bodyDy": 26,
+   "pad": 7,
+   "titleFont": "font.size12",
+   "titleColor": "#ffff00",
+   "bodyFont": "font.size10",
+   "sep": 16,
+   "width": 395
+  },
+  "boxes": [
+   {
+    "icon": "sprite.ace_of_spades",
+    "title": "t.cards_are_rare_drops",
+    "body": "t.cards_drop_from_specific_actions_e_g_a_1_in_5m"
+   },
+   {
+    "icon": "sprite.ace_of_spades",
+    "title": "t.where_cards_come_from",
+    "lines": [
+     [
+      "t.ore",
+      "t.mining_specific_ores"
+     ],
+     [
+      "t.bar",
+      "t.crafting_specific_bars"
+     ],
+     [
+      "t.bomb",
+      "t.firing_specific_bombs"
+     ],
+     [
+      "t.misc",
+      "t.could_be_anything_ex"
+     ],
+     [
+      "t.drone",
+      "t.drones_active_with_fuel"
+     ],
+     [
+      "t.pet",
+      "t.rolling_for_pet_level_ups"
+     ],
+     [
+      "t.vein",
+      "t.depleting_specific_veins"
+     ],
+     [
+      "t.star",
+      "t.catching_specific_stars"
+     ],
+     [
+      "t.arch",
+      "t.destroying_specific_blocks"
+     ],
+     [
+      "t.fish",
+      "t.catching_specific_fish"
+     ],
+     [
+      "t.legendary_fish",
+      "t.catching_specific_legendary_fish"
+     ]
+    ],
+    "join": "t.cards_minus",
+    "last": "t.arcanist_cards_minus_essence_runes_spells_and"
+   },
+   {
+    "icon": "sprite.pickaxe_damage",
+    "title": "t.every_card_gives_a_bonus",
+    "body": "t.each_card_gives_a_permanent_bonus_tied_to_what"
+   },
+   {
+    "icon": "sprite.coin",
+    "title": "t.gilding",
+    "body": "t.tap_a_card_then_gild_it_with_gold_prestige"
+   }
+  ],
+  "foot": {
+   "font": "font.size10",
+   "x": 250,
+   "y": 860,
+   "text": "t.tap_anywhere_to_close",
+   "color": "#c0c0c0"
+  },
+  "button": "sprite.patch_button_green"
+ },
+ "options": {
+  "button": "sprite.patch_button_green",
+  "box": [
+   14,
+   101,
+   214,
+   215,
+   10,
+   10
+  ],
+  "fill": {
+   "color": "#000000",
+   "alpha": 0.92
+  },
+  "frame": "#957c7d",
+  "title": {
+   "font": "font.size10",
+   "x": 26,
+   "y": 117,
+   "text": "t.menu_options",
+   "color": "#ffff00"
+  },
+  "rows": [
+   {
+    "y": 147,
+    "text": "t.hide_unowned_cards",
+    "key": "hideUnowned"
+   },
+   {
+    "y": 185,
+    "text": "t.hide_maxed_cards",
+    "key": "hideMaxed"
+   }
+  ],
+  "row": {
+   "check": "sprite.unchecked_checked",
+   "checkX": 38,
+   "checkScale": 2,
+   "textX": 58,
+   "font": "font.size10",
+   "shadow": "#000000"
+  }
+ }
+}

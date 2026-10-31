@@ -1,6 +1,6 @@
 // spec: drones
 // Дроны и топливо мира 1: улучшения дрона, очки дронов, уголь, костюмы и слоты.
-// Код по спеке oracle/specs/drones.md (правила 1–12, версия 2). Данные — data/systems/drones.json, их передаёт вызывающий:
+// Код по спеке oracle/specs/drones.md (правила 1–12, версия 3). Данные — data/systems/drones.json, их передаёт вызывающий:
 // ядро само в файлы не ходит. Входы не меняются.
 // 13 клеток сводки (правила 1–2: stat.drone*, stat.coal*, stat.droneSuitCap) считает стат-движок (core/stats.mjs, источники
 // drones и coal); здесь остальные функции принимают готовые клетки сводки c (объект с ключами stat.*).
@@ -82,7 +82,8 @@ export function makeDrones(dronesData) {
   /** Правило 10. */
   const fuelDuration = (suit, grade, c) => suits[suit].fuelBase * (c[fuelCell] * (1 + C['suit.fuelPerGrade'] * grade));
   const expToGrade = (suit, grade) => suits[suit].expBase * (grade + 1);
-  const gradeCap = () => C['suit.gradeCap'];
+  const gradeCapCell = Object.fromEntries(tableRows(dronesData.tables.gradeCap).map((r) => [r.suit, r.cell]));
+  const gradeCap = (suit, c) => C['suit.gradeCap'] + c[gradeCapCell[suit]];
 
   /** Правила 11–12. */
   function freeSlots(slots, n) {
@@ -92,15 +93,21 @@ export function makeDrones(dronesData) {
   }
   const isEquipped = (slots, drone) => slots.includes(drone);
   const isFueled = (slots, drone, fuelSeconds) => isEquipped(slots, drone) && fuelSeconds[drone - 1] > 0;
+  /** Правило 12 (v3): повтор не проверяется; работают только первые n слотов. */
   function equip(slots, drone, n) {
     const out = slots.slice();
-    if (slots.slice(0, n).includes(drone)) return out;
     for (let i = 0; i < n && i < out.length; i++) {
       if (out[i] === 0) { out[i] = drone; break; }
     }
     return out;
   }
-  const unequip = (slots, drone) => slots.map((s) => (s === drone ? 0 : s));
+  function unequip(slots, drone, n) {
+    const out = slots.slice();
+    for (let i = 0; i < n && i < out.length; i++) {
+      if (out[i] === drone) { out[i] = 0; break; }
+    }
+    return out;
+  }
 
   return {
     upgradeCost, levelReq, menu, pointsCost, maxPoints, buyMaxPoints,

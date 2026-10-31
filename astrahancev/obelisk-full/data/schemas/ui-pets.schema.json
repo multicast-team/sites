@@ -1,0 +1,30 @@
+{
+ "$id": "ui-pets",
+ "title": "Меню питомцев, вкладка Pets (data/ui/pets.json, этап 8.16)",
+ "description": "Вёрстка меню питомцев блоками: фон и шум, ползунок, список 16 карточек (y0 и шаг; шаблон открытой карточки от её центра — подложки, рамка, имя, бонус, звёзды, строка шанса, строка бросков, Info, Name, голова, кнопка цены, портрет с плашкой уровня, слот карты; запертая карточка), верхняя полоса (сумма уровней, кнопка выгула, ☰), нижние вкладки Pets / Skins / Quests, таблица питомцев (имя, цена, порог открытия, ключ строки шанса, части бонуса b + a·max(L, 1)). Координаты — px комнаты 500×960. Генерирует oracle/pets816/mkdata816.py. Команд рисования нет.",
+ "type": "object",
+ "additionalProperties": false,
+ "required": ["$schema", "screen", "version", "back", "noise", "thumb", "list", "card", "locked", "topbar", "tabs", "cardOdds", "pets"],
+ "properties": {
+  "$schema": {"const": "ui-pets"},
+  "screen": {"const": "pets"},
+  "version": {"$ref": "common#/$defs/version"},
+  "comment": {"type": "string"},
+  "back": {"type": "object"},
+  "noise": {"type": "object", "additionalProperties": false, "required": ["sprite", "x", "step", "count", "sx", "sy", "alpha"],
+   "properties": {"sprite": {"type": "string"}, "x": {"type": "number"}, "step": {"type": "number"}, "count": {"type": "integer"},
+    "sx": {"type": "number"}, "sy": {"type": "number"}, "alpha": {"type": "number"}}},
+  "thumb": {"type": "object"},
+  "list": {"type": "object", "additionalProperties": false, "required": ["y0", "step"], "properties": {"y0": {"type": "number"}, "step": {"type": "number"}}},
+  "card": {"type": "object"},
+  "locked": {"type": "object"},
+  "topbar": {"type": "object"},
+  "tabs": {"type": "object"},
+  "cardOdds": {"type": "object", "additionalProperties": false, "required": ["base", "perLevel"],
+   "description": "Множитель строки «Card Odds» на капе и выше: base + perLevel·L (funPetGetCardChance O при ступени карты 0, probe816b)",
+   "properties": {"base": {"type": "number"}, "perLevel": {"type": "number"}}},
+  "pets": {"type": "object", "additionalProperties": false, "required": ["columns", "rows"],
+   "properties": {"columns": {"const": ["id", "name", "price", "unlockLevels", "levelUpText", "buff", "buffTail"]},
+    "rows": {"type": "array", "minItems": 16, "maxItems": 16, "items": {"type": "array", "minItems": 7, "maxItems": 7}}}}
+ }
+}

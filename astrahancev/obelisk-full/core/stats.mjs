@@ -1,12 +1,12 @@
 // spec: stats
 // Стат-движок: 284 клетки сводки от уровней Upgrades (93), Workshop (37), дерева навыков (70), артефактов (25), gem shop
-// (6 + 4), дронов (7 строк) и угля (16 строк, дополнение 5.25).
-// Код по спеке oracle/specs/stats.md (правила 1–22). Данные — data/systems/stats.json и data/systems/statrules.json;
+// (6 + 4), дронов (7 строк), угля (16 строк, дополнение 5.25) и грейдов костюмов дронов (droneGrade, 11 строк, дополнение 8.18).
+// Код по спеке oracle/specs/stats.md (правила 1–23, версия 8.18; внешние значения — дополнение 8.20, правила 25–26). Данные — data/systems/stats.json и data/systems/statrules.json;
 // оба передаёт вызывающий: ядро само в файлы не ходит.
 
 import { pow } from './num/libm.mjs';
 
-const ROWS = { upgrades: 93, workshop: 37, skilltree: 70, artifacts: 25, gemUpgrades: 6, gemUnlocks: 4, drones: 7, coal: 16 };
+const ROWS = { upgrades: 93, workshop: 37, skilltree: 70, artifacts: 25, gemUpgrades: 6, gemUnlocks: 4, drones: 7, coal: 16, droneGrade: 11 };
 const HIGH_ROUND_FROM = 26; // с этого уровня обелиска шаг round — вниз от x + 0.5
 const MAX_PASSES = 10;
 
@@ -40,9 +40,11 @@ export function makeStats(cellsData, rulesData) {
     gemUnlocks: Array(ROWS.gemUnlocks).fill(0),
     drones: Array(ROWS.drones).fill(0),
     coal: Array(ROWS.coal).fill(0),
+    droneGrade: Array(ROWS.droneGrade).fill(0),
   };
   let obelisk = 0; // уровень обелиска: режим шага round
   let task = 1; // номер задания: шаг scaleUntilTask
+  let external = new Map(); // внешние значения: ключ → double (дополнение 8.20)
 
   // декларации: клетки в порядке таблицы, шаги — группы подряд идущих строк с одним номером step
   const decl = [];
@@ -96,6 +98,13 @@ export function makeStats(cellsData, rulesData) {
           a = a * (1 + (t[0].value * value.get(t[0].ref)) * L(t[0]));
           break;
         }
+        case 'mulExt': if (external.has(t[0].ref)) a = a * external.get(t[0].ref); break;
+        case 'addExt': if (external.has(t[0].ref)) a = a + external.get(t[0].ref); break;
+        case 'mulTermExt': {
+          const m = 1 + t[0].value * L(t[0]);
+          a = external.has(t[0].ref) ? a * (m * external.get(t[0].ref)) : a * m;
+          break;
+        }
         case 'round': a = obelisk >= HIGH_ROUND_FROM ? Math.floor(a + 0.5) : roundHalfEven(a); break;
         default: throw new Error(`stats: неизвестный вид шага ${s.op}`);
       }
@@ -140,6 +149,7 @@ export function makeStats(cellsData, rulesData) {
     },
     setObelisk(level) { obelisk = level; stable = false; },
     setTask(n) { task = n; stable = false; },
+    setExternal(obj) { external = new Map(Object.entries(obj)); stable = false; },
     pass() { stable = false; return pass(); },
     settle,
     get(cell) {

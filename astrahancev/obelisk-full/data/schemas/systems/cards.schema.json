@@ -1,0 +1,23 @@
+{
+ "$id": "systems/cards",
+ "title": "Карты (data/systems/cards.json, этап 8.12)",
+ "description": "Наборы карт (размер, вид ступени 3 — таблица или бонус набора, вид ступени 4 — keep/base/scaleStat/scaleDiff/scaleDelta, есть ли осколки), карты (эффект ступеней 0–3, прибавка ступени 4, округление вверх, цена золочения в PP и самоцветах), снижение требований заданий питомцев (Buns, карта misc 46) по ступеням, константы (обелиск открытия, кап осколков, золото золочения, узел дерева для осколков, ступени улучшений, число «существующих» карт). Источники — группа data.cards812, спека oracle/specs/cards.md. Числа сняты с O.",
+ "allOf": [
+  {"$ref": "system"},
+  {"properties": {"system": {"const": "cards"}}},
+  {
+   "required": ["constants", "tables"],
+   "properties": {
+    "constants": {"required": ["obeliskReq", "shardCap", "gild.gold", "roll.node", "roll.nodeMin", "level.gild", "level.poly", "level.infernal", "exist.total", "petQuest.set", "petQuest.index"]},
+    "tables": {
+     "required": ["sets", "cards", "petQuest"],
+     "properties": {
+      "sets": {"properties": {"columns": {"const": ["set", "size", "poly", "infernal", "shards"]}}},
+      "cards": {"properties": {"columns": {"const": ["set", "index", "base", "level1", "level2", "level3", "delta4", "ceil4", "pp", "gems"]}}},
+      "petQuest": {"properties": {"columns": {"const": ["level", "reduction"]}}}
+     }
+    }
+   }
+  }
+ ]
+}
