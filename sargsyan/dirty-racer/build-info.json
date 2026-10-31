@@ -1,14 +1,14 @@
 {
-  "release": "car-designs-2026-10-31-v2",
-  "built_at_utc": "2026-10-31T14:37:12.173685+00:00",
+  "release": "first-upgrade-unlocks-2026-10-31-v1",
+  "built_at_utc": "2026-10-31T15:05:36.745677+00:00",
   "changes": [
-    "every race's garage has four own car bodies (stock, Special, Works, Champion) instead of repaints",
-    "Champion (Premium) cars: pearl paint, gold Y-spoke rims, polished gold trim, LED bars; gold edge and glitter trail in the race; gold turntable",
-    "garage tiles show small 3D renders of each car on rarity-tinted backdrops; tiles react to taps during a race",
-    "turntable starts with the car's nose toward the camera; side numbers no longer mirrored"
+    "the first upgrade bought opens everything at once: all upgrade and income cards, crew, compete, garage, shop tabs, x10/MAX, boost, drive style, stage report",
+    "one notice 'Everything unlocked' instead of five separate unlock toasts",
+    "includes car-designs-2026-10-31-v2 (four own cars per garage, Champion premium cars, 3D garage tiles)"
   ],
   "docs": [
-    "Docs/Impl/GARAGE.md#designs-2026-10-31"
+    "Docs/Impl/META.md#6",
+    "Docs/Impl/GARAGE.md"
   ],
   "files": [
     {
@@ -17,19 +17,19 @@
       "sha256": "9fa3bc01227674e5cc11ada4a2f31fdc9ebfb00584ac550c864da6d06ab96e01"
     },
     {
-      "path": "Build/9fb9706731169352ac8b9d5a77c92a99.wasm.unityweb",
-      "bytes": 11783043,
-      "sha256": "c4a2997531cc768895f9424694d970fc9fd9c4562a07b1f6978546ea3a367610"
+      "path": "Build/88823dad12cd3979d120301fa1f29b24.wasm.unityweb",
+      "bytes": 11782231,
+      "sha256": "63330dfc676f5c3bb3f1a6815171a459b80cef6b279cce8f140632d1b3e95c85"
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "2ca553890c76124d82934cceff59b1448bb2f44f02ecb109a0c6134fcab25dbc"
+      "sha256": "4d0a2cee2200364a9555d45466eb3df125014004f63018f5414b2d790a6f2ef3"
     },
     {
-      "path": "Build/fde805ddec18ae1f61f50e53f81bbb46.data.unityweb",
-      "bytes": 15196079,
-      "sha256": "ae9e524c67fc0a912188f00588d054c491ac496126baf2c1e3b39f8c24481986"
+      "path": "Build/f2c59af6826652f945db1a79a3fc0ae8.data.unityweb",
+      "bytes": 15195566,
+      "sha256": "dc6d510e58786744911e673597607e80596802b6dbaa4dde160127eef05a7ee9"
     }
   ]
 }
