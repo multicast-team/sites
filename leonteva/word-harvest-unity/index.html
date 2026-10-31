@@ -16,7 +16,7 @@
   <body>
     <canvas id="unity-canvas" tabindex="-1"></canvas>
     <div id="loading">Загрузка… 0%</div>
-    <script src="Build/webgl.loader.js"></script>
+    <script src="Build/webgl4.loader.js"></script>
     <script>
       var canvas = document.querySelector("#unity-canvas");
       var phone = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -32,9 +32,9 @@
       var loading = document.querySelector("#loading");
       createUnityInstance(canvas, {
         arguments: [],
-        dataUrl: "Build/webgl.data.unityweb",
-        frameworkUrl: "Build/webgl.framework.js.unityweb",
-        codeUrl: "Build/webgl.wasm.unityweb",
+        dataUrl: "Build/webgl4.data.unityweb",
+        frameworkUrl: "Build/webgl4.framework.js.unityweb",
+        codeUrl: "Build/webgl4.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Multicast Games",
         productName: "Word Harvest",
