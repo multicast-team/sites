@@ -92,9 +92,9 @@
     canvas.addEventListener('wheel', event => event.preventDefault(), {passive:false});
     const config = {
       arguments: [],
-      dataUrl: 'Build/22b29df85e489983bfe8faf60b047865.data.unityweb',
+      dataUrl: 'Build/f578c5583ad52dab95b3e261f73d38e7.data.unityweb',
       frameworkUrl: 'Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb',
-      codeUrl: 'Build/abcdc214ce119ab6e5a85ee0ec3d5ae1.wasm.unityweb',
+      codeUrl: 'Build/8909348d5b7d0a7af57d448d81e923b1.wasm.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "Dirty Racer Team",
       productName: "Dirty Racer",
@@ -141,7 +141,7 @@
     window.addEventListener('pagehide', () => notifyVisibility(true));
     window.addEventListener('pageshow', () => notifyVisibility(document.hidden));
     const loader = document.createElement('script');
-    loader.src = 'Build/2c9fbb6903f73b15fd655894b9a6378e.loader.js';
+    loader.src = 'Build/451dba3e79224854d85f1ad09da5ab74.loader.js';
     loader.onerror = () => showError('The game download failed. Check your connection and reload.');
     loader.onload = () => {
       createUnityInstance(canvas, config, value => {

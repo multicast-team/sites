@@ -1,38 +1,35 @@
 {
-  "release": "pages-art-2026-10-31-v1",
-  "built_at_utc": "2026-10-31T01:08:18.065237+00:00",
+  "release": "car-designs-2026-10-31-v1",
+  "built_at_utc": "2026-10-31T14:12:37.448401+00:00",
   "changes": [
-    "garage and shop open as full pages (wallets on top, no race band)",
-    "nav order HQ, Crew, Compete, Garage, Shop; red dot on HQ while an upgrade is affordable",
-    "upgrade info text readable (body, bold, main text colour)",
-    "crew tab lists only the current race (CrewState.Home, save roster[].home)",
-    "painted currency art (carbon tile, banknote, stacks) and helmet busts (ArtPainter)"
+    "every race's garage has four own car bodies (stock, Special, Works, Champion) instead of repaints",
+    "Champion (Premium) cars: pearl paint, gold Y-spoke rims, polished gold trim, LED bars; gold edge and glitter trail in the race; gold turntable",
+    "garage tiles show small 3D renders of each car on rarity-tinted backdrops",
+    "turntable starts with the car's nose toward the camera; side numbers no longer mirrored"
   ],
   "docs": [
-    "Docs/Impl/UI.md#12",
-    "Docs/Impl/CREW_PACKS.md",
-    "Docs/Impl/SHOP.md"
+    "Docs/Impl/GARAGE.md#designs-2026-10-31"
   ],
   "files": [
     {
-      "path": "Build/22b29df85e489983bfe8faf60b047865.data.unityweb",
-      "bytes": 15195459,
-      "sha256": "80bdb171f479aafc01f595d6eac0fb6f0501420c3344a1ec9407acb86c39e615"
-    },
-    {
-      "path": "Build/2c9fbb6903f73b15fd655894b9a6378e.loader.js",
+      "path": "Build/451dba3e79224854d85f1ad09da5ab74.loader.js",
       "bytes": 48779,
-      "sha256": "250c2f840a78a2a7ffa44279091e61c86c805832321d32ebcaced885de9bed59"
+      "sha256": "9fa3bc01227674e5cc11ada4a2f31fdc9ebfb00584ac550c864da6d06ab96e01"
     },
     {
-      "path": "Build/abcdc214ce119ab6e5a85ee0ec3d5ae1.wasm.unityweb",
-      "bytes": 11724380,
-      "sha256": "cbc9546459887b30d461b6c99537aecc2ca4d0885d1650103d14f777c3275a9f"
+      "path": "Build/8909348d5b7d0a7af57d448d81e923b1.wasm.unityweb",
+      "bytes": 11782016,
+      "sha256": "36d8763c88d680beb93ada3335a8e0f63ccd67bb20a80dd6fa4d5182b3b4987d"
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "9963bc19be152cd53fdf75909c67b5f5b0ce37aafe3559dccc5e9efd5377bc78"
+      "sha256": "d6b380acab56fdcafdddbd1b10b22059633536dcfc12adef22a1ea3932a62e54"
+    },
+    {
+      "path": "Build/f578c5583ad52dab95b3e261f73d38e7.data.unityweb",
+      "bytes": 15198785,
+      "sha256": "4b098358f7145e60ffb995b40bf7787caa381ee5964732f53598ee00a3187277"
     }
   ]
 }
