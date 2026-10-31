@@ -1,10 +1,10 @@
 {
-  "release": "car-designs-2026-10-31-v1",
-  "built_at_utc": "2026-10-31T14:12:37.448401+00:00",
+  "release": "car-designs-2026-10-31-v2",
+  "built_at_utc": "2026-10-31T14:37:12.173685+00:00",
   "changes": [
     "every race's garage has four own car bodies (stock, Special, Works, Champion) instead of repaints",
     "Champion (Premium) cars: pearl paint, gold Y-spoke rims, polished gold trim, LED bars; gold edge and glitter trail in the race; gold turntable",
-    "garage tiles show small 3D renders of each car on rarity-tinted backdrops",
+    "garage tiles show small 3D renders of each car on rarity-tinted backdrops; tiles react to taps during a race",
     "turntable starts with the car's nose toward the camera; side numbers no longer mirrored"
   ],
   "docs": [
@@ -17,19 +17,19 @@
       "sha256": "9fa3bc01227674e5cc11ada4a2f31fdc9ebfb00584ac550c864da6d06ab96e01"
     },
     {
-      "path": "Build/8909348d5b7d0a7af57d448d81e923b1.wasm.unityweb",
-      "bytes": 11782016,
-      "sha256": "36d8763c88d680beb93ada3335a8e0f63ccd67bb20a80dd6fa4d5182b3b4987d"
+      "path": "Build/9fb9706731169352ac8b9d5a77c92a99.wasm.unityweb",
+      "bytes": 11783043,
+      "sha256": "c4a2997531cc768895f9424694d970fc9fd9c4562a07b1f6978546ea3a367610"
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "d6b380acab56fdcafdddbd1b10b22059633536dcfc12adef22a1ea3932a62e54"
+      "sha256": "2ca553890c76124d82934cceff59b1448bb2f44f02ecb109a0c6134fcab25dbc"
     },
     {
-      "path": "Build/f578c5583ad52dab95b3e261f73d38e7.data.unityweb",
-      "bytes": 15198785,
-      "sha256": "4b098358f7145e60ffb995b40bf7787caa381ee5964732f53598ee00a3187277"
+      "path": "Build/fde805ddec18ae1f61f50e53f81bbb46.data.unityweb",
+      "bytes": 15196079,
+      "sha256": "ae9e524c67fc0a912188f00588d054c491ac496126baf2c1e3b39f8c24481986"
     }
   ]
 }
