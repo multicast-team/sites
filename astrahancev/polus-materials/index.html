@@ -63,7 +63,7 @@ sup{font-size:9px;color:#e0a030}
   <rect x="4" y="22" width="35" height="30" rx="6" fill="#d9534f"/>
   <text x="10" y="42" style="font-size:11px;fill:#fff;font-weight:700">10%</text>
   <text x="48" y="42" style="font-size:12px;fill:#fff">кубики: объём = энергия / цена кубика</text>
-  <text x="4" y="68" class="lbl"><tspan fill="#d9534f">■</tspan> трещина до свободного края (если он близко) → откалывается кусок</text>
+  <text x="4" y="68" class="lbl"><tspan fill="#d9534f">■</tspan> трещина к краю → откол куска</text>
   <!-- gate -->
   <path d="M20 100 L120 100" stroke="#e0a030" stroke-width="3" marker-end="url(#ar)"/>
   <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#e0a030"/></marker></defs>
@@ -73,9 +73,9 @@ sup{font-size:9px;color:#e0a030}
   <text x="146" y="108" class="lbl">давление ≥ твёрдость?</text>
   <text x="146" y="121" class="lbl">лезвие твёрже материала?</text>
   <text x="20" y="146" style="font-size:12px;fill:#4caf50;font-weight:600">да → режет / колет</text>
-  <text x="180" y="146" style="font-size:12px;fill:#e57373;font-weight:600">нет → вмятина, лезвие тупится</text>
+  <text x="170" y="146" style="font-size:12px;fill:#e57373;font-weight:600">нет → вмятина, тупится</text>
   <!-- character scale -->
-  <text x="4" y="178" class="lblb">характер материала = R / P (трещина против кубика)</text>
+  <text x="4" y="178" class="lblb">характер: трещина против кубика</text>
   <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#7cc6c9"/><stop offset=".5" stop-color="#c08a4e"/><stop offset="1" stop-color="#b0704a"/></linearGradient></defs>
   <rect x="10" y="192" width="340" height="10" rx="5" fill="url(#g1)"/>
   <g style="font-size:10.5px;fill:var(--foreground,#e7e5e1)">
@@ -86,7 +86,7 @@ sup{font-size:9px;color:#e0a030}
    <circle cx="320" cy="197" r="4" fill="#fff"/><text x="308" y="220">кожа</text>
   </g>
   <text x="10" y="246" class="lbl">← колется и бьётся</text>
-  <text x="232" y="246" class="lbl">мнётся, гнётся, рвётся →</text>
+  <text x="240" y="246" class="lbl">мнётся и рвётся →</text>
  </svg>
 </div>
 
@@ -106,7 +106,7 @@ sup{font-size:9px;color:#e0a030}
    <text x="36" y="146">твёрдость</text><text x="190" y="146">15 МПа</text>
   </g>
   <line x1="36" y1="82" x2="264" y2="82" stroke="var(--border,#2c3036)"/><line x1="36" y1="106" x2="264" y2="106" stroke="var(--border,#2c3036)"/><line x1="36" y1="130" x2="264" y2="130" stroke="var(--border,#2c3036)"/>
-  <text x="20" y="188" class="lbl">гранит 750 · железо ~2000 · стекло ~1000 · кожа ~2</text>
+  <text x="20" y="184" class="lbl">гранит 750 · железо ~2000</text><text x="20" y="198" class="lbl">стекло ~1000 · кожа ~2</text>
  </svg>
  <div>
   <h3>A. Прейскурант <span class="badge b-step">первый шаг</span></h3>
@@ -137,9 +137,9 @@ sup{font-size:9px;color:#e0a030}
   <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#d9534f"/></marker></defs>
   <text x="232" y="94" class="lblb">удар</text>
   <text x="188" y="134" style="font-size:11px;fill:#4caf50">оторвалось →</text><text x="188" y="147" style="font-size:11px;fill:#4caf50">кусок падает</text>
-  <text x="20" y="28" class="lbl">кубик 2 см, у каждого цена; выбиваются по очереди</text>
-  <text x="20" y="168" class="lbl">кожа, ткань, стекло, лист железа тоньше кубика —</text>
-  <text x="20" y="181" class="lbl">в эту сетку не помещаются</text>
+  <text x="20" y="28" class="lbl">кубики по 2 см</text>
+  <text x="20" y="168" class="lbl">кожа, ткань, стекло тоньше</text>
+  <text x="20" y="181" class="lbl">кубика — не помещаются</text>
   <rect x="196" y="6" width="98" height="24" rx="4" fill="none" stroke="#c0392b" stroke-width="2" transform="rotate(-6 245 18)"/>
   <text x="203" y="23" style="font-size:11px;fill:#e57373;font-weight:700" transform="rotate(-6 245 18)">KILL LIST</text>
  </svg>
@@ -164,15 +164,15 @@ sup{font-size:9px;color:#e0a030}
    <path d="M30 50 l-4 8 l8 8 l-8 8 l4 8 l0 8"/><path d="M70 50 l-4 8 l8 8 l-8 8 l4 8 l0 8"/><path d="M110 50 l-4 8 l8 8 l-8 8 l4 8 l0 8"/><path d="M150 50 l-4 8 l8 8 l-8 8 l4 8 l0 8"/>
   </g>
   <g fill="var(--foreground,#e7e5e1)"><circle cx="30" cy="50" r="4"/><circle cx="70" cy="50" r="4"/><circle cx="110" cy="50" r="4"/><circle cx="150" cy="50" r="4"/><circle cx="30" cy="90" r="4"/><circle cx="70" cy="90" r="4"/><circle cx="110" cy="90" r="4"/><circle cx="150" cy="90" r="4"/></g>
-  <text x="20" y="24" class="lbl">точки, сцепленные пружинками</text>
+  <text x="20" y="24" class="lbl">точки на пружинках</text>
   <!-- bubbles -->
-  <circle cx="210" cy="40" r="24" fill="none" stroke="#6f86a6"/><path d="M192 48 Q210 22 228 48" stroke="#6f86a6" stroke-width="2" fill="none"/>
-  <text x="240" y="36" class="lblb">сталь</text><text x="240" y="49" class="lbl">согнулась</text>
-  <circle cx="210" cy="100" r="24" fill="none" stroke="#7cc6c9"/><path d="M192 100 L204 100 M216 100 L228 100" stroke="#7cc6c9" stroke-width="2"/><path d="M210 92 l3 6 l-6 2 l5 6" stroke="#d9534f" stroke-width="1.5" fill="none"/>
-  <text x="240" y="96" class="lblb">стекло</text><text x="240" y="109" class="lbl">лопнула</text>
-  <circle cx="210" cy="160" r="24" fill="none" stroke="#b0704a"/><path d="M190 160 l6 -3 l6 6 l3 -3 M215 157 l3 3 l6 -6 l6 3" stroke="#b0704a" stroke-width="2" fill="none"/>
-  <text x="240" y="156" class="lblb">кожа</text><text x="240" y="169" class="lbl">растянулась</text><text x="240" y="181" class="lbl">и порвалась</text>
-  <text x="20" y="130" class="lbl">два порога у пружинки:</text><text x="20" y="144" class="lblb">гнуться при X, рваться при Y</text>
+  <circle cx="190" cy="40" r="24" fill="none" stroke="#6f86a6"/><path d="M172 48 Q190 22 208 48" stroke="#6f86a6" stroke-width="2" fill="none"/>
+  <text x="218" y="36" class="lblb">сталь</text><text x="218" y="49" class="lbl">согнулась</text>
+  <circle cx="190" cy="100" r="24" fill="none" stroke="#7cc6c9"/><path d="M172 100 L184 100 M196 100 L208 100" stroke="#7cc6c9" stroke-width="2"/><path d="M190 92 l3 6 l-6 2 l5 6" stroke="#d9534f" stroke-width="1.5" fill="none"/>
+  <text x="218" y="96" class="lblb">стекло</text><text x="218" y="109" class="lbl">лопнула</text>
+  <circle cx="190" cy="160" r="24" fill="none" stroke="#b0704a"/><path d="M170 160 l6 -3 l6 6 l3 -3 M195 157 l3 3 l6 -6 l6 3" stroke="#b0704a" stroke-width="2" fill="none"/>
+  <text x="218" y="156" class="lblb">кожа</text><text x="218" y="169" class="lbl">порвалась</text>
+  <text x="20" y="128" class="lbl">два порога:</text><text x="20" y="144" class="lblb">гнётся при X,</text><text x="20" y="160" class="lblb">рвётся при Y</text>
  </svg>
  <div>
   <h3>C. Связи-пружинки <span class="badge b-no">дорого</span></h3>
@@ -188,20 +188,20 @@ sup{font-size:9px;color:#e0a030}
 <!-- D -->
 <div class="box var">
  <svg viewBox="0 0 300 200">
-  <g style="font-size:10.5px;fill:#fff;font-weight:600">
-   <rect x="6" y="14" width="92" height="30" rx="6" fill="#8f98a3"/><text x="14" y="33">хрупкое — колется</text>
-   <rect x="104" y="14" width="92" height="30" rx="6" fill="#c08a4e"/><text x="110" y="33">волокна — вдоль</text>
-   <rect x="202" y="14" width="92" height="30" rx="6" fill="#6f86a6"/><text x="210" y="33">тягучее — мнётся</text>
-   <rect x="6" y="50" width="92" height="30" rx="6" fill="#b0704a"/><text x="14" y="69">лист — режется</text>
-   <rect x="104" y="50" width="92" height="30" rx="6" fill="#9b7a52"/><text x="110" y="69">сыпучее — осыпь</text>
-   <rect x="202" y="50" width="92" height="30" rx="6" fill="#3d8bd4"/><text x="210" y="69">жидкое — течёт</text>
+  <g style="font-size:11px;fill:#fff">
+   <rect x="6" y="10" width="92" height="38" rx="6" fill="#8f98a3"/><text x="14" y="26" font-weight="700">хрупкое</text><text x="14" y="41">колется</text>
+   <rect x="104" y="10" width="92" height="38" rx="6" fill="#c08a4e"/><text x="112" y="26" font-weight="700">волокна</text><text x="112" y="41">по волокну</text>
+   <rect x="202" y="10" width="92" height="38" rx="6" fill="#6f86a6"/><text x="210" y="26" font-weight="700">тягучее</text><text x="210" y="41">мнётся</text>
+   <rect x="6" y="54" width="92" height="38" rx="6" fill="#b0704a"/><text x="14" y="70" font-weight="700">лист</text><text x="14" y="85">режется</text>
+   <rect x="104" y="54" width="92" height="38" rx="6" fill="#9b7a52"/><text x="112" y="70" font-weight="700">сыпучее</text><text x="112" y="85">осыпается</text>
+   <rect x="202" y="54" width="92" height="38" rx="6" fill="#3d8bd4"/><text x="210" y="70" font-weight="700">жидкое</text><text x="210" y="85">течёт</text>
   </g>
-  <text x="6" y="104" class="lbl">удары копят очки → 100 очков = срабатывает правило класса</text>
-  <rect x="6" y="112" width="288" height="12" rx="6" fill="var(--border,#2c3036)"/><rect x="6" y="112" width="190" height="12" rx="6" fill="#e0a030"/>
-  <text x="6" y="150" class="lblb">метки:</text>
-  <g style="font-size:12px;fill:var(--foreground,#e7e5e1)"><text x="56" y="150">🔥 горит</text><text x="126" y="150">💧 мокнет</text><text x="200" y="150">❄ мёрзнет</text></g>
-  <text x="6" y="172" class="lbl">огонь + «горит» → пепел;  вода → гасит огонь;</text>
-  <text x="6" y="186" class="lbl">материал материал не меняет (3 правила Zelda)</text>
+  <text x="6" y="112" class="lbl">удары копят очки → 100 = правило класса</text>
+  <rect x="6" y="119" width="288" height="10" rx="5" fill="var(--border,#2c3036)"/><rect x="6" y="119" width="190" height="10" rx="5" fill="#e0a030"/>
+  <text x="6" y="152" class="lblb">метки:</text>
+  <g style="font-size:12px;fill:var(--foreground,#e7e5e1)"><circle cx="62" cy="148" r="5" fill="#e8662a"/><text x="70" y="152">горит</text><circle cx="124" cy="148" r="5" fill="#3d8bd4"/><text x="132" y="152">мокнет</text><circle cx="196" cy="148" r="5" fill="#9ad3f5"/><text x="204" y="152">мёрзнет</text></g>
+  <text x="6" y="174" class="lbl">огонь + «горит» → пепел</text>
+  <text x="6" y="189" class="lbl">вода гасит огонь</text>
  </svg>
  <div>
   <h3>D. Классы и метки <span class="badge b-no">теряем точность</span></h3>
@@ -219,7 +219,7 @@ sup{font-size:9px;color:#e0a030}
  <svg viewBox="0 0 300 220">
   <rect x="10" y="8" width="280" height="40" rx="8" fill="#2e7d32"/>
   <text x="22" y="26" style="font-size:12px;fill:#fff;font-weight:700">ОДНА ФОРМУЛА: E = P·V + R·A</text>
-  <text x="22" y="41" style="font-size:10.5px;fill:#e8f5e9">ворота твёрдости · износ лезвия · жар и влага</text>
+  <text x="22" y="41" style="font-size:10.5px;fill:#e8f5e9">твёрдость · износ · жар и влага</text>
   <g stroke="var(--muted-foreground,#9b9a96)" stroke-width="1"><path d="M40 48V70M95 48V70M150 48V70M205 48V70M260 48V70M150 48 L150 140"/></g>
   <!-- canvases -->
   <g>
@@ -230,13 +230,12 @@ sup{font-size:9px;color:#e0a030}
    <rect x="236" y="80" width="48" height="26" rx="2" fill="#6f86a6"/><ellipse cx="258" cy="93" rx="9" ry="5" fill="#4b5f7c"/>
   </g>
   <g style="font-size:10.5px;fill:var(--foreground,#e7e5e1)">
-   <text x="14" y="126">дерево</text><text x="76" y="126">камень</text><text x="134" y="126">земля</text><text x="186" y="126">кожа, ткань</text><text x="238" y="126">железо</text>
+   <text x="18" y="128">дерево</text><text x="74" y="128">камень</text><text x="134" y="128">земля</text><text x="192" y="128">кожа</text><text x="240" y="128">железо</text>
   </g>
-  <g class="lbl"><text x="14" y="139">срезы 5 мм</text><text x="70" y="139">треугольники</text><text x="128" y="139">карта высот</text><text x="186" y="139">лист клеток</text><text x="238" y="139">вмятины 1 см</text></g>
-  <rect x="120" y="148" width="60" height="26" rx="4" fill="none" stroke="#3d8bd4" stroke-width="1.5"/><rect x="121" y="160" width="58" height="13" fill="#3d8bd4" opacity=".6"/>
-  <text x="186" y="164" class="lblb">вода</text><text x="186" y="177" class="lbl">счётчик литров</text>
-  <text x="10" y="200" class="lbl">сетки только внутри предметов, земля — карта высот</text>
-  <text x="10" y="214" style="font-size:11px;fill:#4caf50">✓ в рамках KILL LIST</text>
+  <rect x="118" y="144" width="60" height="26" rx="4" fill="none" stroke="#3d8bd4" stroke-width="1.5"/><rect x="119" y="156" width="58" height="13" fill="#3d8bd4" opacity=".6"/>
+  <text x="184" y="156" class="lblb">вода</text><text x="184" y="169" class="lbl">счётчик литров</text>
+  <text x="10" y="198" class="lbl">у каждого своя невидимая сетка,</text>
+  <text x="10" y="213" style="font-size:11px;fill:#4caf50">только внутри предметов ✓ KILL LIST</text>
  </svg>
  <div>
   <h3>E. Одна формула — свой холст у каждого класса <span class="badge b-rec">рекомендую</span></h3>
