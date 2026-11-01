@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Баланс RPG · 100 локаций</title>
+<style>:root{--page-bg:var(--background,#11151d);--text:var(--foreground,#edf0f6);--quiet:var(--muted-foreground,#9ba7b9);--corners:var(--radius,14px);--family:var(--font-sans,Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif);--good:var(--success,#6ce1b0);--bad:var(--destructive,#ff939e);--amber:var(--warning,#f0ca7e);--blue:var(--chart-1,#8eb7ff);--purple:var(--chart-2,#bdabff);--line:color-mix(in srgb,var(--text) 12%,transparent);--surface:color-mix(in srgb,var(--text) 4%,var(--page-bg));--input-bg:color-mix(in srgb,var(--text) 5%,var(--page-bg))}
+*{box-sizing:border-box}html,body{background:transparent;color:var(--text);font-family:var(--family);margin:0}body{font-size:13px;line-height:1.5}main{width:100%;max-width:1100px;margin:0 auto;padding:0}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--blue);outline-offset:3px}button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:8px 12px;transition:background .15s,border-color .15s}button:hover{background:color-mix(in srgb,var(--text) 9%,var(--page-bg));border-color:color-mix(in srgb,var(--text) 25%,transparent)}button:disabled{opacity:.45;cursor:wait}input[type=number]{min-width:0;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--input-bg);color:var(--text);padding:9px 10px;font-variant-numeric:tabular-nums}input[type=range]{width:100%;accent-color:var(--blue);cursor:pointer;height:20px;margin:9px 0 2px}input[type=checkbox]{accent-color:var(--blue);height:16px;width:16px;cursor:pointer;flex-shrink:0}label{cursor:pointer}h2,h3,p{margin:0}h2{font-size:19px;font-weight:650;letter-spacing:-.4px}h3{font-size:14px;font-weight:600}small,.hint{font-size:12px;color:var(--quiet)}.hint{line-height:1.6}.intro{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:6px}.eyebrow{font-size:9px;letter-spacing:1.8px;color:var(--quiet);font-weight:650}.live{font-size:10px;color:var(--quiet);display:flex;align-items:center;gap:6px;white-space:nowrap}.live i{height:5px;width:5px;border-radius:50%;background:var(--good);box-shadow:0 0 10px #6ce1b033}.live.busy i{background:var(--amber);animation:pulse .7s infinite}.lead{font-size:clamp(23px,4vw,34px);line-height:1.2;font-weight:650;letter-spacing:-1px;margin:14px 0 10px}.sublead{max-width:620px;color:var(--quiet);font-size:13px;line-height:1.65}.toolbar{display:flex;flex-wrap:wrap;gap:5px;margin:16px 0}.subtle{border-color:transparent;background:transparent;padding:5px 8px;font-size:11px;color:var(--quiet)}.reset{margin-left:auto}.flow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:10px;letter-spacing:.15px;color:var(--quiet);padding:11px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.flow b{font-weight:400;opacity:.45}.flow span:first-child{color:var(--blue)}.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:17px 0}.kpi{background:var(--surface);border-radius:var(--corners);padding:16px;min-width:0}.kpi>span{font-size:10px;color:var(--quiet)}.kpi strong{display:block;font-size:clamp(21px,4vw,30px);letter-spacing:-.8px;line-height:1.4;margin:5px 0;font-weight:600;font-variant-numeric:tabular-nums}.kpi small{font-size:10px;line-height:1.4;display:block}.notices{display:grid;gap:7px;margin:10px 0}.notice{color:var(--amber);font-size:11px;padding:10px 13px;background:color-mix(in srgb,var(--amber) 8%,transparent);border-radius:8px;line-height:1.6}.notice.info{color:var(--quiet);background:var(--surface)}.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:22px 0 22px;overflow-x:auto;scrollbar-width:thin}.tabs button{background:transparent;border:0;border-radius:0;font-size:12px;color:var(--quiet);padding:10px 13px 13px;white-space:nowrap;border-bottom:2px solid transparent}.tabs button:first-child{padding-left:0;padding-right:19px}.tabs button[aria-selected=true]{color:var(--text);border-bottom-color:var(--blue)}.tabs span{font-size:9px;opacity:.6;margin-left:3px}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 8px}.tag{font-size:9px;font-weight:500;color:var(--blue);background:color-mix(in srgb,var(--blue) 9%,transparent);border-radius:5px;padding:4px 7px;white-space:nowrap}.test-tag{color:var(--good);background:color-mix(in srgb,var(--good) 8%,transparent)}.stat-table{margin:19px 0 10px}.stat-head,.stat-row{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:14px;align-items:center}.stat-head{font-size:10px;color:var(--quiet);padding:0 0 8px}.stat-row{padding:7px 0}.stat-row label{display:flex;gap:8px;align-items:center;font-size:12px}.stat-dot{width:5px;height:5px;border-radius:50%;display:inline-block;flex-shrink:0}.damage{background:var(--blue)}.hp{background:var(--purple)}.regen{background:var(--good)}.enemy{background:var(--amber)}.slider-field{padding:15px 0 10px;margin:4px 0 10px}.slider-field>label,.compact-slider>label{display:flex;justify-content:space-between;align-items:center;font-size:12px}.slider-field output,.compact-slider output{font-variant-numeric:tabular-nums;font-size:11px;color:var(--blue)}.range-labels{display:flex;justify-content:space-between;color:var(--quiet);font-size:9px}.plot-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:22px 0 7px}.plot-title>span{font-size:9px;color:var(--quiet);text-align:right}.chart{width:100%;overflow:hidden}.growth-chart{height:145px}.hp-chart{height:180px}.chart svg{display:block;width:100%;height:100%;overflow:visible}.chart text{font-family:var(--family);fill:var(--quiet);font-size:9px}.chart .gridline{stroke:var(--line);stroke-width:1;stroke-dasharray:3 5}.chart .axis{stroke:var(--line);stroke-width:1}.legend{display:flex;justify-content:center;gap:19px;font-size:10px;color:var(--quiet);margin:9px 0 13px;flex-wrap:wrap}.legend span{display:flex;align-items:center;gap:5px}.legend i{width:12px;height:3px;display:inline-block;border-radius:2px}.reference{background:var(--purple)}.player{background:var(--good)}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 18px;margin:20px 0}.field-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.field{display:flex;flex-direction:column;gap:7px;font-size:11px}.field small{font-size:10px;line-height:1.4}.minor-heading{margin:24px 0 12px;font-size:13px}.pack-inputs{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:8px}.pack-inputs label{font-size:9px;color:var(--quiet);text-align:center}.pack-inputs input{margin-top:5px;padding:7px 2px 7px 7px;font-size:12px}.preset-row{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0}.loadout-bar{display:flex;justify-content:space-between;gap:10px;align-items:center;background:var(--surface);padding:16px;border-radius:var(--corners);margin:12px 0}.loadout-bar strong{font-size:11px;display:block;margin-bottom:4px}.loadout-bar span{font-size:11px;color:var(--quiet)}.loadout-bar button{font-size:10px;flex-shrink:0}.skill-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}.skill-card{padding:16px;background:var(--surface);border:1px solid transparent;border-radius:var(--corners);position:relative}.skill-card.selected{border-color:color-mix(in srgb,var(--good) 45%,transparent)}.skill-title{display:flex;gap:7px;align-items:center;justify-content:space-between;margin-bottom:10px}.skill-title label{display:flex;gap:6px;align-items:center;line-height:1.25;font-size:11px;font-weight:600}.skill-icon{font-size:21px;line-height:1;margin-bottom:10px;color:var(--blue)}.skill-card p{font-size:10px;line-height:1.5;color:var(--quiet);min-height:45px}.skill-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.skill-fields label{font-size:9px;color:var(--quiet);min-width:0}.skill-fields input{padding:6px 5px;font-size:11px;margin-top:5px}.skill-unit{font-size:8px;color:var(--quiet);margin-top:5px;line-height:1.3}.ref-mark{font-size:8px;position:absolute;right:13px;top:13px;color:var(--purple)}.skill-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}.skill-footer>span{font-size:11px;color:var(--good);margin-right:auto}.share-bar{height:9px;display:flex;overflow:hidden;border-radius:5px;margin:10px 0}.share-bar i{display:block;height:100%}.callout{background:var(--surface);border-radius:var(--corners);padding:16px;line-height:1.8;font-size:12px;margin:16px 0}.callout b{color:var(--text);font-weight:600}.formula{padding:19px 0;border-bottom:1px solid var(--line)}.formula b{display:block;font-size:12px;margin-bottom:10px}.formula code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;display:block;line-height:1.9;white-space:normal;overflow-wrap:anywhere;color:var(--blue);background:var(--surface);padding:16px;border-radius:var(--corners)}.formula p{font-size:11px;color:var(--quiet);line-height:1.8;margin-top:10px}.test-section{margin-top:28px;padding-top:25px;border-top:1px solid var(--line)}.level-picker{display:grid;grid-template-columns:100px minmax(0,1fr) 62px;align-items:center;gap:15px;margin:23px 0 15px}.level-picker label{font-size:12px;color:var(--quiet)}.level-picker strong{color:var(--text);font-size:22px;margin-left:6px;font-weight:600}.level-picker input[type=range]{margin:0}.level-picker input[type=number]{padding:7px 5px 7px 10px}.test-sliders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.compact-slider>label{font-size:11px}.test-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 15px}.test-actions>span{font-size:10px;color:var(--quiet)}.duel-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}.duel-card{padding:16px;background:var(--surface);border-radius:var(--corners)}.duel-card .card-top{display:flex;justify-content:space-between;gap:8px;font-size:11px;margin-bottom:7px}.result{font-size:10px;color:var(--good)}.result.fail{color:var(--bad)}.duel-card strong{font-size:22px;letter-spacing:-.7px;font-weight:600;font-variant-numeric:tabular-nums}.duel-card p{font-size:10px;color:var(--quiet);margin-top:5px;line-height:1.6}.mini-hp{height:4px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:12px}.mini-hp i{display:block;height:100%;background:var(--good);border-radius:5px}.detail-block{border-bottom:1px solid var(--line);padding:11px 0}.detail-block summary{cursor:pointer;font-size:11px;color:var(--quiet);padding:3px 0}.detail-block[open] summary{margin-bottom:12px}.table-scroll{width:100%;overflow:auto;scrollbar-width:thin}table{border-collapse:collapse;width:100%;font-size:10px;font-variant-numeric:tabular-nums;white-space:nowrap}th{text-align:left;font-weight:500;color:var(--quiet);padding:10px 8px;border-bottom:1px solid var(--line);font-size:9px}td{padding:10px 8px;border-bottom:1px solid color-mix(in srgb,var(--text) 5%,transparent)}td:first-child,th:first-child{padding-left:0}td:last-child,th:last-child{padding-right:0}tr.active{background:color-mix(in srgb,var(--blue) 7%,transparent)}td button{padding:0;background:none;border:0;font-size:inherit;color:var(--blue)}.good-text{color:var(--good)}.bad-text{color:var(--bad)}.campaign-heading{margin-top:24px}.campaign-map{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));gap:4px;margin:13px 0}.campaign-map button{padding:5px 0;font-size:9px;border-radius:4px;background:color-mix(in srgb,var(--good) 8%,transparent);color:var(--good);border:1px solid transparent;font-variant-numeric:tabular-nums}.campaign-map button.fail{background:color-mix(in srgb,var(--bad) 9%,transparent);color:var(--bad)}.campaign-map button.active{border-color:var(--text);color:var(--text)}.campaign-table{max-height:280px;overflow:auto;margin-top:14px}.campaign-table thead{position:sticky;top:0;background:var(--page-bg);z-index:1}.cast-list{display:grid;gap:7px;font-size:11px}.cast-list>div{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:7px;color:var(--quiet)}.cast-list>div b{color:var(--text);font-weight:500}footer{border-top:1px solid var(--line);margin-top:24px;padding:15px 0 10px;display:flex;justify-content:space-between;gap:10px;font-size:9px;color:var(--quiet)}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--page-bg);padding:11px 17px;max-width:90%;border-radius:9px;font-size:12px;z-index:20;box-shadow:0 5px 30px #0003}[hidden]{display:none!important}@keyframes pulse{50%{opacity:.3}}@media(min-width:900px){main{padding:15px 24px 0}}@media(max-width:500px){.intro{align-items:flex-start;gap:7px;flex-direction:column}.lead{margin-top:12px}.kpis{gap:7px}.kpi{padding:13px}.kpi>span{font-size:9px}.kpi strong{font-size:23px}.kpi small{font-size:9px}.tabs button{padding:10px 10px 12px;font-size:11px}.tabs button:first-child{padding-right:14px}.tag{font-size:8px}.stat-head,.stat-row{grid-template-columns:1.15fr 1fr 1fr;gap:8px}.stat-row label{font-size:10px;gap:5px}.stat-row input{font-size:12px;padding:9px 6px}.field-grid{gap:15px 12px}.field-grid.three{gap:9px}.field{font-size:10px}.field input{font-size:12px}.pack-inputs{gap:4px}.pack-inputs input{padding-left:5px;font-size:11px}.skill-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.skill-card{padding:16px}.skill-card p{min-height:45px}.loadout-bar{flex-direction:column;align-items:flex-start;gap:11px}.plot-title>span{max-width:150px}.level-picker{grid-template-columns:90px minmax(0,1fr) 55px;gap:10px}.test-sliders{gap:12px}.compact-slider label{font-size:10px}.compact-slider output{font-size:10px}.test-actions{align-items:flex-start}.test-actions>span{max-width:65%;line-height:1.5}.duel-cards{gap:8px}.duel-card .card-top{font-size:10px;flex-direction:column;gap:3px}.duel-card strong{font-size:22px}.campaign-map{grid-template-columns:repeat(10,minmax(0,1fr))}.campaign-map button{padding:6px 0}.toolbar{gap:2px}.toolbar button{font-size:10px;padding:5px}.reset{margin-left:0}.flow{gap:7px;font-size:9px}.formula code{font-size:10px}.legend{gap:13px;font-size:9px}footer{font-size:8px}.section-heading h2{font-size:18px}}
+
+body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @media(max-width:500px){body.standalone{padding:14px}}
+@media(prefers-color-scheme:light){:root{--page-bg:var(--background,#f8fafd);--text:var(--foreground,#17283d);--quiet:var(--muted-foreground,#627086);--good:#167852;--bad:#c93e51;--blue:#315ab9;--purple:#8760c5;--amber:#936c20}}
+
+.derived-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px 0;margin-bottom:20px}.derived-strip span{display:block;font-size:9px;color:var(--quiet)}.derived-strip b{display:block;font-size:16px;font-weight:550;margin-top:3px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}.derived-strip small{font-size:8px;display:block;margin-top:2px}@media(max-width:500px){.derived-strip{gap:8px}.derived-strip b{font-size:13px}.derived-strip span{font-size:8px}.derived-strip small{font-size:7px}}
+
+.level-picker>label{display:flex;align-items:center;white-space:nowrap}@media(max-width:500px){.kpi strong{font-size:20px;white-space:nowrap}}
+</style>
+</head>
+<body class="standalone">
+<main id="app">
+  <div class="intro"><span class="eyebrow">ПЕСОЧНИЦА БАЛАНСА · 100 ЛОКАЦИЙ</span><span class="live" id="liveState"><i></i> Все зависимости связаны</span></div>
+  <p class="lead">От героя — к врагам и цене прокачки.</p>
+  <p class="sublead">Задайте героя на старте и в конце. Средний набор приёмов определит врагов, выбранный набор покажет проходимость.</p>
+  <div class="toolbar">
+    <button type="button" id="downloadHtml" class="subtle">Скачать страницу ↗</button>
+    <button type="button" id="exportJson" class="subtle">Настройки ↓</button>
+    <button type="button" id="importJson" class="subtle">Загрузить ↑</button>
+    <button type="button" id="exportCsv" class="subtle">100 локаций · CSV ↓</button>
+    <button type="button" id="reset" class="subtle reset">Сброс</button>
+    <input id="importFile" type="file" accept="application/json,.json" hidden>
+  </div>
+  <div class="flow" aria-label="Зависимости расчёта"><span>Статы героя</span><b>→</b><span>3 приёма</span><b>→</b><span>Враги</span><b>→</b><span>Победа + цены</span></div>
+  <section class="kpis" aria-label="Итоги кампании">
+    <div class="kpi"><span>100 первых побед</span><strong id="kpiTime">—</strong><small id="kpiRetries">Считаем длительность…</small></div>
+    <div class="kpi"><span>Проверяемый герой</span><strong id="kpiPass">—</strong><small id="kpiPassNote">Тот же герой, другой набор</small></div>
+    <div class="kpi"><span>Энергия на зал</span><strong id="kpiEnergy">—</strong><small id="kpiGym">С учётом реального времени</small></div>
+  </section>
+  <div id="notices" class="notices" aria-live="polite"></div>
+  <nav class="tabs" aria-label="Настройки баланса" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="hero">Герой</button>
+    <button role="tab" aria-selected="false" data-tab="skills">Приёмы <span>12</span></button>
+    <button role="tab" aria-selected="false" data-tab="enemies">Локация</button>
+    <button role="tab" aria-selected="false" data-tab="economy">Прокачка</button>
+    <button role="tab" aria-selected="false" data-tab="formulas">Как считается</button>
+  </nav>
+  <section class="tab-panel" data-panel="hero">
+    <div class="section-heading"><h2>Плановый герой</h2><span class="tag">Общие настройки</span></div>
+    <p class="hint">Ожидаемые статы обычного игрока. Меняете их — пересчитываются враги и цены улучшений.</p>
+    <div class="stat-table"><div class="stat-head"><span>Параметр</span><span>Локация 1</span><span>Локация 100</span></div>
+      <div class="stat-row"><label for="d1"><i class="stat-dot damage"></i>Урон / сек.</label><input id="d1" aria-label="Урон героя на первой локации" data-path="hero.d1" type="number" min="1" step="10"><input aria-label="Урон героя на сотой локации" data-path="hero.d100" type="number" min="1" step="100"></div>
+      <div class="stat-row"><label for="h1"><i class="stat-dot hp"></i>Макс. HP</label><input id="h1" aria-label="HP героя на первой локации" data-path="hero.h1" type="number" min="1" step="100"><input aria-label="HP героя на сотой локации" data-path="hero.h100" type="number" min="1" step="1000"></div>
+      <div class="stat-row"><label for="r1"><i class="stat-dot regen"></i>Реген, % HP / сек.</label><input id="r1" aria-label="Реген героя на первой локации" data-path="hero.r1" type="number" min="0" max="15" step="0.1"><input aria-label="Реген героя на сотой локации" data-path="hero.r100" type="number" min="0" max="15" step="0.1"></div>
+    </div>
+    <div class="slider-field"><label for="curveShape">Когда приходит сила <output data-output="hero.shape"></output></label><input id="curveShape" data-path="hero.shape" type="range" min="0.3" max="3" step="0.05"><div class="range-labels"><span>Раньше</span><span>Равномерно · 1</span><span>Позже</span></div></div>
+    <div class="plot-title"><h3>Кривая роста</h3><span>Во сколько раз от старта · логарифмическая шкала</span></div>
+    <div id="growthChart" class="chart growth-chart" role="img" aria-label="Рост урона, HP и здоровья врагов по локациям"></div>
+    <div class="legend"><span><i class="damage"></i>Урон героя</span><span><i class="hp"></i>HP героя</span><span><i class="enemy"></i>HP пачки</span></div>
+    <p class="hint" id="growthNote"></p>
+  </section>
+  <section class="tab-panel" data-panel="skills" hidden>
+    <div class="section-heading"><h2>Три приёма из двенадцати</h2><span class="tag">Общие настройки</span></div>
+    <p class="hint">Коэффициенты заданы в секундах автоатаки или долях HP. Кулдауны сохраняются между аренами. Все приёмы открыты: это сравнение наборов.</p>
+    <div class="slider-field"><label for="skillStrength">Общая сила приёмов <output data-output="skills.strength"></output></label><input id="skillStrength" data-path="skills.strength" type="range" min="0" max="3" step="0.05"><div class="range-labels"><span>Без эффекта</span><span>Базовые числа · ×1</span><span>×3</span></div></div>
+    <div class="loadout-bar"><div><strong>Эталон</strong><span id="refNames"></span></div><button type="button" id="useAsReference">Выбранные → в эталон</button></div>
+    <p class="hint">Враги рассчитываются под эталон. Галочки ниже меняют только проверяемый набор.</p>
+    <div id="skillGrid" class="skill-grid"></div>
+    <div class="skill-footer"><span id="selectionCount">Выбрано 3 из 3</span><button type="button" id="copyReference" class="subtle">Вернуть эталонный набор</button><button type="button" id="noSkills" class="subtle">Без приёмов</button></div>
+    <p class="hint">Смена коэффициента или кулдауна — изменение общего правила: враги пересчитываются. Смена галочки — проверка готовых врагов.</p>
+  </section>
+  <section class="tab-panel" data-panel="enemies" hidden>
+    <div class="section-heading"><h2>Девять арен и босс</h2><span class="tag">Общие настройки</span></div>
+    <p class="hint">Одинаковый состав на всех 100 локациях. Растут характеристики врагов, а выбор приёмов меняет результат.</p>
+    <div class="field-grid">
+      <label class="field">Цель на локацию, сек.<input data-path="encounter.target" type="number" min="30" max="160" step="5"><small>Включая бег и переходы</small></label>
+      <label class="field">Минимальный запас HP, %<input data-path="encounter.reserve" type="number" min="5" max="75" step="5"><small>Для героя с эталонным набором</small></label>
+      <label class="field">HP босса / HP пачки<input data-path="encounter.bossWeight" type="number" min="1" max="8" step="0.5"></label>
+      <label class="field">Доля дальнего урона, %<input data-path="encounter.ranged" type="number" min="0" max="100" step="5"><small>Продолжается, пока герой бежит</small></label>
+      <label class="field">Подход к арене, сек.<input data-path="encounter.approach" type="number" min="0" max="2" step="0.05"></label>
+      <label class="field">Бег к следующей цели, сек.<input data-path="encounter.move" type="number" min="0" max="1" step="0.02"></label>
+      <label class="field">Переход между аренами, сек.<input data-path="encounter.between" type="number" min="0" max="3" step="0.1"><small>Без атак врагов, реген работает</small></label>
+    </div>
+    <h3 class="minor-heading">Врагов на каждой арене</h3>
+    <div class="pack-inputs" id="packInputs"></div>
+    <div class="preset-row"><button type="button" data-packs="swarm" class="subtle">Больше толпы</button><button type="button" data-packs="elite" class="subtle">Больше элиты</button><button type="button" data-packs="mixed" class="subtle">Смешанный состав</button></div>
+    <p class="hint">Все живые враги могут атаковать одновременно. Внутри одной арены враги одинаковы; один враг — крепкая одиночная цель.</p>
+  </section>
+  <section class="tab-panel" data-panel="economy" hidden>
+    <div class="section-heading"><h2>Цена заданной прогрессии</h2><span class="tag">Обратный расчёт</span></div>
+    <p class="hint">Статы задают, сколько нужно улучшений. Бюджет энергии и монет задаёт их цену. Это план экономики при ожидаемом шмоте и альбоме.</p>
+    <div class="field-grid">
+      <label class="field">Всего активной игры, ч<input data-path="economy.activeHours" type="number" min="0.5" max="100" step="0.5"></label>
+      <label class="field">Из них на бой, ч<input data-path="economy.combatHours" type="number" min="0.25" max="100" step="0.25"><small>Включая повторные попытки</small></label>
+      <label class="field">Календарное время, ч<input data-path="economy.calendarHours" type="number" min="0" max="720" step="1"><small>Сколько реально прошло между стартом и L100</small></label>
+      <label class="field">Энергия на старте<input data-path="economy.energyStart" type="number" min="0" max="100000" step="10"></label>
+      <label class="field">Энергия в час без дома<input data-path="economy.energyHour" type="number" min="0" max="10000" step="5"></label>
+      <label class="field">Средний множитель дома<input data-path="economy.house" type="number" min="1" max="10" step="0.1"><small>За весь путь, а не только к концу</small></label>
+      <label class="field">Доступная доля энергии, %<input data-path="economy.energyUse" type="number" min="5" max="100" step="5"><small>Учитывает потери от заполнения запаса</small></label>
+      <label class="field">Рост цены энергии за локацию<input data-path="economy.priceGrowth" type="number" min="1" max="1.1" step="0.005"><small>Базовая цена выводится из всего бюджета</small></label>
+    </div>
+    <h3 class="minor-heading">Откуда приходит прирост статов</h3>
+    <div class="field-grid">
+      <label class="field">Доля зала, %<input data-path="economy.gymShare" type="number" min="0" max="100" step="5"></label>
+      <label class="field">Доля альбома, %<input data-path="economy.albumShare" type="number" min="0" max="100" step="5"></label>
+    </div>
+    <div class="share-bar" id="shareBar"></div><p class="hint" id="sharesNote"></p>
+    <h3 class="minor-heading">Одно улучшение в зале</h3>
+    <div class="field-grid three">
+      <label class="field">Прибавка урона / сек.<input data-path="economy.dStep" type="number" min="0.01" step="1"></label>
+      <label class="field">Прибавка HP<input data-path="economy.hStep" type="number" min="0.01" step="10"></label>
+      <label class="field">Прибавка регена, п.п.<input data-path="economy.rStep" type="number" min="0.001" max="1" step="0.005"></label>
+    </div>
+    <div class="field-grid">
+      <label class="field">Монеты за победу на L1<input data-path="economy.coin1" type="number" min="1" step="10"></label>
+      <label class="field">Рост награды за локацию<input data-path="economy.coinGrowth" type="number" min="1" max="1.2" step="0.005"></label>
+      <label class="field">Доля монет на зал, %<input data-path="economy.coinUse" type="number" min="0" max="100" step="5"></label>
+      <label class="field">Секунд на одно нажатие<input data-path="economy.tapSeconds" type="number" min="0.1" max="10" step="0.1"></label>
+    </div>
+    <div id="economySummary" class="callout"></div>
+    <p class="hint">Для обучения к L берём монеты с L−1. Дополнительный дроп с поражений не заложен: он ускорит эту траекторию. Улучшения и цены пока дробные, чтобы видеть зависимости до округления.</p>
+  </section>
+  <section class="tab-panel" data-panel="formulas" hidden>
+    <div class="section-heading"><h2>Одна цепочка расчёта</h2><span class="tag">Формулы открыты</span></div>
+    <div class="formula"><b>1 · Герой между стартом и финишем</b><code>x = ((L − 1) / 99)^форма<br>D(L) = D₁ × (D₁₀₀ / D₁)^x<br>H(L) = H₁ × (H₁₀₀ / H₁)^x<br>r(L) = r₁ + (r₁₀₀ − r₁) × x</code><p>Урон и HP растут процентами, процент регена — равными прибавками при форме 1. Реген в расчёте делится на 100.</p></div>
+    <div class="formula"><b>2 · Приёмы</b><code>Урон по цели = D × коэффициент<br>Полезный урон = min(урон по цели, оставшиеся HP)<br>Лечение и щит = H × доля</code><p>Для площади урон считается по каждой цели. Перезарядки общие для всей локации, в начале попытки всё готово. Лечение — при достаточной потере HP. Атаки — когда герой добежал. Применение мгновенное.</p></div>
+    <div class="formula"><b>3 · Враги из среднего набора</b><code>HP врага = D(L) × B / N<br>Урон/сек. врага = H(L) × 2P / (N + 1)<br>HP босса = D(L) × B × вес босса<br>Урон/сек. босса = H(L) × P</code><p>B — здоровье пачки в секундах автоатаки, P — давление в долях HP/сек. Страница подбирает B под целевое время и P под минимальный запас HP эталонного героя. Из-за кулдаунов целевое время иногда достигается только приблизительно; рядом показан фактический результат.</p></div>
+    <div class="formula"><b>4 · Проходимость</b><code>HP после шага = min(max HP,<br>  HP − входящий урон + реген + лечение)</code><p>Щит поглощает урон до потери HP. Реген идёт непрерывно; смерть проверяется до следующего применения лечения. Во время бега обычная атака выключена, дальняя часть входящего урона сохраняется. Шаг расчёта до 0,08 сек., с остановкой в момент убийства, окончания бега и кулдауна. Урон непрерывный: без критов, промахов и отдельных ударов. Набор тестового героя меняет исход боя, а враги остаются рассчитанными под эталон.</p></div>
+    <div class="formula"><b>5 · Цены из доступных ресурсов</b><code>Улучшений = прирост статов × доля зала / прибавка<br>Энергия = (старт + часы × энергия/ч × дом) × доступная доля<br>Вес цены(L) = рост цены^(L − 2)<br>Базовая цена = энергия / Σ(улучшения × вес цены)<br>Цена(L) = базовая цена × вес цены(L)<br>Монеты за улучшение(L) = награда(L−1) × доля / улучшения(L)</code><p>Цены пересчитываются под заданный конечный результат и срок. Поэтому увеличение доступной энергии при фиксированных конечных статах повышает допустимую цену. Доля шмота и альбома — ожидаемый вклад в прирост, без розыгрыша дропа. Нажатия распределяют оставшееся активное время зала пропорционально расходу энергии. Модель не симулирует усталость и покупку дома.</p></div>
+    <div class="callout">Это инструмент для выбора чисел и проверки связей. Пресеты приёмов и стартовые значения — рабочий черновик, который можно менять целиком.</div>
+  </section>
+  <section class="test-section">
+    <div class="section-heading"><h2>Проверка на готовых врагах</h2><span class="tag test-tag">Только тест героя</span></div>
+    <p class="hint">Эти ползунки и выбранные приёмы меняют результат боя. Общая сила врагов и цены сохраняются.</p>
+    <div class="level-picker"><label for="level">Локация <strong id="levelLabel">50</strong></label><input id="level" data-path="test.level" type="range" min="1" max="100" step="1"><input aria-label="Номер тестируемой локации" data-path="test.level" type="number" min="1" max="100" step="1"></div>
+    <div class="derived-strip"><div><span>HP пачки</span><b id="derivedPack">—</b></div><div><span>HP босса</span><b id="derivedBoss">—</b></div><div><span>Урон/с босса</span><b id="derivedPressure">—</b></div><div><span>Цена улучшения</span><b id="derivedPrice">—</b><small>энергия + монеты</small></div></div>
+    <div class="test-sliders">
+      <div class="compact-slider"><label for="testDamage">Урон <output data-output="test.damage"></output></label><input id="testDamage" data-path="test.damage" type="range" min="20" max="250" step="5"></div>
+      <div class="compact-slider"><label for="testHP">HP <output data-output="test.hp"></output></label><input id="testHP" data-path="test.hp" type="range" min="20" max="250" step="5"></div>
+      <div class="compact-slider"><label for="testRegen">Реген <output data-output="test.regen"></output></label><input id="testRegen" data-path="test.regen" type="range" min="0" max="250" step="5"></div>
+    </div>
+    <div class="test-actions"><span id="testNames"></span><button type="button" data-open-tab="skills" class="subtle">Выбрать приёмы ↗</button></div>
+    <div class="duel-cards"><div id="referenceCard" class="duel-card"></div><div id="testCard" class="duel-card"></div></div>
+    <div class="plot-title"><h3>Здоровье по ходу попытки</h3><span id="hpChartNote"></span></div>
+    <div id="hpChart" class="chart hp-chart" role="img" aria-label="Здоровье эталонного и проверяемого героя во время боя"></div>
+    <div class="legend"><span><i class="reference"></i>Эталон</span><span><i class="player"></i>Проверяемый набор</span></div>
+    <details class="detail-block"><summary>Десять арен: враги и исход боя</summary><div class="table-scroll"><table><thead><tr><th>Арена</th><th>Врагов</th><th>HP / враг</th><th>Урон/с / враг</th><th>Время</th><th>HP после</th></tr></thead><tbody id="arenaBody"></tbody></table></div></details>
+    <details class="detail-block"><summary>Приёмы: применения и вклад</summary><div id="castDetails"></div></details>
+    <div class="section-heading campaign-heading"><h3>Все 100 локаций</h3><span class="hint">Нажмите на номер</span></div>
+    <div id="campaignMap" class="campaign-map" aria-label="Проходимость ста локаций"></div>
+    <p class="hint">Каждая локация проверяется своим плановым героем, умноженным на тестовые проценты. Это срезы прогрессии, а не один герой, который подряд проходит всю карту. Зелёный — победа, красный — поражение.</p>
+    <div class="table-scroll campaign-table"><table><thead><tr><th>Локация</th><th>Герой D / HP</th><th>HP пачки</th><th>Зал: энергия + монеты</th><th>Результат</th></tr></thead><tbody id="campaignBody"></tbody></table></div>
+  </section>
+  <footer><span>Расчёт локальный · настройки сохраняются в браузере</span><span id="computeTime"></span></footer>
+  <div id="toast" role="status" class="toast" hidden></div>
+</main>
+<script>(function (root) {
+  'use strict';
+  const VERSION = 1;
+  const DT = 0.08;
+  const COUNT = 100;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const clone = v => JSON.parse(JSON.stringify(v));
+  const defs = [
+    {id:'heavy',name:'Тяжёлый удар',kind:'single',icon:'↗',power:3.5,cd:9,unit:'сек. автоатаки',description:'Сильный удар по текущей цели.'},
+    {id:'sweep',name:'Круговой удар',kind:'area',icon:'◎',power:0.9,cd:14,targets:8,unit:'сек. автоатаки / цель',description:'Удар по всем живым врагам, до 8 целей.'},
+    {id:'heal',name:'Второе дыхание',kind:'heal',icon:'+',power:0.2,cd:22,unit:'доля max HP',description:'Лечение при достаточной потере здоровья.'},
+    {id:'combo',name:'Серия',kind:'single',icon:'»',power:1.5,cd:4.5,unit:'сек. автоатаки',description:'Частый одиночный удар.'},
+    {id:'blast',name:'Взрыв',kind:'area',icon:'✳',power:1.8,cd:28,targets:8,unit:'сек. автоатаки / цель',description:'Редкий мощный удар по площади.'},
+    {id:'fan',name:'Веер',kind:'area',icon:'⋔',power:0.65,cd:7,targets:3,unit:'сек. автоатаки / цель',description:'Частая атака по трём целям.'},
+    {id:'shield',name:'Щит',kind:'shield',icon:'◇',power:0.24,cd:19,duration:7,unit:'доля max HP',description:'Щит на 7 секунд. Остаток щита сгорает.'},
+    {id:'roar',name:'Рёв',kind:'stun',icon:'≋',power:2.2,cd:24,unit:'сек. контроля',description:'Останавливает атаки текущей пачки; по боссу 35% длительности.'},
+    {id:'finish',name:'Сокрушение',kind:'single',icon:'↓',power:6,cd:24,unit:'сек. автоатаки',description:'Редкий одиночный удар без порога HP.'},
+    {id:'regen',name:'Восстановление',kind:'regen',icon:'↟',power:0.012,cd:25,duration:8,unit:'доля max HP / сек.',description:'Дополнительный реген на 8 секунд.'},
+    {id:'rage',name:'Натиск',kind:'buff',icon:'↑',power:0.65,cd:20,duration:6,unit:'добавка к урону',description:'Усиливает автоатаку и атакующие приёмы на 6 секунд.'},
+    {id:'guard',name:'Стойка',kind:'guard',icon:'▱',power:0.45,cd:18,duration:5,unit:'доля защиты',description:'Снижает входящий урон на 5 секунд, максимум на 85%.'}
+  ];
+  const DEFAULTS = {
+    version:VERSION,
+    hero:{d1:100,d100:1000,h1:1000,h100:10000,r1:0.5,r100:2,shape:1},
+    encounter:{target:70,reserve:25,bossWeight:3,packCounts:[4,6,2,8,3,7,1,5,8],ranged:30,approach:0.35,move:0.12,between:0.3},
+    skills:{strength:1,items:defs.map(x=>({id:x.id,power:x.power,cd:x.cd})),reference:['heavy','sweep','heal']},
+    economy:{activeHours:5,combatHours:3,calendarHours:24,energyStart:100,energyHour:20,house:1.5,energyUse:85,priceGrowth:1.01,gymShare:65,albumShare:10,dStep:10,hStep:100,rStep:0.025,coin1:100,coinGrowth:1.025,coinUse:65,tapSeconds:1},
+    test:{level:50,damage:100,hp:100,regen:100,loadout:['heavy','sweep','heal']}
+  };
+  const numeric = (v, fallback, lo, hi) => {
+    const n=Number(v); return Number.isFinite(n) ? clamp(n,lo,hi) : fallback;
+  };
+  function sanitize(input) {
+    const s=clone(DEFAULTS), a=input&&typeof input==='object'?input:{};
+    const limits={
+      hero:{d1:[1,1e8],d100:[1,1e10],h1:[1,1e9],h100:[1,1e11],r1:[0,15],r100:[0,15],shape:[0.3,3]},
+      encounter:{target:[30,160],reserve:[5,75],bossWeight:[1,8],ranged:[0,100],approach:[0,2],move:[0,1],between:[0,3]},
+      economy:{activeHours:[0.5,100],combatHours:[0.25,100],calendarHours:[0,720],energyStart:[0,1e5],energyHour:[0,1e4],house:[1,10],energyUse:[5,100],priceGrowth:[1,1.1],gymShare:[0,100],albumShare:[0,100],dStep:[0.01,1e6],hStep:[0.01,1e7],rStep:[0.001,1],coin1:[1,1e6],coinGrowth:[1,1.2],coinUse:[0,100],tapSeconds:[0.1,10]},
+      test:{level:[1,100],damage:[20,250],hp:[20,250],regen:[0,250]}
+    };
+    Object.keys(limits).forEach(group=>Object.keys(limits[group]).forEach(key=>{
+      const bounds=limits[group][key];
+      s[group][key]=numeric(a[group]?.[key],s[group][key],...bounds);
+    }));
+    s.hero.d100=Math.max(s.hero.d1,s.hero.d100);
+    s.hero.h100=Math.max(s.hero.h1,s.hero.h100);
+    s.hero.r100=Math.max(s.hero.r1,s.hero.r100);
+    s.test.level=Math.round(s.test.level);
+    if (s.economy.gymShare+s.economy.albumShare>100) s.economy.albumShare=100-s.economy.gymShare;
+    if(Array.isArray(a.encounter?.packCounts)) s.encounter.packCounts=Array.from({length:9},(_,i)=>Math.round(numeric(a.encounter.packCounts[i],s.encounter.packCounts[i],1,8)));
+    s.skills.strength=numeric(a.skills?.strength,1,0,3);
+    if(Array.isArray(a.skills?.items)) s.skills.items=defs.map(d=>{
+      const x=a.skills.items.find(v=>v&&v.id===d.id);
+      return {id:d.id,power:numeric(x?.power,d.power,0, d.kind==='regen'?0.15:['heal','shield','guard'].includes(d.kind)?1:20),cd:numeric(x?.cd,d.cd,2,90)};
+    });
+    function selection(value,fallback) {
+      if(!Array.isArray(value)) return fallback.slice();
+      return [...new Set(value.filter(id=>defs.some(d=>d.id===id)))].slice(0,3);
+    }
+    s.skills.reference=selection(a.skills?.reference,s.skills.reference);
+    s.test.loadout=selection(a.test?.loadout,s.test.loadout);
+    return s;
+  }
+  function progress(level,s) {return Math.pow(clamp((level-1)/99,0,1),s.hero.shape);}
+  function heroAt(level,s) {
+    const x=progress(level,s), h=s.hero;
+    return {d:h.d1*Math.pow(h.d100/h.d1,x),h:h.h1*Math.pow(h.h100/h.h1,x),r:(h.r1+(h.r100-h.r1)*x)/100};
+  }
+  function skillSet(s,ids) {return ids.map(id=>{
+    const def=defs.find(x=>x.id===id), v=s.skills.items.find(x=>x.id===id);
+    return {...def,...v,power:v.power*s.skills.strength};
+  });}
+  function simulate(s,hero,enemy,ids,options={}) {
+    const dt=options.dt||DT, limit=options.limit||Math.max(240,s.encounter.target*3);
+    const skills=skillSet(s,ids), ready=skills.map(()=>0), uses=Object.fromEntries(ids.map(id=>[id,0]));
+    const waves=s.encounter.packCounts.concat([1]);
+    const record=!!options.record, ignoreDeath=!!options.ignoreDeath;
+    const maxHP=hero.h;
+    let hp=maxHP,minHP=maxHP,time=0,wave=-1,enemies=[],wait=0,approach=0;
+    let shield=0,shieldUntil=0,stunUntil=0,buffUntil=0,buff=0,guardUntil=0,guard=0,regenUntil=0,regen=0;
+    let damageOut=0,damageIn=0,healing=0,absorbed=0,basicDamage=0,skillDamage=0;
+    let clear=false,dead=false,timeout=false;
+    const rows=[], trace=record?[{t:0,hp:1,wave:1}]:null;
+    let waveStart=0,waveHP=1,waveMin=1,travel=0;
+    function aliveCount(){return enemies.length;}
+    function newWave() {
+      wave++; if(wave>=10){clear=true;return;}
+      const n=waves[wave], weight=wave===9?s.encounter.bossWeight:1;
+      const perHP=enemy.hp*weight/n;
+      const perDPS=enemy.pressure*2/(n+1);
+      enemies=Array.from({length:n},()=>({hp:perHP,dps:perDPS}));
+      approach=s.encounter.approach; stunUntil=0;
+      waveStart=time;waveHP=hp/maxHP;waveMin=waveHP;
+    }
+    function heal(amount) {
+      const actual=Math.max(0,Math.min(amount,maxHP-hp)); hp+=actual;healing+=actual;
+    }
+    function hitSingle(amount) {
+      if(!enemies.length)return;
+      const actual=Math.min(enemies[0].hp,amount);
+      enemies[0].hp-=actual; damageOut+=actual;return actual;
+    }
+    function clean() {
+      if(!enemies.length)return;
+      const hadCurrent=enemies[0].hp>1e-9;
+      enemies=enemies.filter(x=>x.hp>1e-9);
+      if(!hadCurrent&&enemies.length) approach=s.encounter.move;
+    }
+    newWave();
+    while(!clear&&time<limit) {
+      let step=Math.min(dt,limit-time);
+      if(wait>0) {
+        const span=Math.min(step,wait);
+        heal((hero.r+(time<regenUntil?regen:0))*maxHP*span);
+        wait-=span;time+=span;
+        if(wait<=1e-9)newWave();
+        if(record&&Math.round(time/dt)%5===0)trace.push({t:time,hp:Math.max(0,hp/maxHP),wave:wave+1});
+        continue;
+      }
+      const contact=approach<=1e-9;
+      if(time>=shieldUntil)shield=0;
+      for(let i=0;i<skills.length;i++) {
+        if(time+1e-8<ready[i]||!enemies.length)continue;
+        const sk=skills[i],kind=sk.kind,p=sk.power;
+        let cast=false;
+        if((kind==='single'||kind==='area')&&approach<=1e-9) {
+          const boost=time<buffUntil?1+buff:1;
+          if(kind==='single') {skillDamage+=hitSingle(p*hero.d*boost)||0;}
+          else {
+            const cap=Math.min(sk.targets||8,enemies.length);
+            for(let j=0;j<cap;j++){
+              const actual=Math.min(enemies[j].hp,p*hero.d*boost);enemies[j].hp-=actual;damageOut+=actual;skillDamage+=actual;
+            }
+          }
+          cast=true;clean();
+        } else if(kind==='heal'&&maxHP-hp>=Math.min(p*maxHP*0.65,maxHP*0.3)) {heal(p*maxHP);cast=true;}
+        else if(kind==='shield'&&shield<=1e-9&&hp<maxHP*0.92) {shield=p*maxHP;shieldUntil=time+sk.duration;cast=true;}
+        else if(kind==='stun'&&contact&&time>=stunUntil) {stunUntil=time+Math.min(12,p)*(wave===9?0.35:1);cast=true;}
+        else if(kind==='regen'&&hp<maxHP*0.85&&time>=regenUntil) {regen=p;regenUntil=time+sk.duration;cast=true;}
+        else if(kind==='buff'&&contact&&time>=buffUntil) {buff=p;buffUntil=time+sk.duration;cast=true;}
+        else if(kind==='guard'&&contact&&time>=guardUntil) {guard=Math.min(0.85,p);guardUntil=time+sk.duration;cast=true;}
+        if(cast){ready[i]=time+sk.cd;uses[sk.id]++;}
+      }
+      // Stop precisely at a kill or the end of movement; do not lose the rest
+      // of a basic attack tick and do not let a killed enemy attack afterwards.
+      const basicRate=enemies.length&&approach<=1e-9?hero.d*(time<buffUntil?1+buff:1):0;
+      if(basicRate>0)step=Math.min(step,Math.max(1e-8,enemies[0].hp/basicRate));
+      if(approach>1e-9)step=Math.min(step,approach);
+      for(const eventTime of [shieldUntil,stunUntil,buffUntil,guardUntil,regenUntil,...ready]){
+        if(eventTime>time+1e-8)step=Math.min(step,eventTime-time);
+      }
+      let incomingRate=0;
+      if(time>=stunUntil&&enemies.length) {
+        for(let i=0;i<enemies.length;i++)incomingRate+=enemies[i].dps;
+        if(approach>1e-9)incomingRate*=wave===9?0:s.encounter.ranged/100;
+        if(time<guardUntil)incomingRate*=1-guard;
+      }
+      if(shield>1e-9&&incomingRate>0)step=Math.min(step,shield/incomingRate);
+      let incoming=incomingRate*step;
+      damageIn+=incoming;
+      const shielded=Math.min(shield,incoming);shield-=shielded;absorbed+=shielded;incoming-=shielded;
+      // Regeneration is continuous during the interval; active heals happened
+      // above. Check death before a future cast, not before concurrent regen.
+      const regenAmount=(hero.r+(time<regenUntil?regen:0))*maxHP*step;
+      hp-=incoming;
+      heal(regenAmount);
+      minHP=Math.min(minHP,hp);waveMin=Math.min(waveMin,hp/maxHP);
+      if(hp<=0&&!ignoreDeath){dead=true;time+=step;break;}
+      if(basicRate>0)basicDamage+=hitSingle(basicRate*step)||0;
+      if(approach>0){travel+=step;approach=Math.max(0,approach-step);}
+      clean();
+      time+=step;
+      if(record&&Math.round(time/dt)%5===0)trace.push({t:time,hp:Math.max(0,hp/maxHP),wave:wave+1});
+      if(!enemies.length) {
+        if(record)rows.push({wave:wave+1,n:waves[wave],seconds:time-waveStart,start:waveHP,end:hp/maxHP,min:waveMin,boss:wave===9});
+        if(wave===9){clear=true;break;}
+        wait=s.encounter.between;
+        if(wait<=1e-9)newWave();
+      }
+    }
+    if(!clear&&!dead&&time>=limit)timeout=true;
+    if(record) {
+      if(dead||timeout)rows.push({wave:wave+1,n:waves[wave],seconds:time-waveStart,start:waveHP,end:Math.max(0,hp/maxHP),min:Math.max(0,waveMin),boss:wave===9,failed:true});
+      trace.push({t:time,hp:Math.max(0,hp/maxHP),wave:Math.min(10,wave+1)});
+    }
+    return {clear,dead,timeout,time,hp:Math.max(0,hp/maxHP),min:Math.max(0,minHP/maxHP),rawMin:minHP/maxHP,damageOut,damageIn,healing,absorbed,basicDamage,skillDamage,uses,rows,trace,wave:Math.min(10,wave+1),travel};
+  }
+  function calibrate(s,r) {
+    const hero={d:1,h:1,r}, ids=s.skills.reference, target=s.encounter.target;
+    let lo=0.005,hi=8,best=null;
+    function sample(budget) {
+      const out=simulate(s,hero,{hp:budget,pressure:0},ids,{ignoreDeath:true});
+      const error=Math.abs(out.time-target);
+      if(!best||error<best.error)best={budget,error,time:out.time};
+      return out.time;
+    }
+    sample(lo);
+    while(sample(hi)<target&&hi<4096)hi*=2;
+    for(let i=0;i<14;i++) {
+      const mid=(lo+hi)/2;
+      if(sample(mid)<target)lo=mid;else hi=mid;
+    }
+    const anchor=best.budget;
+    for(let i=-3;i<=3;i++)sample(anchor*(1+i*0.003));
+    const hp=best.budget, reserve=s.encounter.reserve/100;
+    let pLo=0,pHi=0.04,closest=null;
+    function pressureSample(p) {
+      const out=simulate(s,hero,{hp,pressure:p},ids,{ignoreDeath:true});
+      const error=Math.abs(out.rawMin-reserve);
+      if(!closest||error<closest.error)closest={pressure:p,error,out};
+      return out.rawMin;
+    }
+    while(pressureSample(pHi)>reserve&&pHi<64)pHi*=2;
+    pressureSample(0);
+    for(let i=0;i<15;i++) {
+      const mid=(pLo+pHi)/2;
+      if(pressureSample(mid)>reserve)pLo=mid;else pHi=mid;
+    }
+    const pressure=closest.pressure;
+    const ref=simulate(s,hero,{hp,pressure},ids);
+    return {hp,pressure,ref,timeError:Math.abs(ref.time-target),reserveError:Math.abs(ref.min-reserve)};
+  }
+  function economy(s) {
+    const c=s.economy, start=heroAt(1,s), end=heroAt(100,s), share=c.gymShare/100;
+    const needs={damage:(end.d-start.d)*share/c.dStep,hp:(end.h-start.h)*share/c.hStep,regen:(end.r-start.r)*100*share/c.rStep};
+    const total=needs.damage+needs.hp+needs.regen;
+    const energyGross=c.energyStart+c.calendarHours*c.energyHour*c.house;
+    const energy=energyGross*c.energyUse/100;
+    const gymMinutes=Math.max(0,c.activeHours-c.combatHours)*60;
+    const tapsPerUpgrade=total>0?gymMinutes*60/(total*c.tapSeconds):0;
+    let weightedUpgrades=0,prior=start;
+    for(let l=2;l<=100;l++){
+      const h=heroAt(l,s);
+      const count=((h.d-prior.d)/c.dStep+(h.h-prior.h)/c.hStep+(h.r-prior.r)*100/c.rStep)*share;
+      weightedUpgrades+=count*Math.pow(c.priceGrowth,l-2);prior=h;
+    }
+    const raw=[];let coinTotal=0;
+    for(let l=1;l<=100;l++){const reward=c.coin1*Math.pow(c.coinGrowth,l-1);coinTotal+=reward;raw.push({level:l,reward});}
+    let previous=start,cumulativeEnergy=0,cumulativeCoins=0,accumulatedTaps=0;
+    for(let i=0;i<100;i++){
+      const l=i+1,current=heroAt(l,s),x=progress(l,s),xPrev=progress(Math.max(1,l-1),s);
+      const stats={damage:(current.d-previous.d)*share/c.dStep,hp:(current.h-previous.h)*share/c.hStep,regen:(current.r-previous.r)*100*share/c.rStep};
+      const upgrades=stats.damage+stats.hp+stats.regen;
+      const energyPrice=weightedUpgrades>1e-9?energy*Math.pow(c.priceGrowth,Math.max(0,l-2))/weightedUpgrades:null;
+      const allocatedEnergy=upgrades*(energyPrice||0);
+      // Training from L-1 to L is funded by the reward from L-1, never by the uncleared L.
+      const allocatedCoins=l===1?0:raw[i-1].reward*c.coinUse/100;
+      const coinPrice=upgrades>1e-9?allocatedCoins/upgrades:null;
+      const taps=energy>0?allocatedEnergy/energy*gymMinutes*60/c.tapSeconds:0;
+      cumulativeEnergy+=upgrades>1e-9?allocatedEnergy:0;
+      cumulativeCoins+=upgrades>1e-9?allocatedCoins:0;
+      accumulatedTaps+=taps;
+      Object.assign(raw[i],{upgrades,stats,energy:allocatedEnergy,coins:allocatedCoins,energyPrice,coinPrice,cumulativeEnergy,cumulativeCoins,taps,cumulativeTaps:accumulatedTaps});
+      previous=current;
+    }
+    return {needs,total,energyGross,energy,energySpent:cumulativeEnergy,coinTotal,coinSpent:cumulativeCoins,gymMinutes,tapsPerUpgrade,totalTaps:accumulatedTaps,rows:raw,shares:{gym:c.gymShare,album:c.albumShare,gear:100-c.gymShare-c.albumShare}};
+  }
+  function campaign(s,options={}) {
+    const rows=[],eco=economy(s);
+    let winTime=0,testTime=0,passed=0,timeError=0,reserveError=0;
+    const cache=new Map();
+    for(let level=1;level<=100;level++){
+      const hero=heroAt(level,s);
+      const key=hero.r.toFixed(9);
+      let enemy=cache.get(key);
+      if(!enemy){enemy=calibrate(s,hero.r);cache.set(key,enemy);}
+      const testHero={d:s.test.damage/100,h:s.test.hp/100,r:hero.r*s.test.regen/100};
+      const out=simulate(s,testHero,enemy,s.test.loadout);
+      rows.push({level,hero,enemy,test:out,economy:eco.rows[level-1]});
+      winTime+=enemy.ref.time;testTime+=out.time;if(out.clear)passed++;
+      timeError=Math.max(timeError,enemy.timeError);reserveError=Math.max(reserveError,enemy.reserveError);
+    }
+    const retryBudget=s.economy.combatHours*3600-winTime;
+    return {rows,eco,winTime,testTime,passed,retryBudget,timeError,reserveError};
+  }
+  const api={VERSION,DT,COUNT,defs,DEFAULTS,clone,clamp,sanitize,heroAt,progress,skillSet,simulate,calibrate,economy,campaign};
+  root.Balance=api;
+  if(typeof module!=='undefined'&&module.exports)module.exports=api;
+})(typeof globalThis!=='undefined'?globalThis:this);
+</script>
+<script>(function(){
+  'use strict';
+  const B=window.Balance,$=id=>document.getElementById(id),$$=selector=>Array.from(document.querySelectorAll(selector));
+  const STORE='rpg-balance-sandbox-v1';
+  let state,model=null,timer=0,toastTimer=0,revision=0;
+  const fmt=(n,d=0)=>Number.isFinite(n)?n.toLocaleString('ru-RU',{maximumFractionDigits:d,minimumFractionDigits:0}):'—';
+  const pct=n=>fmt(n*100,1)+'%';
+  const compact=n=>n>=1e6?fmt(n/1e6,2)+' млн':n>=1e4?fmt(n/1000,1)+' тыс.':fmt(n,n<10?2:0);
+  const duration=seconds=>{const minutes=Math.round(seconds/60);return seconds>=3600?fmt(Math.floor(minutes/60))+' ч'+(minutes%60?' '+fmt(minutes%60)+' мин':''):seconds>=90?fmt(seconds/60,1)+' мин':fmt(seconds,1)+' сек.';};
+  const signed=n=>(n>0?'+':'')+fmt(n,1);
+  const escape=text=>String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const names=ids=>ids.length?ids.map(id=>B.defs.find(d=>d.id===id).name).join(' · '):'Обычные атаки';
+  function get(path){return path.split('.').reduce((v,k)=>v[k],state);}
+  function set(path,value){const parts=path.split('.');let at=state;for(let i=0;i<parts.length-1;i++)at=at[parts[i]];at[parts.at(-1)]=value;}
+  function toast(text){clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;toastTimer=setTimeout(()=>$('toast').hidden=true,3200);}
+  function save(){try{localStorage.setItem(STORE,JSON.stringify(state));}catch(e){/* opaque frame or storage disabled */}}
+  function load(){
+    try{const embedded=$('embedded-settings');if(embedded?.textContent.trim())return B.sanitize(JSON.parse(embedded.textContent));}catch(e){}
+    try{const saved=localStorage.getItem(STORE);if(saved)return B.sanitize(JSON.parse(saved));}catch(e){}
+    return B.sanitize(B.DEFAULTS);
+  }
+  function syncControls(){
+    $$('[data-path]').forEach(el=>{el.value=get(el.dataset.path);});
+    $$('[data-output]').forEach(el=>{
+      const path=el.dataset.output,value=get(path);
+      el.textContent=path.startsWith('test.')?fmt(value)+'%':path==='skills.strength'?'×'+fmt(value,2):fmt(value,2);
+    });
+    $('levelLabel').textContent=state.test.level;
+  }
+  function openTab(name,scroll=false){
+    $$('[data-tab]').forEach(el=>el.setAttribute('aria-selected',el.dataset.tab===name?'true':'false'));
+    $$('[data-panel]').forEach(el=>el.hidden=el.dataset.panel!==name);
+    if(scroll)document.querySelector('.tabs').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function renderSkills(){
+    $('refNames').textContent=names(state.skills.reference);
+    $('testNames').textContent=names(state.test.loadout);
+    $('selectionCount').textContent='Выбрано '+state.test.loadout.length+' из 3';
+    $('skillGrid').innerHTML=B.defs.map(d=>{
+      const v=state.skills.items.find(x=>x.id===d.id),selected=state.test.loadout.includes(d.id),ref=state.skills.reference.includes(d.id);
+      return `<article class="skill-card ${selected?'selected':''}">${ref?'<span class="ref-mark">Эталон</span>':''}<div class="skill-icon" aria-hidden="true">${d.icon}</div><div class="skill-title"><label for="pick-${d.id}"><input id="pick-${d.id}" type="checkbox" data-pick="${d.id}" ${selected?'checked':''}>${d.name}</label></div><p>${d.description}</p><div class="skill-fields"><label>Коэффициент<input aria-label="Коэффициент ${d.name}" type="number" data-skill="${d.id}" data-key="power" value="${v.power}" min="0" step="${v.power<0.1?0.001:v.power<1?0.01:0.1}"></label><label>Кулдаун, с<input aria-label="Кулдаун ${d.name}" type="number" data-skill="${d.id}" data-key="cd" value="${v.cd}" min="2" max="90" step="1"></label></div><div class="skill-unit">Сила: ${d.unit}</div></article>`;
+    }).join('');
+  }
+  function lineChart(series,opts={}){
+    const W=Math.min(1100,Math.max(300,$('app').clientWidth)),H=opts.height||160,L=36,R=12,T=10,BT=23,w=W-L-R,h=H-T-BT;
+    let yMax=opts.yMax||Math.max(...series.flatMap(s=>s.data.map(p=>p.y)),1);
+    const log=!!opts.log;
+    if(log)yMax=Math.max(2,yMax);
+    const y=v=>T+h*(1-(log?Math.log(Math.max(1,v))/Math.log(yMax):v/yMax));
+    const xMax=opts.xMax||Math.max(...series.flatMap(s=>s.data.map(p=>p.x)),1);
+    const x=v=>L+w*v/xMax;
+    const ticks=log?[1,Math.pow(yMax,0.5),yMax]:[0,yMax*0.5,yMax];
+    let svg=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">`;
+    for(const tick of ticks)svg+=`<line class="gridline" x1="${L}" x2="${W-R}" y1="${y(tick)}" y2="${y(tick)}"/><text x="${L-7}" y="${y(tick)+3}" text-anchor="end">${log?'×'+compact(tick):fmt(tick*100)+'%'}</text>`;
+    const xticks=opts.xTicks||[0,xMax/2,xMax];
+    for(const tick of xticks)svg+=`<text x="${x(tick)}" y="${H-4}" text-anchor="${tick===0?'start':tick===xMax?'end':'middle'}">${fmt(tick)}${opts.xSuffix||''}</text>`;
+    for(const s of series){
+      const path=s.data.map((p,i)=>(i?'L':'M')+x(p.x).toFixed(2)+','+y(Math.max(0,p.y)).toFixed(2)).join(' ');
+      svg+=`<path d="${path}" fill="none" stroke="${s.color}" stroke-width="${s.width||2}" stroke-linecap="round" stroke-linejoin="round" ${s.dash?'stroke-dasharray="5 5"':''}/>`;
+    }
+    return svg+'</svg>';
+  }
+  function renderGrowth(){
+    const first=model.rows[0];
+    $('growthChart').innerHTML=lineChart([
+      {color:'var(--blue)',width:3,data:model.rows.map(r=>({x:r.level-1,y:r.hero.d/first.hero.d}))},
+      {color:'var(--purple)',dash:true,data:model.rows.map(r=>({x:r.level-1,y:r.hero.h/first.hero.h}))},
+      {color:'var(--amber)',data:model.rows.map(r=>({x:r.level-1,y:r.enemy.hp*r.hero.d/(first.enemy.hp*first.hero.d)}))}
+    ],{log:true,xMax:99,xTicks:[0,49,99],height:145});
+    // Label levels 1..100 rather than zero-based plotting coordinates.
+    const texts=$('growthChart').querySelectorAll('text');
+    [1,50,100].forEach((n,i)=>texts[texts.length-3+i].textContent='L'+n);
+    $('growthNote').textContent=`К сотой локации: урон ×${fmt(state.hero.d100/state.hero.d1,2)}, HP ×${fmt(state.hero.h100/state.hero.h1,2)}, реген ${fmt(state.hero.r100,2)}%/сек. При форме 1 рост урона за локацию — ${signed((Math.pow(state.hero.d100/state.hero.d1,1/99)-1)*100)}%.`;
+  }
+  function renderMetrics(){
+    $('kpiTime').textContent=duration(model.winTime);
+    $('kpiRetries').textContent=model.retryBudget>=0?'На повторы остаётся '+duration(model.retryBudget):'Бюджет боя превышен на '+duration(-model.retryBudget);
+    $('kpiPass').textContent=model.passed+'/100';
+    $('kpiPassNote').textContent=`Урон ${fmt(state.test.damage)}% · HP ${fmt(state.test.hp)}% · ${state.test.loadout.length} приёма`;
+    $('kpiEnergy').textContent=compact(model.eco.energySpent);
+    $('kpiGym').textContent=`${fmt(model.eco.total,1)} улучшений · ${fmt(model.eco.gymMinutes)} мин. в зале`;
+    const notes=[];
+    if(model.retryBudget<0)notes.push(`Первые победы уже занимают больше ${fmt(state.economy.combatHours,1)} ч боя. Уменьшите целевое время локации или увеличьте бюджет боя.`);
+    if(state.economy.combatHours>state.economy.activeHours)notes.push('Бюджет боя больше всей активной игры. На зал остаётся 0 минут.');
+    if(state.economy.calendarHours<state.economy.activeHours)notes.push('Календарное время короче активной игры. Для согласованного бюджета энергии увеличьте число календарных часов.');
+    if(model.timeError>3)notes.push(`Кулдауны создают скачки длительности: наибольшее отклонение от цели — ${fmt(model.timeError,1)} сек. Показано фактическое время.`);
+    if(model.reserveError>0.035)notes.push(`Целевой запас HP не удалось подобрать точно: отклонение до ${fmt(model.reserveError*100,1)} п.п. Проверьте лечение, защиту и контроль эталона; смотрите фактическую полосу HP.`);
+    if(!model.eco.total)notes.push('Плановый прирост от зала равен нулю. Цена улучшения не определена, энергия не тратится.');
+    if(model.eco.total&&model.eco.energy===0)notes.push('При нулевом бюджете энергии вычисленная цена равна нулю. Увеличьте стартовый запас или восстановление.');
+    if(model.eco.gymMinutes>0&&model.eco.total&&model.eco.energy>0&&model.eco.totalTaps/model.eco.energy>50)notes.push(`Под заданные часы получается ${fmt(model.eco.totalTaps/model.eco.energy,1)} нажатий на единицу энергии. Это расчёт темпа, который можно изменить бюджетом зала.`);
+    $('notices').innerHTML=notes.map(n=>`<div class="notice">${n}</div>`).join('');
+  }
+  function renderEconomy(){
+    const e=model.eco,c=state.economy;
+    $('shareBar').innerHTML=`<i style="width:${e.shares.gym}%;background:var(--blue)"></i><i style="width:${e.shares.gear}%;background:var(--purple)"></i><i style="width:${e.shares.album}%;background:var(--amber)"></i>`;
+    $('sharesNote').textContent=`Зал ${e.shares.gym}% · вещи ${e.shares.gear}% · альбом ${e.shares.album}%. Одинаковые доли для прироста урона, HP и регена.`;
+    $('economySummary').innerHTML=`Нужно <b>${fmt(e.needs.damage,1)}</b> улучшений урона, <b>${fmt(e.needs.hp,1)}</b> HP и <b>${fmt(e.needs.regen,1)}</b> регена.<br>Из <b>${fmt(e.energyGross)}</b> полученной энергии используем <b>${fmt(e.energySpent)}</b>. За ${fmt(c.calendarHours)} ч, средний дом ×${fmt(c.house,1)}.<br>За первые победы: <b>${compact(e.coinTotal)}</b> монет; на зал до L100 — <b>${compact(e.coinSpent)}</b>.<br>На зал: <b>${fmt(e.gymMinutes)} мин.</b>, <b>${compact(e.totalTaps)}</b> нажатий${e.energy>0?' · '+fmt(e.totalTaps/e.energy,1)+' на единицу энергии':''}.`;
+  }
+  function duelCard(title,out,isTest){
+    const status=out.clear?'Победа':out.timeout?'Не уложился':'Поражение · арена '+out.wave;
+    return `<div class="card-top"><span>${title}</span><span class="result ${out.clear?'':'fail'}">${status}</span></div><strong>${fmt(out.time,1)} <span style="font-size:11px;letter-spacing:0;color:var(--muted-foreground)">сек.</span></strong><p>Остаток HP <b>${pct(out.hp)}</b> · минимум ${pct(out.min)}</p><div class="mini-hp"><i style="width:${Math.min(100,out.hp*100)}%;background:${isTest?'var(--good)':'var(--purple)'}"></i></div>`;
+  }
+  function renderDetail(){
+    const row=model.rows[state.test.level-1],refHero={d:1,h:1,r:row.hero.r};
+    const player={d:state.test.damage/100,h:state.test.hp/100,r:row.hero.r*state.test.regen/100};
+    const ref=B.simulate(state,refHero,row.enemy,state.skills.reference,{record:true});
+    const out=B.simulate(state,player,row.enemy,state.test.loadout,{record:true});
+    $('derivedPack').textContent=compact(row.enemy.hp*row.hero.d);
+    $('derivedBoss').textContent=compact(row.enemy.hp*row.hero.d*state.encounter.bossWeight);
+    $('derivedPressure').textContent=compact(row.enemy.pressure*row.hero.h);
+    $('derivedPrice').textContent=row.economy.upgrades?fmt(row.economy.energyPrice,2)+' + '+fmt(row.economy.coinPrice,1):'—';
+    $('referenceCard').innerHTML=duelCard('Эталон · L'+row.level,ref,false);
+    $('testCard').innerHTML=duelCard('Проверяемый герой',out,true);
+    $('hpChartNote').textContent=`${fmt(row.hero.d*player.d)} урона/с · ${fmt(row.hero.h*player.h)} HP · ${fmt(player.r*100,2)}%/с`;
+    const end=Math.max(ref.time,out.time);
+    $('hpChart').innerHTML=lineChart([
+      {color:'var(--purple)',dash:true,width:2.5,data:ref.trace.map(p=>({x:p.t,y:p.hp}))},
+      {color:'var(--good)',data:out.trace.map(p=>({x:p.t,y:p.hp}))}
+    ],{height:180,yMax:1,xMax:end,xSuffix:' с'});
+    const rowMap=new Map(out.rows.map(r=>[r.wave,r]));
+    $('arenaBody').innerHTML=state.encounter.packCounts.concat([1]).map((n,i)=>{
+      const done=rowMap.get(i+1),weight=i===9?state.encounter.bossWeight:1;
+      const h=row.enemy.hp*row.hero.d*weight/n,a=row.enemy.pressure*row.hero.h*2/(n+1);
+      return `<tr><td>${i===9?'Босс':i+1}</td><td>${n}</td><td>${fmt(h,1)}</td><td>${fmt(a,1)}</td><td>${done?fmt(done.seconds,1)+' с':'—'}</td><td class="${done?.failed?'bad-text':'good-text'}">${done?pct(done.end):'—'}</td></tr>`;
+    }).join('');
+    const no=B.simulate(state,player,row.enemy,[]);
+    const entries=state.test.loadout.map(id=>`<div><span>${B.defs.find(d=>d.id===id).name}</span><b>${out.uses[id]} примен.</b></div>`).join('');
+    $('castDetails').innerHTML=`<div class="cast-list">${entries}<div><span>Полезный урон автоатаки</span><b>${fmt(out.basicDamage*row.hero.d)}</b></div><div><span>Полезный урон приёмов</span><b>${fmt(out.skillDamage*row.hero.d)}</b></div><div><span>Фактически восстановлено HP</span><b>${fmt(out.healing*row.hero.h)}</b></div><div><span>Поглощено щитами</span><b>${fmt(out.absorbed*row.hero.h)}</b></div><div><span>Тот же герой без приёмов</span><b class="${no.clear?'good-text':'bad-text'}">${no.clear?'Победа за '+fmt(no.time,1)+' с':'Поражение на арене '+no.wave}</b></div></div>`;
+    $('campaignMap').innerHTML=model.rows.map(r=>`<button type="button" data-level="${r.level}" class="${r.test.clear?'':'fail'} ${r.level===state.test.level?'active':''}" aria-label="Локация ${r.level}: ${r.test.clear?'победа':'поражение'}" title="L${r.level}: ${r.test.clear?'победа, HP '+pct(r.test.hp):'поражение, арена '+r.test.wave}">${r.level}</button>`).join('');
+    $('campaignBody').innerHTML=model.rows.map(r=>{
+      const c=r.economy;
+      return `<tr class="${r.level===state.test.level?'active':''}"><td><button type="button" data-level="${r.level}">L${r.level}</button></td><td>${compact(r.hero.d)} / ${compact(r.hero.h)}</td><td>${compact(r.enemy.hp*r.hero.d)}</td><td>${c.upgrades>0?fmt(c.energyPrice,2)+' + '+fmt(c.coinPrice,1):'—'}</td><td class="${r.test.clear?'good-text':'bad-text'}">${r.test.clear?'HP '+pct(r.test.hp):'Арена '+r.test.wave}</td></tr>`;
+    }).join('');
+    window.BALANCE_RESULT={level:row.level,reference:ref,test:out,enemy:row.enemy,hero:row.hero,noSkills:no};
+  }
+  function refresh(mode='full'){
+    clearTimeout(timer);const stamp=++revision;
+    $('liveState').classList.add('busy');$('liveState').innerHTML='<i></i> Пересчитываем…';
+    timer=setTimeout(()=>{
+      if(stamp!==revision)return;
+      const began=performance.now();
+      try{
+        state=B.sanitize(state);syncControls();
+        if(!model||mode==='full')model=B.campaign(state);
+        else if(mode==='test'){
+          model.passed=0;model.testTime=0;
+          model.rows.forEach(r=>{
+            r.test=B.simulate(state,{d:state.test.damage/100,h:state.test.hp/100,r:r.hero.r*state.test.regen/100},r.enemy,state.test.loadout);
+            if(r.test.clear)model.passed++;model.testTime+=r.test.time;
+          });
+        } else if(mode==='economy'){
+          model.eco=B.economy(state);model.rows.forEach((r,i)=>r.economy=model.eco.rows[i]);
+          model.retryBudget=state.economy.combatHours*3600-model.winTime;
+        }
+        renderMetrics();renderEconomy();renderGrowth();renderDetail();renderSkills();
+        $('computeTime').textContent='Пересчёт '+fmt(performance.now()-began)+' мс';
+        $('liveState').classList.remove('busy');$('liveState').innerHTML='<i></i> Все зависимости связаны';
+        save();window.BALANCE_STATE=state;window.BALANCE_MODEL=model;window.BALANCE_READY=true;
+      }catch(error){
+        $('liveState').classList.remove('busy');$('liveState').textContent='Ошибка расчёта';
+        console.error(error);toast('Ошибка расчёта: '+error.message);window.BALANCE_ERROR=error.message;
+      }
+    },mode==='full'?180:30);
+  }
+  function download(name,content,type){const blob=new Blob([content],{type});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),1000);}
+  function csv(){
+    const header=['location','hero_dps','hero_hp','hero_regen_pct_s','pack_hp','boss_hp','pressure_dps','reference_seconds','reference_min_hp_pct','test_win','test_seconds','test_hp_pct','gym_upgrades_from_previous','energy_per_upgrade','coins_per_upgrade','victory_coins','energy_to_level','taps_to_level'];
+    const lines=model.rows.map(r=>[r.level,r.hero.d,r.hero.h,r.hero.r*100,r.enemy.hp*r.hero.d,r.enemy.hp*r.hero.d*state.encounter.bossWeight,r.enemy.pressure*r.hero.h,r.enemy.ref.time,r.enemy.ref.min*100,r.test.clear?1:0,r.test.time,r.test.hp*100,r.economy.upgrades,r.economy.energyPrice,r.economy.coinPrice,r.economy.reward,r.economy.energy,r.economy.taps].map(v=>v===null?'':typeof v==='number'?String(Math.round(v*100000)/100000):v).join(','));
+    download('rpg-balance-100-locations.csv','\uFEFF'+[header.join(','),...lines].join('\r\n'),'text/csv;charset=utf-8');
+  }
+  state=load();syncControls();
+  $('packInputs').innerHTML=state.encounter.packCounts.map((n,i)=>`<label>${i+1}<input type="number" aria-label="Врагов на арене ${i+1}" data-path="encounter.packCounts.${i}" min="1" max="8" step="1" value="${n}"></label>`).join('');
+  renderSkills();
+  $$('[data-tab]').forEach(button=>{
+    const name=button.dataset.tab;button.id='tab-'+name;button.setAttribute('aria-controls','panel-'+name);
+    const panel=document.querySelector(`[data-panel="${name}"]`);panel.id='panel-'+name;panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby',button.id);
+  });
+  document.addEventListener('input',event=>{
+    const el=event.target;
+    if(el.dataset.path){
+      if(el.value===''||!Number.isFinite(Number(el.value)))return;
+      set(el.dataset.path,Number(el.value));
+      $$(`[data-output="${el.dataset.path}"]`).forEach(out=>out.textContent=el.dataset.path.startsWith('test.')?el.value+'%':el.dataset.path==='skills.strength'?'×'+el.value:el.value);
+      if(el.dataset.path==='test.level'){
+        state.test.level=B.clamp(Math.round(Number(el.value)),1,100);syncControls();if(model)renderDetail();save();return;
+      }
+      refresh(el.dataset.path.startsWith('test.')?'test':el.dataset.path.startsWith('economy.')?'economy':'full');
+    }else if(el.dataset.skill){
+      if(el.value===''||!Number.isFinite(Number(el.value)))return;
+      const item=state.skills.items.find(v=>v.id===el.dataset.skill);item[el.dataset.key]=Number(el.value);refresh('full');
+    }
+  });
+  document.addEventListener('change',event=>{
+    const el=event.target;if(!el.dataset.pick)return;
+    const id=el.dataset.pick;
+    if(el.checked&&state.test.loadout.length>=3){el.checked=false;toast('Выберите не больше трёх приёмов. Сначала снимите одну галочку.');return;}
+    state.test.loadout=el.checked?state.test.loadout.concat(id):state.test.loadout.filter(v=>v!==id);refresh('test');
+  });
+  document.addEventListener('click',event=>{
+    const el=event.target.closest('button');if(!el)return;
+    if(el.dataset.tab)openTab(el.dataset.tab);
+    if(el.dataset.openTab)openTab(el.dataset.openTab,true);
+    if(el.dataset.level){state.test.level=Number(el.dataset.level);syncControls();renderDetail();save();}
+    if(el.dataset.packs){
+      const presets={swarm:[8,6,8,7,8,6,8,7,8],elite:[1,2,1,3,1,2,1,2,1],mixed:B.DEFAULTS.encounter.packCounts};
+      state.encounter.packCounts=presets[el.dataset.packs].slice();refresh('full');
+    }
+  });
+  $('copyReference').addEventListener('click',()=>{state.test.loadout=state.skills.reference.slice();refresh('test');});
+  $('noSkills').addEventListener('click',()=>{state.test.loadout=[];refresh('test');});
+  $('useAsReference').addEventListener('click',()=>{
+    if(state.test.loadout.length!==3){toast('Для нового эталона выберите три приёма.');return;}
+    state.skills.reference=state.test.loadout.slice();refresh('full');toast('Новый эталон: враги пересчитываются под выбранную тройку.');
+  });
+  $('reset').addEventListener('click',()=>{state=B.sanitize(B.DEFAULTS);refresh('full');toast('Возвращены исходные значения.');});
+  $('exportJson').addEventListener('click',()=>download('rpg-balance-settings.json',JSON.stringify(state,null,2),'application/json'));
+  $('importJson').addEventListener('click',()=>$('importFile').click());
+  $('importFile').addEventListener('change',async event=>{
+    const file=event.target.files[0];if(!file)return;
+    try{
+      const parsed=JSON.parse(await file.text());
+      if(!parsed.hero||!parsed.encounter||!parsed.skills||!parsed.economy)throw new Error('не найден набор настроек песочницы');
+      state=B.sanitize(parsed);refresh('full');toast('Настройки загружены.');
+    }catch(error){toast('Не удалось загрузить: '+error.message);}
+    event.target.value='';
+  });
+  $('exportCsv').addEventListener('click',()=>{if(model)csv();});
+  $('downloadHtml').addEventListener('click',()=>{
+    const doc=document.documentElement.cloneNode(true);
+    doc.querySelector('body').classList.add('standalone');
+    doc.querySelectorAll('script[src]').forEach(el=>el.remove());
+    doc.querySelector('#embedded-settings')?.remove();
+    const script=document.createElement('script');script.id='embedded-settings';script.type='application/json';script.textContent=JSON.stringify(state).replace(/</g,'\\u003c');doc.querySelector('head').append(script);
+    download('rpg-balance-sandbox.html','<!doctype html>\n'+doc.outerHTML,'text/html;charset=utf-8');
+    toast('Страница с текущими настройками сохранена.');
+  });
+  // Small public API for reproducible checks, without network dependencies.
+  window.BALANCE_APP={getState:()=>B.clone(state),setState:value=>{state=B.sanitize(value);refresh('full');},recompute:()=>refresh('full'),downloadCsv:csv,openTab};
+  let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(model){renderGrowth();renderDetail();}},100);});
+  refresh('full');
+})();
+</script>
+</body>
+</html>
