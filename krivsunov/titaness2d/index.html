@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><title>Атака Титаншей 2D — тестовый бой</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<style>html,body{margin:0;height:100%;background:#5c4f7a;overflow:hidden;font:16px system-ui,sans-serif;color:#fff}
+#c{position:fixed;inset:0;width:100vw;height:100vh;display:block;outline:none}
+#l{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center}
+#b{width:320px;height:10px;margin-top:10px;background:#2b2440;border-radius:5px;overflow:hidden}#f{height:100%;width:0;background:#f39a2b}</style>
+</head><body><canvas id="c" tabindex="-1"></canvas>
+<div id="l">Атака Титаншей 2D — загрузка…<div id="b"><div id="f"></div></div></div>
+<script src="g/Web.loader.js"></script>
+<script>
+createUnityInstance(document.getElementById("c"), {
+  dataUrl: "g/Web.data.unityweb", frameworkUrl: "g/Web.framework.js.unityweb", codeUrl: "g/Web.wasm.unityweb",
+  companyName: "Mrak0be5", productName: "Titaness2D", productVersion: "1.0",
+  devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2)
+}, function (p) { document.getElementById("f").style.width = Math.round(p * 100) + "%"; })
+.then(function () { document.getElementById("l").remove(); document.getElementById("c").focus(); })
+.catch(function (e) { document.getElementById("l").textContent = "Ошибка: " + e; });
+</script></body></html>
