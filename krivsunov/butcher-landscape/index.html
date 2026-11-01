@@ -38,7 +38,7 @@
   .meta small { color: var(--muted); font-size: 12px; word-break: break-all; }
   .tag { display: inline-block; font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: .04em; padding: 2px 6px; }
   .empty { color: var(--muted); padding: 40px 0; text-align: center; }
-  #box { position: fixed; inset: 0; z-index: 10; background: rgba(5, 6, 8, .96); display: none; flex-direction: column; }
+  #box { position: fixed; inset: 0; z-index: 10; background: #050608; display: none; flex-direction: column; }
   #box.open { display: flex; }
   .bar { display: flex; align-items: center; gap: 10px; padding: calc(10px + env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) 10px max(14px, env(safe-area-inset-left)); flex-wrap: wrap; }
   .bar .title { flex: 1 1 200px; min-width: 0; }
@@ -54,8 +54,10 @@
   .stage.all .side { flex: 0 1 auto; max-width: 32%; }
   .stage .missing { color: var(--muted); border: 1px dashed var(--line); border-radius: 10px; padding: 40px 16px; text-align: center; }
   .hint { color: var(--muted); font-size: 12px; text-align: center; padding-bottom: calc(6px + env(safe-area-inset-bottom)); }
-  @media (max-width: 600px) { h1 { font-size: 16px; } .hint { display: none; } body.all .grid { grid-template-columns: 1fr; } }
-  @media (max-width: 700px) { .stage.all { flex-direction: column; overflow-y: auto; } .stage.all .side { max-width: none; max-height: 70vh; flex: 0 0 auto; } }
+  @media (max-width: 600px) { h1 { font-size: 16px; } .hint { display: none; } body.all .grid { grid-template-columns: 1fr; }
+    .seg { flex: 1 1 100%; } .seg button { flex: 1 1 auto; padding: 7px 6px; } .bar .seg { order: 1; } .bar .title { flex-basis: 120px; } }
+  /* Столбиком прокрутка с начала: при центровке верх переполнения недостижим. */
+  @media (max-width: 700px) { .stage.all { flex-direction: column; justify-content: flex-start; overflow-y: auto; } .stage.all .side { max-width: none; max-height: 70vh; flex: 0 0 auto; } }
 </style>
 </head>
 <body>
@@ -135,6 +137,7 @@
                          : '<figure class="side"><div class="missing">Оригинала в вертикали для этого окна нет</div></figure>';
     $('#stage').className = 'stage' + (platform === 'all' ? ' all' : '');
     $('#stage').innerHTML = platform === 'all' ? `<div class="col">${figs}</div>${orig}` : figs;
+    $('#stage').scrollTop = 0;
     $('#box').classList.add('open');
     history.replaceState(null, '', '#' + it.id);
     for (const d of [1, -1]) {  // соседние окна — заранее
