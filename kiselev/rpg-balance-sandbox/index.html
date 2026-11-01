@@ -12,6 +12,8 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
 .derived-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px 0;margin-bottom:20px}.derived-strip span{display:block;font-size:9px;color:var(--quiet)}.derived-strip b{display:block;font-size:16px;font-weight:550;margin-top:3px;font-variant-numeric:tabular-nums;letter-spacing:-.3px}.derived-strip small{font-size:8px;display:block;margin-top:2px}@media(max-width:500px){.derived-strip{gap:8px}.derived-strip b{font-size:13px}.derived-strip span{font-size:8px}.derived-strip small{font-size:7px}}
 
 .level-picker>label{display:flex;align-items:center;white-space:nowrap}@media(max-width:500px){.kpi strong{font-size:20px;white-space:nowrap}}
+
+.uncertain{color:var(--amber)!important}.campaign-map button.uncertain{background:color-mix(in srgb,var(--amber) 10%,transparent)}
 </style>
 </head>
 <body class="standalone">
@@ -93,7 +95,7 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
       <label class="field">Энергия в час без дома<input data-path="economy.energyHour" type="number" min="0" max="10000" step="5"></label>
       <label class="field">Средний множитель дома<input data-path="economy.house" type="number" min="1" max="10" step="0.1"><small>За весь путь, а не только к концу</small></label>
       <label class="field">Доступная доля энергии, %<input data-path="economy.energyUse" type="number" min="5" max="100" step="5"><small>Учитывает потери от заполнения запаса</small></label>
-      <label class="field">Рост цены энергии за локацию<input data-path="economy.priceGrowth" type="number" min="1" max="1.1" step="0.005"><small>Базовая цена выводится из всего бюджета</small></label>
+      <label class="field">Рост цен за локацию<input data-path="economy.priceGrowth" type="number" min="1" max="1.1" step="0.005"><small>Своя базовая цена для каждого стата</small></label>
     </div>
     <h3 class="minor-heading">Откуда приходит прирост статов</h3>
     <div class="field-grid">
@@ -114,22 +116,22 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
       <label class="field">Секунд на одно нажатие<input data-path="economy.tapSeconds" type="number" min="0.1" max="10" step="0.1"></label>
     </div>
     <div id="economySummary" class="callout"></div>
-    <p class="hint">Для обучения к L берём монеты с L−1. Дополнительный дроп с поражений не заложен: он ускорит эту траекторию. Улучшения и цены пока дробные, чтобы видеть зависимости до округления.</p>
+    <p class="hint">К L доступны только монеты с уже пройденных локаций. Энергия проверяется по календарному времени на каждом шаге. Дополнительный дроп с поражений не заложен: он ускорит эту траекторию. Улучшения и цены пока дробные, чтобы видеть зависимости до округления.</p>
   </section>
   <section class="tab-panel" data-panel="formulas" hidden>
     <div class="section-heading"><h2>Одна цепочка расчёта</h2><span class="tag">Формулы открыты</span></div>
     <div class="formula"><b>1 · Герой между стартом и финишем</b><code>x = ((L − 1) / 99)^форма<br>D(L) = D₁ × (D₁₀₀ / D₁)^x<br>H(L) = H₁ × (H₁₀₀ / H₁)^x<br>r(L) = r₁ + (r₁₀₀ − r₁) × x</code><p>Урон и HP растут процентами, процент регена — равными прибавками при форме 1. Реген в расчёте делится на 100.</p></div>
-    <div class="formula"><b>2 · Приёмы</b><code>Урон по цели = D × коэффициент<br>Полезный урон = min(урон по цели, оставшиеся HP)<br>Лечение и щит = H × доля</code><p>Для площади урон считается по каждой цели. Перезарядки общие для всей локации, в начале попытки всё готово. Лечение — при достаточной потере HP. Атаки — когда герой добежал. Применение мгновенное.</p></div>
-    <div class="formula"><b>3 · Враги из среднего набора</b><code>HP врага = D(L) × B / N<br>Урон/сек. врага = H(L) × 2P / (N + 1)<br>HP босса = D(L) × B × вес босса<br>Урон/сек. босса = H(L) × P</code><p>B — здоровье пачки в секундах автоатаки, P — давление в долях HP/сек. Страница подбирает B под целевое время и P под минимальный запас HP эталонного героя. Из-за кулдаунов целевое время иногда достигается только приблизительно; рядом показан фактический результат.</p></div>
-    <div class="formula"><b>4 · Проходимость</b><code>HP после шага = min(max HP,<br>  HP − входящий урон + реген + лечение)</code><p>Щит поглощает урон до потери HP. Реген идёт непрерывно; смерть проверяется до следующего применения лечения. Во время бега обычная атака выключена, дальняя часть входящего урона сохраняется. Шаг расчёта до 0,08 сек., с остановкой в момент убийства, окончания бега и кулдауна. Урон непрерывный: без критов, промахов и отдельных ударов. Набор тестового героя меняет исход боя, а враги остаются рассчитанными под эталон.</p></div>
-    <div class="formula"><b>5 · Цены из доступных ресурсов</b><code>Улучшений = прирост статов × доля зала / прибавка<br>Энергия = (старт + часы × энергия/ч × дом) × доступная доля<br>Вес цены(L) = рост цены^(L − 2)<br>Базовая цена = энергия / Σ(улучшения × вес цены)<br>Цена(L) = базовая цена × вес цены(L)<br>Монеты за улучшение(L) = награда(L−1) × доля / улучшения(L)</code><p>Цены пересчитываются под заданный конечный результат и срок. Поэтому увеличение доступной энергии при фиксированных конечных статах повышает допустимую цену. Доля шмота и альбома — ожидаемый вклад в прирост, без розыгрыша дропа. Нажатия распределяют оставшееся активное время зала пропорционально расходу энергии. Модель не симулирует усталость и покупку дома.</p></div>
+    <div class="formula"><b>2 · Приёмы</b><code>Урон по цели = D × коэффициент<br>Полезный урон = min(урон по цели, оставшиеся HP)<br>Лечение и щит = H × доля</code><p>Для площади урон считается по каждой цели. Перезарядки общие для всей локации, в начале попытки всё готово. Лечение — при достаточной потере HP. Атаки — когда герой добежал. Применение мгновенное. Очерёдность всегда соответствует порядку карточек, порядок выбора галочек её не меняет. Между аренами продолжаются реген и уже наложенные эффекты.</p></div>
+    <div class="formula"><b>3 · Враги из среднего набора</b><code>HP врага = D(L) × B / N<br>Урон/сек. врага = H(L) × 2P / (N + 1)<br>HP босса = D(L) × B × вес босса<br>Урон/сек. босса = H(L) × P</code><p>B — здоровье пачки в секундах автоатаки, P — давление в долях HP/сек. Страница подбирает B под целевое время, проверяя также ±1% урона, чтобы не попадать ровно на границу кулдауна. Затем подбирает P под минимальный запас HP эталонного героя. Целевое время иногда достигается только приблизительно; рядом показан фактический результат.</p></div>
+    <div class="formula"><b>4 · Проходимость</b><code>HP после шага = min(max HP,<br>  HP − входящий урон + реген + лечение)</code><p>Щит поглощает урон до потери HP. Реген идёт непрерывно; смерть проверяется до следующего применения лечения. Во время бега обычная атака выключена, дальняя часть входящего урона сохраняется. Шаг до 0,08 сек., с остановкой в момент убийства, порога лечения, окончания бега и кулдауна. Урон непрерывный: без критов, промахов и отдельных ударов. Это один сценарий применения приёмов, а не оптимальная ручная игра. Если ±1% урона меняет победу или резко сдвигает время, результат отмечен жёлтым. Лимит расчёта с живым героем отмечается отдельно. Враги остаются рассчитанными под эталон.</p></div>
+    <div class="formula"><b>5 · Цены из доступных ресурсов</b><code>Улучшений стата = прирост × доля зала / прибавка<br>Энергия = (старт + часы × энергия/ч × дом) × доступная доля<br>Вес цены(L) = рост цены^(L − 2)<br>База стата = бюджет стата / Σ(улучшения стата × вес цены)<br>Цена стата(L) = база стата × вес цены(L)</code><p>Энергия и монеты делятся поровну между растущими статами. У каждого стата свои цены: уменьшение шага урона не удешевляет улучшение HP. Бюджеты ограничены доступностью ресурсов перед каждой локацией; монеты будущих побед не расходуются. Календарные часы распределены равномерно по 99 переходам. Отдельная ёмкость энергии не симулируется — требуемый запас показан на вкладке прокачки.</p><p>Цены пересчитываются под заданный конечный результат и срок. Поэтому увеличение доступной энергии при фиксированных конечных статах повышает допустимую цену. Доля шмота и альбома — ожидаемый вклад в прирост, без розыгрыша дропа. Нажатия распределяют время зала пропорционально расходу энергии. Модель не симулирует усталость и покупку дома. Время на повторы — остаток бюджета, а не симуляция кампании с поражениями.</p></div>
     <div class="callout">Это инструмент для выбора чисел и проверки связей. Пресеты приёмов и стартовые значения — рабочий черновик, который можно менять целиком.</div>
   </section>
   <section class="test-section">
     <div class="section-heading"><h2>Проверка на готовых врагах</h2><span class="tag test-tag">Только тест героя</span></div>
     <p class="hint">Эти ползунки и выбранные приёмы меняют результат боя. Общая сила врагов и цены сохраняются.</p>
     <div class="level-picker"><label for="level">Локация <strong id="levelLabel">50</strong></label><input id="level" data-path="test.level" type="range" min="1" max="100" step="1"><input aria-label="Номер тестируемой локации" data-path="test.level" type="number" min="1" max="100" step="1"></div>
-    <div class="derived-strip"><div><span>HP пачки</span><b id="derivedPack">—</b></div><div><span>HP босса</span><b id="derivedBoss">—</b></div><div><span>Урон/с босса</span><b id="derivedPressure">—</b></div><div><span>Цена улучшения</span><b id="derivedPrice">—</b><small>энергия + монеты</small></div></div>
+    <div class="derived-strip"><div><span>HP пачки</span><b id="derivedPack">—</b></div><div><span>HP босса</span><b id="derivedBoss">—</b></div><div><span>Урон/с босса</span><b id="derivedPressure">—</b></div><div><span>Средняя цена</span><b id="derivedPrice">—</b><small>энергия + монеты</small></div></div>
     <div class="test-sliders">
       <div class="compact-slider"><label for="testDamage">Урон <output data-output="test.damage"></output></label><input id="testDamage" data-path="test.damage" type="range" min="20" max="250" step="5"></div>
       <div class="compact-slider"><label for="testHP">HP <output data-output="test.hp"></output></label><input id="testHP" data-path="test.hp" type="range" min="20" max="250" step="5"></div>
@@ -144,8 +146,8 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
     <details class="detail-block"><summary>Приёмы: применения и вклад</summary><div id="castDetails"></div></details>
     <div class="section-heading campaign-heading"><h3>Все 100 локаций</h3><span class="hint">Нажмите на номер</span></div>
     <div id="campaignMap" class="campaign-map" aria-label="Проходимость ста локаций"></div>
-    <p class="hint">Каждая локация проверяется своим плановым героем, умноженным на тестовые проценты. Это срезы прогрессии, а не один герой, который подряд проходит всю карту. Зелёный — победа, красный — поражение.</p>
-    <div class="table-scroll campaign-table"><table><thead><tr><th>Локация</th><th>Герой D / HP</th><th>HP пачки</th><th>Зал: энергия + монеты</th><th>Результат</th></tr></thead><tbody id="campaignBody"></tbody></table></div>
+    <p class="hint">Каждая локация проверяется своим плановым героем, умноженным на тестовые проценты. Это срезы прогрессии, а не один герой, который подряд проходит всю карту. Зелёный — победа, красный — поражение, жёлтый — лимит времени или чувствительность к таймингу.</p>
+    <div class="table-scroll campaign-table"><table><thead><tr><th>Локация</th><th>Герой D / HP</th><th>HP пачки</th><th>Зал: средняя цена</th><th>Результат</th></tr></thead><tbody id="campaignBody"></tbody></table></div>
   </section>
   <footer><span>Расчёт локальный · настройки сохраняются в браузере</span><span id="computeTime"></span></footer>
   <div id="toast" role="status" class="toast" hidden></div>
@@ -218,12 +220,12 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
     const x=progress(level,s), h=s.hero;
     return {d:h.d1*Math.pow(h.d100/h.d1,x),h:h.h1*Math.pow(h.h100/h.h1,x),r:(h.r1+(h.r100-h.r1)*x)/100};
   }
-  function skillSet(s,ids) {return ids.map(id=>{
+  function skillSet(s,ids) {return ids.slice().sort((a,b)=>defs.findIndex(x=>x.id===a)-defs.findIndex(x=>x.id===b)).map(id=>{
     const def=defs.find(x=>x.id===id), v=s.skills.items.find(x=>x.id===id);
     return {...def,...v,power:v.power*s.skills.strength};
   });}
   function simulate(s,hero,enemy,ids,options={}) {
-    const dt=options.dt||DT, limit=options.limit||Math.max(240,s.encounter.target*3);
+    const dt=options.dt||DT, limit=options.limit||Math.max(600,s.encounter.target*8);
     const skills=skillSet(s,ids), ready=skills.map(()=>0), uses=Object.fromEntries(ids.map(id=>[id,0]));
     const waves=s.encounter.packCounts.concat([1]);
     const record=!!options.record, ignoreDeath=!!options.ignoreDeath;
@@ -258,12 +260,18 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
       enemies=enemies.filter(x=>x.hp>1e-9);
       if(!hadCurrent&&enemies.length) approach=s.encounter.move;
     }
+    function finishWave() {
+      if(record)rows.push({wave:wave+1,n:waves[wave],seconds:time-waveStart,start:waveHP,end:hp/maxHP,min:waveMin,boss:wave===9});
+      if(wave===9){clear=true;return;}
+      wait=s.encounter.between;
+      if(wait<=1e-9)newWave();
+    }
     newWave();
     while(!clear&&time<limit) {
       let step=Math.min(dt,limit-time);
       if(wait>0) {
         const span=Math.min(step,wait);
-        heal((hero.r+(time<regenUntil?regen:0))*maxHP*span);
+        heal((hero.r*span+regen*Math.max(0,Math.min(span,regenUntil-time)))*maxHP);
         wait-=span;time+=span;
         if(wait<=1e-9)newWave();
         if(record&&Math.round(time/dt)%5===0)trace.push({t:time,hp:Math.max(0,hp/maxHP),wave:wave+1});
@@ -285,14 +293,16 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
             }
           }
           cast=true;clean();
-        } else if(kind==='heal'&&maxHP-hp>=Math.min(p*maxHP*0.65,maxHP*0.3)) {heal(p*maxHP);cast=true;}
-        else if(kind==='shield'&&shield<=1e-9&&hp<maxHP*0.92) {shield=p*maxHP;shieldUntil=time+sk.duration;cast=true;}
+        } else if(kind==='heal'&&maxHP-hp+1e-9>=Math.min(p*maxHP*0.65,maxHP*0.3)) {heal(p*maxHP);cast=true;}
+        else if(kind==='shield'&&shield<=1e-9&&hp<=maxHP*0.92+1e-9) {shield=p*maxHP;shieldUntil=time+sk.duration;cast=true;}
         else if(kind==='stun'&&contact&&time>=stunUntil) {stunUntil=time+Math.min(12,p)*(wave===9?0.35:1);cast=true;}
-        else if(kind==='regen'&&hp<maxHP*0.85&&time>=regenUntil) {regen=p;regenUntil=time+sk.duration;cast=true;}
+        else if(kind==='regen'&&hp<=maxHP*0.85+1e-9&&time>=regenUntil) {regen=p;regenUntil=time+sk.duration;cast=true;}
         else if(kind==='buff'&&contact&&time>=buffUntil) {buff=p;buffUntil=time+sk.duration;cast=true;}
         else if(kind==='guard'&&contact&&time>=guardUntil) {guard=Math.min(0.85,p);guardUntil=time+sk.duration;cast=true;}
         if(cast){ready[i]=time+sk.cd;uses[sk.id]++;}
       }
+      // Instantaneous skill kills finish the wave at this timestamp.
+      if(!enemies.length){finishWave();continue;}
       // Stop precisely at a kill or the end of movement; do not lose the rest
       // of a basic attack tick and do not let a killed enemy attack afterwards.
       const basicRate=enemies.length&&approach<=1e-9?hero.d*(time<buffUntil?1+buff:1):0;
@@ -308,6 +318,18 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
         if(time<guardUntil)incomingRate*=1-guard;
       }
       if(shield>1e-9&&incomingRate>0)step=Math.min(step,shield/incomingRate);
+      const netRate=(hero.r+(time<regenUntil?regen:0))*maxHP-(shield>1e-9?0:incomingRate);
+      if(netRate<0){
+        for(let i=0;i<skills.length;i++){
+          if(ready[i]>time+1e-8)continue;
+          const sk=skills[i];let threshold=-1;
+          if(sk.kind==='heal')threshold=maxHP-Math.min(sk.power*maxHP*0.65,maxHP*0.3);
+          if(sk.kind==='shield'&&shield<=1e-9)threshold=maxHP*.92;
+          if(sk.kind==='regen'&&time>=regenUntil)threshold=maxHP*.85;
+          if(threshold>=0&&hp>threshold+1e-9)step=Math.min(step,(hp-threshold)/(-netRate));
+        }
+        if(!ignoreDeath&&hp>1e-9)step=Math.min(step,hp/(-netRate));
+      }
       let incoming=incomingRate*step;
       damageIn+=incoming;
       const shielded=Math.min(shield,incoming);shield-=shielded;absorbed+=shielded;incoming-=shielded;
@@ -317,17 +339,14 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
       hp-=incoming;
       heal(regenAmount);
       minHP=Math.min(minHP,hp);waveMin=Math.min(waveMin,hp/maxHP);
-      if(hp<=0&&!ignoreDeath){dead=true;time+=step;break;}
+      if(hp<=1e-9&&!ignoreDeath){dead=true;hp=0;time+=step;break;}
       if(basicRate>0)basicDamage+=hitSingle(basicRate*step)||0;
       if(approach>0){travel+=step;approach=Math.max(0,approach-step);}
       clean();
       time+=step;
       if(record&&Math.round(time/dt)%5===0)trace.push({t:time,hp:Math.max(0,hp/maxHP),wave:wave+1});
       if(!enemies.length) {
-        if(record)rows.push({wave:wave+1,n:waves[wave],seconds:time-waveStart,start:waveHP,end:hp/maxHP,min:waveMin,boss:wave===9});
-        if(wave===9){clear=true;break;}
-        wait=s.encounter.between;
-        if(wait<=1e-9)newWave();
+        finishWave();
       }
     }
     if(!clear&&!dead&&time>=limit)timeout=true;
@@ -337,7 +356,7 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
     }
     return {clear,dead,timeout,time,hp:Math.max(0,hp/maxHP),min:Math.max(0,minHP/maxHP),rawMin:minHP/maxHP,damageOut,damageIn,healing,absorbed,basicDamage,skillDamage,uses,rows,trace,wave:Math.min(10,wave+1),travel};
   }
-  function calibrate(s,r) {
+  function calibrate(s,r,shared=null) {
     const hero={d:1,h:1,r}, ids=s.skills.reference, target=s.encounter.target;
     let lo=0.005,hi=8,best=null;
     function sample(budget) {
@@ -346,15 +365,29 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
       if(!best||error<best.error)best={budget,error,time:out.time};
       return out.time;
     }
-    sample(lo);
-    while(sample(hi)<target&&hi<4096)hi*=2;
-    for(let i=0;i<14;i++) {
-      const mid=(lo+hi)/2;
-      if(sample(mid)<target)lo=mid;else hi=mid;
+    let hp;
+    if(shared)hp=shared.hp;
+    else {
+      sample(lo);
+      while(sample(hi)<target&&hi<4096)hi*=2;
+      for(let i=0;i<14;i++) {
+        const mid=(lo+hi)/2;
+        if(sample(mid)<target)lo=mid;else hi=mid;
+      }
+      const anchor=best.budget;
+      let robust=null;
+      // A cooldown can move to the previous wave at a boundary. Prefer an
+      // interior point that remains close to target for ±1% basic damage.
+      for(let i=-12;i<=12;i++){
+        const budget=anchor*(1+i*.005);
+        const times=[.99,1,1.01].map(d=>simulate(s,{d,h:1,r:0},{hp:budget,pressure:0},ids,{ignoreDeath:true}).time);
+        const span=Math.max(...times)-Math.min(...times);
+        const score=Math.abs(times[1]-target)+.3*(Math.abs(times[0]-target)+Math.abs(times[2]-target))+1.2*span;
+        if(!robust||score<robust.score)robust={budget,score};
+      }
+      hp=robust.budget;
     }
-    const anchor=best.budget;
-    for(let i=-3;i<=3;i++)sample(anchor*(1+i*0.003));
-    const hp=best.budget, reserve=s.encounter.reserve/100;
+    const reserve=s.encounter.reserve/100;
     let pLo=0,pHi=0.04,closest=null;
     function pressureSample(p) {
       const out=simulate(s,hero,{hp,pressure:p},ids,{ignoreDeath:true});
@@ -372,52 +405,74 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
     const ref=simulate(s,hero,{hp,pressure},ids);
     return {hp,pressure,ref,timeError:Math.abs(ref.time-target),reserveError:Math.abs(ref.min-reserve)};
   }
+  function assess(s,hero,enemy,ids){
+    const out=simulate(s,hero,enemy,ids);
+    const a=simulate(s,{...hero,d:hero.d*.99},enemy,ids),b=simulate(s,{...hero,d:hero.d*1.01},enemy,ids);
+    out.fragile=a.clear!==out.clear||b.clear!==out.clear||(out.clear&&(Math.max(a.time,b.time,out.time)-Math.min(a.time,b.time,out.time)>Math.max(3,out.time*.08)));
+    return out;
+  }
   function economy(s) {
     const c=s.economy, start=heroAt(1,s), end=heroAt(100,s), share=c.gymShare/100;
     const needs={damage:(end.d-start.d)*share/c.dStep,hp:(end.h-start.h)*share/c.hStep,regen:(end.r-start.r)*100*share/c.rStep};
     const total=needs.damage+needs.hp+needs.regen;
     const energyGross=c.energyStart+c.calendarHours*c.energyHour*c.house;
-    const energy=energyGross*c.energyUse/100;
+    const energyTarget=energyGross*c.energyUse/100;
     const gymMinutes=Math.max(0,c.activeHours-c.combatHours)*60;
     const tapsPerUpgrade=total>0?gymMinutes*60/(total*c.tapSeconds):0;
-    let weightedUpgrades=0,prior=start;
+    const weighted={damage:0,hp:0,regen:0},priorCounts=[];let prior=start;
     for(let l=2;l<=100;l++){
       const h=heroAt(l,s);
-      const count=((h.d-prior.d)/c.dStep+(h.h-prior.h)/c.hStep+(h.r-prior.r)*100/c.rStep)*share;
-      weightedUpgrades+=count*Math.pow(c.priceGrowth,l-2);prior=h;
+      const stats={damage:(h.d-prior.d)*share/c.dStep,hp:(h.h-prior.h)*share/c.hStep,regen:(h.r-prior.r)*100*share/c.rStep};
+      const weight=Math.pow(c.priceGrowth,l-2);
+      for(const key of Object.keys(weighted))weighted[key]+=stats[key]*weight;
+      priorCounts.push(stats);prior=h;
     }
     const raw=[];let coinTotal=0;
     for(let l=1;l<=100;l++){const reward=c.coin1*Math.pow(c.coinGrowth,l-1);coinTotal+=reward;raw.push({level:l,reward});}
-    let previous=start,cumulativeEnergy=0,cumulativeCoins=0,accumulatedTaps=0;
+    const keys=Object.keys(weighted),active=keys.filter(key=>weighted[key]>1e-9);
+    const budgets=Object.fromEntries(keys.map(key=>[key,active.includes(key)?1/active.length:0]));
+    let fraction=0,coinAvailable=0,coinBudget=raw.slice(0,99).reduce((v,row)=>v+row.reward*c.coinUse/100,0),energy=energyTarget;
+    for(let i=1;i<100;i++){
+      const weight=Math.pow(c.priceGrowth,i-1),stats=priorCounts[i-1];
+      fraction+=keys.reduce((v,key)=>v+(weighted[key]>1e-9?budgets[key]*stats[key]*weight/weighted[key]:0),0);
+      coinAvailable+=raw[i-1].reward*c.coinUse/100;
+      const energyAvailable=(c.energyStart+c.calendarHours*i/99*c.energyHour*c.house)*c.energyUse/100;
+      if(fraction>1e-9){coinBudget=Math.min(coinBudget,coinAvailable/fraction);energy=Math.min(energy,energyAvailable/fraction);}
+    }
+    let previous=start,cumulativeEnergy=0,cumulativeCoins=0,accumulatedTaps=0,capacityNeeded=0;
     for(let i=0;i<100;i++){
       const l=i+1,current=heroAt(l,s),x=progress(l,s),xPrev=progress(Math.max(1,l-1),s);
       const stats={damage:(current.d-previous.d)*share/c.dStep,hp:(current.h-previous.h)*share/c.hStep,regen:(current.r-previous.r)*100*share/c.rStep};
       const upgrades=stats.damage+stats.hp+stats.regen;
-      const energyPrice=weightedUpgrades>1e-9?energy*Math.pow(c.priceGrowth,Math.max(0,l-2))/weightedUpgrades:null;
-      const allocatedEnergy=upgrades*(energyPrice||0);
-      // Training from L-1 to L is funded by the reward from L-1, never by the uncleared L.
-      const allocatedCoins=l===1?0:raw[i-1].reward*c.coinUse/100;
+      const weight=Math.pow(c.priceGrowth,Math.max(0,l-2));
+      const energyPrices={},coinPrices={};
+      for(const key of keys){energyPrices[key]=weighted[key]>1e-9?energy*budgets[key]*weight/weighted[key]:null;coinPrices[key]=weighted[key]>1e-9?coinBudget*budgets[key]*weight/weighted[key]:null;}
+      const allocatedEnergy=keys.reduce((v,key)=>v+stats[key]*(energyPrices[key]||0),0);
+      const allocatedCoins=keys.reduce((v,key)=>v+stats[key]*(coinPrices[key]||0),0);
+      const energyPrice=upgrades>1e-9?allocatedEnergy/upgrades:null;
       const coinPrice=upgrades>1e-9?allocatedCoins/upgrades:null;
       const taps=energy>0?allocatedEnergy/energy*gymMinutes*60/c.tapSeconds:0;
+      const energyAvailable=(c.energyStart+c.calendarHours*i/99*c.energyHour*c.house)*c.energyUse/100;
+      capacityNeeded=Math.max(capacityNeeded,energyAvailable-cumulativeEnergy);
       cumulativeEnergy+=upgrades>1e-9?allocatedEnergy:0;
       cumulativeCoins+=upgrades>1e-9?allocatedCoins:0;
       accumulatedTaps+=taps;
-      Object.assign(raw[i],{upgrades,stats,energy:allocatedEnergy,coins:allocatedCoins,energyPrice,coinPrice,cumulativeEnergy,cumulativeCoins,taps,cumulativeTaps:accumulatedTaps});
+      Object.assign(raw[i],{upgrades,stats,energy:allocatedEnergy,coins:allocatedCoins,energyPrice,coinPrice,energyPrices,coinPrices,cumulativeEnergy,cumulativeCoins,taps,cumulativeTaps:accumulatedTaps,energyAvailable});
       previous=current;
     }
-    return {needs,total,energyGross,energy,energySpent:cumulativeEnergy,coinTotal,coinSpent:cumulativeCoins,gymMinutes,tapsPerUpgrade,totalTaps:accumulatedTaps,rows:raw,shares:{gym:c.gymShare,album:c.albumShare,gear:100-c.gymShare-c.albumShare}};
+    return {needs,total,energyGross,energy,energyTarget,energySpent:cumulativeEnergy,coinTotal,coinBudget,coinSpent:cumulativeCoins,capacityNeeded,budgets,gymMinutes,tapsPerUpgrade,totalTaps:accumulatedTaps,rows:raw,shares:{gym:c.gymShare,album:c.albumShare,gear:100-c.gymShare-c.albumShare}};
   }
   function campaign(s,options={}) {
     const rows=[],eco=economy(s);
     let winTime=0,testTime=0,passed=0,timeError=0,reserveError=0;
-    const cache=new Map();
+    const cache=new Map();let shared=null;
     for(let level=1;level<=100;level++){
       const hero=heroAt(level,s);
       const key=hero.r.toFixed(9);
       let enemy=cache.get(key);
-      if(!enemy){enemy=calibrate(s,hero.r);cache.set(key,enemy);}
+      if(!enemy){enemy=calibrate(s,hero.r,shared);if(!shared)shared={hp:enemy.hp};cache.set(key,enemy);}
       const testHero={d:s.test.damage/100,h:s.test.hp/100,r:hero.r*s.test.regen/100};
-      const out=simulate(s,testHero,enemy,s.test.loadout);
+      const out=assess(s,testHero,enemy,s.test.loadout);
       rows.push({level,hero,enemy,test:out,economy:eco.rows[level-1]});
       winTime+=enemy.ref.time;testTime+=out.time;if(out.clear)passed++;
       timeError=Math.max(timeError,enemy.timeError);reserveError=Math.max(reserveError,enemy.reserveError);
@@ -425,7 +480,7 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
     const retryBudget=s.economy.combatHours*3600-winTime;
     return {rows,eco,winTime,testTime,passed,retryBudget,timeError,reserveError};
   }
-  const api={VERSION,DT,COUNT,defs,DEFAULTS,clone,clamp,sanitize,heroAt,progress,skillSet,simulate,calibrate,economy,campaign};
+  const api={VERSION,DT,COUNT,defs,DEFAULTS,clone,clamp,sanitize,heroAt,progress,skillSet,simulate,assess,calibrate,economy,campaign};
   root.Balance=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
@@ -521,6 +576,9 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
     $('kpiEnergy').textContent=compact(model.eco.energySpent);
     $('kpiGym').textContent=`${fmt(model.eco.total,1)} улучшений · ${fmt(model.eco.gymMinutes)} мин. в зале`;
     const notes=[];
+    const fragile=model.rows.filter(r=>r.test.fragile).length,timedOut=model.rows.filter(r=>r.test.timeout).length;
+    if(fragile)notes.push(`${fragile} из 100 боёв чувствительны к ±1% урона: применение приёма может перейти в соседнюю пачку. Жёлтые клетки показывают зависимость от тайминга.`);
+    if(timedOut)notes.push(`${timedOut} боёв дошли до лимита расчёта с живым героем. Они отмечены как «лимит», отдельно от поражений.`);
     if(model.retryBudget<0)notes.push(`Первые победы уже занимают больше ${fmt(state.economy.combatHours,1)} ч боя. Уменьшите целевое время локации или увеличьте бюджет боя.`);
     if(state.economy.combatHours>state.economy.activeHours)notes.push('Бюджет боя больше всей активной игры. На зал остаётся 0 минут.');
     if(state.economy.calendarHours<state.economy.activeHours)notes.push('Календарное время короче активной игры. Для согласованного бюджета энергии увеличьте число календарных часов.');
@@ -528,6 +586,7 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
     if(model.reserveError>0.035)notes.push(`Целевой запас HP не удалось подобрать точно: отклонение до ${fmt(model.reserveError*100,1)} п.п. Проверьте лечение, защиту и контроль эталона; смотрите фактическую полосу HP.`);
     if(!model.eco.total)notes.push('Плановый прирост от зала равен нулю. Цена улучшения не определена, энергия не тратится.');
     if(model.eco.total&&model.eco.energy===0)notes.push('При нулевом бюджете энергии вычисленная цена равна нулю. Увеличьте стартовый запас или восстановление.');
+    if(model.eco.energyTarget-model.eco.energySpent>1)notes.push(`На ранние улучшения ресурсов не хватает при цене из полного бюджета. Цены ограничены доступностью энергии по ходу пути; используется ${fmt(model.eco.energySpent)} из ${fmt(model.eco.energyTarget)}.`);
     if(model.eco.gymMinutes>0&&model.eco.total&&model.eco.energy>0&&model.eco.totalTaps/model.eco.energy>50)notes.push(`Под заданные часы получается ${fmt(model.eco.totalTaps/model.eco.energy,1)} нажатий на единицу энергии. Это расчёт темпа, который можно изменить бюджетом зала.`);
     $('notices').innerHTML=notes.map(n=>`<div class="notice">${n}</div>`).join('');
   }
@@ -535,17 +594,19 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
     const e=model.eco,c=state.economy;
     $('shareBar').innerHTML=`<i style="width:${e.shares.gym}%;background:var(--blue)"></i><i style="width:${e.shares.gear}%;background:var(--purple)"></i><i style="width:${e.shares.album}%;background:var(--amber)"></i>`;
     $('sharesNote').textContent=`Зал ${e.shares.gym}% · вещи ${e.shares.gear}% · альбом ${e.shares.album}%. Одинаковые доли для прироста урона, HP и регена.`;
-    $('economySummary').innerHTML=`Нужно <b>${fmt(e.needs.damage,1)}</b> улучшений урона, <b>${fmt(e.needs.hp,1)}</b> HP и <b>${fmt(e.needs.regen,1)}</b> регена.<br>Из <b>${fmt(e.energyGross)}</b> полученной энергии используем <b>${fmt(e.energySpent)}</b>. За ${fmt(c.calendarHours)} ч, средний дом ×${fmt(c.house,1)}.<br>За первые победы: <b>${compact(e.coinTotal)}</b> монет; на зал до L100 — <b>${compact(e.coinSpent)}</b>.<br>На зал: <b>${fmt(e.gymMinutes)} мин.</b>, <b>${compact(e.totalTaps)}</b> нажатий${e.energy>0?' · '+fmt(e.totalTaps/e.energy,1)+' на единицу энергии':''}.`;
+    const row=e.rows[state.test.level-1],prices=['damage','hp','regen'].map((key,i)=>`${['Урон','HP','Реген'][i]}: <b>${fmt(row.energyPrices[key],2)} энергии + ${fmt(row.coinPrices[key],1)} монет</b>`).join('<br>');
+    $('economySummary').innerHTML=`Нужно <b>${fmt(e.needs.damage,1)}</b> улучшений урона, <b>${fmt(e.needs.hp,1)}</b> HP и <b>${fmt(e.needs.regen,1)}</b> регена.<br>Из <b>${fmt(e.energyGross)}</b> полученной энергии используем <b>${fmt(e.energySpent)}</b>. За ${fmt(c.calendarHours)} ч, средний дом ×${fmt(c.house,1)}.<br>За первые победы: <b>${compact(e.coinTotal)}</b> монет; на зал до L100 — <b>${compact(e.coinSpent)}</b>.<br>На зал: <b>${fmt(e.gymMinutes)} мин.</b>, <b>${compact(e.totalTaps)}</b> нажатий${e.energy>0?' · '+fmt(e.totalTaps/e.energy,1)+' на единицу энергии':''}.<br><br><b>Цена одного улучшения к L${state.test.level}</b><br>${prices}<br><small>Бюджет делится поровну между растущими статами. Для расписания нужно удерживать до ${fmt(e.capacityNeeded)} энергии; отдельный лимит ёмкости здесь не задан.</small>`;
   }
   function duelCard(title,out,isTest){
-    const status=out.clear?'Победа':out.timeout?'Не уложился':'Поражение · арена '+out.wave;
-    return `<div class="card-top"><span>${title}</span><span class="result ${out.clear?'':'fail'}">${status}</span></div><strong>${fmt(out.time,1)} <span style="font-size:11px;letter-spacing:0;color:var(--muted-foreground)">сек.</span></strong><p>Остаток HP <b>${pct(out.hp)}</b> · минимум ${pct(out.min)}</p><div class="mini-hp"><i style="width:${Math.min(100,out.hp*100)}%;background:${isTest?'var(--good)':'var(--purple)'}"></i></div>`;
+    const status=out.clear?(out.fragile?'Победа · зависит от тайминга':'Победа'):out.timeout?'Лимит · герой жив':'Поражение · арена '+out.wave;
+    return `<div class="card-top"><span>${title}</span><span class="result ${out.timeout||out.fragile?'uncertain':out.clear?'':'fail'}">${status}</span></div><strong>${fmt(out.time,1)} <span style="font-size:11px;letter-spacing:0;color:var(--muted-foreground)">сек.</span></strong><p>Остаток HP <b>${pct(out.hp)}</b> · минимум ${pct(out.min)}</p><div class="mini-hp"><i style="width:${Math.min(100,out.hp*100)}%;background:${isTest?'var(--good)':'var(--purple)'}"></i></div>`;
   }
   function renderDetail(){
     const row=model.rows[state.test.level-1],refHero={d:1,h:1,r:row.hero.r};
     const player={d:state.test.damage/100,h:state.test.hp/100,r:row.hero.r*state.test.regen/100};
     const ref=B.simulate(state,refHero,row.enemy,state.skills.reference,{record:true});
     const out=B.simulate(state,player,row.enemy,state.test.loadout,{record:true});
+    out.fragile=row.test.fragile;
     $('derivedPack').textContent=compact(row.enemy.hp*row.hero.d);
     $('derivedBoss').textContent=compact(row.enemy.hp*row.hero.d*state.encounter.bossWeight);
     $('derivedPressure').textContent=compact(row.enemy.pressure*row.hero.h);
@@ -566,11 +627,11 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
     }).join('');
     const no=B.simulate(state,player,row.enemy,[]);
     const entries=state.test.loadout.map(id=>`<div><span>${B.defs.find(d=>d.id===id).name}</span><b>${out.uses[id]} примен.</b></div>`).join('');
-    $('castDetails').innerHTML=`<div class="cast-list">${entries}<div><span>Полезный урон автоатаки</span><b>${fmt(out.basicDamage*row.hero.d)}</b></div><div><span>Полезный урон приёмов</span><b>${fmt(out.skillDamage*row.hero.d)}</b></div><div><span>Фактически восстановлено HP</span><b>${fmt(out.healing*row.hero.h)}</b></div><div><span>Поглощено щитами</span><b>${fmt(out.absorbed*row.hero.h)}</b></div><div><span>Тот же герой без приёмов</span><b class="${no.clear?'good-text':'bad-text'}">${no.clear?'Победа за '+fmt(no.time,1)+' с':'Поражение на арене '+no.wave}</b></div></div>`;
-    $('campaignMap').innerHTML=model.rows.map(r=>`<button type="button" data-level="${r.level}" class="${r.test.clear?'':'fail'} ${r.level===state.test.level?'active':''}" aria-label="Локация ${r.level}: ${r.test.clear?'победа':'поражение'}" title="L${r.level}: ${r.test.clear?'победа, HP '+pct(r.test.hp):'поражение, арена '+r.test.wave}">${r.level}</button>`).join('');
+    $('castDetails').innerHTML=`<div class="cast-list">${entries}<div><span>Полезный урон автоатаки</span><b>${fmt(out.basicDamage*row.hero.d)}</b></div><div><span>Полезный урон приёмов</span><b>${fmt(out.skillDamage*row.hero.d)}</b></div><div><span>Фактически восстановлено HP</span><b>${fmt(out.healing*row.hero.h)}</b></div><div><span>Поглощено щитами</span><b>${fmt(out.absorbed*row.hero.h)}</b></div><div><span>Тот же герой без приёмов</span><b class="${no.clear?'good-text':'bad-text'}">${no.clear?'Победа за '+fmt(no.time,1)+' с':no.timeout?'Лимит времени, герой жив':'Поражение на арене '+no.wave}</b></div></div>`;
+    $('campaignMap').innerHTML=model.rows.map(r=>`<button type="button" data-level="${r.level}" class="${r.test.timeout||r.test.fragile?'uncertain':r.test.clear?'':'fail'} ${r.level===state.test.level?'active':''}" aria-label="Локация ${r.level}: ${r.test.timeout?'лимит':r.test.clear?'победа':'поражение'}" title="L${r.level}: ${r.test.timeout?'лимит времени':r.test.fragile?'чувствительно к таймингу':r.test.clear?'победа, HP '+pct(r.test.hp):'поражение, арена '+r.test.wave}">${r.level}</button>`).join('');
     $('campaignBody').innerHTML=model.rows.map(r=>{
       const c=r.economy;
-      return `<tr class="${r.level===state.test.level?'active':''}"><td><button type="button" data-level="${r.level}">L${r.level}</button></td><td>${compact(r.hero.d)} / ${compact(r.hero.h)}</td><td>${compact(r.enemy.hp*r.hero.d)}</td><td>${c.upgrades>0?fmt(c.energyPrice,2)+' + '+fmt(c.coinPrice,1):'—'}</td><td class="${r.test.clear?'good-text':'bad-text'}">${r.test.clear?'HP '+pct(r.test.hp):'Арена '+r.test.wave}</td></tr>`;
+      return `<tr class="${r.level===state.test.level?'active':''}"><td><button type="button" data-level="${r.level}">L${r.level}</button></td><td>${compact(r.hero.d)} / ${compact(r.hero.h)}</td><td>${compact(r.enemy.hp*r.hero.d)}</td><td>${c.upgrades>0?fmt(c.energyPrice,2)+' + '+fmt(c.coinPrice,1):'—'}</td><td class="${r.test.timeout||r.test.fragile?'uncertain':r.test.clear?'good-text':'bad-text'}">${r.test.timeout?'Лимит':r.test.clear?'HP '+pct(r.test.hp)+(r.test.fragile?' *':''):'Арена '+r.test.wave}</td></tr>`;
     }).join('');
     window.BALANCE_RESULT={level:row.level,reference:ref,test:out,enemy:row.enemy,hero:row.hero,noSkills:no};
   }
@@ -586,7 +647,7 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
         else if(mode==='test'){
           model.passed=0;model.testTime=0;
           model.rows.forEach(r=>{
-            r.test=B.simulate(state,{d:state.test.damage/100,h:state.test.hp/100,r:r.hero.r*state.test.regen/100},r.enemy,state.test.loadout);
+            r.test=B.assess(state,{d:state.test.damage/100,h:state.test.hp/100,r:r.hero.r*state.test.regen/100},r.enemy,state.test.loadout);
             if(r.test.clear)model.passed++;model.testTime+=r.test.time;
           });
         } else if(mode==='economy'){
@@ -605,8 +666,8 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
   }
   function download(name,content,type){const blob=new Blob([content],{type});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),1000);}
   function csv(){
-    const header=['location','hero_dps','hero_hp','hero_regen_pct_s','pack_hp','boss_hp','pressure_dps','reference_seconds','reference_min_hp_pct','test_win','test_seconds','test_hp_pct','gym_upgrades_from_previous','energy_per_upgrade','coins_per_upgrade','victory_coins','energy_to_level','taps_to_level'];
-    const lines=model.rows.map(r=>[r.level,r.hero.d,r.hero.h,r.hero.r*100,r.enemy.hp*r.hero.d,r.enemy.hp*r.hero.d*state.encounter.bossWeight,r.enemy.pressure*r.hero.h,r.enemy.ref.time,r.enemy.ref.min*100,r.test.clear?1:0,r.test.time,r.test.hp*100,r.economy.upgrades,r.economy.energyPrice,r.economy.coinPrice,r.economy.reward,r.economy.energy,r.economy.taps].map(v=>v===null?'':typeof v==='number'?String(Math.round(v*100000)/100000):v).join(','));
+    const header=['location','hero_dps','hero_hp','hero_regen_pct_s','pack_hp','boss_hp','pressure_dps','reference_seconds','reference_min_hp_pct','test_win','test_timeout','timing_sensitive','test_seconds','test_hp_pct','gym_upgrades_from_previous','energy_per_upgrade_avg','coins_per_upgrade_avg','victory_coins','energy_to_level','taps_to_level','energy_damage','energy_hp','energy_regen','coins_damage','coins_hp','coins_regen'];
+    const lines=model.rows.map(r=>[r.level,r.hero.d,r.hero.h,r.hero.r*100,r.enemy.hp*r.hero.d,r.enemy.hp*r.hero.d*state.encounter.bossWeight,r.enemy.pressure*r.hero.h,r.enemy.ref.time,r.enemy.ref.min*100,r.test.clear?1:0,r.test.timeout?1:0,r.test.fragile?1:0,r.test.time,r.test.hp*100,r.economy.upgrades,r.economy.energyPrice,r.economy.coinPrice,r.economy.reward,r.economy.energy,r.economy.taps,...['damage','hp','regen'].map(k=>r.economy.energyPrices[k]),...['damage','hp','regen'].map(k=>r.economy.coinPrices[k])].map(v=>v===null?'':typeof v==='number'?String(Math.round(v*100000)/100000):v).join(','));
     download('rpg-balance-100-locations.csv','\uFEFF'+[header.join(','),...lines].join('\r\n'),'text/csv;charset=utf-8');
   }
   state=load();syncControls();
@@ -623,7 +684,7 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
       set(el.dataset.path,Number(el.value));
       $$(`[data-output="${el.dataset.path}"]`).forEach(out=>out.textContent=el.dataset.path.startsWith('test.')?el.value+'%':el.dataset.path==='skills.strength'?'×'+el.value:el.value);
       if(el.dataset.path==='test.level'){
-        state.test.level=B.clamp(Math.round(Number(el.value)),1,100);syncControls();if(model)renderDetail();save();return;
+        state.test.level=B.clamp(Math.round(Number(el.value)),1,100);syncControls();if(model){renderDetail();renderEconomy();}save();return;
       }
       refresh(el.dataset.path.startsWith('test.')?'test':el.dataset.path.startsWith('economy.')?'economy':'full');
     }else if(el.dataset.skill){
@@ -641,7 +702,7 @@ body.standalone{background:var(--page-bg);min-height:100vh;padding:18px 24px} @m
     const el=event.target.closest('button');if(!el)return;
     if(el.dataset.tab)openTab(el.dataset.tab);
     if(el.dataset.openTab)openTab(el.dataset.openTab,true);
-    if(el.dataset.level){state.test.level=Number(el.dataset.level);syncControls();renderDetail();save();}
+    if(el.dataset.level){state.test.level=Number(el.dataset.level);syncControls();renderDetail();renderEconomy();save();}
     if(el.dataset.packs){
       const presets={swarm:[8,6,8,7,8,6,8,7,8],elite:[1,2,1,3,1,2,1,2,1],mixed:B.DEFAULTS.encounter.packCounts};
       state.encounter.packCounts=presets[el.dataset.packs].slice();refresh('full');
