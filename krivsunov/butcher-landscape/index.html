@@ -29,9 +29,13 @@
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: pointer; text-align: left; padding: 0; color: inherit; font: inherit; }
   .card:hover, .card:focus-visible { border-color: var(--accent); outline: none; }
   .shots { display: grid; gap: 2px; background: #000; }
+  .th { position: relative; display: block; }
   .shots img { width: 100%; aspect-ratio: 2.17; object-fit: contain; display: block; background: #000; }
   .shots.all { grid-template-columns: 1fr .425fr; }
-  .shots.all .orig { grid-column: 2; grid-row: 1 / span 2; width: 100%; height: 100%; aspect-ratio: auto; }
+  .shots.all .th.orig { grid-column: 2; grid-row: 1 / span 2; }
+  .shots.all .th.orig img { height: 100%; aspect-ratio: auto; }
+  .cnt { position: absolute; right: 6px; bottom: 6px; padding: 3px 7px; border-radius: 999px; background: rgba(0, 0, 0, .78); color: #fff; font-size: 11px; font-weight: 700; }
+  .cnt:empty { display: none; }
   .noorig { grid-column: 2; grid-row: 1 / span 2; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; text-align: center; background: #000; }
   .meta { padding: 8px 10px 10px; }
   .meta b { display: block; font-size: 14px; }
@@ -45,19 +49,44 @@
   .bar .title b { display: block; font-size: 16px; }
   .bar .title small { color: var(--muted); }
   .icon { border: 1px solid var(--line); background: var(--card); color: var(--text); width: 40px; height: 40px; border-radius: 10px; font-size: 20px; cursor: pointer; }
-  .stage { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; padding: 0 max(8px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); touch-action: pan-y pinch-zoom; }
-  .stage figure { margin: 0; flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
-  .stage img { max-width: 100%; max-height: 100%; min-height: 0; object-fit: contain; border-radius: 10px; background: #000; }
-  .stage figcaption { color: var(--muted); font-size: 12px; padding-top: 4px; }
+  .stage { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center; padding: 0 max(8px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); touch-action: pan-y pinch-zoom; }
+  .stage figure { margin: 0; flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; align-items: center; width: 100%; }
+  .stage .pic { flex: 1 1 0; min-height: 80px; width: 100%; display: flex; align-items: center; justify-content: center; }
+  .stage img { display: block; max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; background: #000; }
+  .stage figcaption { flex: none; color: var(--muted); font-size: 12px; padding-top: 4px; }
   .stage.all { flex-direction: row; align-items: stretch; }
-  .stage.all .col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .stage.all .col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
   .stage.all .side { flex: 0 1 auto; max-width: 32%; }
   .stage .missing { color: var(--muted); border: 1px dashed var(--line); border-radius: 10px; padding: 40px 16px; text-align: center; }
+  /* Комментарии под каждой картинкой: список прокручивается, поле ввода всегда на виду. */
+  .cm { flex: 0 1 auto; min-height: 0; max-height: 45%; width: min(100%, 760px); display: flex; flex-direction: column; gap: 6px; padding-top: 6px; }
+  .cm-list { flex: 0 1 auto; min-height: 0; overflow-y: auto; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .cm-list:empty { display: none; }
+  .cm-list li { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; font-size: 13px; }
+  .cm-list time { color: var(--muted); font-size: 11px; margin-left: 8px; }
+  .cm-list p { margin: 2px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .cm-form { flex: none; display: flex; gap: 6px; }
+  .cm-form input, .cm-form textarea { min-width: 0; background: var(--card); border: 1px solid var(--line); color: var(--text); border-radius: 8px; padding: 7px 9px; font: inherit; font-size: 14px; }
+  .cm-form input { flex: 0 1 8.5em; }
+  .cm-form textarea { flex: 1 1 auto; height: 36px; max-height: 120px; resize: none; line-height: 20px; }
+  .cm-form button { flex: none; width: 40px; border: 0; border-radius: 8px; background: var(--accent); color: #1b1505; font-size: 16px; cursor: pointer; }
+  .cm-form button:disabled { opacity: .5; cursor: wait; }
+  .cm-err { color: #ff8a80; font-size: 12px; }
   .hint { color: var(--muted); font-size: 12px; text-align: center; padding-bottom: calc(6px + env(safe-area-inset-bottom)); }
   @media (max-width: 600px) { h1 { font-size: 16px; } .hint { display: none; } body.all .grid { grid-template-columns: 1fr; }
     .seg { flex: 1 1 100%; } .seg button { flex: 1 1 auto; padding: 7px 6px; } .bar .seg { order: 1; } .bar .title { flex-basis: 120px; } }
-  /* Столбиком прокрутка с начала: при центровке верх переполнения недостижим. */
-  @media (max-width: 700px) { .stage.all { flex-direction: column; justify-content: flex-start; overflow-y: auto; } .stage.all .side { max-width: none; max-height: 70vh; flex: 0 0 auto; } }
+  /* Узкий экран: всё столбиком, прокрутка с начала (при центровке верх переполнения недостижим). Шрифт полей 16px — иначе iOS увеличивает страницу. */
+  @media (max-width: 700px) {
+    .stage { overflow-y: auto; justify-content: flex-start; }
+    .stage figure, .stage .pic, .stage.all .col, .cm, .cm-list { flex: none; }
+    .stage .pic { min-height: 0; }
+    .stage img { max-height: 70vh; }
+    .cm { max-height: none; }
+    .cm-form input, .cm-form textarea { font-size: 16px; }
+    .cm-form input { flex-basis: 6.5em; }
+    .stage.all { flex-direction: column; }
+    .stage.all .side { max-width: none; }
+  }
 </style>
 </head>
 <body>
@@ -84,7 +113,7 @@
     <button class="icon" id="close" aria-label="Закрыть">✕</button>
   </div>
   <div class="stage" id="stage"></div>
-  <div class="hint">← → — листать, I / A / B / O — iOS, Android, оба, оба + оригинал, Esc — закрыть</div>
+  <div class="hint">← → — листать, I / A / B / O — iOS, Android, оба, оба + оригинал, Esc — закрыть, Enter в поле — отправить комментарий</div>
 </div>
 
 <script src="data.js"></script>
@@ -92,17 +121,30 @@
 (() => {
   const items = window.WINDOWS || [];
   const names = { ios: 'iOS · iPhone 15 Pro, 2556 × 1179', android: 'Android · 20:9, 2400 × 1080', orig: 'Оригинал · вертикаль iPhone, 1179 × 2556' };
+  // Комментарии: новый уходит в очередь ntfy.sh, GitHub Actions раз в 10 минут переносит очередь в JSON на ветке comments
+  // репозитория Mrak0be5.github.io. Сайт показывает перенесённые и ещё лежащие в очереди (она хранит 12 часов).
+  const SITE = 'butcher-landscape';
+  const QUEUE = 'https://ntfy.sh/bh-landscape-cm-nwk23eg5';
+  const STORE = 'https://raw.githubusercontent.com/Mrak0be5/Mrak0be5.github.io/refs/heads/comments/butcher-landscape.json';
+  const TARGETS = { ios: 'к iOS', android: 'к Android', orig: 'к оригиналу' };
   const landscape = () => (platform === 'both' || platform === 'all' ? ['ios', 'android'] : [platform]);
   let platform = localStorage.getItem('platform') || 'ios';
   let shown = items, index = -1;
+  let comments = new Map(), byKey = new Map(), loadedAt = 0;
+  const mine = new Map();  // свои отправленные: в выдаче очереди появляются не сразу
   const $ = s => document.querySelector(s);
   const groups = [...new Set(items.map(it => it.group))];
-  $('#sub').textContent = `${items.length} окон · ${groups.length} разделов · iPhone и Android в ландшафте`;
+  const subtitle = `${items.length} окон · ${groups.length} разделов · iPhone и Android в ландшафте`;
+  $('#sub').textContent = subtitle;
 
-  const shotsHtml = (it, kind) => landscape()
-    .map(p => `<img loading="lazy" src="${kind}/${p}/${it.id}.webp" alt="${it.title} — ${p === 'ios' ? 'iOS' : 'Android'}">`).join('')
-    + (platform !== 'all' ? '' : it.orig ? `<img class="orig" loading="lazy" src="${kind}/orig/${it.id}.webp" alt="${it.title} — оригинал">`
-                                         : '<div class="noorig">нет<br>оригинала</div>');
+  const thumb = (it, p) => `<span class="th${p === 'orig' ? ' orig' : ''}"><img loading="lazy" src="thumb/${p}/${it.id}.webp"
+    alt="${it.title} — ${{ ios: 'iOS', android: 'Android', orig: 'оригинал' }[p]}"><span class="cnt" data-k="${it.id}/${p}"></span></span>`;
+  const shotsHtml = it => landscape().map(p => thumb(it, p)).join('')
+    + (platform !== 'all' ? '' : it.orig ? thumb(it, 'orig') : '<div class="noorig">нет<br>оригинала</div>');
+  const cmHtml = (id, p) => `<div class="cm" data-id="${id}" data-p="${p}"><ol class="cm-list"></ol>
+    <form class="cm-form"><input class="cm-name" maxlength="40" placeholder="Имя" aria-label="Имя">
+      <textarea class="cm-text" rows="1" maxlength="1000" placeholder="Комментарий ${TARGETS[p]}" aria-label="Комментарий ${TARGETS[p]}"></textarea>
+      <button aria-label="Отправить">➤</button></form><div class="cm-err" hidden></div></div>`;
 
   function render() {
     const q = $('#q').value.trim().toLowerCase();
@@ -111,12 +153,83 @@
     $('#nav').innerHTML = byGroup.map(([g, list], i) => `<a href="#g${i}">${g} · ${list.length}</a>`).join('');
     $('#main').innerHTML = byGroup.length ? byGroup.map(([g, list], i) => `
       <section><h2 id="g${i}">${g} <span>${list.length}</span></h2><div class="grid">${list.map(it => `
-        <button class="card" data-id="${it.id}"><div class="shots${platform === 'all' ? ' all' : ''}">${shotsHtml(it, 'thumb')}</div>
+        <button class="card" data-id="${it.id}"><div class="shots${platform === 'all' ? ' all' : ''}">${shotsHtml(it)}</div>
           <div class="meta"><b>${it.title}</b><small>${it.source || ''}</small></div></button>`).join('')}</div></section>`).join('')
       : '<div class="empty">Ничего не нашлось</div>';
     document.body.classList.toggle('both', platform === 'both');
     document.body.classList.toggle('all', platform === 'all');
     document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === platform));
+    update();
+  }
+
+  function fromQueue(line) {
+    try {
+      const m = JSON.parse(line), c = m.event === 'message' && JSON.parse(m.message);
+      if (!c || c.site !== SITE || typeof c.cid !== 'string' || !/^w\d{3}$/.test(c.id) || !Object.hasOwn(TARGETS, c.p)
+          || typeof c.text !== 'string' || !c.text.trim()) return null;
+      return { cid: c.cid, nid: m.id, id: c.id, p: c.p, name: String(c.name || '').slice(0, 40), text: c.text.slice(0, 1000), t: m.time };
+    } catch { return null; }
+  }
+
+  async function loadComments() {
+    loadedAt = Date.now();
+    const [stored, queued] = await Promise.all([
+      fetch(STORE, { cache: 'no-store' }).then(r => (r.ok ? r.json() : {})).catch(() => ({})),
+      fetch(QUEUE + '/json?poll=1&since=all').then(r => (r.ok ? r.text() : '')).catch(() => '')]);
+    const done = stored.ingested || {}, next = new Map();
+    for (const c of stored.comments || []) next.set(c.cid, c);
+    for (const c of [...queued.split('\n').map(fromQueue), ...mine.values()])  // перенесённые и удалённые из очереди не берём
+      if (c && !Object.hasOwn(done, c.nid) && !next.has(c.cid)) next.set(c.cid, c);
+    comments = next;
+    update();
+  }
+
+  // Счётчики на плитках и списки под картинками открытого окна.
+  function update() {
+    byKey = new Map();
+    for (const c of [...comments.values()].sort((a, b) => a.t - b.t)) {
+      const k = c.id + '/' + c.p;
+      byKey.has(k) ? byKey.get(k).push(c) : byKey.set(k, [c]);
+    }
+    $('#sub').textContent = subtitle + (comments.size ? ` · 💬 ${comments.size}` : '');
+    document.querySelectorAll('.cnt').forEach(el => { const n = byKey.get(el.dataset.k)?.length; el.textContent = n ? '💬 ' + n : ''; });
+    document.querySelectorAll('#stage .cm').forEach(cm => {
+      cm.querySelector('.cm-list').replaceChildren(...(byKey.get(cm.dataset.id + '/' + cm.dataset.p) || []).map(c => {
+        const li = document.createElement('li'), name = document.createElement('b'), time = document.createElement('time'), text = document.createElement('p');
+        name.textContent = c.name || 'Аноним';
+        time.textContent = new Date(c.t * 1000).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        text.textContent = c.text;
+        li.append(name, time, text);
+        return li;
+      }));
+    });
+  }
+
+  async function send(form) {
+    const cm = form.closest('.cm'), text = form.querySelector('.cm-text'), button = form.querySelector('button'), err = cm.querySelector('.cm-err');
+    const c = { site: SITE, cid: crypto.randomUUID(), id: cm.dataset.id, p: cm.dataset.p,
+                name: form.querySelector('.cm-name').value.trim().slice(0, 40), text: text.value.trim().slice(0, 1000) };
+    if (!c.text || button.disabled) return;
+    button.disabled = true;
+    err.hidden = true;
+    try {
+      const r = await fetch(QUEUE, { method: 'POST', body: JSON.stringify(c) });
+      if (!r.ok) throw new Error('ошибка ' + r.status);
+      const m = await r.json();
+      const saved = { cid: c.cid, nid: m.id, id: c.id, p: c.p, name: c.name, text: c.text, t: m.time };
+      mine.set(saved.cid, saved);
+      comments.set(saved.cid, saved);
+      text.value = '';
+      text.style.height = '';
+      update();
+      const list = cm.querySelector('.cm-list');
+      list.scrollTop = list.scrollHeight;
+    } catch (e) {
+      err.textContent = `Не отправилось (${e.message}), попробуйте ещё раз`;
+      err.hidden = false;
+    } finally {
+      button.disabled = false;
+    }
   }
 
   function setPlatform(p) {
@@ -131,13 +244,16 @@
     const it = shown[index];
     $('#bt').textContent = it.title;
     $('#bs').textContent = `${it.group} · ${index + 1} из ${shown.length}`;
-    const figs = landscape().map(p =>
-      `<figure><img src="img/${p}/${it.id}.webp" alt="${it.title}"><figcaption>${names[p]}</figcaption></figure>`).join('');
-    const orig = it.orig ? `<figure class="side"><img src="img/orig/${it.id}.webp" alt="${it.title} — оригинал"><figcaption>${names.orig}</figcaption></figure>`
-                         : '<figure class="side"><div class="missing">Оригинала в вертикали для этого окна нет</div></figure>';
+    const fig = (p, cls = '') => `<figure class="${cls}"><div class="pic"><img src="img/${p}/${it.id}.webp" alt="${it.title}"></div>
+      <figcaption>${names[p]}</figcaption>${cmHtml(it.id, p)}</figure>`;
+    const figs = landscape().map(p => fig(p)).join('');
+    const orig = it.orig ? fig('orig', 'side') : '<figure class="side"><div class="missing">Оригинала в вертикали для этого окна нет</div></figure>';
     $('#stage').className = 'stage' + (platform === 'all' ? ' all' : '');
     $('#stage').innerHTML = platform === 'all' ? `<div class="col">${figs}</div>${orig}` : figs;
     $('#stage').scrollTop = 0;
+    document.querySelectorAll('#stage .cm-name').forEach(el => { el.value = localStorage.getItem('cmName') || ''; });
+    update();
+    if (Date.now() - loadedAt > 30000) loadComments();
     $('#box').classList.add('open');
     history.replaceState(null, '', '#' + it.id);
     for (const d of [1, -1]) {  // соседние окна — заранее
@@ -162,15 +278,28 @@
   $('#next').addEventListener('click', () => open(index + 1));
   $('#close').addEventListener('click', close);
   $('#stage').addEventListener('click', e => { if (e.target === e.currentTarget) close(); });
+  $('#stage').addEventListener('submit', e => { e.preventDefault(); send(e.target); });
+  $('#stage').addEventListener('keydown', e => {
+    if (e.target.matches('.cm-text') && e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(e.target.form); }
+  });
+  $('#stage').addEventListener('input', e => {
+    const el = e.target;
+    if (el.matches('.cm-text')) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight + 2, 120) + 'px'; }
+    if (el.matches('.cm-name')) {
+      localStorage.setItem('cmName', el.value);
+      document.querySelectorAll('#stage .cm-name').forEach(other => { if (other !== el) other.value = el.value; });
+    }
+  });
   document.addEventListener('keydown', e => {
     if (index < 0 || e.target === $('#q')) return;
+    if (e.target.closest('.cm-form')) { if (e.key === 'Escape') e.target.blur(); return; }  // печать в комментарии — не горячие клавиши
     const keys = { ArrowLeft: () => open(index - 1), ArrowRight: () => open(index + 1), Escape: close,
                    i: () => setPlatform('ios'), a: () => setPlatform('android'), b: () => setPlatform('both'), o: () => setPlatform('all') };
     const act = keys[e.key] || keys[e.key.toLowerCase()];
     if (act) { e.preventDefault(); act(); }
   });
   let x0 = null;  // листание пальцем
-  $('#stage').addEventListener('touchstart', e => { x0 = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+  $('#stage').addEventListener('touchstart', e => { x0 = e.touches.length === 1 && !e.target.closest('.cm') ? e.touches[0].clientX : null; }, { passive: true });
   $('#stage').addEventListener('touchend', e => {
     if (x0 === null) return;
     const dx = e.changedTouches[0].clientX - x0;
@@ -179,6 +308,7 @@
   });
 
   render();
+  loadComments();
   const start = location.hash.slice(1);
   if (start) { const i = shown.findIndex(it => it.id === start); if (i >= 0) open(i); }
 })();
