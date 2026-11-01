@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>POLUS — один закон для всех материалов</title>
+<style>
+:root{color-scheme:dark light}
+body{margin:0;font-family:var(--font-sans,system-ui,-apple-system,"Segoe UI",sans-serif);color:var(--foreground,#e7e5e1);background:var(--background,#121417);font-size:14.5px;line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h2{font-size:20px;margin:6px 0 0}
+h3{font-size:16px;margin:0}
+.mut{color:var(--muted-foreground,#9b9a96)}
+.s{font-size:13px}
+.box{background:var(--card,#1b1e22);border:1px solid var(--border,#2c3036);border-radius:var(--radius,10px);padding:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.law{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:center}
+.formula{font-size:22px;font-weight:700;letter-spacing:.3px;margin:6px 0}
+.formula small{font-size:13px;font-weight:400}
+svg{width:100%;height:auto;display:block}
+.lbl{font-size:11px;fill:var(--muted-foreground,#9b9a96)}
+.lblb{font-size:12px;fill:var(--foreground,#e7e5e1);font-weight:600}
+.var{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start}
+.badge{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:2px;font-weight:600}
+.b-rec{background:#2e7d32;color:#fff}.b-kill{background:#c0392b;color:#fff}.b-step{background:#455a64;color:#fff}.b-no{background:#6d4c41;color:#fff}
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.pc ul{margin:4px 0 0;padding-left:16px}.pc li{margin:2px 0}
+.plus b{color:#4caf50}.minus b{color:#e57373}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12.5px}
+.meta span b{color:var(--foreground,#e7e5e1)}
+ol.steps{margin:6px 0 0;padding-left:18px}ol.steps li{margin:2px 0}
+table{width:100%;border-collapse:collapse}
+th,td{border-bottom:1px solid var(--border,#2c3036);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted-foreground,#9b9a96);font-weight:600;font-size:12px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.clsgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.cls{background:var(--card,#1b1e22);border:1px solid var(--border,#2c3036);border-radius:var(--radius,10px);padding:12px 14px;display:flex;flex-direction:column;gap:5px}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.game{background:var(--card,#1b1e22);border:1px solid var(--border,#2c3036);border-radius:var(--radius,10px);padding:12px 14px}
+.tbl-wrap{overflow-x:auto}
+.ex td:first-child{white-space:nowrap}
+sup{font-size:9px;color:#e0a030}
+@media (max-width:680px){.law,.var,.grid2,.pc{grid-template-columns:1fr}.formula{font-size:19px}}
+</style></head><body><div class="wrap">
+
+<!-- ===== CORE LAW ===== -->
+<div>
+ <h2>Как это в реальной физике — один закон</h2>
+ <div class="mut s">По реальным измерениям (резание металла и дерева, бурение камня, трещины в стекле, разрыв кожи и ткани) и по тому, как это делают Minecraft, Dwarf Fortress, Teardown, Zelda, BeamNG.</div>
+</div>
+
+<div class="box law">
+ <div>
+  <div><b>Удар — это кошелёк джоулей.</b> Материал «продаёт» две вещи:</div>
+  <ul style="margin:6px 0;padding-left:18px">
+   <li><b>кубик</b> — раздавить или вырезать объём (цена <b>P</b>, Дж за см³);</li>
+   <li><b>квадратик</b> — новую трещину или разрез (цена <b>R</b>, Дж за см²).</li>
+  </ul>
+  <div class="formula">E = P·V + R·A <small class="mut">энергия = кубики + трещины</small></div>
+  <div>И <b>ворота</b>: лезвие должно продавить материал (давление ≥ твёрдости <b>H</b>) и быть твёрже его. Нет — только вмятина, а лезвие тупится. Поэтому медная кирка по граниту работает на 10 %, а нож по камню только скользит.</div>
+  <div class="mut s" style="margin-top:8px">Это уже работает в игре: сосна — кубик 10 Дж, гранит — 750 Дж, земля — 0,04 Дж; скол камня — трещина за 10 % удара. Новые материалы — просто новые строки цен.</div>
+ </div>
+ <svg viewBox="0 0 360 250">
+  <text x="4" y="14" class="lblb">кошелёк удара: 150 Дж</text>
+  <rect x="4" y="22" width="352" height="30" rx="6" fill="#2b5d8a"/>
+  <rect x="4" y="22" width="35" height="30" rx="6" fill="#d9534f"/>
+  <text x="10" y="42" style="font-size:11px;fill:#fff;font-weight:700">10%</text>
+  <text x="48" y="42" style="font-size:12px;fill:#fff">кубики: объём = энергия / цена кубика</text>
+  <text x="4" y="68" class="lbl"><tspan fill="#d9534f">■</tspan> трещина до свободного края (если он близко) → откалывается кусок</text>
+  <!-- gate -->
+  <path d="M20 100 L120 100" stroke="#e0a030" stroke-width="3" marker-end="url(#ar)"/>
+  <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#e0a030"/></marker></defs>
+  <text x="20" y="92" class="lbl">лезвие</text>
+  <rect x="126" y="80" width="14" height="44" fill="#e0a030"/>
+  <text x="146" y="94" class="lblb">ворота</text>
+  <text x="146" y="108" class="lbl">давление ≥ твёрдость?</text>
+  <text x="146" y="121" class="lbl">лезвие твёрже материала?</text>
+  <text x="20" y="146" style="font-size:12px;fill:#4caf50;font-weight:600">да → режет / колет</text>
+  <text x="180" y="146" style="font-size:12px;fill:#e57373;font-weight:600">нет → вмятина, лезвие тупится</text>
+  <!-- character scale -->
+  <text x="4" y="178" class="lblb">характер материала = R / P (трещина против кубика)</text>
+  <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#7cc6c9"/><stop offset=".5" stop-color="#c08a4e"/><stop offset="1" stop-color="#b0704a"/></linearGradient></defs>
+  <rect x="10" y="192" width="340" height="10" rx="5" fill="url(#g1)"/>
+  <g style="font-size:10.5px;fill:var(--foreground,#e7e5e1)">
+   <circle cx="34" cy="197" r="4" fill="#fff"/><text x="22" y="220">стекло</text>
+   <circle cx="104" cy="197" r="4" fill="#fff"/><text x="90" y="220">гранит</text>
+   <circle cx="250" cy="197" r="4" fill="#fff"/><text x="236" y="220">сталь</text>
+   <circle cx="290" cy="197" r="4" fill="#fff"/><text x="272" y="234">дерево⊥</text>
+   <circle cx="320" cy="197" r="4" fill="#fff"/><text x="308" y="220">кожа</text>
+  </g>
+  <text x="10" y="246" class="lbl">← колется и бьётся</text>
+  <text x="232" y="246" class="lbl">мнётся, гнётся, рвётся →</text>
+ </svg>
+</div>
+
+<!-- ===== VARIANTS ===== -->
+<div><h2>5 вариантов, как сделать это в игре</h2><div class="mut s">Все пять опираются на один закон выше. Разница — где хранится результат удара и сколько это стоит.</div></div>
+
+<!-- A -->
+<div class="box var">
+ <svg viewBox="0 0 300 200">
+  <rect x="20" y="16" width="260" height="150" rx="10" fill="none" stroke="#c08a4e" stroke-width="2"/>
+  <circle cx="44" cy="40" r="7" fill="none" stroke="#c08a4e" stroke-width="2"/>
+  <text x="60" y="45" class="lblb">карточка: Сосна</text>
+  <g style="font-size:12.5px;fill:var(--foreground,#e7e5e1)">
+   <text x="36" y="74">плотность</text><text x="190" y="74">700 кг/м³</text>
+   <text x="36" y="98">цена кубика</text><text x="190" y="98">10 Дж</text>
+   <text x="36" y="122">цена трещины</text><text x="190" y="122">0,18 / 0,016</text>
+   <text x="36" y="146">твёрдость</text><text x="190" y="146">15 МПа</text>
+  </g>
+  <line x1="36" y1="82" x2="264" y2="82" stroke="var(--border,#2c3036)"/><line x1="36" y1="106" x2="264" y2="106" stroke="var(--border,#2c3036)"/><line x1="36" y1="130" x2="264" y2="130" stroke="var(--border,#2c3036)"/>
+  <text x="20" y="188" class="lbl">гранит 750 · железо ~2000 · стекло ~1000 · кожа ~2</text>
+ </svg>
+ <div>
+  <h3>A. Прейскурант <span class="badge b-step">первый шаг</span></h3>
+  <div class="mut s">Все разбросанные по коду числа — в одну таблицу карточек. Одна формула, одна подсказка «кубик … Дж, трещина … Дж, твёрдость …» для любого материала. Картинки остаются сегодняшние.</div>
+  <div class="pc">
+   <div class="plus"><b>Плюсы</b><ul><li>Игра не меняется, ничего не ломаем</li><li>Почти бесплатно для браузера и сети</li><li>Новый материал = строка в таблице</li></ul></div>
+   <div class="minus"><b>Минусы</b><ul><li>Сам по себе новых материалов не даёт: кожу, ткань, воду негде нарисовать</li><li>Форма щепы и скола — по-прежнему свои правила</li></ul></div>
+  </div>
+  <div class="meta mut"><span><b>4–6 дней</b></span><span>браузер: микросекунды</span><span>как у: Minecraft, Dwarf Fortress</span></div>
+ </div>
+</div>
+
+<!-- B -->
+<div class="box var">
+ <svg viewBox="0 0 300 200">
+  <g stroke="#6b4a26" stroke-width=".8">
+   <g fill="#c08a4e">
+    <rect x="20" y="40" width="20" height="20"/><rect x="40" y="40" width="20" height="20"/><rect x="60" y="40" width="20" height="20"/><rect x="80" y="40" width="20" height="20"/><rect x="100" y="40" width="20" height="20"/><rect x="120" y="40" width="20" height="20"/><rect x="140" y="40" width="20" height="20"/><rect x="160" y="40" width="20" height="20"/>
+    <rect x="20" y="60" width="20" height="20"/><rect x="40" y="60" width="20" height="20"/><rect x="60" y="60" width="20" height="20"/><rect x="80" y="60" width="20" height="20"/><rect x="100" y="60" width="20" height="20"/><rect x="120" y="60" width="20" height="20"/><rect x="140" y="60" width="20" height="20"/><rect x="160" y="60" width="20" height="20"/>
+    <rect x="20" y="80" width="20" height="20"/><rect x="40" y="80" width="20" height="20"/><rect x="60" y="80" width="20" height="20"/><rect x="80" y="80" width="20" height="20"/>
+    <rect x="20" y="100" width="20" height="20"/><rect x="40" y="100" width="20" height="20"/><rect x="60" y="100" width="20" height="20"/><rect x="80" y="100" width="20" height="20"/><rect x="100" y="100" width="20" height="20"/><rect x="120" y="100" width="20" height="20"/>
+   </g>
+   <g fill="none" stroke-dasharray="3 2"><rect x="100" y="80" width="20" height="20"/><rect x="120" y="80" width="20" height="20"/><rect x="140" y="80" width="20" height="20"/><rect x="160" y="80" width="20" height="20"/></g>
+   <g fill="#4caf50" opacity=".85"><rect x="140" y="100" width="20" height="20"/><rect x="160" y="100" width="20" height="20"/><rect x="140" y="120" width="20" height="20"/><rect x="160" y="120" width="20" height="20"/></g>
+  </g>
+  <g style="font-size:11px;fill:var(--foreground,#e7e5e1)"><text x="105" y="94">1</text><text x="125" y="94">2</text><text x="145" y="94">3</text><text x="165" y="94">4</text></g>
+  <path d="M230 90 L186 90" stroke="#d9534f" stroke-width="3" marker-end="url(#ar2)"/>
+  <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#d9534f"/></marker></defs>
+  <text x="232" y="94" class="lblb">удар</text>
+  <text x="188" y="134" style="font-size:11px;fill:#4caf50">оторвалось →</text><text x="188" y="147" style="font-size:11px;fill:#4caf50">кусок падает</text>
+  <text x="20" y="28" class="lbl">кубик 2 см, у каждого цена; выбиваются по очереди</text>
+  <text x="20" y="168" class="lbl">кожа, ткань, стекло, лист железа тоньше кубика —</text>
+  <text x="20" y="181" class="lbl">в эту сетку не помещаются</text>
+  <rect x="196" y="6" width="98" height="24" rx="4" fill="none" stroke="#c0392b" stroke-width="2" transform="rotate(-6 245 18)"/>
+  <text x="203" y="23" style="font-size:11px;fill:#e57373;font-weight:700" transform="rotate(-6 245 18)">KILL LIST</text>
+ </svg>
+ <div>
+  <h3>B. Невидимые кубики <span class="badge b-kill">против KILL LIST</span></h3>
+  <div class="mut s">Внутри любого твёрдого предмета — невидимая сетка кубиков по 2 см. Удар выбивает кубики по очереди, пока хватает энергии; куски, которые больше ни за что не держатся, отваливаются и падают. Как Teardown (там 10 см).</div>
+  <div class="pc">
+   <div class="plus"><b>Плюсы</b><ul><li>Правда одно правило на всё твёрдое: брёвна, скалы, стены, двери</li><li>Дыры и обвалы получаются сами</li><li>Сеть дешёвая: «удар здесь», все считают одинаково</li></ul></div>
+   <div class="minus"><b>Минусы</b><ul><li>Это «воксельная физика» — ты сам её вычеркнул в KILL LIST</li><li>Грубее, чем сейчас: зарубка ступеньками по 2 см вместо реза по 5 мм, сколы по треугольникам пропадают</li><li>Тонкое (кожа, ткань, стекло, лист) не помещается</li><li>Память и рывки в браузере; дерево и камень переписать почти с нуля</li></ul></div>
+  </div>
+  <div class="meta mut"><span><b>30–45 дней</b></span><span>браузер: 5–150 мс рывки, ~30 МБ</span><span>как у: Teardown, Deep Rock Galactic</span></div>
+  <div class="s mut" style="margin-top:6px">Честно: у дерева невидимые клетки уже есть (3–7 мм в ломтиках по 5 мм), но только внутри ствола и только для подсчёта — картинка гладкая.</div>
+ </div>
+</div>
+
+<!-- C -->
+<div class="box var">
+ <svg viewBox="0 0 300 200">
+  <g stroke="#9aa1ab" stroke-width="1.2" fill="none">
+   <path d="M30 50 l8 -4 l8 8 l8 -8 l8 4"/><path d="M70 50 l8 -4 l8 8 l8 -8 l8 4"/><path d="M110 50 l8 -4 l8 8 l8 -8 l8 4"/>
+   <path d="M30 90 l8 -4 l8 8 l8 -8 l8 4"/><path d="M70 90 l8 -4 l8 8 l8 -8 l8 4"/><path d="M110 90 l8 -4 l8 8 l8 -8 l8 4"/>
+   <path d="M30 50 l-4 8 l8 8 l-8 8 l4 8 l0 8"/><path d="M70 50 l-4 8 l8 8 l-8 8 l4 8 l0 8"/><path d="M110 50 l-4 8 l8 8 l-8 8 l4 8 l0 8"/><path d="M150 50 l-4 8 l8 8 l-8 8 l4 8 l0 8"/>
+  </g>
+  <g fill="var(--foreground,#e7e5e1)"><circle cx="30" cy="50" r="4"/><circle cx="70" cy="50" r="4"/><circle cx="110" cy="50" r="4"/><circle cx="150" cy="50" r="4"/><circle cx="30" cy="90" r="4"/><circle cx="70" cy="90" r="4"/><circle cx="110" cy="90" r="4"/><circle cx="150" cy="90" r="4"/></g>
+  <text x="20" y="24" class="lbl">точки, сцепленные пружинками</text>
+  <!-- bubbles -->
+  <circle cx="210" cy="40" r="24" fill="none" stroke="#6f86a6"/><path d="M192 48 Q210 22 228 48" stroke="#6f86a6" stroke-width="2" fill="none"/>
+  <text x="240" y="36" class="lblb">сталь</text><text x="240" y="49" class="lbl">согнулась</text>
+  <circle cx="210" cy="100" r="24" fill="none" stroke="#7cc6c9"/><path d="M192 100 L204 100 M216 100 L228 100" stroke="#7cc6c9" stroke-width="2"/><path d="M210 92 l3 6 l-6 2 l5 6" stroke="#d9534f" stroke-width="1.5" fill="none"/>
+  <text x="240" y="96" class="lblb">стекло</text><text x="240" y="109" class="lbl">лопнула</text>
+  <circle cx="210" cy="160" r="24" fill="none" stroke="#b0704a"/><path d="M190 160 l6 -3 l6 6 l3 -3 M215 157 l3 3 l6 -6 l6 3" stroke="#b0704a" stroke-width="2" fill="none"/>
+  <text x="240" y="156" class="lblb">кожа</text><text x="240" y="169" class="lbl">растянулась</text><text x="240" y="181" class="lbl">и порвалась</text>
+  <text x="20" y="130" class="lbl">два порога у пружинки:</text><text x="20" y="144" class="lblb">гнуться при X, рваться при Y</text>
+ </svg>
+ <div>
+  <h3>C. Связи-пружинки <span class="badge b-no">дорого</span></h3>
+  <div class="mut s">Предмет — облако невидимых точек на пружинках. Пружинка гнётся после первого порога и рвётся после второго. Железо гнётся, ткань рвётся по нитке, стекло трескается паутиной — само.</div>
+  <div class="pc">
+   <div class="plus"><b>Плюсы</b><ul><li>Самый живой вид: изгиб, разрыв, паутина трещин</li><li>Ветки, верёвки, ткань, лук получаются сами</li></ul></div>
+   <div class="minus"><b>Минусы</b><ul><li>В браузере — 2–3 предмета одновременно (10–20 мс на каждый)</li><li>Сети надо слать положения точек каждый кадр</li><li>Жёсткие пружинки «взрываются» (беда BeamNG)</li><li>Почти весь сегодняшний код — в мусор; земля и вода всё равно отдельно</li></ul></div>
+  </div>
+  <div class="meta mut"><span><b>45–70 дней</b></span><span>как у: BeamNG, Besiege, People Playground</span></div>
+ </div>
+</div>
+
+<!-- D -->
+<div class="box var">
+ <svg viewBox="0 0 300 200">
+  <g style="font-size:10.5px;fill:#fff;font-weight:600">
+   <rect x="6" y="14" width="92" height="30" rx="6" fill="#8f98a3"/><text x="14" y="33">хрупкое — колется</text>
+   <rect x="104" y="14" width="92" height="30" rx="6" fill="#c08a4e"/><text x="110" y="33">волокна — вдоль</text>
+   <rect x="202" y="14" width="92" height="30" rx="6" fill="#6f86a6"/><text x="210" y="33">тягучее — мнётся</text>
+   <rect x="6" y="50" width="92" height="30" rx="6" fill="#b0704a"/><text x="14" y="69">лист — режется</text>
+   <rect x="104" y="50" width="92" height="30" rx="6" fill="#9b7a52"/><text x="110" y="69">сыпучее — осыпь</text>
+   <rect x="202" y="50" width="92" height="30" rx="6" fill="#3d8bd4"/><text x="210" y="69">жидкое — течёт</text>
+  </g>
+  <text x="6" y="104" class="lbl">удары копят очки → 100 очков = срабатывает правило класса</text>
+  <rect x="6" y="112" width="288" height="12" rx="6" fill="var(--border,#2c3036)"/><rect x="6" y="112" width="190" height="12" rx="6" fill="#e0a030"/>
+  <text x="6" y="150" class="lblb">метки:</text>
+  <g style="font-size:12px;fill:var(--foreground,#e7e5e1)"><text x="56" y="150">🔥 горит</text><text x="126" y="150">💧 мокнет</text><text x="200" y="150">❄ мёрзнет</text></g>
+  <text x="6" y="172" class="lbl">огонь + «горит» → пепел;  вода → гасит огонь;</text>
+  <text x="6" y="186" class="lbl">материал материал не меняет (3 правила Zelda)</text>
+ </svg>
+ <div>
+  <h3>D. Классы и метки <span class="badge b-no">теряем точность</span></h3>
+  <div class="mut s">Семь классов с крошечным правилом («хрупкое колется», «тягучее мнётся») и очками до срабатывания, плюс метки «горит, мокнет, плавится, ржавеет, мёрзнет» с тремя правилами, как в Zelda.</div>
+  <div class="pc">
+   <div class="plus"><b>Плюсы</b><ul><li>Очень дёшево и быстро</li><li>Игроку понятно за минуту</li><li>Метки дают весёлые цепочки: поджёг, потушил, заморозил</li></ul></div>
+   <div class="minus"><b>Минусы</b><ul><li>Это Minecraft: удар в край и в середину камня одинаковы</li><li>Пропадает то, что тебе понравилось: настоящий разрез, щепа ровно по объёму, скол от края</li><li>Числа придуманные, их вечно подкручивать</li></ul></div>
+  </div>
+  <div class="meta mut"><span><b>6–10 дней</b></span><span>как у: Zelda, Minecraft, Valheim</span></div>
+ </div>
+</div>
+
+<!-- E -->
+<div class="box var" style="border-color:#2e7d32">
+ <svg viewBox="0 0 300 220">
+  <rect x="10" y="8" width="280" height="40" rx="8" fill="#2e7d32"/>
+  <text x="22" y="26" style="font-size:12px;fill:#fff;font-weight:700">ОДНА ФОРМУЛА: E = P·V + R·A</text>
+  <text x="22" y="41" style="font-size:10.5px;fill:#e8f5e9">ворота твёрдости · износ лезвия · жар и влага</text>
+  <g stroke="var(--muted-foreground,#9b9a96)" stroke-width="1"><path d="M40 48V70M95 48V70M150 48V70M205 48V70M260 48V70M150 48 L150 140"/></g>
+  <!-- canvases -->
+  <g>
+   <rect x="16" y="72" width="48" height="40" rx="5" fill="#c08a4e"/><path d="M22 72V112M28 72V112M34 72V112M40 72V112M46 72V112M52 72V112M58 72V112" stroke="#6b4a26" stroke-width=".7"/>
+   <polygon points="71,112 80,78 104,72 118,96 106,112" fill="#8f98a3" stroke="#555b66"/><path d="M80 78 L106 112 M104 72 L90 112" stroke="#555b66" stroke-width=".8"/>
+   <path d="M128 100 L140 96 L152 104 L164 92 L176 98" stroke="#9b7a52" stroke-width="2" fill="none"/><path d="M128 100V112M140 96V112M152 104V112M164 92V112M176 98V112" stroke="#9b7a52" stroke-width="1"/>
+   <rect x="184" y="76" width="44" height="34" rx="3" fill="#b0704a"/><path d="M190 84 L222 104" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 2"/>
+   <rect x="236" y="80" width="48" height="26" rx="2" fill="#6f86a6"/><ellipse cx="258" cy="93" rx="9" ry="5" fill="#4b5f7c"/>
+  </g>
+  <g style="font-size:10.5px;fill:var(--foreground,#e7e5e1)">
+   <text x="14" y="126">дерево</text><text x="76" y="126">камень</text><text x="134" y="126">земля</text><text x="186" y="126">кожа, ткань</text><text x="238" y="126">железо</text>
+  </g>
+  <g class="lbl"><text x="14" y="139">срезы 5 мм</text><text x="70" y="139">треугольники</text><text x="128" y="139">карта высот</text><text x="186" y="139">лист клеток</text><text x="238" y="139">вмятины 1 см</text></g>
+  <rect x="120" y="148" width="60" height="26" rx="4" fill="none" stroke="#3d8bd4" stroke-width="1.5"/><rect x="121" y="160" width="58" height="13" fill="#3d8bd4" opacity=".6"/>
+  <text x="186" y="164" class="lblb">вода</text><text x="186" y="177" class="lbl">счётчик литров</text>
+  <text x="10" y="200" class="lbl">сетки только внутри предметов, земля — карта высот</text>
+  <text x="10" y="214" style="font-size:11px;fill:#4caf50">✓ в рамках KILL LIST</text>
+ </svg>
+ <div>
+  <h3>E. Одна формула — свой холст у каждого класса <span class="badge b-rec">рекомендую</span></h3>
+  <div class="mut s">Вариант A плюс новые материалы. Закон один для всех (кошелёк, ворота твёрдости, износ лезвия). Результат удара записывается в маленькую невидимую сетку внутри предмета — свою у каждого класса: ломтики у дерева, треугольники у камня, лист клеточек у кожи и ткани, карта вмятин у железа, счётчик литров у воды. Сверху — метки из варианта D: горит, мокнет, ржавеет, плюс жар (раскалённое железо в 3–10 раз мягче).</div>
+  <div class="pc">
+   <div class="plus"><b>Плюсы</b><ul><li>Одна формула и одна подсказка на все материалы</li><li>Сегодняшняя красота дерева, камня и земли остаётся: числа те же</li><li>Новый материал = строка, новый вид поведения = одна маленькая сетка</li><li>Сеть и браузер тянут: те же маленькие события, целые клеточки</li><li>Метки, жар и износ дают кузницу, химию и ремонт почти даром</li></ul></div>
+   <div class="minus"><b>Минусы</b><ul><li>Шесть «холстов» — каждый новый класс сделать и отладить (кожа, железо, вода)</li><li>Часть чисел — оценки, проверять ботами</li><li>Формула отвечает за энергию; форму щепы и скола по-прежнему решают их правила</li></ul></div>
+  </div>
+  <div class="meta mut"><span><b>20–28 дней поэтапно</b> (первые 4–6 — это A)</span><span>браузер: &lt; 1–3 мс на удар</span><span>как у: DF + BeamNG + Zelda + Valheim</span></div>
+ </div>
+</div>
+
+<!-- ===== EXAMPLES ===== -->
+<div><h2>Как это сыграет: примеры в варианте E</h2></div>
+<div class="box tbl-wrap"><table class="ex s">
+ <tr><th>Чем → во что</th><th>Что происходит</th></tr>
+ <tr><td>Топор → сосна, 150 Дж</td><td>Сталь твёрже сосны — режет. Клин вырезает 15 см³ (кубик 10 Дж), трещина вдоль волокна почти даром → щепа ~190 см³ до свободной грани. Всего ~200 см³ — как сейчас.</td></tr>
+ <tr><td>Кирка → гранит, 150 Дж</td><td>В середине — 0,2 см³ пыли (кубик 750 Дж). На трещину 15 Дж, удар «достаёт» край до 11 см: край в 4 см → скол ~470 см³. Медная кирка работает на 10 % и после сотни ударов тупится.</td></tr>
+ <tr><td>Нож → кожа 3 мм</td><td>~4,5 Дж за протяжку, острый нож режет ~15 см — полоска 2×15 см в сумку. Тупой режет втрое хуже: кожа почти рвётся. Мокрая режется легче.</td></tr>
+ <tr><td>Молоток → стекло 4 мм</td><td>Трещина стоит почти ноль: окно 50×50 см разлетается на 20–40 осколков (число ограничено), осколки — предметы «режут руку». Бутылка с 1 м (4 Дж) тоже бьётся.</td></tr>
+ <tr><td>Меч → железный лист 2 мм</td><td>Холодный: железо не трескается, а течёт — зарубка ~1 см и прогиб. Раскалённый в горне: в 3–10 раз мягче, молот гнёт и рубит его на наковальне.</td></tr>
+ <tr><td>Лопата → песок, 6 л</td><td>Рыхлить ~120 Дж — почти весь удар. Суглинок вдвое дороже: за тычок ~3,7 л. Яма в сухом песке осыпается до 34°, мокрый держит замок.</td></tr>
+ <tr><td>Ведро → вода</td><td>Цены нулевые, платишь только подъём: 10 л = 10 кг. Лужа 2×2 м опускается на 2,5 мм. Вылил — земля «мокрая», огонь гаснет.</td></tr>
+</table></div>
+
+<!-- ===== CLASSES ===== -->
+<div><h2>7 классов — куда ложится любой материал</h2></div>
+<div class="clsgrid">
+<div class='cls' style='border-top:3px solid #8f98a3'><b>Хрупкое</b><div class='s'>Трещина дешёвая, кубик дорогой: у края откалывается кусок, в середине — пыль. Стекло и лёд лопаются целиком от малого удара; падение тоже бьёт.</div><div class='s mut'><b>Что:</b> гранит, песчаник, известняк, кремень, обсидиан, стекло, лёд, керамика, кирпич, бетон, фарфор, кварц, алмаз, соль, уголь, железная руда</div><div class='s mut'><b>Чем:</b> кирка, кувалда, камень-отбойник, клинья; стекло — молоток или стеклорез</div></div>
+<div class='cls' style='border-top:3px solid #c08a4e'><b>Волокнистое</b><div class='s'>Вдоль волокна колется легко, поперёк режется тяжело; держит вес оставшимися волокнами, падает, когда их мало.</div><div class='s mut'><b>Что:</b> сосна, ель, дуб, берёза, лиственница, осина, кедр, секвойя, зелёная ветка, бамбук, кость, рог, стекловолокно</div><div class='s mut'><b>Чем:</b> топор, колун, пила, нож; кость и рог — пила и нож</div></div>
+<div class='cls' style='border-top:3px solid #6f86a6'><b>Тягучее (металлы)</b><div class='s'>Не трескается, а мнётся и гнётся: удар оставляет вмятину, тонкий лист гнётся и рвётся только при большой силе. От холодной ковки твердеет, в горне мягчеет в 3-10 раз; холодная сталь на морозе может стать ломкой.</div><div class='s mut'><b>Что:</b> медь, бронза, кованое железо, сталь (мягкая и закалённая), золото, свинец, алюминий, титан</div><div class='s mut'><b>Чем:</b> молот и наковальня, горн, напильник, зубило, пила; режут только более твёрдым лезвием</div></div>
+<div class='cls' style='border-top:3px solid #b0704a'><b>Лист (мягкое и прочное)</b><div class='s'>Тонкое и тянется: режется линией, а не объёмом; острым ножом режется легко, тупым — почти рвётся; от надреза рвётся; мокрое мягчеет, сухое твердеет.</div><div class='s mut'><b>Что:</b> шкура, кожа, кора, мясо, ткань (лён, шерсть), верёвка, бумага, резина, листья и солома</div><div class='s mut'><b>Чем:</b> нож, ножницы, скребок, шило; руки — рвать</div></div>
+<div class='cls' style='border-top:3px solid #9b7a52'><b>Сыпучее</b><div class='s'>Рыхлить недорого, но не бесплатно (полная лопата суглинка — больше удара); платишь силами за подъём; стенки осыпаются до своего угла. Глина липнет и держит стенку.</div><div class='s mut'><b>Что:</b> земля, песок, гравий, глина, грязь, снег</div><div class='s mut'><b>Чем:</b> лопата (большая/малая), руки, кирка для плотного, тачка</div></div>
+<div class='cls' style='border-top:3px solid #3d8bd4'><b>Жидкое</b><div class='s'>Не ломается и не режется: только набирается и выливается; платишь за подъём; уровень убывает; мочит и гасит.</div><div class='s mut'><b>Что:</b> вода, масло, расплавленный металл, смола в жару</div><div class='s mut'><b>Чем:</b> ведро, бурдюк, горшок, ковш</div></div>
+<div class='cls' style='border-top:3px solid #c9a227'><b>Плавкое (тает от жара)</b><div class='s'>Холодное — твёрдое и хрупкое, тёплое — мягкое, горячее — течёт; можно переплавить и вылить в форму.</div><div class='s mut'><b>Что:</b> воск, смола и дёготь, пластик (ПЭ, ПВХ), жир; у металлов и стекла — только в горне</div><div class='s mut'><b>Чем:</b> нож, огонь, форма, горн</div></div>
+</div>
+
+<!-- ===== GAMES ===== -->
+<div><h2>Как это сделано в других играх</h2><div class="mut s">Вывод: все, у кого много материалов, держат <b>одно неизменное правило + таблицу чисел</b> на материал. Новый материал — новая строка.</div></div>
+<div class="games s">
+ <div class="game"><b>Minecraft</b><div class="mut">скорость инструмента / твёрдость блока; неправильный инструмент — медленно и без добычи. Очень читаемо, но без формы и энергии.</div></div>
+ <div class="game"><b>Dwarf Fortress</b><div class="mut">реальные пределы прочности у каждого материала (удар, срез). Из ~30 чисел реально работают 2–3 — значит, 3 числа хватит.</div></div>
+ <div class="game"><b>Teardown</b><div class="mut">кубики 10 см, 7 материалов. Сеть заработала только когда стали слать маленькие команды «режь здесь» на целых числах.</div></div>
+ <div class="game"><b>Zelda</b><div class="mut">5 стихий, 3 правила: стихия меняет материал, стихия меняет стихию, материал материал — нет. «Делай систему, из которой весёлое рождается само».</div></div>
+ <div class="game"><b>BeamNG</b><div class="mut">у материала два порога: «гнётся при X, рвётся при Y». Губка, стекло, железо — одной парой чисел. Но 2000 расчётов в секунду.</div></div>
+ <div class="game"><b>Valheim, 7 Days</b><div class="mut">опора постройки убывает от земли; дерево не держит камень, железо — каркас. Подсветка цветом учит правилу.</div></div>
+</div>
+
+<!-- ===== CATALOG ===== -->
+<div><h2>Каталог: 52 материалов от каменного века до космоса</h2>
+ <div class="mut s">Карточка в варианте E: ρ — плотность кг/м³; P — цена кубика, Дж за см³ (поперёк / вдоль волокна); R — цена трещины, Дж за см²; H — твёрдость, МПа. <sup>*</sup> — оценка, проверим ботами.</div></div>
+<div class="box tbl-wrap"><table>
+ <tr><th>Материал</th><th>Карточка</th><th>Эпоха</th><th>Что интересного в игре</th></tr>
+<tr><td><span class='dot' style='background:#c08a4e'></span><b>Сосна</b><div class='mut s'>Волокнистое</div></td><td class='s'>ρ 700 (сырая) | P 10 поперёк / ~2 вдоль <sup>*</sup> | R 0,18 / 0,016 | H ~15 | горит</td><td class='s'>каменный век</td><td class='s'>быстро рубится, хорошо горит, слабые балки</td></tr>
+<tr><td><span class='dot' style='background:#c08a4e'></span><b>Ель</b><div class='mut s'>Волокнистое</div></td><td class='s'>ρ 750 | P 9,5 / ~2 <sup>*</sup> | R 0,17 / 0,015 | H ~13 <sup>*</sup> | горит</td><td class='s'>каменный век</td><td class='s'>длинная щепа, ровные брёвна</td></tr>
+<tr><td><span class='dot' style='background:#c08a4e'></span><b>Дуб</b><div class='mut s'>Волокнистое</div></td><td class='s'>ρ 1050 | P 27,5 / ~5 <sup>*</sup> | R 0,18 / 0,03 | H ~35 <sup>*</sup> | горит долго</td><td class='s'>каменный век</td><td class='s'>рубить долго, зато прочные балки — награда за хороший топор</td></tr>
+<tr><td><span class='dot' style='background:#c08a4e'></span><b>Берёза</b><div class='mut s'>Волокнистое</div></td><td class='s'>ρ 950 | P 15 / ~3 <sup>*</sup> | R 0,15 / 0,02 | H ~25 <sup>*</sup> | горит, кора — растопка</td><td class='s'>каменный век</td><td class='s'>кора для огня и коробов, дёготь для клея</td></tr>
+<tr><td><span class='dot' style='background:#c08a4e'></span><b>Зелёная ветка</b><div class='mut s'>Волокнистое</div></td><td class='s'>ρ 900 | P 5 <sup>*</sup> | R 1 <sup>*</sup> (гнётся) | H 8 <sup>*</sup> | мокрая</td><td class='s'>каменный век</td><td class='s'>гнётся — можно плести корзины, луки; высохнет — станет ломкой</td></tr>
+<tr><td><span class='dot' style='background:#c08a4e'></span><b>Кость</b><div class='mut s'>Волокнистое</div></td><td class='s'>ρ 1900 | P 150 <sup>*</sup> | R 0,2 | H 400 <sup>*</sup></td><td class='s'>каменный век</td><td class='s'>первые иглы и шила с добычи</td></tr>
+<tr><td><span class='dot' style='background:#c08a4e'></span><b>Рог</b><div class='mut s'>Волокнистое</div></td><td class='s'>ρ 1500 | P 100 <sup>*</sup> | R 1 <sup>*</sup> | H 250 <sup>*</sup></td><td class='s'>каменный век</td><td class='s'>роговая кирка и отжимник для кремня — вязкий, не ломается</td></tr>
+<tr><td><span class='dot' style='background:#c08a4e'></span><b>Стекловолокно</b><div class='mut s'>Волокнистое</div></td><td class='s'>ρ 1900 | P 700 <sup>*</sup> | R 2 <sup>*</sup> | H 300 <sup>*</sup> | слоится</td><td class='s'>новое время</td><td class='s'>корпуса лодок; крепкое вдоль волокон, отслаивается слоями</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Гранит</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 2700 | P 750 | R 0,0145 (в игре; чистый 0,003-0,009) | H 600 (зёрна 5400) | слои ×0,7</td><td class='s'>каменный век</td><td class='s'>самый твёрдый: блоки добываются с трудом, у края — большими сколами</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Песчаник</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 2300 | P 375 | R 0,016 (в игре) | H 300 (зёрна 3900)</td><td class='s'>каменный век</td><td class='s'>легко тесать, точильный камень</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Известняк</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 2500 | P 337 | R 0,0074 (в игре) | H 270 (зёрна 1200)</td><td class='s'>каменный век</td><td class='s'>обжечь в печи → известь → раствор для кладки</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Кремень</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 2600 | P 1200 <sup>*</sup> | R 0,006 <sup>*</sup> | H 10000 <sup>*</sup></td><td class='s'>каменный век</td><td class='s'>угол удара решает форму скола: делаешь ножи и наконечники; искры для огня</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Обсидиан</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 2400 | P 600 <sup>*</sup> | R 0,002 <sup>*</sup> | H 5500 <sup>*</sup></td><td class='s'>каменный век</td><td class='s'>самое острое лезвие древности, но быстро щербится</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Стекло</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 2500 | P ~1000 <sup>*</sup> | R 0,0008 | H 5400 | мягчеет ~700 °C, варится 1400 °C</td><td class='s'>железный век</td><td class='s'>сильное на сжатие, разлетается от удара и падения; осколки режут руки</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Лёд</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 917 | P 45 <sup>*</sup> | R 0,0001-0,0003 <sup>*</sup> | H 45 <sup>*</sup> | тает при 0 °C</td><td class='s'>каменный век</td><td class='s'>тонкий лёд трещит под ногами</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Обожжённая глина (керамика)</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 1900 | P 300 <sup>*</sup> | R 0,005 <sup>*</sup> | H 300 <sup>*</sup></td><td class='s'>каменный век</td><td class='s'>горшки громко бьются, если уронить</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Кирпич</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 1900 | P 90 <sup>*</sup> | R 0,004 <sup>*</sup> | H 90 <sup>*</sup></td><td class='s'>бронзовый век</td><td class='s'>строишь блоками, после обвала собираешь заново</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Бетон</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 2400 | P 90 <sup>*</sup> | R 0,003 <sup>*</sup> | H 90 <sup>*</sup> | сохнет дни</td><td class='s'>промышленная эпоха</td><td class='s'>строишь раз и надолго, ломать тяжело</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Соль</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 2165 | P 90 <sup>*</sup> | R 0,001 <sup>*</sup> | H 200 <sup>*</sup> | растворяется в воде</td><td class='s'>каменный век</td><td class='s'>сохраняет мясо от порчи — настоящий ресурс выживания</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Уголь</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 1400 | P 60 <sup>*</sup> | R 0,002 <sup>*</sup> | H 60 <sup>*</sup> | горит жарко</td><td class='s'>бронзовый век</td><td class='s'>жар для горна и плавки</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Железная руда</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 5100 | P 1200 <sup>*</sup> | R 0,01 <sup>*</sup> | H 1000 <sup>*</sup></td><td class='s'>бронзовый век</td><td class='s'>тяжёлые куски — возишь тачкой</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Фарфор</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 2400 | P 600 <sup>*</sup> | R 0,01 <sup>*</sup> | H 6000 <sup>*</sup></td><td class='s'>промышленная эпоха</td><td class='s'>нужна очень горячая печь; изоляторы</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Кварц</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 2650 | P 1500 <sup>*</sup> | R 0,003 <sup>*</sup> | H 11000</td><td class='s'>каменный век (находка)</td><td class='s'>редкая находка; позже линзы и кремний</td></tr>
+<tr><td><span class='dot' style='background:#8f98a3'></span><b>Алмаз</b><div class='mut s'>Хрупкое</div></td><td class='s'>ρ 3510 | P 10000 <sup>*</sup> | R 0,02 <sup>*</sup> | H ~90000</td><td class='s'>космос</td><td class='s'>лучшее лезвие игры; обрабатывается только алмазом</td></tr>
+<tr><td><span class='dot' style='background:#6f86a6'></span><b>Медь</b><div class='mut s'>Тягучее</div></td><td class='s'>ρ 8960 | P 1400 | R 10 <sup>*</sup> | H 340 | изгиб 70 МПа | плавится 1085 °C</td><td class='s'>бронзовый век</td><td class='s'>куёшь — твердеет; на граните тупится (работает на 10 %)</td></tr>
+<tr><td><span class='dot' style='background:#6f86a6'></span><b>Бронза</b><div class='mut s'>Тягучее</div></td><td class='s'>ρ 8800 | P 1200 <sup>*</sup> | R 7 <sup>*</sup> | H 700-980 | изгиб 175 МПа | плавится ~950-1000 °C</td><td class='s'>бронзовый век</td><td class='s'>льёшь в форму, держит лезвие лучше меди</td></tr>
+<tr><td><span class='dot' style='background:#6f86a6'></span><b>Кованое железо</b><div class='mut s'>Тягучее</div></td><td class='s'>ρ 7700 | P ~2000 <sup>*</sup> | R ~5 <sup>*</sup> | H 980 | изгиб 200 МПа | в горне ×0,1-0,3 | ржавеет</td><td class='s'>железный век</td><td class='s'>гвозди, цепи; куётся только раскалённым, сваривается ковкой</td></tr>
+<tr><td><span class='dot' style='background:#6f86a6'></span><b>Сталь (мягкая / закалённая)</b><div class='mut s'>Тягучее</div></td><td class='s'>ρ 7850 | P 3000 / 5000 <sup>*</sup> | R 2-10 / 2 <sup>*</sup> | H 1180 / 6900 | изгиб 250 / 2000 МПа | ржавеет, на морозе ломче</td><td class='s'>железный век</td><td class='s'>закалка — выбор игрока: твёрдая, но ломкая, или мягкая, но вязкая</td></tr>
+<tr><td><span class='dot' style='background:#6f86a6'></span><b>Золото</b><div class='mut s'>Тягучее</div></td><td class='s'>ρ 19300 | P 700 <sup>*</sup> | R 10 <sup>*</sup> | H 245 | изгиб 40 МПа</td><td class='s'>бронзовый век</td><td class='s'>товар для обмена, очень тяжёлое, как инструмент бесполезно</td></tr>
+<tr><td><span class='dot' style='background:#6f86a6'></span><b>Свинец</b><div class='mut s'>Тягучее</div></td><td class='s'>ρ 11340 | P 200 <sup>*</sup> | R 2 <sup>*</sup> | H 49 | плавится 327 °C</td><td class='s'>бронзовый век</td><td class='s'>легко плавится и льётся: пули, грузила; ядовит</td></tr>
+<tr><td><span class='dot' style='background:#6f86a6'></span><b>Алюминий (сплав)</b><div class='mut s'>Тягучее</div></td><td class='s'>ρ 2700 | P 700 | R 1 <sup>*</sup> | H 930 (сплав; чистый ~200) | изгиб 275 МПа</td><td class='s'>промышленная эпоха</td><td class='s'>лёгкий и крепкий, нужно электричество для плавки</td></tr>
+<tr><td><span class='dot' style='background:#6f86a6'></span><b>Титан (сплав)</b><div class='mut s'>Тягучее</div></td><td class='s'>ρ 4430 | P 1600 | R 4 <sup>*</sup> | H 3420 | изгиб 880 МПа</td><td class='s'>космос</td><td class='s'>корпуса кораблей: лёгкий, прочный, трудно добыть и обработать</td></tr>
+<tr><td><span class='dot' style='background:#b0704a'></span><b>Кора</b><div class='mut s'>Лист</div></td><td class='s'>ρ 300 <sup>*</sup> | P 2 <sup>*</sup> | R 0,01 <sup>*</sup> | H 2 <sup>*</sup> | горит</td><td class='s'>каменный век</td><td class='s'>первое, что снимаешь с бревна: растопка, крыша, дубильное вещество для кожи</td></tr>
+<tr><td><span class='dot' style='background:#b0704a'></span><b>Солома, трава, листья</b><div class='mut s'>Лист</div></td><td class='s'>ρ 100 | P 0,5 <sup>*</sup> | R 0,005 <sup>*</sup> | H ~0 | горит мгновенно</td><td class='s'>каменный век</td><td class='s'>крыши, постель, трут</td></tr>
+<tr><td><span class='dot' style='background:#b0704a'></span><b>Шкура (сыромять)</b><div class='mut s'>Лист</div></td><td class='s'>ρ 1050 | толщина 3-5 мм | R рвать ~2 (кожа свиньи 1,7) / резать ~0,3 <sup>*</sup> | H 20 <sup>*</sup> | гниёт, мокнет</td><td class='s'>каменный век</td><td class='s'>сухая — твёрдая, мокрая — мягкая; первая добыча с охоты</td></tr>
+<tr><td><span class='dot' style='background:#b0704a'></span><b>Кожа выделанная</b><div class='mut s'>Лист</div></td><td class='s'>ρ 900 | толщина 2-4 мм | R рвать ~2 / резать ~0,3 <sup>*</sup> | H 20 <sup>*</sup> | горит, мокнет</td><td class='s'>каменный век</td><td class='s'>режешь ножом полосами: ремни, сумки, одежда</td></tr>
+<tr><td><span class='dot' style='background:#b0704a'></span><b>Мясо</b><div class='mut s'>Лист</div></td><td class='s'>ρ 1050 | P 0,05 <sup>*</sup> | R 0,1-0,4 | H 0,5 <sup>*</sup> | портится</td><td class='s'>каменный век</td><td class='s'>еда; портится, если не засолить, не закоптить, не охладить</td></tr>
+<tr><td><span class='dot' style='background:#b0704a'></span><b>Ткань (лён, шерсть)</b><div class='mut s'>Лист</div></td><td class='s'>ρ 400 (полотно) <sup>*</sup> | R 0,2-0,4 <sup>*</sup>, вдоль нити ×0,5 | H 5 <sup>*</sup> | горит, мокнет</td><td class='s'>бронзовый век</td><td class='s'>рвётся по нитке, режется линией; одежда, паруса, бинты</td></tr>
+<tr><td><span class='dot' style='background:#b0704a'></span><b>Верёвка</b><div class='mut s'>Лист</div></td><td class='s'>ρ 1100 <sup>*</sup> | R 0,5 <sup>*</sup> | H 5 <sup>*</sup> | держит только на растяжение</td><td class='s'>каменный век</td><td class='s'>связывает части, тянет грузы, силки</td></tr>
+<tr><td><span class='dot' style='background:#b0704a'></span><b>Бумага</b><div class='mut s'>Лист</div></td><td class='s'>ρ 800 | R 0,15 <sup>*</sup> | H 5 <sup>*</sup> | горит, размокает</td><td class='s'>железный век</td><td class='s'>карты и записи; погибает от воды</td></tr>
+<tr><td><span class='dot' style='background:#b0704a'></span><b>Резина</b><div class='mut s'>Лист</div></td><td class='s'>ρ 940 | P 5 <sup>*</sup> | R 0,3-2 (быстро и холодно — больше) | H 5 <sup>*</sup> | пружинит</td><td class='s'>промышленная эпоха</td><td class='s'>пружинит и отскакивает, рвётся от надреза</td></tr>
+<tr><td><span class='dot' style='background:#9b7a52'></span><b>Земля (суглинок)</b><div class='mut s'>Сыпучее</div></td><td class='s'>ρ 1400 | P 0,04 (перекопанная 0,008) | угол 36° | мокнет</td><td class='s'>каменный век</td><td class='s'>копать недорого — основа строительства; второй раз копать в 5 раз легче</td></tr>
+<tr><td><span class='dot' style='background:#9b7a52'></span><b>Песок</b><div class='mut s'>Сыпучее</div></td><td class='s'>ρ 1600 | P ~0,02 <sup>*</sup> | угол 34° сухой / 45° мокрый</td><td class='s'>каменный век</td><td class='s'>яма в сухом песке осыпается, мокрый держит замок; из песка — стекло</td></tr>
+<tr><td><span class='dot' style='background:#9b7a52'></span><b>Гравий</b><div class='mut s'>Сыпучее</div></td><td class='s'>ρ 1750 | P ~0,06 <sup>*</sup> | угол 38°</td><td class='s'>каменный век</td><td class='s'>дороги и дренаж</td></tr>
+<tr><td><span class='dot' style='background:#9b7a52'></span><b>Глина сырая</b><div class='mut s'>Сыпучее</div></td><td class='s'>ρ 1800 | P ~0,15 <sup>*</sup> | липкость: держит стенку ~1 м <sup>*</sup> | мокнет</td><td class='s'>каменный век</td><td class='s'>лепишь, сушишь, обжигаешь: горшки и кирпич</td></tr>
+<tr><td><span class='dot' style='background:#9b7a52'></span><b>Грязь</b><div class='mut s'>Сыпучее</div></td><td class='s'>ρ 1800 | P 0,01 <sup>*</sup> | угол ~5° <sup>*</sup> | мокрая</td><td class='s'>каменный век</td><td class='s'>замедляет шаг, засасывает</td></tr>
+<tr><td><span class='dot' style='background:#9b7a52'></span><b>Снег</b><div class='mut s'>Сыпучее</div></td><td class='s'>ρ 100 свежий / 400 плотный | P 0,01-1 <sup>*</sup> | тает 0 °C</td><td class='s'>каменный век</td><td class='s'>блоки для иглу, лавины</td></tr>
+<tr><td><span class='dot' style='background:#3d8bd4'></span><b>Вода</b><div class='mut s'>Жидкое</div></td><td class='s'>ρ 1000 | P 0 | R 0 | счётчик литров | мёрзнет 0 °C, кипит 100 °C | мочит, гасит огонь</td><td class='s'>каменный век</td><td class='s'>ведро 10 кг — тяжело; пить, тушить, крутить колесо</td></tr>
+<tr><td><span class='dot' style='background:#c9a227'></span><b>Жир</b><div class='mut s'>Плавкое</div></td><td class='s'>ρ 920 | P 0,01 <sup>*</sup> | R 0,01 <sup>*</sup> | тает 35-45 °C | горит</td><td class='s'>каменный век</td><td class='s'>топливо для лампы, пропитка от воды</td></tr>
+<tr><td><span class='dot' style='background:#c9a227'></span><b>Воск</b><div class='mut s'>Плавкое</div></td><td class='s'>ρ 960 | P 0,1 <sup>*</sup> | R 0,002 <sup>*</sup> | H 3 <sup>*</sup> | тает 63 °C</td><td class='s'>каменный век</td><td class='s'>свечи, пропитка; мягчеет в руке</td></tr>
+<tr><td><span class='dot' style='background:#c9a227'></span><b>Смола / дёготь</b><div class='mut s'>Плавкое</div></td><td class='s'>ρ 1100 | P 3 <sup>*</sup> | R 0,01 <sup>*</sup> | H 50 (холодная) <sup>*</sup> | мягчеет ~80 °C</td><td class='s'>каменный век</td><td class='s'>первый клей: сажает каменный наконечник на древко</td></tr>
+<tr><td><span class='dot' style='background:#c9a227'></span><b>Пластик (ПЭ / ПВХ)</b><div class='mut s'>Плавкое</div></td><td class='s'>ρ 950 / 1400 | P 400 / 500 <sup>*</sup> | R 2 / 0,5 <sup>*</sup> | H 60 / 200 <sup>*</sup> | плавится 115-135 / 160-210 °C</td><td class='s'>новое время</td><td class='s'>переплавляешь и отливаешь заново, не гниёт</td></tr>
+</table></div>
+
+<!-- ===== PLAN ===== -->
+<div class="grid2">
+ <div class="box"><h3>Если берём E — по шагам</h3><ol class="steps s"><li>Шаг 1 (1-2 дня). Matter становится таблицей карточек: плотность, цена кубика (по направлениям), цена трещины, твёрдость, класс, метки. Переносим туда разбросанные числа (KAPPA, sigma_perp и ETA дерева; ETA_ROCK и H камня; PROCESS, K и E из Spall; SOIL_E и LOOSE_E земли) с теми же значениями. Важно: цена кубика уже включает потери (сосна 10 = 3 × 2 / 0,6), второй раз долю «ушло в материал» не умножать. Правило длины щепы (kl) не заменять ценой трещины — оставить как есть. Игра не меняется, бот-тесты остаются зелёными.</li>
+<li>Шаг 2 (1-2 дня). В Impact одна функция удара: на вход инструмент, материал, энергия; на выход — прошли ли ворота, бюджет на трещину, объём кубиков. Дерево, камень и земля зовут её вместо своих формул; замеры (207 см³ сосна, 0,2 см³ пыли гранита, 101/473 см³ скол у края 2/4 см) должны совпасть.</li>
+<li>Шаг 3 (1 день). Ворота «лезвие продавливает и твёрже материала» из каменной формулы становятся общими: медь тупится о гранит, нож не режет камень, бронза тупится о сталь.</li>
+<li>Шаг 4 (1 день). Одна отладочная подсказка для всех материалов (просьба Максима 31.10): «кубик … Дж, трещина … Дж, твёрдость …, лезвие …%».</li>
+<li>Шаг 5 (2-3 дня). Класс «жидкое»: счётчик литров у луж и озёр, ведро и бурдюк, вес в руках. Метка «мокрый».</li>
+<li>Шаг 6 (2-3 дня). Стекло и лёд на каменном холсте: та же сетка треугольников и трещина, цена трещины почти ноль, остаток энергии — ещё трещины, но не больше ~40 осколков. Падение и бросок дают удар m·g·h — горшки и бутылки бьются.</li>
+<li>Шаг 7 (1-2 дня). Износ лезвия: острота падает от каждого удара (больше — по твёрдому), точильный камень возвращает. Тупой нож режет как рвёт.</li>
+<li>Шаг 8 (4-6 дней). Класс «лист»: шкура и ткань как клеточная карта 5 мм (как один срез дерева), нож режет линию, полосы — предметы в сумку. Бот-проверка, как chop_bot.</li>
+<li>Шаг 9 (5-7 дней). Класс «тягучее»: железные листы и заготовки, карта вмятин 1 см, порог изгиба и разрыва, жар из горна делает металл в 3-10 раз мягче. Ковка на наковальне — те же удары.</li>
+<li>Шаг 10 (3-4 дня). Метки и три правила (огонь, вода, мороз, ржавчина): стихия меняет материал, стихия меняет стихию, материал материал не меняет.</li>
+<li>Шаг 11. Каждый новый класс — с ботом-прогоном без окна и проверкой «у всех игроков одинаково» (одни события → одни клеточки).</li></ol></div>
+ <div class="box"><h3>Честно о рисках</h3><ul class="s" style="padding-left:16px;margin:6px 0 0"><li>Часть чисел — оценки (кожа, ткань, верёвка, некоторые металлы и камни помечены [E]); проверять ботами и подкручивать одной строкой карточки.</li>
+<li>Игра сознательно щедрее жизни: скол гранита у края в игре стоит ~15 Дж, в настоящем камне — около 2 кДж. Это ради удовольствия; не «исправлять» под реальность, не проверив, весело ли.</li>
+<li>Двойной учёт потерь: сегодняшние цены уже включают трение и отдачу. Если при переносе ещё раз умножить на долю 0,6, дерево станет рубиться почти вдвое хуже.</li>
+<li>Соблазн «давайте всё на кубиках» — это воксельная физика из KILL LIST. Сетки — только внутри предметов.</li>
+<li>Каждый новый класс — работа (кожа, железо): не брать все сразу, по одному, когда он нужен геймплею (еда и одежда → кожа; кузница → железо).</li>
+<li>Сеть: сервер решает и рассылает события; новые классы должны слать маленькие события (линия разреза, точка вмятины), а не целые сетки.</li>
+<li>Браузер на одном потоке: большие карты листа и железа и массовые осколки дают рывки; держать сетки маленькими, осколки считать предметами, их число ограничить.</li>
+<li>Игрок может не понять, почему медь не берёт гранит и почему нож затупился — нужна явная подсказка «лезвие тупится: материал твёрже» и видимая полоска остроты.</li></ul></div>
+</div>
+
+<div class="mut s" style="margin-bottom:10px">Источники: удельная энергия резания металла и дерева (Atkins), закон Тиле для бурения камня, законы дробления (Риттингер, Кик, Бонд), Гриффитс и вязкость разрушения (стекло, лёд, керамика, металлы), энергия разрыва кожи, резины и ткани, углы осыпания грунта; разборы Teardown, Noita, Dwarf Fortress, Zelda, BeamNG, Minecraft, Valheim, 7 Days to Die. 35 ссылок — в заметках задачи 61.</div>
+</div></body></html>
