@@ -25,10 +25,14 @@
   section h2 span { color: var(--muted); font-weight: 400; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
   body.both .grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  body.all .grid { grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: pointer; text-align: left; padding: 0; color: inherit; font: inherit; }
   .card:hover, .card:focus-visible { border-color: var(--accent); outline: none; }
   .shots { display: grid; gap: 2px; background: #000; }
   .shots img { width: 100%; aspect-ratio: 2.17; object-fit: contain; display: block; background: #000; }
+  .shots.all { grid-template-columns: 1fr .425fr; }
+  .shots.all .orig { grid-column: 2; grid-row: 1 / span 2; width: 100%; height: 100%; aspect-ratio: auto; }
+  .noorig { grid-column: 2; grid-row: 1 / span 2; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; text-align: center; background: #000; }
   .meta { padding: 8px 10px 10px; }
   .meta b { display: block; font-size: 14px; }
   .meta small { color: var(--muted); font-size: 12px; word-break: break-all; }
@@ -45,8 +49,13 @@
   .stage figure { margin: 0; flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
   .stage img { max-width: 100%; max-height: 100%; min-height: 0; object-fit: contain; border-radius: 10px; background: #000; }
   .stage figcaption { color: var(--muted); font-size: 12px; padding-top: 4px; }
+  .stage.all { flex-direction: row; align-items: stretch; }
+  .stage.all .col { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .stage.all .side { flex: 0 1 auto; max-width: 32%; }
+  .stage .missing { color: var(--muted); border: 1px dashed var(--line); border-radius: 10px; padding: 40px 16px; text-align: center; }
   .hint { color: var(--muted); font-size: 12px; text-align: center; padding-bottom: calc(6px + env(safe-area-inset-bottom)); }
-  @media (max-width: 600px) { h1 { font-size: 16px; } .hint { display: none; } }
+  @media (max-width: 600px) { h1 { font-size: 16px; } .hint { display: none; } body.all .grid { grid-template-columns: 1fr; } }
+  @media (max-width: 700px) { .stage.all { flex-direction: column; overflow-y: auto; } .stage.all .side { max-width: none; max-height: 70vh; flex: 0 0 auto; } }
 </style>
 </head>
 <body>
@@ -54,7 +63,7 @@
   <div class="top">
     <h1>Butcher Hero — окна в горизонтали<small id="sub"></small></h1>
     <div class="seg" role="group" aria-label="Платформа">
-      <button data-p="ios">iOS</button><button data-p="android">Android</button><button data-p="both">Оба</button>
+      <button data-p="ios">iOS</button><button data-p="android">Android</button><button data-p="both">Оба</button><button data-p="all">Оба + оригинал</button>
     </div>
     <input type="search" id="q" placeholder="Поиск окна…" aria-label="Поиск окна">
   </div>
@@ -67,28 +76,31 @@
     <button class="icon" id="prev" aria-label="Предыдущее окно">‹</button>
     <div class="title"><b id="bt"></b><small id="bs"></small></div>
     <div class="seg" role="group" aria-label="Платформа в просмотре">
-      <button data-p="ios">iOS</button><button data-p="android">Android</button><button data-p="both">Оба</button>
+      <button data-p="ios">iOS</button><button data-p="android">Android</button><button data-p="both">Оба</button><button data-p="all">Оба + оригинал</button>
     </div>
     <button class="icon" id="next" aria-label="Следующее окно">›</button>
     <button class="icon" id="close" aria-label="Закрыть">✕</button>
   </div>
   <div class="stage" id="stage"></div>
-  <div class="hint">← → — листать, I / A / B — iOS, Android, оба, Esc — закрыть</div>
+  <div class="hint">← → — листать, I / A / B / O — iOS, Android, оба, оба + оригинал, Esc — закрыть</div>
 </div>
 
 <script src="data.js"></script>
 <script>
 (() => {
   const items = window.WINDOWS || [];
-  const names = { ios: 'iOS · iPhone 15 Pro, 2556 × 1179', android: 'Android · 20:9, 2400 × 1080' };
+  const names = { ios: 'iOS · iPhone 15 Pro, 2556 × 1179', android: 'Android · 20:9, 2400 × 1080', orig: 'Оригинал · вертикаль iPhone, 1179 × 2556' };
+  const landscape = () => (platform === 'both' || platform === 'all' ? ['ios', 'android'] : [platform]);
   let platform = localStorage.getItem('platform') || 'ios';
   let shown = items, index = -1;
   const $ = s => document.querySelector(s);
   const groups = [...new Set(items.map(it => it.group))];
   $('#sub').textContent = `${items.length} окон · ${groups.length} разделов · iPhone и Android в ландшафте`;
 
-  const shotsHtml = (it, kind) => (platform === 'both' ? ['ios', 'android'] : [platform])
-    .map(p => `<img loading="lazy" src="${kind}/${p}/${it.id}.webp" alt="${it.title} — ${p === 'ios' ? 'iOS' : 'Android'}">`).join('');
+  const shotsHtml = (it, kind) => landscape()
+    .map(p => `<img loading="lazy" src="${kind}/${p}/${it.id}.webp" alt="${it.title} — ${p === 'ios' ? 'iOS' : 'Android'}">`).join('')
+    + (platform !== 'all' ? '' : it.orig ? `<img class="orig" loading="lazy" src="${kind}/orig/${it.id}.webp" alt="${it.title} — оригинал">`
+                                         : '<div class="noorig">нет<br>оригинала</div>');
 
   function render() {
     const q = $('#q').value.trim().toLowerCase();
@@ -97,10 +109,11 @@
     $('#nav').innerHTML = byGroup.map(([g, list], i) => `<a href="#g${i}">${g} · ${list.length}</a>`).join('');
     $('#main').innerHTML = byGroup.length ? byGroup.map(([g, list], i) => `
       <section><h2 id="g${i}">${g} <span>${list.length}</span></h2><div class="grid">${list.map(it => `
-        <button class="card" data-id="${it.id}"><div class="shots">${shotsHtml(it, 'thumb')}</div>
+        <button class="card" data-id="${it.id}"><div class="shots${platform === 'all' ? ' all' : ''}">${shotsHtml(it, 'thumb')}</div>
           <div class="meta"><b>${it.title}</b><small>${it.source || ''}</small></div></button>`).join('')}</div></section>`).join('')
       : '<div class="empty">Ничего не нашлось</div>';
     document.body.classList.toggle('both', platform === 'both');
+    document.body.classList.toggle('all', platform === 'all');
     document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === platform));
   }
 
@@ -116,13 +129,17 @@
     const it = shown[index];
     $('#bt').textContent = it.title;
     $('#bs').textContent = `${it.group} · ${index + 1} из ${shown.length}`;
-    $('#stage').innerHTML = (platform === 'both' ? ['ios', 'android'] : [platform]).map(p =>
+    const figs = landscape().map(p =>
       `<figure><img src="img/${p}/${it.id}.webp" alt="${it.title}"><figcaption>${names[p]}</figcaption></figure>`).join('');
+    const orig = it.orig ? `<figure class="side"><img src="img/orig/${it.id}.webp" alt="${it.title} — оригинал"><figcaption>${names.orig}</figcaption></figure>`
+                         : '<figure class="side"><div class="missing">Оригинала в вертикали для этого окна нет</div></figure>';
+    $('#stage').className = 'stage' + (platform === 'all' ? ' all' : '');
+    $('#stage').innerHTML = platform === 'all' ? `<div class="col">${figs}</div>${orig}` : figs;
     $('#box').classList.add('open');
     history.replaceState(null, '', '#' + it.id);
     for (const d of [1, -1]) {  // соседние окна — заранее
       const near = shown[(index + d + shown.length) % shown.length];
-      (platform === 'both' ? ['ios', 'android'] : [platform]).forEach(p => { new Image().src = `img/${p}/${near.id}.webp`; });
+      landscape().concat(platform === 'all' && near.orig ? ['orig'] : []).forEach(p => { new Image().src = `img/${p}/${near.id}.webp`; });
     }
   }
 
@@ -145,7 +162,7 @@
   document.addEventListener('keydown', e => {
     if (index < 0 || e.target === $('#q')) return;
     const keys = { ArrowLeft: () => open(index - 1), ArrowRight: () => open(index + 1), Escape: close,
-                   i: () => setPlatform('ios'), a: () => setPlatform('android'), b: () => setPlatform('both') };
+                   i: () => setPlatform('ios'), a: () => setPlatform('android'), b: () => setPlatform('both'), o: () => setPlatform('all') };
     const act = keys[e.key] || keys[e.key.toLowerCase()];
     if (act) { e.preventDefault(); act(); }
   });
