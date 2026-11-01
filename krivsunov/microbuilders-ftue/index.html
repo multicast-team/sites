@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MicroBuilders — разбор FTUE и ETM: сначала пусто, потом густо</title>
-<meta name="description" content="Разбор окон и геймплея MicroBuilders по 5-часовому плейтесту: что переделать в онбординге, раскрытии меты, проблемах стройки и интерфейсе.">
+<title>MicroBuilders — FTUE и ETM: сначала пусто, потом густо (v2)</title>
+<meta name="description" content="Пять решений по фидбеку 5-часового плейтеста MicroBuilders: поток нового, проблемы стройки, карточка рабочего, валюты и интерфейс по этапам.">
 <style>
 :root{
   color-scheme: dark;
@@ -141,6 +141,31 @@ ul.clean li b{color:var(--text-primary)}
 footer{padding:36px 0 60px;color:var(--text-muted);font-size:13px}
 code{background:var(--surface-2);border:1px solid var(--line);padding:1px 5px;border-radius:5px;font-size:.9em}
 @media (max-width:640px){.g2{grid-template-columns:1fr}.stat .v{font-size:32px}.phone{width:100%;max-width:300px}}
+
+.top{display:flex;gap:16px;align-items:flex-start}
+.top .tn{flex:0 0 40px;height:40px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:20px;display:grid;place-items:center}
+.top h4{font-size:17px;margin:2px 0 6px}
+.top p{margin:0 0 6px}
+.top .eff{color:var(--text-primary);font-size:14px}
+.bq{margin:0 0 18px;padding:14px 18px;border-left:4px solid var(--accent);background:var(--surface-1);border-radius:0 var(--radius) var(--radius) 0;font-size:18px;line-height:1.5}
+.lbl{color:var(--text-muted);font-size:13px;margin:0 0 8px;font-weight:700;letter-spacing:.04em}
+.wc{background:#2a2622;border:1px solid #4a4236;border-radius:16px;padding:14px;font-size:14px;max-width:420px}
+.wc .gold{color:#f0c35a;font-size:16px}
+.wc-h{margin-bottom:8px;line-height:1.35}
+.wc-row{display:flex;justify-content:space-between;gap:10px;margin:6px 0;flex-wrap:wrap}
+.wc .mut{color:var(--text-muted)}
+.wc .bad{color:#ff8a6a;font-weight:700}
+.wc .good{color:#7fe07f;font-weight:700}
+.wc-stat{display:flex;justify-content:space-between;align-items:center;background:#1f1c19;border-radius:10px;padding:8px 10px;margin:6px 0}
+.wc-stat span{display:flex;flex-direction:column}
+.wc-stat i{font-style:normal;color:var(--text-muted);font-size:12px}
+.wc-stat em{font-style:normal;color:var(--text-secondary);font-size:12px}
+.wc-stat b{color:#ff8a6a;font-size:22px}
+.wc-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.wc-3 div{background:#1f1c19;border:1px solid #6a5a3a;border-radius:12px;text-align:center;padding:10px 4px;color:var(--text-secondary);font-size:13px}
+.wc-3 b{display:block;color:#fff;font-size:24px}
+details.more{background:var(--surface-1);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin:0 0 12px}
+details.more>summary{cursor:pointer;font-weight:700;font-size:16px}
 </style>
 </head>
 <body>
@@ -148,336 +173,242 @@ code{background:var(--surface-2);border:1px solid var(--line);padding:1px 5px;bo
 
 <header class="hero">
   <div class="wrap">
-    <span class="kicker">MicroBuilders · разбор FTUE и ETM</span>
-    <h1>Сначала пусто, потом густо.<br><em>Выравниваем кривую</em> — от первой минуты до меты</h1>
-    <p class="lead">Разбор всех окон и геймплея по 5-часовому плейтесту: где кор кажется однообразным, где мета обрушивается разом, как обыграть каждую проблему стройки и подавать интерфейс по мере надобности, а не вывалить всё с первой секунды.</p>
-    <p class="meta-line">Сборка игры: <code>main 1e17be1</code> от 29.10.2026 · источники: код, GDD (31 документ), плейтест заказов 1–20 от 20.10, живой плейтест 31.10 · подготовлено 1 ноября 2026</p>
+    <span class="kicker">MicroBuilders · FTUE и ETM · v2</span>
+    <h1>Сначала пусто, потом густо.<br><em>Голова игрока переполняется</em> — что с этим делать</h1>
+    <p class="lead">Разбор по фидбеку Антона после 5-часового плейтеста с Кириллом. Сначала пять решений с наибольшим эффектом, дальше — цифры, на которых они держатся.</p>
+    <p class="meta-line">Разбор сделан по <code>main 1e17be1</code> от 29.10.2026. Локальная сборка Антона новее: в ней рабочие с именами, статами и характером. Всё про карточку рабочего ниже учитывает его скриншоты от 1 ноября, остальное нужно перепроверить на текущей сборке. Минуты меты — модель метасимулятора (60 активных минут в сутки), а не замер живой игры.</p>
   </div>
 </header>
 
 <nav class="toc"><div class="wrap">
-  <a href="#feedback">Фидбек</a><a href="#numbers">Цифры</a><a href="#curve">Кривая новизны</a><a href="#core">Кор-луп</a><a href="#problems">Проблемы стройки</a><a href="#numbers-onboard">Онбординг числами</a><a href="#ui">Интерфейс</a><a href="#currencies">Валюты</a><a href="#windows">Окна</a><a href="#oom">Out of memory</a><a href="#plan">План</a><a href="#metrics">Как проверить</a>
+  <a href="#top5">Топ-5</a><a href="#feedback">Фидбек</a><a href="#load">Перегрузка</a><a href="#curve">Кривая новизны</a><a href="#problems">Проблемы стройки</a><a href="#worker">Карточка рабочего</a><a href="#currencies">Валюты</a><a href="#ui">Интерфейс</a><a href="#core">Кор-луп</a><a href="#next">Дальше</a><a href="#appx">Приложения</a>
 </div></nav>
 
 <main class="wrap">
 
-<section id="feedback">
-  <h2><span class="num">01</span>Что показал плейтест</h2>
-  <p class="sub">Пять часов игры вдвоём. Ниже — четыре наблюдения из фидбека и что за каждым стоит в коде и балансе.</p>
-  <div class="grid g2">
-    <div class="card"><p class="quote">«Сначала кор не очень — однообразно»</p><p>Первые заказы — это «купить доступное → подождать → купить то же». После каждого заказа сессионные прокачки сбрасываются, порядок решений повторяется. Время заказа растёт быстрее, чем число новых решений: <b style="color:#fff">4 мин на 1-м → 24–30 мин на 10-м</b>.</p></div>
-    <div class="card"><p class="quote">«Потом мета начала раскрываться»</p><p>Штаб, школа, бригадиры и контракты — это то, что вытягивает игру. Но первый настоящий выбор состава появляется только около заказа 10, а самые интересные решения (ускорение начала против постоянной кладки) — ещё позже.</p></div>
-    <div class="card"><p class="quote">«Сначала пусто, потом густо»</p><p>Плотность новизны неровная: <b style="color:#fff">4 открытия в 3-м часу</b> и <b style="color:#fff">17 — в 5-м</b>, затем 180 минут вообще без нового и сразу <b style="color:#fff">21 за час</b>. В пике у игрока одновременно 10 ресурсов.</p></div>
-    <div class="card"><p class="quote">«Out of memory в оперативке»</p><p>Вкладка падает после нескольких часов, когда открыто много зданий штаба, площадок и бригадиров. При смене стройки освобождается геометрия, но не текстуры, а двор техники пересобирается без освобождения ресурсов. Подробно — в разделе <a href="#oom">Out of memory</a>.</p></div>
+<section id="top5">
+  <h2><span class="num">00</span>Пять решений, с которых начать</h2>
+  <p class="sub">Отобраны по одному признаку: сколько «пусто» или «густо» они убирают из первых 5 часов. Каждое — правка порядка открытий или подачи, без новых механик.</p>
+  <div class="grid" style="gap:10px">
+    <div class="card top"><div class="tn">1</div><div><h4>Выровнять поток нового: 6–8 вещей в час вместо 4 → 17 → 0 → 21</h4><p>Блюда, бюджеты биржи и часть линий офиса переезжают из часов 5 и 10 в провалы 3–4 и 8–9. Пачку из 47 покупок на старте заказа 20 разбить на заказы 17–21.</p><p class="eff">Эффект: исчезают оба «густо» и 180-минутный провал. <a href="#curve">Цифры →</a></p></div></div>
+    <div class="card top"><div class="tn">2</div><div><h4>Первое решение проблемы — не позже чем через час после её появления</h4><p>Перекуры появляются на 15-й минуте, а «Реже перекуры» — на 176-й. Голод: 30 → 176. Сон: 130 → 380. Сдвинуть первую контрмеру к ~100–130-й минуте, прожекторы и каски — к ~150–200-й.</p><p class="eff">Эффект: каждая проблема сразу становится целью, а не фоновым раздражением. <a href="#problems">Цифры →</a></p></div></div>
+    <div class="card top"><div class="tn">3</div><div><h4>Раскрывать карточку рабочего по слоям, как уже начато</h4><p>Упрощённая карточка для ранних уровней — верное решение. Дальше: характер — после первой прокачки рабочего, полосы потребностей — по одной, в момент первой встречи, ноша и перегруз — с первым тяжёлым материалом.</p><p class="eff">Эффект: через минуту игры в карточке 4 числа вместо 13. <a href="#worker">Подробно →</a></p></div></div>
+    <div class="card top"><div class="tn">4</div><div><h4>Одна новая валюта за раз и только с первой тратой</h4><p>Сейчас на заказе 1 приходят капитал и редкий ресурс одновременно, жетоны висят на экране с первой секунды, печати и дипломы — нулями в кошельке штаба. В пике игрок держит 10+ ресурсов.</p><p class="eff">Эффект: к первому часу не больше 3 валют. <a href="#currencies">Цифры →</a></p></div></div>
+    <div class="card top"><div class="tn">5</div><div><h4>Показать первую ночь событием и починить порог</h4><p>Ночь заявлена с заказа 7, но стройка начинается в 8:00, а ночь — в 20:00, то есть на 24-й минуте. Заказы 1–9 короче, игрок её не видит до заказа 10. Либо ввести ночь с 10-го отдельным «Первым закатом», либо укоротить сутки в раннем окне.</p><p class="eff">Эффект: настройка в балансе перестаёт расходиться с тем, что видит игрок. <a href="#problems">Подробно →</a></p></div></div>
   </div>
-  <div class="callout"><b>Главная мысль.</b> Проблема не в том, что механик мало: их много, и они хорошие. Проблема в <b>подаче</b> — когда и как игрок с ними встречается. Почти всё, что нужно, в коде уже есть; предлагаемые правки в основном про порядок, числа и тексты.</div>
 </section>
 
-<section id="numbers">
-  <h2><span class="num">02</span>Масштаб игры в цифрах</h2>
-  <p class="sub">Что игроку предстоит понять за первые часы. Каждая цифра взята из кода и <code>balance.json</code>.</p>
-  <div class="grid g4">
-    <div class="card stat"><div class="v">73</div><div class="l">линии прокачки внутри одной стройки</div><div class="s">граф «Улучшения»: 72 узла и 13 ворот за жетоны</div></div>
-    <div class="card stat"><div class="v">85</div><div class="l">технологий в техцентре</div><div class="s">59 для стройки, 13 для городка, 12 продвинутых, 1 реактор</div></div>
-    <div class="card stat"><div class="v">46</div><div class="l">линий в главном офисе</div><div class="s">8 вкладок видны сразу, 4 из них пусты первые 8–10 заказов</div></div>
-    <div class="card stat"><div class="v">≈177</div><div class="l">новых сущностей за 30 часов меты</div><div class="s">здания, технологии, линии, блюда, программы</div></div>
-    <div class="card stat"><div class="v">10+</div><div class="l">валют и ресурсов одновременно в пике</div><div class="s">монеты, капитал, печати, дипломы, 4 редких, опыт центра, мана, жетоны</div></div>
-    <div class="card stat"><div class="v">24</div><div class="l">карты бригадиров показаны сразу</div><div class="s">даже когда своих 1–2</div></div>
-    <div class="card stat"><div class="v">250<span style="font-size:20px"> мин</span></div><div class="l">ждёт решения усталость и сон</div><div class="s">перекуры — 160 мин, голод — 146 мин</div></div>
-    <div class="card stat"><div class="v">0</div><div class="l">шагов обучения на стройке</div><div class="s">есть только титульная фраза и тост про камеру; подсказки — в штабе</div></div>
+<section id="feedback">
+  <h2><span class="num">01</span>Фидбек</h2>
+  <p class="sub">Антон, 1 ноября, после 5 часов игры с Кириллом:</p>
+  <blockquote class="bq">«…ему сначала не очень понравился кор, однообразно, но потом мета начала раскрываться и Out of memory сделала в оперативке у Кири, ну это тоже плохо, сначала пусто, потом густо, нужно это всё как следует настроить и лучше обыграть каждую проблему на стройке, нормально онбордить через числа»</blockquote>
+  <div class="grid g2">
+    <div class="card"><h4>«Однообразно»</h4><p>Заказы растут по длине быстрее, чем появляются новые решения: 4–5 минут на первых, 15–30 к 8–10-му, до 60–100 к 28–42-му (модель). Первый настоящий выбор состава — около заказа 10.</p></div>
+    <div class="card"><h4>«Out of memory в оперативке у Кири»</h4><p>Это про голову игрока, а не про браузер: мета вывалилась разом и переполнила внимание. Раздел <a href="#load">«Перегрузка»</a> считает, сколько нового игрок должен держать в голове к каждому часу.</p></div>
+    <div class="card"><h4>«Обыграть каждую проблему на стройке»</h4><p>Перекуры, голод, сон и износ лесов приходят как иконки над головами, а решения — через 2–4 часа. Погода подаётся хорошо (тост с числом и подсказкой) — это готовый образец.</p></div>
+    <div class="card"><h4>«Онбордить через числа»</h4><p>Числа в игре есть, но не там, где принимается решение: покупка показывает «уровень 3 → 4», а «куда ушло время бригады» спрятано в «Об уровне → Тайминги».</p></div>
+  </div>
+  <div class="callout"><b>Что уже сделано в локальной сборке.</b> Карточка рабочего для начальных уровней упрощена до имени, статуса и трёх статов с выбором прокачки. Ниже это учтено и развито, а не предложено заново.</div>
+</section>
+
+<section id="load">
+  <h2><span class="num">02</span>Перегрузка: сколько нового к каждому часу</h2>
+  <p class="sub">Накопленное число новых сущностей — здания, технологии, линии офиса, блюда, программы, бюджеты биржи — которые игрок встречает к концу каждого часа. Это и есть «оперативка» игрока. Модель по плану покупок метасимулятора.</p>
+  <div class="chart" id="ch-load">
+    <p class="chart-title">Накоплено нового к концу часа</p>
+    <p class="chart-sub">Сейчас — ступени: ровно, рывок к часу 5, плато 8–9, рывок к часу 10. Предлагается — тот же объём ровной линией.</p>
+    <div class="legend"><span><i class="line" style="background:var(--series-1)"></i>Сейчас</span><span><i class="line" style="background:var(--series-2)"></i>Предлагается</span></div>
+    <div class="svgbox"></div>
+    <details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-load"></div></details>
+  </div>
+  <div class="grid g4" style="margin-top:14px">
+    <div class="card stat"><div class="v">10+</div><div class="l">валют и ресурсов в пике</div><div class="s">монеты, капитал, печати, дипломы, 4 редких, опыт центра, мана, жетоны</div></div>
+    <div class="card stat"><div class="v">24</div><div class="l">карты бригадиров на экране</div><div class="s">при 1–2 своих</div></div>
+    <div class="card stat"><div class="v">8</div><div class="l">вкладок офиса с первого входа</div><div class="s">4 из них пусты первые 8–10 заказов</div></div>
+    <div class="card stat"><div class="v">15</div><div class="l">плашек над штабом</div><div class="s">1 доступна, 9 с замками, 5 «Скоро»</div></div>
   </div>
 </section>
 
 <section id="curve">
   <h2><span class="num">03</span>Кривая новизны: где пусто, где густо</h2>
-  <p class="sub">Сколько новых вещей (здания, технологии, линии офиса, блюда, программы, бюджеты биржи) открывается за каждый час активной игры. Расчёт по номинальному профилю кампании из баланса: 60 активных минут в сутки.</p>
+  <p class="sub">Сколько нового открывается за каждый час активной игры. Модель метасимулятора.</p>
   <div class="chart" id="ch-curve">
-    <p class="chart-title">Новые сущности по часам игры</p>
-    <p class="chart-sub">Сейчас — по плану покупок метасимулятора; предлагается — то же количество, растянутое ровной лестницей. Полоса — целевой коридор 6–8 в час.</p>
+    <p class="chart-title">Новые сущности по часам</p>
+    <p class="chart-sub">Полоса — целевой коридор 6–8 в час.</p>
     <div class="legend"><span><i style="background:var(--series-1)"></i>Сейчас</span><span><i style="background:var(--series-2)"></i>Предлагается</span><span><i style="background:rgba(255,255,255,.12);border:1px dashed #777"></i>Цель 6–8 в час</span></div>
     <div class="svgbox"></div>
     <details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-curve"></div></details>
   </div>
   <div class="grid g3" style="margin-top:14px">
-    <div class="card"><h4>Пусто: часы 3–4 и 8–9</h4><p>В часах 8–9 — ноль новых сущностей за 180 минут. Это заказ 19, «Монастырь»: в плане он занимает 193 минуты, хотя строится ~16. Все покупки копятся и падают на начало заказа 20.</p></div>
-    <div class="card"><h4>Густо: часы 5 и 10</h4><p>Час 5: 9 технологий, 4 бюджета биржи, 2 блюда и центр персонала. Час 10: 10 технологий, 7 линий офиса, блюда и 2 уровня городка. Это и есть «потом густо».</p></div>
-    <div class="card"><h4>Правило выравнивания</h4><p>Не больше 6–8 новых вещей в час после второго часа и один крупный механизм раз в ~40 минут. Блюда, бюджеты биржи и часть линий офиса переезжают из пиков в провалы.</p></div>
-  </div>
-</section>
-
-<section id="core">
-  <h2><span class="num">04</span>Кор-луп: время растёт быстрее, чем решения</h2>
-  <p class="sub">Модельная длительность каждого заказа (непрерывная стройка с метой своего дня) и моменты, когда открываются здания штаба. Длинные заказы без новых решений — главный источник «однообразно».</p>
-  <div class="chart" id="ch-orders">
-    <p class="chart-title">Длительность заказа, минут</p>
-    <p class="chart-sub">Подписи сверху — открытие зданий штаба. Заштрихованная зона — заказы, где сейчас нет новых решений дольше 5 минут подряд.</p>
-    <div class="legend"><span><i class="line" style="background:var(--series-1)"></i>Длительность заказа</span><span><i style="background:rgba(236,131,90,.18);border:1px solid rgba(236,131,90,.5)"></i>Риск «пустого» ожидания</span></div>
-    <div class="svgbox"></div>
-    <details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-orders"></div></details>
-  </div>
-  <div class="grid g3" style="margin-top:14px">
-    <div class="card"><h4>Заказы 1–7: 4–11 минут</h4><p>Короткие и бодрые, но в них только «План работ», «Скорость», «Рабочие». Нужна одна контрастная пара решений уже на первой минуте.</p></div>
-    <div class="card"><h4>Заказы 8–42: 15–100 минут</h4><p>Здесь длина взрывается. Правило: если заказ длиннее 10 минут, у игрока должно появляться новое решение раз в 3–5 минут — событие, проблема, бригадир, сундук.</p></div>
-    <div class="card"><h4>Заказы 44–57: 9–14 минут</h4><p>Ядро ускорилось, а меты почти не осталось — хвост рискует снова стать «пустым». Сюда — редкие события, контракты-боссы и продвинутые узлы.</p></div>
-  </div>
-  <h3>Как разнообразить старт заказа без новой механики</h3>
-  <div class="grid g3">
-    <div class="card"><h4>«Как в прошлый раз» для покупок</h4><p>Повторный старт съедает интерес: каждый раз те же первые покупки. Предлагается план закупки — одна кнопка «Повторить стартовые покупки» за реально имеющиеся монеты.</p></div>
-    <div class="card"><h4>Особенность заказа</h4><p>У каждого объекта один «характер» в брифинге: «высокий — нужна вертикаль», «тяжёлый — нужна ноша», «широкий — нужны маршруты». Это делает выбор покупок и бригадира осмысленным.</p></div>
-    <div class="card"><h4>Раньше выбор бригадира</h4><p>Сейчас до победы в школе из сундуков падают копии стартового. Гарантировать 2–3 разных бригадира к заказу 5–6, чтобы выбор состава появился до длинных заказов.</p></div>
+    <div class="card"><h4>Пусто: часы 3–4 и 8–9</h4><p>В часах 8–9 — ноль нового за 180 минут: заказ 19 «Монастырь» занимает в плане 193 минуты при ~16 минутах стройки. Всё накопленное падает на старт заказа 20.</p></div>
+    <div class="card"><h4>Густо: часы 5 и 10</h4><p>Час 5 — 9 технологий, 4 бюджета биржи, 2 блюда и центр персонала. Час 10 — 10 технологий, 7 линий офиса, блюда и 2 уровня городка.</p></div>
+    <div class="card"><h4>Что переносить</h4><p>Из пиков в провалы: блюда кроме первых двух, бюджеты биржи, линии офиса, которые не нужны сразу (геодезия, изыскания, золотой резерв, тяжёлый монтаж).</p></div>
   </div>
 </section>
 
 <section id="problems">
-  <h2><span class="num">05</span>Проблемы стройки: от появления до решения</h2>
-  <p class="sub">Перекуры, голод, сон, погода, износ лесов — отличные механики, но игрок узнаёт о них по иконке над головой рабочего. А решение появляется спустя часы. Самые ранние проблемы ждут ответа дольше всех.</p>
+  <h2><span class="num">04</span>Проблемы стройки: от появления до решения</h2>
+  <p class="sub">Самые ранние проблемы ждут ответа дольше всех. Модель: минута меты, когда проблема впервые встречается, и когда игроку доступна первая контрмера.</p>
   <div class="chart" id="ch-gantt">
-    <p class="chart-title">Минута меты: проблема появилась → решение доступно</p>
-    <p class="chart-sub">Полоса — сколько игрок терпит проблему без ответа. Ромб — где предлагается дать первое решение (цель: зазор ≤ 30–60 минут).</p>
-    <div class="legend"><span><i style="background:var(--serious)"></i>Зазор сейчас</span><span><i style="background:var(--series-3)"></i>Зазор после правки</span><span>● появление · ▲ решение сейчас · ◆ решение после правки</span></div>
+    <p class="chart-title">Проблема появилась → решение доступно</p>
+    <p class="chart-sub">Цель — зазор не больше 60 минут, как у дождя и шторма.</p>
+    <div class="legend"><span><i style="background:var(--serious)"></i>Зазор сейчас</span><span><i style="background:var(--series-3)"></i>Зазор после правки</span><span>● появление · ▲ решение сейчас · ◆ после правки</span></div>
     <div class="svgbox"></div>
     <details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-gantt"></div></details>
   </div>
-
-  <h3>Как это читается игроком сейчас</h3>
-  <div class="scroll"><table>
-    <thead><tr><th>Проблема</th><th>Штраф в коде</th><th>Сигнал игроку</th><th>Читаемость</th></tr></thead>
+  <div class="scroll" style="margin-top:14px"><table>
+    <thead><tr><th>Проблема</th><th>Что делает в коде</th><th>Как узнаёт игрок</th><th>Что добавить</th></tr></thead>
     <tbody>
-      <tr><td><b>Перекуры</b> · с заказа 3</td><td>каждые 2–3 мин на 20 с; привычка растёт до ×2,8 частоты и ×2,2 длительности; зовут товарищей в радиусе 8 клеток</td><td>иконка над головой, строка в карточке рабочего</td><td><span class="st bad"><span>3/5 — нет общих потерь</span></span></td></tr>
-      <tr><td><b>Голод</b> · с заказа 5</td><td>с 60 % шкалы −25…−50 % работы, на 100 % уходит обедать на 90 с; в снег ×2</td><td>значок обеда, «Голоден −32 %» в карточке</td><td><span class="st bad"><span>3/5 — нет итога по бригаде</span></span></td></tr>
-      <tr><td><b>Усталость и сон</b> · с заказа 7 (по факту 10)</td><td>с 50 % шкалы до −40 % работы, ночью копится ×3, сон 400–600 с</td><td>Zz, «устал −12 %»</td><td><span class="st crit"><span>2/5 — копится молча</span></span></td></tr>
-      <tr><td><b>Ночь</b> · с заказа 7 (по факту 10)</td><td>работа ×0,72, ходьба ×0,82</td><td>тост «Ночь — бригада медленнее на 28 %»</td><td><span class="st good"><span>4/5</span></span></td></tr>
-      <tr><td><b>Износ лесов</b> · с заказа 8</td><td>прочность 2000, шаг стоит 100 + масса; ~6–7 проходов с грузом; ремонт = полная установка</td><td>цвет, трещины, лента, звук; тоста нет</td><td><span class="st crit"><span>2/5 — нет предупреждения</span></span></td></tr>
-      <tr><td><b>Снег / дождь / жара</b> · заказы 11 / 20 / 29</td><td>ходьба ×0,7 / укладка ×0,7 / укладка ×0,78, усталость ×1,5</td><td>тост с числом и подсказкой решения</td><td><span class="st good"><span>4/5 — образец</span></span></td></tr>
-      <tr><td><b>Шторм</b> · заказ 33</td><td>молния раз в ~40 с выбивает 3–8 кубов с этажей ≥ 5</td><td>вспышка, гром, тост с числом кубов</td><td><span class="st good"><span>5/5</span></span></td></tr>
-      <tr><td><b>Ступор</b> · в любой момент</td><td>10 с без продвижения — все бросают задание; при &lt; 2 % остатка автодостройка</td><td>«!» над рабочими; объяснение только в контракте и школе</td><td><span class="st crit"><span>2/5 — молча</span></span></td></tr>
-      <tr><td><b>Высота и подъём</b> · с заказа 8</td><td>настилы ×0,8 и −4 % за этаж: 10-й этаж ×0,53, в снег ≈ ×0,24</td><td>ходьба 40–53 % видна только в «Об уровне → Тайминги»</td><td><span class="st bad"><span>3/5 — спрятано</span></span></td></tr>
+      <tr><td><b>Перекуры</b> · заказ 3</td><td>каждые 2–3 мин на 20 с, привычка до ×2,8 частоты</td><td>иконка над головой</td><td>событие первой встречи с долей потерянного времени бригады</td></tr>
+      <tr><td><b>Голод</b> · заказ 5</td><td>с 60 % шкалы −25…−50 % работы, обед 90 с</td><td>значок, «Голоден −32 %» в карточке</td><td>итог по бригаде, а не по одному рабочему</td></tr>
+      <tr><td><b>Сон</b> · по факту заказ 10</td><td>до −40 % работы, ночью копится ×3</td><td>Zz, «устал −12 %»</td><td>показать, что усталость копится, до того как она стала штрафом</td></tr>
+      <tr><td><b>Износ лесов</b> · заказ 8</td><td>~6–7 проходов с грузом, ремонт = полная установка</td><td>цвет, трещины, лента</td><td>предупреждение на 50 % и при поломке</td></tr>
+      <tr><td><b>Ступор</b> · любой момент</td><td>10 с без продвижения — все бросают задание</td><td>«!» над рабочими; объяснение только в контракте и школе</td><td>то же окно «кубы недостижимы» в сюжете</td></tr>
+      <tr><td><b>Погода</b> · заказы 11 / 20 / 29 / 33</td><td>снег, дождь, жара, шторм</td><td>тост с числом и подсказкой решения</td><td><span class="st good"><span>уже хорошо — образец для остальных</span></span></td></tr>
     </tbody>
   </table></div>
+  <div class="callout"><b>Ночь заявлена с заказа 7, а видна с 10-го.</b> Стройка начинается в 8:00, игровой час — 120 секунд, ночь в 20:00 наступает на 24-й минуте стройки. Заказы 1–9 короче 24 минут.</div>
+</section>
 
-  <div class="callout"><b>Ночь заявлена с заказа 7, но игрок её не увидит до заказа 10.</b> Каждая стройка начинается в 8:00, ночь наступает в 20:00, игровой час — 120 секунд, то есть ночь приходит на 24-й минуте стройки. Заказы 1–9 короче. Предлагается либо открывать ночь отдельным событием «Первый закат» на заказе 10, либо в раннем окне укоротить сутки.</div>
-
-  <h3>Единый шаблон: проблема → событие с числом → решение</h3>
-  <p class="sub">Погода уже подаётся правильно: тост с цифрой и подсказкой. Распространяем этот же шаблон на всё остальное и добавляем счётчик потерь — это и есть «онбординг через числа».</p>
-  <div class="phones">
-    <div><div class="phone"><div class="screen"><div class="bld"></div>
-      <div class="hud-top"><span class="pill"><span class="coin"></span> 1 240 · +86/мин</span></div>
-      <div class="bar">Ур. 3 · Дом с крыльцом<div class="track"><div class="fill"></div></div></div>
-      <div class="toast"><div class="t">Новое: перекуры</div>Рабочие уходят курить каждые 2–3 мин на 20 с. Сейчас бригада теряет <b>9 %</b> времени.<br><span style="color:#c3c2b7">Решение «Реже перекуры» откроется через 2 заказа в техцентре.</span><br><span class="go">Понятно</span></div>
-      <div class="bottom"><div class="btn-up">Улучшения</div></div>
-    </div></div><p class="cap">Первое появление — один раз отдельным событием, с числом потерь</p></div>
-
-    <div><div class="phone"><div class="screen"><div class="bld"></div>
-      <div class="hud-top"><span class="pill"><span class="coin"></span> 8 900 · +420/мин</span><span class="pill"><span class="clk"></span> 21:40</span></div>
-      <div class="bar">Ур. 10 · Собор рудокопов<div class="track"><div class="fill" style="width:61%"></div></div></div>
-      <div class="losses"><b>Куда ушло время бригады</b>
-        <div class="stack"><span style="flex:41;background:var(--series-1)"></span><span style="flex:9;background:var(--series-2)"></span><span style="flex:7;background:var(--series-3)"></span><span style="flex:12;background:#7c6fd6"></span><span style="flex:31;background:#55554f"></span></div>
-        <span style="color:#9cc6ff">ходьба 41 %</span> · <span style="color:#ff9a6e">перекуры 9 %</span> · <span style="color:#5fd3a5">обед 7 %</span> · <span style="color:#b3a9ff">ночь −12 %</span> · кладка 31 %
+<section id="worker">
+  <h2><span class="num">05</span>Карточка рабочего: слоями</h2>
+  <p class="sub">По двум скриншотам Антона от 1 ноября. Полная карточка через минуту игры — 13 чисел. Упрощённая для ранних уровней — 3 стата и выбор прокачки. Предлагается довести упрощение до правила: каждый слой появляется вместе с механикой, которую объясняет.</p>
+  <div class="grid g2">
+    <div>
+      <p class="lbl">ПОЛНАЯ, ЧЕРЕЗ МИНУТУ ИГРЫ</p>
+      <div class="wc">
+        <div class="wc-h"><b class="gold">Рабочий 1</b><br>Кладёт куб</div>
+        <div class="wc-row"><span>Свои кубы 0</span><span class="mut">до прокачки ещё 2 куба</span></div>
+        <div class="wc-stat"><span>Скорость <i>ходьба и подъём</i> <em>Характер −6</em></span><b>94</b></div>
+        <div class="wc-stat"><span>Сила <i>сколько уносит</i> <em>Характер −5</em></span><b>95</b></div>
+        <div class="wc-stat"><span>Сноровка ★ <i>укладка, набор, леса</i> <em>Характер −2</em></span><b>98</b></div>
+        <div class="wc-row"><span>План: 1 из 3</span><span class="bad">Ноша 34 / 18,7 кг · Перегруз ×1,8</span></div>
+        <div class="wc-row mut">Один тяжёлый кубик · перегруз · За ходку: —</div>
+        <div class="wc-row"><span>обед 485</span><span>перекур 2:01</span><span>сон 2 362</span></div>
       </div>
-      <div class="bottom"><div class="btn-up">Улучшения <span class="badge">2</span></div></div>
-    </div></div><p class="cap">Счётчик потерь по причинам — на HUD по тапу и в итоге заказа</p></div>
-
-    <div><div class="phone"><div class="screen"><div class="bld"></div>
-      <div class="hud-top"><span class="pill"><span class="coin"></span> 14 300 · +610/мин</span></div>
-      <div class="bar">Ур. 12 · Плавильный цех<div class="track"><div class="fill" style="width:47%"></div></div></div>
-      <div class="toast" style="border-left-color:var(--serious)"><div class="t">Настил на 3-м этаже — 50 %</div>Ещё ~4 прохода с грузом до поломки. Ремонт займёт 6 с.<br><span style="color:#c3c2b7">«Прочный крепёж» — ×1,3 к прочности.</span><br><span class="go">Перейти к улучшению</span></div>
-      <div class="bottom"><div class="btn-up">Улучшения</div></div>
-    </div></div><p class="cap">Предупреждение до поломки, а не только цвет и трещины</p></div>
-  </div>
-
-  <div class="grid g2" style="margin-top:18px">
-    <div class="card"><h4>Ступор: говорить, а не молчать</h4><p>В сюжетном режиме показывать то же, что в контракте: «5 кубов недостижимы — нужна вертикаль или лифт», подсветить эти кубы и дать кнопку к нужной прокачке. Сейчас таймер сбрасывается без объяснения.</p></div>
-    <div class="card"><h4>Связать технологию с болью</h4><p>В техцентре рядом с технологией писать, что она лечит, и сколько игрок уже потерял: «Полевая кухня — решает голод. За последние 3 заказа бригада простояла на обеде 4 мин 10 с».</p></div>
-  </div>
-</section>
-
-<section id="numbers-onboard">
-  <h2><span class="num">06</span>Онбординг через числа</h2>
-  <p class="sub">Игрок покупает «уровень 3» и «+0,4». Ему нужно «было → стало» в своих единицах: кубы в минуту, время до сдачи, окупаемость. Игра эти значения уже считает — в окне «Об уровне → Тайминги» и в оценке симулятора, но показывает их не там, где принимается решение.</p>
-  <div class="grid g2">
-    <div>
-      <p style="color:var(--text-muted);font-size:13px;margin:0 0 8px">СЕЙЧАС</p>
-      <div class="upg old"><div class="hd"><div><div class="nm">Скорость стройки</div><div class="lv">Уровень 3 → 4</div></div><div class="pr">110 <span class="coin"></span></div></div><div class="why">Скорость укладки +0,4</div></div>
-      <div class="upg old" style="margin-top:10px"><div class="hd"><div><div class="nm">Рабочие</div><div class="lv">Уровень 2 → 3</div></div><div class="pr">240 <span class="coin"></span></div></div><div class="why">+1 рабочий</div></div>
     </div>
     <div>
-      <p style="color:var(--accent);font-size:13px;margin:0 0 8px;font-weight:700">ПРЕДЛАГАЕТСЯ <span style="color:var(--text-muted);font-weight:400">· числа в макете условные, прирост скорости — по формуле баланса</span></p>
-      <div class="upg"><div class="hd"><div><div class="nm">Скорость стройки</div><div class="lv">Уровень 3 → 4</div></div><div class="pr">110 <span class="coin"></span></div></div>
-        <div class="delta"><div><div class="a">сейчас</div><div class="b">12 куб/мин</div></div><div class="arr">→</div><div><div class="a">после</div><div class="b">13,7 куб/мин</div></div></div>
-        <div class="why">Скорость +14 % · до сдачи <b>8:40 → 7:40</b></div></div>
-      <div class="upg" style="margin-top:10px"><div class="hd"><div><div class="nm">Рабочие</div><div class="lv">Уровень 2 → 3</div></div><div class="pr">240 <span class="coin"></span></div></div>
-        <div class="delta"><div><div class="a">сейчас</div><div class="b">3 рабочих</div></div><div class="arr">→</div><div><div class="a">после</div><div class="b">4 рабочих</div></div></div>
-        <div class="why">До сдачи <b>−1:00…−1:30</b> · <span style="color:var(--warning)">7 из 10 ходок ограничила ноша</span> — сначала «Ноша» даст больше</div></div>
+      <p class="lbl" style="color:var(--good)">УПРОЩЁННАЯ — УЖЕ СДЕЛАНО</p>
+      <div class="wc">
+        <div class="wc-h"><b class="gold">Петрович</b><br>Получает план</div>
+        <div class="wc-row good">Прокачка готова — выбери, что качать</div>
+        <div class="wc-3"><div><b>103</b>Скорость</div><div><b>107</b>Сила</div><div><b>94</b>Сноровка</div></div>
+      </div>
+      <p class="lbl" style="margin-top:14px">ЧТО ДОБАВЛЯТЬ И КОГДА</p>
+      <div class="scroll"><table>
+        <thead><tr><th>Слой</th><th>Когда</th><th>Как подать</th></tr></thead>
+        <tbody>
+          <tr><td>Характер у статов</td><td>после первой прокачки рабочего</td><td>«У Петровича тяжёлая рука: Сила растёт медленнее»</td></tr>
+          <tr><td>План «1 из 3»</td><td>после покупки «План работ»</td><td>одна строка, без полосы</td></tr>
+          <tr><td>Ноша и перегруз</td><td>с первым тяжёлым материалом</td><td>событие «Перегруз ×1,8 — идёт медленнее» и ссылка на «Силу»</td></tr>
+          <tr><td>Перекур</td><td>заказ 3, первая встреча</td><td>полоса с подписью «перекур через 2:01»</td></tr>
+          <tr><td>Голод</td><td>заказ 5, первая встреча</td><td>«обед через 8 мин», а не «485»</td></tr>
+          <tr><td>Сон</td><td>первая длинная смена</td><td>«устанет через 39 мин», а не «2 362»</td></tr>
+          <tr><td>«За ходку»</td><td>убрать в «i»</td><td>пока пусто — не показывать прочерк</td></tr>
+        </tbody>
+      </table></div>
     </div>
   </div>
-  <div class="grid g3" style="margin-top:18px">
-    <div class="card"><h4>Диапазон, а не ложная точность</h4><p>Кубы в минуту зависят от этажа, погоды и ночи. Показывать «расчёт по текущей стройке» и диапазон «−1:00…−1:30».</p></div>
-    <div class="card"><h4>Подсказка узкого места</h4><p>Данные уже есть: «7 из 10 ходок ограничила ноша», «ходьба 41 % времени». Выносить одну главную подсказку прямо на кнопку «Улучшения».</p></div>
-    <div class="card"><h4>«Об уровне» — показать один раз</h4><p>Окно с таймингами отличное, но его не замечают: в плейтесте его нашли только на заказе 13. Подсветить «i» на заказе 3 с короткой фразой «Здесь видно, куда уходит время бригады».</p></div>
-  </div>
-</section>
-
-<section id="ui">
-  <h2><span class="num">07</span>Интерфейс: раскрывать по мере надобности</h2>
-  <p class="sub">Механизмы постепенного раскрытия в коде уже есть: граф «на шаг вперёд», ворота за жетоны, замки офиса, скрытая навигация. Но часть элементов видна с первой секунды без надобности, а часть нужной информации, наоборот, спрятана. Матрица показывает, что игрок видит на каждом этапе.</p>
-  <div class="mswitch" role="tablist"><button class="on" data-m="now">Сейчас</button><button data-m="new">Предлагается</button></div>
-  <div class="legend"><span><span class="cell c-early" style="display:inline-block;padding:0 8px">рано</span> видно, но ещё бесполезно</span><span><span class="cell c-intro" style="display:inline-block;padding:0 8px">★ ввод</span> открывается с объяснением</span><span><span class="cell c-ok" style="display:inline-block;padding:0 8px">нужно</span> видно и используется</span><span><span class="cell c-off" style="display:inline-block;padding:0 8px">—</span> скрыто</span></div>
-  <div class="scroll"><table class="matrix" id="matrix"></table></div>
-
-  <h3>Первая минута: HUD на заказе 1</h3>
-  <div class="phones">
-    <div><div class="phone"><div class="screen"><div class="bld"></div>
-      <div class="hud-top"><span class="pill"><span class="coin"></span> 40 · +12/мин</span><span class="pill noise"><span class="tok"></span> 2</span><span class="pill noise"><span class="clk"></span></span><span class="pill">☰</span></div>
-      <div class="bar">Ур. 1 · Маленький дом <span class="pill noise" style="float:right;padding:0 6px">i</span><div class="track"><div class="fill" style="width:12%"></div></div>0 / 64 куба</div>
-      <div class="bottom"><div class="btn-up">Улучшения</div><div class="btn-sq noise" style="outline:2px dashed var(--serious)">◉</div></div>
-    </div></div><p class="cap">Сейчас: жетоны, часы, «i» и глаз видны сразу, а что нажать — не сказано</p></div>
-    <div><div class="phone"><div class="screen"><div class="bld"></div>
-      <div class="hud-top"><span class="pill"><span class="coin"></span> 40 · +12/мин</span><span class="pill">☰</span></div>
-      <div class="bar">Ур. 1 · Маленький дом<div class="track"><div class="fill" style="width:12%"></div></div>0 / 64 куба</div>
-      <div class="coach"><b>Купите «План работ»</b>: рабочий будет планировать 2 куба за ходку вместо 1 — меньше пустых ходок.</div>
-      <div class="bottom"><div class="btn-up" style="box-shadow:0 0 0 4px rgba(255,176,32,.35)">Улучшения <span class="badge">1</span></div></div>
-    </div></div><p class="cap">Предлагается: монеты, прогресс и одно понятное действие с числом</p></div>
-  </div>
-
-  <h3>Первый вход в штаб</h3>
-  <div class="grid g2">
-    <div class="card"><h4>Сейчас</h4><p>15 плашек над кварталом: 1 доступная, 9 с замками, 5 «Скоро». В кошельке капитал, печати = 0, дипломы = 0. За заказ 1 игрок получил сразу капитал и «Жилой ресурс» — две новые валюты одновременно.</p></div>
-    <div class="card"><h4>Предлагается</h4><p>Офис ярко, 2 ближайших участка силуэтом с подписью «откроется после заказа 2/3», остальные скрыты в тумане. В кошельке только капитал. Редкий ресурс копится тихо и впервые показывается, когда открывается «Снабжение».</p></div>
-  </div>
+  <div class="callout"><b>Числа без единиц.</b> «485», «2:01», «2 362» в нижнем ряду — три разные шкалы без подписей (по балансу похоже на пункты голода, секунды до перекура и пункты усталости). Игроку проще одно время до события: «обед через 8 мин», «перекур через 2 мин», «устанет через 39 мин».</div>
 </section>
 
 <section id="currencies">
-  <h2><span class="num">08</span>Валюты: одна новая за раз</h2>
-  <p class="sub">Минута, когда игрок впервые видит валюту, сейчас и после правки. Правило: следующая валюта появляется, только когда на неё есть первая трата и понятен источник.</p>
+  <h2><span class="num">06</span>Валюты: одна новая за раз</h2>
+  <p class="sub">Минута, когда игрок впервые видит валюту, сейчас и после правки. Правило: валюта появляется вместе с первой тратой и понятным источником.</p>
   <div class="chart" id="ch-cur">
     <p class="chart-title">Первое появление валюты, минута игры</p>
-    <p class="chart-sub">Шкала логарифмическая: ранние минуты важнее.</p>
+    <p class="chart-sub">Шкала логарифмическая.</p>
     <div class="legend"><span><i style="background:var(--series-1);border-radius:50%"></i>Сейчас</span><span><i style="background:var(--series-2);border-radius:50%"></i>Предлагается</span></div>
     <div class="svgbox"></div>
     <details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-cur"></div></details>
   </div>
   <div class="grid g3" style="margin-top:14px">
-    <div class="card"><h4>Две валюты на одну покупку</h4><p>Каждая технология стоит капитал + печати: кухня 200 + 2, прожекторы 400 + 2, погрузчики 11 000 + 5. Показывать в техцентре, где взять недостающее: «Печать: 1 за контракт, следующий через 0:40».</p></div>
-    <div class="card"><h4>Скрывать нули</h4><p>В панелях нулевые валюты уже скрыты, а в кошельке штаба и в «Снабжении» — нет. Применить одно правило везде: валюта видна, только если &gt; 0 или нужна для цены на экране.</p></div>
-    <div class="card"><h4>Объяснить при первом получении</h4><p>Первая печать, первый диплом, первый жетон — короткая карточка «что это, откуда ещё взять, на что потратить» с кнопкой к ближайшей трате.</p></div>
+    <div class="card"><h4>Заказ 1 — одна валюта</h4><p>Капитал и «Жилой ресурс» приходят вместе. Редкий ресурс копить молча и показать, когда откроется «Снабжение».</p></div>
+    <div class="card"><h4>Нули не показывать</h4><p>В панелях это уже так. В кошельке штаба и в «Снабжении» — нет. Одно правило везде.</p></div>
+    <div class="card"><h4>Две валюты на одну технологию</h4><p>Кухня 200 + 2 печати, погрузчики 11 000 + 5. Рядом с ценой — где взять недостающее: «1 печать за контракт».</p></div>
   </div>
 </section>
 
-<section id="windows">
-  <h2><span class="num">09</span>Окна: что поменять в каждом</h2>
-  <p class="sub">Полный проход по окнам и панелям игры. Для каждого — что сейчас мешает и минимальная правка.</p>
-  <div class="scroll"><table>
-    <thead><tr><th>Окно</th><th>Сейчас</th><th>Предлагается</th><th>Когда</th></tr></thead>
-    <tbody>
-      <tr><td><b>HUD стройки</b></td><td>Жетоны, часы, «i», глаз видны на заказе 1</td><td>Жетоны — с первой траты (ворота графа); часы — с первой ночи; «i» — с заказа 3 с подсветкой; глаз — в меню ☰</td><td>заказы 1–10</td></tr>
-      <tr><td><b>Лист «Улучшения»</b></td><td>Граф с иконками, эффект в абсолютных величинах</td><td>Карточка «было → стало» в куб/мин и во времени до сдачи; подсказка узкого места на кнопке</td><td>всегда</td></tr>
-      <tr><td><b>Карточка рабочего</b></td><td>Потребности одной строкой</td><td>Добавить «бригада теряет N % на это» и ссылку на решение</td><td>с заказа 3</td></tr>
-      <tr><td><b>«Об уровне»</b></td><td>Отличные данные, но окно не замечают</td><td>Подсветить один раз на заказе 3; вынести главную цифру «куда ушло время» в итог заказа</td><td>заказ 3</td></tr>
-      <tr><td><b>Окно сдачи</b></td><td>Плитки наград, 2 новые валюты сразу на заказе 1</td><td>Одна валюта на заказе 1; строка «Прокачки стройки начнутся заново, штаб сохранится»; ближайшая цель («Офис: ещё 20 капитала»)</td><td>заказ 1</td></tr>
-      <tr><td><b>Брифинг</b></td><td>С заказа 4 — слоты, чипы, сетка карт, 3 кнопки; с 7 — ещё бустеры</td><td>«Характер» заказа одной строкой; «Автоподбор» по умолчанию; бустеры отдельным шагом только когда есть хотя бы 2</td><td>с заказа 2</td></tr>
-      <tr><td><b>Штаб-город</b></td><td>15 плашек, 9 с замками</td><td>Только доступное + 2 ближайших силуэта; остальное в тумане</td><td>после заказа 1</td></tr>
-      <tr><td><b>Кошелёк штаба</b></td><td>Печати и дипломы при нуле</td><td>Правило «только ненулевые или нужные для цены»</td><td>всегда</td></tr>
-      <tr><td><b>Главный офис</b></td><td>8 вкладок сразу, 4 пустые</td><td>Вкладка появляется с первой открытой линией; новая вкладка — с отметкой «новое»</td><td>заказы 1–10</td></tr>
-      <tr><td><b>Школа</b></td><td>3 вкладки, «Найм» заперт</td><td>Сначала только «Испытания»; первое испытание гарантированно проходимо и даёт нового бригадира</td><td>заказ 3</td></tr>
-      <tr><td><b>Техцентр</b></td><td>Цепочка: построить → капитал и печать → уровни за монеты</td><td>Рядом с технологией: «что лечит» и «сколько вы уже потеряли»; первое открытие бесплатно как обучение</td><td>заказ 4</td></tr>
-      <tr><td><b>Бригадиры</b></td><td>Все 24 карты, свои 1–2</td><td>Свои карты + 3 ближайшие «как получить»; полный каталог за кнопкой</td><td>с первой карты</td></tr>
-      <tr><td><b>Снабжение</b></td><td>15 бустеров и 4 редких ресурса с нулями</td><td>Показывать только открытые бустеры и ресурсы &gt; 0</td><td>заказ 7</td></tr>
-      <tr><td><b>Центр персонала</b></td><td>3 вкладки, 29 блюд</td><td>Сначала 2 блюда (гречка, борщ), остальные — по мере уровня кухни</td><td>заказ 11</td></tr>
-      <tr><td><b>Контракты</b></td><td>Открыты после заказа 2, награда в печатях не объяснена</td><td>Связать с целью: «ещё 1 печать — откроются вертикальные маршруты»</td><td>заказ 2</td></tr>
-      <tr><td><b>Меню ☰</b></td><td>«Звук» рядом с «Сбросить прогресс» и «Перемоткой на уровень»</td><td>Отладочные пункты — только в <code>?dev=1</code>; опасные — в отдельный блок</td><td>сразу</td></tr>
-      <tr><td><b>Ступор</b></td><td>«Нет достижимых кубов» только в контракте и школе</td><td>То же окно в сюжете + подсветка кубов + кнопка к прокачке</td><td>сразу</td></tr>
-    </tbody>
-  </table></div>
-</section>
-
-<section id="oom">
-  <h2><span class="num">10</span>Out of memory: откуда берётся</h2>
-  <p class="sub">Вкладка падает после нескольких часов. Проверили живым прогоном: 40 заказов подряд с заходом в штаб и окна, замер после каждого. Память JS почти не растёт (18 → 40 МБ). Течёт <b style="color:#fff">видеопамять</b>: текстуры создаются на каждой стройке и при входе в штаб, но не освобождаются.</p>
-  <div class="grid g4" style="margin-bottom:14px">
-    <div class="card stat"><div class="v">+13,5</div><div class="l">текстур в видеокарте на каждый заказ</div><div class="s">7 на старте → 549 после 40 заказов; ни одна не освобождается</div></div>
-    <div class="card stat"><div class="v">+18<span style="font-size:20px"> МБ</span></div><div class="l">памяти браузера на каждый заказ</div><div class="s">653 → 1 382 МБ за 40 заказов</div></div>
-    <div class="card stat"><div class="v">0</div><div class="l">рост, если стоять на одной стройке</div><div class="s">7,5 мин без переходов — текстуры 37 → 37</div></div>
-    <div class="card stat"><div class="v">≈2,5<span style="font-size:20px"> ГБ</span></div><div class="l">к пятому часу по этой скорости</div><div class="s">≈100 переходов стройка ↔ штаб; на ноутбуке это вылет вкладки</div></div>
-  </div>
-  <div class="grid g2" style="margin-bottom:14px">
-    <div class="chart" id="ch-mem"><p class="chart-title">Память браузера, МБ</p><p class="chart-sub">Рендерер + видеопроцесс + браузер, после каждого заказа. Прогон в headless Chrome на ПК.</p><div class="svgbox"></div><details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-mem"></div></details></div>
-    <div class="chart" id="ch-tex"><p class="chart-title">Текстуры в видеокарте, шт</p><p class="chart-sub"><code>renderer.info.memory.textures</code> после каждого заказа. Должно быть плато.</p><div class="svgbox"></div><details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-tex"></div></details></div>
-  </div>
-  <div class="grid g2">
-    <div class="card"><h4>Причина 1: текстуры не освобождаются при смене стройки</h4><p><code>disposeLevel()</code> вызывает <code>dispose()</code> для геометрии и материалов, но не для <code>material.map</code>. А CanvasTexture создаются на каждой стройке: таблички, площадки техники, полосы, руны. Каждая смена заказа оставляет текстуры в памяти видеокарты и вкладки.</p></div>
-    <div class="card"><h4>Двор техники пересобирается без освобождения</h4><p><code>openYard()</code> и <code>clearYardRig()</code> снимают меши через <code>group.remove()</code> и создают новые геометрии и материалы, старые не освобождаются. Растёт с каждым событием перестройки двора.</p></div>
-    <div class="card"><h4>Пики при офлайн-догонке и сохранении</h4><p>Догонка после отсутствия симулирует большой отрезок разом, а сохранение сериализует весь стейт в одну строку. Это не утечка, а пики — но на слабой машине поверх утечки они и добивают вкладку.</p></div>
-    <div class="card"><h4>Минимальная правка</h4><p>Одна функция <code>disposeObject()</code>: геометрия + все текстуры материала + материал, с пропуском общих кэшированных ресурсов. Вызывать её в <code>disposeLevel</code>, <code>openYard</code> и <code>clearYardRig</code>. В <code>?dev=1</code> выводить <code>renderer.info.memory</code>, чтобы рост был виден сразу.</p></div>
+<section id="ui">
+  <h2><span class="num">07</span>Интерфейс по этапам</h2>
+  <p class="sub">Механизмы постепенного раскрытия в коде уже есть: граф «на шаг вперёд», замки офиса, скрытая навигация, правило «только ненулевые». Матрица — что видит игрок на каждом этапе сейчас и что предлагается.</p>
+  <div class="mswitch" role="tablist"><button class="on" data-m="now">Сейчас</button><button data-m="new">Предлагается</button></div>
+  <div class="legend"><span><span class="cell c-early" style="display:inline-block;padding:0 8px">рано</span> видно, но ещё бесполезно</span><span><span class="cell c-intro" style="display:inline-block;padding:0 8px">★ ввод</span> открывается с объяснением</span><span><span class="cell c-ok" style="display:inline-block;padding:0 8px">нужно</span> видно и используется</span><span><span class="cell c-off" style="display:inline-block;padding:0 8px">—</span> скрыто</span></div>
+  <div class="scroll"><table class="matrix" id="matrix"></table></div>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card"><h4>«Об уровне» — показать один раз</h4><p>Там лучшие числа игры: куда уходит время бригады. В плейтесте 20.10 его нашли только на заказе 13. Подсветить «i» на заказе 3 и вынести одну главную цифру в итог заказа.</p></div>
+    <div class="card"><h4>Покупка — «было → стало»</h4><p>Вместо «уровень 3 → 4» — прирост в единицах стройки и время до сдачи, диапазоном. Пример: «Скорость стройки» 3 → 4 по формуле баланса даёт +14 %.</p></div>
   </div>
 </section>
 
-<section id="plan">
-  <h2><span class="num">11</span>План: что делать и в каком порядке</h2>
-  <p class="sub">Сначала то, что ломает игру и первые 15 минут. Затем подача проблем и числа. В конце — перестройка расписания открытий с проверкой метасимулятором.</p>
+<section id="core">
+  <h2><span class="num">08</span>Кор-луп: длина заказа против числа решений</h2>
+  <p class="sub">Модельная длительность заказа и открытие зданий штаба. На заказах 8–42 длина растёт, а новых решений внутри заказа почти не прибавляется.</p>
+  <div class="chart" id="ch-orders">
+    <p class="chart-title">Длительность заказа, минут (модель)</p>
+    <p class="chart-sub">Подписи сверху — открытие зданий штаба. Заштрихованная зона — риск «пустого» ожидания.</p>
+    <div class="legend"><span><i class="line" style="background:var(--series-1)"></i>Длительность заказа</span><span><i style="background:rgba(236,131,90,.18);border:1px solid rgba(236,131,90,.5)"></i>Риск «пустого» ожидания</span></div>
+    <div class="svgbox"></div>
+    <details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-orders"></div></details>
+  </div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card"><h4>«Повторить стартовые покупки»</h4><p>Сброс прокачек заставляет каждый раз проходить одни и те же первые покупки. Одна кнопка за реально имеющиеся монеты.</p></div>
+    <div class="card"><h4>Характер заказа в брифинге</h4><p>«Высокий — нужна вертикаль», «тяжёлый — нужна сила». Выбор покупок и бригадира перестаёт быть одинаковым.</p></div>
+    <div class="card"><h4>2–3 разных бригадира к заказу 5–6</h4><p>До победы в школе из сундуков падают копии стартового. Выбор состава должен появиться до длинных заказов.</p></div>
+  </div>
+</section>
+
+<section id="next">
+  <h2><span class="num">09</span>Как этим пользоваться</h2>
   <div class="grid g3">
-    <div class="card phase"><div class="when">Этап 1 · 2–3 дня</div><h4>Стабильность и первые 15 минут</h4>
-      <ul class="clean">
-        <li><b>OOM:</b> освобождение текстур и двора, счётчик памяти в dev</li>
-        <li><b>HUD заказа 1:</b> скрыть жетоны, часы, «i», глаз</li>
-        <li><b>Первое действие:</b> подсказка «Купите План работ» с числом</li>
-        <li><b>Окно сдачи:</b> одна валюта, строка про сброс прокачек, ближайшая цель</li>
-        <li><b>Кошельки:</b> правило «только ненулевые» везде</li>
-        <li><b>Меню:</b> отладочное — под <code>?dev=1</code></li>
-      </ul></div>
-    <div class="card phase"><div class="when">Этап 2 · 4–6 дней</div><h4>Проблемы и числа</h4>
-      <ul class="clean">
-        <li><b>Событие первой встречи</b> для перекуров, голода, сна, ночи, износа, ступора</li>
-        <li><b>Счётчик потерь</b> по причинам на HUD и в итоге заказа</li>
-        <li><b>Карточка «было → стало»</b> для каждой сессионной покупки</li>
-        <li><b>Предупреждение лесов</b> на 50 % и при поломке</li>
-        <li><b>Техцентр:</b> «что лечит» и «сколько потеряли»</li>
-        <li><b>«Об уровне»:</b> подсветка на заказе 3</li>
-      </ul></div>
-    <div class="card phase"><div class="when">Этап 3 · 1–2 недели</div><h4>Ритм открытий</h4>
-      <ul class="clean">
-        <li><b>Выровнять плотность</b> до 6–8 в час, разбить пачку на заказах 19–20</li>
-        <li><b>Зазор проблема → решение</b> ≤ 60 минут (кухня и «Реже перекуры» к ~100–130-й минуте)</li>
-        <li><b>2–3 разных бригадира</b> к заказу 5–6</li>
-        <li><b>Скрывать дольше:</b> продвинутые узлы, блюда, бустеры, реактор</li>
-        <li><b>Хвост 44–57:</b> события и контракты</li>
-        <li>Проверка метасимулятором и плейтестом</li>
-      </ul></div>
+    <div class="card"><h4>Как дополнение к GDD</h4><p>Каждое из пяти решений — отдельный пункт в <code>docs/gdd</code>: что меняется в <code>balance.json</code> (порядок открытий, пороги в <code>tuning.intro</code>) и в каком окне. Отбирать по пунктам.</p></div>
+    <div class="card"><h4>Проверка на текущей сборке</h4><p>Разбор сделан по <code>main 1e17be1</code>. Нужен пуш локальной сборки с новыми рабочими — тогда пересчитать кривую новизны и проблемы стройки на ней.</p></div>
+    <div class="card"><h4>Графика — в конце</h4><p>Только там, где подчёркивает механику: износ лесов, перегруз, ночь, голод. Свистелки — полировкой после ручного полиша UX, геймдизайна и таймингов.</p></div>
   </div>
 </section>
 
-<section id="metrics">
-  <h2><span class="num">12</span>Как понять, что стало лучше</h2>
-  <p class="sub">Цели, которые можно проверить в следующем плейтесте и метасимуляторе. Для живых игроков — несколько событий в лог.</p>
-  <div class="grid g2">
-    <div class="card">
-      <div class="kpi"><span class="k">Первая осмысленная покупка</span><span class="t">≤ 90 с</span></div>
-      <div class="kpi"><span class="k">Интервал между решениями на заказах 1–10</span><span class="t">≤ 3 мин</span></div>
-      <div class="kpi"><span class="k">То же на длинных заказах</span><span class="t">≤ 5 мин</span></div>
-      <div class="kpi"><span class="k">Новых сущностей в час после 2-го часа</span><span class="t">6–8</span></div>
-      <div class="kpi"><span class="k">Зазор «проблема → первое решение»</span><span class="t">≤ 60 мин</span></div>
-      <div class="kpi"><span class="k">Новых валют за первый час</span><span class="t">≤ 3</span></div>
-      <div class="kpi"><span class="k">Память вкладки после 50 циклов стройка ↔ штаб</span><span class="t">плато</span></div>
+<section id="appx">
+  <h2><span class="num">A</span>Приложения</h2>
+  <details class="more">
+    <summary>Попутно: техническая утечка текстур (не связана с фидбеком)</summary>
+    <p class="sub" style="margin-top:12px">Пока искали «out of memory» буквально, прогнали 40 заказов подряд в headless Chrome на ПК. Память JS почти не растёт (18 → 40 МБ), а текстуры в видеокарте копятся: при смене стройки освобождаются геометрия и материалы, но не их текстуры. Стоя на одной стройке 7,5 минуты, роста нет.</p>
+    <div class="grid g2">
+      <div class="chart" id="ch-mem"><p class="chart-title">Память браузера, МБ</p><p class="chart-sub">Рендерер + видеопроцесс + браузер после каждого заказа.</p><div class="svgbox"></div><details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-mem"></div></details></div>
+      <div class="chart" id="ch-tex"><p class="chart-title">Текстуры в видеокарте, шт</p><p class="chart-sub"><code>renderer.info.memory.textures</code>; должно быть плато.</p><div class="svgbox"></div><details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-tex"></div></details></div>
     </div>
-    <div class="card">
-      <h4>События для лога плейтеста</h4>
-      <ul class="clean">
-        <li><b>upgrade_available / upgrade_bought</b> — время между ними и между покупками</li>
-        <li><b>idle_gap</b> — интервалы без доступного решения &gt; 3 и &gt; 5 мин</li>
-        <li><b>problem_first_seen / problem_solution_bought</b> — по каждой проблеме</li>
-        <li><b>info_opened</b> — открыл ли «Об уровне» без подсказки и изменил ли покупку после</li>
-        <li><b>currency_first_seen / currency_first_spent</b></li>
-        <li><b>crew_changed</b> — смена состава бригадиров</li>
-        <li><b>heap_mb, gpu_textures</b> — раз в минуту в dev</li>
-      </ul>
-      <p style="margin-top:10px">Сравнить стратегии «рабочие», «скорость», «доход» и смешанную на заказах 8–10 обычным темпом, без ускорения.</p>
-    </div>
-  </div>
+    <p class="sub" style="margin-top:12px">Правка: в <code>disposeLevel</code>, <code>openYard</code> и <code>clearYardRig</code> освобождать и текстуры материала, пропуская общие кэшированные. +13,5 текстуры и ~18 МБ на заказ.</p>
+  </details>
+  <details class="more">
+    <summary>Окна: что поменять в каждом (17 окон)</summary>
+    <div class="scroll" style="margin-top:12px"><table>
+      <thead><tr><th>Окно</th><th>Сейчас</th><th>Предлагается</th></tr></thead>
+      <tbody>
+        <tr><td><b>HUD стройки</b></td><td>Жетоны, часы, «i», глаз видны на заказе 1</td><td>Жетоны — с первой траты; часы — с первой ночи; «i» — с подсветкой на заказе 3</td></tr>
+        <tr><td><b>Лист «Улучшения»</b></td><td>Эффект в абсолютных величинах</td><td>«Было → стало» в единицах стройки и времени до сдачи</td></tr>
+        <tr><td><b>Карточка рабочего</b></td><td>Упрощена для ранних уровней</td><td>Слои по механикам — раздел 05</td></tr>
+        <tr><td><b>«Об уровне»</b></td><td>Не замечают</td><td>Подсветка на заказе 3, главная цифра — в итоге заказа</td></tr>
+        <tr><td><b>Окно сдачи</b></td><td>2 новые валюты на заказе 1</td><td>Одна валюта; строка «прокачки стройки начнутся заново, штаб сохранится»; ближайшая цель</td></tr>
+        <tr><td><b>Брифинг</b></td><td>С заказа 4 слоты, сетка карт, 3 кнопки, с 7 — бустеры</td><td>Характер заказа строкой; автоподбор по умолчанию; бустеры — когда их хотя бы 2</td></tr>
+        <tr><td><b>Штаб-город</b></td><td>15 плашек</td><td>Доступное + 2 ближайших силуэта</td></tr>
+        <tr><td><b>Кошелёк штаба</b></td><td>Нули</td><td>Только ненулевые или нужные для цены</td></tr>
+        <tr><td><b>Главный офис</b></td><td>8 вкладок, 4 пустые</td><td>Вкладка — с первой открытой линией</td></tr>
+        <tr><td><b>Школа</b></td><td>3 вкладки</td><td>Сначала «Испытания», первое гарантированно проходимо</td></tr>
+        <tr><td><b>Техцентр</b></td><td>Построить → капитал и печать → уровни</td><td>«Что лечит» и «сколько уже потеряли» рядом с технологией</td></tr>
+        <tr><td><b>Бригадиры</b></td><td>24 карты при 1–2 своих</td><td>Свои + 3 ближайшие «как получить»</td></tr>
+        <tr><td><b>Снабжение</b></td><td>15 бустеров, 4 ресурса с нулями</td><td>Только открытое и ненулевое</td></tr>
+        <tr><td><b>Центр персонала</b></td><td>29 блюд</td><td>Сначала 2, остальные по уровню кухни</td></tr>
+        <tr><td><b>Контракты</b></td><td>Награда в печатях не объяснена</td><td>«Ещё 1 печать — откроются вертикальные маршруты»</td></tr>
+        <tr><td><b>Меню ☰</b></td><td>Звук рядом со сбросом и перемоткой</td><td>Отладочное — под <code>?dev=1</code></td></tr>
+        <tr><td><b>Ступор</b></td><td>Объяснение только в контракте и школе</td><td>То же окно в сюжете + подсветка кубов</td></tr>
+      </tbody>
+    </table></div>
+  </details>
 </section>
 </main>
 
 <footer><div class="wrap">
-  MicroBuilders · разбор FTUE и ETM · MULTICAST GAMES · 1 ноября 2026.<br>
-  Числа: <code>balance.json</code>, <code>logic.js</code>, <code>meta.js</code>, <code>game.js</code> (main 1e17be1), отчёт производительности уровней от 20.10, плейтест заказов 1–20, живой плейтест 31.10. Минуты меты — номинальный профиль 60 активных минут в сутки; живой темп игрока отличается, поэтому все цели нужно сверить плейтестом.
+  MicroBuilders · FTUE и ETM · v2 · MULTICAST GAMES · 1 ноября 2026.<br>
+  Источники: фидбек Антона и его скриншоты карточки рабочего (1.11), <code>balance.json</code>, <code>logic.js</code>, <code>meta.js</code>, <code>game.js</code> (main 1e17be1), отчёт производительности уровней (20.10), плейтест заказов 1–20 (20.10). Минуты меты и длительности заказов — модель метасимулятора, их нужно сверить на текущей сборке.
 </div></footer>
 
 <script>
@@ -610,6 +541,7 @@ const stages = ['Заказ 1', 'Заказы 2–3', '4–6', '7–10', '11–1
 // e = early, o = ok, - = off, i = intro
 const rows = [
   ['Монеты и прогресс', 'oooooo', 'oooooo'],
+  ['Полная карточка рабочего', 'eeeeoo', 'iiiioo'],
   ['Пилюля жетонов (HUD)', 'eeeeoo', '---ioo'],
   ['Часы дня (HUD)', 'eeeeoo', '---ioo'],
   ['Кнопка «i» — Об уровне', 'eooooo', '-ioooo'],
@@ -660,7 +592,32 @@ window.drawOom = function(){ line1('ch-mem', memTot, 1500, [0,500,1000,1500], '�
 table('tb-mem', ['Заказов', 'МБ'], memTot.map((v, i) => [i, v]));
 table('tb-tex', ['Заказов', 'Текстур'], memTex.map((v, i) => [i, v]));
 
-function drawAll(){ drawCurve(); drawOrders(); drawGantt(); drawCur(); if (window.drawOom) window.drawOom(); }
+
+const cumNow = now.reduce((a, v) => (a.push((a.length ? a[a.length - 1] : 0) + v), a), []);
+const cumNext = next.reduce((a, v) => (a.push((a.length ? a[a.length - 1] : 0) + v), a), []);
+function drawLoad(){
+  const b = box('ch-load'); if (!b) return; b.innerHTML = '';
+  const W = width(b), H = 280, m = {l: 40, r: 12, t: 12, b: 34};
+  const svg = el('svg', {width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Накоплено нового к концу часа'}, b);
+  const iw = W - m.l - m.r, ih = H - m.t - m.b, n = hours.length, max = 140;
+  const x = i => m.l + i / (n - 1) * iw, y = v => m.t + ih - v / max * ih;
+  [0,35,70,105,140].forEach(v => { el('line', {x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: C('--line')}, svg); txt(svg, m.l - 6, y(v) + 4, v, {'text-anchor': 'end'}); });
+  hours.forEach(h => txt(svg, x(h), H - m.b + 16, h + 1, {'text-anchor': 'middle'}));
+  txt(svg, m.l + iw / 2, H - 2, 'конец часа игры', {'text-anchor': 'middle'});
+  [[cumNow, C('--series-1')], [cumNext, C('--series-2')]].forEach(([d, c]) => el('path', {d: d.map((v, k) => (k ? 'L' : 'M') + x(k) + ',' + y(v)).join(''), fill: 'none', stroke: c, 'stroke-width': 2, 'stroke-linejoin': 'round'}, svg));
+  const cross = el('line', {y1: m.t, y2: m.t + ih, stroke: '#888', opacity: 0}, svg);
+  const d1 = el('circle', {r: 5, fill: C('--series-1'), stroke: C('--surface-1'), 'stroke-width': 2, opacity: 0}, svg);
+  const d2 = el('circle', {r: 5, fill: C('--series-2'), stroke: C('--surface-1'), 'stroke-width': 2, opacity: 0}, svg);
+  const hit = el('rect', {x: m.l, y: m.t, width: iw, height: ih, fill: 'transparent'}, svg);
+  hit.addEventListener('mousemove', ev => { const r = svg.getBoundingClientRect(); const i = Math.max(0, Math.min(n - 1, Math.round((ev.clientX - r.left - m.l) / iw * (n - 1))));
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('opacity', 1);
+    d1.setAttribute('cx', x(i)); d1.setAttribute('cy', y(cumNow[i])); d1.setAttribute('opacity', 1); d2.setAttribute('cx', x(i)); d2.setAttribute('cy', y(cumNext[i])); d2.setAttribute('opacity', 1);
+    showTip(`<b>Конец часа ${i + 1}</b><div class="row"><span><span class="sw" style="background:${C('--series-1')}"></span>Сейчас</span><b>${cumNow[i]}</b></div><div class="row"><span><span class="sw" style="background:${C('--series-2')}"></span>Предлагается</span><b>${cumNext[i]}</b></div>`, ev); });
+  hit.addEventListener('mouseleave', () => { hideTip(); cross.setAttribute('opacity', 0); d1.setAttribute('opacity', 0); d2.setAttribute('opacity', 0); });
+}
+table('tb-load', ['Конец часа', 'Сейчас', 'Предлагается'], hours.map(h => [h + 1, cumNow[h], cumNext[h]]));
+
+function drawAll(){ drawLoad(); drawCurve(); drawOrders(); drawGantt(); drawCur(); if (window.drawOom) window.drawOom(); }
 drawAll();
 let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(drawAll, 120); });
 window.__mb = {el, txt, C, showTip, hideTip, table, width};
