@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MicroBuilders — разбор FTUE и ETM: сначала пусто, потом густо</title>
+<meta name="description" content="Разбор окон и геймплея MicroBuilders по 5-часовому плейтесту: что переделать в онбординге, раскрытии меты, проблемах стройки и интерфейсе.">
+<style>
+:root{
+  color-scheme: dark;
+  --bg:#121211; --surface-1:#1a1a19; --surface-2:#232321; --line:#34342f;
+  --text-primary:#ffffff; --text-secondary:#c3c2b7; --text-muted:#8d8c84;
+  --accent:#ffb020; --accent-ink:#1a1405;
+  --series-1:#3987e5; --series-2:#d95926; --series-3:#199e70;
+  --good:#0ca30c; --warning:#fab219; --serious:#ec835a; --critical:#d03b3b;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text-primary);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header.hero{padding:56px 0 28px;border-bottom:1px solid var(--line);
+  background:repeating-linear-gradient(-45deg,transparent 0 22px,rgba(255,176,32,.05) 22px 44px)}
+.kicker{display:inline-block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);background:var(--accent);padding:4px 10px;border-radius:6px;font-weight:700}
+h1{font-size:clamp(30px,5vw,52px);line-height:1.08;margin:16px 0 12px;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{font-size:clamp(17px,2vw,20px);color:var(--text-secondary);max-width:820px;margin:0}
+.meta-line{margin-top:14px;font-size:13px;color:var(--text-muted)}
+nav.toc{position:sticky;top:0;z-index:20;background:rgba(18,18,17,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:8px;padding-bottom:8px;scrollbar-width:none}
+nav.toc a{white-space:nowrap;color:var(--text-secondary);text-decoration:none;font-size:13px;padding:6px 10px;border-radius:8px}
+nav.toc a:hover{background:var(--surface-2);color:var(--text-primary)}
+section{padding:52px 0;border-bottom:1px solid var(--line)}
+h2{font-size:clamp(24px,3.2vw,34px);margin:0 0 6px;line-height:1.15}
+h2 .num{color:var(--accent);margin-right:10px}
+h3{font-size:19px;margin:28px 0 8px}
+.sub{color:var(--text-secondary);max-width:860px;margin:0 0 22px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--surface-1);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.card h4{margin:0 0 6px;font-size:16px}
+.card p{margin:0;color:var(--text-secondary);font-size:15px}
+.stat .v{font-size:40px;font-weight:800;line-height:1;letter-spacing:-.02em}
+.stat .l{margin-top:8px;color:var(--text-secondary);font-size:14px}
+.stat .s{margin-top:6px;color:var(--text-muted);font-size:12px}
+.quote{border-left:4px solid var(--accent);padding:4px 0 4px 14px;font-size:17px;color:var(--text-primary);margin:0 0 10px}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--text-secondary);border:1px solid var(--line);margin:2px 4px 2px 0}
+.chart{background:var(--surface-1);border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 10px;position:relative}
+.chart-title{font-weight:700;margin:0 0 2px}
+.chart-sub{color:var(--text-muted);font-size:13px;margin:0 0 10px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--text-secondary);margin:4px 0 8px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend i.line{height:3px;border-radius:2px;vertical-align:3px;width:18px}
+svg text{font-family:inherit}
+.tip{position:fixed;pointer-events:none;z-index:50;background:#2b2b28;border:1px solid #4a4a44;color:#fff;border-radius:10px;padding:8px 10px;font-size:13px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.45);max-width:280px;opacity:0;transition:opacity .08s}
+.tip b{font-weight:700}
+.tip .row{display:flex;justify-content:space-between;gap:12px}
+.tip .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+details.tbl{margin-top:8px}
+details.tbl summary{cursor:pointer;color:var(--text-muted);font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+td.n{text-align:right;font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto}
+.callout{background:linear-gradient(90deg,rgba(255,176,32,.12),rgba(255,176,32,0));border:1px solid rgba(255,176,32,.35);border-radius:var(--radius);padding:14px 16px;margin:18px 0;color:var(--text-primary)}
+.callout b{color:var(--accent)}
+/* status chips */
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--text-primary);white-space:nowrap}
+.st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.st.good{color:#4fd04f}.st.warn{color:var(--warning)}.st.bad{color:var(--serious)}.st.crit{color:#ff6b6b}
+.st span{color:var(--text-primary)}
+/* phone mockups */
+.phones{display:flex;gap:22px;flex-wrap:wrap;justify-content:center}
+.phones>div{width:280px}
+.coin{display:inline-block;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ffe08a,#e2a100);box-shadow:inset 0 0 0 1px #9a6a00;vertical-align:-1px}
+.tok{display:inline-block;width:10px;height:10px;transform:rotate(45deg);background:#7fb6ff;border-radius:2px;vertical-align:0}
+.clk{display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid #fff;vertical-align:-1px}
+.phone{width:280px;border-radius:30px;background:#0b0b0a;border:2px solid #3a3a35;padding:12px;position:relative}
+.phone .cap{text-align:center;font-size:13px;color:var(--text-secondary);margin:10px 0 0}
+.screen{height:500px;border-radius:20px;overflow:hidden;position:relative;
+  background:linear-gradient(180deg,#9cc4e6 0%,#cfe2ee 38%,#9a8463 38.2%,#8d7759 100%)}
+.screen .bld{position:absolute;left:50%;bottom:150px;transform:translateX(-50%);width:110px;height:90px;
+  background:repeating-linear-gradient(0deg,#b7b0a3 0 16px,#a39b8d 16px 18px);border-radius:3px;box-shadow:0 8px 0 rgba(0,0,0,.15)}
+.screen .bld::after{content:"";position:absolute;left:-10px;right:-10px;top:-34px;height:34px;background:rgba(255,255,255,.25);border:2px dashed rgba(255,255,255,.7);border-radius:4px}
+.hud-top{position:absolute;top:8px;left:8px;right:8px;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.pill{background:rgba(20,20,18,.82);color:#fff;font-size:11px;padding:4px 7px;border-radius:999px;display:inline-flex;gap:4px;align-items:center;border:1px solid rgba(255,255,255,.12)}
+.pill.noise{outline:2px dashed var(--serious);outline-offset:1px}
+.pill.new{outline:2px solid var(--good);outline-offset:1px}
+.bar{position:absolute;top:44px;left:8px;right:8px;background:rgba(20,20,18,.82);border-radius:10px;padding:6px 8px;color:#fff;font-size:11px}
+.bar .track{height:7px;border-radius:4px;background:#3a3a35;margin-top:4px;overflow:hidden}
+.bar .fill{height:100%;width:38%;background:var(--accent)}
+.bottom{position:absolute;left:8px;right:8px;bottom:8px;display:flex;gap:6px;align-items:flex-end}
+.btn-up{flex:1;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:13px;text-align:center;padding:10px 6px;border-radius:12px;position:relative}
+.btn-up .badge{position:absolute;top:-7px;right:-5px;background:var(--critical);color:#fff;border-radius:999px;font-size:10px;padding:1px 6px}
+.btn-sq{width:38px;height:38px;border-radius:12px;background:rgba(20,20,18,.82);color:#fff;display:grid;place-items:center;font-size:14px;border:1px solid rgba(255,255,255,.12)}
+.coach{position:absolute;left:12px;right:12px;bottom:66px;background:#fffbe9;color:#2a2205;border-radius:12px;padding:9px 10px;font-size:12px;line-height:1.35;box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.coach::after{content:"";position:absolute;bottom:-7px;left:46%;border:7px solid transparent;border-top-color:#fffbe9;border-bottom:0}
+.coach b{color:#b55d00}
+.toast{position:absolute;left:10px;right:10px;top:96px;background:rgba(20,20,18,.92);color:#fff;border-radius:12px;padding:9px 10px;font-size:12px;border-left:4px solid var(--warning)}
+.toast .t{font-weight:700;margin-bottom:2px}
+.toast .go{display:inline-block;margin-top:6px;background:var(--accent);color:var(--accent-ink);font-weight:700;border-radius:8px;padding:3px 8px}
+.losses{position:absolute;left:10px;right:10px;bottom:60px;background:rgba(20,20,18,.9);border-radius:12px;padding:8px 10px;color:#fff;font-size:11px}
+.losses .stack{display:flex;height:9px;border-radius:5px;overflow:hidden;margin:5px 0 4px;gap:2px}
+/* upgrade cards */
+.upg{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:14px;max-width:420px}
+.upg .hd{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.upg .nm{font-weight:800}
+.upg .pr{background:var(--accent);color:var(--accent-ink);font-weight:800;border-radius:10px;padding:5px 10px;font-size:14px}
+.upg .lv{color:var(--text-muted);font-size:13px;margin-top:2px}
+.upg .delta{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin-top:12px;background:#1b1b19;border-radius:10px;padding:10px}
+.upg .delta .a{color:var(--text-secondary);font-size:13px}
+.upg .delta .b{color:#fff;font-weight:800;font-size:18px}
+.upg .delta .arr{color:var(--accent);font-weight:800}
+.upg .why{margin-top:10px;font-size:13px;color:var(--text-secondary)}
+.upg .why b{color:#fff}
+.upg.old .delta{display:none}
+/* matrix */
+.matrix td,.matrix th{text-align:center;padding:6px 4px;font-size:12px}
+.matrix td:first-child,.matrix th:first-child{text-align:left;font-size:13px;padding-left:8px;min-width:200px}
+.cell{display:block;border-radius:6px;padding:6px 2px;font-weight:700;font-size:11px;border:1px solid transparent}
+.c-early{background:rgba(236,131,90,.22);color:#ffb391;border-color:rgba(236,131,90,.5)}
+.c-ok{background:rgba(12,163,12,.18);color:#7fe07f;border-color:rgba(12,163,12,.45)}
+.c-off{background:#20201e;color:#6f6e68;border-color:#2c2c29}
+.c-intro{background:rgba(57,135,229,.22);color:#9cc6ff;border-color:rgba(57,135,229,.55)}
+.mswitch{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px;margin:0 0 12px}
+.mswitch button{background:none;border:0;color:var(--text-secondary);font:inherit;font-size:14px;padding:6px 12px;border-radius:8px;cursor:pointer}
+.mswitch button.on{background:var(--accent);color:var(--accent-ink);font-weight:700}
+/* phases */
+.phase{border-left:4px solid var(--accent);padding-left:14px}
+.phase .when{color:var(--accent);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+ul.clean{margin:8px 0 0;padding-left:18px;color:var(--text-secondary)}
+ul.clean li{margin:4px 0}
+ul.clean li b{color:var(--text-primary)}
+.kpi{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.kpi:last-child{border-bottom:0}
+.kpi .k{color:var(--text-secondary)}
+.kpi .t{font-weight:800;white-space:nowrap}
+footer{padding:36px 0 60px;color:var(--text-muted);font-size:13px}
+code{background:var(--surface-2);border:1px solid var(--line);padding:1px 5px;border-radius:5px;font-size:.9em}
+@media (max-width:640px){.g2{grid-template-columns:1fr}.stat .v{font-size:32px}.phone{width:100%;max-width:300px}}
+</style>
+</head>
+<body>
+<div class="tip" id="tip"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">MicroBuilders · разбор FTUE и ETM</span>
+    <h1>Сначала пусто, потом густо.<br><em>Выравниваем кривую</em> — от первой минуты до меты</h1>
+    <p class="lead">Разбор всех окон и геймплея по 5-часовому плейтесту: где кор кажется однообразным, где мета обрушивается разом, как обыграть каждую проблему стройки и подавать интерфейс по мере надобности, а не вывалить всё с первой секунды.</p>
+    <p class="meta-line">Сборка игры: <code>main 1e17be1</code> от 29.10.2026 · источники: код, GDD (31 документ), плейтест заказов 1–20 от 20.10, живой плейтест 31.10 · подготовлено 1 ноября 2026</p>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#feedback">Фидбек</a><a href="#numbers">Цифры</a><a href="#curve">Кривая новизны</a><a href="#core">Кор-луп</a><a href="#problems">Проблемы стройки</a><a href="#numbers-onboard">Онбординг числами</a><a href="#ui">Интерфейс</a><a href="#currencies">Валюты</a><a href="#windows">Окна</a><a href="#oom">Out of memory</a><a href="#plan">План</a><a href="#metrics">Как проверить</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="feedback">
+  <h2><span class="num">01</span>Что показал плейтест</h2>
+  <p class="sub">Пять часов игры вдвоём. Ниже — четыре наблюдения из фидбека и что за каждым стоит в коде и балансе.</p>
+  <div class="grid g2">
+    <div class="card"><p class="quote">«Сначала кор не очень — однообразно»</p><p>Первые заказы — это «купить доступное → подождать → купить то же». После каждого заказа сессионные прокачки сбрасываются, порядок решений повторяется. Время заказа растёт быстрее, чем число новых решений: <b style="color:#fff">4 мин на 1-м → 24–30 мин на 10-м</b>.</p></div>
+    <div class="card"><p class="quote">«Потом мета начала раскрываться»</p><p>Штаб, школа, бригадиры и контракты — это то, что вытягивает игру. Но первый настоящий выбор состава появляется только около заказа 10, а самые интересные решения (ускорение начала против постоянной кладки) — ещё позже.</p></div>
+    <div class="card"><p class="quote">«Сначала пусто, потом густо»</p><p>Плотность новизны неровная: <b style="color:#fff">4 открытия в 3-м часу</b> и <b style="color:#fff">17 — в 5-м</b>, затем 180 минут вообще без нового и сразу <b style="color:#fff">21 за час</b>. В пике у игрока одновременно 10 ресурсов.</p></div>
+    <div class="card"><p class="quote">«Out of memory в оперативке»</p><p>Вкладка падает после нескольких часов, когда открыто много зданий штаба, площадок и бригадиров. При смене стройки освобождается геометрия, но не текстуры, а двор техники пересобирается без освобождения ресурсов. Подробно — в разделе <a href="#oom">Out of memory</a>.</p></div>
+  </div>
+  <div class="callout"><b>Главная мысль.</b> Проблема не в том, что механик мало: их много, и они хорошие. Проблема в <b>подаче</b> — когда и как игрок с ними встречается. Почти всё, что нужно, в коде уже есть; предлагаемые правки в основном про порядок, числа и тексты.</div>
+</section>
+
+<section id="numbers">
+  <h2><span class="num">02</span>Масштаб игры в цифрах</h2>
+  <p class="sub">Что игроку предстоит понять за первые часы. Каждая цифра взята из кода и <code>balance.json</code>.</p>
+  <div class="grid g4">
+    <div class="card stat"><div class="v">73</div><div class="l">линии прокачки внутри одной стройки</div><div class="s">граф «Улучшения»: 72 узла и 13 ворот за жетоны</div></div>
+    <div class="card stat"><div class="v">85</div><div class="l">технологий в техцентре</div><div class="s">59 для стройки, 13 для городка, 12 продвинутых, 1 реактор</div></div>
+    <div class="card stat"><div class="v">46</div><div class="l">линий в главном офисе</div><div class="s">8 вкладок видны сразу, 4 из них пусты первые 8–10 заказов</div></div>
+    <div class="card stat"><div class="v">≈177</div><div class="l">новых сущностей за 30 часов меты</div><div class="s">здания, технологии, линии, блюда, программы</div></div>
+    <div class="card stat"><div class="v">10+</div><div class="l">валют и ресурсов одновременно в пике</div><div class="s">монеты, капитал, печати, дипломы, 4 редких, опыт центра, мана, жетоны</div></div>
+    <div class="card stat"><div class="v">24</div><div class="l">карты бригадиров показаны сразу</div><div class="s">даже когда своих 1–2</div></div>
+    <div class="card stat"><div class="v">250<span style="font-size:20px"> мин</span></div><div class="l">ждёт решения усталость и сон</div><div class="s">перекуры — 160 мин, голод — 146 мин</div></div>
+    <div class="card stat"><div class="v">0</div><div class="l">шагов обучения на стройке</div><div class="s">есть только титульная фраза и тост про камеру; подсказки — в штабе</div></div>
+  </div>
+</section>
+
+<section id="curve">
+  <h2><span class="num">03</span>Кривая новизны: где пусто, где густо</h2>
+  <p class="sub">Сколько новых вещей (здания, технологии, линии офиса, блюда, программы, бюджеты биржи) открывается за каждый час активной игры. Расчёт по номинальному профилю кампании из баланса: 60 активных минут в сутки.</p>
+  <div class="chart" id="ch-curve">
+    <p class="chart-title">Новые сущности по часам игры</p>
+    <p class="chart-sub">Сейчас — по плану покупок метасимулятора; предлагается — то же количество, растянутое ровной лестницей. Полоса — целевой коридор 6–8 в час.</p>
+    <div class="legend"><span><i style="background:var(--series-1)"></i>Сейчас</span><span><i style="background:var(--series-2)"></i>Предлагается</span><span><i style="background:rgba(255,255,255,.12);border:1px dashed #777"></i>Цель 6–8 в час</span></div>
+    <div class="svgbox"></div>
+    <details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-curve"></div></details>
+  </div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card"><h4>Пусто: часы 3–4 и 8–9</h4><p>В часах 8–9 — ноль новых сущностей за 180 минут. Это заказ 19, «Монастырь»: в плане он занимает 193 минуты, хотя строится ~16. Все покупки копятся и падают на начало заказа 20.</p></div>
+    <div class="card"><h4>Густо: часы 5 и 10</h4><p>Час 5: 9 технологий, 4 бюджета биржи, 2 блюда и центр персонала. Час 10: 10 технологий, 7 линий офиса, блюда и 2 уровня городка. Это и есть «потом густо».</p></div>
+    <div class="card"><h4>Правило выравнивания</h4><p>Не больше 6–8 новых вещей в час после второго часа и один крупный механизм раз в ~40 минут. Блюда, бюджеты биржи и часть линий офиса переезжают из пиков в провалы.</p></div>
+  </div>
+</section>
+
+<section id="core">
+  <h2><span class="num">04</span>Кор-луп: время растёт быстрее, чем решения</h2>
+  <p class="sub">Модельная длительность каждого заказа (непрерывная стройка с метой своего дня) и моменты, когда открываются здания штаба. Длинные заказы без новых решений — главный источник «однообразно».</p>
+  <div class="chart" id="ch-orders">
+    <p class="chart-title">Длительность заказа, минут</p>
+    <p class="chart-sub">Подписи сверху — открытие зданий штаба. Заштрихованная зона — заказы, где сейчас нет новых решений дольше 5 минут подряд.</p>
+    <div class="legend"><span><i class="line" style="background:var(--series-1)"></i>Длительность заказа</span><span><i style="background:rgba(236,131,90,.18);border:1px solid rgba(236,131,90,.5)"></i>Риск «пустого» ожидания</span></div>
+    <div class="svgbox"></div>
+    <details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-orders"></div></details>
+  </div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card"><h4>Заказы 1–7: 4–11 минут</h4><p>Короткие и бодрые, но в них только «План работ», «Скорость», «Рабочие». Нужна одна контрастная пара решений уже на первой минуте.</p></div>
+    <div class="card"><h4>Заказы 8–42: 15–100 минут</h4><p>Здесь длина взрывается. Правило: если заказ длиннее 10 минут, у игрока должно появляться новое решение раз в 3–5 минут — событие, проблема, бригадир, сундук.</p></div>
+    <div class="card"><h4>Заказы 44–57: 9–14 минут</h4><p>Ядро ускорилось, а меты почти не осталось — хвост рискует снова стать «пустым». Сюда — редкие события, контракты-боссы и продвинутые узлы.</p></div>
+  </div>
+  <h3>Как разнообразить старт заказа без новой механики</h3>
+  <div class="grid g3">
+    <div class="card"><h4>«Как в прошлый раз» для покупок</h4><p>Повторный старт съедает интерес: каждый раз те же первые покупки. Предлагается план закупки — одна кнопка «Повторить стартовые покупки» за реально имеющиеся монеты.</p></div>
+    <div class="card"><h4>Особенность заказа</h4><p>У каждого объекта один «характер» в брифинге: «высокий — нужна вертикаль», «тяжёлый — нужна ноша», «широкий — нужны маршруты». Это делает выбор покупок и бригадира осмысленным.</p></div>
+    <div class="card"><h4>Раньше выбор бригадира</h4><p>Сейчас до победы в школе из сундуков падают копии стартового. Гарантировать 2–3 разных бригадира к заказу 5–6, чтобы выбор состава появился до длинных заказов.</p></div>
+  </div>
+</section>
+
+<section id="problems">
+  <h2><span class="num">05</span>Проблемы стройки: от появления до решения</h2>
+  <p class="sub">Перекуры, голод, сон, погода, износ лесов — отличные механики, но игрок узнаёт о них по иконке над головой рабочего. А решение появляется спустя часы. Самые ранние проблемы ждут ответа дольше всех.</p>
+  <div class="chart" id="ch-gantt">
+    <p class="chart-title">Минута меты: проблема появилась → решение доступно</p>
+    <p class="chart-sub">Полоса — сколько игрок терпит проблему без ответа. Ромб — где предлагается дать первое решение (цель: зазор ≤ 30–60 минут).</p>
+    <div class="legend"><span><i style="background:var(--serious)"></i>Зазор сейчас</span><span><i style="background:var(--series-3)"></i>Зазор после правки</span><span>● появление · ▲ решение сейчас · ◆ решение после правки</span></div>
+    <div class="svgbox"></div>
+    <details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-gantt"></div></details>
+  </div>
+
+  <h3>Как это читается игроком сейчас</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Проблема</th><th>Штраф в коде</th><th>Сигнал игроку</th><th>Читаемость</th></tr></thead>
+    <tbody>
+      <tr><td><b>Перекуры</b> · с заказа 3</td><td>каждые 2–3 мин на 20 с; привычка растёт до ×2,8 частоты и ×2,2 длительности; зовут товарищей в радиусе 8 клеток</td><td>иконка над головой, строка в карточке рабочего</td><td><span class="st bad"><span>3/5 — нет общих потерь</span></span></td></tr>
+      <tr><td><b>Голод</b> · с заказа 5</td><td>с 60 % шкалы −25…−50 % работы, на 100 % уходит обедать на 90 с; в снег ×2</td><td>значок обеда, «Голоден −32 %» в карточке</td><td><span class="st bad"><span>3/5 — нет итога по бригаде</span></span></td></tr>
+      <tr><td><b>Усталость и сон</b> · с заказа 7 (по факту 10)</td><td>с 50 % шкалы до −40 % работы, ночью копится ×3, сон 400–600 с</td><td>Zz, «устал −12 %»</td><td><span class="st crit"><span>2/5 — копится молча</span></span></td></tr>
+      <tr><td><b>Ночь</b> · с заказа 7 (по факту 10)</td><td>работа ×0,72, ходьба ×0,82</td><td>тост «Ночь — бригада медленнее на 28 %»</td><td><span class="st good"><span>4/5</span></span></td></tr>
+      <tr><td><b>Износ лесов</b> · с заказа 8</td><td>прочность 2000, шаг стоит 100 + масса; ~6–7 проходов с грузом; ремонт = полная установка</td><td>цвет, трещины, лента, звук; тоста нет</td><td><span class="st crit"><span>2/5 — нет предупреждения</span></span></td></tr>
+      <tr><td><b>Снег / дождь / жара</b> · заказы 11 / 20 / 29</td><td>ходьба ×0,7 / укладка ×0,7 / укладка ×0,78, усталость ×1,5</td><td>тост с числом и подсказкой решения</td><td><span class="st good"><span>4/5 — образец</span></span></td></tr>
+      <tr><td><b>Шторм</b> · заказ 33</td><td>молния раз в ~40 с выбивает 3–8 кубов с этажей ≥ 5</td><td>вспышка, гром, тост с числом кубов</td><td><span class="st good"><span>5/5</span></span></td></tr>
+      <tr><td><b>Ступор</b> · в любой момент</td><td>10 с без продвижения — все бросают задание; при &lt; 2 % остатка автодостройка</td><td>«!» над рабочими; объяснение только в контракте и школе</td><td><span class="st crit"><span>2/5 — молча</span></span></td></tr>
+      <tr><td><b>Высота и подъём</b> · с заказа 8</td><td>настилы ×0,8 и −4 % за этаж: 10-й этаж ×0,53, в снег ≈ ×0,24</td><td>ходьба 40–53 % видна только в «Об уровне → Тайминги»</td><td><span class="st bad"><span>3/5 — спрятано</span></span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout"><b>Ночь заявлена с заказа 7, но игрок её не увидит до заказа 10.</b> Каждая стройка начинается в 8:00, ночь наступает в 20:00, игровой час — 120 секунд, то есть ночь приходит на 24-й минуте стройки. Заказы 1–9 короче. Предлагается либо открывать ночь отдельным событием «Первый закат» на заказе 10, либо в раннем окне укоротить сутки.</div>
+
+  <h3>Единый шаблон: проблема → событие с числом → решение</h3>
+  <p class="sub">Погода уже подаётся правильно: тост с цифрой и подсказкой. Распространяем этот же шаблон на всё остальное и добавляем счётчик потерь — это и есть «онбординг через числа».</p>
+  <div class="phones">
+    <div><div class="phone"><div class="screen"><div class="bld"></div>
+      <div class="hud-top"><span class="pill"><span class="coin"></span> 1 240 · +86/мин</span></div>
+      <div class="bar">Ур. 3 · Дом с крыльцом<div class="track"><div class="fill"></div></div></div>
+      <div class="toast"><div class="t">Новое: перекуры</div>Рабочие уходят курить каждые 2–3 мин на 20 с. Сейчас бригада теряет <b>9 %</b> времени.<br><span style="color:#c3c2b7">Решение «Реже перекуры» откроется через 2 заказа в техцентре.</span><br><span class="go">Понятно</span></div>
+      <div class="bottom"><div class="btn-up">Улучшения</div></div>
+    </div></div><p class="cap">Первое появление — один раз отдельным событием, с числом потерь</p></div>
+
+    <div><div class="phone"><div class="screen"><div class="bld"></div>
+      <div class="hud-top"><span class="pill"><span class="coin"></span> 8 900 · +420/мин</span><span class="pill"><span class="clk"></span> 21:40</span></div>
+      <div class="bar">Ур. 10 · Собор рудокопов<div class="track"><div class="fill" style="width:61%"></div></div></div>
+      <div class="losses"><b>Куда ушло время бригады</b>
+        <div class="stack"><span style="flex:41;background:var(--series-1)"></span><span style="flex:9;background:var(--series-2)"></span><span style="flex:7;background:var(--series-3)"></span><span style="flex:12;background:#7c6fd6"></span><span style="flex:31;background:#55554f"></span></div>
+        <span style="color:#9cc6ff">ходьба 41 %</span> · <span style="color:#ff9a6e">перекуры 9 %</span> · <span style="color:#5fd3a5">обед 7 %</span> · <span style="color:#b3a9ff">ночь −12 %</span> · кладка 31 %
+      </div>
+      <div class="bottom"><div class="btn-up">Улучшения <span class="badge">2</span></div></div>
+    </div></div><p class="cap">Счётчик потерь по причинам — на HUD по тапу и в итоге заказа</p></div>
+
+    <div><div class="phone"><div class="screen"><div class="bld"></div>
+      <div class="hud-top"><span class="pill"><span class="coin"></span> 14 300 · +610/мин</span></div>
+      <div class="bar">Ур. 12 · Плавильный цех<div class="track"><div class="fill" style="width:47%"></div></div></div>
+      <div class="toast" style="border-left-color:var(--serious)"><div class="t">Настил на 3-м этаже — 50 %</div>Ещё ~4 прохода с грузом до поломки. Ремонт займёт 6 с.<br><span style="color:#c3c2b7">«Прочный крепёж» — ×1,3 к прочности.</span><br><span class="go">Перейти к улучшению</span></div>
+      <div class="bottom"><div class="btn-up">Улучшения</div></div>
+    </div></div><p class="cap">Предупреждение до поломки, а не только цвет и трещины</p></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card"><h4>Ступор: говорить, а не молчать</h4><p>В сюжетном режиме показывать то же, что в контракте: «5 кубов недостижимы — нужна вертикаль или лифт», подсветить эти кубы и дать кнопку к нужной прокачке. Сейчас таймер сбрасывается без объяснения.</p></div>
+    <div class="card"><h4>Связать технологию с болью</h4><p>В техцентре рядом с технологией писать, что она лечит, и сколько игрок уже потерял: «Полевая кухня — решает голод. За последние 3 заказа бригада простояла на обеде 4 мин 10 с».</p></div>
+  </div>
+</section>
+
+<section id="numbers-onboard">
+  <h2><span class="num">06</span>Онбординг через числа</h2>
+  <p class="sub">Игрок покупает «уровень 3» и «+0,4». Ему нужно «было → стало» в своих единицах: кубы в минуту, время до сдачи, окупаемость. Игра эти значения уже считает — в окне «Об уровне → Тайминги» и в оценке симулятора, но показывает их не там, где принимается решение.</p>
+  <div class="grid g2">
+    <div>
+      <p style="color:var(--text-muted);font-size:13px;margin:0 0 8px">СЕЙЧАС</p>
+      <div class="upg old"><div class="hd"><div><div class="nm">Скорость стройки</div><div class="lv">Уровень 3 → 4</div></div><div class="pr">110 <span class="coin"></span></div></div><div class="why">Скорость укладки +0,4</div></div>
+      <div class="upg old" style="margin-top:10px"><div class="hd"><div><div class="nm">Рабочие</div><div class="lv">Уровень 2 → 3</div></div><div class="pr">240 <span class="coin"></span></div></div><div class="why">+1 рабочий</div></div>
+    </div>
+    <div>
+      <p style="color:var(--accent);font-size:13px;margin:0 0 8px;font-weight:700">ПРЕДЛАГАЕТСЯ <span style="color:var(--text-muted);font-weight:400">· числа в макете условные, прирост скорости — по формуле баланса</span></p>
+      <div class="upg"><div class="hd"><div><div class="nm">Скорость стройки</div><div class="lv">Уровень 3 → 4</div></div><div class="pr">110 <span class="coin"></span></div></div>
+        <div class="delta"><div><div class="a">сейчас</div><div class="b">12 куб/мин</div></div><div class="arr">→</div><div><div class="a">после</div><div class="b">13,7 куб/мин</div></div></div>
+        <div class="why">Скорость +14 % · до сдачи <b>8:40 → 7:40</b></div></div>
+      <div class="upg" style="margin-top:10px"><div class="hd"><div><div class="nm">Рабочие</div><div class="lv">Уровень 2 → 3</div></div><div class="pr">240 <span class="coin"></span></div></div>
+        <div class="delta"><div><div class="a">сейчас</div><div class="b">3 рабочих</div></div><div class="arr">→</div><div><div class="a">после</div><div class="b">4 рабочих</div></div></div>
+        <div class="why">До сдачи <b>−1:00…−1:30</b> · <span style="color:var(--warning)">7 из 10 ходок ограничила ноша</span> — сначала «Ноша» даст больше</div></div>
+    </div>
+  </div>
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card"><h4>Диапазон, а не ложная точность</h4><p>Кубы в минуту зависят от этажа, погоды и ночи. Показывать «расчёт по текущей стройке» и диапазон «−1:00…−1:30».</p></div>
+    <div class="card"><h4>Подсказка узкого места</h4><p>Данные уже есть: «7 из 10 ходок ограничила ноша», «ходьба 41 % времени». Выносить одну главную подсказку прямо на кнопку «Улучшения».</p></div>
+    <div class="card"><h4>«Об уровне» — показать один раз</h4><p>Окно с таймингами отличное, но его не замечают: в плейтесте его нашли только на заказе 13. Подсветить «i» на заказе 3 с короткой фразой «Здесь видно, куда уходит время бригады».</p></div>
+  </div>
+</section>
+
+<section id="ui">
+  <h2><span class="num">07</span>Интерфейс: раскрывать по мере надобности</h2>
+  <p class="sub">Механизмы постепенного раскрытия в коде уже есть: граф «на шаг вперёд», ворота за жетоны, замки офиса, скрытая навигация. Но часть элементов видна с первой секунды без надобности, а часть нужной информации, наоборот, спрятана. Матрица показывает, что игрок видит на каждом этапе.</p>
+  <div class="mswitch" role="tablist"><button class="on" data-m="now">Сейчас</button><button data-m="new">Предлагается</button></div>
+  <div class="legend"><span><span class="cell c-early" style="display:inline-block;padding:0 8px">рано</span> видно, но ещё бесполезно</span><span><span class="cell c-intro" style="display:inline-block;padding:0 8px">★ ввод</span> открывается с объяснением</span><span><span class="cell c-ok" style="display:inline-block;padding:0 8px">нужно</span> видно и используется</span><span><span class="cell c-off" style="display:inline-block;padding:0 8px">—</span> скрыто</span></div>
+  <div class="scroll"><table class="matrix" id="matrix"></table></div>
+
+  <h3>Первая минута: HUD на заказе 1</h3>
+  <div class="phones">
+    <div><div class="phone"><div class="screen"><div class="bld"></div>
+      <div class="hud-top"><span class="pill"><span class="coin"></span> 40 · +12/мин</span><span class="pill noise"><span class="tok"></span> 2</span><span class="pill noise"><span class="clk"></span></span><span class="pill">☰</span></div>
+      <div class="bar">Ур. 1 · Маленький дом <span class="pill noise" style="float:right;padding:0 6px">i</span><div class="track"><div class="fill" style="width:12%"></div></div>0 / 64 куба</div>
+      <div class="bottom"><div class="btn-up">Улучшения</div><div class="btn-sq noise" style="outline:2px dashed var(--serious)">◉</div></div>
+    </div></div><p class="cap">Сейчас: жетоны, часы, «i» и глаз видны сразу, а что нажать — не сказано</p></div>
+    <div><div class="phone"><div class="screen"><div class="bld"></div>
+      <div class="hud-top"><span class="pill"><span class="coin"></span> 40 · +12/мин</span><span class="pill">☰</span></div>
+      <div class="bar">Ур. 1 · Маленький дом<div class="track"><div class="fill" style="width:12%"></div></div>0 / 64 куба</div>
+      <div class="coach"><b>Купите «План работ»</b>: рабочий будет планировать 2 куба за ходку вместо 1 — меньше пустых ходок.</div>
+      <div class="bottom"><div class="btn-up" style="box-shadow:0 0 0 4px rgba(255,176,32,.35)">Улучшения <span class="badge">1</span></div></div>
+    </div></div><p class="cap">Предлагается: монеты, прогресс и одно понятное действие с числом</p></div>
+  </div>
+
+  <h3>Первый вход в штаб</h3>
+  <div class="grid g2">
+    <div class="card"><h4>Сейчас</h4><p>15 плашек над кварталом: 1 доступная, 9 с замками, 5 «Скоро». В кошельке капитал, печати = 0, дипломы = 0. За заказ 1 игрок получил сразу капитал и «Жилой ресурс» — две новые валюты одновременно.</p></div>
+    <div class="card"><h4>Предлагается</h4><p>Офис ярко, 2 ближайших участка силуэтом с подписью «откроется после заказа 2/3», остальные скрыты в тумане. В кошельке только капитал. Редкий ресурс копится тихо и впервые показывается, когда открывается «Снабжение».</p></div>
+  </div>
+</section>
+
+<section id="currencies">
+  <h2><span class="num">08</span>Валюты: одна новая за раз</h2>
+  <p class="sub">Минута, когда игрок впервые видит валюту, сейчас и после правки. Правило: следующая валюта появляется, только когда на неё есть первая трата и понятен источник.</p>
+  <div class="chart" id="ch-cur">
+    <p class="chart-title">Первое появление валюты, минута игры</p>
+    <p class="chart-sub">Шкала логарифмическая: ранние минуты важнее.</p>
+    <div class="legend"><span><i style="background:var(--series-1);border-radius:50%"></i>Сейчас</span><span><i style="background:var(--series-2);border-radius:50%"></i>Предлагается</span></div>
+    <div class="svgbox"></div>
+    <details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-cur"></div></details>
+  </div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card"><h4>Две валюты на одну покупку</h4><p>Каждая технология стоит капитал + печати: кухня 200 + 2, прожекторы 400 + 2, погрузчики 11 000 + 5. Показывать в техцентре, где взять недостающее: «Печать: 1 за контракт, следующий через 0:40».</p></div>
+    <div class="card"><h4>Скрывать нули</h4><p>В панелях нулевые валюты уже скрыты, а в кошельке штаба и в «Снабжении» — нет. Применить одно правило везде: валюта видна, только если &gt; 0 или нужна для цены на экране.</p></div>
+    <div class="card"><h4>Объяснить при первом получении</h4><p>Первая печать, первый диплом, первый жетон — короткая карточка «что это, откуда ещё взять, на что потратить» с кнопкой к ближайшей трате.</p></div>
+  </div>
+</section>
+
+<section id="windows">
+  <h2><span class="num">09</span>Окна: что поменять в каждом</h2>
+  <p class="sub">Полный проход по окнам и панелям игры. Для каждого — что сейчас мешает и минимальная правка.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Окно</th><th>Сейчас</th><th>Предлагается</th><th>Когда</th></tr></thead>
+    <tbody>
+      <tr><td><b>HUD стройки</b></td><td>Жетоны, часы, «i», глаз видны на заказе 1</td><td>Жетоны — с первой траты (ворота графа); часы — с первой ночи; «i» — с заказа 3 с подсветкой; глаз — в меню ☰</td><td>заказы 1–10</td></tr>
+      <tr><td><b>Лист «Улучшения»</b></td><td>Граф с иконками, эффект в абсолютных величинах</td><td>Карточка «было → стало» в куб/мин и во времени до сдачи; подсказка узкого места на кнопке</td><td>всегда</td></tr>
+      <tr><td><b>Карточка рабочего</b></td><td>Потребности одной строкой</td><td>Добавить «бригада теряет N % на это» и ссылку на решение</td><td>с заказа 3</td></tr>
+      <tr><td><b>«Об уровне»</b></td><td>Отличные данные, но окно не замечают</td><td>Подсветить один раз на заказе 3; вынести главную цифру «куда ушло время» в итог заказа</td><td>заказ 3</td></tr>
+      <tr><td><b>Окно сдачи</b></td><td>Плитки наград, 2 новые валюты сразу на заказе 1</td><td>Одна валюта на заказе 1; строка «Прокачки стройки начнутся заново, штаб сохранится»; ближайшая цель («Офис: ещё 20 капитала»)</td><td>заказ 1</td></tr>
+      <tr><td><b>Брифинг</b></td><td>С заказа 4 — слоты, чипы, сетка карт, 3 кнопки; с 7 — ещё бустеры</td><td>«Характер» заказа одной строкой; «Автоподбор» по умолчанию; бустеры отдельным шагом только когда есть хотя бы 2</td><td>с заказа 2</td></tr>
+      <tr><td><b>Штаб-город</b></td><td>15 плашек, 9 с замками</td><td>Только доступное + 2 ближайших силуэта; остальное в тумане</td><td>после заказа 1</td></tr>
+      <tr><td><b>Кошелёк штаба</b></td><td>Печати и дипломы при нуле</td><td>Правило «только ненулевые или нужные для цены»</td><td>всегда</td></tr>
+      <tr><td><b>Главный офис</b></td><td>8 вкладок сразу, 4 пустые</td><td>Вкладка появляется с первой открытой линией; новая вкладка — с отметкой «новое»</td><td>заказы 1–10</td></tr>
+      <tr><td><b>Школа</b></td><td>3 вкладки, «Найм» заперт</td><td>Сначала только «Испытания»; первое испытание гарантированно проходимо и даёт нового бригадира</td><td>заказ 3</td></tr>
+      <tr><td><b>Техцентр</b></td><td>Цепочка: построить → капитал и печать → уровни за монеты</td><td>Рядом с технологией: «что лечит» и «сколько вы уже потеряли»; первое открытие бесплатно как обучение</td><td>заказ 4</td></tr>
+      <tr><td><b>Бригадиры</b></td><td>Все 24 карты, свои 1–2</td><td>Свои карты + 3 ближайшие «как получить»; полный каталог за кнопкой</td><td>с первой карты</td></tr>
+      <tr><td><b>Снабжение</b></td><td>15 бустеров и 4 редких ресурса с нулями</td><td>Показывать только открытые бустеры и ресурсы &gt; 0</td><td>заказ 7</td></tr>
+      <tr><td><b>Центр персонала</b></td><td>3 вкладки, 29 блюд</td><td>Сначала 2 блюда (гречка, борщ), остальные — по мере уровня кухни</td><td>заказ 11</td></tr>
+      <tr><td><b>Контракты</b></td><td>Открыты после заказа 2, награда в печатях не объяснена</td><td>Связать с целью: «ещё 1 печать — откроются вертикальные маршруты»</td><td>заказ 2</td></tr>
+      <tr><td><b>Меню ☰</b></td><td>«Звук» рядом с «Сбросить прогресс» и «Перемоткой на уровень»</td><td>Отладочные пункты — только в <code>?dev=1</code>; опасные — в отдельный блок</td><td>сразу</td></tr>
+      <tr><td><b>Ступор</b></td><td>«Нет достижимых кубов» только в контракте и школе</td><td>То же окно в сюжете + подсветка кубов + кнопка к прокачке</td><td>сразу</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="oom">
+  <h2><span class="num">10</span>Out of memory: откуда берётся</h2>
+  <p class="sub">Вкладка падает после нескольких часов. Проверили живым прогоном: 40 заказов подряд с заходом в штаб и окна, замер после каждого. Память JS почти не растёт (18 → 40 МБ). Течёт <b style="color:#fff">видеопамять</b>: текстуры создаются на каждой стройке и при входе в штаб, но не освобождаются.</p>
+  <div class="grid g4" style="margin-bottom:14px">
+    <div class="card stat"><div class="v">+13,5</div><div class="l">текстур в видеокарте на каждый заказ</div><div class="s">7 на старте → 549 после 40 заказов; ни одна не освобождается</div></div>
+    <div class="card stat"><div class="v">+18<span style="font-size:20px"> МБ</span></div><div class="l">памяти браузера на каждый заказ</div><div class="s">653 → 1 382 МБ за 40 заказов</div></div>
+    <div class="card stat"><div class="v">0</div><div class="l">рост, если стоять на одной стройке</div><div class="s">7,5 мин без переходов — текстуры 37 → 37</div></div>
+    <div class="card stat"><div class="v">≈2,5<span style="font-size:20px"> ГБ</span></div><div class="l">к пятому часу по этой скорости</div><div class="s">≈100 переходов стройка ↔ штаб; на ноутбуке это вылет вкладки</div></div>
+  </div>
+  <div class="grid g2" style="margin-bottom:14px">
+    <div class="chart" id="ch-mem"><p class="chart-title">Память браузера, МБ</p><p class="chart-sub">Рендерер + видеопроцесс + браузер, после каждого заказа. Прогон в headless Chrome на ПК.</p><div class="svgbox"></div><details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-mem"></div></details></div>
+    <div class="chart" id="ch-tex"><p class="chart-title">Текстуры в видеокарте, шт</p><p class="chart-sub"><code>renderer.info.memory.textures</code> после каждого заказа. Должно быть плато.</p><div class="svgbox"></div><details class="tbl"><summary>Таблица данных</summary><div class="scroll" id="tb-tex"></div></details></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h4>Причина 1: текстуры не освобождаются при смене стройки</h4><p><code>disposeLevel()</code> вызывает <code>dispose()</code> для геометрии и материалов, но не для <code>material.map</code>. А CanvasTexture создаются на каждой стройке: таблички, площадки техники, полосы, руны. Каждая смена заказа оставляет текстуры в памяти видеокарты и вкладки.</p></div>
+    <div class="card"><h4>Двор техники пересобирается без освобождения</h4><p><code>openYard()</code> и <code>clearYardRig()</code> снимают меши через <code>group.remove()</code> и создают новые геометрии и материалы, старые не освобождаются. Растёт с каждым событием перестройки двора.</p></div>
+    <div class="card"><h4>Пики при офлайн-догонке и сохранении</h4><p>Догонка после отсутствия симулирует большой отрезок разом, а сохранение сериализует весь стейт в одну строку. Это не утечка, а пики — но на слабой машине поверх утечки они и добивают вкладку.</p></div>
+    <div class="card"><h4>Минимальная правка</h4><p>Одна функция <code>disposeObject()</code>: геометрия + все текстуры материала + материал, с пропуском общих кэшированных ресурсов. Вызывать её в <code>disposeLevel</code>, <code>openYard</code> и <code>clearYardRig</code>. В <code>?dev=1</code> выводить <code>renderer.info.memory</code>, чтобы рост был виден сразу.</p></div>
+  </div>
+</section>
+
+<section id="plan">
+  <h2><span class="num">11</span>План: что делать и в каком порядке</h2>
+  <p class="sub">Сначала то, что ломает игру и первые 15 минут. Затем подача проблем и числа. В конце — перестройка расписания открытий с проверкой метасимулятором.</p>
+  <div class="grid g3">
+    <div class="card phase"><div class="when">Этап 1 · 2–3 дня</div><h4>Стабильность и первые 15 минут</h4>
+      <ul class="clean">
+        <li><b>OOM:</b> освобождение текстур и двора, счётчик памяти в dev</li>
+        <li><b>HUD заказа 1:</b> скрыть жетоны, часы, «i», глаз</li>
+        <li><b>Первое действие:</b> подсказка «Купите План работ» с числом</li>
+        <li><b>Окно сдачи:</b> одна валюта, строка про сброс прокачек, ближайшая цель</li>
+        <li><b>Кошельки:</b> правило «только ненулевые» везде</li>
+        <li><b>Меню:</b> отладочное — под <code>?dev=1</code></li>
+      </ul></div>
+    <div class="card phase"><div class="when">Этап 2 · 4–6 дней</div><h4>Проблемы и числа</h4>
+      <ul class="clean">
+        <li><b>Событие первой встречи</b> для перекуров, голода, сна, ночи, износа, ступора</li>
+        <li><b>Счётчик потерь</b> по причинам на HUD и в итоге заказа</li>
+        <li><b>Карточка «было → стало»</b> для каждой сессионной покупки</li>
+        <li><b>Предупреждение лесов</b> на 50 % и при поломке</li>
+        <li><b>Техцентр:</b> «что лечит» и «сколько потеряли»</li>
+        <li><b>«Об уровне»:</b> подсветка на заказе 3</li>
+      </ul></div>
+    <div class="card phase"><div class="when">Этап 3 · 1–2 недели</div><h4>Ритм открытий</h4>
+      <ul class="clean">
+        <li><b>Выровнять плотность</b> до 6–8 в час, разбить пачку на заказах 19–20</li>
+        <li><b>Зазор проблема → решение</b> ≤ 60 минут (кухня и «Реже перекуры» к ~100–130-й минуте)</li>
+        <li><b>2–3 разных бригадира</b> к заказу 5–6</li>
+        <li><b>Скрывать дольше:</b> продвинутые узлы, блюда, бустеры, реактор</li>
+        <li><b>Хвост 44–57:</b> события и контракты</li>
+        <li>Проверка метасимулятором и плейтестом</li>
+      </ul></div>
+  </div>
+</section>
+
+<section id="metrics">
+  <h2><span class="num">12</span>Как понять, что стало лучше</h2>
+  <p class="sub">Цели, которые можно проверить в следующем плейтесте и метасимуляторе. Для живых игроков — несколько событий в лог.</p>
+  <div class="grid g2">
+    <div class="card">
+      <div class="kpi"><span class="k">Первая осмысленная покупка</span><span class="t">≤ 90 с</span></div>
+      <div class="kpi"><span class="k">Интервал между решениями на заказах 1–10</span><span class="t">≤ 3 мин</span></div>
+      <div class="kpi"><span class="k">То же на длинных заказах</span><span class="t">≤ 5 мин</span></div>
+      <div class="kpi"><span class="k">Новых сущностей в час после 2-го часа</span><span class="t">6–8</span></div>
+      <div class="kpi"><span class="k">Зазор «проблема → первое решение»</span><span class="t">≤ 60 мин</span></div>
+      <div class="kpi"><span class="k">Новых валют за первый час</span><span class="t">≤ 3</span></div>
+      <div class="kpi"><span class="k">Память вкладки после 50 циклов стройка ↔ штаб</span><span class="t">плато</span></div>
+    </div>
+    <div class="card">
+      <h4>События для лога плейтеста</h4>
+      <ul class="clean">
+        <li><b>upgrade_available / upgrade_bought</b> — время между ними и между покупками</li>
+        <li><b>idle_gap</b> — интервалы без доступного решения &gt; 3 и &gt; 5 мин</li>
+        <li><b>problem_first_seen / problem_solution_bought</b> — по каждой проблеме</li>
+        <li><b>info_opened</b> — открыл ли «Об уровне» без подсказки и изменил ли покупку после</li>
+        <li><b>currency_first_seen / currency_first_spent</b></li>
+        <li><b>crew_changed</b> — смена состава бригадиров</li>
+        <li><b>heap_mb, gpu_textures</b> — раз в минуту в dev</li>
+      </ul>
+      <p style="margin-top:10px">Сравнить стратегии «рабочие», «скорость», «доход» и смешанную на заказах 8–10 обычным темпом, без ускорения.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  MicroBuilders · разбор FTUE и ETM · MULTICAST GAMES · 1 ноября 2026.<br>
+  Числа: <code>balance.json</code>, <code>logic.js</code>, <code>meta.js</code>, <code>game.js</code> (main 1e17be1), отчёт производительности уровней от 20.10, плейтест заказов 1–20, живой плейтест 31.10. Минуты меты — номинальный профиль 60 активных минут в сутки; живой темп игрока отличается, поэтому все цели нужно сверить плейтестом.
+</div></footer>
+
+<script>
+(function(){
+const css = getComputedStyle(document.documentElement);
+const C = n => css.getPropertyValue(n).trim();
+const tip = document.getElementById('tip');
+function showTip(html, ev){ tip.innerHTML = html; tip.style.opacity = 1; moveTip(ev); }
+function moveTip(ev){ const x = ev.clientX + 14, y = ev.clientY + 14; const w = tip.offsetWidth, h = tip.offsetHeight;
+  tip.style.left = Math.min(x, innerWidth - w - 8) + 'px'; tip.style.top = Math.min(y, innerHeight - h - 8) + 'px'; }
+function hideTip(){ tip.style.opacity = 0; }
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent){ const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, attrs){ const t = el('text', Object.assign({x, y, fill: C('--text-muted'), 'font-size': 11}, attrs || {}), parent); t.textContent = s; return t; }
+function roundTop(x, y, w, h, r){ r = Math.min(r, w / 2, h); if (h <= 0) return ''; return `M${x},${y+h}V${y+r}Q${x},${y} ${x+r},${y}H${x+w-r}Q${x+w},${y} ${x+w},${y+r}V${y+h}Z`; }
+function table(id, head, rows){ const t = document.createElement('table'); t.innerHTML = '<thead><tr>' + head.map(h => '<th>' + h + '</th>').join('') + '</tr></thead><tbody>' + rows.map(r => '<tr>' + r.map((c, i) => '<td' + (i && typeof c === 'number' ? ' class="n"' : '') + '>' + c + '</td>').join('') + '</tr>').join('') + '</tbody>'; document.getElementById(id).appendChild(t); }
+function box(id){ return document.querySelector('#' + id + ' .svgbox'); }
+function width(b){ return Math.max(320, b.clientWidth); }
+
+// ---------- 1. Novelty curve ----------
+const hours = [...Array(16).keys()];
+const now = [14,10,11,4,7,17,12,3,0,0,21,5,4,3,9,9];
+const next = [6,7,8,8,8,8,8,8,8,8,8,8,9,9,9,10];
+function drawCurve(){
+  const b = box('ch-curve'); b.innerHTML = '';
+  const W = width(b), H = 300, m = {l: 34, r: 10, t: 12, b: 34};
+  const svg = el('svg', {width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Новые сущности по часам: сейчас и предлагается'}, b);
+  const iw = W - m.l - m.r, ih = H - m.t - m.b, max = 24;
+  const y = v => m.t + ih - v / max * ih;
+  [0,6,12,18,24].forEach(v => { el('line', {x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: C('--line'), 'stroke-width': 1}, svg); txt(svg, m.l - 6, y(v) + 4, v, {'text-anchor': 'end'}); });
+  el('rect', {x: m.l, y: y(8), width: iw, height: y(6) - y(8), fill: 'rgba(255,255,255,.07)', stroke: '#777', 'stroke-dasharray': '4 4', 'stroke-width': 1}, svg);
+  const band = iw / hours.length, bw = Math.max(4, (band - 8) / 2 - 1);
+  hours.forEach((h, i) => {
+    const x0 = m.l + i * band + 4;
+    el('path', {d: roundTop(x0, y(now[i]), bw, y(0) - y(now[i]), 4), fill: C('--series-1')}, svg);
+    el('path', {d: roundTop(x0 + bw + 2, y(next[i]), bw, y(0) - y(next[i]), 4), fill: C('--series-2')}, svg);
+    if (now[i] === 0) txt(svg, x0 + bw / 2, y(0) - 4, '0', {'text-anchor': 'middle', fill: C('--text-secondary')});
+    txt(svg, m.l + i * band + band / 2, H - m.b + 16, h, {'text-anchor': 'middle'});
+    const hit = el('rect', {x: m.l + i * band, y: m.t, width: band, height: ih, fill: 'transparent'}, svg);
+    hit.addEventListener('mousemove', ev => showTip(`<b>Час ${h}</b><div class="row"><span><span class="sw" style="background:${C('--series-1')}"></span>Сейчас</span><b>${now[i]}</b></div><div class="row"><span><span class="sw" style="background:${C('--series-2')}"></span>Предлагается</span><b>${next[i]}</b></div>`, ev));
+    hit.addEventListener('mouseleave', hideTip);
+  });
+  txt(svg, m.l + iw / 2, H - 4, 'час активной игры', {'text-anchor': 'middle'});
+  // annotations
+  txt(svg, m.l + 5 * band + band / 2, y(17) - 6, 'пик', {'text-anchor': 'middle', fill: C('--text-secondary')});
+  txt(svg, m.l + 10 * band + band / 2, y(21) - 6, 'пик', {'text-anchor': 'middle', fill: C('--text-secondary')});
+  txt(svg, m.l + 9 * band, y(4) - 6, '180 мин пусто', {'text-anchor': 'middle', fill: C('--text-secondary')});
+}
+table('tb-curve', ['Час', 'Сейчас', 'Предлагается'], hours.map(h => [h, now[h], next[h]]));
+
+// ---------- 2. Order durations ----------
+const dur = [4.7,4.3,4.8,6.1,11.3,8.1,11.5,15.3,23.9,30.6,29.8,29.9,28.3,28.3,29.5,23.1,22.1,18.0,16.3,27.9,9.9,16.9,14.9,15.7,24.7,30.2,35.0,60.0,81.6,71.4,36.8,33.5,59.2,56.5,50.4,54.2,50.1,51.3,62.0,57.1,75.9,99.5,47.1,14.3,11.5,9.7,11.6,8.6,42.9,11.6,11.5,10.5,13.5,12.1,13.1,12.5,14.2];
+const names = ['Маленький дом','Изба','Дом с крыльцом','Дом с трубой','Дом старосты','Жёлтый флигель','Мастерская','Амбар','Цитадель','Собор рудокопов','Рудный мост','Плавильный цех','Маяк старателей','Акведук','Утёсная крепость','Ратуша','Обсерватория','Верфь','Монастырь','Горный дворец','Стекольная мануфактура','Зимняя галерея','Дом гильдии','Четыре двора','Железная переправа','Хрустальный виадук','Королевская биржа','Небесный дворец'];
+const hq = [[1,'Офис'],[2,'Школа'],[3,'Техцентр'],[6,'Снабжение'],[8,'Учебный центр'],[10,'Персонал'],[12,'Биржа'],[19,'Реактор'],[26,'Гараж'],[38,'Контр. бюро'],[50,'Субподряд']];
+function drawOrders(){
+  const b = box('ch-orders'); b.innerHTML = '';
+  const W = width(b), H = 350, m = {l: 38, r: 12, t: 60, b: 34};
+  const svg = el('svg', {width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Длительность заказов 1–57'}, b);
+  const iw = W - m.l - m.r, ih = H - m.t - m.b, max = 100, n = dur.length;
+  const x = i => m.l + (i - 1) / (n - 1) * iw, y = v => m.t + ih - v / max * ih;
+  // risk zone: orders 8..42
+  el('rect', {x: x(8), y: m.t, width: x(42) - x(8), height: ih, fill: 'rgba(236,131,90,.10)', stroke: 'rgba(236,131,90,.35)', 'stroke-width': 1}, svg);
+  [0,25,50,75,100].forEach(v => { el('line', {x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: C('--line')}, svg); txt(svg, m.l - 6, y(v) + 4, v, {'text-anchor': 'end'}); });
+  [1,10,20,30,40,50,57].forEach(i => txt(svg, x(i), H - m.b + 16, i, {'text-anchor': 'middle'}));
+  txt(svg, m.l + iw / 2, H - 4, 'номер заказа', {'text-anchor': 'middle'});
+  hq.forEach(([i, s], k) => { const xx = x(i); const row = k < 7 ? k % 4 : (k - 7) % 2;
+    el('line', {x1: xx, x2: xx, y1: m.t - 4, y2: m.t + ih, stroke: '#4a4a44', 'stroke-dasharray': '2 3'}, svg);
+    txt(svg, xx + 3, 14 + row * 14, s, {fill: C('--text-secondary')}); });
+  el('path', {d: dur.map((v, k) => (k ? 'L' : 'M') + x(k + 1) + ',' + y(v)).join(''), fill: 'none', stroke: C('--series-1'), 'stroke-width': 2, 'stroke-linejoin': 'round'}, svg);
+  const cross = el('line', {y1: m.t, y2: m.t + ih, stroke: '#888', 'stroke-width': 1, opacity: 0}, svg);
+  const dot = el('circle', {r: 5, fill: C('--series-1'), stroke: C('--surface-1'), 'stroke-width': 2, opacity: 0}, svg);
+  const hit = el('rect', {x: m.l, y: m.t, width: iw, height: ih, fill: 'transparent'}, svg);
+  hit.addEventListener('mousemove', ev => { const r = svg.getBoundingClientRect(); const i = Math.max(1, Math.min(n, Math.round((ev.clientX - r.left - m.l) / iw * (n - 1)) + 1));
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('opacity', 1); dot.setAttribute('cx', x(i)); dot.setAttribute('cy', y(dur[i - 1])); dot.setAttribute('opacity', 1);
+    const h = hq.find(q => q[0] === i);
+    showTip(`<b>Заказ ${i}${names[i - 1] ? ' · ' + names[i - 1] : ''}</b><div class="row"><span>Длительность</span><b>${String(dur[i - 1]).replace('.', ',')} мин</b></div>${h ? '<div>Открывается: ' + h[1] + '</div>' : ''}`, ev); });
+  hit.addEventListener('mouseleave', () => { hideTip(); cross.setAttribute('opacity', 0); dot.setAttribute('opacity', 0); });
+}
+table('tb-orders', ['Заказ', 'Объект', 'Минут'], dur.map((v, k) => [k + 1, names[k] || '—', String(v).replace('.', ',')]));
+
+// ---------- 3. Gantt problems ----------
+const probs = [
+  ['Перекуры', 15, 176, 110], ['Голод', 30, 176, 120], ['Износ лесов', 75, 304, 130], ['Усталость и сон', 130, 380, 170], ['Ночь', 130, 380, 170],
+  ['Снег', 176, 333, 220], ['Дождь', 631, 709, 690], ['Жара', 800, 912, 850], ['Шторм', 992, 1067, 1040]];
+function drawGantt(){
+  const b = box('ch-gantt'); b.innerHTML = '';
+  const W = width(b), rowH = 30, m = {l: 120, r: 64, t: 10, b: 34}, H = m.t + m.b + probs.length * rowH;
+  const svg = el('svg', {width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Зазор между появлением проблемы и решением'}, b);
+  const iw = W - m.l - m.r, max = 1100, x = v => m.l + v / max * iw;
+  [0,200,400,600,800,1000].forEach(v => { el('line', {x1: x(v), x2: x(v), y1: m.t, y2: H - m.b, stroke: C('--line')}, svg); txt(svg, x(v), H - m.b + 16, v, {'text-anchor': 'middle'}); });
+  txt(svg, m.l + iw / 2, H - 4, 'минута меты', {'text-anchor': 'middle'});
+  probs.forEach(([name, a, s, p], k) => {
+    const yc = m.t + k * rowH + rowH / 2;
+    txt(svg, m.l - 8, yc + 4, name, {'text-anchor': 'end', fill: C('--text-primary'), 'font-size': 12});
+    el('rect', {x: x(a), y: yc - 7, width: Math.max(2, x(s) - x(a)), height: 6, rx: 3, fill: C('--serious')}, svg);
+    el('rect', {x: x(a), y: yc + 1, width: Math.max(2, x(p) - x(a)), height: 6, rx: 3, fill: C('--series-3')}, svg);
+    el('circle', {cx: x(a), cy: yc, r: 4.5, fill: '#fff', stroke: C('--surface-1'), 'stroke-width': 2}, svg);
+    el('path', {d: `M${x(s)},${yc - 10} l5,8 h-10z`, fill: C('--serious'), stroke: C('--surface-1'), 'stroke-width': 1.5}, svg);
+    el('path', {d: `M${x(p)},${yc - 1} l5,5 l-5,5 l-5,-5z`, fill: C('--series-3'), stroke: C('--surface-1'), 'stroke-width': 1.5}, svg);
+    txt(svg, x(s) + 8, yc - 1, (s - a) + ' мин', {fill: C('--text-secondary')});
+    const hit = el('rect', {x: 0, y: yc - rowH / 2, width: W, height: rowH, fill: 'transparent'}, svg);
+    hit.addEventListener('mousemove', ev => showTip(`<b>${name}</b><div class="row"><span>Появляется</span><b>${a} мин</b></div><div class="row"><span>Решение сейчас</span><b>${s} мин</b></div><div class="row"><span>Зазор сейчас</span><b>${s - a} мин</b></div><div class="row"><span>Решение после правки</span><b>${p} мин</b></div><div class="row"><span>Зазор после</span><b>${p - a} мин</b></div>`, ev));
+    hit.addEventListener('mouseleave', hideTip);
+  });
+}
+table('tb-gantt', ['Проблема', 'Появляется, мин', 'Решение сейчас', 'Зазор сейчас', 'Решение после', 'Зазор после'], probs.map(([n, a, s, p]) => [n, a, s, s - a, p, p - a]));
+
+// ---------- 4. Currencies dumbbell ----------
+const cur = [['Монеты стройки', 0.5, 0.5], ['Жетоны', 0.5, 60], ['Капитал', 4, 4], ['Редкие ресурсы', 4, 40], ['Дипломы', 16, 25], ['Печати', 19, 19], ['Карты бригадиров', 18, 15], ['Опыт центра', 75, 120], ['Мана', 438, 500]];
+function drawCur(){
+  const b = box('ch-cur'); b.innerHTML = '';
+  const W = width(b), rowH = 28, m = {l: 130, r: 16, t: 8, b: 34}, H = m.t + m.b + cur.length * rowH;
+  const svg = el('svg', {width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Первое появление валют'}, b);
+  const iw = W - m.l - m.r, lo = Math.log10(0.5), hi = Math.log10(600), x = v => m.l + (Math.log10(v) - lo) / (hi - lo) * iw;
+  [1,5,15,30,60,120,240,480].forEach(v => { el('line', {x1: x(v), x2: x(v), y1: m.t, y2: H - m.b, stroke: C('--line')}, svg); txt(svg, x(v), H - m.b + 16, v, {'text-anchor': 'middle'}); });
+  txt(svg, m.l + iw / 2, H - 4, 'минута игры (лог-шкала)', {'text-anchor': 'middle'});
+  cur.forEach(([name, a, p], k) => { const yc = m.t + k * rowH + rowH / 2;
+    txt(svg, m.l - 8, yc + 4, name, {'text-anchor': 'end', fill: C('--text-primary'), 'font-size': 12});
+    el('line', {x1: x(a), x2: x(p), y1: yc, y2: yc, stroke: '#5a5a53', 'stroke-width': 2}, svg);
+    el('circle', {cx: x(a), cy: yc, r: 6, fill: C('--series-1'), stroke: C('--surface-1'), 'stroke-width': 2}, svg);
+    if (p !== a) el('circle', {cx: x(p), cy: yc, r: 6, fill: C('--series-2'), stroke: C('--surface-1'), 'stroke-width': 2}, svg);
+    const hit = el('rect', {x: 0, y: yc - rowH / 2, width: W, height: rowH, fill: 'transparent'}, svg);
+    hit.addEventListener('mousemove', ev => showTip(`<b>${name}</b><div class="row"><span>Сейчас</span><b>${a < 1 ? 'с 1-й мин' : a + ' мин'}</b></div><div class="row"><span>Предлагается</span><b>${p < 1 ? 'с 1-й мин' : p + ' мин'}</b></div>`, ev));
+    hit.addEventListener('mouseleave', hideTip); });
+}
+table('tb-cur', ['Валюта', 'Сейчас, мин', 'Предлагается, мин'], cur.map(r => [r[0], r[1] < 1 ? 'с 1-й' : r[1], r[2] < 1 ? 'с 1-й' : r[2]]));
+
+// ---------- 5. Matrix ----------
+const stages = ['Заказ 1', 'Заказы 2–3', '4–6', '7–10', '11–15', '16+'];
+// e = early, o = ok, - = off, i = intro
+const rows = [
+  ['Монеты и прогресс', 'oooooo', 'oooooo'],
+  ['Пилюля жетонов (HUD)', 'eeeeoo', '---ioo'],
+  ['Часы дня (HUD)', 'eeeeoo', '---ioo'],
+  ['Кнопка «i» — Об уровне', 'eooooo', '-ioooo'],
+  ['Подсказка «что купить»', '------', 'iooooo'],
+  ['Счётчик потерь бригады', '------', '-ioooo'],
+  ['Кошелёк: печати и дипломы при нуле', 'eeoooo', '-ioooo'],
+  ['Редкие ресурсы', 'eeeooo', '---ioo'],
+  ['Все 8 вкладок офиса', 'eeeeoo', '-iiioo'],
+  ['15 плашек штаба', 'eeeeeo', '-ooooo'],
+  ['24 карты бригадиров', '--eeeo', '--iooo'],
+  ['Брифинг со слотами', '--oooo', '-ioooo'],
+  ['Выбор бустеров', '---eoo', '---ioo'],
+  ['События проблем стройки', '------', '-iiiii'],
+  ['Предупреждения лесов', '------', '---ioo'],
+  ['Меню: сброс и перемотка', 'eeeeee', '------'],
+];
+function drawMatrix(mode){
+  const t = document.getElementById('matrix');
+  const lab = {e: 'рано', o: 'нужно', '-': '—', i: '★ ввод'}, cls = {e: 'c-early', o: 'c-ok', '-': 'c-off', i: 'c-intro'};
+  t.innerHTML = '<thead><tr><th>Элемент</th>' + stages.map(s => '<th>' + s + '</th>').join('') + '</tr></thead><tbody>' +
+    rows.map(r => { const s = (mode === 'now' ? r[1] : r[2]).padEnd(6, 'o'); return '<tr><td>' + r[0] + '</td>' + [...s].map(c => '<td><span class="cell ' + cls[c] + '">' + lab[c] + '</span></td>').join('') + '</tr>'; }).join('') + '</tbody>';
+}
+document.querySelectorAll('.mswitch button').forEach(bt => bt.addEventListener('click', () => { document.querySelectorAll('.mswitch button').forEach(x => x.classList.toggle('on', x === bt)); drawMatrix(bt.dataset.m); }));
+drawMatrix('now');
+
+
+const memTot = [653,732,803,858,909,922,931,864,886,922,905,983,965,980,987,981,999,990,1010,1015,1061,1086,1100,1078,1088,1121,1142,1177,1201,1205,1155,1141,1205,1201,1174,1210,1343,1232,1304,1294,1382];
+const memTex = [7,21,28,39,51,56,65,82,91,111,118,138,152,195,206,216,226,251,263,274,297,316,325,331,338,352,362,384,395,420,429,439,446,456,465,475,490,500,509,542,549];
+function line1(id, data, max, ticks, unit, color){
+  const b = box(id); if (!b) return; b.innerHTML = '';
+  const W = width(b), H = 240, m = {l: 44, r: 12, t: 12, b: 32};
+  const svg = el('svg', {width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img'}, b);
+  const iw = W - m.l - m.r, ih = H - m.t - m.b, n = data.length;
+  const x = i => m.l + i / (n - 1) * iw, y = v => m.t + ih - v / max * ih;
+  ticks.forEach(v => { el('line', {x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), stroke: C('--line')}, svg); txt(svg, m.l - 6, y(v) + 4, v, {'text-anchor': 'end'}); });
+  [0,10,20,30,40].forEach(i => txt(svg, x(i), H - m.b + 16, i, {'text-anchor': 'middle'}));
+  txt(svg, m.l + iw / 2, H - 2, 'заказов пройдено', {'text-anchor': 'middle'});
+  el('path', {d: data.map((v, k) => (k ? 'L' : 'M') + x(k) + ',' + y(v)).join(''), fill: 'none', stroke: color, 'stroke-width': 2, 'stroke-linejoin': 'round'}, svg);
+  const cross = el('line', {y1: m.t, y2: m.t + ih, stroke: '#888', opacity: 0}, svg);
+  const dot = el('circle', {r: 5, fill: color, stroke: C('--surface-1'), 'stroke-width': 2, opacity: 0}, svg);
+  const hit = el('rect', {x: m.l, y: m.t, width: iw, height: ih, fill: 'transparent'}, svg);
+  hit.addEventListener('mousemove', ev => { const r = svg.getBoundingClientRect(); const i = Math.max(0, Math.min(n - 1, Math.round((ev.clientX - r.left - m.l) / iw * (n - 1))));
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('opacity', 1); dot.setAttribute('cx', x(i)); dot.setAttribute('cy', y(data[i])); dot.setAttribute('opacity', 1);
+    showTip(`<b>После ${i} заказов</b><div class="row"><span>${unit}</span><b>${data[i].toLocaleString('ru-RU')}</b></div>`, ev); });
+  hit.addEventListener('mouseleave', () => { hideTip(); cross.setAttribute('opacity', 0); dot.setAttribute('opacity', 0); });
+}
+window.drawOom = function(){ line1('ch-mem', memTot, 1500, [0,500,1000,1500], 'Память, МБ', C('--series-2')); line1('ch-tex', memTex, 600, [0,200,400,600], 'Текстур', C('--series-1')); };
+table('tb-mem', ['Заказов', 'МБ'], memTot.map((v, i) => [i, v]));
+table('tb-tex', ['Заказов', 'Текстур'], memTex.map((v, i) => [i, v]));
+
+function drawAll(){ drawCurve(); drawOrders(); drawGantt(); drawCur(); if (window.drawOom) window.drawOom(); }
+drawAll();
+let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(drawAll, 120); });
+window.__mb = {el, txt, C, showTip, hideTip, table, width};
+})();
+</script>
+</body>
+</html>
