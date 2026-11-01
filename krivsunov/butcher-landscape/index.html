@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Butcher Hero — окна в горизонтали</title>
+<style>
+  :root { --bg: #101216; --card: #1a1d23; --line: #2a2e36; --text: #e8eaef; --muted: #9aa1ad; --accent: #ffc94a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { position: sticky; top: 0; z-index: 5; background: rgba(16, 18, 22, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
+           padding: calc(10px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left)); }
+  .top { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  h1 { margin: 0; font-size: 18px; font-weight: 700; }
+  h1 small { display: block; font-size: 12px; font-weight: 400; color: var(--muted); }
+  .seg { display: inline-flex; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
+  .seg button { border: 0; background: none; color: var(--muted); font: inherit; font-weight: 600; padding: 7px 14px; border-radius: 7px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: #1b1505; }
+  input[type=search] { flex: 1 1 180px; min-width: 0; background: var(--card); border: 1px solid var(--line); color: var(--text); border-radius: 10px; padding: 9px 12px; font: inherit; }
+  nav { display: flex; gap: 6px; overflow-x: auto; padding-top: 10px; scrollbar-width: none; }
+  nav a { flex: none; color: var(--muted); text-decoration: none; font-size: 13px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; }
+  nav a:hover { color: var(--text); border-color: var(--muted); }
+  main { padding: 6px max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left)); }
+  section h2 { font-size: 16px; margin: 22px 0 10px; scroll-margin-top: 130px; }
+  section h2 span { color: var(--muted); font-weight: 400; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  body.both .grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; cursor: pointer; text-align: left; padding: 0; color: inherit; font: inherit; }
+  .card:hover, .card:focus-visible { border-color: var(--accent); outline: none; }
+  .shots { display: grid; gap: 2px; background: #000; }
+  .shots img { width: 100%; aspect-ratio: 2.17; object-fit: contain; display: block; background: #000; }
+  .meta { padding: 8px 10px 10px; }
+  .meta b { display: block; font-size: 14px; }
+  .meta small { color: var(--muted); font-size: 12px; word-break: break-all; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: .04em; padding: 2px 6px; }
+  .empty { color: var(--muted); padding: 40px 0; text-align: center; }
+  #box { position: fixed; inset: 0; z-index: 10; background: rgba(5, 6, 8, .96); display: none; flex-direction: column; }
+  #box.open { display: flex; }
+  .bar { display: flex; align-items: center; gap: 10px; padding: calc(10px + env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) 10px max(14px, env(safe-area-inset-left)); flex-wrap: wrap; }
+  .bar .title { flex: 1 1 200px; min-width: 0; }
+  .bar .title b { display: block; font-size: 16px; }
+  .bar .title small { color: var(--muted); }
+  .icon { border: 1px solid var(--line); background: var(--card); color: var(--text); width: 40px; height: 40px; border-radius: 10px; font-size: 20px; cursor: pointer; }
+  .stage { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center; padding: 0 max(8px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); touch-action: pan-y pinch-zoom; }
+  .stage figure { margin: 0; flex: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+  .stage img { max-width: 100%; max-height: 100%; min-height: 0; object-fit: contain; border-radius: 10px; background: #000; }
+  .stage figcaption { color: var(--muted); font-size: 12px; padding-top: 4px; }
+  .hint { color: var(--muted); font-size: 12px; text-align: center; padding-bottom: calc(6px + env(safe-area-inset-bottom)); }
+  @media (max-width: 600px) { h1 { font-size: 16px; } .hint { display: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1>Butcher Hero — окна в горизонтали<small id="sub"></small></h1>
+    <div class="seg" role="group" aria-label="Платформа">
+      <button data-p="ios">iOS</button><button data-p="android">Android</button><button data-p="both">Оба</button>
+    </div>
+    <input type="search" id="q" placeholder="Поиск окна…" aria-label="Поиск окна">
+  </div>
+  <nav id="nav"></nav>
+</header>
+<main id="main"></main>
+
+<div id="box" role="dialog" aria-modal="true" aria-label="Просмотр окна">
+  <div class="bar">
+    <button class="icon" id="prev" aria-label="Предыдущее окно">‹</button>
+    <div class="title"><b id="bt"></b><small id="bs"></small></div>
+    <div class="seg" role="group" aria-label="Платформа в просмотре">
+      <button data-p="ios">iOS</button><button data-p="android">Android</button><button data-p="both">Оба</button>
+    </div>
+    <button class="icon" id="next" aria-label="Следующее окно">›</button>
+    <button class="icon" id="close" aria-label="Закрыть">✕</button>
+  </div>
+  <div class="stage" id="stage"></div>
+  <div class="hint">← → — листать, I / A / B — iOS, Android, оба, Esc — закрыть</div>
+</div>
+
+<script src="data.js"></script>
+<script>
+(() => {
+  const items = window.WINDOWS || [];
+  const names = { ios: 'iOS · iPhone 15 Pro, 2556 × 1179', android: 'Android · 20:9, 2400 × 1080' };
+  let platform = localStorage.getItem('platform') || 'ios';
+  let shown = items, index = -1;
+  const $ = s => document.querySelector(s);
+  const groups = [...new Set(items.map(it => it.group))];
+  $('#sub').textContent = `${items.length} окон · ${groups.length} разделов · iPhone и Android в ландшафте`;
+
+  const shotsHtml = (it, kind) => (platform === 'both' ? ['ios', 'android'] : [platform])
+    .map(p => `<img loading="lazy" src="${kind}/${p}/${it.id}.webp" alt="${it.title} — ${p === 'ios' ? 'iOS' : 'Android'}">`).join('');
+
+  function render() {
+    const q = $('#q').value.trim().toLowerCase();
+    shown = items.filter(it => !q || (it.title + ' ' + it.group + ' ' + it.source).toLowerCase().includes(q));
+    const byGroup = groups.map(g => [g, shown.filter(it => it.group === g)]).filter(([, list]) => list.length);
+    $('#nav').innerHTML = byGroup.map(([g, list], i) => `<a href="#g${i}">${g} · ${list.length}</a>`).join('');
+    $('#main').innerHTML = byGroup.length ? byGroup.map(([g, list], i) => `
+      <section><h2 id="g${i}">${g} <span>${list.length}</span></h2><div class="grid">${list.map(it => `
+        <button class="card" data-id="${it.id}"><div class="shots">${shotsHtml(it, 'thumb')}</div>
+          <div class="meta"><b>${it.title}</b><small>${it.source || ''}</small></div></button>`).join('')}</div></section>`).join('')
+      : '<div class="empty">Ничего не нашлось</div>';
+    document.body.classList.toggle('both', platform === 'both');
+    document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === platform));
+  }
+
+  function setPlatform(p) {
+    platform = p;
+    localStorage.setItem('platform', p);
+    render();
+    if (index >= 0) open(index);
+  }
+
+  function open(i) {
+    index = (i + shown.length) % shown.length;
+    const it = shown[index];
+    $('#bt').textContent = it.title;
+    $('#bs').textContent = `${it.group} · ${index + 1} из ${shown.length}`;
+    $('#stage').innerHTML = (platform === 'both' ? ['ios', 'android'] : [platform]).map(p =>
+      `<figure><img src="img/${p}/${it.id}.webp" alt="${it.title}"><figcaption>${names[p]}</figcaption></figure>`).join('');
+    $('#box').classList.add('open');
+    history.replaceState(null, '', '#' + it.id);
+    for (const d of [1, -1]) {  // соседние окна — заранее
+      const near = shown[(index + d + shown.length) % shown.length];
+      (platform === 'both' ? ['ios', 'android'] : [platform]).forEach(p => { new Image().src = `img/${p}/${near.id}.webp`; });
+    }
+  }
+
+  function close() {
+    $('#box').classList.remove('open');
+    index = -1;
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setPlatform(b.dataset.p)));
+  $('#q').addEventListener('input', render);
+  $('#main').addEventListener('click', e => {
+    const card = e.target.closest('.card');
+    if (card) open(shown.findIndex(it => it.id === card.dataset.id));
+  });
+  $('#prev').addEventListener('click', () => open(index - 1));
+  $('#next').addEventListener('click', () => open(index + 1));
+  $('#close').addEventListener('click', close);
+  $('#stage').addEventListener('click', e => { if (e.target === e.currentTarget) close(); });
+  document.addEventListener('keydown', e => {
+    if (index < 0 || e.target === $('#q')) return;
+    const keys = { ArrowLeft: () => open(index - 1), ArrowRight: () => open(index + 1), Escape: close,
+                   i: () => setPlatform('ios'), a: () => setPlatform('android'), b: () => setPlatform('both') };
+    const act = keys[e.key] || keys[e.key.toLowerCase()];
+    if (act) { e.preventDefault(); act(); }
+  });
+  let x0 = null;  // листание пальцем
+  $('#stage').addEventListener('touchstart', e => { x0 = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+  $('#stage').addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) open(index + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+
+  render();
+  const start = location.hash.slice(1);
+  if (start) { const i = shown.findIndex(it => it.id === start); if (i >= 0) open(i); }
+})();
+</script>
+</body>
+</html>
