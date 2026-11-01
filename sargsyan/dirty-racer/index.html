@@ -36,7 +36,7 @@
     footer { color:#6f665a; font-size:10px; text-align:center; flex:none; }
     #shell:fullscreen { background:#e9e0d1; }
     @media(max-width:480px) { #shell { gap:4px; padding-left:0; padding-right:0; } header { padding:0 12px; height:28px; } #game { border-radius:0; box-shadow:none; } footer { font-size:9px; } }
-    @media(max-width:620px){#shell{padding:0;gap:0}header{display:none}#game{border-radius:0;box-shadow:none}}
+    @media(max-width:620px){#shell{padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);gap:0}header{display:none}#game{border-radius:0;box-shadow:none}}
   </style>
 </head>
 <body>
@@ -65,9 +65,13 @@
     const game = document.getElementById('game');
     const area = document.getElementById('play-area');
     function fitGame() {
-      const width = Math.min(area.clientWidth, area.clientHeight * 6 / 13);
+      // Portrait phones use their full safe area. Unity recomputes its UI zones and camera viewport for this aspect.
+      // Keep a portrait game window on desktop/landscape; do not stretch the canvas or its backing buffer with CSS.
+      const phone = window.matchMedia('(max-width:620px) and (orientation:portrait)').matches;
+      const width = phone ? area.clientWidth : Math.min(area.clientWidth, area.clientHeight * 6 / 13);
+      const height = phone ? area.clientHeight : width * 13 / 6;
       game.style.width = width + 'px';
-      game.style.height = width * 13 / 6 + 'px';
+      game.style.height = height + 'px';
     }
     new ResizeObserver(fitGame).observe(area);
     fitGame();
@@ -92,9 +96,9 @@
     canvas.addEventListener('wheel', event => event.preventDefault(), {passive:false});
     const config = {
       arguments: [],
-      dataUrl: 'Build/40d60fab0353ce0c2368b9fa29eb3f1a.data.unityweb',
+      dataUrl: 'Build/0e7ce5716e1e01e1e811961d5f92384d.data.unityweb',
       frameworkUrl: 'Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb',
-      codeUrl: 'Build/f957691f6d1014ff195c5bee81bcefbd.wasm.unityweb',
+      codeUrl: 'Build/5c086777ba7c02a3940a855c1fcbb226.wasm.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "Dirty Racer Team",
       productName: "Dirty Racer",

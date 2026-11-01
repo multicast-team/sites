@@ -1,29 +1,28 @@
 {
-  "release": "gear-2026-10-31-v1",
-  "built_at_utc": "2026-10-31T16:25:10.870392+00:00",
+  "release": "feedback345-2026-11-01-v1",
+  "built_at_utc": "2026-11-01T23:23:40.668067+00:00",
   "changes": [
-    "new Gear tab (between Crew and Compete): Standard Gear 10 / 100 carbon (Rare 85% / Epic 15%) and Elite Gear 30 / 300 carbon (Epic 85% / Legendary 15%), \"i\" shows the drop information",
-    "inventory of 30 racing pieces (helmet, gloves, boots, suit, wheel, seat, tyre, stopwatch, headset, roadbook x Rare / Epic / Legendary): \"?\" until found, then stars, the stat it raises and copies to the next star; every found piece is worn by the team",
-    "gear bonus: +3% / +6% / +12% to its stat at one star, five stars double it; duplicates add stars (1, 2, 4, 6 copies)",
-    "reveal window after a chest (x1 big card, x10 list with NEW / star up) with Again; piece window with the stat now and at the next star",
-    "all gear art painted in code (white-blue Rare, carbon-purple Epic, gold Legendary)",
-    "includes first-upgrade-unlocks-2026-10-31-v1 and car-designs-2026-10-31-v2"
+    "Gear reveal shows each draw's actual stat bonus before and after, no false gain for ordinary copies, whole team / next stage timing",
+    "Gear x10 has readable bonus lines, split totals and a scrolling reward list at enlarged text sizes; carbon sources link to Shop",
+    "Same USD prices, better large carbon bundles:100/330/720/1500/4200; original product IDs retained; computed Best value badge",
+    "Portrait phones use full safe-area width and height, while desktop/landscape retain the portrait game window",
+    "First-upgrade unlocks and Crew implementation preserved"
   ],
-  "docs": [
-    "Docs/Impl/GEAR.md",
-    "Docs/Impl/META.md#6",
-    "Docs/Impl/DEVIATIONS.md"
-  ],
+  "checks": {
+    "logic_tests_passed": 12,
+    "unity_ui_passed": 1,
+    "unity_shots": 13
+  },
   "files": [
     {
       "path": "index.html",
-      "bytes": 9330,
-      "sha256": "14d7eb96e24ca4ff833cdf887054db689d29537899748251cf2558661cd7a4d6"
+      "bytes": 9864,
+      "sha256": "7615680056a70be1961140822e9b60c88e4757c4fe9bf0bd5ae4609ab4c5ab8c"
     },
     {
-      "path": "Build/40d60fab0353ce0c2368b9fa29eb3f1a.data.unityweb",
-      "bytes": 15201063,
-      "sha256": "3c3bc6eb1777c0f8b73f63c88f66f4388c945c84749682a4c7d1d975fff3424a"
+      "path": "Build/0e7ce5716e1e01e1e811961d5f92384d.data.unityweb",
+      "bytes": 15201709,
+      "sha256": "efe342233a0b00b0c02c0941ea0e50f10cb91b39bb354df4ae9b2d5db1ef5411"
     },
     {
       "path": "Build/451dba3e79224854d85f1ad09da5ab74.loader.js",
@@ -31,14 +30,14 @@
       "sha256": "9fa3bc01227674e5cc11ada4a2f31fdc9ebfb00584ac550c864da6d06ab96e01"
     },
     {
-      "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
-      "bytes": 77286,
-      "sha256": "294787e3f126f599e199c686e335dbed00cc62f0c4f3ff790fd6377055866f94"
+      "path": "Build/5c086777ba7c02a3940a855c1fcbb226.wasm.unityweb",
+      "bytes": 11804511,
+      "sha256": "33be859d04dff9a1597dd816a8391adc05c3a3e4a1601f5f210554d31d27a4a2"
     },
     {
-      "path": "Build/f957691f6d1014ff195c5bee81bcefbd.wasm.unityweb",
-      "bytes": 11802840,
-      "sha256": "a1f8c7bc93d86e90cc0eac8db699001470a49cddc4b014620bf93c0bd33181f4"
+      "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
+      "bytes": 77286,
+      "sha256": "1989eeb8f1fe9145bfeb07df4355d33d96c6d6edcea95da8d97f29edc066d698"
     }
   ]
 }
