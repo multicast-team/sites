@@ -21,6 +21,7 @@
   let savedSnapshot = null;
   let noteSequence = 0;
   let lastOpener = null;
+  let galleryDialog = null;
   const noteFields = new Set();
 
   function el(tag, className, content) {
@@ -40,10 +41,10 @@
 
   function imageUrl(value) {
     const source = text(value);
-    if (/^(?:\.\/)?assets\//.test(source)) {
+    if (/^(?:\.\/)?(?:assets|gallery|videos)\//.test(source)) {
       try {
         const path = decodeURIComponent(source.split(/[?#]/)[0]);
-        if (!path.includes('\\') && !path.split('/').includes('..') && !/[\u0000-\u001f\u007f]/.test(path)) return source;
+        if (!source.includes('\\') && !path.includes('\\') && !path.split('/').includes('..') && !/[\u0000-\u001f\u007f]/.test(source + path)) return source;
       } catch { return ''; }
       return '';
     }
@@ -161,6 +162,8 @@
       if (!field.input.isConnected) { noteFields.delete(field); continue; }
       const value = notes[field.id] || '';
       if (field.input.value !== value) field.input.value = value;
+      field.block.classList.toggle('has-note', !!value.trim());
+      field.badge.hidden = !value.trim();
       field.status.textContent = savedToDevice ? 'Сохранено на устройстве' : 'Не сохранено · экспортируйте JSON';
       field.status.classList.toggle('error', !savedToDevice);
     }
@@ -170,14 +173,17 @@
     const block = el('div', 'notes-block');
     const heading = el('div', 'note-heading');
     const label = el('label', '', 'Ваш комментарий');
+    const badge = el('span', 'note-badge', 'Есть заметка');
+    badge.hidden = true;
+    label.append(badge);
     const input = el('textarea');
     const status = el('span', 'note-status');
     const inputId = `note-${++noteSequence}`;
     label.htmlFor = inputId;
     input.id = inputId;
     input.maxLength = MAX_NOTE;
-    input.rows = 3;
-    input.placeholder = 'Что нравится, что уточнить…';
+    input.rows = 4;
+    input.placeholder = 'Напишите, что нравится в этой вилле и что хотите уточнить…';
     input.setAttribute('aria-label', `Ваш комментарий: ${property.title}`);
     status.id = `${inputId}-status`;
     status.setAttribute('aria-live', 'polite');
@@ -188,9 +194,11 @@
       status.textContent = 'Заметки пока недоступны';
     } else {
       input.value = notes[property.noteId] || '';
+      block.classList.toggle('has-note', !!input.value.trim());
+      badge.hidden = !input.value.trim();
       status.textContent = !savedToDevice ? 'Не сохранено · экспортируйте JSON' : input.value ? 'Сохранено на устройстве' : 'Сохраняется автоматически';
       status.classList.toggle('error', !savedToDevice);
-      noteFields.add({ id: property.noteId, input, status });
+      noteFields.add({ id: property.noteId, input, status, block, badge });
       input.addEventListener('input', () => {
         const next = Object.assign(Object.create(null), notes);
         if (input.value.trim()) next[property.noteId] = input.value;
@@ -225,13 +233,160 @@
       img.addEventListener('error', () => {
         img.remove();
         placeholder.hidden = false;
-        const link = box.closest('a.photo-link');
-        if (link) link.replaceWith(box);
       }, { once: true });
       img.src = url;
       box.append(img);
     }
     return box;
+  }
+
+  function videoElement(item, label, controls = false) {
+    const video = el('video');
+    video.controls = controls;
+    video.playsInline = true;
+    video.preload = 'metadata';
+    video.muted = true;
+    video.defaultMuted = true;
+    if (item.poster) video.poster = item.poster;
+    if (controls) video.setAttribute('aria-label', label);
+    else { video.tabIndex = -1; video.setAttribute('aria-hidden', 'true'); }
+    video.src = item.src;
+    return video;
+  }
+
+  function mediaPreview(item, label, eager = false, thumbnail = false) {
+    if (item.type !== 'video') return media(thumbnail && item.thumb ? item.thumb : item.src, label, eager);
+    const box = media(item.poster || '', label, eager);
+    box.classList.add('video-preview');
+    box.querySelector('.media-placeholder p').textContent = 'Видео';
+    if (!item.poster && !thumbnail) box.append(videoElement(item, label));
+    const play = el('span', 'play-indicator', '▶');
+    play.setAttribute('aria-hidden', 'true');
+    box.append(play);
+    return box;
+  }
+
+  function pauseVideos(container) {
+    container.querySelectorAll('video').forEach((video) => {
+      video.pause();
+      video.muted = true;
+      video.removeAttribute('src');
+      video.load();
+    });
+  }
+
+  function syncDialogScroll() {
+    document.body.classList.toggle('dialog-open', $('property-dialog').open || !!(galleryDialog && galleryDialog.open));
+  }
+
+  function openGallery(property, startIndex, opener) {
+    if (!property.media.length) return;
+    if (galleryDialog) galleryDialog.close();
+    const dialog = el('dialog', 'gallery-dialog');
+    galleryDialog = dialog;
+    dialog.setAttribute('aria-labelledby', 'gallery-title');
+    const top = el('div', 'dialog-top');
+    const heading = el('h2', 'gallery-title', property.title);
+    heading.id = 'gallery-title';
+    const close = el('button', 'close-button', '✕');
+    close.type = 'button';
+    close.setAttribute('aria-label', 'Закрыть галерею');
+    top.append(heading, close);
+    const counter = el('p', 'gallery-counter');
+    counter.setAttribute('role', 'status');
+    counter.setAttribute('aria-live', 'polite');
+    counter.setAttribute('aria-atomic', 'true');
+    const viewport = el('div', 'gallery-viewport');
+    const stage = el('div', 'gallery-stage');
+    const previous = el('button', 'gallery-nav', '‹');
+    const next = el('button', 'gallery-nav', '›');
+    previous.type = next.type = 'button';
+    previous.setAttribute('aria-label', 'Предыдущее фото или видео');
+    next.setAttribute('aria-label', 'Следующее фото или видео');
+    previous.disabled = next.disabled = property.media.length < 2;
+    viewport.append(previous, stage, next);
+    const caption = el('p', 'gallery-caption');
+    const thumbnails = el('div', 'gallery-thumbnails');
+    thumbnails.setAttribute('role', 'group');
+    thumbnails.setAttribute('aria-label', 'Все видео и фотографии');
+    let current = startIndex;
+    const buttons = property.media.map((item, index) => {
+      const button = el('button', 'gallery-thumbnail');
+      button.type = 'button';
+      button.setAttribute('aria-label', `${item.type === 'video' ? 'Видео' : 'Фото'} · ${index + 1} из ${property.media.length}: ${item.caption || property.title}`);
+      button.append(mediaPreview(item, '', false, true), el('span', 'thumbnail-number', String(index + 1)));
+      button.addEventListener('click', () => show(index));
+      thumbnails.append(button);
+      return button;
+    });
+
+    function show(index) {
+      pauseVideos(stage);
+      current = (index + property.media.length) % property.media.length;
+      const item = property.media[current];
+      const label = item.caption || property.title;
+      const kind = item.type === 'video' ? 'Видео' : 'Фото';
+      const message = el('p', 'gallery-media-error', `${kind} не удалось загрузить. Выберите другой материал.`);
+      message.hidden = true;
+      message.setAttribute('role', 'status');
+      let node;
+      if (item.type === 'video') node = videoElement(item, label, true);
+      else {
+        node = el('img');
+        node.alt = label;
+        node.decoding = 'async';
+        node.referrerPolicy = 'no-referrer';
+      }
+      node.addEventListener('error', () => { message.hidden = false; node.hidden = true; }, { once: true });
+      if (item.type !== 'video') node.src = item.src;
+      stage.replaceChildren(node, message);
+      counter.textContent = `${kind} · ${current + 1} из ${property.media.length}`;
+      caption.textContent = item.caption || `${kind}: ${property.title}`;
+      buttons.forEach((button, i) => {
+        button.setAttribute('aria-current', String(i === current));
+        button.tabIndex = i === current ? 0 : -1;
+      });
+      const active = buttons[current];
+      thumbnails.scrollLeft = active.offsetLeft - thumbnails.offsetLeft - (thumbnails.clientWidth - active.offsetWidth) / 2;
+    }
+
+    close.addEventListener('click', () => { pauseVideos(stage); dialog.close(); });
+    previous.addEventListener('click', () => show(current - 1));
+    next.addEventListener('click', () => show(current + 1));
+    dialog.addEventListener('keydown', (event) => {
+      if (event.target.closest('video') || event.altKey || event.ctrlKey || event.metaKey) return;
+      const targets = { ArrowLeft: current - 1, ArrowRight: current + 1, Home: 0, End: property.media.length - 1 };
+      if (!own(targets, event.key)) return;
+      event.preventDefault();
+      show(targets[event.key]);
+      if (thumbnails.contains(event.target)) buttons[current].focus({ preventScroll: true });
+    });
+    let touchStart = null;
+    stage.addEventListener('touchstart', (event) => {
+      touchStart = event.touches.length === 1 && !event.target.closest('video') ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null;
+    }, { passive: true });
+    stage.addEventListener('touchend', (event) => {
+      if (!touchStart || !event.changedTouches.length) return;
+      const dx = event.changedTouches[0].clientX - touchStart.x;
+      const dy = event.changedTouches[0].clientY - touchStart.y;
+      touchStart = null;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) show(current + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+    stage.addEventListener('touchcancel', () => { touchStart = null; });
+    dialog.addEventListener('cancel', () => pauseVideos(stage));
+    dialog.addEventListener('close', () => {
+      pauseVideos(stage);
+      dialog.remove();
+      if (galleryDialog === dialog) galleryDialog = null;
+      syncDialogScroll();
+      if (!galleryDialog && opener && opener.isConnected) opener.focus({ preventScroll: true });
+    });
+    dialog.append(top, counter, viewport, caption, thumbnails);
+    document.body.append(dialog);
+    dialog.showModal();
+    syncDialogScroll();
+    show(startIndex);
+    close.focus({ preventScroll: true });
   }
 
   const catalog = object(window.VILLA_CATALOG) ? window.VILLA_CATALOG : {};
@@ -240,7 +395,8 @@
   for (const item of rawProperties) if (validId(item.id)) idCounts.set(item.id, (idCounts.get(item.id) || 0) + 1);
   const properties = rawProperties.map((item, index) => {
     const status = own(statuses, item.status) ? item.status : 'review';
-    const pictures = (Array.isArray(item.images) ? item.images : []).filter(object).map((picture) => ({ src: imageUrl(picture.src), caption: text(picture.caption) })).filter((picture) => picture.src);
+    const pictures = (Array.isArray(item.images) ? item.images : []).filter(object).map((picture) => ({ src: imageUrl(picture.src), thumb: imageUrl(picture.thumb), caption: text(picture.caption) })).filter((picture) => picture.src);
+    const videos = (Array.isArray(item.videos) ? item.videos : []).filter(object).map((video) => ({ src: imageUrl(video.src), caption: text(video.caption), poster: imageUrl(video.poster), type: 'video' })).filter((video) => video.src);
     const cover = imageUrl(item.cover) || (pictures[0] && pictures[0].src) || '';
     if (cover && !pictures.some((picture) => picture.src === cover)) pictures.unshift({ src: cover, caption: '' });
     return {
@@ -258,6 +414,8 @@
       priceNote: text(item.priceNote),
       cover,
       images: pictures,
+      videos,
+      media: [...videos, ...pictures.map((picture) => ({ ...picture, type: 'image' }))],
       documents: (Array.isArray(item.documents) ? item.documents : []).filter(object).map((doc) => ({href: documentUrl(doc.href), label: text(doc.label) || 'PDF с фотографиями'})).filter((doc) => doc.href),
       description: text(item.description),
       facts: strings(item.facts),
@@ -317,9 +475,12 @@
 
   function card(property, index) {
     const article = el('article', 'property-card');
-    const cover = openButton('', property, 'cover-button');
-    cover.setAttribute('aria-label', `Подробнее: ${property.title}`);
-    cover.append(media(property.cover, property.title, index < 3), el('span', 'cover-action', 'Подробнее ↗'));
+    const cover = el('button', 'cover-button');
+    cover.type = 'button';
+    cover.setAttribute('aria-label', property.media.length ? `Открыть галерею: ${property.title}. Видео: ${property.videos.length}, фото: ${property.images.length}` : `Подробнее: ${property.title}`);
+    cover.setAttribute('aria-haspopup', 'dialog');
+    cover.addEventListener('click', () => property.media.length ? openGallery(property, 0, cover) : openDetail(property, cover));
+    cover.append(property.media.length ? mediaPreview(property.media[0], property.title, index < 3) : media('', property.title), el('span', 'cover-action', property.media.length ? `${property.videos.length ? '▶ Видео' : 'Фото'} · ${property.media.length} материалов` : 'Подробнее ↗'));
     const main = el('div', 'card-main');
     const title = el('h3', 'card-title');
     title.append(openButton(property.title, property, 'title-button'));
@@ -358,14 +519,19 @@
     if (property.detailPage) { const link = externalLink('Отдельная страница →', property.detailPage); link.target = '_self'; actions.append(link); }
     content.append(actions, el('p', 'map-precision', [property.locationLabel, precision(property)].filter(Boolean).join(' · ')));
     const gallery = el('div', 'gallery');
-    if (!property.images.length) gallery.append(media('', '', true));
-    property.images.forEach((picture, index) => {
+    gallery.setAttribute('role', 'group');
+    gallery.setAttribute('aria-label', 'Все видео и фотографии объекта');
+    if (!property.media.length) gallery.append(media('', '', true));
+    property.media.forEach((item, index) => {
       const figure = el('figure');
-      const link = externalLink('', picture.src, 'photo-link');
-      link.setAttribute('aria-label', `Открыть фото ${index + 1}: ${picture.caption || property.title}`);
-      link.append(media(picture.src, picture.caption || `${property.title} — фото ${index + 1}`, index === 0));
-      figure.append(link);
-      if (picture.caption) figure.append(el('figcaption', '', picture.caption));
+      const button = el('button', 'gallery-open');
+      button.type = 'button';
+      button.setAttribute('aria-haspopup', 'dialog');
+      const label = `${item.type === 'video' ? 'Видео' : 'Фото'} · ${index + 1} из ${property.media.length}`;
+      button.setAttribute('aria-label', `Открыть ${label}: ${item.caption || property.title}`);
+      button.append(mediaPreview(item, item.caption || property.title, index === 0));
+      button.addEventListener('click', () => openGallery(property, index, button));
+      figure.append(button, el('figcaption', '', item.caption ? `${label} · ${item.caption}` : label));
       gallery.append(figure);
     });
     content.append(gallery);
@@ -450,7 +616,9 @@
   $('empty-reset').addEventListener('click', resetFilters);
   $('close-dialog').addEventListener('click', () => $('property-dialog').close());
   $('property-dialog').addEventListener('close', () => {
-    document.body.classList.remove('dialog-open');
+    if (galleryDialog) galleryDialog.close();
+    pauseVideos($('detail-content'));
+    syncDialogScroll();
     $('detail-content').replaceChildren();
     for (const field of noteFields) if (!field.input.isConnected) noteFields.delete(field);
     if (lastOpener && lastOpener.isConnected) lastOpener.focus({ preventScroll: true });
