@@ -1,6 +1,6 @@
 {
   "release": "loadart-2026-11-02-v1",
-  "built_at_utc": "2026-11-02T17:25:29.521929+00:00",
+  "built_at_utc": "2026-11-02T17:33:21.660211+00:00",
   "changes": [
     "New loading screen: a box-cover picture split into six sectors, one per race (Formula, Superbike, Dirt Rally, NASCAR, Desert Trucks, GT3), each a race moment rendered from the game's own venues and garage cars",
     "Race Team Hero logo in the game font across the middle; the progress pill sits under the logo on any screen size"
@@ -21,9 +21,9 @@
       "sha256": "3211bc1e6208a50547b73ddef5166cfaf8cee7da6f58a28e99fde3c5ecb99e9c"
     },
     {
-      "path": "Build/4a09dee1780dafb02e6c6a0fefa479b2.data.unityweb",
-      "bytes": 15203556,
-      "sha256": "d2a64235ea833d97c675d5874c9fc94e0c13ad7ee8f746b587ad933016bdd1cb"
+      "path": "Build/91efbd2f35a3d518e1fbce42b3b563aa.data.unityweb",
+      "bytes": 15204320,
+      "sha256": "83f29fc59bc21f76c34cb991abadb346689c11fa0b0ebaf33464a9676a0b225b"
     },
     {
       "path": "Build/bed42fd67ae5a632b0a229ebbaf6d3be.wasm.unityweb",
@@ -37,13 +37,13 @@
     },
     {
       "path": "TemplateData/loading.jpg",
-      "bytes": 358874,
-      "sha256": "eab1a95fe9fd0b385f8cb26f8b2f3611ac5f38f2749e3446b50c49f9b5337c88"
+      "bytes": 363438,
+      "sha256": "49fadc745ff60a7007f8c5c25eaf82c85ffb91e2f13d1330746f642c8ab2acb7"
     },
     {
       "path": "index.html",
       "bytes": 11522,
-      "sha256": "78a4579a8a641fa0691e463667f91c18ae932d5d08ee9a5bf00f18bccc55cdfd"
+      "sha256": "c99f715250422457d017cb0e9dac55c091733d700a6f507a824fe152b7d9ffec"
     }
   ]
 }
