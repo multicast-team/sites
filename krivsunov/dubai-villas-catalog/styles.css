@@ -96,7 +96,16 @@ h2 { font: normal 21px/1.2 Georgia, "Times New Roman", serif; letter-spacing: -.
 .title-button { padding: 0; border: 0; background: none; font: inherit; text-align: left; }
 .title-button:hover { color: var(--accent); }
 .card-area { margin: 0; color: var(--olive); font-size: 11px; line-height: 1.35; overflow-wrap: anywhere; }
-.card-agent { margin: 1px 0 0; font-size: 10px; color: var(--muted); line-height: 1.35; overflow-wrap: anywhere; }
+.card-agent { margin: 3px 0 0; font-size: 10.5px; color: var(--ink); line-height: 1.35; overflow-wrap: anywhere; }
+.card-agent .agent-name { font-weight: 600; }
+.card-source { margin: 2px 0 0; font-size: 10px; line-height: 1.35; color: var(--muted); overflow-wrap: anywhere; }
+.inline-ext-link { font-weight: 600; text-decoration: underline; text-decoration-color: #94594366; }
+.inline-ext-link:hover { color: var(--accent); text-decoration-color: var(--accent); }
+.wa-link { color: #2d5a36; text-decoration-color: #2d5a3666; }
+.wa-link:hover { color: #1d4024; text-decoration-color: #1d4024; }
+.wa-group-tag, .wa-missing-tag { color: var(--muted); font-size: 10px; }
+.source-site-link { color: var(--accent); }
+.source-no-link { display: inline-block; color: #6c5937; background: #f5efe1; border: 1px solid #e3d6b8; border-radius: 4px; padding: 1px 5px; font-size: 9.5px; font-weight: 550; }
 .specs { display: flex; flex-wrap: wrap; gap: 3px 8px; margin: 6px 0; padding: 5px 0; border-block: 1px solid var(--line); list-style: none; color: #555e4e; font-size: 10px; line-height: 1.35; }
 .specs li + li::before { content: "·"; color: #a3a795; margin-right: 8px; }
 .description { font-size: 11px; line-height: 1.42; margin: 0 0 6px; color: #565c53; overflow-wrap: anywhere; white-space: pre-line; }

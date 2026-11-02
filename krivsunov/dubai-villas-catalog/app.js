@@ -738,9 +738,71 @@
       detailPage: /^properties\/[a-z0-9_-]+\.html$/i.test(text(item.detailPage)) ? text(item.detailPage) : '',
       mapUrl: safeUrl(item.mapUrl),
       locationLabel: text(item.locationLabel),
-      search: [item.title, item.area, item.agent, item.statusLabel, item.description, item.locationLabel, item.ceiling, ...strings(item.facts), ...strings(item.caveats)].filter((value) => typeof value === 'string').join(' ').toLocaleLowerCase('ru-RU')
+      agentPhone: text(item.agentPhone),
+      search: [item.title, item.area, item.agent, item.agentPhone, item.statusLabel, item.description, item.locationLabel, item.ceiling, item.listingUrl, ...strings(item.facts), ...strings(item.caveats)].filter((value) => typeof value === 'string').join(' ').toLocaleLowerCase('ru-RU')
     };
   });
+
+  function formatPhone(raw) {
+    const clean = text(raw);
+    const digits = clean.replace(/\D/g, '');
+    const uae = digits.match(/^971(\d{2})(\d{3})(\d{4})$/);
+    if (uae) return `+971 ${uae[1]} ${uae[2]} ${uae[3]}`;
+    if (digits.length >= 8) return `+${digits}`;
+    return clean;
+  }
+
+  function whatsappUrl(raw) {
+    const digits = text(raw).replace(/\D/g, '');
+    return digits.length >= 8 ? `https://wa.me/${digits}` : '';
+  }
+
+  function sourceSiteName(url) {
+    if (!url) return '';
+    try {
+      const host = new URL(url).hostname.replace(/^www\./i, '').toLowerCase();
+      if (host.includes('propertyfinder')) return 'Property Finder';
+      if (host.includes('bayut')) return 'Bayut';
+      if (host.includes('keyzee')) return 'Keyzee Homes';
+      return host;
+    } catch { return 'сайт объявления'; }
+  }
+
+  function noLinkSourceLabel(property) {
+    if (property.videos.length && property.images.length) return 'Ссылки на сайт нет — только фото и видео риэлтора';
+    if (property.videos.length) return 'Ссылки на сайт нет — только видео риэлтора';
+    if (property.documents.length) return 'Ссылки на сайт нет — только PDF и фото риэлтора';
+    if (property.images.length) return 'Ссылки на сайт нет — только фото риэлтора';
+    return 'Ссылки на сайт нет — только фото/видео риэлтора (переписка)';
+  }
+
+  function agentContactLine(property) {
+    const p = el('p', 'card-agent');
+    p.append(el('span', 'agent-name', `Риэлтор: ${property.agent || 'Не указан'}`));
+    p.append(document.createTextNode(' · '));
+    const wa = whatsappUrl(property.agentPhone);
+    if (wa) {
+      const link = externalLink(`WhatsApp ${formatPhone(property.agentPhone)} ↗`, wa, 'inline-ext-link wa-link');
+      p.append(link);
+    } else if (property.agent === 'Артур') {
+      p.append(el('span', 'wa-group-tag', 'WhatsApp: группа с Артуром · TG @Art_Real_Estate'));
+    } else {
+      p.append(el('span', 'wa-missing-tag', 'WhatsApp не сохранён'));
+    }
+    return p;
+  }
+
+  function sourceOriginLine(property) {
+    const p = el('p', 'card-source');
+    if (property.listingUrl) {
+      const site = sourceSiteName(property.listingUrl);
+      p.append(el('span', 'source-label', 'Откуда взят: '));
+      p.append(externalLink(`Сайт ${site} ↗`, property.listingUrl, 'inline-ext-link source-site-link'));
+    } else {
+      p.append(el('span', 'source-no-link', noLinkSourceLabel(property)));
+    }
+    return p;
+  }
 
   function badges(property) {
     const group = el('div', 'badges');
@@ -797,11 +859,12 @@
     const main = el('div', 'card-main');
     const title = el('h3', 'card-title');
     title.append(openButton(property.title, property, 'title-button'));
-    main.append(badges(property), priceBlock(property), title, el('p', 'card-area', property.area || 'Район не указан'), el('p', 'card-agent', property.agent ? `Агент: ${property.agent}` : 'Агент не указан'), specifications(property));
+    main.append(badges(property), priceBlock(property), title, el('p', 'card-area', property.area || 'Район не указан'), agentContactLine(property), sourceOriginLine(property), specifications(property));
     main.append(el('p', 'description card-description', property.description || 'Описание пока не предоставлено.'));
     if (property.caveats.length) main.append(el('p', 'caveat', property.caveats[0] + (property.caveats.length > 1 ? ` · Ещё замечаний: ${property.caveats.length - 1} — в карточке` : '')));
     const actions = el('div', 'card-actions');
-    actions.append(property.listingUrl ? action('Фото и описание ↗', property.listingUrl, '', true) : openButton('Материалы и описание', property, 'button'), action('На карте ↗', property.mapUrl, 'Нет точки на карте'));
+    const siteBtnLabel = property.listingUrl ? `Сайт (${sourceSiteName(property.listingUrl)}) ↗` : 'Ссылки нет · Фото/видео';
+    actions.append(property.listingUrl ? action(siteBtnLabel, property.listingUrl, '', true) : openButton(siteBtnLabel, property, 'button'), action('На карте ↗', property.mapUrl, 'Нет точки на карте'));
     if (property.documents.length) actions.append(externalLink('PDF ↗', property.documents[0].href));
     if (property.detailPage) { const link = externalLink('Страница объекта →', property.detailPage); link.target = '_self'; actions.append(link); }
     main.append(actions, el('p', 'map-precision', precision(property)));
@@ -827,7 +890,10 @@
     title.id = 'detail-title';
     content.append(badges(property), title, el('p', 'detail-location', property.area || 'Район не указан'), priceBlock(property, true));
     const actions = el('div', 'detail-actions');
-    actions.append(action('Фото и описание ↗', property.listingUrl, 'Ссылка на описание не предоставлена', true), action('На карте ↗', property.mapUrl, 'Точка на карте не предоставлена'));
+    const wa = whatsappUrl(property.agentPhone);
+    const siteLabel = property.listingUrl ? `Сайт (${sourceSiteName(property.listingUrl)}) ↗` : '';
+    actions.append(action(siteLabel || 'Фото и описание ↗', property.listingUrl, noLinkSourceLabel(property), true), action('На карте ↗', property.mapUrl, 'Точка на карте не предоставлена'));
+    if (wa) actions.append(externalLink(`WhatsApp: ${formatPhone(property.agentPhone)} ↗`, wa, 'button button-quiet'));
     property.documents.forEach((doc) => actions.append(externalLink(doc.label + ' ↗', doc.href)));
     if (property.detailPage) { const link = externalLink('Отдельная страница →', property.detailPage); link.target = '_self'; actions.append(link); }
     content.append(actions, el('p', 'map-precision', [property.locationLabel, precision(property)].filter(Boolean).join(' · ')));
@@ -851,7 +917,9 @@
     const facts = el('dl', 'detail-facts');
     const rows = [
       ['Район', property.area || 'Не указан'], ['Агент', property.agent || 'Не указан'],
-      ['Телефон агента', text(property.agentPhone) || 'Не указан'], ['Тип объекта', types[property.type]],
+      ['WhatsApp риэлтора', wa ? externalLink(`${formatPhone(property.agentPhone)} ↗`, wa, 'inline-ext-link wa-link') : (property.agent === 'Артур' ? 'Группа в WhatsApp с Артуром · TG @Art_Real_Estate' : 'Не указан')],
+      ['Откуда взят объект', property.listingUrl ? externalLink(`${sourceSiteName(property.listingUrl)} (${property.listingUrl}) ↗`, property.listingUrl, 'inline-ext-link source-site-link') : noLinkSourceLabel(property)],
+      ['Тип объекта', types[property.type]],
       ['Спальни', number(property.bedrooms) === null ? 'Не указано' : format.format(property.bedrooms)],
       ['Санузлы', number(property.bathrooms) === null ? 'Не указано' : format.format(property.bathrooms)],
       ['Площадь участка', number(property.plotM2) === null ? 'Не указана' : `${format.format(property.plotM2)} м²`],
@@ -860,7 +928,10 @@
     ];
     for (const [label, value] of rows) {
       const row = el('div');
-      row.append(el('dt', '', label), el('dd', '', value));
+      const dd = el('dd');
+      if (value instanceof Node) dd.append(value);
+      else dd.textContent = value;
+      row.append(el('dt', '', label), dd);
       facts.append(row);
     }
     content.append(facts);

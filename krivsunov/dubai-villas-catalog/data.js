@@ -1,5 +1,5 @@
 window.VILLA_CATALOG = {
-  "updatedAt": "2026-11-02T21:21:57.753450+00:00",
+  "updatedAt": "2026-11-02T22:06:37.999870+00:00",
   "properties": [
     {
       "id": "samantha_ji_gardenhall500",
@@ -2011,6 +2011,128 @@ window.VILLA_CATALOG = {
       "videos": []
     },
     {
+      "id": "arthur_silver480",
+      "title": "Silver Springs · 480 000 AED (новое 02.11)",
+      "area": "DAMAC Hills",
+      "agent": "Артур",
+      "agentPhone": "",
+      "price": 480000,
+      "priceLabel": "480 000 AED / год",
+      "priceNote": "Предложено Артуром в WhatsApp 02.11.2026 в 17:40 (480K).",
+      "bedrooms": 5,
+      "bathrooms": null,
+      "plotM2": 641,
+      "buaM2": 465,
+      "ceiling": "",
+      "status": "review",
+      "statusLabel": "Новое · 02.11",
+      "type": "villa",
+      "cover": "gallery/arthur_silver480-b0bb796c1bd2c5.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_silver480-b0bb796c1bd2c5.webp",
+          "thumb": "gallery/thumb-arthur_silver480-b0bb796c1bd2c5.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-071ce5ebda0f62.webp",
+          "thumb": "gallery/thumb-arthur_silver480-071ce5ebda0f62.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-28bae70fc853c4.webp",
+          "thumb": "gallery/thumb-arthur_silver480-28bae70fc853c4.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-144c315b5b67fa.webp",
+          "thumb": "gallery/thumb-arthur_silver480-144c315b5b67fa.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-8bdb72ae414a0b.webp",
+          "thumb": "gallery/thumb-arthur_silver480-8bdb72ae414a0b.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-6e92aad602bf89.webp",
+          "thumb": "gallery/thumb-arthur_silver480-6e92aad602bf89.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-e18390eaa540b8.webp",
+          "thumb": "gallery/thumb-arthur_silver480-e18390eaa540b8.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-3834dca38cebb1.webp",
+          "thumb": "gallery/thumb-arthur_silver480-3834dca38cebb1.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-029053c0315257.webp",
+          "thumb": "gallery/thumb-arthur_silver480-029053c0315257.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-a9e33d8b6ba15f.webp",
+          "thumb": "gallery/thumb-arthur_silver480-a9e33d8b6ba15f.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-370d1a6c36210b.webp",
+          "thumb": "gallery/thumb-arthur_silver480-370d1a6c36210b.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-24523f175b0a52.webp",
+          "thumb": "gallery/thumb-arthur_silver480-24523f175b0a52.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-098c09c5a202dc.webp",
+          "thumb": "gallery/thumb-arthur_silver480-098c09c5a202dc.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-7117ab77a28ca9.webp",
+          "thumb": "gallery/thumb-arthur_silver480-7117ab77a28ca9.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        },
+        {
+          "src": "gallery/arthur_silver480-0730b02b97df4d.webp",
+          "thumb": "gallery/thumb-arthur_silver480-0730b02b97df4d.webp",
+          "caption": "Фото риэлтора (WhatsApp 02.11)"
+        }
+      ],
+      "videos": [],
+      "description": "Silver Springs, DAMAC Hills 1: 5 спален + комнаты прислуги и водителя (maids & drivers room), вид на гольф-поле и озеро/пруд слева. Дом 5 000 sqft (465 м²), участок 6 900 sqft (641 м²).",
+      "facts": [
+        "Прислано Артуром в группе WhatsApp 02.11.2026 в 17:40 (15 фотографий от риэлтора, без публичной ссылки на сайт).",
+        "Параметры из сообщения Артура: Silver Springs, Damac Hills 1, price 480K, 5 bedrooms + maids & drivers room, golf course and lake views, 5000 sqft build up, 6900 sqft plot size.",
+        "Комментарий в группе: планировка как у ранее понравившейся виллы в Silver Springs, слева также должен быть виден пруд."
+      ],
+      "caveats": [
+        "Ссылки на сайт нет — в группе присланы только фотографии от риэлтора.",
+        "Точный номер дома и точка (pin) на карте пока не переданы."
+      ],
+      "listingUrl": "",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Silver%20Springs%2C%20DAMAC%20Hills%2C%20Dubai",
+      "mapPrecision": "area",
+      "locationLabel": "Silver Springs · DAMAC Hills 1 (район)",
+      "missing": [
+        "Точная точка дома"
+      ],
+      "requestState": "Новое предложение Артура за последние 48 часов (02.11 в 17:40).",
+      "ref": "",
+      "possibleDuplicateIds": [
+        "legacy_silver"
+      ],
+      "sourceNote": "Предложено Артуром в WhatsApp 02.11.2026 без ссылки на агрегатор (только фото риэлтора).",
+      "documents": [],
+      "detailPage": "properties/arthur_silver480.html"
+    },
+    {
       "id": "samantha_orange595",
       "title": "Orange Lake · Lake View",
       "area": "Jumeirah Golf Estates",
@@ -2709,7 +2831,9 @@ window.VILLA_CATALOG = {
         }
       ],
       "description": "Альтернативный дом с pin, подписанным Orange Lake street F64.",
-      "facts": [],
+      "facts": [
+        "02.11 в 17:14 Артур сообщил в группе, что показ этой виллы согласован на вторник в 17:30 (5:30 PM)."
+      ],
       "caveats": [
         "Публичная ссылка, цена и текущая доступность не получены."
       ],
@@ -4369,7 +4493,9 @@ window.VILLA_CATALOG = {
       "cover": "",
       "images": [],
       "description": "Ранее осмотренный дом, обсуждавшийся в переписке. Точный номер и публичное объявление не установлены.",
-      "facts": [],
+      "facts": [
+        "02.11 в 10:11 Артур сообщил: собственник принял оффер другого арендатора (оплата 2 года вперёд и договор на 4 года)."
+      ],
       "caveats": [
         "Не доказано совпадение с Orange Lake 595 000 или F64.",
         "В имеющихся материалах нет уверенно сопоставленного изображения именно этого дома."
