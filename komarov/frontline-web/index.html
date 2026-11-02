@@ -52,12 +52,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/b11021344.loader.js";
+      var loaderUrl = buildUrl + "/b11021353.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/b11021344.data.unityweb",
-        frameworkUrl: buildUrl + "/b11021344.framework.js.unityweb",
-        codeUrl: buildUrl + "/b11021344.wasm.unityweb",
+        dataUrl: buildUrl + "/b11021353.data.unityweb",
+        frameworkUrl: buildUrl + "/b11021353.framework.js.unityweb",
+        codeUrl: buildUrl + "/b11021353.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "MulticastGames",
         productName: "Frontline",
@@ -132,7 +132,14 @@
               });
             };
 
-      document.body.appendChild(script);
+      fetch("version.json?t=" + Date.now()).then(function (r) { return r.json(); }).then(function (v) {
+        var fix = function (u) { return u.replace(/b\d{8}\./, v.tag + "."); };
+        config.dataUrl = fix(config.dataUrl);
+        config.frameworkUrl = fix(config.frameworkUrl);
+        config.codeUrl = fix(config.codeUrl);
+        script.src = fix(loaderUrl);
+        document.body.appendChild(script);
+      }).catch(function () { document.body.appendChild(script); });
 
     </script>
   </body>
