@@ -1,0 +1,120 @@
+/* Slide 05 · История с выбором.  Owner: story screens.  Scoped under .st */
+.st { position: absolute; inset: 0; }
+.st .seat__shelf { display: none; }
+
+/* ---------- beat picture (60 % brightness, slow drift) ---------- */
+.st-pic { position: absolute; inset: 0; overflow: hidden; }
+.st-pic__l { position: absolute; inset: -4%; background: #0b0907 center 62% / cover no-repeat; filter: sepia(.35) saturate(.8) brightness(.6);
+  opacity: 0; transition: opacity .9s ease; animation: st-drift 26s ease-in-out infinite alternate; }
+.st-pic__l.is-on { opacity: 1; }
+@keyframes st-drift { from { scale: 1; translate: 0 0; } to { scale: 1.06; translate: -1.2% -1%; } }
+.st-shade { position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(8,6,4,.78) 0, rgba(8,6,4,0) 26%, rgba(8,6,4,0) 70%, rgba(8,6,4,.82) 100%),
+    radial-gradient(70% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%); }
+
+/* ---------- choice rows (near + far copy) ---------- */
+.st-row { position: absolute; left: 0; width: 1920px; height: 170px; display: flex; align-items: flex-end; justify-content: center; gap: 20px; padding-bottom: 14px; z-index: 3; pointer-events: none; }
+.st-row--near { top: 550px; }
+.st-row--far { top: 0; rotate: 180deg; }
+.st-row .choice { pointer-events: auto; transition: translate var(--t-move) var(--ease-back), scale var(--t-move) var(--ease-back), box-shadow var(--t-move), opacity .3s; }
+.st-row.is-out .choice { opacity: 0; translate: 0 50px; transition: opacity .32s ease, translate .32s var(--ease-in); pointer-events: none; }
+.st-row.is-out .choice.is-stamped { translate: 0 -24px; opacity: 0; transition-delay: .2s; }
+.st-row.is-in .choice { animation: st-card-in .5s var(--ease-back) both; animation-delay: calc(var(--i) * 70ms); }
+@keyframes st-card-in { from { opacity: 0; translate: 0 60px; scale: .9; } }
+.st-row .choice { width: 250px; height: 156px; gap: 6px; padding-top: 4px;
+  background: radial-gradient(90% 80% at 50% 30%, rgba(255,226,170,.16), transparent 70%), var(--st-parch, linear-gradient(180deg, #4a3520, #2a1d10)) center / cover, #3a2a18;
+  box-shadow: inset 0 0 0 2px #A67C43, inset 0 0 0 5px #2a1d10, inset 0 0 0 6px rgba(245,213,138,.55), inset 0 0 34px rgba(0,0,0,.55), 0 12px 22px rgba(0,0,0,.7); }
+.st-row .choice .frame__corner .orn-o { fill: #2a1d10; }
+.st-row .choice__ic { width: 78px; height: 78px; border-radius: 50%; display: grid; place-items: center; font-size: 46px; color: var(--gold-hi); filter: none;
+  background: radial-gradient(circle at 40% 30%, #4a3620, #160f08 75%);
+  box-shadow: inset 0 0 0 2px var(--gold-hi), inset 0 0 0 5px #120c07, inset 0 0 0 6px rgba(166,124,67,.7), 0 3px 6px rgba(40,22,8,.6); }
+.st-row .choice__ic .ic { width: 64px; height: 64px; font-size: 46px; }
+.st-row .choice__w { color: var(--ink); text-shadow: 0 2px 0 rgba(0,0,0,.85); font-size: 24px; }
+/* before a pick: the whole near+far row breathes gold (one main action) */
+.st-row::before { content: ""; position: absolute; left: 50%; bottom: 0; width: 1240px; height: 190px; translate: -50% 0; pointer-events: none; z-index: -1; border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 60%, rgba(245,213,138,.34), rgba(224,178,92,.12) 60%, transparent 75%); opacity: .35; animation: st-row-breathe 2.2s ease-in-out infinite; }
+.st.has-pick .st-row::before, .st-row.is-out::before { animation: none; opacity: 0; transition: opacity .3s; }
+@keyframes st-row-breathe { 50% { opacity: 1; scale: 1.04; } }
+.st-row .choice:not(.is-selected):not(.is-muted)::after { content: ""; position: absolute; inset: -4px; border-radius: 10px; pointer-events: none;
+  box-shadow: 0 0 0 3px rgba(245,213,138,.85), 0 0 28px rgba(224,178,92,.6); opacity: .25; animation: st-breathe 2.2s ease-in-out infinite; }
+.st.has-pick .st-row .choice::after { animation: none; opacity: 0; }
+@keyframes st-breathe { 50% { opacity: 1; } }
+.st-row .choice.is-selected { --halo: var(--gold-hi); translate: 0 -12px; scale: 1.04;
+  box-shadow: inset 0 0 0 3px var(--gold-hi), inset 0 0 0 6px #2a1d10, inset 0 0 0 7px rgba(245,213,138,.7), inset 0 0 30px rgba(70,42,16,.45), 0 0 0 3px var(--halo), 0 0 36px var(--halo), 0 18px 26px rgba(0,0,0,.7); }
+.st-row .choice.is-selected .choice__ic { color: #fff3d0; }
+.st-row .choice.is-selected::before { content: ""; position: absolute; left: 50%; top: 50%; width: 320px; height: 240px; translate: -50% -50%; pointer-events: none; z-index: -1;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--halo) 45%, transparent), transparent); }
+.st-row .choice.is-stamped { box-shadow: inset 0 0 0 3px var(--gold-hi), 0 0 40px rgba(245,213,138,.7); }
+.st-row .st-decline { width: 150px; opacity: .85; margin-left: 22px; }
+.st-row .st-decline .choice__ic { width: 62px; height: 62px; font-size: 36px; color: var(--ink-2); box-shadow: inset 0 0 0 2px #6B4E2A, inset 0 0 0 5px #120c07; }
+.st-row .st-decline .choice__ic .ic { width: 40px; height: 40px; }
+.st-row .st-decline .choice__w { color: var(--ink-2); }
+.st-row .st-decline.is-selected { opacity: 1; }
+
+/* ---------- Severin subtitle (one line, faces the tapper) ---------- */
+.st-sub { position: absolute; left: 50%; display: flex; align-items: center; gap: 14px; padding: 12px 28px 12px 18px; border-radius: 40px; white-space: nowrap; z-index: 5; pointer-events: none;
+  background: linear-gradient(180deg, rgba(42,31,21,.96), rgba(18,12,7,.96)); box-shadow: 0 0 0 2px #A67C43, 0 0 0 5px #0f0a06, 0 0 0 6px rgba(166,124,67,.45), 0 14px 30px rgba(0,0,0,.7);
+  opacity: 0; translate: -50% 16px; transition: opacity .3s ease, translate .3s var(--ease-out); }
+.st-sub--near { top: 470px; }
+.st-sub--far { top: 190px; rotate: 180deg; }
+.st-sub.is-on { opacity: 1; translate: -50% 0; }
+.st-sub__ic { font-size: 30px; color: var(--gold-hi); }
+.st-sub__t { font-family: var(--f-text); font-style: italic; font-size: 32px; line-height: 1.1; color: var(--ink); }
+
+/* ---------- clue tokens (left end) ---------- */
+.st-clues { display: flex; flex-direction: column; gap: 18px; align-items: center; }
+.st-clue { position: relative; width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 38% 30%, #4a3620, #160f08 75%); box-shadow: inset 0 0 0 2px #A67C43, inset 0 0 0 7px #0f0a06, inset 0 0 0 8px rgba(166,124,67,.5), 0 6px 12px rgba(0,0,0,.8); }
+.st-clue__ic { font-size: 44px; color: var(--ink); filter: drop-shadow(0 2px 0 rgba(0,0,0,.8)); }
+.st-clue.is-new { animation: st-clue-in .7s var(--ease-back) both; }
+.st-clue.is-new::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; box-shadow: 0 0 0 3px var(--gold-hi), 0 0 26px var(--gold); animation: st-breathe 1s ease-in-out 2; opacity: 0; }
+.st-clue.is-new .st-clue__ic { color: var(--gold-hi); }
+@keyframes st-clue-in { from { opacity: 0; scale: 2.2; translate: 260px 0; } 70% { opacity: 1; } }
+
+/* ---------- beat path (right end) ---------- */
+.st-path { display: flex; flex-direction: column; align-items: center; gap: 0; opacity: .55; }
+.st-path__d { width: 46px; height: 46px; display: grid; place-items: center; color: var(--off); }
+.st-path__r { width: 100%; height: 100%; }
+.st-path__r .orn-o { fill: #120c07; stroke: #6B4E2A; stroke-width: 1.6; }
+.st-path__r .orn-i { fill: none; stroke: #6B4E2A; stroke-width: 1.2; }
+.st-path__r .orn-x { stroke: #6B4E2A; stroke-width: 1.2; }
+.st-path__d.is-done .orn-o { stroke: #A67C43; fill: #2a1f15; }
+.st-path__d.is-done .orn-i { fill: #A67C43; stroke: #A67C43; }
+.st-path__d.is-on { scale: 1.35; filter: drop-shadow(0 0 10px var(--gold)); }
+.st-path__d.is-on .orn-o { stroke: var(--gold-hi); fill: #3a2a18; stroke-width: 2; }
+.st-path__d.is-on .orn-i { fill: var(--gold); stroke: var(--gold-hi); }
+.st-path__l { width: 3px; height: 56px; background: linear-gradient(#6B4E2A, #3a2a18); }
+.st-path__end { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font-size: 34px; color: var(--off);
+  box-shadow: inset 0 0 0 2px #3a2a18; transition: scale .3s var(--ease-back); }
+.st-path__end.is-on { color: #FFD9CF; scale: 1.2; box-shadow: inset 0 0 0 2px var(--enemy), 0 0 20px rgba(184,69,58,.7); }
+
+/* ---------- story roll card ---------- */
+.st-roll { position: absolute; z-index: 7; bottom: 186px; }
+.st-roll--nearRight { right: 60px; }
+.st-roll--nearLeft { left: 60px; }
+
+/* ---------- toward the fight ---------- */
+.st-fight { position: absolute; left: 50%; top: 50%; width: 220px; height: 220px; margin: -110px 0 0 -110px; border-radius: 50%; display: grid; place-items: center; z-index: 4;
+  background: radial-gradient(circle at 40% 32%, #4a1a14, #140605 72%); box-shadow: inset 0 0 0 3px var(--enemy), inset 0 0 0 10px #140605, inset 0 0 0 11px rgba(184,69,58,.5), 0 0 60px rgba(184,69,58,.55), 0 20px 40px rgba(0,0,0,.8);
+  animation: st-fight-in .6s var(--ease-back) both; }
+.st-fight.is-main { animation: st-fight-in .6s var(--ease-back) both, ui-pulse var(--t-pulse) ease-in-out .6s infinite; }
+.st-fight__ic { font-size: 120px; color: #FFE1D6; filter: drop-shadow(0 0 14px rgba(255,90,67,.8)); }
+.st-fight__ring { position: absolute; inset: -26px; border-radius: 50%; border: 3px solid rgba(255,90,67,.6); animation: rip 1.6s ease-out infinite; }
+@keyframes st-fight-in { from { opacity: 0; scale: .3; } }
+.st-rise { position: absolute; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; z-index: 3; background: #120d08 center / cover no-repeat;
+  box-shadow: 0 0 0 4px var(--enemy), 0 0 30px rgba(184,69,58,.7), 0 10px 20px rgba(0,0,0,.8); animation: st-rise .8s var(--ease-back) var(--d) both; }
+@keyframes st-rise { from { opacity: 0; scale: .2; translate: 0 60px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .st-pic__l { animation: none; transition-duration: .01s; }
+  .st-row .choice::after, .st-row::before, .st-fight__ring { animation: none; }
+}
+
+/* hero art in the seat: solid painted figure, masked into the strip; dimmed unless the seat acts (rule 10) */
+.st-heroart { position: absolute; top: 7px; bottom: 0; width: 300px; pointer-events: none; opacity: 1; filter: brightness(.55) saturate(.8); transition: filter var(--t-move);
+  background-size: 100% auto !important; background-position: 50% 12% !important; background-repeat: no-repeat;
+  -webkit-mask-image: radial-gradient(60% 85% at 50% 40%, #000 45%, transparent 100%); mask-image: radial-gradient(60% 85% at 50% 40%, #000 45%, transparent 100%); }
+.seat--left .st-heroart { left: 420px; }
+.seat--right .st-heroart { right: 420px; }
+.seat.is-active .st-heroart { filter: none; }

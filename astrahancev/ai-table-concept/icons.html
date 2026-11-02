@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-стол · системные иконки</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  html, body { margin: 0; background: var(--bg, #0B0907); color: var(--ink, #EFE3C8); }
+  body {
+    font-family: var(--f-text, Georgia, serif);
+    background-image: radial-gradient(120% 80% at 50% 0%, #1D150E 0%, #0B0907 60%), var(--noise, none);
+    min-height: 100vh; padding: 32px 40px 60px; box-sizing: border-box;
+  }
+  h1 { font-family: var(--f-title, serif); font-weight: 400; text-transform: uppercase; letter-spacing: .08em;
+       font-size: 40px; margin: 0 0 6px;
+       background: var(--g-gold-text, linear-gradient(#F5D58A,#A8771F)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { color: var(--ink-2, #B7A585); margin: 0 0 22px; font-size: 18px; }
+  .bar { display: flex; gap: 12px; align-items: center; margin-bottom: 24px; flex-wrap: wrap; }
+  .bar button { font-family: var(--f-label, serif); font-weight: 700; font-size: 16px; color: var(--ink-2);
+    background: #15100B; border: 2px solid #6B4E2A; border-radius: 22px; padding: 6px 16px; cursor: pointer; }
+  .bar button[aria-pressed="true"] { color: #0B0907; background: #E0B25C; border-color: #F5D58A; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 14px; }
+  .cell { background: #15100B; border-radius: 10px; padding: 12px 12px 10px; display: grid;
+          grid-template-columns: 1fr 1fr; grid-template-rows: 72px auto auto; gap: 6px 8px; align-items: center;
+          box-shadow: inset 0 0 0 1px rgba(166,124,67,.18); }
+  .big { grid-column: 1 / -1; display: flex; justify-content: center; gap: 18px; }
+  .big svg { width: 72px; height: 72px; }
+  .small { grid-column: 1 / -1; display: flex; justify-content: center; gap: 14px; align-items: center; }
+  .small svg { width: 24px; height: 24px; }
+  .small svg.s18 { width: 18px; height: 18px; }
+  .ink { color: var(--ink, #EFE3C8); }
+  .gold { color: var(--gold, #E0B25C); filter: drop-shadow(0 0 6px rgba(224,178,92,.35)); }
+  .off { color: var(--off, #5A5048); }
+  .name { grid-column: 1 / -1; text-align: center; font-family: var(--f-label, serif); font-weight: 700;
+          font-size: 14px; color: var(--ink-2, #B7A585); letter-spacing: .02em; }
+  .cell:hover { box-shadow: inset 0 0 0 2px #A67C43; }
+  .grid.hide-off .off { display: none; }
+  .sec { grid-column: 1 / -1; font-family: var(--f-title, serif); text-transform: uppercase; letter-spacing: .08em;
+         color: var(--bronze-hi, #A67C43); font-size: 20px; margin: 14px 0 0; }
+  .demo { display: flex; gap: 22px; margin: 0 0 26px; align-items: center; flex-wrap: wrap; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; background: #1D150E; border-radius: 22px; padding: 6px 14px;
+          font-family: var(--f-label, serif); font-weight: 700; font-size: 18px; }
+  .chip svg { width: 24px; height: 24px; }
+  @media (prefers-reduced-motion: no-preference) { .cell { transition: transform .12s; } .cell:active { transform: scale(.97); } }
+</style>
+</head>
+<body>
+<h1>Системные знаки</h1>
+<p class="sub">Спрайт <code>assets/icons.svg</code>: сетка 24, обводка 2,5, <code>currentColor</code>. Пергамент — обычная, золото — «действуй сейчас», серый — недоступно. Внизу каждой ячейки 18 и 24 px.</p>
+<div class="demo">
+  <span class="chip ink"><svg><use href="assets/icons.svg#i-heart" style="color:#FF5A43"/></svg>12</span>
+  <span class="chip ink"><svg><use href="assets/icons.svg#i-shield-ac"/></svg>13</span>
+  <span class="chip ink"><svg style="color:#5AA9FF"><use href="assets/icons.svg#i-heart-temp"/></svg>5</span>
+  <span class="chip ink"><svg style="color:#5AA9FF"><use href="assets/icons.svg#i-cost-slot-2"/></svg>II</span>
+  <span class="chip gold"><svg><use href="assets/icons.svg#i-seal"/></svg>Подтвердить</span>
+  <span class="chip ink"><svg style="color:#B8453A"><use href="assets/icons.svg#i-crown"/></svg><svg style="color:#B8453A"><use href="assets/icons.svg#i-intent-strike"/></svg></span>
+</div>
+<div class="bar">
+  <button type="button" data-t="off" aria-pressed="true">Показывать недоступную</button>
+  <button type="button" data-t="big" aria-pressed="false">Только 24 px</button>
+</div>
+<div class="grid" id="grid"></div>
+<script>
+(function () {
+  const groups = [
+    ['Голос и печать', 'mic mic-off keyboard seal check cross back plus arrow-left arrow-right'],
+    ['Кубики и броски', 'd4 d6 d8 d10 d12 d20 adv dis dc-shield'],
+    ['Показатели', 'heart heart-temp shield-ac boot'],
+    ['Стоимость', 'cost-action cost-bonus cost-reaction cost-slot cost-slot-1 cost-slot-2 cost-slot-3 cost-cantrip lock hourglass'],
+    ['Бой', 'phase-sun phase-skull target crown flee skull bandage save-dots concentration swords'],
+    ['Состояния', 'cond-rage cond-bless cond-fire cond-prone cond-wounded'],
+    ['Намерения врага', 'intent-strike intent-shot intent-heal intent-summon intent-flee intent-multi'],
+    ['Отдых и отряд', 'campfire moon hit-die crystal stabilize party-swap'],
+    ['Служебные', 'flag scroll help info gear speaker speaker-off volume rotate fullscreen dev-table dev-phone dev-tv qr padlock eye dot'],
+    ['История и финал', 'clue-scroll clue-key clue-track choice-talk choice-sneak choice-search choice-go choice-fight laurel laurel-broken'],
+  ];
+  const use = (n, cls) => `<svg class="${cls}" aria-hidden="true"><use href="assets/icons.svg#i-${n}"/></svg>`;
+  const grid = document.getElementById('grid');
+  let html = '';
+  for (const [title, list] of groups) {
+    html += `<div class="sec">${title}</div>`;
+    for (const n of list.split(' ')) {
+      html += `<div class="cell" title="i-${n}">
+        <div class="big">${use(n, 'ink')}${use(n, 'gold')}</div>
+        <div class="small">${use(n, 's18 ink')}${use(n, 'ink')}${use(n, 'gold')}${use(n, 'off')}</div>
+        <div class="name">${n}</div></div>`;
+    }
+  }
+  grid.innerHTML = html;
+  document.querySelector('[data-t="off"]').onclick = (e) => {
+    const on = e.currentTarget.getAttribute('aria-pressed') !== 'true';
+    e.currentTarget.setAttribute('aria-pressed', on); grid.classList.toggle('hide-off', !on);
+  };
+  document.querySelector('[data-t="big"]').onclick = (e) => {
+    const on = e.currentTarget.getAttribute('aria-pressed') !== 'true';
+    e.currentTarget.setAttribute('aria-pressed', on);
+    grid.querySelectorAll('.big').forEach((b) => (b.style.display = on ? 'none' : ''));
+  };
+  // report symbols missing from the sprite
+  fetch('assets/icons.svg').then((r) => r.text()).then((t) => {
+    const ids = new Set([...t.matchAll(/id="i-([\w-]+)"/g)].map((m) => m[1]));
+    const want = groups.flatMap((g) => g[1].split(' '));
+    const miss = want.filter((n) => !ids.has(n));
+    console.log('icons in sprite:', ids.size, 'missing:', miss.length ? miss.join(',') : 'none');
+  });
+})();
+</script>
+</body>
+</html>
