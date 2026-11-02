@@ -86,10 +86,14 @@
     return url ? externalLink(label, url, primary ? 'button' : 'button button-quiet') : el('span', 'disabled-link', unavailable);
   }
 
+  let notifyTimer = 0;
   function notify(message, error = false) {
-    $('notification').textContent = message;
-    $('notification').className = error ? 'notice notice-error' : 'notice';
-    $('notification').hidden = false;
+    const node = $('notification');
+    node.textContent = message;
+    node.className = error ? 'toast toast-error' : 'toast';
+    node.hidden = false;
+    clearTimeout(notifyTimer);
+    notifyTimer = setTimeout(() => { node.hidden = true; }, error ? 9000 : 4500);
   }
 
   function storageWarning(message) {
@@ -264,6 +268,7 @@
     } else {
       $('notes-count').textContent = 'Все комментарии автоматически сохраняются и видны всем';
     }
+    updateCommentBadges();
   }
 
   function formatCommentTime(timestamp) {
@@ -743,6 +748,46 @@
     };
   });
 
+  const AED_PER_USD = 3.6725;
+  const GENERIC_PRICE_NOTE = 'Заявленная цена; актуальные условия уточняются.';
+  const statusTabs = [['', 'Все'], ['active', 'Актуальные'], ['selected', 'Выбрано'], ['review', 'На рассмотрении'], ['rejected', 'Отказ'], ['unavailable', 'Недоступно'], ['historical', 'Архив']];
+  const standalone = rawProperties.length === 1 && !!document.querySelector('base');
+  const state = { status: '', view: 'grid' };
+  let visibleList = properties;
+  let currentDetail = null;
+  let pushedHash = false;
+  const ICONS = {
+    pin: '<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21z"/><circle cx="12" cy="10" r="2.4"/>',
+    chat: '<path d="M4.5 19.5 5.6 16A8 8 0 1 1 8.4 18.6z"/>',
+    link: '<path d="M14 5h5v5M19 5l-8 8M17 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h4"/>',
+    doc: '<path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+    page: '<path d="M4 12h14M13 6l6 6-6 6"/>'
+  };
+
+  function icon(name) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.classList.add('icon');
+    svg.innerHTML = ICONS[name];
+    return svg;
+  }
+
+  function iconLink(name, label, href, className = 'button button-quiet') {
+    const link = externalLink('', href, className);
+    link.append(icon(name), el('span', '', label));
+    return link;
+  }
+
+  function plural(n, one, few, many) {
+    const a = Math.abs(n) % 100;
+    const b = a % 10;
+    if (a > 10 && a < 20) return many;
+    if (b === 1) return one;
+    if (b >= 2 && b <= 4) return few;
+    return many;
+  }
+
   function formatPhone(raw) {
     const clean = text(raw);
     const digits = clean.replace(/\D/g, '');
@@ -776,46 +821,40 @@
     return 'Ссылки на сайт нет — только фото/видео риэлтора (переписка)';
   }
 
-  function agentContactLine(property) {
-    const p = el('p', 'card-agent');
-    p.append(el('span', 'agent-name', `Риэлтор: ${property.agent || 'Не указан'}`));
-    p.append(document.createTextNode(' · '));
-    const wa = whatsappUrl(property.agentPhone);
-    if (wa) {
-      const link = externalLink(`WhatsApp ${formatPhone(property.agentPhone)} ↗`, wa, 'inline-ext-link wa-link');
-      p.append(link);
-    } else if (property.agent === 'Артур') {
-      p.append(el('span', 'wa-group-tag', 'WhatsApp: группа с Артуром · TG @Art_Real_Estate'));
-    } else {
-      p.append(el('span', 'wa-missing-tag', 'WhatsApp не сохранён'));
-    }
-    return p;
+  function usdLabel(aed) {
+    return `≈ ${format.format(Math.round(aed / AED_PER_USD / 1000))} тыс. $ в год`;
   }
 
-  function sourceOriginLine(property) {
-    const p = el('p', 'card-source');
-    if (property.listingUrl) {
-      const site = sourceSiteName(property.listingUrl);
-      p.append(el('span', 'source-label', 'Откуда взят: '));
-      p.append(externalLink(`Сайт ${site} ↗`, property.listingUrl, 'inline-ext-link source-site-link'));
-    } else {
-      p.append(el('span', 'source-no-link', noLinkSourceLabel(property)));
-    }
-    return p;
+  function commentCount(property) {
+    return property.noteId ? getVisibleSharedComments(property.noteId).length : 0;
   }
 
-  function badges(property) {
+  function mediaSummary(property) {
+    const parts = [];
+    if (property.videos.length) parts.push(`${property.videos.length} видео`);
+    if (property.images.length) parts.push(`${property.images.length} фото`);
+    return parts.join(' · ');
+  }
+
+  function statusText(property) {
+    return property.status === 'rejected' && !/отказ/i.test(property.statusLabel) ? `Отказ · ${property.statusLabel}` : property.statusLabel;
+  }
+
+  function badges(property, withType = false) {
     const group = el('div', 'badges');
-    const label = property.status === 'rejected' && !/отказ/i.test(property.statusLabel) ? `Отказано · ${property.statusLabel}` : property.statusLabel;
-    group.append(el('span', `badge status-${property.status}`, label), el('span', 'badge type-badge', types[property.type]));
+    group.append(el('span', `badge status-${property.status}`, statusText(property)));
+    if ((withType && property.type !== 'unknown') || property.type === 'townhouse' || property.type === 'linked') group.append(el('span', 'badge type-badge', types[property.type]));
     return group;
   }
 
   function priceBlock(property, detail = false) {
-    const block = el('div', detail ? 'detail-price' : 'price-block');
-    const label = property.priceLabel || (property.price !== null ? `${format.format(property.price)} AED` : 'Цена не указана');
-    block.append(el('p', property.price === null && !property.priceLabel ? 'price price-unknown' : 'price', label));
-    if (property.priceNote) block.append(el('p', 'price-note', property.priceNote));
+    const block = el('div', detail ? 'price-block detail-price' : 'price-block');
+    if (property.price !== null) {
+      block.append(el('p', 'price', property.priceLabel || `${format.format(property.price)} AED / год`), el('p', 'price-usd', usdLabel(property.price)));
+    } else {
+      block.append(el('p', 'price price-unknown', property.priceLabel || 'Цена не указана'));
+    }
+    if (property.priceNote && (detail || property.priceNote !== GENERIC_PRICE_NOTE)) block.append(el('p', 'price-note', property.priceNote));
     return block;
   }
 
@@ -825,51 +864,140 @@
     return own(labels, property.mapPrecision) ? labels[property.mapPrecision] : 'Точность точки не подтверждена';
   }
 
-  function specifications(property) {
+  function specItems(property) {
     const items = [];
     const bedrooms = number(property.bedrooms);
     const bathrooms = number(property.bathrooms);
     const plot = number(property.plotM2);
     const bua = number(property.buaM2);
-    if (bedrooms !== null) items.push(`Спален: ${format.format(bedrooms)}`);
-    if (bathrooms !== null) items.push(`Санузлов: ${format.format(bathrooms)}`);
-    if (plot !== null) items.push(`Участок ${format.format(plot)} м²`);
-    if (bua !== null) items.push(`Дом ${format.format(bua)} м²`);
-    if (text(property.ceiling)) items.push(`Потолки: ${text(property.ceiling)}`);
+    if (bedrooms !== null) items.push(`${format.format(bedrooms)} ${plural(bedrooms, 'спальня', 'спальни', 'спален')}`);
+    if (bathrooms !== null) items.push(`${format.format(bathrooms)} ${plural(bathrooms, 'санузел', 'санузла', 'санузлов')}`);
+    if (plot !== null) items.push(`участок ${format.format(plot)} м²`);
+    if (bua !== null) items.push(`дом ${format.format(bua)} м²`);
+    return items;
+  }
+
+  function specifications(property) {
     const list = el('ul', 'specs');
-    for (const value of items.length ? items : ['Характеристики пока не указаны']) list.append(el('li', '', value));
+    const items = specItems(property);
+    for (const value of items) list.append(el('li', '', value));
+    if (!items.length) list.append(el('li', 'specs-empty', 'Метраж и спальни не указаны'));
     return list;
   }
 
   function openButton(label, property, className) {
     const button = el('button', className, label);
     button.type = 'button';
+    button.setAttribute('aria-haspopup', 'dialog');
     button.addEventListener('click', () => openDetail(property, button));
     return button;
   }
 
+  function commentBadge(property, className) {
+    const badge = el('span', className);
+    badge.dataset.commentsFor = property.noteId || '';
+    fillCommentBadge(badge, commentCount(property));
+    return badge;
+  }
+
+  function fillCommentBadge(badge, count) {
+    badge.hidden = count === 0;
+    badge.textContent = `✎ ${count}`;
+    badge.title = `${count} ${plural(count, 'комментарий', 'комментария', 'комментариев')}`;
+  }
+
+  function updateCommentBadges() {
+    document.querySelectorAll('[data-comments-for]').forEach((badge) => {
+      fillCommentBadge(badge, badge.dataset.commentsFor ? getVisibleSharedComments(badge.dataset.commentsFor).length : 0);
+    });
+  }
+
+  function quickLinks(property) {
+    const group = el('div', 'quick-links');
+    const wa = whatsappUrl(property.agentPhone);
+    if (property.mapUrl) group.append(iconLink('pin', 'Карта', property.mapUrl, 'chip-link'));
+    if (wa) group.append(iconLink('chat', 'WhatsApp', wa, 'chip-link chip-wa'));
+    if (property.listingUrl) group.append(iconLink('link', 'Сайт', property.listingUrl, 'chip-link'));
+    else if (property.documents.length) group.append(iconLink('doc', 'PDF', property.documents[0].href, 'chip-link'));
+    return group;
+  }
+
+  function cover(property, eager) {
+    const button = el('button', 'cover-button');
+    button.type = 'button';
+    button.setAttribute('aria-label', property.media.length ? `Открыть галерею: ${property.title}. Видео: ${property.videos.length}, фото: ${property.images.length}` : `Подробнее: ${property.title}`);
+    button.setAttribute('aria-haspopup', 'dialog');
+    button.addEventListener('click', () => property.media.length ? openGallery(property, 0, button) : openDetail(property, button));
+    button.append(property.media.length ? mediaPreview(property.media[0], property.title, eager) : media('', property.title));
+    const top = el('div', 'cover-top');
+    top.append(badges(property), commentBadge(property, 'cover-comments'));
+    button.append(top);
+    if (property.media.length) button.append(el('span', 'cover-count', mediaSummary(property)));
+    return button;
+  }
+
   function card(property, index) {
-    const article = el('article', 'property-card');
-    const cover = el('button', 'cover-button');
-    cover.type = 'button';
-    cover.setAttribute('aria-label', property.media.length ? `Открыть галерею: ${property.title}. Видео: ${property.videos.length}, фото: ${property.images.length}` : `Подробнее: ${property.title}`);
-    cover.setAttribute('aria-haspopup', 'dialog');
-    cover.addEventListener('click', () => property.media.length ? openGallery(property, 0, cover) : openDetail(property, cover));
-    cover.append(property.media.length ? mediaPreview(property.media[0], property.title, index < 3) : media('', property.title), el('span', 'cover-action', property.media.length ? `${property.videos.length ? '▶ Видео' : 'Фото'} · ${property.media.length} материалов` : 'Подробнее ↗'));
+    const article = el('article', `property-card is-${property.status}`);
+    article.dataset.id = property.id;
     const main = el('div', 'card-main');
     const title = el('h3', 'card-title');
     title.append(openButton(property.title, property, 'title-button'));
-    main.append(badges(property), priceBlock(property), title, el('p', 'card-area', property.area || 'Район не указан'), agentContactLine(property), sourceOriginLine(property), specifications(property));
-    main.append(el('p', 'description card-description', property.description || 'Описание пока не предоставлено.'));
-    if (property.caveats.length) main.append(el('p', 'caveat', property.caveats[0] + (property.caveats.length > 1 ? ` · Ещё замечаний: ${property.caveats.length - 1} — в карточке` : '')));
+    const meta = el('p', 'card-meta');
+    meta.append(el('span', 'card-area', property.area || 'Район не указан'));
+    if (property.agent) meta.append(el('span', 'card-agent', property.agent));
+    main.append(priceBlock(property), title, meta, specifications(property));
+    if (text(property.ceiling)) main.append(el('p', 'card-ceiling', `Потолки: ${text(property.ceiling)}`));
+    if (property.description) main.append(el('p', 'description card-description', property.description));
+    if (property.caveats.length) main.append(el('p', 'caveat', property.caveats[0] + (property.caveats.length > 1 ? ` · ещё ${property.caveats.length - 1} в карточке` : '')));
     const actions = el('div', 'card-actions');
-    const siteBtnLabel = property.listingUrl ? `Сайт (${sourceSiteName(property.listingUrl)}) ↗` : 'Ссылки нет · Фото/видео';
-    actions.append(property.listingUrl ? action(siteBtnLabel, property.listingUrl, '', true) : openButton(siteBtnLabel, property, 'button'), action('На карте ↗', property.mapUrl, 'Нет точки на карте'));
-    if (property.documents.length) actions.append(externalLink('PDF ↗', property.documents[0].href));
-    if (property.detailPage) { const link = externalLink('Страница объекта →', property.detailPage); link.target = '_self'; actions.append(link); }
-    main.append(actions, el('p', 'map-precision', precision(property)));
-    article.append(cover, main, noteBlock(property));
+    actions.append(openButton('Подробнее', property, 'button card-open'), quickLinks(property));
+    main.append(actions);
+    article.append(cover(property, index < 3), main, noteBlock(property));
     return article;
+  }
+
+  function listHeader() {
+    const head = el('div', 'list-head');
+    head.setAttribute('aria-hidden', 'true');
+    ['Объект', 'Цена', 'Спальни', 'Участок', 'Дом', 'Статус', ''].forEach((label) => head.append(el('span', '', label)));
+    return head;
+  }
+
+  function listRow(property, index) {
+    const row = el('article', `list-row is-${property.status}`);
+    row.dataset.id = property.id;
+    const thumb = el('button', 'list-thumb');
+    thumb.type = 'button';
+    thumb.tabIndex = -1;
+    thumb.setAttribute('aria-hidden', 'true');
+    const first = property.media[0];
+    thumb.append(first ? mediaPreview(first, '', index < 8, true) : media('', ''));
+    thumb.addEventListener('click', () => openDetail(property, row.querySelector('.title-button')));
+    const name = el('div', 'list-name');
+    const title = el('h3', 'list-title');
+    title.append(openButton(property.title, property, 'title-button'));
+    name.append(title, el('p', 'list-sub', [property.area || 'Район не указан', property.agent].filter(Boolean).join(' · ')));
+    const price = el('div', 'list-price');
+    if (property.price !== null) price.append(el('strong', '', format.format(property.price)), el('span', '', ` AED · ${usdLabel(property.price).replace(' в год', '')}`));
+    else price.append(el('span', 'muted', property.priceLabel || 'Цена не указана'));
+    const beds = number(property.bedrooms);
+    const plot = number(property.plotM2);
+    const bua = number(property.buaM2);
+    const cell = (value, label) => {
+      const node = el('span', value === null ? 'list-num is-empty' : 'list-num', value === null ? '—' : value);
+      node.dataset.label = label;
+      return node;
+    };
+    row.append(thumb, name, price,
+      cell(beds === null ? null : format.format(beds), 'спальни'),
+      cell(plot === null ? null : `${format.format(plot)} м²`, 'участок'),
+      cell(bua === null ? null : `${format.format(bua)} м²`, 'дом'),
+      badges(property), commentBadge(property, 'list-comments'));
+    row.addEventListener('click', (event) => {
+      if (event.target.closest('a, button, input, textarea, select')) return;
+      openDetail(property, row.querySelector('.title-button'));
+    });
+    return row;
   }
 
   function detailSection(parent, heading, values, className = '') {
@@ -882,136 +1010,350 @@
     parent.append(section);
   }
 
-  function openDetail(property, opener) {
-    lastOpener = opener;
-    const content = $('detail-content');
-    content.replaceChildren();
-    const title = el('h2', 'detail-title', property.title);
-    title.id = 'detail-title';
-    content.append(badges(property), title, el('p', 'detail-location', property.area || 'Район не указан'), priceBlock(property, true));
-    const actions = el('div', 'detail-actions');
-    const wa = whatsappUrl(property.agentPhone);
-    const siteLabel = property.listingUrl ? `Сайт (${sourceSiteName(property.listingUrl)}) ↗` : '';
-    actions.append(action(siteLabel || 'Фото и описание ↗', property.listingUrl, noLinkSourceLabel(property), true), action('На карте ↗', property.mapUrl, 'Точка на карте не предоставлена'));
-    if (wa) actions.append(externalLink(`WhatsApp: ${formatPhone(property.agentPhone)} ↗`, wa, 'button button-quiet'));
-    property.documents.forEach((doc) => actions.append(externalLink(doc.label + ' ↗', doc.href)));
-    if (property.detailPage) { const link = externalLink('Отдельная страница →', property.detailPage); link.target = '_self'; actions.append(link); }
-    content.append(actions, el('p', 'map-precision', [property.locationLabel, precision(property)].filter(Boolean).join(' · ')));
-    const gallery = el('div', 'gallery');
-    gallery.setAttribute('role', 'group');
-    gallery.setAttribute('aria-label', 'Все видео и фотографии объекта');
-    if (!property.media.length) gallery.append(media('', '', true));
-    property.media.forEach((item, index) => {
-      const figure = el('figure');
-      const button = el('button', 'gallery-open');
+  function mosaic(property) {
+    const wrap = el('div', 'mosaic');
+    wrap.setAttribute('role', 'group');
+    wrap.setAttribute('aria-label', 'Фото и видео объекта');
+    if (!property.media.length) {
+      wrap.classList.add('is-empty');
+      wrap.append(media('', '', true));
+      return wrap;
+    }
+    const shown = property.media.slice(0, 5);
+    wrap.classList.add(`count-${shown.length}`);
+    shown.forEach((item, index) => {
+      const button = el('button', 'mosaic-item');
       button.type = 'button';
       button.setAttribute('aria-haspopup', 'dialog');
-      const label = `${item.type === 'video' ? 'Видео' : 'Фото'} · ${index + 1} из ${property.media.length}`;
-      button.setAttribute('aria-label', `Открыть ${label}: ${item.caption || property.title}`);
-      button.append(mediaPreview(item, item.caption || property.title, index === 0));
+      const kind = item.type === 'video' ? 'Видео' : 'Фото';
+      button.setAttribute('aria-label', `Открыть ${kind.toLowerCase()} ${index + 1} из ${property.media.length}: ${item.caption || property.title}`);
+      button.append(mediaPreview(item, item.caption || property.title, index === 0, index > 0));
+      const rest = property.media.length - shown.length;
+      if (index === shown.length - 1 && rest > 0) button.append(el('span', 'mosaic-more', `+${rest}`));
       button.addEventListener('click', () => openGallery(property, index, button));
-      figure.append(button, el('figcaption', '', item.caption ? `${label} · ${item.caption}` : label));
-      gallery.append(figure);
+      wrap.append(button);
     });
-    content.append(gallery);
+    const all = el('button', 'mosaic-all', `Все материалы · ${mediaSummary(property)}`);
+    all.type = 'button';
+    all.addEventListener('click', () => openGallery(property, 0, all));
+    wrap.append(all);
+    return wrap;
+  }
+
+  function propertyLink(property) {
+    if (property.detailPage) return new URL(property.detailPage, document.baseURI).href;
+    return `${location.origin}${location.pathname}${location.search}#${encodeURIComponent(property.id)}`;
+  }
+
+  function buildDetail(property, container) {
+    container.replaceChildren();
+    const head = el('header', 'detail-head');
+    const title = el('h2', 'detail-title', property.title);
+    title.id = 'detail-title';
+    head.append(badges(property, true), title, el('p', 'detail-location', [property.area || 'Район не указан', property.agent ? `агент ${property.agent}` : ''].filter(Boolean).join(' · ')));
+    container.append(head, mosaic(property));
+
+    const layout = el('div', 'detail-layout');
+    const mainCol = el('div', 'detail-main');
+    const aside = el('aside', 'detail-aside');
+
+    const priceCard = el('div', 'aside-card');
+    priceCard.append(priceBlock(property, true));
     const facts = el('dl', 'detail-facts');
     const rows = [
-      ['Район', property.area || 'Не указан'], ['Агент', property.agent || 'Не указан'],
-      ['WhatsApp риэлтора', wa ? externalLink(`${formatPhone(property.agentPhone)} ↗`, wa, 'inline-ext-link wa-link') : (property.agent === 'Артур' ? 'Группа в WhatsApp с Артуром · TG @Art_Real_Estate' : 'Не указан')],
-      ['Откуда взят объект', property.listingUrl ? externalLink(`${sourceSiteName(property.listingUrl)} (${property.listingUrl}) ↗`, property.listingUrl, 'inline-ext-link source-site-link') : noLinkSourceLabel(property)],
-      ['Тип объекта', types[property.type]],
-      ['Спальни', number(property.bedrooms) === null ? 'Не указано' : format.format(property.bedrooms)],
-      ['Санузлы', number(property.bathrooms) === null ? 'Не указано' : format.format(property.bathrooms)],
-      ['Площадь участка', number(property.plotM2) === null ? 'Не указана' : `${format.format(property.plotM2)} м²`],
-      ['Площадь дома', number(property.buaM2) === null ? 'Не указана' : `${format.format(property.buaM2)} м²`],
-      ['Потолки', text(property.ceiling) || 'Не указаны'], ['Статус', property.statusLabel]
+      ['Спальни', number(property.bedrooms) === null ? '—' : format.format(property.bedrooms)],
+      ['Санузлы', number(property.bathrooms) === null ? '—' : format.format(property.bathrooms)],
+      ['Участок', number(property.plotM2) === null ? '—' : `${format.format(property.plotM2)} м²`],
+      ['Дом', number(property.buaM2) === null ? '—' : `${format.format(property.buaM2)} м²`],
+      ['Потолки', text(property.ceiling) || '—'],
+      ['Тип', types[property.type]]
     ];
     for (const [label, value] of rows) {
-      const row = el('div');
-      const dd = el('dd');
-      if (value instanceof Node) dd.append(value);
-      else dd.textContent = value;
-      row.append(el('dt', '', label), dd);
+      const row = el('div', value === '—' ? 'is-empty' : '');
+      row.append(el('dt', '', label), el('dd', '', value));
       facts.append(row);
     }
-    content.append(facts);
+    priceCard.append(facts);
+
+    const contact = el('div', 'aside-card');
+    const wa = whatsappUrl(property.agentPhone);
+    contact.append(el('p', 'aside-label', 'Агент'), el('p', 'aside-agent', property.agent || 'Не указан'));
+    if (wa) contact.append(iconLink('chat', `WhatsApp ${formatPhone(property.agentPhone)}`, wa, 'button button-wa'));
+    else if (property.agent === 'Артур') contact.append(el('p', 'aside-note', 'Группа в WhatsApp с Артуром · TG @Art_Real_Estate'));
+    else contact.append(el('p', 'aside-note', 'WhatsApp не сохранён'));
+    const links = el('div', 'aside-links');
+    if (property.mapUrl) links.append(iconLink('pin', 'Открыть на карте', property.mapUrl));
+    if (property.listingUrl) links.append(iconLink('link', `Объявление · ${sourceSiteName(property.listingUrl)}`, property.listingUrl));
+    property.documents.forEach((doc) => links.append(iconLink('doc', doc.label, doc.href)));
+    contact.append(links, el('p', 'aside-note', [property.locationLabel, precision(property)].filter(Boolean).join(' · ')));
+    if (!property.listingUrl) contact.append(el('p', 'aside-note', noLinkSourceLabel(property)));
+    aside.append(priceCard, contact);
+
     const description = el('section', 'detail-section');
     description.append(el('h3', '', 'Описание'), el('p', 'description', property.description || 'Описание пока не предоставлено.'));
-    content.append(description);
-    detailSection(content, 'Что известно', property.facts);
-    detailSection(content, 'Обратить внимание', property.caveats);
-    detailSection(content, 'Что ещё нужно уточнить', property.missing);
-    if (text(property.requestState)) detailSection(content, 'Уточнения у агента', [text(property.requestState)]);
-    if (strings(property.possibleDuplicateIds).length) detailSection(content, 'Проверка предложения', ['Возможно, этот же объект есть в подборке повторно. Совпадение ещё не подтверждено.']);
-    if (text(property.sourceNote)) detailSection(content, 'Примечание к источнику', [text(property.sourceNote)]);
-    content.append(noteBlock(property));
-    $('property-dialog').showModal();
+    mainCol.append(description);
+    detailSection(mainCol, 'Что известно', property.facts);
+    detailSection(mainCol, 'Обратить внимание', property.caveats, 'is-caveats');
+    detailSection(mainCol, 'Что ещё уточнить', property.missing);
+    if (text(property.requestState)) detailSection(mainCol, 'Уточнения у агента', [text(property.requestState)]);
+    if (strings(property.possibleDuplicateIds).length) detailSection(mainCol, 'Проверка предложения', ['Возможно, этот же объект есть в подборке повторно. Совпадение ещё не подтверждено.']);
+    if (text(property.sourceNote)) detailSection(mainCol, 'Примечание к источнику', [text(property.sourceNote)]);
+    const comments = el('section', 'detail-section detail-comments');
+    comments.append(el('h3', '', 'Комментарии'), noteBlock(property));
+    mainCol.append(comments);
+
+    layout.append(mainCol, aside);
+    container.append(layout);
+  }
+
+  function updateDialogNav() {
+    const index = visibleList.indexOf(currentDetail);
+    const inList = index !== -1;
+    $('prev-property').disabled = !inList || visibleList.length < 2;
+    $('next-property').disabled = !inList || visibleList.length < 2;
+    $('dialog-position').textContent = inList ? `${index + 1} из ${visibleList.length}` : '';
+    $('dialog-heading').textContent = currentDetail ? currentDetail.title : '';
+  }
+
+  function openDetail(property, opener, options = {}) {
+    if (!options.keepOpener) lastOpener = opener || lastOpener;
+    currentDetail = property;
+    if (galleryDialog) galleryDialog.close();
+    pauseVideos($('detail-content'));
+    for (const field of noteFields) if (!field.input.isConnected) noteFields.delete(field);
+    buildDetail(property, $('detail-content'));
+    updateDialogNav();
+    const hash = `#${encodeURIComponent(property.id)}`;
+    if (location.hash !== hash) {
+      if (options.replace || $('property-dialog').open) history.replaceState(history.state, '', hash);
+      else if (!options.fromHistory) { history.pushState({ villa: property.id }, '', hash); pushedHash = true; }
+    }
+    if (!$('property-dialog').open) $('property-dialog').showModal();
     $('property-dialog').scrollTop = 0;
     document.body.classList.add('dialog-open');
-    $('close-dialog').focus({ preventScroll: true });
+    if (!options.keepFocus) $('close-dialog').focus({ preventScroll: true });
+  }
+
+  function stepDetail(delta) {
+    const index = visibleList.indexOf(currentDetail);
+    if (index === -1 || visibleList.length < 2) return;
+    openDetail(visibleList[(index + delta + visibleList.length) % visibleList.length], null, { replace: true, keepOpener: true, keepFocus: true });
   }
 
   function fillFilter(id, field, allLabel) {
     const values = [...new Set(properties.map((property) => property[field]))].sort((a, b) => a.localeCompare(b, 'ru'));
     const select = $(id);
     select.replaceChildren(new Option(allLabel, ''));
-    values.forEach((value, index) => select.add(new Option(value || (field === 'area' ? 'Район не указан' : 'Агент не указан'), String(index))));
+    values.forEach((value) => select.add(new Option(value || (field === 'area' ? 'Район не указан' : 'Агент не указан'), value || '∅')));
     return values;
   }
 
-  const areas = fillFilter('area', 'area', 'Все районы');
-  const agents = fillFilter('agent', 'agent', 'Все агенты');
+  fillFilter('area', 'area', 'Все районы');
+  fillFilter('agent', 'agent', 'Все агенты');
+
+  function matchesStatus(property, status) {
+    if (!status) return true;
+    if (status === 'active') return property.status === 'selected' || property.status === 'review';
+    return property.status === status;
+  }
+
+  function baseFilter() {
+    const query = $('search').value.trim().toLocaleLowerCase('ru-RU').split(/\s+/).filter(Boolean);
+    const area = $('area').value;
+    const agent = $('agent').value;
+    const beds = Number($('beds').value) || 0;
+    const withComments = $('with-comments').checked;
+    return properties.filter((property) => query.every((word) => property.search.includes(word)) &&
+      (!area || (property.area || '∅') === area) &&
+      (!agent || (property.agent || '∅') === agent) &&
+      (!beds || (number(property.bedrooms) || 0) >= beds) &&
+      (!withComments || commentCount(property) > 0));
+  }
+
+  const sorters = {
+    'price-asc': (p) => p.price === null ? null : p.price,
+    'price-desc': (p) => p.price === null ? null : -p.price,
+    'plot-desc': (p) => number(p.plotM2) === null ? null : -p.plotM2,
+    'bua-desc': (p) => number(p.buaM2) === null ? null : -p.buaM2,
+    'beds-desc': (p) => number(p.bedrooms) === null ? null : -p.bedrooms,
+    'media-desc': (p) => -p.media.length
+  };
+
+  function activeFilterCount() {
+    return ['area', 'agent', 'beds'].filter((id) => $(id).value).length + ($('with-comments').checked ? 1 : 0) + ($('sort').value !== 'source' ? 1 : 0);
+  }
+
+  function renderStatusTabs(base) {
+    const tabs = $('status-tabs');
+    tabs.replaceChildren();
+    for (const [value, label] of statusTabs) {
+      const count = base.filter((property) => matchesStatus(property, value)).length;
+      if (value && value !== 'active' && !properties.some((property) => property.status === value)) continue;
+      const button = el('button', `status-tab${value ? ` tab-${value}` : ''}`);
+      button.type = 'button';
+      button.setAttribute('aria-pressed', String(state.status === value));
+      button.append(el('span', '', label), el('span', 'tab-count', String(count)));
+      button.addEventListener('click', () => { state.status = value; render(); });
+      tabs.append(button);
+    }
+  }
+
+  function renderStats() {
+    const stats = $('stats');
+    stats.replaceChildren();
+    const count = (status) => properties.filter((property) => property.status === status).length;
+    const prices = properties.filter((property) => matchesStatus(property, 'active') && property.price !== null).map((property) => property.price);
+    const items = [['Объектов', String(properties.length)], ['Выбрано', String(count('selected'))], ['Смотрим', String(count('review'))]];
+    if (prices.length) items.push(['Цены, тыс. AED', `${format.format(Math.min(...prices) / 1000)}–${format.format(Math.max(...prices) / 1000)}`]);
+    for (const [label, value] of items) {
+      const row = el('div');
+      if (label.startsWith('Цены')) row.title = 'Вилка цен выбранных и рассматриваемых объектов';
+      row.append(el('dt', '', label), el('dd', '', value));
+      stats.append(row);
+    }
+  }
+
+  function syncUrl() {
+    if (standalone) return;
+    const params = new URLSearchParams();
+    if ($('search').value.trim()) params.set('q', $('search').value.trim());
+    if (state.status) params.set('status', state.status);
+    for (const id of ['area', 'agent', 'beds']) if ($(id).value) params.set(id, $(id).value);
+    if ($('sort').value !== 'source') params.set('sort', $('sort').value);
+    if ($('with-comments').checked) params.set('comments', '1');
+    if (state.view !== 'grid') params.set('view', state.view);
+    const query = params.toString();
+    const next = `${location.pathname}${query ? `?${query}` : ''}${location.hash}`;
+    if (next !== `${location.pathname}${location.search}${location.hash}`) history.replaceState(history.state, '', next);
+  }
+
+  function readUrl() {
+    const params = new URLSearchParams(location.search);
+    $('search').value = params.get('q') || '';
+    const status = params.get('status') || '';
+    state.status = statusTabs.some(([value]) => value === status) ? status : '';
+    for (const id of ['area', 'agent', 'beds', 'sort']) {
+      const value = params.get(id);
+      if (value && [...$(id).options].some((option) => option.value === value)) $(id).value = value;
+    }
+    $('with-comments').checked = params.get('comments') === '1';
+    state.view = params.get('view') === 'list' ? 'list' : 'grid';
+  }
 
   function render() {
-    const query = $('search').value.trim().toLocaleLowerCase('ru-RU').split(/\s+/).filter(Boolean);
-    const filtered = properties.filter((property) => query.every((word) => property.search.includes(word)) &&
-      ($('area').value === '' || property.area === areas[Number($('area').value)]) &&
-      ($('agent').value === '' || property.agent === agents[Number($('agent').value)]) &&
-      (!$('status').value || property.status === $('status').value));
-    const sort = $('sort').value;
-    if (sort !== 'source') filtered.sort((a, b) => {
-      if (a.price === null && b.price === null) return a.index - b.index;
-      if (a.price === null) return 1;
-      if (b.price === null) return -1;
-      return (sort === 'price-asc' ? a.price - b.price : b.price - a.price) || a.index - b.index;
+    const base = baseFilter();
+    const filtered = base.filter((property) => matchesStatus(property, state.status));
+    const sortKey = sorters[$('sort').value];
+    if (sortKey) filtered.sort((a, b) => {
+      const x = sortKey(a);
+      const y = sortKey(b);
+      if (x === null && y === null) return a.index - b.index;
+      if (x === null) return 1;
+      if (y === null) return -1;
+      return (x - y) || a.index - b.index;
     });
-    $('property-grid').replaceChildren();
+    visibleList = filtered;
+    renderStatusTabs(base);
+    const grid = $('property-grid');
+    grid.classList.toggle('is-list', state.view === 'list');
+    grid.replaceChildren();
     for (const field of noteFields) if (!field.input.isConnected) noteFields.delete(field);
     const fragment = document.createDocumentFragment();
-    filtered.forEach((property, index) => fragment.append(card(property, index)));
-    $('property-grid').append(fragment);
-    $('result-count').textContent = `Показано ${filtered.length} из ${properties.length}`;
-    $('catalog-heading').textContent = $('search').value.trim() || $('area').value || $('agent').value || $('status').value ? 'Результаты поиска' : 'Все объекты';
+    if (state.view === 'list' && filtered.length) fragment.append(listHeader());
+    filtered.forEach((property, index) => fragment.append(state.view === 'list' ? listRow(property, index) : card(property, index)));
+    grid.append(fragment);
+    document.querySelectorAll('.view-toggle button').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.view === state.view)));
+    const extra = activeFilterCount();
+    $('filters-active').hidden = !extra;
+    $('filters-active').textContent = String(extra);
+    const filteredAny = !!($('search').value.trim() || state.status || extra);
+    $('result-count').textContent = `${filtered.length} из ${properties.length}`;
+    $('catalog-heading').textContent = filteredAny ? 'Результаты' : 'Все объекты';
+    $('reset-filters').hidden = !filteredAny;
     $('empty-state').hidden = filtered.length !== 0;
     $('empty-title').textContent = properties.length ? 'По этим условиям ничего не найдено' : 'Предложения ещё не добавлены';
-    $('empty-description').textContent = properties.length ? 'Попробуйте другой запрос или сбросьте фильтры. Все объекты, включая архивные и отказанные, остаются в каталоге.' : 'Когда появятся данные, здесь будут все объекты, фотографии и точки на карте.';
+    $('empty-description').textContent = properties.length ? 'Попробуйте другой запрос или сбросьте фильтры. Архивные и отклонённые объекты тоже остаются в каталоге.' : 'Когда появятся данные, здесь будут все объекты, фотографии и точки на карте.';
     $('empty-reset').hidden = !properties.length;
+    if ($('property-dialog').open) updateDialogNav();
+    syncUrl();
   }
 
   function resetFilters() {
     $('filters').reset();
+    state.status = '';
     render();
   }
 
+  function openFromHash(fromHistory) {
+    let id = '';
+    try { id = decodeURIComponent(location.hash.slice(1)); } catch {}
+    const property = id && properties.find((item) => item.id === id);
+    if (property) {
+      if (currentDetail !== property || !$('property-dialog').open) openDetail(property, null, { fromHistory });
+    } else if ($('property-dialog').open) {
+      pushedHash = false;
+      $('property-dialog').close();
+    }
+  }
+
   $('filters').addEventListener('submit', (event) => event.preventDefault());
-  $('search').addEventListener('input', render);
-  ['area', 'agent', 'status', 'sort'].forEach((id) => $(id).addEventListener('change', render));
+  let searchTimer = null;
+  $('search').addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(render, 120); });
+  ['area', 'agent', 'beds', 'sort', 'with-comments'].forEach((id) => $(id).addEventListener('change', render));
+  document.querySelectorAll('.view-toggle button').forEach((button) => button.addEventListener('click', () => { state.view = button.dataset.view; render(); }));
+  $('filters-toggle').addEventListener('click', () => {
+    const open = $('filters-toggle').getAttribute('aria-expanded') !== 'true';
+    $('filters-toggle').setAttribute('aria-expanded', String(open));
+    $('toolbar').classList.toggle('filters-open', open);
+  });
   $('reset-filters').addEventListener('click', resetFilters);
   $('empty-reset').addEventListener('click', resetFilters);
+  $('prev-property').addEventListener('click', () => stepDetail(-1));
+  $('next-property').addEventListener('click', () => stepDetail(1));
+  $('copy-link').addEventListener('click', async () => {
+    if (!currentDetail) return;
+    const url = propertyLink(currentDetail);
+    try { await navigator.clipboard.writeText(url); notify('Ссылка на объект скопирована'); }
+    catch { notify(`Ссылка: ${url}`); }
+  });
+  $('property-dialog').addEventListener('keydown', (event) => {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || galleryDialog) return;
+    if (event.target.closest('input, textarea, select, video, [contenteditable]')) return;
+    if (event.key === 'ArrowLeft') { event.preventDefault(); stepDetail(-1); }
+    if (event.key === 'ArrowRight') { event.preventDefault(); stepDetail(1); }
+  });
   $('close-dialog').addEventListener('click', () => $('property-dialog').close());
   $('property-dialog').addEventListener('close', () => {
     if (galleryDialog) galleryDialog.close();
     pauseVideos($('detail-content'));
     syncDialogScroll();
     $('detail-content').replaceChildren();
+    currentDetail = null;
     for (const field of noteFields) if (!field.input.isConnected) noteFields.delete(field);
-    if (lastOpener && lastOpener.isConnected) lastOpener.focus({ preventScroll: true });
+    if (location.hash) {
+      if (pushedHash) history.back();
+      else history.replaceState(history.state, '', `${location.pathname}${location.search}`);
+    }
+    pushedHash = false;
+    const target = lastOpener && lastOpener.isConnected ? lastOpener : null;
+    if (target) target.focus({ preventScroll: true });
   });
   $('property-dialog').addEventListener('click', (event) => {
     if (event.target !== $('property-dialog')) return;
     const rect = $('property-dialog').getBoundingClientRect();
     if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) $('property-dialog').close();
   });
+  window.addEventListener('popstate', () => { pushedHash = false; openFromHash(true); });
+  $('to-top').addEventListener('click', () => window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
+  let scrollFrame = 0;
+  window.addEventListener('scroll', () => {
+    if (scrollFrame) return;
+    scrollFrame = requestAnimationFrame(() => {
+      scrollFrame = 0;
+      $('to-top').hidden = window.scrollY < 1200;
+      $('toolbar').classList.toggle('is-stuck', $('toolbar').getBoundingClientRect().top <= 0.5 && window.scrollY > 0);
+    });
+  }, { passive: true });
 
   $('export-notes').addEventListener('click', () => {
     const payload = { version: 1, exportedAt: new Date().toISOString(), notes };
@@ -1036,7 +1378,7 @@
       if (!file.size || file.size > MAX_BYTES) throw new Error('Выберите непустой JSON-файл размером не более 2 МБ.');
       let payload;
       try { payload = JSON.parse((await file.text()).replace(/^\uFEFF/, '')); }
-      catch { throw new Error('Файл не удалось прочитать как JSON. Используйте файл, созданный через «Экспорт заметок».'); }
+      catch { throw new Error('Файл не удалось прочитать как JSON. Используйте файл, созданный через «Экспорт JSON».'); }
       const imported = validateNotes(payload);
       const merged = Object.assign(Object.create(null), notes);
       let added = 0;
@@ -1099,15 +1441,13 @@
     }
   });
 
-  const updated = text(catalog.updatedAt);
-  if (/^\d{4}-\d{2}-\d{2}$/.test(updated)) {
-    const date = new Date(`${updated}T00:00:00Z`);
-    if (Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === updated) {
-      $('updated-at').dateTime = updated;
-      $('updated-at').textContent = `Обновлено ${date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}`;
-      $('updated-at').hidden = false;
-    }
+  const updatedDate = new Date(text(catalog.updatedAt));
+  if (text(catalog.updatedAt) && Number.isFinite(updatedDate.getTime())) {
+    $('updated-at').dateTime = updatedDate.toISOString();
+    $('updated-at').textContent = ` · обновлено ${updatedDate.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', timeZone: 'Asia/Dubai' })}`;
+    $('updated-at').hidden = false;
   }
+
   function initSharedComments() {
     mergeSharedMap(INITIAL_SHARED_SEED);
     if (object(catalog.sharedComments)) mergeSharedMap(catalog.sharedComments);
@@ -1231,6 +1571,18 @@
   readNotes();
   reconcileLocalNotesWithShared();
   updateNotesCount();
-  render();
+  renderStats();
+  if (standalone) {
+    document.body.classList.add('standalone');
+    $('toolbar').hidden = true;
+    $('catalog').hidden = true;
+    $('standalone-detail').hidden = false;
+    currentDetail = properties[0];
+    buildDetail(properties[0], $('standalone-detail'));
+  } else {
+    readUrl();
+    render();
+    openFromHash(true);
+  }
   startCloudSync();
 })();
