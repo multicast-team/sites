@@ -284,13 +284,14 @@
       const ownEntry = isOwnSharedEntry(field.id, item);
       const cardNode = el('div', ownEntry ? 'shared-comment-item is-own' : 'shared-comment-item');
       const meta = el('div', 'shared-comment-meta');
-      const authorWrap = el('span', 'shared-comment-author', item.author || 'Автор комментария');
-      authorWrap.append(el('span', 'shared-comment-tag', ownEntry ? 'Вы · видно всем' : 'Видно всем'));
+      const authorWrap = el('span', 'shared-comment-author', item.author || 'Участник');
+      if (ownEntry) authorWrap.append(el('span', 'shared-comment-tag', 'Вы'));
       const right = el('span', 'shared-comment-right');
       const timeLabel = formatCommentTime(item.updatedAt);
-      if (timeLabel) right.append(el('span', 'shared-comment-time', timeLabel));
-      const editBtn = el('button', 'shared-comment-delete', 'Изменить');
+      if (timeLabel && timeLabel !== 'сохранено в подборке') right.append(el('span', 'shared-comment-time', timeLabel));
+      const editBtn = el('button', 'shared-comment-delete', 'Изм.');
       editBtn.type = 'button';
+      editBtn.title = 'Изменить комментарий';
       editBtn.setAttribute('aria-label', 'Изменить комментарий');
       editBtn.addEventListener('click', () => {
         boundEntryIds[field.id] = item.id;
@@ -300,8 +301,9 @@
         field.input.focus();
       });
       right.append(editBtn);
-      const del = el('button', 'shared-comment-delete', 'Удалить');
+      const del = el('button', 'shared-comment-delete', '×');
       del.type = 'button';
+      del.title = 'Удалить комментарий';
       del.setAttribute('aria-label', 'Удалить комментарий');
       del.addEventListener('click', () => deleteSharedComment(field.id, item.id));
       right.append(del);
@@ -322,10 +324,11 @@
       const hasAny = !!value.trim() || sharedCount > 0;
       field.block.classList.toggle('has-note', hasAny);
       field.badge.hidden = !hasAny;
-      field.badge.textContent = sharedCount > 1 ? `Комментариев: ${sharedCount}` : (sharedCount === 1 ? 'Видно всем' : 'Есть заметка');
-      field.status.textContent = !savedToDevice ? 'Не сохранено · экспортируйте JSON' : (hasAny ? 'Сохранено · видно всем' : 'Сохраняется для всех автоматически');
+      field.badge.textContent = sharedCount > 1 ? `${sharedCount}` : 'Есть';
+      field.status.textContent = !savedToDevice ? 'Не сохранено · экспортируйте JSON' : (hasAny ? 'Видно всем' : 'Автосохранение');
       field.status.classList.toggle('error', !savedToDevice);
       if (field.addBtn) field.addBtn.hidden = !value.trim();
+      if (field.actionsRow) field.actionsRow.hidden = !value.trim();
     }
   }
 
@@ -464,8 +467,8 @@
   function noteBlock(property) {
     const block = el('div', 'notes-block');
     const heading = el('div', 'note-heading');
-    const label = el('label', '', 'Комментарии (видны всем)');
-    const badge = el('span', 'note-badge', 'Видно всем');
+    const label = el('label', '', 'Комментарии');
+    const badge = el('span', 'note-badge', 'Есть');
     badge.hidden = true;
     label.append(badge);
     const list = el('div', 'shared-comments-list');
@@ -473,16 +476,16 @@
     const input = el('textarea');
     const status = el('span', 'note-status');
     const actionsRow = el('div', 'note-actions');
-    const hint = el('span', 'note-hint', 'Сохраняется автоматически и сразу видно всем посетителям');
-    const addBtn = el('button', 'note-add-button', '+ Добавить ещё комментарий');
+    const addBtn = el('button', 'note-add-button', '+ Ещё комментарий');
     addBtn.type = 'button';
     addBtn.hidden = true;
+    actionsRow.hidden = true;
     const inputId = `note-${++noteSequence}`;
     label.htmlFor = inputId;
     input.id = inputId;
     input.maxLength = MAX_NOTE;
-    input.rows = 4;
-    input.placeholder = 'Напишите комментарий к этой вилле — он сохранится и будет виден всем…';
+    input.rows = 2;
+    input.placeholder = 'Написать комментарий (виден всем)…';
     input.setAttribute('aria-label', `Ваш комментарий: ${property.title}`);
     status.id = `${inputId}-status`;
     status.setAttribute('aria-live', 'polite');
@@ -493,15 +496,16 @@
       status.textContent = 'Заметки пока недоступны';
     } else {
       input.value = notes[property.noteId] || '';
-      const fieldRecord = { id: property.noteId, input, status, block, badge, list, addBtn, lastSignature: '' };
+      const fieldRecord = { id: property.noteId, input, status, block, badge, list, addBtn, actionsRow, lastSignature: '' };
       const sharedCount = renderSharedList(fieldRecord);
       const hasAny = !!input.value.trim() || sharedCount > 0;
       block.classList.toggle('has-note', hasAny);
       badge.hidden = !hasAny;
-      badge.textContent = sharedCount > 1 ? `Комментариев: ${sharedCount}` : (sharedCount === 1 ? 'Видно всем' : 'Есть заметка');
-      status.textContent = !savedToDevice ? 'Не сохранено · экспортируйте JSON' : (hasAny ? 'Сохранено · видно всем' : 'Сохраняется для всех автоматически');
+      badge.textContent = sharedCount > 1 ? `${sharedCount}` : 'Есть';
+      status.textContent = !savedToDevice ? 'Не сохранено · экспортируйте JSON' : (hasAny ? 'Видно всем' : 'Автосохранение');
       status.classList.toggle('error', !savedToDevice);
       addBtn.hidden = !input.value.trim();
+      actionsRow.hidden = !input.value.trim();
       noteFields.add(fieldRecord);
       input.addEventListener('input', () => {
         const next = Object.assign(Object.create(null), notes);
@@ -521,7 +525,7 @@
       addBtn.addEventListener('click', () => addSeparateComment(property.noteId, input));
     }
     heading.append(label, status);
-    actionsRow.append(hint, addBtn);
+    actionsRow.append(addBtn);
     block.append(heading, list, input, actionsRow);
     return block;
   }
