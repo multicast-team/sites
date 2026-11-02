@@ -202,7 +202,7 @@ function renderTiles(){
   ];
   keyed(box, tiles, t=>t[0], ()=>{const el=document.createElement('div'); el.className='tile'; return el;},
     (el,t)=>patch(el, `<div class="k">${t[1]}</div><div class="v num">${t[2]}</div>${t[3]?`<div class="s num">${t[3]}</div>`:''}${t[4]||''}`));
-  const g=d.generated; $('upd').textContent=`данные на ${fmtT(g)} · страница проверяет обновления раз в минуту`;
+  const g=d.generated; $('upd').textContent=`данные на ${fmtT(g)} · страница обновляется каждые 20 секунд`;
 }
 
 /* ---------- list ---------- */
@@ -438,7 +438,7 @@ async function refresh(){
     else renderTiles();
   }catch(e){ $('upd').textContent='не удалось обновить данные ('+e.message+'), повторю через минуту'; }
 }
-refresh(); setInterval(refresh, 60000);
+refresh(); setInterval(refresh, 20000);
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) refresh(); });
 </script>
 </body>
