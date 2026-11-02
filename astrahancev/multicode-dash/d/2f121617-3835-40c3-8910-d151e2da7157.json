@@ -1,1 +1,1 @@
-{"wf":{},"subs":[],"main_prompt":"Ты — «агент 5.19-impl», РЕАЛИЗАТОР в процессе чистой комнаты проекта multicode/obelisk/full (браузерный порт игры; ядро core/ пишется только по спецификациям поведения). Отвеча…","main_result":"В `core/offline.mjs` добавлены четыре метода: `bombShare`, `bombFloor`, `bombClears` и `eventBombClears` (правила 29–34). check519 сходится с эталоном по всем пунктам. **Что сделано** - `bombShare` — правила 29–30. Урон…","main_ntools":0}
+{"wf":{},"subs":[],"main_prompt":"","main_result":"","main_ntools":0}

@@ -1,1 +1,1 @@
-{"wf":{},"subs":[],"main_prompt":"Ты — реализатор (чистая комната) правки UI-кита проекта Obelisk Full. Отвечай по-русски. Работаешь ТОЛЬКО в каталоге multicode/.cache/obelisk-full/dp66/impl-kit/work (там копии…","main_result":"Правка п. 6а внесена в три файла, проверки по примерам спеки проходят. Полноценный `import` `prims.mjs` не получился. Он импортирует `sprite.mjs`, а этого файла в `work` нет. Поэтому я взял строки `alphaByte` и `alphaBy…","main_ntools":0}
+{"wf":{},"subs":[],"main_prompt":"","main_result":"","main_ntools":0}

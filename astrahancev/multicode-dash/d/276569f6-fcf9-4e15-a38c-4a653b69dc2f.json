@@ -1,1 +1,1 @@
-{"wf":{},"subs":[],"main_prompt":"Ты — реализатор (чистая комната) в проекте multicode/.cache/wt68r (рабочая копия git). Отвечай по-русски. Задача: по спеке oracle/specs/unlock-fx.md ВЕРСИИ 2 (этап 6.8, раунд и…","main_result":"Часть 1 спеки (правила 0–5) в `ui/screens/unlockfx.mjs` и `ui/screens/hub.mjs` переделана. Самопроверка сошлась по всем числам. `node --test tests/schema.test.mjs` дал 42 pass, 0 fail. Стражи `node tests/guards/run.mjs`…","main_ntools":0}
+{"wf":{},"subs":[],"main_prompt":"","main_result":"","main_ntools":0}

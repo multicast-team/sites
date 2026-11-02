@@ -1,1 +1,1 @@
-{"wf":{},"subs":[],"main_prompt":"Ты — реализатор (чистая комната) в проекте multicode/obelisk/full. Отвечай по-русски, коротко. Задача: в UI-ките реализовать новое правило спеки oracle/specs/text-layout.md — п…","main_result":"Правило п. 3б реализовано в `drawText`. Самопроверка дала ожидаемые значения, стражи — 0 нарушений. Ничего не закоммичено. **Что изменено** - `ui/kit/prims.mjs`, `drawText`: - Добавлено `halfBlock = !ext && p.snap ? lin…","main_ntools":0}
+{"wf":{},"subs":[],"main_prompt":"","main_result":"","main_ntools":0}

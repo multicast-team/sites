@@ -1,1 +1,1 @@
-{"wf":{},"subs":[],"main_prompt":"Ты — реализатор (агент 6.1-impl) в проекте multicode/obelisk/full (браузерный порт игры, чистая комната). Отвечай по-русски, коротко. ЗАДАЧА: добавить в …/","main_result":"**Сделано** - В `ui/kit/sprite.mjs` добавлена `drawSpritePart(list, skin, key, frame, left, top, width, height, x, y, sx, sy, angle, rgb, alpha)` по правилу 7 и правилам 1 и 5. Первая строка `// spec: sprite-layout` ост…","main_ntools":0}
+{"wf":{},"subs":[],"main_prompt":"","main_result":"","main_ntools":0}

@@ -1,1 +1,1 @@
-{"wf":{},"subs":[],"main_prompt":"Ты — РЕАЛИЗАТОР в процессе «чистой комнаты» (отвечай по-русски, коротко). Проект: multicode/obelisk/full (свой git; НЕ коммить, не трогай другие файлы — параллельно работают др…","main_result":"`core/rng.mjs` написан. Тесты 2, 3 и 4 из `tests/rng53.test.mjs` проходят, тест 1 падает, как вы и предупреждали. - **Что внутри:** `makeRng(seed = 0)` с методами `setSeed`, `getSeed`, `u32`, `u63`, `random`, `randomRan…","main_ntools":0}
+{"wf":{},"subs":[],"main_prompt":"","main_result":"","main_ntools":0}

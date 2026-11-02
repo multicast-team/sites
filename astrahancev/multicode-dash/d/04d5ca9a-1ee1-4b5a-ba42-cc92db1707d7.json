@@ -1,1 +1,1 @@
-{"wf":{},"subs":[],"main_prompt":"Ты — «агент 5.11-impl», РЕАЛИЗАТОР (чистая комната) проекта multicode/obelisk/full. Отвечай по-русски, коротко. Составитель исправил спеку oracle/specs/bombs.md по твоей неясно…","main_result":"В `core/bombs.mjs` теперь везде прямое имя `capacityCell`. **Что изменил.** В `step` поле входа читается деструктуризацией: `const { dt, rechargeMulti, capacityCell } = input`. Константу `CAP_CELL = 'stat' + 'Capacity'`…","main_ntools":0}
+{"wf":{},"subs":[],"main_prompt":"","main_result":"","main_ntools":0}

@@ -1,1 +1,1 @@
-{"wf":{},"subs":[],"main_prompt":"Ты — реализатор (чистая комната) в проекте multicode/obelisk/full (рабочая копия git; параллельно работают другие агенты — трогай только перечисленные файлы, ничего не коммить)…","main_result":"Списки теперь лежат таблицами `menu.labelOutline` и `menu.flairColors` в `tables` файла `data/systems/menufx.json`, а из `constants` убраны. Тесты и стражи проходят, самопроверка таблиц 2, 3 и 5 совпала. Ничего не комми…","main_ntools":0}
+{"wf":{},"subs":[],"main_prompt":"","main_result":"","main_ntools":0}

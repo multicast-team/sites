@@ -1,1 +1,1 @@
-{"wf":{},"subs":[],"main_prompt":"Ты — «агент 5.11-impl», РЕАЛИЗАТОР в процессе чистой комнаты проекта multicode/obelisk/full (браузерный порт игры; ядро core/ пишется только по спецификациям поведения). Отвеча…","main_result":"**Изменённые файлы:** создан `core/bombs.mjs`; в конец `core/savedict.mjs` добавлен экспорт `bombDict(st)`. Остальное в `savedict.mjs` не менялось. **Проверки:** - `check511.mjs`: Зн(bombs) 50/50, края 27/27, капы 18/18…","main_ntools":0}
+{"wf":{},"subs":[],"main_prompt":"","main_result":"","main_ntools":0}
