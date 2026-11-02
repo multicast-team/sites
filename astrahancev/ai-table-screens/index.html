@@ -11,8 +11,8 @@ h1 { color:var(--gold); font-size:30px; margin:0 0 6px; letter-spacing:.5px; }
 .lead { color:var(--muted); margin:0 0 14px; max-width:1000px; }
 .how { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 16px; max-width:1000px; margin-bottom:16px; }
 .how li { margin:2px 0; }
-nav { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; gap:8px; padding:10px 0; background:var(--bg); border-bottom:1px solid var(--line); }
-nav a { color:var(--text); text-decoration:none; border:1px solid var(--line); border-radius:999px; padding:5px 12px; font-size:15px; }
+nav { position:sticky; top:0; z-index:5; display:flex; flex-wrap:nowrap; overflow-x:auto; gap:8px; padding:10px 0; scrollbar-width:none; background:var(--bg); border-bottom:1px solid var(--line); }
+nav a { flex:none; color:var(--text); text-decoration:none; border:1px solid var(--line); border-radius:999px; padding:5px 12px; font-size:15px; }
 nav a:hover { border-color:var(--gold); color:var(--gold); }
 section { margin-top:34px; scroll-margin-top:60px; }
 h2 { color:var(--gold); font-size:24px; margin:0 0 4px; }
@@ -52,19 +52,19 @@ figcaption { color:var(--muted); margin-top:8px; }
   <div class="grid">
 <article class="card" id="n00a">
   <header><span class="no">№00a</span><span class="ph">Помощь</span><h3>Страница помощи — шаг 1 из 2</h3></header>
-  <a class="shot" href="shots/00a-start-1.png" target="_blank" rel="noopener"><img loading="lazy" src="shots/00a-start-1.png" alt="Страница помощи — шаг 1 из 2"></a>
+  <a class="shot" href="shots/00a-start-1.png" target="_blank" rel="noopener"><img width="1280" height="720" loading="lazy" src="shots/00a-start-1.png" alt="Страница помощи — шаг 1 из 2"></a>
   <p class="what">Тёмная страница «Стол» с тремя блоками: слева три кнопки-входа (Играть — стол, Экран сцены, Большой стол), в середине пронумерованная инструкция «Как играть» (8 пунктов: войти, говорить с Северином, выбрать героев, подтверждать, кубики, бой, экран сцены), справа три адреса сайта. Внизу кнопки «Назад» и «Дальше» и счётчик 1 / 2. Игрок читает правила и выбирает, куда зайти.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Инструкция — сплошная стена мелкого текста, 8 длинных пунктов; с расстояния или с телефона читать тяжело, нет картинок и выделения главного.</li><li>Мелкий текст в описаниях кнопок слева и особенно в подписях под адресами (серый на тёмном) почти не читается.</li><li>Правая колонка с адресами короткая, под ней и под кнопками слева много пустого места; адреса не кликабельны на вид и нет кнопки «копировать».</li></ul></div>
 </article>
 <article class="card" id="n00b">
   <header><span class="no">№00b</span><span class="ph">Помощь</span><h3>Страница помощи — шаг 2 из 2</h3></header>
-  <a class="shot" href="shots/00b-start-2.png" target="_blank" rel="noopener"><img loading="lazy" src="shots/00b-start-2.png" alt="Страница помощи — шаг 2 из 2"></a>
+  <a class="shot" href="shots/00b-start-2.png" target="_blank" rel="noopener"><img width="1280" height="720" loading="lazy" src="shots/00b-start-2.png" alt="Страница помощи — шаг 2 из 2"></a>
   <p class="what">Вторая страница той же помощи: два пункта — что делать, если не работает микрофон, и что делать, если пропала связь. В тексте есть оранжевая ссылка на экран управления. Кнопка «Дальше» неактивна, «Назад» активна.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Занята только верхняя четверть экрана, остальное — большая пустая тёмная область; страницу можно было не делить на две или добавить полезное (схема, значки).</li><li>Те же мелкие серые подписи у адресов и кнопок слева.</li><li>Три кнопки слева выглядят как выбор, но ни одна не показывает, что нажата именно эта; «Играть — стол» подсвечена всегда, даже здесь.</li><li>Неактивная «Дальше» едва видна — выглядит как сломанная, а не как «дальше некуда».</li></ul></div>
 </article>
 <article class="card" id="n00c">
   <header><span class="no">№00c</span><span class="ph">Вход</span><h3>Вход по паролю комнаты</h3></header>
-  <a class="shot" href="shots/00c-login.png" target="_blank" rel="noopener"><img loading="lazy" src="shots/00c-login.png" alt="Вход по паролю комнаты"></a>
+  <a class="shot" href="shots/00c-login.png" target="_blank" rel="noopener"><img width="1280" height="720" loading="lazy" src="shots/00c-login.png" alt="Вход по паролю комнаты"></a>
   <p class="what">По центру тёмного экрана небольшая карточка «Стол» с ромбиком, подписью «Введите пароль комнаты», полем для пароля и золотой кнопкой «Войти». Игрок вводит пароль, который дал хозяин стола.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Подпись «Введите пароль комнаты» очень мелкая и бледная, на телефоне и в тёмной комнате её легко не заметить.</li><li>Карточка маленькая на фоне 1920 пикселей, много пустого места; текст на кнопке «Войти» мелкий.</li><li>В поле нет подсказки (placeholder) и значка «показать пароль»; поле выглядит пустым и не сразу понятно, что это поле ввода.</li><li>Нет ссылки на помощь и подсказки, где взять пароль.</li></ul></div>
 </article></div>
@@ -75,61 +75,61 @@ figcaption { color:var(--muted); margin-top:8px; }
   <div class="grid">
 <article class="card" id="n01">
   <header><span class="no">№01</span><span class="ph">Подготовка</span><h3>Экран игрока — начало, история не начата</h3></header>
-  <a class="shot" href="shots/01-setup-table.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/01-setup-table.webp" alt="Экран игрока — начало, история не начата"></a>
+  <a class="shot" href="shots/01-setup-table.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/01-setup-table.webp" alt="Экран игрока — начало, история не начата"></a>
   <p class="what">Игровой экран до начала истории. Слева панель Северина Кроу и кнопки выбора героя, сверху полоска про карту, по центру кнопка «Начать: Чёрная вода у Мельничьего Брода» и памятка по игре. Ниже шесть карточек героев с отметками, кнопки отдыха, выбор боя и «Разложить бой». Внизу строка «Говорить» и «Подтвердить».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Имена героев на карточках налезают на портреты и переносятся по буквам («Патрикеевн / а», «Подорожни / к») — читать трудно.</li><li>Отметки выбора героев — обычные белые квадраты, не в стиле игры.</li><li>Выпадающие списки «Проверка правил» и «Фазы сторон» выглядят стандартно, а название «Проверка правил: заклинатели» — служебное, не для игроков.</li><li>Под карточками большая пустая тёмная область, а мелкий текст памятки на расстоянии стола не прочесть.</li></ul></div>
 </article>
 <article class="card" id="n08">
   <header><span class="no">№08</span><span class="ph">Карточка</span><h3>Экран игрока — карточка «Подтвердить» начало истории</h3></header>
-  <a class="shot" href="shots/08-moment-approval-start-story-table.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/08-moment-approval-start-story-table.webp" alt="Экран игрока — карточка «Подтвердить» начало истории"></a>
+  <a class="shot" href="shots/08-moment-approval-start-story-table.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/08-moment-approval-start-story-table.webp" alt="Экран игрока — карточка «Подтвердить» начало истории"></a>
   <p class="what">Тот же стартовый экран, но внизу в рамке появилась карточка «Начать историю: Чёрная вода у Мельничьего Брода». Игроки нажимают «Подтвердить», и только тогда история начнётся.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Карточка подтверждения не выделена: тот же цвет, что и строка «Ждём действия», легко не заметить.</li><li>Кнопка «Подтвердить» небольшая и справа внизу — для стола далековато и мелковато.</li><li>Те же обрезанные имена героев и белые квадраты на карточках.</li><li>Огромная пустая область посередине, пока верх занят служебным текстом.</li></ul></div>
 </article>
 <article class="card" id="n09">
   <header><span class="no">№09</span><span class="ph">История</span><h3>Экран игрока — история началась</h3></header>
-  <a class="shot" href="shots/09-story-table.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/09-story-table.webp" alt="Экран игрока — история началась"></a>
+  <a class="shot" href="shots/09-story-table.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/09-story-table.webp" alt="Экран игрока — история началась"></a>
   <p class="what">Показан первый кусок истории: ночь у Мельничьего Брода. Под текстом кнопка выбора «Спуститься к броду». Внизу в карточке написано «Принято.», панель героев осталась под рукой.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Текст истории мелкий для взгляда со стороны, а длинная строка во всю ширину читается тяжело.</li><li>Надпись «Принято.» и кнопка «Подтвердить» остаются, хотя подтверждать нечего — путает.</li><li>Нижняя половина экрана пустая, а карточки героев и кнопки отдыха занимают место, хотя сейчас не нужны.</li><li>Имена на карточках героев по-прежнему налезают на портреты.</li></ul></div>
 </article>
 <article class="card" id="n14">
   <header><span class="no">№14</span><span class="ph">Карточка</span><h3>Экран игрока — подтверждение выбора «Спуститься к броду»</h3></header>
-  <a class="shot" href="shots/14-moment-approval-choose-choice-arrive-table.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/14-moment-approval-choose-choice-arrive-table.webp" alt="Экран игрока — подтверждение выбора «Спуститься к броду»"></a>
+  <a class="shot" href="shots/14-moment-approval-choose-choice-arrive-table.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/14-moment-approval-choose-choice-arrive-table.webp" alt="Экран игрока — подтверждение выбора «Спуститься к броду»"></a>
   <p class="what">История та же, но внизу в карточке написан выбранный вариант «Спуститься к броду». Игроки нажимают «Подтвердить», чтобы сцена пошла дальше.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Карточка подтверждения почти не отличается от обычной строки «Принято.» — нет яркой рамки или подсветки.</li><li>Выбранная кнопка «Спуститься к броду» в тексте истории никак не отмечена, видно только внизу.</li><li>Подтверждение мелко и в стороне от центра внимания.</li><li>Много пустого места в средней части экрана.</li></ul></div>
 </article>
 <article class="card" id="n15">
   <header><span class="no">№15</span><span class="ph">Перед боем</span><h3>Экран игрока — перед боем</h3></header>
-  <a class="shot" href="shots/15-encounter-table.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/15-encounter-table.webp" alt="Экран игрока — перед боем"></a>
+  <a class="shot" href="shots/15-encounter-table.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/15-encounter-table.webp" alt="Экран игрока — перед боем"></a>
   <p class="what">История рассказывает о нападении тинников у брода и просит выбрать героев и разложить бой. Ниже карточки героев, выбор боя «Мельничий Брод: тинники у брода» и кнопка «Разложить бой». Сообщение говорит, что для 5 героев бой не откалиброван, нужно 3–4.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Важная подсказка про «3–4 героя» написана тем же текстом, что и история, и теряется между абзацами.</li><li>Список боя и «Фазы сторон» — обычные выпадающие списки, непонятно, что это за «фазы».</li><li>Пока герои не выбраны, нет подсказки на самих карточках, что их надо отметить.</li><li>Белые квадраты вместо красивых отметок, имена на портретах обрезаны.</li></ul></div>
 </article>
 <article class="card" id="n20">
   <header><span class="no">№20</span><span class="ph">Карточка</span><h3>Экран игрока — подтверждение «Разложить бой»</h3></header>
-  <a class="shot" href="shots/20-moment-approval-lay-out-mf-ford-tutorial-table.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/20-moment-approval-lay-out-mf-ford-tutorial-table.webp" alt="Экран игрока — подтверждение «Разложить бой»"></a>
+  <a class="shot" href="shots/20-moment-approval-lay-out-mf-ford-tutorial-table.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/20-moment-approval-lay-out-mf-ford-tutorial-table.webp" alt="Экран игрока — подтверждение «Разложить бой»"></a>
   <p class="what">Четыре героя отмечены (Никита, Настасья, Старец, Кощей), цвета рамок у каждого свои. Внизу карточка «Разложить бой «Мельничий Брод: тинники у брода» (фазы сторон): ...» и кнопка «Подтвердить».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Отмеченные герои хорошо видны по цветным рамкам и галочкам — это удачно, но у остальных двух нет явного «не выбран».</li><li>Текст карточки подтверждения длинный и в скобках, звучит как служебная запись.</li><li>Карточка стала выше и сдвинула панель ввода — кнопки внизу скачут.</li><li>«Подтвердить» по-прежнему маленькая.</li></ul></div>
 </article>
 <article class="card" id="n21">
   <header><span class="no">№21</span><span class="ph">Карточка</span><h3>Экран игрока — бой, карточка броска</h3></header>
-  <a class="shot" href="shots/21-moment-roll-card-table.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/21-moment-roll-card-table.webp" alt="Экран игрока — бой, карточка броска"></a>
+  <a class="shot" href="shots/21-moment-roll-card-table.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/21-moment-roll-card-table.webp" alt="Экран игрока — бой, карточка броска"></a>
   <p class="what">Бой разложен: в центре карта с героями и тинниками, справа список бойцов с полосками здоровья. Внизу карточка «Никита Кожемяка бросает: инициатива», где надо ввести число с настоящего кубика, есть кнопки «Зажмите и назовите кубики» и «Подтвердить кубики».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Поле для числа тёмное и без подсказки, не сразу видно, куда писать; подпись «Введите сумму на кубиках, 1–20» мелкая и капсом.</li><li>Карта занимает меньшую часть центра, фигуры мелкие, а вокруг пустое тёмное поле.</li><li>Внизу одновременно карточка броска, подсказка и ещё карточка «Принято» с «Подтвердить» — две карточки путают.</li><li>Список «Броски» справа пока пустой, мелкий шрифт со здоровьем и КД трудно читать издалека.</li></ul></div>
 </article>
 <article class="card" id="n23">
   <header><span class="no">№23</span><span class="ph">Бой</span><h3>Экран игрока — бой идёт</h3></header>
-  <a class="shot" href="shots/23-fight-table.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/23-fight-table.webp" alt="Экран игрока — бой идёт"></a>
+  <a class="shot" href="shots/23-fight-table.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/23-fight-table.webp" alt="Экран игрока — бой идёт"></a>
   <p class="what">Карта боя увеличена: герои слева, тинники справа, вода посередине. Справа список бойцов и журнал бросков: сервер бросил инициативу и стол ввёл 20+1=21. Слева кнопки выбора героя и цель боя.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Журнал бросков внизу справа мелкий и прижат к краю, в нём «кубики сервера» и «кубики стола» отличаются только словом.</li><li>Левая панель Северина почти вся пустая, а кнопки героев в середине неё висят без связи.</li><li>Фигуры на карте небольшие, нет подсветки того, чей сейчас ход.</li><li>Цель боя («Если падёт Матёрый тинник...») мелкая и жмётся в левый нижний угол.</li></ul></div>
 </article>
 <article class="card" id="n30">
   <header><span class="no">№30</span><span class="ph">Привал</span><h3>Экран игрока — привал после боя</h3></header>
-  <a class="shot" href="shots/30-rest-table.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/30-rest-table.webp" alt="Экран игрока — привал после боя"></a>
+  <a class="shot" href="shots/30-rest-table.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/30-rest-table.webp" alt="Экран игрока — привал после боя"></a>
   <p class="what">Мельник Онисим пускает героев к очагу. В истории сказано сделать короткий отдых на панели боя. Над карточками надпись «Победа, раундов: 1.». Ниже панель героев с отметками и кнопками «Короткий отдых», «Долгий отдых», «Новый отряд».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Строка «Победа, раундов: 1.» крошечная — а это важный итог боя.</li><li>Кнопка «Короткий отдых», которую просит история, ничем не выделена среди остальных.</li><li>Рядом всё ещё висят «Разложить бой» и выбор боя, хотя во время привала они не нужны.</li><li>Нижняя часть экрана пустая.</li></ul></div>
 </article>
 <article class="card" id="n35">
   <header><span class="no">№35</span><span class="ph">Финал</span><h3>Экран игрока — концовка</h3></header>
-  <a class="shot" href="shots/35-ending-table.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/35-ending-table.webp" alt="Экран игрока — концовка"></a>
+  <a class="shot" href="shots/35-ending-table.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/35-ending-table.webp" alt="Экран игрока — концовка"></a>
   <p class="what">Показан итог: «Успех с потерями. Карась ушёл по воде...» и три пункта о том, что игроки узнали. Есть кнопка «Начать историю заново (всё сначала)». Внизу панель героев: у Настасьи 21 из 35 здоровья.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Кнопка «Начать заново» стоит рядом с итогом и выглядит как обычная, можно нажать случайно.</li><li>Итоговая фраза «Успех с потерями» жирная, но ненамного крупнее текста — нет ощущения финала.</li><li>Под текстом концовки опять боевая панель: выбор боя, «Разложить бой» — на финале лишнее.</li><li>Пункты текста повторяют итог почти слово в слово.</li></ul></div>
 </article></div>
@@ -140,61 +140,61 @@ figcaption { color:var(--muted); margin-top:8px; }
   <div class="grid grid-phone">
 <article class="card phone" id="n02">
   <header><span class="no">№02</span><span class="ph">Подготовка</span><h3>Телефон — начало, вкладка «Игра»</h3></header>
-  <a class="shot" href="shots/02-setup-phone.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/02-setup-phone.webp" alt="Телефон — начало, вкладка «Игра»"></a>
+  <a class="shot" href="shots/02-setup-phone.webp" target="_blank" rel="noopener"><img width="390" height="844" loading="lazy" src="shots/02-setup-phone.webp" alt="Телефон — начало, вкладка «Игра»"></a>
   <p class="what">Вверху название «Стол», кнопка «Как играть» и три вкладки. Под красной плашкой про то, что Северин не на связи, одна карточка: история не начата и большая кнопка «Начать: Чёрная вода у Мельничьего Брода». Внизу «Говорить», строка для письма Северину и «Подтвердить».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Почти весь экран пустой и тёмный: между карточкой и нижней панелью огромный провал.</li><li>Подпись «Карта появится, когда вы разложите бой» мелкая и тусклая, почти не читается.</li><li>Красная плашка занимает место на каждом экране; после первого прочтения её можно сделать компактнее.</li><li>«Ждём предложенного действия» и «Подтвердить» не показывают, что сейчас нечего подтверждать (кнопка выглядит активной).</li></ul></div>
 </article>
 <article class="card phone" id="n06">
   <header><span class="no">№06</span><span class="ph">Подготовка</span><h3>Телефон — начало, вкладка «Ведущий»</h3></header>
-  <a class="shot" href="shots/06-setup-phone-gm.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/06-setup-phone-gm.webp" alt="Телефон — начало, вкладка «Ведущий»"></a>
+  <a class="shot" href="shots/06-setup-phone-gm.webp" target="_blank" rel="noopener"><img width="390" height="844" loading="lazy" src="shots/06-setup-phone-gm.webp" alt="Телефон — начало, вкладка «Ведущий»"></a>
   <p class="what">Окно общения с Северином Кроу. Сверху сообщение, что он не на связи. В середине ряд кнопок-адресатов: Стол, Никита, Настасья, Лиса, Старец, Кощей, Любава. Внизу те же поле ввода и «Подтвердить».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Кнопки адресатов висят посреди пустого окна без подписи, непонятно, что это выбор «кому говорит Северин».</li><li>Огромное пустое поле над кнопками; истории разговора нет.</li><li>Кнопки идут неровными рядами разной длины, выглядят случайно.</li></ul></div>
 </article>
 <article class="card phone" id="n07">
   <header><span class="no">№07</span><span class="ph">Подготовка</span><h3>Телефон — начало, вкладка «Отряд»</h3></header>
-  <a class="shot" href="shots/07-setup-phone-party.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/07-setup-phone-party.webp" alt="Телефон — начало, вкладка «Отряд»"></a>
+  <a class="shot" href="shots/07-setup-phone-party.webp" target="_blank" rel="noopener"><img width="390" height="844" loading="lazy" src="shots/07-setup-phone-party.webp" alt="Телефон — начало, вкладка «Отряд»"></a>
   <p class="what">Список шести героев с очками здоровья и белыми галочками для выбора в бой. Ниже кнопки «Короткий отдых», «Долгий отдых», «Новый отряд», выбор проверки правил и сцены боя и кнопка «Разложить бой». Внизу мелкий юридический текст про лицензию.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Белые стандартные флажки и серые выпадающие списки выбиваются из золотисто-тёмного оформления.</li><li>Юридический текст мелкий, красноватый и плохо читается; он занимает место сразу под рабочими кнопками.</li><li>Кнопки отдыха и «Новый отряд» выглядят одинаково с безопасными действиями; «Новый отряд» легко нажать случайно.</li><li>Строка «Боя на столе нет» очень мелкая.</li></ul></div>
 </article>
 <article class="card phone" id="n10">
   <header><span class="no">№10</span><span class="ph">История</span><h3>Телефон — история, вкладка «Игра»</h3></header>
-  <a class="shot" href="shots/10-story-phone.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/10-story-phone.webp" alt="Телефон — история, вкладка «Игра»"></a>
+  <a class="shot" href="shots/10-story-phone.webp" target="_blank" rel="noopener"><img width="390" height="844" loading="lazy" src="shots/10-story-phone.webp" alt="Телефон — история, вкладка «Игра»"></a>
   <p class="what">В карточке истории описана ночь у Мельничьего Брода и есть кнопка «Спуститься к броду». Сверху плашка, что Северин не на связи. Внизу обычная панель с голосом, письмом и «Подтвердить».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Текст хорошо читается, но под ним снова огромная пустая тёмная область.</li><li>Единственная кнопка действия одна и небольшая; можно сделать её шире, как на первом экране.</li><li>Нет картинки или иллюстрации сцены, экран выглядит как простой текст.</li></ul></div>
 </article>
 <article class="card phone" id="n16">
   <header><span class="no">№16</span><span class="ph">Перед боем</span><h3>Телефон — перед боем</h3></header>
-  <a class="shot" href="shots/16-encounter-phone.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/16-encounter-phone.webp" alt="Телефон — перед боем"></a>
+  <a class="shot" href="shots/16-encounter-phone.webp" target="_blank" rel="noopener"><img width="390" height="844" loading="lazy" src="shots/16-encounter-phone.webp" alt="Телефон — перед боем"></a>
   <p class="what">Сверху текст, что бой — «Тинники у брода», нужно выбрать героев и разложить бой. Ниже панель боя: шесть героев с галочками, кнопки отдыха, выбор сцены, выбор «Фазы сторон» и «Разложить бой».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Стандартные белые галочки и серые выпадающие списки выглядят сырыми.</li><li>Сразу три кнопки отдыха и нового отряда стоят рядом с главной «Разложить бой», главное действие теряется.</li><li>Мелкие подписи «Боя на столе нет» и «хитов» трудно читать с руки.</li><li>Две карточки с золотыми уголками слегка ломают ритм: рамки разные по высоте.</li></ul></div>
 </article>
 <article class="card phone" id="n24">
   <header><span class="no">№24</span><span class="ph">Бой</span><h3>Телефон — бой, вкладка «Игра»</h3></header>
-  <a class="shot" href="shots/24-fight-phone.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/24-fight-phone.webp" alt="Телефон — бой, вкладка «Игра»"></a>
+  <a class="shot" href="shots/24-fight-phone.webp" target="_blank" rel="noopener"><img width="390" height="844" loading="lazy" src="shots/24-fight-phone.webp" alt="Телефон — бой, вкладка «Игра»"></a>
   <p class="what">Сверху цель боя, под ней карта-сетка с фишками героев и тинников. Ниже ряд значков способностей (Рывок, Отход, Встать, «Закончить ход» и заклинания) и выбранная способность «Луч холода» с выбором цели и кнопкой «Сотворить». Внизу «Говорить» и «Подтвердить».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Значки способностей очень мелкие, подписи под ними 8–9 px, у некоторых обрезаны («За кон чить ход» переносится по слогам).</li><li>Карта тёмная, клетки и фишки слабо различимы, цвета врагов и героев почти не отличаются.</li><li>Недоступные способности просто серые, нет подсказки почему.</li><li>Строка «Раунд 1 · фаза: герои» мелкая и жмётся в угол.</li><li>Кнопка «Сотворить» маленькая, на телефоне легко промахнуться.</li></ul></div>
 </article>
 <article class="card phone" id="n28">
   <header><span class="no">№28</span><span class="ph">Бой</span><h3>Телефон — бой, вкладка «Ведущий»</h3></header>
-  <a class="shot" href="shots/28-fight-phone-gm.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/28-fight-phone-gm.webp" alt="Телефон — бой, вкладка «Ведущий»"></a>
+  <a class="shot" href="shots/28-fight-phone-gm.webp" target="_blank" rel="noopener"><img width="390" height="844" loading="lazy" src="shots/28-fight-phone-gm.webp" alt="Телефон — бой, вкладка «Ведущий»"></a>
   <p class="what">Та же страница общения с Северином, что и до боя: сообщение, что он не на связи, и ряд кнопок адресатов. Внизу панель ввода.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Во время боя тут ничего нового: нет ни реплик Северина, ни истории разговора.</li><li>Огромное пустое поле, кнопки адресатов без подписи, что это такое.</li><li>Экран ничем не отличается от стартового, нет признаков, что идёт бой.</li></ul></div>
 </article>
 <article class="card phone" id="n29">
   <header><span class="no">№29</span><span class="ph">Бой</span><h3>Телефон — бой, вкладка «Отряд»</h3></header>
-  <a class="shot" href="shots/29-fight-phone-party.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/29-fight-phone-party.webp" alt="Телефон — бой, вкладка «Отряд»"></a>
+  <a class="shot" href="shots/29-fight-phone-party.webp" target="_blank" rel="noopener"><img width="390" height="844" loading="lazy" src="shots/29-fight-phone-party.webp" alt="Телефон — бой, вкладка «Отряд»"></a>
   <p class="what">Сверху раунд 1 из 2 и цели боя. Дальше список участников боя: четыре героя и четыре тинника, у каждого портрет, полоса здоровья, очки хитов и класс защиты. Внизу начинается раздел «Броски» с записями о результатах инициативы.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Полосы здоровья у всех зелёные и одинаково длинные, видно мало разницы между героями и врагами, кроме цвета рамки слева.</li><li>Портреты мелкие, враги похожи друг на друга.</li><li>Записи в «Бросках» мелкие и обрезаны внизу; в них странные подписи вроде «d20 1d20: грани 15».</li><li>Не видно, чей сейчас ход.</li></ul></div>
 </article>
 <article class="card phone" id="n31">
   <header><span class="no">№31</span><span class="ph">Привал</span><h3>Телефон — привал</h3></header>
-  <a class="shot" href="shots/31-rest-phone.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/31-rest-phone.webp" alt="Телефон — привал"></a>
+  <a class="shot" href="shots/31-rest-phone.webp" target="_blank" rel="noopener"><img width="390" height="844" loading="lazy" src="shots/31-rest-phone.webp" alt="Телефон — привал"></a>
   <p class="what">Карточка с текстом «Привал: отдохните на панели боя». Ниже панель отряда с победой за 1 раунд, шесть галочек героев, кнопки короткого и долгого отдыха, «Новый отряд» и выбор сцены с «Разложить бой».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Белые галочки и серые списки не вписаны в оформление.</li><li>Кнопки отдыха, ради которых этот экран, выглядят так же, как все остальные, не выделены.</li><li>Фраза «Победа, раундов: 1» мелкая и теряется.</li><li>Под панелью пустая область.</li></ul></div>
 </article>
 <article class="card phone" id="n36">
   <header><span class="no">№36</span><span class="ph">Финал</span><h3>Телефон — концовка</h3></header>
-  <a class="shot" href="shots/36-ending-phone.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/36-ending-phone.webp" alt="Телефон — концовка"></a>
+  <a class="shot" href="shots/36-ending-phone.webp" target="_blank" rel="noopener"><img width="390" height="844" loading="lazy" src="shots/36-ending-phone.webp" alt="Телефон — концовка"></a>
   <p class="what">Карточка истории с итогом: три пункта про Карася, пропавшего подмастерья и перекрытую реку, потом кнопка «Начать историю заново (всё сначала)» и жирная строка «Успех с потерями». Внизу обычная панель.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Кнопка «Начать заново» стоит прямо под текстом и похожа на обычный пункт, её легко нажать случайно.</li><li>Итог «Успех с потерями» дублирует первый пункт и стоит в конце, а не заголовком.</li><li>Нет оформления финала: ни картинки, ни крупного заголовка.</li><li>Нижние кнопки «Говорить» и «Подтвердить» остались, хотя игра закончена.</li></ul></div>
 </article></div>
@@ -205,43 +205,43 @@ figcaption { color:var(--muted); margin-top:8px; }
   <div class="grid">
 <article class="card" id="n03">
   <header><span class="no">№03</span><span class="ph">Подготовка</span><h3>Большой стол — до начала истории</h3></header>
-  <a class="shot" href="shots/03-setup-tabletop.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/03-setup-tabletop.webp" alt="Большой стол — до начала истории"></a>
+  <a class="shot" href="shots/03-setup-tabletop.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/03-setup-tabletop.webp" alt="Большой стол — до начала истории"></a>
   <p class="what">Стол в раскладке «Большой стол» ещё до старта: у нас нет панелей игроков по краям, виден общий экран. Слева карточка Северина с кнопками выбора героев, справа надпись «История ещё не начата» и кнопка «Начать: Чёрная вода у Мельничьего Брода». Ниже памятка по правилам, ряд из шести героев с галочками, кнопки отдыха и выбор боя. Внизу строка для разговора с ведущим и «Подтвердить». Это обычный экран, а не стол с местами по сторонам, поэтому панелей героев пока нет.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Экран выглядит как обычная страница, а не как стол: нет мест по длинным сторонам, нет повёрнутой стороны.</li><li>Памятка по правилам набрана очень мелким текстом, с расстояния стола её не прочесть.</li><li>Белые стандартные галочки поверх карточек героев закрывают лица и имена; имена переносятся по слогам («Патрикеевн / а»).</li><li>Стандартные выпадающие списки боя выглядят сырыми на фоне золотого оформления, а нижняя половина экрана пустая.</li></ul></div>
 </article>
 <article class="card" id="n11">
   <header><span class="no">№11</span><span class="ph">История</span><h3>Большой стол — история</h3></header>
-  <a class="shot" href="shots/11-story-tabletop.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/11-story-tabletop.webp" alt="Большой стол — история"></a>
+  <a class="shot" href="shots/11-story-tabletop.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/11-story-tabletop.webp" alt="Большой стол — история"></a>
   <p class="what">Идёт история: наверху описание ночи у Мельничьего Брода и золотая кнопка «Спуститься к броду». Слева карточка Северина (он не на связи), справа список героев, кнопки отдыха и выбор боя. Внизу поле для сообщения ведущему и «Подтвердить». Игроки читают сцену и жмут кнопку, чтобы продолжить.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Панелей героев по краям по-прежнему нет, хотя это раскладка для стола.</li><li>Белые галочки и имена на карточках героев накладываются на картинки, текст трудно читать.</li><li>Огромная пустая область под выбором боя, когда боя нет.</li><li>Надпись «Боя на столе нет» и подписи статуса вверху очень мелкие.</li></ul></div>
 </article>
 <article class="card" id="n17">
   <header><span class="no">№17</span><span class="ph">Перед боем</span><h3>Большой стол — перед боем</h3></header>
-  <a class="shot" href="shots/17-encounter-tabletop.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/17-encounter-tabletop.webp" alt="Большой стол — перед боем"></a>
+  <a class="shot" href="shots/17-encounter-tabletop.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/17-encounter-tabletop.webp" alt="Большой стол — перед боем"></a>
   <p class="what">Описание сцены: тинники лезут на берег, названа схватка «Тинники у брода» и сказано, что бой рассчитан на 3–4 героев. Ниже выбор героев, кнопки отдыха, выбор боя и кнопка «Разложить бой». Игроки отмечают героев и раскладывают бой.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Подсказка «для 5 героев бой не откалиброван» набрана тем же размером, что и сюжет, и не выделена как предупреждение.</li><li>Те же белые галочки поверх портретов и перенос имён по слогам.</li><li>Выбор боя и «Фазы сторон» остаются стандартными выпадающими списками, кнопка «Разложить бой» маленькая для большого стола.</li><li>Нижняя половина экрана пустая, а места игроков по краям всё ещё не показаны.</li></ul></div>
 </article>
 <article class="card" id="n22">
   <header><span class="no">№22</span><span class="ph">Карточка</span><h3>Большой стол — карточка броска</h3></header>
-  <a class="shot" href="shots/22-moment-roll-card-tabletop.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/22-moment-roll-card-tabletop.webp" alt="Большой стол — карточка броска"></a>
+  <a class="shot" href="shots/22-moment-roll-card-tabletop.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/22-moment-roll-card-tabletop.webp" alt="Большой стол — карточка броска"></a>
   <p class="what">Бой в раскладке для стола: в центре поле с фигурками героев и врагов, по длинным сторонам панели героев. Верхние панели (Кощей, Старец) повёрнуты вверх ногами для сидящих напротив. У Никиты Кожемяки открыта карточка броска инициативы с полем для числа и кнопками «Зажмите и назовите кубики» и «Подтвердить кубики». У Настасьи пока пусто.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Поле для ввода числа маленькое и пустое, а подпись над ним мелкая и сухая; на столе его легко не заметить.</li><li>Фигурки на карте очень мелкие по сравнению с свободным местом вокруг карты, она занимает лишь треть ширины.</li><li>Строка ведущего и подсказка про карточку броска внизу набраны мелко; повёрнутый вверх ногами текст у дальней стороны тоже мелкий.</li><li>Карточка броска не отличается цветом от остального и легко теряется, особенно у соседа напротив.</li></ul></div>
 </article>
 <article class="card" id="n25">
   <header><span class="no">№25</span><span class="ph">Бой</span><h3>Большой стол — бой</h3></header>
-  <a class="shot" href="shots/25-fight-tabletop.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/25-fight-tabletop.webp" alt="Большой стол — бой"></a>
+  <a class="shot" href="shots/25-fight-tabletop.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/25-fight-tabletop.webp" alt="Большой стол — бой"></a>
   <p class="what">Идёт бой: в центре карта с героями и врагами, сверху повёрнутые панели Кощея и Старца с рядами умений и выбранным заклинанием, снизу панели Никиты и Настасьи с кнопками действий (Рывок, Отход, Встать, Закончить ход и другие). Игроки выбирают действие своей иконкой и подтверждают внизу.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Подписи под иконками умений крошечные и переносятся по буквам («Второе дыхани/е», «Закончи/ть ход»); с расстояния стола не прочесть.</li><li>Недоступные действия затемнены почти до невидимости, а иконки малого размера, трудно понять, что можно нажать.</li><li>Карта занимает узкую полосу в центре, по бокам много неиспользованного места; фигурки и клетки мелкие.</li><li>Повёрнутый текст верхней стороны очень мелкий, особенно строка с целью боя («Раунд 1 из 2…»).</li></ul></div>
 </article>
 <article class="card" id="n32">
   <header><span class="no">№32</span><span class="ph">Привал</span><h3>Большой стол — привал</h3></header>
-  <a class="shot" href="shots/32-rest-tabletop.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/32-rest-tabletop.webp" alt="Большой стол — привал"></a>
+  <a class="shot" href="shots/32-rest-tabletop.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/32-rest-tabletop.webp" alt="Большой стол — привал"></a>
   <p class="what">Бой выигран, начался привал: слева текст истории про мельника Онисима с просьбой сделать короткий отдых, справа список героев с кнопками «Короткий отдых», «Долгий отдых», «Новый отряд» и выбор боя. По краям панели героев, дальняя сторона повёрнута. Игроки нажимают отдых и ждут продолжения.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Панели героев на привале сжаты до шапки: имя, хиты и кнопка, а рядом пустота; тут можно было бы показать, кто ранен.</li><li>Кнопка «Короткий отдых», которую просит история, не выделена среди двух соседних.</li><li>Правая половина экрана почти пустая, а белые галочки поверх портретов остаются.</li><li>Выбор боя с «Фазы сторон» всё ещё виден на привале, где он не нужен.</li></ul></div>
 </article>
 <article class="card" id="n37">
   <header><span class="no">№37</span><span class="ph">Финал</span><h3>Большой стол — финал</h3></header>
-  <a class="shot" href="shots/37-ending-tabletop.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/37-ending-tabletop.webp" alt="Большой стол — финал"></a>
+  <a class="shot" href="shots/37-ending-tabletop.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/37-ending-tabletop.webp" alt="Большой стол — финал"></a>
   <p class="what">Финал истории: слева итоги списком (Карась ушёл, пропал подмастерье, реку перекрыли), кнопка «Начать историю заново» и строка «Успех с потерями». Справа те же карточки героев и кнопки отдыха. У Настасьи хиты упали до 21/35, это видно по полоске. По краям панели героев, дальняя сторона повёрнута.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Кнопка «Начать историю заново» выглядит как обычная рамка и легко нажимается случайно; рядом нет подтверждения.</li><li>Итог «Успех с потерями» дублирует первый пункт и набран жирно в самом низу, как подпись, а не как главный результат.</li><li>Экран финала ничем не отличается от обычного: нет заставки, картинки или торжественности.</li><li>Справа осталось пустое поле с кнопками боя и отдыха, которые в конце не нужны.</li></ul></div>
 </article></div>
@@ -252,37 +252,37 @@ figcaption { color:var(--muted); margin-top:8px; }
   <div class="grid">
 <article class="card" id="n04">
   <header><span class="no">№04</span><span class="ph">Подготовка</span><h3>ТВ — до начала истории</h3></header>
-  <a class="shot" href="shots/04-setup-scene.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/04-setup-scene.webp" alt="ТВ — до начала истории"></a>
+  <a class="shot" href="shots/04-setup-scene.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/04-setup-scene.webp" alt="ТВ — до начала истории"></a>
   <p class="what">Почти пустой экран. Слева большая тёмная рамка с подписью «История · истории нет» и строкой «История ещё не начата». Справа текст «Сцена продолжается. Время идёт» и «Звук выключен на сервере». Игроки здесь ещё ничего не видят, идёт подготовка. Это ожидаемое состояние до старта.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Две трети экрана пустые и тёмные: нет заставки, названия кампании или картинки, чтобы ТВ не выглядел сломанным.</li><li>Текст справа «Сцена продолжается. Время идёт» не подходит к моменту, когда история ещё не начата.</li><li>Подпись «История · истории нет» звучит как ошибка.</li><li>Сверху «Комната · ревизия 0» и снизу «Проверка устройств» мелкие, с дивана не прочесть. Это служебная информация, ей не место на ТВ.</li></ul></div>
 </article>
 <article class="card" id="n12">
   <header><span class="no">№12</span><span class="ph">История</span><h3>ТВ — история, начало</h3></header>
-  <a class="shot" href="shots/12-story-scene.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/12-story-scene.webp" alt="ТВ — история, начало"></a>
+  <a class="shot" href="shots/12-story-scene.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/12-story-scene.webp" alt="ТВ — история, начало"></a>
   <p class="what">На ТВ большая картина: ночная деревня у воды, светятся окна. Под картиной подпись ведущего про Мельничий Брод. Справа заголовок «История начинается.» и статус «История началась». Игроки смотрят на картину и слушают ведущего.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Подпись под картиной мелкая для комнаты, хотя это главный текст сцены.</li><li>Правая колонка почти пустая, а заголовок и статус повторяют друг друга («История начинается» и «История началась»).</li><li>Строка «Звук выключен на сервере» постоянно висит на экране, хотя нужна только оператору.</li><li>Картина красивая, но рамка с мелкой золотой подписью сверху лишняя.</li></ul></div>
 </article>
 <article class="card" id="n18">
   <header><span class="no">№18</span><span class="ph">Перед боем</span><h3>ТВ — перед боем</h3></header>
-  <a class="shot" href="shots/18-encounter-scene.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/18-encounter-scene.webp" alt="ТВ — перед боем"></a>
+  <a class="shot" href="shots/18-encounter-scene.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/18-encounter-scene.webp" alt="ТВ — перед боем"></a>
   <p class="what">Картина лунного болота с чёрной водой. Под ней подпись: из ила лезут тинники, это первый бой. Справа заголовок «История продолжается.» и статус «История продолжается». Игроки выбирают героев и готовятся к бою, но ТВ пока показывает только сцену.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>На ТВ нет ни намёка на бой: нет врагов, расклада и героев, хотя это экран «перед боем».</li><li>Заголовок и статус справа дословно повторяют друг друга.</li><li>Картина в тёмной гамме с блёклым серым, мало контраста с рамкой и фоном.</li><li>Подпись внизу в одну строку мелкая и почти упирается в нижний край рамки.</li></ul></div>
 </article>
 <article class="card" id="n26">
   <header><span class="no">№26</span><span class="ph">Бой</span><h3>ТВ — бой</h3></header>
-  <a class="shot" href="shots/26-fight-scene.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/26-fight-scene.webp" alt="ТВ — бой"></a>
+  <a class="shot" href="shots/26-fight-scene.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/26-fight-scene.webp" alt="ТВ — бой"></a>
   <p class="what">Слева крупный портрет героя, чей ход (Никита Кожемяка, здоровье 28/28, КД, способности). В центре сетка поля боя с жетонами героев и четырёх тинников. Справа цель боя, список участников с полосками здоровья и журнал бросков. Внизу «Кубики сказали своё слово. Бросок учтён».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Сетка тёмная и однообразная: клетки почти не видны, жетоны мелкие для просмотра с расстояния.</li><li>Подписи участников справа и журнал бросков очень мелкие, а правая колонка внизу пустая.</li><li>Цель боя вверху справа крупная, а важные вещи (кто ходит, чья очередь) читаются хуже.</li><li>Внизу слева крупный текст «Кубики сказали своё слово» занимает место, а сам бросок виден только мелким шрифтом справа.</li></ul></div>
 </article>
 <article class="card" id="n33">
   <header><span class="no">№33</span><span class="ph">Привал</span><h3>ТВ — отдых после боя</h3></header>
-  <a class="shot" href="shots/33-rest-scene.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/33-rest-scene.webp" alt="ТВ — отдых после боя"></a>
+  <a class="shot" href="shots/33-rest-scene.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/33-rest-scene.webp" alt="ТВ — отдых после боя"></a>
   <p class="what">Картина очага у мельницы с костром, в углу портрет мельника Онисима. Под картиной подпись ведущего о том, как перевязать раны. Справа заголовок «Последний враг пал. Бой выигран.» и статус «победа». Игроки отдыхают и лечатся.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Подпись под картиной мелкая и не говорит игрокам прямо, что делать.</li><li>Статус «победа» написан с маленькой буквы, выглядит как сырой код.</li><li>Портрет мельника в углу закрывает часть картины и не подписан.</li><li>Справа много пустого места, нет итогов боя или состояния отряда.</li></ul></div>
 </article>
 <article class="card" id="n38">
   <header><span class="no">№38</span><span class="ph">Финал</span><h3>ТВ — конец истории</h3></header>
-  <a class="shot" href="shots/38-ending-scene.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/38-ending-scene.webp" alt="ТВ — конец истории"></a>
+  <a class="shot" href="shots/38-ending-scene.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/38-ending-scene.webp" alt="ТВ — конец истории"></a>
   <p class="what">Огромная тёмная пустая рамка. Внизу мелкий список итогов про Карася, Митю и реку и жирная строка «Успех с потерями». Справа «История окончена.» и «История окончена».</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Финальный экран без картины: почти весь экран пустой, для конца кампании нет торжественности.</li><li>Итоговый текст и список очень мелкие и прижаты к низу, в комнате их не прочтут.</li><li>Заголовок и статус справа дословно повторяются.</li><li>Итог «Успех с потерями» важнее списка, но выглядит почти так же мелко; нет имён героев и числа потерь.</li></ul></div>
 </article></div>
@@ -293,42 +293,42 @@ figcaption { color:var(--muted); margin-top:8px; }
   <div class="grid">
 <article class="card" id="n05">
   <header><span class="no">№05</span><span class="ph">Подготовка</span><h3>Пульт — до начала истории</h3></header>
-  <a class="shot" href="shots/05-setup-admin.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/05-setup-admin.webp" alt="Пульт — до начала истории"></a>
+  <a class="shot" href="shots/05-setup-admin.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/05-setup-admin.webp" alt="Пульт — до начала истории"></a>
   <p class="what">Пульт оператора в трёх колонках. Слева «Состояние» (здоровье комнаты, свободное место, число столов и экранов) и памятка «Если что-то зависло». В центре «Координатор», «История» (пока пусто), «Звук» и «Ведущий». Справа «Карта» с пустым полем и тремя фишками. Оператор здесь только проверяет, что всё подключено.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Слова «running», «receiving», «healthy», «none» остались по-английски — оператору они непонятны.</li><li>Мелкий текст в левой колонке и в «Истории» трудно читать, а жёлтые предупреждения сливаются с обычными строками.</li><li>Низ колонок «Ведущий» и «Состояние» пустой, при этом на экране ни одной крупной кнопки действия.</li><li>Красное сообщение «Северин не на связи» выглядит как ошибка, но не предлагает, что делать.</li></ul></div>
 </article>
 <article class="card" id="n13">
   <header><span class="no">№13</span><span class="ph">История</span><h3>Пульт — история идёт</h3></header>
-  <a class="shot" href="shots/13-story-admin.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/13-story-admin.webp" alt="Пульт — история идёт"></a>
+  <a class="shot" href="shots/13-story-admin.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/13-story-admin.webp" alt="Пульт — история идёт"></a>
   <p class="what">Тот же пульт, когда история началась: в «Истории» написано «active · beat.arrival · 0 мин». На карте всё те же три фишки, этап «committed». Оператор видит, что сцена запущена, но управлять сюжетом тут нечем.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Название истории «STORY.MILL-FORD» и «beat.arrival» — служебные коды, а не человеческие названия сцены.</li><li>Предупреждение «для 5 героев бой не откалиброван» повторяется в каждом окне и занимает место, хотя отряд из 4 героев.</li><li>В «Истории» нет кнопок: нельзя перейти к следующему шагу или вернуться.</li><li>Карта занимает полколонки, её верхняя часть пустая, а сетка без подписей и фона.</li></ul></div>
 </article>
 <article class="card" id="n19">
   <header><span class="no">№19</span><span class="ph">Перед боем</span><h3>Пульт — перед боем</h3></header>
-  <a class="shot" href="shots/19-encounter-admin.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/19-encounter-admin.webp" alt="Пульт — перед боем"></a>
+  <a class="shot" href="shots/19-encounter-admin.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/19-encounter-admin.webp" alt="Пульт — перед боем"></a>
   <p class="what">Пульт, когда история дошла до сцены «beat.ford» (5 мин). Состояние и карта почти не изменились, боя ещё нет. Оператор мог бы здесь следить за подготовкой боя, но на экране это не видно.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Подготовка боя (выбор героев, расстановка) на пульте никак не показана — выглядит так же, как до этого.</li><li>Фишки на карте остались в стартовых местах без подписей, кто это.</li><li>Большие пустые участки в колонках «Ведущий» и «Состояние».</li><li>Слова «committed», «none» опять по-английски.</li></ul></div>
 </article>
 <article class="card" id="n27">
   <header><span class="no">№27</span><span class="ph">Бой</span><h3>Пульт — бой идёт</h3></header>
-  <a class="shot" href="shots/27-fight-admin.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/27-fight-admin.webp" alt="Пульт — бой идёт"></a>
+  <a class="shot" href="shots/27-fight-admin.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/27-fight-admin.webp" alt="Пульт — бой идёт"></a>
   <p class="what">В «Координаторе» появилась строка «идёт бой · фазы сторон · раунд 1 · герои» и подсказка режиссёра: «ранить, не добивать, давление +0». На карте расставлены герои (К, НК, СП) и враги (ИТ, МТ, НМ), видны тёмные клетки препятствий и следы. Оператор следит за ходом боя.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Заметной кнопки управления боем (следующий ход, пауза) нет, видно только состояние.</li><li>Подсказка режиссёра написана мелким серым текстом и теряется среди других строк.</li><li>Фишки отличаются только двумя буквами и тонкой цветной рамкой, издали героев и врагов трудно различить.</li><li>Нет списка участников с их здоровьем: ход боя видно только по карте.</li></ul></div>
 </article>
 <article class="card" id="n34">
   <header><span class="no">№34</span><span class="ph">Привал</span><h3>Пульт — привал после боя</h3></header>
-  <a class="shot" href="shots/34-rest-admin.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/34-rest-admin.webp" alt="Пульт — привал после боя"></a>
+  <a class="shot" href="shots/34-rest-admin.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/34-rest-admin.webp" alt="Пульт — привал после боя"></a>
   <p class="what">Бой закончен: в «Координаторе» написано «победа · фазы сторон · раунд 1 · герои», в «Истории» — «beat.mill_rest · 19 мин». На карте остались фишки героев и врагов в тех же местах. Оператор видит победу и ждёт, пока игроки отдохнут.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Враги остались на карте после победы — выглядит так, будто бой не закончился.</li><li>Привал нигде не назван словами («отдых», «ночь»), только служебный код «beat.mill_rest».</li><li>Поле «Восстановление» исчезло из «Координатора», а блоки сдвинулись — раскладка прыгает.</li><li>Колонка «Состояние» слева пуста вполовину, мелкий текст памятки трудно прочитать.</li></ul></div>
 </article>
 <article class="card" id="n39">
   <header><span class="no">№39</span><span class="ph">Финал</span><h3>Пульт — финал</h3></header>
-  <a class="shot" href="shots/39-ending-admin.webp" target="_blank" rel="noopener"><img loading="lazy" src="shots/39-ending-admin.webp" alt="Пульт — финал"></a>
+  <a class="shot" href="shots/39-ending-admin.webp" target="_blank" rel="noopener"><img width="1920" height="1080" loading="lazy" src="shots/39-ending-admin.webp" alt="Пульт — финал"></a>
   <p class="what">Последний этап: в «Истории» написано «mixed · — · 79 мин», то есть итог смешанный. На карте новая расстановка: герои (К, НК, СП) и несколько фигур (ПБ, В, НМ, П), больше препятствий справа. Оператор видит, что игра подошла к концу.</p>
   <div class="notes"><b>Бросается в глаза</b><ul><li>Концовка показана только словом «mixed» и тире, без названия исхода и без подсказки, что делать дальше.</li><li>Ни кнопки «завершить», ни «сохранить итог» нет — финал на пульте не отличить от обычной сцены.</li><li>Фишки врагов и героев на карте вперемешку, подписей и легенды нет.</li><li>Правая половина карты почти пустая, а надпись «Карта» и сетка не имеют общей рамки с названием сцены.</li></ul></div>
 </article></div>
 </section>
 <section id="concept"><h2>Концепт <code>как хотели, чтобы выглядело</code></h2>
 <p class="intro">Картинки из концепта от 15 октября — образец «как в игре», на который ты ссылался.</p>
-<div class="concept"><figure><a href="concept/choose-master-severin.jpg" target="_blank" rel="noopener"><img loading="lazy" src="concept/choose-master-severin.jpg" alt="Выбор мастера"></a><figcaption>Выбор мастера</figcaption></figure><figure><a href="concept/choose-hero-six.jpg" target="_blank" rel="noopener"><img loading="lazy" src="concept/choose-hero-six.jpg" alt="Выбор героя: шесть карточек"></a><figcaption>Выбор героя: шесть карточек</figcaption></figure><figure><a href="concept/arden-veil-card.jpg" target="_blank" rel="noopener"><img loading="lazy" src="concept/arden-veil-card.jpg" alt="Карточка героя"></a><figcaption>Карточка героя</figcaption></figure><figure><a href="concept/generated_1792048145393.png" target="_blank" rel="noopener"><img loading="lazy" src="concept/generated_1792048145393.png" alt="Выбор героя: русские сказки"></a><figcaption>Выбор героя: русские сказки</figcaption></figure></div></section>
+<div class="concept"><figure><a href="concept/choose-master-severin.jpg" target="_blank" rel="noopener"><img width="1280" height="720" loading="lazy" src="concept/choose-master-severin.jpg" alt="Выбор мастера"></a><figcaption>Выбор мастера</figcaption></figure><figure><a href="concept/choose-hero-six.jpg" target="_blank" rel="noopener"><img width="1280" height="853" loading="lazy" src="concept/choose-hero-six.jpg" alt="Выбор героя: шесть карточек"></a><figcaption>Выбор героя: шесть карточек</figcaption></figure><figure><a href="concept/arden-veil-card.jpg" target="_blank" rel="noopener"><img width="1280" height="720" loading="lazy" src="concept/arden-veil-card.jpg" alt="Карточка героя"></a><figcaption>Карточка героя</figcaption></figure><figure><a href="concept/generated_1792048145393.png" target="_blank" rel="noopener"><img width="1376" height="768" loading="lazy" src="concept/generated_1792048145393.png" alt="Выбор героя: русские сказки"></a><figcaption>Выбор героя: русские сказки</figcaption></figure></div></section>
 </div></body></html>
