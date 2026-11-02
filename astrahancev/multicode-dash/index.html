@@ -96,10 +96,14 @@ details.ag>summary:hover{background:var(--hover)}
 .am2{grid-column:2/-1;font-size:12px;color:var(--muted);margin-top:-2px}
 .abody{padding:2px 2px 10px 16px;font-size:13px}
 .lbl{font-size:11.5px;color:var(--muted);margin:6px 0 2px;font-weight:600}
-.txt{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:12.5px;max-height:260px;overflow:auto}
+.txt{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 9px;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;max-height:340px;overflow:auto;margin:0}
+.cp{margin-left:8px;border:1px solid var(--line);background:transparent;border-radius:999px;padding:0 9px;font-size:11px;color:var(--accent);cursor:pointer}
+.cp:hover{background:var(--hover)}
+.ld{font-weight:400;margin-left:6px}
 details.tools>summary{cursor:pointer;font-size:12.5px;color:var(--accent);margin-top:8px}
-.tl{font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin-top:4px;max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--panel2)}
+.tl{font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin-top:4px;max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--panel2)}
 .tl div{display:grid;grid-template-columns:44px 92px 1fr;gap:6px;padding:2px 8px;border-bottom:1px solid var(--line)}
+.tl .tb{white-space:pre-wrap}
 .tl div:last-child{border-bottom:0}
 .tl .tm{color:var(--muted)}.tl .tn{color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tl .tb{overflow-wrap:anywhere}
 .empty{color:var(--muted);padding:14px;font-size:13px}
@@ -144,7 +148,7 @@ const $ = id => document.getElementById(id);
 const LS = {get(k, d){try{const v=localStorage.getItem('dash.'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
             set(k, v){try{localStorage.setItem('dash.'+k, JSON.stringify(v))}catch(e){}}};
 const QS=new URLSearchParams(location.search);
-const state = {data:null, sel:LS.get('sel', null), q:'', filter:LS.get('filter','all'), details:{}, open:new Set(LS.get('open', [])), gen:0, more:false};
+const state = {data:null, sel:LS.get('sel', null), q:'', filter:LS.get('filter','all'), details:{}, xs:{}, open:new Set(LS.get('open', [])), gen:0, more:false};
 if(QS.get('sel')) state.sel=QS.get('sel');
 for(const k of QS.getAll('open')) state.open.add(k);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -226,7 +230,7 @@ function sessMeta(s){
   return parts.filter(Boolean).join(' · ');
 }
 function renderList(){
-  const d=state.data, items=d.sessions.filter(matches);
+  const d=state.data, items=d.sessions.filter(matches).sort((a,b)=>(b.last||0)-(a.last||0));
   keyed($('list'), items, s=>s.id, s=>{const b=document.createElement('button'); b.type='button'; b.className='sess'; b.onclick=()=>select(s.id, true); return b;},
     (b,s)=>{ b.classList.toggle('sel', s.id===state.sel);
       patch(b, `<div class="t"><span class="dot ${s.status}" aria-label="${ST[s.status]}"></span><b>${esc(s.title)}</b></div><div class="m num">${esc(sessMeta(s))}</div>`); });
@@ -253,6 +257,34 @@ async function loadDetail(s, force){
     const d=await r.json(); state.details[s.id]={d, last:s.last, gen:state.data.generated}; return d;
   }catch(e){ state.details[s.id]={d:c?c.d:null, last:0, gen:0}; return c?c.d:null; }
 }
+/* полные тексты (задание, итог, вызовы) лежат в x/<id>.json и грузятся при раскрытии */
+function getX(id, ver){
+  const c=state.xs[id];
+  if(c && c.ver===ver) return c.d||null;
+  const prev=c?c.d:null;
+  state.xs[id]={d:prev, ver, loading:true};
+  fetch('x/'+encodeURIComponent(id)+'.json?v='+ver, {cache:'no-store'}).then(r=>{ if(!r.ok) throw 0; return r.json(); })
+    .then(d=>{ state.xs[id]={d, ver, loading:false}; renderMain(false); })
+    .catch(()=>{ state.xs[id]={d:prev, ver, loading:false, fail:true}; });
+  return prev;
+}
+function copyBtn(){ return '<button type="button" class="cp">копировать</button>'; }
+document.addEventListener('click', ev=>{
+  const b=ev.target.closest&&ev.target.closest('.cp'); if(!b) return;
+  ev.preventDefault(); ev.stopPropagation();
+  const box=b.parentElement.nextElementSibling; if(!box) return;
+  const txt=box.textContent;
+  const done=()=>{ b.textContent='скопировано'; setTimeout(()=>{b.textContent='копировать'},1500); };
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done,()=>fb());
+  else fb();
+  function fb(){ const r=document.createRange(); r.selectNodeContents(box); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    try{ document.execCommand('copy'); done(); }catch(e){} }
+});
+function textBlock(label, full, prev, total){
+  const t=full!=null?full:prev; if(!t) return '';
+  const loading = full==null && total>t.length ? '<span class="ld am">загружаю полный текст…</span>' : '';
+  return `<div class="lbl">${label}${copyBtn()}${loading}</div><pre class="txt">${esc(t)}</pre>`;
+}
 function mainSkeleton(){
   const m=$('main'); if(m._built) return m._p; m.innerHTML='';
   const p={head:el('div','card shead'), wfsec:el('div','sec'), wfs:el('div',''), wfmore:el('button','more'), subsec:el('div','sec'), subs:el('div','card'), delsec:el('div','sec'), dels:el('div','card'), mainsec:el('div','sec'), mainc:el('div','card sub')};
@@ -277,35 +309,41 @@ async function renderMain(changedSel){
   const det = await loadDetail(s, false);
   if(state.sel!==s.id) return;
   // workflow
+  const wfsAll=s.workflows.slice().sort((a,b)=>(b.start||b.last_act||0)-(a.start||a.last_act||0));   // новые сверху
   patch(p.wfsec, s.workflows.length?`Workflow (${s.workflows.length})`:'');
-  const recent=s.workflows.filter((w,i)=>i<12||w.status==='run'||state.open.has('wf:'+w.id)||nowS()-(w.start||0)<86400);
-  const shown=state.more?s.workflows:recent;
+  const recent=wfsAll.filter((w,i)=>i<12||w.status==='run'||state.open.has('wf:'+w.id)||nowS()-(w.start||0)<86400);
+  const shown=state.more?wfsAll:recent;
   keyed(p.wfs, shown, w=>w.id, w=>makeWf(w), (e,w)=>updWf(e,w,det));
   p.wfmore.type='button'; p.wfmore.style.display=s.workflows.length>recent.length?'':'none';
   p.wfmore.onclick=()=>{state.more=!state.more; renderMain(false);};
   patch(p.wfmore, state.more?'Скрыть старые workflow':`Показать ещё ${s.workflows.length-recent.length} workflow (старше суток)`);
   // субагенты
   patch(p.subsec, s.subs.length?`Субагенты (${s.subs.length})`:''); p.subs.style.display=s.subs.length?'':'none';
-  if(s.subs.length){ if(!p.subs._list){ p.subs._list=el('div','sub'); p.subs.appendChild(p.subs._list);} renderAgents(p.subs._list, (det&&det.subs)||s.subs, 'sub:'+s.id); }
+  if(s.subs.length){ if(!p.subs._list){ p.subs._list=el('div','sub'); p.subs.appendChild(p.subs._list);} renderAgents(p.subs._list, (det&&det.subs)||s.subs, 'sub:'+s.id, ((x)=>x&&x.subs)(subOpen(s)?getX(s.id, s.last):(state.xs[s.id]&&state.xs[s.id].d))); }
   // делегированные T3
   const dl=s.delegated||[]; patch(p.delsec, dl.length?`Делегированные задачи T3 (${dl.length})`:''); p.dels.style.display=dl.length?'':'none';
   patch(p.dels, dl.map(x=>`<div class="sub" style="border-bottom:1px solid var(--line)"><div style="display:flex;gap:8px;align-items:baseline"><span class="dot ${x.status==='running'?'run':x.status==='failed'?'error':x.status==='cancelled'?'stopped':'done'}"></span><b style="flex:1">${esc(x.title)}</b><span class="am">${esc(x.provider)} ${esc(x.model)}</span></div><div class="am2 num" style="margin-left:16px">${fmtT(x.start)} · ${fmtDur((x.end||nowS())-(x.start||nowS()))} · ${esc(x.status)}</div></div>`).join(''));
   // главный тред
-  const mt=det?det.main_tools||[]:[];
-  const hasMain = det && (det.main_prompt||det.main_result||mt.length);
+  const sx = det && !s.nodetail ? (mainOpen(s)?getX(s.id, s.last):(state.xs[s.id]&&state.xs[s.id].d)) : null;
+  const mx = (sx&&sx.main)||null;
+  const mt = mx&&mx.tools ? mx.tools : [];
+  const mnt = det?(det.main_ntools||0):0;
+  const hasMain = det && (det.main_prompt||det.main_result||mnt);
   patch(p.mainsec, hasMain?'Главный тред':''); p.mainc.style.display=hasMain?'':'none';
   if(hasMain){
     if(!p.mainc._b){ p.mainc._b=el('div',''); p.mainc._t=el('details','tools'); p.mainc._t.innerHTML='<summary></summary><div class="tl"></div>';
       const k='main:'+s.id; p.mainc.append(p.mainc._b, p.mainc._t);
-      p.mainc._t.addEventListener('toggle',()=>{const kk=p.mainc._t.dataset.k; if(p.mainc._t.open) state.open.add(kk); else state.open.delete(kk); saveOpen();}); }
+      p.mainc._t.addEventListener('toggle',()=>{const kk=p.mainc._t.dataset.k; if(p.mainc._t.open) state.open.add(kk); else state.open.delete(kk); saveOpen(); renderMain(false);}); }
     const kk='main:'+s.id; if(p.mainc._t.dataset.k!==kk){ p.mainc._t.dataset.k=kk; p.mainc._t.open=state.open.has(kk); }
-    patch(p.mainc._b, `${det.main_prompt?`<div class="lbl">Первое задание</div><div class="txt">${esc(det.main_prompt)}</div>`:''}${det.main_result?`<div class="lbl">Последний ответ</div><div class="txt">${esc(det.main_result)}</div>`:''}`);
-    p.mainc._t.style.display=mt.length?'':'none';
-    patch(p.mainc._t.firstChild, `Последние вызовы инструментов (${mt.length})`);
-    patch(p.mainc._t.lastChild, toolsHtml(mt));
+    patch(p.mainc._b, textBlock('Первое задание', mx?mx.prompt:null, det.main_prompt, 400)+textBlock('Последний ответ', mx?mx.result:null, det.main_result, 400));
+    p.mainc._t.style.display=mnt?'':'none';
+    patch(p.mainc._t.firstChild, `Последние вызовы инструментов (${mx?mt.length:mnt})`);
+    if(p.mainc._t.open) patch(p.mainc._t.lastChild, mx?toolsHtml(mt):'<div class="empty">Загружаю…</div>');
   }
   if(s.nodetail) patch(p.wfsec, '<span style="font-weight:400">Тред T3 без локального журнала — подробностей нет.</span>');
 }
+function subOpen(s){ for(const k of state.open) if(k.startsWith('sub:'+s.id+':')) return true; return false; }
+function mainOpen(s){ return true; }
 function toolsHtml(list){ return list.slice().reverse().map(t=>`<div><span class="tm num">${t[0]?fmtHM(t[0]):''}</span><span class="tn">${esc(t[1])}</span><span class="tb">${esc(t[2])}</span></div>`).join(''); }
 
 /* ---------- workflow ---------- */
@@ -330,8 +368,9 @@ function updWf(e, w, det){
   if(!open) return;
   const agents = det && det.wf && det.wf[w.id] ? det.wf[w.id].agents : null;
   if(!agents){ patch(body.firstChild, '<div class="empty">Загружаю агентов…</div>'); return; }
+  const wx=getX(w.id, w.xk||w.last_act);
   renderGantt(body.firstChild, w, agents);
-  renderAgents(body.lastChild, agents, 'wf:'+w.id);
+  renderAgents(body.lastChild, agents, 'wf:'+w.id, wx&&wx.agents);
 }
 function renderGantt(box, w, agents){
   const order=w.phases.map(p=>p.title);
@@ -356,8 +395,11 @@ function renderGantt(box, w, agents){
     const wf=box.closest('.wf'); const k='ag:'+wf.dataset.id+':'+r.dataset.ag; state.open.add(k); saveOpen();
     const d=wf.querySelector(`details.ag[data-k="${CSS.escape(k)}"]`); if(d){ d.open=true; d.scrollIntoView({block:'nearest', behavior:'smooth'}); } }); }
 }
-function renderAgents(box, agents, scope){
-  const list=agents.slice().sort((a,b)=>(a.status==='run')-(b.status==='run')||(a.start||0)-(b.start||0)).reverse();
+function renderAgents(box, agents, scope, xmap){
+  // агенты workflow — в порядке запуска (как Gantt), субагенты сессии — новые сверху
+  const isWf=scope.startsWith('wf:');
+  const list=agents.slice().sort((a,b)=>(a.start==null)-(b.start==null)||(a.start||0)-(b.start||0)||String(a.id).localeCompare(b.id));
+  if(!isWf) list.reverse();
   keyed(box, list, a=>a.id, a=>{ const d=el('details','ag'); d.innerHTML='<summary></summary><div class="abody"><div class="pt"></div><details class="tools"><summary></summary><div class="tl"></div></details></div>';
       d.addEventListener('toggle',()=>{ if(d.open) state.open.add(d.dataset.k); else state.open.delete(d.dataset.k); saveOpen(); });
       d.lastChild.lastChild.addEventListener('toggle',ev=>{ const t=ev.currentTarget, k=d.dataset.k+':tools'; if(t.open) state.open.add(k); else state.open.delete(k); saveOpen(); });
@@ -369,10 +411,11 @@ function renderAgents(box, agents, scope){
         <span class="am2 num">${esc(a.model||'')}${a.effort?' · '+esc(a.effort):''} · ${ST[a.status]||a.status} · ${fmtT(a.start)}${a.start?' · '+fmtDur(end-a.start):''}${a.phase&&!scope.startsWith('wf:')?'':''}</span>`);
       if(!d.open && !d._seen) return;
       d._seen=true;
-      patch(d.lastChild.firstChild, `${a.prompt?`<div class="lbl">Задание</div><div class="txt">${esc(a.prompt)}</div>`:''}${a.result?`<div class="lbl">Итог</div><div class="txt">${esc(a.result)}</div>`:'<div class="lbl">Итога пока нет</div>'}`);
-      const tl=a.tools||[]; const tdet=d.lastChild.lastChild; tdet.style.display=tl.length?'':'none';
-      patch(tdet.firstChild, `Вызовы инструментов (${tl.length}${a.ntools>tl.length?' последних из '+a.ntools:''})`);
-      if(tdet.open||tdet._seen){ tdet._seen=true; patch(tdet.lastChild, toolsHtml(tl)); }
+      const x=xmap&&xmap[a.id];
+      patch(d.lastChild.firstChild, textBlock('Задание', x?x.prompt:null, a.prompt, a.plen||0)+(a.result||(x&&x.result)?textBlock('Итог', x?x.result:null, a.result, a.rlen||0):'<div class="lbl">Итога пока нет</div>'));
+      const tl=(x&&x.tools)||[]; const tdet=d.lastChild.lastChild; tdet.style.display=(x?tl.length:a.ntools)?'':'none';
+      patch(tdet.firstChild, x?`Вызовы инструментов (${tl.length}${a.ntools>tl.length?' последних из '+a.ntools:''})`:`Вызовы инструментов (${a.ntools})`);
+      if(tdet.open||tdet._seen){ tdet._seen=true; patch(tdet.lastChild, x?toolsHtml(tl):'<div class="empty">Загружаю…</div>'); }
     });
   if(!box._tog){ box._tog=true; box.addEventListener('toggle', ev=>{ if(ev.target.matches('details')) { renderMain(false); } }, true); }
 }
