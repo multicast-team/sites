@@ -1,19 +1,17 @@
 {
-  "release": "smoothcars-2026-11-02-v1",
-  "built_at_utc": "2026-11-02T18:13:55.762405+00:00",
+  "release": "garage-bonus-2026-11-02-v1",
+  "built_at_utc": "2026-11-02T18:34:12.848689+00:00",
   "changes": [
-    "Garage cars use a new showroom model: rounded bodies smoothed along the car, a curved glasshouse with painted pillars, rounded edges, finer wheels and smooth shading; races keep the light model",
-    "Bike riders are streamlined: smooth leathers with an aero hump, a teardrop helmet, tapered limbs with sliders, a lower tuck; Works and Champion riders wear dark leathers",
-    "Loading screen re-rendered with the showroom cars"
+    "Garage car bonuses to all car stats: ads car +5%, carbon car +8%, store car +15%, Premium car +25% (were +2/+4/+8/+12%)"
   ],
   "docs": [
     "Docs/Impl/GARAGE.md",
-    "Docs/Impl/LOADING_ART.md"
+    "Docs/Impl/DEVIATIONS.md"
   ],
   "checks": {
-    "unity_car_and_garage_tests": "25/25",
-    "unity_garage_shots": "27, 0 errors",
-    "showroom_triangles": "13-23k (race 4-7k)"
+    "domain_garage_tests": "6/6",
+    "unity_garage_tests": "6/6",
+    "unity_garage_shots": "27, 0 errors"
   },
   "files": [
     {
@@ -27,14 +25,14 @@
       "sha256": "2c96012ff73a4197790bb34e61779e3b1a899b42beebd299641f6806fb83c120"
     },
     {
-      "path": "Build/6aea1da8473d4c713feb6c1429ab8829.data.unityweb",
-      "bytes": 15213702,
-      "sha256": "63d4f7835f9ca83389760256e3fa07fadc05f9a92a07b6e58aa2f298cbc2d067"
-    },
-    {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
       "sha256": "fd48f70416dfd3b5ecb548f66ffd7f5ed4f9da3383c15137a315227713f9601b"
+    },
+    {
+      "path": "Build/e291984ba2e5aed9d5be0e73bc93b55d.data.unityweb",
+      "bytes": 15211350,
+      "sha256": "b2c58767f9a730004a5e0adf7d0d92b315ecfd7ef1356f66686762ec33974ee9"
     },
     {
       "path": "TemplateData/loading.jpg",
@@ -44,7 +42,7 @@
     {
       "path": "index.html",
       "bytes": 11522,
-      "sha256": "efb85ad8af8bbddb1633483f1c691a4c74943143877bbfa92619619ca155698a"
+      "sha256": "120c55d1469236eb173c3624048845d461f7ae21802f4917a4dd715335a2f23c"
     }
   ]
 }
