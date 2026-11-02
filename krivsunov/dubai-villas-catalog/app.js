@@ -916,10 +916,19 @@
     const group = el('div', 'quick-links');
     const wa = whatsappUrl(property.agentPhone);
     if (property.mapUrl) group.append(iconLink('pin', 'Карта', property.mapUrl, 'chip-link'));
-    if (wa) group.append(iconLink('chat', 'WhatsApp', wa, 'chip-link chip-wa'));
     if (property.listingUrl) group.append(iconLink('link', 'Сайт', property.listingUrl, 'chip-link'));
     else if (property.documents.length) group.append(iconLink('doc', 'PDF', property.documents[0].href, 'chip-link'));
     return group;
+  }
+
+  function brokerBlock(property) {
+    const wa = whatsappUrl(property.agentPhone);
+    const block = el('div', 'card-broker');
+    block.append(el('p', 'broker-name', property.agent || 'Брокер не указан'));
+    if (wa) block.append(iconLink('chat', `WhatsApp ${formatPhone(property.agentPhone)}`, wa, 'button button-wa'));
+    else if (property.agent === 'Артур') block.append(el('p', 'broker-note', 'Группа в WhatsApp с Артуром · TG @Art_Real_Estate'));
+    else block.append(el('p', 'broker-note', 'WhatsApp не сохранён'));
+    return block;
   }
 
   function cover(property, eager) {
@@ -944,14 +953,13 @@
     title.append(openButton(property.title, property, 'title-button'));
     const meta = el('p', 'card-meta');
     meta.append(el('span', 'card-area', property.area || 'Район не указан'));
-    if (property.agent) meta.append(el('span', 'card-agent', property.agent));
     main.append(priceBlock(property), title, meta, specifications(property));
     if (text(property.ceiling)) main.append(el('p', 'card-ceiling', `Потолки: ${text(property.ceiling)}`));
     if (property.description) main.append(el('p', 'description card-description', property.description));
     if (property.caveats.length) main.append(el('p', 'caveat', property.caveats[0] + (property.caveats.length > 1 ? ` · ещё ${property.caveats.length - 1} в карточке` : '')));
     const actions = el('div', 'card-actions');
     actions.append(openButton('Подробнее', property, 'button card-open'), quickLinks(property));
-    main.append(actions);
+    main.append(actions, brokerBlock(property));
     article.append(cover(property, index < 3), main, noteBlock(property));
     return article;
   }
@@ -1050,7 +1058,7 @@
     const head = el('header', 'detail-head');
     const title = el('h2', 'detail-title', property.title);
     title.id = 'detail-title';
-    head.append(badges(property, true), title, el('p', 'detail-location', [property.area || 'Район не указан', property.agent ? `агент ${property.agent}` : ''].filter(Boolean).join(' · ')));
+    head.append(badges(property, true), title, el('p', 'detail-location', property.area || 'Район не указан'));
     container.append(head, mosaic(property));
 
     const layout = el('div', 'detail-layout');
@@ -1077,7 +1085,7 @@
 
     const contact = el('div', 'aside-card');
     const wa = whatsappUrl(property.agentPhone);
-    contact.append(el('p', 'aside-label', 'Агент'), el('p', 'aside-agent', property.agent || 'Не указан'));
+    contact.append(el('p', 'aside-label', 'Брокер'), el('p', 'aside-agent', property.agent || 'Не указан'));
     if (wa) contact.append(iconLink('chat', `WhatsApp ${formatPhone(property.agentPhone)}`, wa, 'button button-wa'));
     else if (property.agent === 'Артур') contact.append(el('p', 'aside-note', 'Группа в WhatsApp с Артуром · TG @Art_Real_Estate'));
     else contact.append(el('p', 'aside-note', 'WhatsApp не сохранён'));

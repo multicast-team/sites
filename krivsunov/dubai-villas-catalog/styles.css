@@ -171,6 +171,11 @@ h2 { font: normal 24px/1.2 var(--serif); letter-spacing: -.025em; margin: 0; }
 .chip-link { display: inline-flex; align-items: center; gap: 5px; min-height: 38px; padding: 6px 11px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--surface); font-size: 13px; font-weight: 600; text-decoration: none; }
 .chip-link:hover { background: var(--soft); }
 .chip-wa { color: var(--green); }
+.card-broker { display: grid; gap: 6px; margin-top: 6px; padding-top: 12px; border-top: 1px solid var(--line); }
+.broker-name { margin: 0; font-size: 14px; font-weight: 650; overflow-wrap: anywhere; }
+.broker-name::before { content: "Брокер · "; color: var(--muted); font-weight: 400; }
+.card-broker .button-wa { width: 100%; }
+.broker-note { margin: 0; font-size: 13px; color: var(--muted); }
 .inline-ext-link { font-weight: 600; text-decoration: underline; text-decoration-color: #8f564066; }
 
 /* Комментарии */
