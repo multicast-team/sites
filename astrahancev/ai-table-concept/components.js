@@ -30,6 +30,8 @@
      UI.choiceCard(opts)              big icon + 2-3 words
      UI.toast(container, opts)        icon + few words, auto-hide
      UI.sheet(container, opts)        long-press info sheet (rotatable), UI.sheetFor(el, opts)
+                                      on the table both are shared by default: two copies, near upright +
+                                      far turned 180° at the mirror point; opts.side 'near'|'far' = one owner
      UI.turnStrip(opts)               queue of portraits, current bigger, phase emblem + round
      UI.intent(opts)                  enemy intent badge (icon + multi-hit dots)
      UI.targetRing()                  gold rotating target ring
@@ -44,6 +46,8 @@
      data-main  on THE one main action (deck «5 секунд» reveals it; gets .is-main pulse)
      data-turn  on the element that shows whose turn it is (5-second reveal)
      data-far   on containers rotated 180° (sheets/toasts opened from inside face that side)
+     data-own   ="near"|"far" on a non-seat container whose transients belong to one side
+                (inside .seat this is automatic; everything else on the table opens on both sides)
    ===================================================================== */
 (function () {
   'use strict';
@@ -249,6 +253,10 @@
     var t = null, sx = 0, sy = 0;
     function cancel() { if (t) { clearTimeout(t); t = null; } el.classList.remove('is-holding'); }
     el.addEventListener('pointerdown', function (e) {
+      // nested long-press targets (a fan item inside its parent slot): the innermost one owns the press,
+      // so holding «Огонь» shows «Огонь», not the parent «Чары» (owner feedback 2026-11-02, item 2)
+      if (e.__lpOwner && e.__lpOwner !== el && el.contains(e.__lpOwner)) { cancel(); return; }
+      e.__lpOwner = el;
       sx = e.clientX; sy = e.clientY; cancel();
       el.classList.add('is-holding');
       t = setTimeout(function () { t = null; el.classList.remove('is-holding'); el.__lp = Date.now(); fn(e); }, ms);
@@ -343,14 +351,24 @@
     }
   };
 
-  /** Number pop. kind: dmg | heal | miss | crit | info. Quick pops at the same spot merge (Hades). */
+  /** Number pop. kind: dmg | heal | miss | crit | info. Quick pops at the same spot merge (Hades).
+      opts.both (table only, see «both long sides»): a shared number/word pops twice — the near copy
+      upright at (x, y), the far copy turned 180° at the point mirrored through opts.around ({x, y},
+      default 70 px below), so «6» and «9», «мимо», «+12» read right from both long sides. */
   UI.pop = function (c, x, y, text, kind, opts) {
     opts = opts || {};
+    if (opts.both && onTable(c)) {
+      var ar = opts.around || { x: x, y: y + 70 };
+      var o1 = Object.assign({}, opts, { both: false, rot: 0 }), o2 = Object.assign({}, opts, { both: false, rot: 180 });
+      var a = UI.pop(c, x, y, text, kind, o1), b = UI.pop(c, 2 * ar.x - x, 2 * ar.y - y, text, kind, o2);
+      if (a && b && a !== b) { a.twin = b; b.twin = a; b.setAttribute('data-twin', ''); }
+      return a;
+    }
     var l = fxLayer(c), now = Date.now();
     var num = typeof text === 'number' ? text : (/^[+-]?\d+$/.test(String(text)) ? parseInt(text, 10) : null);
     if (num != null) {
       var prev = [].slice.call(l.querySelectorAll('.fx-pop')).filter(function (p) {
-        return p.__kind === kind && now - p.__t < 380 && Math.hypot(p.__x - x, p.__y - y) < 40 && p.__num != null;
+        return p.__kind === kind && p.__rot === (opts.rot || 0) && now - p.__t < 380 && Math.hypot(p.__x - x, p.__y - y) < 40 && p.__num != null;
       })[0];
       if (prev) {
         prev.__num += num; prev.__t = now;
@@ -364,7 +382,7 @@
       h('span', { class: 'fx-pop__in' },
         kind === 'heal' ? UI.icon('heart', 'fx-pop__ic') : null,
         h('span', { class: 'fx-pop__n', text: label })));
-    p.__t = now; p.__x = x; p.__y = y; p.__num = num; p.__kind = kind;
+    p.__t = now; p.__x = x; p.__y = y; p.__num = num; p.__kind = kind; p.__rot = opts.rot || 0;
     l.appendChild(p);
     setTimeout(function () { p.remove(); }, 1100);
     return p;
@@ -684,9 +702,17 @@
       if (opts.fan) { UI.fan(el, opts.fan, { color: color, onPick: opts.onPick }); return; }
       if (opts.onTap) opts.onTap(el, opts);
     });
-    if (opts.info) UI.longPress(el, function () { UI.sheetFor(el, { icon: opts.icon, art: opts.art, title: opts.title || opts.label, text: opts.info }); });
+    if (opts.info) UI.longPress(el, function () { UI.sheetFor(el, { icon: opts.icon, art: opts.art, title: opts.title || opts.label, text: opts.info, cost: opts.cost, lvl: opts.lvl }); });
     return el;
   };
+  /** Cost chip for an info sheet: icon + one word (action, bonus, reaction, spell slot with its circle …). */
+  var COST_WORD = { action: 'Действие', bonus: 'Бонус', reaction: 'Реакция', slot: 'Ячейка', cantrip: 'Заговор', move: 'Движение', free: 'Свободно' };
+  function costChip(cost, lvl) {
+    if (!cost || !COST_WORD[cost]) return null;
+    var ic = cost === 'slot' && lvl ? 'cost-slot-' + lvl : COST_ICON[cost];
+    return h('span', { class: 'sheet__cost sheet__cost--' + cost }, ic ? UI.icon(ic) : null,
+      h('span', { text: COST_WORD[cost] + (cost === 'slot' && lvl ? ' ' + ['', 'I', 'II', 'III'][lvl] + ' круга' : '') }));
+  }
 
   /** Fan: arc of up to 8 slots above `slotEl`.  items: slot opts.  opts: {color, onPick(item, el)} */
   UI.fan = function (slotEl, items, opts) {
@@ -1052,53 +1078,136 @@
    * Toast: icon + few words.  opts {icon, text, tone:'info'|'good'|'bad', ms=2200, x, y, rot}
    * Default position: centre-top of container.  UI.toastFor(el, opts) places it near el, facing its side.
    */
+  /* ---- both long sides (brief rule 7; owner 2026-11-02 «на столе всё должно дублироваться»)
+     On the flat table every transient thing with words follows ONE rule:
+       · it belongs to one player (sits in a .seat or under [data-own]) → one copy, in front of that
+         player, turned to them  (opts.side = 'near' | 'far');
+       · otherwise it is shared → TWO copies: the near one upright in the near half, the far one
+         turned 180° at the mirrored point (W−x, H−y).  UI.toast / UI.sheet do this by default on a
+         table stage; opts.both = false or opts.side opts out.  UI.toastFor / UI.sheetFor pick the
+         mode from the element.  The two copies live and die together (el.twin). */
+  function onTable(c) { var st = stageOf(c) || c; return !!(st && st.dataset && st.dataset.surface === 'table'); }
+  UI.onTable = onTable;
+  /** 'near' | 'far' when el belongs to one player's seat on the table, null when it is shared. */
+  UI.ownerSide = function (el) {
+    var own = el && el.closest && el.closest('.seat, [data-own]');
+    if (!own) return null;
+    var v = own.getAttribute('data-own');
+    if (v === 'near' || v === 'far') return v;
+    return farOf(own) ? 'far' : 'near';
+  };
+  /** Mode for a transient on container c: {both:true} | {side, rot} | {rot} (off the table). */
+  function placeMode(c, opts) {
+    if (!onTable(c)) return { both: false, rot: opts.rot || 0 };
+    if (opts.side === 'near' || opts.side === 'far') return { both: false, rot: opts.side === 'far' ? 180 : 0 };
+    if (opts.both === false) return { both: false, rot: opts.rot || 0 };
+    return { both: true };
+  }
+  /** Near/far points for a mirrored pair of an element hgt px tall: the near copy sits in the near
+      half (a point given in the far half folds into it, x kept), the far copy at the mirror point. */
+  function mirrorPair(c, x, y, hgt) {
+    var W = c.offsetWidth, H = c.offsetHeight;
+    if (y < H / 2) y = H - y;   // a point in the far half folds down: the near copy keeps its x
+    var lo = H / 2 + hgt / 2 + 8, hi = H - hgt / 2 - 8;
+    y = Math.max(lo, Math.min(Math.max(lo, hi), y));
+    return [{ x: x, y: y, rot: 0 }, { x: W - x, y: H - y, rot: 180 }];
+  }
+  UI.mirrorPair = mirrorPair;
+  function twin(a, b) { a.twin = b; b.twin = a; a.classList.add('is-side-near'); b.classList.add('is-side-far'); b.setAttribute('data-twin', ''); }
+
   UI.toast = function (c, opts) {
     opts = opts || {};
-    var l = fxLayer(c);
-    var t = h('div', { class: 'toast toast--' + (opts.tone || 'info'), style: { left: (opts.x != null ? opts.x : c.offsetWidth / 2) + 'px', top: (opts.y != null ? opts.y : Math.min(140, c.offsetHeight * 0.14)) + 'px', '--rot': (opts.rot || 0) + 'deg' } },
-      opts.icon ? UI.icon(opts.icon, 'toast__ic') : null, h('span', { text: opts.text || '' }));
-    l.appendChild(t);
-    var tw = t.offsetWidth, cw = c.offsetWidth, x0 = parseFloat(t.style.left);   // keep the whole toast on screen
-    if (tw && cw && tw + 24 < cw) t.style.left = Math.max(tw / 2 + 12, Math.min(cw - tw / 2 - 12, x0)) + 'px';
-    setTimeout(function () { t.classList.add('is-out'); setTimeout(function () { t.remove(); }, 320); }, opts.ms || 2200);
-    return t;
+    var l = fxLayer(c), mode = placeMode(c, opts);
+    var x0 = opts.x != null ? opts.x : c.offsetWidth / 2;
+    var y0 = opts.y != null ? opts.y : (mode.both ? c.offsetHeight - Math.min(140, c.offsetHeight * 0.14) : Math.min(140, c.offsetHeight * 0.14));
+    function one(x, y, rot) {
+      var t = h('div', { class: 'toast toast--' + (opts.tone || 'info'), style: { left: x + 'px', top: y + 'px', '--rot': rot + 'deg' } },
+        opts.icon ? UI.icon(opts.icon, 'toast__ic') : null, h('span', { text: opts.text || '' }));
+      l.appendChild(t);
+      var tw = t.offsetWidth, cw = c.offsetWidth;   // keep the whole toast on screen
+      if (tw && cw && tw + 24 < cw) t.style.left = Math.max(tw / 2 + 12, Math.min(cw - tw / 2 - 12, x)) + 'px';
+      setTimeout(function () { t.classList.add('is-out'); setTimeout(function () { t.remove(); }, 320); }, opts.ms || 2200);
+      return t;
+    }
+    if (!mode.both) return one(x0, y0, mode.rot);
+    var a = one(x0, y0, 0), pts = mirrorPair(c, x0, y0, a.offsetHeight || 50);
+    a.style.left = pts[0].x + 'px'; a.style.top = pts[0].y + 'px';
+    var tw = a.offsetWidth, cw = c.offsetWidth;
+    if (tw && cw && tw + 24 < cw) a.style.left = Math.max(tw / 2 + 12, Math.min(cw - tw / 2 - 12, pts[0].x)) + 'px';
+    var b = one(c.offsetWidth - parseFloat(a.style.left), pts[1].y, 180);
+    twin(a, b);
+    return a;
   };
+  /** Where an element's transient goes: 'both' (shared, on the table) or the owner side. */
+  function sideFor(el, st) {
+    if (!onTable(st)) return farOf(el) ? 'far' : 'near';
+    return UI.ownerSide(el) || 'both';
+  }
+  UI.sideFor = sideFor;
   UI.toastFor = function (el, opts) {
     var st = stageOf(el); if (!st) return null;
-    var p = UI.center(el, st), far = farOf(el);
-    return UI.toast(st, Object.assign({ x: p.x, y: p.y + (far ? 90 : -90), rot: far ? 180 : 0 }, opts));
+    var p = UI.center(el, st), side = opts && opts.shared && onTable(st) ? 'both' : sideFor(el, st);
+    if (side === 'both') return UI.toast(st, Object.assign({ x: p.x, y: p.y + (p.y < st.offsetHeight / 2 ? 90 : -90) }, opts, { both: true, side: null }));
+    var far = side === 'far';
+    return UI.toast(st, Object.assign({ x: p.x, y: p.y + (far ? 90 : -90), rot: far ? 180 : 0 }, opts, { side: onTable(st) ? side : null }));
   };
 
-  /** Info sheet (long-press).  opts {icon, art, title, text, x, y, rot}.  Tap anywhere closes. */
+  /**
+   * Info sheet (long-press).  opts {icon, art, title, text, cost, lvl, body, x, y, rot, side, both}.  Tap anywhere closes.
+   * body: a node (copied for the far twin) or a function () → node (called per copy: use it for buttons).
+   * On the table a sheet is shared (two copies) unless opts.side names its owner (see «both long sides»).
+   */
   UI.sheet = function (c, opts) {
     opts = opts || {};
     [].slice.call(c.querySelectorAll('.sheet')).forEach(function (o) { o.remove(); });
-    var l = fxLayer(c);
-    var head = h('div', { class: 'sheet__head' });
-    if (opts.art) head.appendChild(bgArt(h('span', { class: 'sheet__art' }), opts.art));
-    else if (opts.icon) head.appendChild(h('span', { class: 'sheet__ic' }, UI.icon(opts.icon)));
-    if (opts.title) head.appendChild(h('span', { class: 'sheet__title', text: opts.title }));
-    var body = UI.frame({ parch: true, cls: 'sheet__frame' }, head, opts.text ? h('p', { class: 'sheet__text', text: opts.text }) : null, opts.body || null);
+    var l = fxLayer(c), mode = placeMode(c, opts);
     var W = c.offsetWidth, H = c.offsetHeight, w = Math.min(460, W - 24);
+    var copies = [];
+    function build(k) {
+      var head = h('div', { class: 'sheet__head' });
+      if (opts.art) head.appendChild(bgArt(h('span', { class: 'sheet__art' }), opts.art));
+      else if (opts.icon) head.appendChild(h('span', { class: 'sheet__ic' }, UI.icon(opts.icon)));
+      var chip = costChip(opts.cost, opts.lvl);
+      if (opts.title || chip) head.appendChild(h('span', { class: 'sheet__hd' }, opts.title ? h('span', { class: 'sheet__title', text: opts.title }) : null, chip));
+      var extra = typeof opts.body === 'function' ? opts.body(k) : (opts.body ? (k ? opts.body.cloneNode(true) : opts.body) : null);
+      var body = UI.frame({ parch: true, cls: 'sheet__frame' }, head, opts.text ? h('p', { class: 'sheet__text', text: opts.text }) : null, extra);
+      var sh = h('div', { class: 'sheet' + (opts.body ? ' sheet--body' : ''), style: { width: w + 'px' } }, body);
+      l.appendChild(sh);
+      copies.push(sh);
+      return sh;
+    }
+    function put(sh, x, y, rot, clampY) {
+      x = Math.max(w / 2 + 12, Math.min(W - w / 2 - 12, x));
+      if (clampY) y = Math.max(110, Math.min(H - 110, y));
+      sh.style.left = x + 'px'; sh.style.top = y + 'px'; sh.style.setProperty('--rot', rot + 'deg');
+    }
     var x = opts.x != null ? opts.x : W / 2, y = opts.y != null ? opts.y : H / 2;
-    x = Math.max(w / 2 + 12, Math.min(W - w / 2 - 12, x));
-    y = Math.max(110, Math.min(H - 110, y));
-    var sh = h('div', { class: 'sheet' + (opts.body ? ' sheet--body' : ''), style: { left: x + 'px', top: y + 'px', width: w + 'px', '--rot': (opts.rot || 0) + 'deg' } }, body);
-    l.appendChild(sh);
+    var sh = build(0);
+    if (!mode.both) put(sh, x, y, mode.rot, true);
+    else {
+      var pts = mirrorPair(c, x, y, sh.offsetHeight || 220);
+      put(sh, pts[0].x, pts[0].y, 0, false);
+      var far = build(1);
+      put(far, W - parseFloat(sh.style.left), pts[1].y, 180, false);
+      twin(sh, far);
+    }
     UI.sound('open');
     function close(e) {
-      if (e && opts.body && sh.contains(e.target)) return;   // interactive sheet: inside taps keep it open
+      if (e && opts.body && copies.some(function (s) { return s.contains(e.target); })) return;   // interactive sheet: inside taps keep it open
       if (sh.classList.contains('is-out')) return;
-      sh.classList.add('is-out'); setTimeout(function () { sh.remove(); }, 260); document.removeEventListener('pointerdown', close, true);
+      copies.forEach(function (s) { s.classList.add('is-out'); setTimeout(function () { s.remove(); }, 260); });
+      document.removeEventListener('pointerdown', close, true);
     }
-    sh.close = function () { close(); };
+    copies.forEach(function (s) { s.close = function () { close(); }; });
     setTimeout(function () { document.addEventListener('pointerdown', close, true); }, 30);
     return sh;
   };
   UI.sheetFor = function (el, opts) {
     var st = stageOf(el); if (!st) return null;
-    var p = UI.center(el, st), far = farOf(el);
-    return UI.sheet(st, Object.assign({ x: p.x, y: p.y + (far ? 150 : -150), rot: far ? 180 : 0 }, opts));
+    var p = UI.center(el, st), side = opts && opts.shared && onTable(st) ? 'both' : sideFor(el, st);
+    if (side === 'both') return UI.sheet(st, Object.assign({ x: p.x, y: p.y + (p.y < st.offsetHeight / 2 ? 150 : -150) }, opts, { both: true, side: null }));
+    var far = side === 'far';
+    return UI.sheet(st, Object.assign({ x: p.x, y: p.y + (far ? 150 : -150), rot: far ? 180 : 0 }, opts, { side: onTable(st) ? side : null }));
   };
 
   /**
@@ -1143,15 +1252,18 @@
     opts = opts || {};
     var items = opts.items || UI.GEAR_ITEMS;
     var sh;
-    var grid = h('div', { class: 'gsheet' });
-    items.forEach(function (it) {
-      var b = h('button', { class: 'gsheet__b', type: 'button', 'data-key': it.key }, h('span', { class: 'gsheet__ic' }, UI.icon(it.icon)), h('span', { class: 'gsheet__w', text: it.word }));
-      b.addEventListener('click', function () {
-        if (sh) sh.close();
-        if (opts.onPick) opts.onPick(it.key, it); else UI.toastFor(el, { icon: it.icon, text: it.word });
+    function grid() {   // built once per copy: on the table the gear sheet opens for both long sides
+      var g = h('div', { class: 'gsheet' });
+      items.forEach(function (it) {
+        var b = h('button', { class: 'gsheet__b', type: 'button', 'data-key': it.key }, h('span', { class: 'gsheet__ic' }, UI.icon(it.icon)), h('span', { class: 'gsheet__w', text: it.word }));
+        b.addEventListener('click', function () {
+          if (sh) sh.close();
+          if (opts.onPick) opts.onPick(it.key, it); else UI.toastFor(el, { icon: it.icon, text: it.word });
+        });
+        g.appendChild(b);
       });
-      grid.appendChild(b);
-    });
+      return g;
+    }
     sh = UI.sheetFor(el, { icon: 'gear', body: grid });
     return sh;
   };
@@ -1329,6 +1441,7 @@
       te.appendChild(body);
       if (enemy && enemy.leader) te.appendChild(h('span', { class: 'tok__crown' }, UI.icon('crown')));
       te.appendChild(h('div', { class: 'tok__over' }));
+      te.appendChild(h('div', { class: 'tok__under' }));   // far twins of shared badges (preview)
       t.el = te; t.hpEl = hp; t.body = body;
       toks.appendChild(te);
       place(t);
@@ -1391,11 +1504,22 @@
       });
       reach.classList.add('is-on');
     };
-    el.clearReach = function () { reach.innerHTML = ''; reach.classList.remove('is-on'); curReach = null; if (bootEl) { bootEl.remove(); bootEl = null; } };
+    el.clearReach = function () { reach.innerHTML = ''; reach.classList.remove('is-on'); curReach = null; if (bootEl) { if (bootEl.twin) bootEl.twin.remove(); bootEl.remove(); bootEl = null; } };
+    /* feet left: on the table shared — near copy upper-right of the token, far copy turned 180° at the
+       point mirrored through the token centre; off the table one copy turned to the token's side */
     function boot(t, feet, x, y) {
-      if (!bootEl) { bootEl = h('div', { class: 'boot' }, UI.icon('boot'), h('b')); over.appendChild(bootEl); }
+      var both = onTable(el);
+      if (!bootEl) {
+        bootEl = h('div', { class: 'boot' }, UI.icon('boot'), h('b')); over.appendChild(bootEl);
+        if (both) { var b2 = h('div', { class: 'boot', 'data-twin': '' }, UI.icon('boot'), h('b')); over.appendChild(b2); bootEl.twin = b2; }
+      }
       bootEl.querySelector('b').textContent = feet;
-      bootEl.style.transform = 'translate(' + (x + cell * 0.38) + 'px,' + (y - cell * 0.62) + 'px)' + (t.far ? ' rotate(180deg)' : '');
+      var bw = bootEl.offsetWidth || 70, bh = bootEl.offsetHeight || 36;
+      if (!both) { bootEl.style.transform = 'translate(' + (x + cell * 0.38) + 'px,' + (y - cell * 0.62) + 'px)' + (t.far ? ' rotate(180deg)' : ''); return; }
+      var nx = x + cell * 0.38, ny = y - cell * 0.62;   // near copy's top-left
+      bootEl.style.transform = 'translate(' + nx + 'px,' + ny + 'px)';
+      var tw = bootEl.twin; tw.querySelector('b').textContent = feet;
+      tw.style.transform = 'translate(' + (2 * x - nx - bw) + 'px,' + (2 * y - ny - bh) + 'px) rotate(180deg)';
     }
     el.showBoot = function (id) { var t = T[id]; if (!t) return; var c = cc(t.x, t.y); boot(t, t.left, c.x, c.y); };
 
@@ -1478,14 +1602,24 @@
       return UI.arrow(arrows, a, b, Object.assign({ gap: cell * 0.5, startGap: cell * 0.42 }, o || {}));
     };
     el.clearArrows = function () { arrows.innerHTML = ''; };
+    /* o {items, cls, far, decorate(b)}.  On the table the badge is shared: a second copy hangs under
+       the token turned 180° (.tok__under) so the far side reads it too; off the table o.far turns the
+       single copy.  decorate runs on every copy. */
     el.preview = function (id, o) {
       el.clearPreview(id);
       var t = T[id]; if (!t) return null;
-      var b = h('div', { class: 'preview' });
-      (o.items || []).forEach(function (it) {
-        b.appendChild(h('span', { class: 'preview__it' + (it.tone ? ' is-' + it.tone : '') }, it.icon ? UI.icon(it.icon) : null, it.text != null ? h('b', { text: String(it.text) }) : null));
-      });
-      t.el.querySelector('.tok__over').appendChild(b);
+      var both = onTable(el);
+      function make(under) {
+        var b = h('div', { class: 'preview' + (o.cls ? ' ' + o.cls : '') + (!both && o.far ? ' is-far' : '') });
+        (o.items || []).forEach(function (it) {
+          b.appendChild(h('span', { class: 'preview__it' + (it.tone ? ' is-' + it.tone : '') }, it.icon ? UI.icon(it.icon) : null, it.text != null ? h('b', { text: String(it.text) }) : null));
+        });
+        t.el.querySelector(under ? '.tok__under' : '.tok__over').appendChild(b);
+        if (o.decorate) o.decorate(b);
+        return b;
+      }
+      var b = make(false);
+      if (both) { var b2 = make(true); b.twin = b2; b2.twin = b; b2.setAttribute('data-twin', ''); }
       return b;
     };
     el.clearPreview = function (id) {
@@ -1509,7 +1643,10 @@
       var c = el.tokenCenter(id); if (!c) return null;
       var t = T[id];
       if (kind === 'dmg' || kind === 'crit') { t.el.classList.remove('is-hit'); void t.el.offsetWidth; t.el.classList.add('is-hit'); }
-      return UI.pop(fx, c.x, c.y - cell * 0.35, text, kind, Object.assign({ rot: t && t.far ? 180 : 0 }, o || {}));
+      // on the table a map number/word is shared: it pops above the token for the near side and,
+      // turned, below it for the far side (o.both = false keeps one copy turned by o.rot)
+      var both = onTable(el) && !(o && o.both === false);
+      return UI.pop(fx, c.x, c.y - cell * (both ? 0.6 : 0.35), text, kind, Object.assign({ rot: t && t.far ? 180 : 0 }, o || {}, both ? { both: true, around: c } : {}));
     };
 
     (opts.tokens || []).forEach(el.addToken);

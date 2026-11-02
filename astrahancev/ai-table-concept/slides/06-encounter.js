@@ -61,9 +61,9 @@
         UI.medallion({ enemy: 'tinnik-big', size: 96, cls: 'en-goal__m' }),
         h('span', { class: 'en-goal__arrow' }, UI.icon('arrow-right')),
         h('span', { class: 'en-goal__flee' }, UI.icon('flee')));
-      goal.addEventListener('click', function (e) {
-        var p = ctx.local(e);
-        UI.sheet(stage, { icon: 'crown', title: 'Цель', text: UI.FORD.goal + '. Раунд 1 из 2.', x: 1480, y: p.y, rot: p.y < 540 ? 180 : 0 });
+      goal.addEventListener('click', function () {
+        // the goal is shared: one sheet for each long side (UI.sheet mirrors it on the table)
+        UI.sheet(stage, { icon: 'crown', title: 'Цель', text: UI.FORD.goal + '. Раунд 1 из 2.', x: 1480, y: 700 });
       });
       L.endR.appendChild(goal);
 
@@ -150,7 +150,7 @@
           ctx.setTimeout(function () { oldBox.remove(); }, 340);
         }
         var hero = UI.PARTY4[pos], far = pos.indexOf('far') === 0;
-        var box = h('div', { class: 'en-roll en-roll--' + pos });
+        var box = h('div', { class: 'en-roll en-roll--' + pos, 'data-own': far ? 'far' : 'near' });
         if (far) box.setAttribute('data-far', '');
         var card = UI.diceCard({
           die: 'd20', mod: INIT[hero], hero: hero, word: 'Бросай',

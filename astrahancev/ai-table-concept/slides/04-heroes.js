@@ -351,8 +351,7 @@
       [near, far].forEach(function (r) { r.removeAttribute('data-main'); });
       ctx.setTimeout(function () {
         UI.flash(stage, 'rgba(245,213,138,.35)', 500);
-        ctx.toast({ icon: 'choice-go', text: 'История начинается', x: 960, y: 700, ms: 3200 });
-        ctx.toast({ icon: 'choice-go', text: 'История начинается', x: 960, y: 380, rot: 180, ms: 3200 });
+        ctx.toast({ icon: 'choice-go', text: 'История начинается', x: 960, y: 700, ms: 3200 });   // the table toast doubles itself (far copy at y 380, turned)
         SEATS.forEach(function (pos) {
           var st = boxes[pos].querySelector('.seat');
           if (st) st.classList.add('is-active');

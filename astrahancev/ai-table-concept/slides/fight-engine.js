@@ -137,7 +137,7 @@
       var t = board.token(id); t.ac = UI.ENEMIES[t.enemy].ac;
       if (/^small/.test(id)) t.el.classList.add('ft-small');
     });
-    // long-press any token: who is it (sheet faces that token's owner)
+    // long-press any token: who is it — shared sheet, near copy upright + far copy turned
     Object.keys(board.tokens).forEach(function (id) {
       var t = board.tokens[id];
       UI.longPress(t.el, function () {
@@ -145,7 +145,7 @@
         var c = board.tokenCenter(id), b = UI.center(board, stage), bx = b.x - board.offsetWidth / 2, by = b.y - board.offsetHeight / 2;
         UI.sheet(stage, { art: en ? en.token : 'bust-' + t.hero, title: en ? en.name : hr.short,
           text: 'Хиты ' + t.hp + ' из ' + t.max + ' · КД ' + (en ? en.ac : hr.ac) + (en && en.leader ? '. Вожак: падёт — остальные бегут.' : ''),
-          x: bx + c.x, y: by + c.y + (t.far ? 150 : -150), rot: t.far ? 180 : 0 });
+          x: bx + c.x, y: by + c.y });   // shared: two copies (anyone at the table may press any token)
       });
     });
 
@@ -161,7 +161,7 @@
       h('span', { class: 'ft-goal__lead' }, UI.medallion({ enemy: 'tinnik-big', size: 92 }), h('span', { class: 'ft-goal__crown' }, UI.icon('crown'))),
       h('span', { class: 'ft-goal__arrow' }, UI.icon('arrow-right')),
       h('span', { class: 'ft-goal__flee' }, UI.icon('flee')));
-    goal.addEventListener('click', function () { UI.sheet(stage, { icon: 'crown', title: 'Цель', text: UI.FORD.goal + '. Раунд ' + Math.min(S.round, 2) + ' из 2.', x: 1560, y: 540 }); });
+    goal.addEventListener('click', function () { UI.sheet(stage, { icon: 'crown', title: 'Цель', text: UI.FORD.goal + '. Раунд ' + Math.min(S.round, 2) + ' из 2.', x: 1560, y: 700 }); });   // shared: both sides
     var svc = h('div', { class: 'ft-svc' });
     [['scroll', 'Журнал'], ['flag', 'Пометки'], ['help', 'Как играть'], ['gear', 'Настройки']].forEach(function (s) {
       var b = h('button', { class: 'ft-svc__b', type: 'button', 'aria-label': s[1] }, UI.icon(s[0]));
@@ -445,10 +445,8 @@
       } else if (k.kind === 'heal') {
         items = [{ icon: 'heart', text: null, tone: 'heal' }, { icon: k.die, text: UI.fmtMod(k.mod), tone: 'heal' }];
       }
-      var b = board.preview(id, { items: items });
-      if (b) dieFaces(b);
-      if (b && d.rec.far) b.classList.add('ft-far');
-      return b;
+      // shared aim badge: on the table it shows for both long sides (UI.board preview twin)
+      return board.preview(id, { items: items, far: d.rec.far, decorate: dieFaces });
     }
 
     /* a bare die glyph means nothing to a newcomer: write its face count inside it («8» in the d8) */
@@ -477,7 +475,7 @@
         Object.keys(d.missiles).forEach(function (tid) {
           drawArrow(d.rec.hero, tid, { color: col, width: 8, bend: 0.28 });
           var dots = []; for (var i = 0; i < d.missiles[tid]; i++) dots.push({ icon: 'dot', tone: 'hit' });
-          var b = board.preview(tid, { items: dots }); if (b && d.rec.far) b.classList.add('ft-far');
+          board.preview(tid, { items: dots, far: d.rec.far });
         });
         d.targets = Object.keys(d.missiles);
         var c = board.tokenCenter(id); UI.spark(board.fx, c.x, c.y, col, 8);
@@ -637,7 +635,7 @@
     function openCard(rec, co) {
       return new Promise(function (res) {
         S.mode = 'rolling';
-        var holder = h('div', { class: 'ft-cardslot ft-cardslot--' + rec.inner });
+        var holder = h('div', { class: 'ft-cardslot ft-cardslot--' + rec.inner, 'data-own': rec.far ? 'far' : 'near' });
         var card = UI.diceCard(Object.assign({ color: rec.hd.color, word: 'Бросай' }, co, {
           onConfirm: function (v) {
             ctx.setTimeout(function () {
@@ -704,8 +702,7 @@
     }
     function showCheck(rec, id, total, ok) {
       board.clearPreview(id);
-      var b = board.preview(id, { items: [{ icon: 'd20', text: total, tone: ok ? 'hit' : null }, { icon: ok ? 'check' : 'cross', tone: ok ? 'heal' : 'dmg' }] });
-      if (b) { b.classList.add('ft-result'); if (rec.far) b.classList.add('ft-far'); }
+      board.preview(id, { items: [{ icon: 'd20', text: total, tone: ok ? 'hit' : null }, { icon: ok ? 'check' : 'cross', tone: ok ? 'heal' : 'dmg' }], cls: 'ft-result', far: rec.far });
     }
 
     function doAttack(d) {
@@ -908,7 +905,7 @@
           h('div', { class: 'ft-react__gain' }, UI.icon('shield-ac'), h('b', { text: String(rec.ac + 5) })),
           h('div', { class: 'ft-react__btns' }, yes, no),
           h('i', { class: 'ft-react__timer' }));
-        var holder = h('div', { class: 'ft-cardslot ft-cardslot--' + rec.inner + ' ft-cardslot--react' }, card);
+        var holder = h('div', { class: 'ft-cardslot ft-cardslot--' + rec.inner + ' ft-cardslot--react', 'data-own': rec.far ? 'far' : 'near' }, card);
         rec.box.appendChild(holder);
         setMain(yes);
         UI.sound('open');
@@ -984,24 +981,25 @@
       }
     }
     /* gear: everything §5 hides behind it, as a sheet of big rows (one tap each) */
+    /* the gear is shared (right end): its sheet opens for both long sides, each copy with live rows;
+       the toasts it raises double themselves too (UI.toast on the table) */
     function gearSheet() {
-      var sh = UI.sheet(stage, { icon: 'gear', title: 'Настройки', x: 1560, y: 520 });
-      var list = h('div', { class: 'ft-gear' });
-      [['rotate', 'Поворот', function () { UI.toast(stage, { icon: 'rotate', text: 'Поворот — кнопка «Напротив»' }); }],
+      var ROWS = [['rotate', 'Поворот', function () { UI.toast(stage, { icon: 'rotate', text: 'Поворот — кнопка «Напротив»' }); }],
         ['dev-table', 'Раскладка', function () { UI.toast(stage, { icon: 'dev-table', text: '2 и 2' }); }],
         ['check', 'Проверка', function () { UI.toast(stage, { icon: 'check', tone: 'good', text: 'Всё на связи' }); }],
         ['help', 'Правила', function () { svcTap('help'); }],
         ['party-swap', 'Новый отряд', function () { UI.toast(stage, { icon: 'party-swap', text: 'Выбор героев — слайд 04' }); }],
-        ['back', 'Ещё раз', function () { ctx.remount(); }]].forEach(function (r) {
-        var b = h('button', { class: 'ft-gear__b', type: 'button' }, UI.icon(r[0]), h('span', { text: r[1] }));
-        b.addEventListener('click', function (e) { e.stopPropagation(); sh.remove(); r[2](); });
-        list.appendChild(b);
-      });
-      var fr = sh.querySelector('.sheet__frame') || sh.firstChild;
-      fr.appendChild(list);
+        ['back', 'Ещё раз', function () { ctx.remount(); }]];
+      var sh = UI.sheet(stage, { icon: 'gear', title: 'Настройки', x: 1560, y: 720, body: function () {
+        var list = h('div', { class: 'ft-gear' });
+        ROWS.forEach(function (r) {
+          var b = h('button', { class: 'ft-gear__b', type: 'button' }, UI.icon(r[0]), h('span', { text: r[1] }));
+          b.addEventListener('click', function (e) { e.stopPropagation(); sh.close(); r[2](); });
+          list.appendChild(b);
+        });
+        return list;
+      } });
     }
-    // keep the sheet open while its own rows are pressed (UI.sheet closes on any document pointerdown)
-    ctx.on(window, 'pointerdown', function (e) { if (e.target.closest && e.target.closest('.ft-gear')) e.stopPropagation(); }, true);
     var marks = {};
     function toggleMark(x, y) {
       var k = x + ':' + y;

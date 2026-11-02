@@ -122,20 +122,20 @@
         speakT = ctx.setTimeout(function () { nodes.forEach(function (n) { n.severin.setState('idle'); }); }, ms || 3200);
       }
       function think() { nodes.forEach(function (n) { n.severin.setState('thinking'); }); }
-      function onSeverin(sev) {
-        var far = !!sev.closest('[data-far]');
-        showSub(far);
+      function onSeverin() {
+        showSub();
         speak(4000);
       }
-      function showSub(far) {
-        var el = far ? subFar : subNear, other = far ? subNear : subFar;
-        other.classList.remove('is-on');
-        el.innerHTML = '';
-        el.appendChild(h('span', { class: 'st-sub__ic' }, UI.icon('scroll')));
-        el.appendChild(h('span', { class: 'st-sub__t', text: BEATS[state.beat].line }));
-        el.classList.remove('is-on'); void el.offsetWidth; el.classList.add('is-on');
+      // Severin's line is shared: whichever node is tapped, both long sides get it
+      function showSub() {
+        [subNear, subFar].forEach(function (el) {
+          el.innerHTML = '';
+          el.appendChild(h('span', { class: 'st-sub__ic' }, UI.icon('scroll')));
+          el.appendChild(h('span', { class: 'st-sub__t', text: BEATS[state.beat].line }));
+          el.classList.remove('is-on'); void el.offsetWidth; el.classList.add('is-on');
+        });
         if (subT) ctx.clearTimeout(subT);
-        subT = ctx.setTimeout(function () { el.classList.remove('is-on'); }, 8000);
+        subT = ctx.setTimeout(hideSubs, 8000);
       }
       function hideSubs() { subNear.classList.remove('is-on'); subFar.classList.remove('is-on'); }
 
@@ -144,9 +144,10 @@
         if (!key || state.clues[key]) return;
         var c = CLUES[key];
         var tok = h('button', { class: 'st-clue', type: 'button', 'aria-label': c.title }, h('span', { class: 'st-clue__ic' }, UI.icon(c.icon)));
-        tok.addEventListener('click', function (e) {
-          var p = ctx.local(e);
-          UI.sheet(stage, { icon: c.icon, title: c.title, text: c.text, x: 440, y: p.y, rot: p.y < 540 ? 180 : 0 });
+        tok.addEventListener('click', function () {
+          // a clue is shared: it opens for both long sides (near copy upright, far copy turned 180°)
+          var p = UI.center(tok, stage);
+          UI.sheet(stage, { icon: c.icon, title: c.title, text: c.text, x: 440, y: p.y });
         });
         clueCol.appendChild(tok);
         state.clues[key] = tok;
@@ -250,7 +251,7 @@
         ['nearLeft', 'nearRight', 'farLeft', 'farRight'].forEach(function (pos) {
           if (pos === ROLLER.pos) L[pos].setActive(true); else L[pos].setDim(true);
         });
-        var box = h('div', { class: 'st-roll st-roll--' + ROLLER.pos });
+        var box = h('div', { class: 'st-roll st-roll--' + ROLLER.pos, 'data-own': ROLLER.pos.indexOf('far') === 0 ? 'far' : 'near' });
         root.appendChild(box);
         var card = UI.diceCard({
           die: 'd20', mod: ROLLER.mod, dc: ROLLER.dc, hero: ROLLER.hero, word: 'Бросай',
@@ -264,9 +265,11 @@
         var total = v + ROLLER.mod, ok = total >= ROLLER.dc;
         var d = card.querySelector('.die');
         var p = UI.center(d, stage);
-        UI.pop(stage, p.x, p.y - 170, String(total), ok ? 'crit' : 'dmg', { size: 96 });
+        // the number belongs to the roller (faces their seat); the outcome word is shared (both sides)
+        var rf = ROLLER.pos.indexOf('far') === 0;
+        UI.pop(stage, p.x, p.y + (rf ? 170 : -170), String(total), ok ? 'crit' : 'dmg', { size: 96, rot: rf ? 180 : 0 });
         UI.sound(ok ? 'heal' : 'miss');
-        UI.toast(stage, { icon: ok ? 'check' : 'cross', text: ok ? 'Успех' : 'Замечены', tone: ok ? 'good' : 'bad', x: p.x + 230, y: p.y - 170, ms: 1800 });
+        UI.toast(stage, { icon: ok ? 'check' : 'cross', text: ok ? 'Успех' : 'Замечены', tone: ok ? 'good' : 'bad', x: p.x + (rf ? -230 : 230), y: p.y + (rf ? 170 : -170), ms: 1800 });
         ctx.setTimeout(function () {
           card.close();
           ctx.setTimeout(function () { box.remove(); }, 360);

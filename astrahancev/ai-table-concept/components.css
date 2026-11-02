@@ -343,6 +343,10 @@
 .sheet__art { width: 64px; height: 64px; flex: none; border-radius: 50%; background: center / cover no-repeat; box-shadow: 0 0 0 3px #8A6535, 0 3px 6px rgba(0,0,0,.7); }
 .sheet__ic { font-size: 44px; color: var(--gold-hi); }
 .sheet__title { font-family: var(--f-title); font-size: 30px; line-height: 1; text-transform: uppercase; letter-spacing: .08em; background: var(--g-gold-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.sheet__hd { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
+.sheet__cost { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-label); font-weight: 700; font-size: 18px; line-height: 1; color: var(--ink-2); }
+.sheet__cost .ic { font-size: 24px; color: var(--gold-hi); }
+.sheet__cost--slot .ic { color: var(--magic); } .sheet__cost--cantrip .ic { color: var(--ink-2); } .sheet__cost--bonus .ic { color: #F0C27A; } .sheet__cost--reaction .ic { color: #E89A7A; }
 .sheet--body { pointer-events: auto; }
 .sheet__text { margin: 0; font-family: var(--f-text); font-size: 22px; line-height: 1.35; color: var(--ink); }
 
@@ -460,6 +464,9 @@
 .tok__spk, .medal__spk { filter: drop-shadow(0 0 6px rgba(184,69,58,.55)); }
 .tok__crown { position: absolute; left: 50%; top: -12%; translate: -50% 0; font-size: 30px; color: var(--gold-hi); filter: drop-shadow(0 2px 2px #000); z-index: 3; pointer-events: none; }
 .tok__over { position: absolute; left: 50%; bottom: 92%; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; z-index: 4; }
+/* far twin of a shared badge: hangs under the token, turned 180° (reads «above» for the far side) */
+.tok__under { position: absolute; left: 50%; top: 92%; translate: -50% 0; rotate: 180deg; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; z-index: 4; }
+.preview.is-far { rotate: 180deg; }
 .tok.is-active { z-index: 3; }
 .tok.is-active .tok__body { animation: ui-pulse var(--t-pulse) ease-in-out infinite; }
 .tok.is-active .tok__body::before { content: ""; position: absolute; inset: -22%; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--hero) 60%, transparent), transparent 66%); animation: glow-pulse var(--t-pulse) ease-in-out infinite; }

@@ -153,7 +153,7 @@
       var card = UI.diceCard(Object.assign({ hero: hero, onConfirm: function (v, el) {
         ctx.setTimeout(function () { closeCard(); cb(v); }, 180);
       } }, o));
-      var pos = h('div', { class: 'r13-cardpos', style: { left: p.x + 'px' } }, card);
+      var pos = h('div', { class: 'r13-cardpos', 'data-own': p.far ? 'far' : 'near', style: { left: p.x + 'px' } }, card);
       (p.far ? farLayer : nearLayer).appendChild(pos);
       var w = card.offsetWidth || 700;
       pos.style.left = Math.max(w / 2 + 16, Math.min(1920 - w / 2 - 16, p.x)) + 'px';
@@ -176,25 +176,29 @@
       if (st.phase === 'dying') {
         if (hero === DYING) {
           UI.sound('error');
-          UI.toastFor(el, { icon: 'stabilize', text: 'Кто спасёт?' });
+          UI.toastFor(el, { icon: 'stabilize', text: 'Кто спасёт?', shared: true });   // asks the whole table: both sides
           savers.forEach(function (k) { var b = seats[k].querySelector('.r13-medtap'); b.classList.remove('is-hint'); void b.offsetWidth; b.classList.add('is-hint'); });
           ctx.setTimeout(function () { savers.forEach(function (k) { seats[k].querySelector('.r13-medtap').classList.remove('is-hint'); }); }, 1800);
           return;
         }
         openCard(hero, { die: 'd20', mod: MED[hero], dc: 10 }, function (v) {
           var total = v + MED[hero];
-          var b = seats[DYING].medal, c = UI.center(b, stage);
+          var b = seats[DYING].medal, c = UI.center(b, stage), dyFar = seats[DYING].__pos.indexOf('far') === 0;
+          // the outcome number is shared: upright copy in the near half, the turned one mirrored (W−x, H−y)
+          var W2 = stage.offsetWidth, H2 = stage.offsetHeight, px = c.x, py = c.y + (dyFar ? 40 : -40);
+          if (dyFar) { px = W2 - px; py = H2 - py; }
+          var mid = { x: W2 / 2, y: H2 / 2 };
           if (total >= 10) {
             setDying(false);
             UI.sound('heal');
             UI.spark(stage, c.x, c.y, 'var(--heal)', 18);
-            UI.pop(stage, c.x, c.y - 40, total, 'heal', { size: 64 });
-            UI.toastFor(seats[hero].medal, { icon: 'bandage', text: 'Стабильна', tone: 'good' });
-            UI.toastFor(seats[DYING].medal, { icon: 'bandage', text: 'Стабильна', tone: 'good' });
+            // the outcome is shared: number and word for both long sides (one mirrored pair each)
+            UI.pop(stage, px, py, total, 'heal', { size: 64, both: true, around: mid });
+            UI.toastFor(seats[DYING].medal, { icon: 'bandage', text: 'Стабильна', tone: 'good', shared: true });
             ctx.setTimeout(function () { setPhase('choose'); UI.sound('turn'); }, 700);
           } else {
             UI.sound('miss');
-            UI.pop(stage, c.x, c.y - 40, String(total), 'miss', { size: 64 });
+            UI.pop(stage, px, py, String(total), 'miss', { size: 64, both: true, around: mid });
             UI.toastFor(seats[hero].medal, { icon: 'cross', text: 'Ещё раз', tone: 'bad' });
           }
         });

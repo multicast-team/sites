@@ -17,7 +17,7 @@
 
 /* drafted preview / result badge facing the far player */
 .ft .preview__it .ic { font-size: 28px; }
-.ft .preview.ft-far { rotate: 180deg; }
+.ft .preview.is-far { rotate: 180deg; }
 .ft .preview.ft-result { box-shadow: 0 0 0 2px var(--bronze-hi), 0 6px 10px rgba(0,0,0,.8); }
 
 /* ---------- main action (rule 1): one gold pulse ---------- */
@@ -203,6 +203,8 @@
 /* the leader's intent sits above its crown */
 .ft .tok--leader .tok__over { translate: -50% -20px; }
 .ft .tok--leader.ft-melee .tok__over { translate: -50% -50px; }
+/* the far twin (.tok__under) needs no lift: the melee arc and the crown are above the token */
+.ft .tok:has(.preview) { z-index: 6; }
 /* drafted: the seal is the one thing that pulses — the map comes back, the spare target ring steps back */
 .ft .board.ft-drafted.is-targeting .board__map::after { opacity: .3; }
 .ft .board.ft-drafted .tok.is-target:not(.is-picked) .target-ring { opacity: .35; }
