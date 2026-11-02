@@ -2,6 +2,16 @@
   'use strict';
 
   const STORAGE_KEY = 'dubai-villas.notes.v1';
+  const SHARED_STORAGE_KEY = 'dubai-villas.shared.v1';
+  const CLIENT_STORAGE_KEY = 'dubai-villas.client.v1';
+  const AUTHOR_STORAGE_KEY = 'dubai-villas.author.v1';
+  const CLOUD_OBJECT_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a19e08924213e1';
+  const CLOUD_STREAM_URL = 'https://ntfy.sh/dubai_villas_krivsunov_comments_v1';
+  const INITIAL_SHARED_SEED = {
+    war4_6br_tayyab_pdf: { owner: { id: 'owner', author: 'Автор подборки', text: 'Круто, надо посмотреть обязательно. ВДруг все таки зеленом там и вид нормальный', updatedAt: 1000 } },
+    samantha_ji_gardenhall500: { owner: { id: 'owner', author: 'Автор подборки', text: 'Второй свет нормалексный ваще', updatedAt: 1000 } },
+    polo: { owner: { id: 'owner', author: 'Автор подборки', text: 'красивенько, чисьенько, аккуратненько', updatedAt: 1000 } }
+  };
   const MAX_BYTES = 2 * 1024 * 1024;
   const MAX_NOTE = 20000;
   const MAX_ENTRIES = 10000;
@@ -15,13 +25,20 @@
   const own = (object, key) => Object.prototype.hasOwnProperty.call(object, key);
   const object = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
   const validId = (value) => typeof value === 'string' && value.length > 0 && value.length <= 256 && value === value.trim() && !/[\u0000-\u001f\u007f]/.test(value);
+  const isTestNote = (value) => typeof value === 'string' && /Проверка заметки <script>|Импортированная проверка|Заметка из другой вкладки|Новая версия другой вкладки|Моя правка после другой вкладки/.test(value);
   let notes = Object.create(null);
+  let sharedComments = Object.create(null);
+  let boundEntryIds = Object.create(null);
+  let clientId = 'guest';
+  let authorName = '';
   let storageReadable = true;
   let savedToDevice = true;
   let savedSnapshot = null;
   let noteSequence = 0;
   let lastOpener = null;
   let galleryDialog = null;
+  const publishTimers = new Map();
+  let cloudPutTimer = null;
   const noteFields = new Set();
 
   function el(tag, className, content) {
@@ -152,9 +169,148 @@
     storageWarning('Заметки изменились в другой вкладке. Чтобы не перезаписать другую версию, запись на устройство приостановлена. Экспортируйте текущие заметки, обновите страницу и импортируйте файл: тексты будут объединены.');
   }
 
+  function currentAuthor() {
+    return text(authorName).slice(0, 40) || 'Автор комментария';
+  }
+
+  function normalizeSharedEntry(rawEntry, fallbackId = '') {
+    if (!object(rawEntry)) return null;
+    const id = validId(rawEntry.id) ? rawEntry.id : (validId(fallbackId) ? fallbackId : '');
+    if (!id) return null;
+    const rawText = typeof rawEntry.text === 'string' ? rawEntry.text.slice(0, MAX_NOTE) : '';
+    if (isTestNote(rawText)) return null;
+    const updatedAt = typeof rawEntry.updatedAt === 'number' && Number.isFinite(rawEntry.updatedAt)
+      ? rawEntry.updatedAt
+      : (typeof rawEntry.updatedAt === 'string' && Number.isFinite(Date.parse(rawEntry.updatedAt)) ? Date.parse(rawEntry.updatedAt) : 1000);
+    const deleted = !!rawEntry.deleted || !rawText.trim();
+    return {
+      id,
+      author: text(rawEntry.author).slice(0, 40) || 'Автор комментария',
+      text: deleted ? '' : rawText.trim(),
+      updatedAt,
+      clientId: text(rawEntry.clientId).slice(0, 64),
+      deleted
+    };
+  }
+
+  function mergeSharedEntry(propertyId, rawEntry, fallbackId = '') {
+    if (!validId(propertyId)) return false;
+    const entry = normalizeSharedEntry(rawEntry, fallbackId);
+    if (!entry) return false;
+    if (!own(sharedComments, propertyId)) sharedComments[propertyId] = Object.create(null);
+    const existing = sharedComments[propertyId][entry.id];
+    if (existing) {
+      if (existing.updatedAt > entry.updatedAt) return false;
+      if (existing.updatedAt === entry.updatedAt && existing.text === entry.text && existing.author === entry.author && existing.deleted === entry.deleted) return false;
+    }
+    sharedComments[propertyId][entry.id] = entry;
+    return true;
+  }
+
+  function mergeSharedMap(rawMap) {
+    if (!object(rawMap)) return false;
+    let changed = false;
+    for (const [propertyId, entries] of Object.entries(rawMap)) {
+      if (!validId(propertyId)) continue;
+      if (Array.isArray(entries)) {
+        for (const item of entries) if (mergeSharedEntry(propertyId, item)) changed = true;
+      } else if (object(entries)) {
+        for (const [entryId, item] of Object.entries(entries)) if (mergeSharedEntry(propertyId, item, entryId)) changed = true;
+      }
+    }
+    return changed;
+  }
+
+  function saveSharedToLocal() {
+    try {
+      localStorage.setItem(SHARED_STORAGE_KEY, JSON.stringify({ version: 1, sharedComments }));
+    } catch {}
+  }
+
+  function getVisibleSharedComments(propertyId) {
+    if (!validId(propertyId) || !own(sharedComments, propertyId)) return [];
+    return Object.values(sharedComments[propertyId])
+      .filter((entry) => entry && !entry.deleted && entry.text && entry.text.trim() && !isTestNote(entry.text))
+      .sort((a, b) => (a.updatedAt - b.updatedAt) || a.id.localeCompare(b.id));
+  }
+
+  function totalSharedCommentsCount() {
+    let total = 0;
+    for (const propertyId of Object.keys(sharedComments)) total += getVisibleSharedComments(propertyId).length;
+    return total;
+  }
+
+  function getActiveEntryId(propertyId) {
+    if (own(boundEntryIds, propertyId) && validId(boundEntryIds[propertyId])) return boundEntryIds[propertyId];
+    boundEntryIds[propertyId] = clientId;
+    return clientId;
+  }
+
+  function isOwnSharedEntry(propertyId, entry) {
+    if (!entry) return false;
+    if (entry.clientId && entry.clientId === clientId) return true;
+    if (own(boundEntryIds, propertyId) && boundEntryIds[propertyId] === entry.id) return true;
+    if (own(notes, propertyId) && notes[propertyId].trim() && notes[propertyId].trim() === entry.text.trim()) return true;
+    return false;
+  }
+
   function updateNotesCount() {
     const count = Object.keys(notes).length;
-    $('notes-count').textContent = count ? `Заметок: ${count} · резервная копия в JSON` : 'Перенос и резервная копия — через JSON';
+    const sharedTotal = totalSharedCommentsCount();
+    if (count) {
+      $('notes-count').textContent = `Заметок: ${count} · Общих комментариев: ${sharedTotal} (видны всем)`;
+    } else if (sharedTotal) {
+      $('notes-count').textContent = `Общих комментариев: ${sharedTotal} · видны всем посетителям`;
+    } else {
+      $('notes-count').textContent = 'Все комментарии автоматически сохраняются и видны всем';
+    }
+  }
+
+  function formatCommentTime(timestamp) {
+    if (typeof timestamp !== 'number' || timestamp <= 1000000000000) return 'сохранено в подборке';
+    try {
+      return new Date(timestamp).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    } catch { return ''; }
+  }
+
+  function renderSharedList(field) {
+    const items = getVisibleSharedComments(field.id);
+    const signature = JSON.stringify(items.map((item) => [item.id, item.author, item.text, item.updatedAt, isOwnSharedEntry(field.id, item)]));
+    if (field.lastSignature === signature) return items.length;
+    field.lastSignature = signature;
+    field.list.replaceChildren();
+    field.list.hidden = items.length === 0;
+    for (const item of items) {
+      const ownEntry = isOwnSharedEntry(field.id, item);
+      const cardNode = el('div', ownEntry ? 'shared-comment-item is-own' : 'shared-comment-item');
+      const meta = el('div', 'shared-comment-meta');
+      const authorWrap = el('span', 'shared-comment-author', item.author || 'Автор комментария');
+      authorWrap.append(el('span', 'shared-comment-tag', ownEntry ? 'Вы · видно всем' : 'Видно всем'));
+      const right = el('span', 'shared-comment-right');
+      const timeLabel = formatCommentTime(item.updatedAt);
+      if (timeLabel) right.append(el('span', 'shared-comment-time', timeLabel));
+      const editBtn = el('button', 'shared-comment-delete', 'Изменить');
+      editBtn.type = 'button';
+      editBtn.setAttribute('aria-label', 'Изменить комментарий');
+      editBtn.addEventListener('click', () => {
+        boundEntryIds[field.id] = item.id;
+        const next = Object.assign(Object.create(null), notes);
+        next[field.id] = item.text;
+        try { commitNotes(next); } catch {}
+        field.input.focus();
+      });
+      right.append(editBtn);
+      const del = el('button', 'shared-comment-delete', 'Удалить');
+      del.type = 'button';
+      del.setAttribute('aria-label', 'Удалить комментарий');
+      del.addEventListener('click', () => deleteSharedComment(field.id, item.id));
+      right.append(del);
+      meta.append(authorWrap, right);
+      const body = el('p', 'shared-comment-text', item.text);
+      cardNode.append(meta, body);
+      field.list.append(cardNode);
+    }
+    return items.length;
   }
 
   function refreshNoteFields() {
@@ -162,28 +318,171 @@
       if (!field.input.isConnected) { noteFields.delete(field); continue; }
       const value = notes[field.id] || '';
       if (field.input.value !== value) field.input.value = value;
-      field.block.classList.toggle('has-note', !!value.trim());
-      field.badge.hidden = !value.trim();
-      field.status.textContent = savedToDevice ? 'Сохранено на устройстве' : 'Не сохранено · экспортируйте JSON';
+      const sharedCount = renderSharedList(field);
+      const hasAny = !!value.trim() || sharedCount > 0;
+      field.block.classList.toggle('has-note', hasAny);
+      field.badge.hidden = !hasAny;
+      field.badge.textContent = sharedCount > 1 ? `Комментариев: ${sharedCount}` : (sharedCount === 1 ? 'Видно всем' : 'Есть заметка');
+      field.status.textContent = !savedToDevice ? 'Не сохранено · экспортируйте JSON' : (hasAny ? 'Сохранено · видно всем' : 'Сохраняется для всех автоматически');
       field.status.classList.toggle('error', !savedToDevice);
+      if (field.addBtn) field.addBtn.hidden = !value.trim();
     }
+  }
+
+  async function pushSnapshotToCloud() {
+    try {
+      let remoteMap = Object.create(null);
+      try {
+        const getResp = await fetch(CLOUD_OBJECT_URL, { cache: 'no-store' });
+        if (getResp.ok) {
+          const currentObj = await getResp.json();
+          if (currentObj && object(currentObj.data) && object(currentObj.data.sharedComments)) {
+            remoteMap = currentObj.data.sharedComments;
+          }
+        }
+      } catch {}
+      if (mergeSharedMap(remoteMap)) {
+        saveSharedToLocal();
+        refreshNoteFields();
+        updateNotesCount();
+      }
+      await fetch(CLOUD_OBJECT_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'dubai-villas-shared-comments-v1',
+          data: { version: 1, updatedAt: Date.now(), sharedComments }
+        })
+      });
+    } catch {}
+  }
+
+  async function publishEntryToCloud(propertyId, entryId) {
+    if (!validId(propertyId) || !own(sharedComments, propertyId) || !own(sharedComments[propertyId], entryId)) return;
+    const entry = sharedComments[propertyId][entryId];
+    if (!entry || isTestNote(entry.text)) return;
+    try {
+      await fetch(CLOUD_STREAM_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ type: 'comment', propertyId, entry })
+      });
+    } catch {}
+    clearTimeout(cloudPutTimer);
+    cloudPutTimer = setTimeout(pushSnapshotToCloud, 400);
+  }
+
+  function scheduleCloudPublish(propertyId, entryId, immediate = false) {
+    const key = `${propertyId}::${entryId}`;
+    if (publishTimers.has(key)) clearTimeout(publishTimers.get(key));
+    if (immediate) {
+      publishTimers.delete(key);
+      publishEntryToCloud(propertyId, entryId);
+      return;
+    }
+    publishTimers.set(key, setTimeout(() => {
+      publishTimers.delete(key);
+      publishEntryToCloud(propertyId, entryId);
+    }, 600));
+  }
+
+  function syncLocalNoteToShared(propertyId, rawValue, immediate = false) {
+    if (!validId(propertyId) || isTestNote(rawValue)) return;
+    const entryId = getActiveEntryId(propertyId);
+    const trimmed = typeof rawValue === 'string' ? rawValue.trim() : '';
+    if (!trimmed) {
+      if (own(sharedComments, propertyId) && own(sharedComments[propertyId], entryId) && !sharedComments[propertyId][entryId].deleted) {
+        mergeSharedEntry(propertyId, {
+          id: entryId,
+          author: currentAuthor(),
+          text: '',
+          updatedAt: Date.now(),
+          clientId,
+          deleted: true
+        });
+        saveSharedToLocal();
+        refreshNoteFields();
+        updateNotesCount();
+        scheduleCloudPublish(propertyId, entryId, immediate);
+      }
+      return;
+    }
+    const existing = own(sharedComments, propertyId) ? sharedComments[propertyId][entryId] : null;
+    const authorLabel = existing && existing.id === 'owner' && !text(authorName) ? existing.author : currentAuthor();
+    const changed = mergeSharedEntry(propertyId, {
+      id: entryId,
+      author: authorLabel,
+      text: trimmed,
+      updatedAt: Date.now(),
+      clientId,
+      deleted: false
+    });
+    if (changed) {
+      saveSharedToLocal();
+      refreshNoteFields();
+      updateNotesCount();
+      scheduleCloudPublish(propertyId, entryId, immediate);
+    }
+  }
+
+  function deleteSharedComment(propertyId, entryId) {
+    if (!validId(propertyId) || !validId(entryId)) return;
+    const existing = own(sharedComments, propertyId) ? sharedComments[propertyId][entryId] : null;
+    if (!existing) return;
+    mergeSharedEntry(propertyId, {
+      id: entryId,
+      author: existing.author || currentAuthor(),
+      text: '',
+      updatedAt: Date.now(),
+      clientId,
+      deleted: true
+    });
+    saveSharedToLocal();
+    if (own(notes, propertyId) && (getActiveEntryId(propertyId) === entryId || notes[propertyId].trim() === existing.text.trim())) {
+      const next = Object.assign(Object.create(null), notes);
+      delete next[propertyId];
+      try { commitNotes(next); } catch {}
+    } else {
+      refreshNoteFields();
+      updateNotesCount();
+    }
+    scheduleCloudPublish(propertyId, entryId, true);
+  }
+
+  function addSeparateComment(propertyId, inputNode) {
+    if (!validId(propertyId)) return;
+    const val = inputNode.value.trim();
+    if (!val || isTestNote(val)) return;
+    syncLocalNoteToShared(propertyId, val, true);
+    boundEntryIds[propertyId] = `${clientId}_${Date.now().toString(36)}`;
+    const next = Object.assign(Object.create(null), notes);
+    delete next[propertyId];
+    try { commitNotes(next); } catch {}
+    notify('Комментарий опубликован в общую ленту. Поле очищено — при желании можно добавить ещё один комментарий.');
   }
 
   function noteBlock(property) {
     const block = el('div', 'notes-block');
     const heading = el('div', 'note-heading');
-    const label = el('label', '', 'Ваш комментарий');
-    const badge = el('span', 'note-badge', 'Есть заметка');
+    const label = el('label', '', 'Комментарии (видны всем)');
+    const badge = el('span', 'note-badge', 'Видно всем');
     badge.hidden = true;
     label.append(badge);
+    const list = el('div', 'shared-comments-list');
+    list.hidden = true;
     const input = el('textarea');
     const status = el('span', 'note-status');
+    const actionsRow = el('div', 'note-actions');
+    const hint = el('span', 'note-hint', 'Сохраняется автоматически и сразу видно всем посетителям');
+    const addBtn = el('button', 'note-add-button', '+ Добавить ещё комментарий');
+    addBtn.type = 'button';
+    addBtn.hidden = true;
     const inputId = `note-${++noteSequence}`;
     label.htmlFor = inputId;
     input.id = inputId;
     input.maxLength = MAX_NOTE;
     input.rows = 4;
-    input.placeholder = 'Напишите, что нравится в этой вилле и что хотите уточнить…';
+    input.placeholder = 'Напишите комментарий к этой вилле — он сохранится и будет виден всем…';
     input.setAttribute('aria-label', `Ваш комментарий: ${property.title}`);
     status.id = `${inputId}-status`;
     status.setAttribute('aria-live', 'polite');
@@ -194,26 +493,36 @@
       status.textContent = 'Заметки пока недоступны';
     } else {
       input.value = notes[property.noteId] || '';
-      block.classList.toggle('has-note', !!input.value.trim());
-      badge.hidden = !input.value.trim();
-      status.textContent = !savedToDevice ? 'Не сохранено · экспортируйте JSON' : input.value ? 'Сохранено на устройстве' : 'Сохраняется автоматически';
+      const fieldRecord = { id: property.noteId, input, status, block, badge, list, addBtn, lastSignature: '' };
+      const sharedCount = renderSharedList(fieldRecord);
+      const hasAny = !!input.value.trim() || sharedCount > 0;
+      block.classList.toggle('has-note', hasAny);
+      badge.hidden = !hasAny;
+      badge.textContent = sharedCount > 1 ? `Комментариев: ${sharedCount}` : (sharedCount === 1 ? 'Видно всем' : 'Есть заметка');
+      status.textContent = !savedToDevice ? 'Не сохранено · экспортируйте JSON' : (hasAny ? 'Сохранено · видно всем' : 'Сохраняется для всех автоматически');
       status.classList.toggle('error', !savedToDevice);
-      noteFields.add({ id: property.noteId, input, status, block, badge });
+      addBtn.hidden = !input.value.trim();
+      noteFields.add(fieldRecord);
       input.addEventListener('input', () => {
         const next = Object.assign(Object.create(null), notes);
         if (input.value.trim()) next[property.noteId] = input.value;
         else delete next[property.noteId];
-        try { commitNotes(next); }
-        catch (error) {
+        try {
+          commitNotes(next);
+          syncLocalNoteToShared(property.noteId, input.value, false);
+        } catch (error) {
           input.value = notes[property.noteId] || '';
           status.textContent = 'Изменение не сохранено: лимит объёма';
           status.classList.add('error');
           notify(error.message, true);
         }
       });
+      input.addEventListener('change', () => syncLocalNoteToShared(property.noteId, input.value, true));
+      addBtn.addEventListener('click', () => addSeparateComment(property.noteId, input));
     }
     heading.append(label, status);
-    block.append(heading, input);
+    actionsRow.append(hint, addBtn);
+    block.append(heading, list, input, actionsRow);
     return block;
   }
 
@@ -667,12 +976,25 @@
         }
       }
       commitNotes(merged);
+      for (const [id, value] of Object.entries(merged)) {
+        if (!isTestNote(value)) syncLocalNoteToShared(id, value, true);
+      }
       notify(`Импорт завершён. Добавлено: ${added}; объединено: ${conflicts}. При совпадении объекта оба текста сохранены вместе.${savedToDevice ? '' : ' Сохраните объединённые заметки экспортом: запись на устройство недоступна.'}`);
     } catch (error) { notify(error.message || 'Не удалось импортировать заметки. Существующие записи не изменены.', true); }
     finally { event.target.value = ''; button.disabled = false; }
   });
 
   window.addEventListener('storage', (event) => {
+    if (event.key === SHARED_STORAGE_KEY && event.newValue) {
+      try {
+        const parsed = JSON.parse(event.newValue);
+        if (object(parsed) && mergeSharedMap(parsed.sharedComments)) {
+          refreshNoteFields();
+          updateNotesCount();
+        }
+      } catch {}
+      return;
+    }
     if ((event.key === STORAGE_KEY && event.newValue !== savedSnapshot) || event.key === null) {
       if (!savedToDevice) {
         pauseForStorageConflict();
@@ -711,6 +1033,129 @@
       $('updated-at').hidden = false;
     }
   }
+  function initSharedComments() {
+    mergeSharedMap(INITIAL_SHARED_SEED);
+    if (object(catalog.sharedComments)) mergeSharedMap(catalog.sharedComments);
+    try {
+      const savedClient = localStorage.getItem(CLIENT_STORAGE_KEY);
+      if (validId(savedClient)) clientId = savedClient;
+      else {
+        clientId = `u_${Math.random().toString(36).slice(2, 10)}${Date.now().toString(36)}`;
+        localStorage.setItem(CLIENT_STORAGE_KEY, clientId);
+      }
+    } catch {
+      clientId = `u_${Math.random().toString(36).slice(2, 10)}`;
+    }
+    try {
+      const savedAuthor = localStorage.getItem(AUTHOR_STORAGE_KEY);
+      if (typeof savedAuthor === 'string') authorName = savedAuthor.trim().slice(0, 40);
+    } catch {}
+    if ($('author-name')) {
+      $('author-name').value = authorName;
+      $('author-name').addEventListener('input', () => {
+        authorName = $('author-name').value.trim().slice(0, 40);
+        try { localStorage.setItem(AUTHOR_STORAGE_KEY, authorName); } catch {}
+        for (const [propId, val] of Object.entries(notes)) {
+          if (val && val.trim() && !isTestNote(val)) syncLocalNoteToShared(propId, val, false);
+        }
+      });
+    }
+    try {
+      const rawShared = localStorage.getItem(SHARED_STORAGE_KEY);
+      if (rawShared) {
+        const parsed = JSON.parse(rawShared);
+        if (object(parsed)) mergeSharedMap(parsed.sharedComments);
+      }
+    } catch {}
+  }
+
+  function reconcileLocalNotesWithShared() {
+    let anyChanged = false;
+    for (const [propId, val] of Object.entries(notes)) {
+      if (!validId(propId) || !val || !val.trim() || isTestNote(val)) continue;
+      const trimmed = val.trim();
+      const existingList = getVisibleSharedComments(propId);
+      const matched = existingList.find((item) => item.text.trim() === trimmed);
+      if (matched) {
+        boundEntryIds[propId] = matched.id;
+      } else {
+        const entryId = getActiveEntryId(propId);
+        if (mergeSharedEntry(propId, { id: entryId, author: currentAuthor(), text: trimmed, updatedAt: Date.now(), clientId, deleted: false })) {
+          anyChanged = true;
+          scheduleCloudPublish(propId, entryId, false);
+        }
+      }
+    }
+    if (anyChanged) saveSharedToLocal();
+  }
+
+  async function pullSharedFromCloud() {
+    let changed = false;
+    try {
+      const resp = await fetch(CLOUD_OBJECT_URL, { cache: 'no-store' });
+      if (resp.ok) {
+        const payload = await resp.json();
+        if (payload && object(payload.data) && mergeSharedMap(payload.data.sharedComments)) changed = true;
+      }
+    } catch {}
+    try {
+      const resp = await fetch(`${CLOUD_STREAM_URL}/json?poll=1&since=all`, { cache: 'no-store' });
+      if (resp.ok) {
+        const rawLines = (await resp.text()).split('\n').filter(Boolean);
+        for (const line of rawLines) {
+          try {
+            const evt = JSON.parse(line);
+            if (evt && evt.event === 'message' && typeof evt.message === 'string') {
+              const msg = JSON.parse(evt.message);
+              if (msg && msg.type === 'comment' && validId(msg.propertyId) && mergeSharedEntry(msg.propertyId, msg.entry)) changed = true;
+              else if (msg && msg.type === 'snapshot' && mergeSharedMap(msg.sharedComments)) changed = true;
+            }
+          } catch {}
+        }
+      }
+    } catch {}
+    if (changed) {
+      saveSharedToLocal();
+      refreshNoteFields();
+      updateNotesCount();
+    }
+  }
+
+  function startCloudSync() {
+    if (typeof fetch !== 'function' || !/^https?:$/i.test(location.protocol)) {
+      pullSharedFromCloud();
+      return;
+    }
+    pullSharedFromCloud();
+    if (typeof EventSource === 'function') {
+      try {
+        const es = new EventSource(`${CLOUD_STREAM_URL}/sse`);
+        es.addEventListener('message', (event) => {
+          try {
+            const evt = JSON.parse(event.data);
+            if (!evt || typeof evt.message !== 'string') return;
+            const msg = JSON.parse(evt.message);
+            let changed = false;
+            if (msg && msg.type === 'comment' && validId(msg.propertyId)) changed = mergeSharedEntry(msg.propertyId, msg.entry);
+            else if (msg && msg.type === 'snapshot') changed = mergeSharedMap(msg.sharedComments);
+            if (changed) {
+              saveSharedToLocal();
+              refreshNoteFields();
+              updateNotesCount();
+            }
+          } catch {}
+        });
+      } catch {}
+    }
+    setInterval(() => {
+      if (document.visibilityState !== 'hidden') pullSharedFromCloud();
+    }, 25000);
+  }
+
+  initSharedComments();
   readNotes();
+  reconcileLocalNotesWithShared();
+  updateNotesCount();
   render();
+  startCloudSync();
 })();

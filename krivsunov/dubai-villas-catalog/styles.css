@@ -41,7 +41,10 @@ h1 { font: normal clamp(40px, 5vw, 66px)/1.12 Georgia, "Times New Roman", serif;
 .notes-info .muted { font-size: 11px; }
 .muted { color: var(--muted); }
 .small-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--olive); flex-shrink: 0; margin-top: 6px; }
-.toolbar-actions { display: flex; gap: 10px; }
+.toolbar-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.author-field { display: inline-flex; align-items: center; }
+.author-field input { height: 44px; width: 210px; max-width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; padding: 0 12px; font-size: 12px; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 14px; min-height: 44px; padding: 11px 17px; border: 1px solid var(--ink); border-radius: 7px; background: var(--ink); color: var(--surface); font-size: 12px; font-weight: 600; text-decoration: none; line-height: 1.4; }
 .button:hover { background: var(--olive); border-color: var(--olive); }
 .button-quiet { background: transparent; border-color: var(--line); color: var(--ink); }
@@ -116,6 +119,22 @@ h2 { font: normal 29px/1.2 Georgia, "Times New Roman", serif; letter-spacing: -.
 .notes-block textarea::placeholder { color: #817354; font-weight: 400; }
 .notes-block textarea:focus { background: white; border-color: #96671d; outline: 3px solid #d8aa4940; outline-offset: 2px; }
 .notes-block textarea:disabled { opacity: .7; cursor: not-allowed; }
+.shared-comments-list { display: grid; gap: 8px; margin-bottom: 12px; }
+.shared-comments-list[hidden] { display: none !important; }
+.shared-comment-item { padding: 10px 12px; border: 1px solid #dfbe6f; border-radius: 8px; background: #fffdf6; box-shadow: 0 1px 4px #8c65180f; }
+.shared-comment-item.is-own { border-color: #c6922c; background: #fffef9; }
+.shared-comment-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; font-size: 11px; color: #6f5520; }
+.shared-comment-author { font-weight: 700; color: #573d0c; display: inline-flex; align-items: center; gap: 6px; }
+.shared-comment-tag { padding: 1px 6px; border-radius: 4px; background: #efe0b4; color: #573d0c; font-size: 10px; font-weight: 600; }
+.shared-comment-right { display: inline-flex; align-items: center; gap: 8px; }
+.shared-comment-time { color: #847044; font-size: 10px; }
+.shared-comment-delete { border: none; background: transparent; color: #8b4936; font-size: 11px; padding: 2px 5px; border-radius: 4px; line-height: 1.2; }
+.shared-comment-delete:hover { background: #f4e6de; }
+.shared-comment-text { margin: 0; font-size: 14px; line-height: 1.55; color: #2f281a; white-space: pre-line; overflow-wrap: anywhere; }
+.note-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+.note-hint { font-size: 11px; color: #6f5c30; line-height: 1.4; }
+.note-add-button { min-height: 34px; padding: 6px 11px; border: 1px solid #b88728; border-radius: 6px; background: #fffaf0; color: #5c400e; font-size: 11px; font-weight: 650; }
+.note-add-button:hover { background: #f7e6bd; }
 .empty-state { text-align: center; border: 1px dashed #c8ccbc; border-radius: var(--radius); padding: 64px 24px; }
 .empty-state > span { font: normal 40px Georgia, serif; color: var(--olive); }
 .empty-state h3 { font: normal 28px/1.3 Georgia, serif; margin: 15px 0 10px; }
@@ -190,7 +209,9 @@ dialog::backdrop { background: #242b24a6; backdrop-filter: blur(3px); }
   .edition > span { display: none; }
   .notes-toolbar { gap: 14px; padding: 16px 0; }
   .notes-info p { font-size: 12px; }
-  .toolbar-actions { width: 100%; }
+  .toolbar-actions { width: 100%; flex-wrap: wrap; }
+  .author-field { width: 100%; }
+  .author-field input { width: 100%; font-size: 16px; }
   .toolbar-actions .button { flex: 1; gap: 10px; font-size: 11px; padding-inline: 10px; }
   .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 24px 0; gap: 14px 10px; }
   .search-field { grid-column: 1 / -1; }

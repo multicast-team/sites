@@ -1,5 +1,5 @@
 window.VILLA_CATALOG = {
-  "updatedAt": "2026-11-02T20:30:27.597032+00:00",
+  "updatedAt": "2026-11-02T21:01:49.132750+00:00",
   "properties": [
     {
       "id": "samantha_ji_gardenhall500",
@@ -4665,5 +4665,31 @@ window.VILLA_CATALOG = {
       "detailPage": "properties/legacy_nice.html",
       "videos": []
     }
-  ]
+  ],
+  "sharedComments": {
+    "war4_6br_tayyab_pdf": {
+      "owner": {
+        "id": "owner",
+        "author": "Автор подборки",
+        "text": "Круто, надо посмотреть обязательно. ВДруг все таки зеленом там и вид нормальный",
+        "updatedAt": 1000
+      }
+    },
+    "samantha_ji_gardenhall500": {
+      "owner": {
+        "id": "owner",
+        "author": "Автор подборки",
+        "text": "Второй свет нормалексный ваще",
+        "updatedAt": 1000
+      }
+    },
+    "polo": {
+      "owner": {
+        "id": "owner",
+        "author": "Автор подборки",
+        "text": "красивенько, чисьенько, аккуратненько",
+        "updatedAt": 1000
+      }
+    }
+  }
 };
