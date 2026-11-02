@@ -1,31 +1,29 @@
 {
-  "release": "adcar-2026-11-02-v1",
-  "built_at_utc": "2026-11-02T12:41:22.800105+00:00",
+  "release": "loadart-2026-11-02-v1",
+  "built_at_utc": "2026-11-02T17:25:29.521929+00:00",
   "changes": [
-    "Garage: every race has a fifth car earned only by watching 10 rewarded ads, placed before the carbon car (Tuned, +2%)",
-    "Watch ad n/10 button with ten progress pips; one ad at a time, skipped ads do not count, progress is saved; the tenth ad owns and equips the car",
-    "Six new Classic bodies drawn in code: safari estate, cigar formula, legends coupe, barchetta, dune buggy, racing scooter; chrome wire wheels on whitewall tyres",
-    "Five cars fit one row of garage tiles on narrow phones"
+    "New loading screen: a box-cover picture split into six sectors, one per race (Formula, Superbike, Dirt Rally, NASCAR, Desert Trucks, GT3), each a race moment rendered from the game's own venues and garage cars",
+    "Race Team Hero logo in the game font across the middle; the progress pill sits under the logo on any screen size"
   ],
   "docs": [
-    "Docs/Impl/GARAGE.md",
-    "Docs/Impl/DEVIATIONS.md"
+    "Docs/Impl/LOADING_ART.md",
+    "Docs/art/provenance.csv"
   ],
   "checks": {
-    "domain_garage_tests": "6/6",
-    "unity_garage_tests": "6/6",
-    "unity_shots": 12
+    "loading_art_bake": "6/6 sectors, 0 errors",
+    "page_preview": "390x844, 360x640, 300x650",
+    "webgl_build": "Succeeded, 0 errors"
   },
   "files": [
     {
-      "path": "Build/3596f35075130d8811c433bf7e2aac88.loader.js",
+      "path": "Build/2ae235671c53efec0a2f204666c2b203.loader.js",
       "bytes": 48779,
-      "sha256": "7931ab783b22354ed7cbce85105edaf60e24350d04afe1aaca7e11bcda42d5c7"
+      "sha256": "3211bc1e6208a50547b73ddef5166cfaf8cee7da6f58a28e99fde3c5ecb99e9c"
     },
     {
-      "path": "Build/a04773e81d7d792c541675f600f4eb8b.data.unityweb",
-      "bytes": 15208139,
-      "sha256": "268565aff5d7fcb1cf94b8e9086a3647f5dea52724b321b562cce6e433a87ea2"
+      "path": "Build/4a09dee1780dafb02e6c6a0fefa479b2.data.unityweb",
+      "bytes": 15203556,
+      "sha256": "d2a64235ea833d97c675d5874c9fc94e0c13ad7ee8f746b587ad933016bdd1cb"
     },
     {
       "path": "Build/bed42fd67ae5a632b0a229ebbaf6d3be.wasm.unityweb",
@@ -38,9 +36,14 @@
       "sha256": "6af7b37d958fac0a7b84844ee5fb4c1634306e4f78e4a4c239d9e1404a05d259"
     },
     {
+      "path": "TemplateData/loading.jpg",
+      "bytes": 358874,
+      "sha256": "eab1a95fe9fd0b385f8cb26f8b2f3611ac5f38f2749e3446b50c49f9b5337c88"
+    },
+    {
       "path": "index.html",
-      "bytes": 9896,
-      "sha256": "8479afcb75caec005aae45a05ccb070f94d047b79594b5552a6b339fbcfdc9cf"
+      "bytes": 11522,
+      "sha256": "78a4579a8a641fa0691e463667f91c18ae932d5d08ee9a5bf00f18bccc55cdfd"
     }
   ]
 }

@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#e9e0d1">
   <meta name="description" content="Build your racing team. Upgrade your cars. Watch every race in 3D. Play Race Team Hero in your browser.">
   <title>Race Team Hero · Team Manager</title>
+  <link rel="preload" as="image" href="TemplateData/loading.jpg">
   <style>
     :root { color-scheme:light; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:#292a28; background:#e9e0d1; }
     * { box-sizing:border-box; }
@@ -21,18 +22,24 @@
     #play-area { flex:1; min-height:0; width:100%; display:flex; justify-content:center; align-items:center; }
     #game { position:relative; height:100%; aspect-ratio:6/13; max-width:100%; overflow:hidden; background:#f4efe5; box-shadow:0 16px 80px #172b4d18; border-radius:7px; }
     canvas { width:100%; height:100%; display:block; outline:none; touch-action:none; -webkit-tap-highlight-color:transparent; }
-    #loading { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; padding:32px; gap:18px; background:#f4efe5; }
+    /* Loading art (Assets/WebGLTemplates/DirtyRacer/TemplateData/loading.jpg, baked by DR.Editor.Stage.LoadingArtBaker):
+       a 1080×2340 cover scaled to fill the game box; the progress pill sits under the logo in art coordinates (--u = px per art px). */
+    #loading { position:absolute; inset:0; overflow:hidden; background:#17181f; }
     #loading[hidden] { display:none; }
-    .tag { color:#b8461b; letter-spacing:3px; font-size:10px; font-weight:700; }
-    h1 { font-size:clamp(32px,6vw,48px); line-height:.95; letter-spacing:-2px; margin:0; font-weight:900; }
-    .track { height:42px; width:74px; border:3px solid #b8461b; border-left-color:transparent; border-radius:50% 35% 50% 30%; transform:rotate(-25deg); margin:0 0 16px 4px; }
-    #load-label { display:flex; justify-content:space-between; color:#655f55; font-size:12px; gap:8px; }
-    progress { display:block; appearance:none; width:100%; height:4px; border:0; border-radius:4px; overflow:hidden; background:#d9cdba; }
-    progress::-webkit-progress-bar { background:#d9cdba; }
-    progress::-webkit-progress-value { background:#b8461b; transition:width .15s; }
-    progress::-moz-progress-bar { background:#b8461b; }
-    #error { margin:0; font-size:12px; color:#b92436; line-height:1.5; overflow-wrap:anywhere; }
-    #retry { align-self:flex-start; }
+    #art { position:absolute; left:0; top:0; width:100%; height:100%; background:#17181f url(TemplateData/loading.jpg) center/100% 100% no-repeat; --u:.5; }
+    .sr-only { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+    #bar { position:absolute; left:50%; top:57.9%; width:60%; transform:translateX(-50%); box-sizing:border-box; height:calc(78px * var(--u)); display:flex; align-items:center; gap:calc(18px * var(--u)); padding:0 calc(28px * var(--u)); border-radius:999px; background:rgba(18,18,24,.84); border:calc(6px * var(--u)) solid #fffdf5; box-shadow:0 calc(12px * var(--u)) calc(30px * var(--u)) rgba(0,0,0,.45); }
+    progress { display:block; flex:1; min-width:0; appearance:none; -webkit-appearance:none; height:calc(24px * var(--u)); border:0; border-radius:999px; overflow:hidden; background:#3b3a44; }
+    progress::-webkit-progress-bar { background:#3b3a44; border-radius:999px; }
+    progress::-webkit-progress-value { background:linear-gradient(90deg,#fff27a,#ffb21c 45%,#f0461a); border-radius:999px; transition:width .15s; }
+    progress::-moz-progress-bar { background:linear-gradient(90deg,#fff27a,#ffb21c 45%,#f0461a); border-radius:999px; }
+    #percent { color:#fffdf5; font-weight:800; font-size:calc(38px * var(--u)); line-height:1; min-width:2.9em; text-align:right; font-variant-numeric:tabular-nums; }
+    #fail { position:absolute; left:6%; right:6%; bottom:6%; display:flex; flex-direction:column; gap:12px; padding:16px; border-radius:10px; background:rgba(18,18,24,.9); color:#fffdf5; }
+    #fail[hidden] { display:none; }
+    #fail strong { font-size:14px; }
+    #error { margin:0; font-size:12px; color:#ffb3a8; line-height:1.5; overflow-wrap:anywhere; }
+    #retry { align-self:flex-start; color:#17181f; background:#ffb21c; border:0; font-weight:700; }
+    #retry:hover { background:#ffc552; }
     footer { color:#6f665a; font-size:10px; text-align:center; flex:none; }
     #shell:fullscreen { background:#e9e0d1; }
     @media(max-width:480px) { #shell { gap:4px; padding-left:0; padding-right:0; } header { padding:0 12px; height:28px; } #game { border-radius:0; box-shadow:none; } footer { font-size:9px; } }
@@ -46,12 +53,11 @@
       <div id="game">
         <canvas id="unity-canvas" width="540" height="1170" tabindex="0" aria-label="Race Team Hero racing team game"></canvas>
         <div id="loading" role="status" aria-live="polite">
-          <div class="track" aria-hidden="true"></div>
-          <h1>RACE TEAM<br>HERO.</h1>
-          <div id="load-label"><span id="load-text"></span><span id="percent">0%</span></div>
-          <progress id="progress" max="1" value="0" aria-label="Game loading progress"></progress>
-          <p id="error" hidden></p>
-          <button id="retry" type="button" hidden>Reload</button>
+          <h1 class="sr-only">Race Team Hero</h1>
+          <div id="art">
+            <div id="bar"><progress id="progress" max="1" value="0" aria-label="Game loading progress"></progress><span id="percent">0%</span></div>
+          </div>
+          <div id="fail" hidden><strong>Could not start the game</strong><p id="error"></p><button id="retry" type="button">Reload</button></div>
         </div>
       </div>
     </div>
@@ -75,14 +81,25 @@
     }
     new ResizeObserver(fitGame).observe(area);
     fitGame();
+    // The loading art covers the game box like object-fit: cover; the progress pill moves and scales with it.
+    const art = document.getElementById('art');
+    function fitArt() {
+      const w = loading.clientWidth, h = loading.clientHeight;
+      if (!w || !h) return;
+      const s = Math.max(w / 1080, h / 2340);
+      art.style.width = 1080 * s + 'px';
+      art.style.height = 2340 * s + 'px';
+      art.style.left = (w - 1080 * s) / 2 + 'px';
+      art.style.top = (h - 2340 * s) / 2 + 'px';
+      art.style.setProperty('--u', s);
+    }
+    new ResizeObserver(fitArt).observe(loading);
+    fitArt();
     function showError(message) {
       console.error('[Race Team Hero]', message);
       loading.hidden = false;
-      document.getElementById('load-text').textContent = 'Could not start the game';
-      const error = document.getElementById('error');
-      error.textContent = String(message);
-      error.hidden = false;
-      document.getElementById('retry').hidden = false;
+      document.getElementById('error').textContent = String(message);
+      document.getElementById('fail').hidden = false;
     }
     document.getElementById('retry').onclick = () => location.reload();
     document.getElementById('fullscreen').onclick = async () => {
@@ -96,7 +113,7 @@
     canvas.addEventListener('wheel', event => event.preventDefault(), {passive:false});
     const config = {
       arguments: [],
-      dataUrl: 'Build/a04773e81d7d792c541675f600f4eb8b.data.unityweb',
+      dataUrl: 'Build/4a09dee1780dafb02e6c6a0fefa479b2.data.unityweb',
       frameworkUrl: 'Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb',
       codeUrl: 'Build/bed42fd67ae5a632b0a229ebbaf6d3be.wasm.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
@@ -145,13 +162,12 @@
     window.addEventListener('pagehide', () => notifyVisibility(true));
     window.addEventListener('pageshow', () => notifyVisibility(document.hidden));
     const loader = document.createElement('script');
-    loader.src = 'Build/3596f35075130d8811c433bf7e2aac88.loader.js';
+    loader.src = 'Build/2ae235671c53efec0a2f204666c2b203.loader.js';
     loader.onerror = () => showError('The game download failed. Check your connection and reload.');
     loader.onload = () => {
       createUnityInstance(canvas, config, value => {
         progress.value = value;
         percent.textContent = Math.round(value * 100) + '%';
-        if (value >= 0.9) document.getElementById('load-text').textContent = '';
       }).then(instance => {
         window.unityInstance = instance;
         loading.hidden = true;
