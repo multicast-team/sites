@@ -1,38 +1,44 @@
 {
-  "release": "garage-bonus-2026-11-02-v1",
-  "built_at_utc": "2026-11-02T18:34:12.848689+00:00",
+  "release": "sponsor-minute-2026-11-02-v1",
+  "built_at_utc": "2026-11-02T19:47:38.984676+00:00",
   "changes": [
-    "Garage car bonuses to all car stats: ads car +5%, carbon car +8%, store car +15%, Premium car +25% (were +2/+4/+8/+12%)"
+    "Sponsor airship every minute (was every five minutes); each flight carries one rewarded-ad reward in turn: 1-2 carbon, x2 car speed for 5 min, a free Standard Gear chest, fuel and tyres without use and without pit stops for 5 min, cash",
+    "Boosts add up to 15 minutes; HUD pills with timers; fuel and tyre readouts show infinity while free",
+    "A boost re-simulates the race from now (and again when it ends); reload replays it exactly",
+    "Smoother on-screen join after any live recalculation: the end of x2 no longer brakes the car to a near stop"
   ],
   "docs": [
-    "Docs/Impl/GARAGE.md",
-    "Docs/Impl/DEVIATIONS.md"
+    "Docs/Impl/SPONSOR_AND_OFFLINE.md",
+    "Docs/Impl/DEVIATIONS.md",
+    "Docs/Impl/VIEW3D.md"
   ],
   "checks": {
-    "domain_garage_tests": "6/6",
-    "unity_garage_tests": "6/6",
-    "unity_garage_shots": "27, 0 errors"
+    "domain_sponsor_tests": "29/29 (6 new)",
+    "domain_driving_feel_and_stage_view": "49/49 incl. the new join test",
+    "domain_full_suite": "340/343; the 3 failures predate this change (same as 2026-10-31)",
+    "unity_playmode": "35/36: reward offers 3/3 (cash, carbon, gear, x2, fuel through the UI), garage 6/6, stage view 5/5, pit stop 1/1, circuit presentation 19/19, feedback 1/2 (ClearGoalsIncome... still expects the Crew goal removed by the 2026-10-31 unlock change)",
+    "webgl": "26.3 MB, 0 errors"
   },
   "files": [
     {
-      "path": "Build/2ae235671c53efec0a2f204666c2b203.loader.js",
-      "bytes": 48779,
-      "sha256": "3211bc1e6208a50547b73ddef5166cfaf8cee7da6f58a28e99fde3c5ecb99e9c"
+      "path": "Build/101c4772bb77f5d0f64c4c82a6d2d340.data.unityweb",
+      "bytes": 15214238,
+      "sha256": "dbd36911dd103da733ad1057f65f3ace6b99abd45486f7950943727e9de90809"
     },
     {
-      "path": "Build/572748e4b51fd1f5194b8e3441f52a05.wasm.unityweb",
-      "bytes": 11850798,
-      "sha256": "2c96012ff73a4197790bb34e61779e3b1a899b42beebd299641f6806fb83c120"
+      "path": "Build/2f8c6be09eca62ac26ea0b632fe8459a.wasm.unityweb",
+      "bytes": 11851162,
+      "sha256": "602743bbaadcb8d365aadc2daa401ff38f4421a2874b7556d59a2943ffe5b267"
+    },
+    {
+      "path": "Build/83ccce387d3c345b38f34652f702a8b1.loader.js",
+      "bytes": 48779,
+      "sha256": "02cb4ee05d121b6b9d522e445db5e9e917f826b6fa7008d59c2581008b29cdce"
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "fd48f70416dfd3b5ecb548f66ffd7f5ed4f9da3383c15137a315227713f9601b"
-    },
-    {
-      "path": "Build/e291984ba2e5aed9d5be0e73bc93b55d.data.unityweb",
-      "bytes": 15211350,
-      "sha256": "b2c58767f9a730004a5e0adf7d0d92b315ecfd7ef1356f66686762ec33974ee9"
+      "sha256": "b1f718bd443a156da1b77d0e559cc5bba92d70c6a571503f55bfa1994ac3d2bf"
     },
     {
       "path": "TemplateData/loading.jpg",
@@ -42,7 +48,7 @@
     {
       "path": "index.html",
       "bytes": 11522,
-      "sha256": "120c55d1469236eb173c3624048845d461f7ae21802f4917a4dd715335a2f23c"
+      "sha256": "d48ff86cf0fcde90a42167dbbb101879a489a14ec152d6d1588822cfcef686ef"
     }
   ]
 }

@@ -113,9 +113,9 @@
     canvas.addEventListener('wheel', event => event.preventDefault(), {passive:false});
     const config = {
       arguments: [],
-      dataUrl: 'Build/e291984ba2e5aed9d5be0e73bc93b55d.data.unityweb',
+      dataUrl: 'Build/101c4772bb77f5d0f64c4c82a6d2d340.data.unityweb',
       frameworkUrl: 'Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb',
-      codeUrl: 'Build/572748e4b51fd1f5194b8e3441f52a05.wasm.unityweb',
+      codeUrl: 'Build/2f8c6be09eca62ac26ea0b632fe8459a.wasm.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
       companyName: "Race Team Hero Studio",
       productName: "Race Team Hero",
@@ -162,7 +162,7 @@
     window.addEventListener('pagehide', () => notifyVisibility(true));
     window.addEventListener('pageshow', () => notifyVisibility(document.hidden));
     const loader = document.createElement('script');
-    loader.src = 'Build/2ae235671c53efec0a2f204666c2b203.loader.js';
+    loader.src = 'Build/83ccce387d3c345b38f34652f702a8b1.loader.js';
     loader.onerror = () => showError('The game download failed. Check your connection and reload.');
     loader.onload = () => {
       createUnityInstance(canvas, config, value => {
