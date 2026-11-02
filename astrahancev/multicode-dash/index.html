@@ -72,6 +72,7 @@ h1{font-size:21px;margin:0;font-weight:650;letter-spacing:-.01em}
 .pbar{display:inline-flex;width:64px;height:6px;border-radius:3px;background:var(--track);overflow:hidden;gap:1px}
 .pbar i{display:block;height:100%}
 .pbar .d{background:var(--done)}.pbar .r{background:var(--run)}.pbar .f{background:var(--err)}
+.more{display:block;width:100%;border:1px dashed var(--line);background:transparent;border-radius:12px;padding:8px;color:var(--accent);cursor:pointer;margin-bottom:10px}
 .wbody{border-top:1px solid var(--line);padding:10px 14px 12px}
 .gantt{position:relative;margin-bottom:10px}
 .gaxis{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-left:var(--lw);padding-bottom:3px;border-bottom:1px solid var(--line)}
@@ -109,7 +110,7 @@ details.tools>summary{cursor:pointer;font-size:12.5px;color:var(--accent);margin
 @media (max-width:760px){
   header{padding:10px 12px 4px}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr));padding:4px 12px 8px;gap:6px}
-  .tile{min-height:70px;padding:8px 10px}.tile .v{font-size:19px}
+  .tile{min-height:70px;padding:8px 10px}.tile .v{font-size:19px}.tile .s{white-space:normal}
   .layout{grid-template-columns:1fr;padding:0 12px 20px}
   .side{position:static;max-height:none}
   .side .list{max-height:55vh}
@@ -142,7 +143,10 @@ details.tools>summary{cursor:pointer;font-size:12.5px;color:var(--accent);margin
 const $ = id => document.getElementById(id);
 const LS = {get(k, d){try{const v=localStorage.getItem('dash.'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
             set(k, v){try{localStorage.setItem('dash.'+k, JSON.stringify(v))}catch(e){}}};
-const state = {data:null, sel:LS.get('sel', null), q:'', filter:LS.get('filter','all'), details:{}, open:new Set(LS.get('open', [])), gen:0};
+const QS=new URLSearchParams(location.search);
+const state = {data:null, sel:LS.get('sel', null), q:'', filter:LS.get('filter','all'), details:{}, open:new Set(LS.get('open', [])), gen:0, more:false};
+if(QS.get('sel')) state.sel=QS.get('sel');
+for(const k of QS.getAll('open')) state.open.add(k);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nowS = () => Date.now()/1000;
 function fmtTok(n){ if(!n) return '0'; if(n>=1e9) return (n/1e9).toFixed(1).replace('.',',')+' млрд'; if(n>=1e6) return (n/1e6).toFixed(n>=1e7?0:1).replace('.',',')+' млн'; if(n>=1e3) return Math.round(n/1e3)+' тыс'; return String(n); }
@@ -251,7 +255,7 @@ async function loadDetail(s, force){
 }
 function mainSkeleton(){
   const m=$('main'); if(m._built) return m._p; m.innerHTML='';
-  const p={head:el('div','card shead'), wfsec:el('div','sec'), wfs:el('div',''), subsec:el('div','sec'), subs:el('div','card'), delsec:el('div','sec'), dels:el('div','card'), mainsec:el('div','sec'), mainc:el('div','card sub')};
+  const p={head:el('div','card shead'), wfsec:el('div','sec'), wfs:el('div',''), wfmore:el('button','more'), subsec:el('div','sec'), subs:el('div','card'), delsec:el('div','sec'), dels:el('div','card'), mainsec:el('div','sec'), mainc:el('div','card sub')};
   Object.values(p).forEach(x=>m.appendChild(x)); m._built=true; m._p=p; return p;
 }
 function el(tag, cls){const e=document.createElement(tag); if(cls) e.className=cls; return e;}
@@ -259,7 +263,7 @@ async function renderMain(changedSel){
   const d=state.data; const s=d.sessions.find(x=>x.id===state.sel);
   const p=mainSkeleton();
   if(!s){ patch(p.head, '<div class="empty">Сессия не найдена — выберите другую в списке.</div>'); return; }
-  if(changedSel){ for(const k of ['wfs']) { p[k].innerHTML=''; p[k]._map=null; } }
+  if(changedSel){ state.more=false; for(const k of ['wfs']) { p[k].innerHTML=''; p[k]._map=null; } }
   const meta=[];
   meta.push(`<span><span class="dot ${s.status}"></span> ${ST[s.status]}${s.t3status?` · T3: ${esc(T3ST[s.t3status]||s.t3status)}`:''}</span>`);
   if(s.project) meta.push(`<span>проект <b>${esc(s.project)}</b></span>`);
@@ -274,7 +278,12 @@ async function renderMain(changedSel){
   if(state.sel!==s.id) return;
   // workflow
   patch(p.wfsec, s.workflows.length?`Workflow (${s.workflows.length})`:'');
-  keyed(p.wfs, s.workflows, w=>w.id, w=>makeWf(w), (e,w)=>updWf(e,w,det));
+  const recent=s.workflows.filter((w,i)=>i<12||w.status==='run'||state.open.has('wf:'+w.id)||nowS()-(w.start||0)<86400);
+  const shown=state.more?s.workflows:recent;
+  keyed(p.wfs, shown, w=>w.id, w=>makeWf(w), (e,w)=>updWf(e,w,det));
+  p.wfmore.type='button'; p.wfmore.style.display=s.workflows.length>recent.length?'':'none';
+  p.wfmore.onclick=()=>{state.more=!state.more; renderMain(false);};
+  patch(p.wfmore, state.more?'Скрыть старые workflow':`Показать ещё ${s.workflows.length-recent.length} workflow (старше суток)`);
   // субагенты
   patch(p.subsec, s.subs.length?`Субагенты (${s.subs.length})`:''); p.subs.style.display=s.subs.length?'':'none';
   if(s.subs.length){ if(!p.subs._list){ p.subs._list=el('div','sub'); p.subs.appendChild(p.subs._list);} renderAgents(p.subs._list, (det&&det.subs)||s.subs, 'sub:'+s.id); }
