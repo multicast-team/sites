@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#e9e0d1">
-  <meta name="description" content="Build your rally team. Upgrade your cars. Watch every stage in 3D. Play Dirty Racer in your browser.">
-  <title>Dirty Racer · Rally Team</title>
+  <meta name="description" content="Build your racing team. Upgrade your cars. Watch every race in 3D. Play Race Team Hero in your browser.">
+  <title>Race Team Hero · Team Manager</title>
   <style>
     :root { color-scheme:light; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:#292a28; background:#e9e0d1; }
     * { box-sizing:border-box; }
@@ -41,13 +41,13 @@
 </head>
 <body>
   <main id="shell">
-    <header><div class="brand">DIRTY <span>RACER</span></div><button id="fullscreen" type="button" aria-label="Toggle fullscreen">↗</button></header>
+    <header><div class="brand">RACE TEAM <span>HERO</span></div><button id="fullscreen" type="button" aria-label="Toggle fullscreen">↗</button></header>
     <div id="play-area">
       <div id="game">
-        <canvas id="unity-canvas" width="540" height="1170" tabindex="0" aria-label="Dirty Racer rally team game"></canvas>
+        <canvas id="unity-canvas" width="540" height="1170" tabindex="0" aria-label="Race Team Hero racing team game"></canvas>
         <div id="loading" role="status" aria-live="polite">
           <div class="track" aria-hidden="true"></div>
-          <h1>DIRTY<br>RACER.</h1>
+          <h1>RACE TEAM<br>HERO.</h1>
           <div id="load-label"><span id="load-text"></span><span id="percent">0%</span></div>
           <progress id="progress" max="1" value="0" aria-label="Game loading progress"></progress>
           <p id="error" hidden></p>
@@ -56,7 +56,7 @@
       </div>
     </div>
   </main>
-  <noscript>Enable JavaScript to play Dirty Racer.</noscript>
+  <noscript>Enable JavaScript to play Race Team Hero.</noscript>
   <script>
     const canvas = document.getElementById('unity-canvas');
     const loading = document.getElementById('loading');
@@ -76,7 +76,7 @@
     new ResizeObserver(fitGame).observe(area);
     fitGame();
     function showError(message) {
-      console.error('[Dirty Racer]', message);
+      console.error('[Race Team Hero]', message);
       loading.hidden = false;
       document.getElementById('load-text').textContent = 'Could not start the game';
       const error = document.getElementById('error');
@@ -96,12 +96,12 @@
     canvas.addEventListener('wheel', event => event.preventDefault(), {passive:false});
     const config = {
       arguments: [],
-      dataUrl: 'Build/0e7ce5716e1e01e1e811961d5f92384d.data.unityweb',
+      dataUrl: 'Build/a04773e81d7d792c541675f600f4eb8b.data.unityweb',
       frameworkUrl: 'Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb',
-      codeUrl: 'Build/5c086777ba7c02a3940a855c1fcbb226.wasm.unityweb',
+      codeUrl: 'Build/bed42fd67ae5a632b0a229ebbaf6d3be.wasm.unityweb',
       streamingAssetsUrl: 'StreamingAssets',
-      companyName: "Dirty Racer Team",
-      productName: "Dirty Racer",
+      companyName: "Race Team Hero Studio",
+      productName: "Race Team Hero",
       productVersion: "0.1.0",
       autoSyncPersistentDataPath: true,
       devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
@@ -145,7 +145,7 @@
     window.addEventListener('pagehide', () => notifyVisibility(true));
     window.addEventListener('pageshow', () => notifyVisibility(document.hidden));
     const loader = document.createElement('script');
-    loader.src = 'Build/451dba3e79224854d85f1ad09da5ab74.loader.js';
+    loader.src = 'Build/3596f35075130d8811c433bf7e2aac88.loader.js';
     loader.onerror = () => showError('The game download failed. Check your connection and reload.');
     loader.onload = () => {
       createUnityInstance(canvas, config, value => {

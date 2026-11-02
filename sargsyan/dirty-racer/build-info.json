@@ -1,43 +1,46 @@
 {
-  "release": "feedback345-2026-11-01-v1",
-  "built_at_utc": "2026-11-01T23:23:40.668067+00:00",
+  "release": "adcar-2026-11-02-v1",
+  "built_at_utc": "2026-11-02T12:41:22.800105+00:00",
   "changes": [
-    "Gear reveal shows each draw's actual stat bonus before and after, no false gain for ordinary copies, whole team / next stage timing",
-    "Gear x10 has readable bonus lines, split totals and a scrolling reward list at enlarged text sizes; carbon sources link to Shop",
-    "Same USD prices, better large carbon bundles:100/330/720/1500/4200; original product IDs retained; computed Best value badge",
-    "Portrait phones use full safe-area width and height, while desktop/landscape retain the portrait game window",
-    "First-upgrade unlocks and Crew implementation preserved"
+    "Garage: every race has a fifth car earned only by watching 10 rewarded ads, placed before the carbon car (Tuned, +2%)",
+    "Watch ad n/10 button with ten progress pips; one ad at a time, skipped ads do not count, progress is saved; the tenth ad owns and equips the car",
+    "Six new Classic bodies drawn in code: safari estate, cigar formula, legends coupe, barchetta, dune buggy, racing scooter; chrome wire wheels on whitewall tyres",
+    "Five cars fit one row of garage tiles on narrow phones"
+  ],
+  "docs": [
+    "Docs/Impl/GARAGE.md",
+    "Docs/Impl/DEVIATIONS.md"
   ],
   "checks": {
-    "logic_tests_passed": 12,
-    "unity_ui_passed": 1,
-    "unity_shots": 13
+    "domain_garage_tests": "6/6",
+    "unity_garage_tests": "6/6",
+    "unity_shots": 12
   },
   "files": [
     {
-      "path": "index.html",
-      "bytes": 9864,
-      "sha256": "7615680056a70be1961140822e9b60c88e4757c4fe9bf0bd5ae4609ab4c5ab8c"
-    },
-    {
-      "path": "Build/0e7ce5716e1e01e1e811961d5f92384d.data.unityweb",
-      "bytes": 15201709,
-      "sha256": "efe342233a0b00b0c02c0941ea0e50f10cb91b39bb354df4ae9b2d5db1ef5411"
-    },
-    {
-      "path": "Build/451dba3e79224854d85f1ad09da5ab74.loader.js",
+      "path": "Build/3596f35075130d8811c433bf7e2aac88.loader.js",
       "bytes": 48779,
-      "sha256": "9fa3bc01227674e5cc11ada4a2f31fdc9ebfb00584ac550c864da6d06ab96e01"
+      "sha256": "7931ab783b22354ed7cbce85105edaf60e24350d04afe1aaca7e11bcda42d5c7"
     },
     {
-      "path": "Build/5c086777ba7c02a3940a855c1fcbb226.wasm.unityweb",
-      "bytes": 11804511,
-      "sha256": "33be859d04dff9a1597dd816a8391adc05c3a3e4a1601f5f210554d31d27a4a2"
+      "path": "Build/a04773e81d7d792c541675f600f4eb8b.data.unityweb",
+      "bytes": 15208139,
+      "sha256": "268565aff5d7fcb1cf94b8e9086a3647f5dea52724b321b562cce6e433a87ea2"
+    },
+    {
+      "path": "Build/bed42fd67ae5a632b0a229ebbaf6d3be.wasm.unityweb",
+      "bytes": 11824981,
+      "sha256": "f39519d1af5f781ce2e89df67243297f8609b78d0aeb469077ed66b6e029d9cf"
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "1989eeb8f1fe9145bfeb07df4355d33d96c6d6edcea95da8d97f29edc066d698"
+      "sha256": "6af7b37d958fac0a7b84844ee5fb4c1634306e4f78e4a4c239d9e1404a05d259"
+    },
+    {
+      "path": "index.html",
+      "bytes": 9896,
+      "sha256": "8479afcb75caec005aae45a05ccb070f94d047b79594b5552a6b339fbcfdc9cf"
     }
   ]
 }
