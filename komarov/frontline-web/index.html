@@ -9,7 +9,7 @@
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=540 height=960 tabindex="-1"></canvas>
+      <canvas id="unity-canvas" width=540 height=1169 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -52,12 +52,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/b11021320.loader.js";
+      var loaderUrl = buildUrl + "/b11021344.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/b11021320.data.unityweb",
-        frameworkUrl: buildUrl + "/b11021320.framework.js.unityweb",
-        codeUrl: buildUrl + "/b11021320.wasm.unityweb",
+        dataUrl: buildUrl + "/b11021344.data.unityweb",
+        frameworkUrl: buildUrl + "/b11021344.framework.js.unityweb",
+        codeUrl: buildUrl + "/b11021344.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "MulticastGames",
         productName: "Frontline",
@@ -105,8 +105,8 @@
       } else {
         // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
         var fit = function () {
-          var h = window.innerHeight - 40, w = Math.round(h * 9 / 16);
-          if (w > window.innerWidth) { w = window.innerWidth; h = Math.round(w * 16 / 9); }
+          var h = window.innerHeight - 40, w = Math.round(h * 1080 / 2338);
+          if (w > window.innerWidth) { w = window.innerWidth; h = Math.round(w * 2338 / 1080); }
           canvas.style.width = w + "px";
           canvas.style.height = h + "px";
         };
