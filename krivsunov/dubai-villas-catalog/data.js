@@ -1,5 +1,5 @@
 window.VILLA_CATALOG = {
-  "updatedAt": "2026-11-02T22:06:37.999870+00:00",
+  "updatedAt": "2026-11-02T22:17:38.910737+00:00",
   "properties": [
     {
       "id": "samantha_ji_gardenhall500",
