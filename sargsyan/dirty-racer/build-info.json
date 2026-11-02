@@ -1,18 +1,19 @@
 {
-  "release": "loadart-2026-11-02-v1",
-  "built_at_utc": "2026-11-02T17:33:21.660211+00:00",
+  "release": "smoothcars-2026-11-02-v1",
+  "built_at_utc": "2026-11-02T18:13:55.762405+00:00",
   "changes": [
-    "New loading screen: a box-cover picture split into six sectors, one per race (Formula, Superbike, Dirt Rally, NASCAR, Desert Trucks, GT3), each a race moment rendered from the game's own venues and garage cars",
-    "Race Team Hero logo in the game font across the middle; the progress pill sits under the logo on any screen size"
+    "Garage cars use a new showroom model: rounded bodies smoothed along the car, a curved glasshouse with painted pillars, rounded edges, finer wheels and smooth shading; races keep the light model",
+    "Bike riders are streamlined: smooth leathers with an aero hump, a teardrop helmet, tapered limbs with sliders, a lower tuck; Works and Champion riders wear dark leathers",
+    "Loading screen re-rendered with the showroom cars"
   ],
   "docs": [
-    "Docs/Impl/LOADING_ART.md",
-    "Docs/art/provenance.csv"
+    "Docs/Impl/GARAGE.md",
+    "Docs/Impl/LOADING_ART.md"
   ],
   "checks": {
-    "loading_art_bake": "6/6 sectors, 0 errors",
-    "page_preview": "390x844, 360x640, 300x650",
-    "webgl_build": "Succeeded, 0 errors"
+    "unity_car_and_garage_tests": "25/25",
+    "unity_garage_shots": "27, 0 errors",
+    "showroom_triangles": "13-23k (race 4-7k)"
   },
   "files": [
     {
@@ -21,29 +22,29 @@
       "sha256": "3211bc1e6208a50547b73ddef5166cfaf8cee7da6f58a28e99fde3c5ecb99e9c"
     },
     {
-      "path": "Build/91efbd2f35a3d518e1fbce42b3b563aa.data.unityweb",
-      "bytes": 15204320,
-      "sha256": "83f29fc59bc21f76c34cb991abadb346689c11fa0b0ebaf33464a9676a0b225b"
+      "path": "Build/572748e4b51fd1f5194b8e3441f52a05.wasm.unityweb",
+      "bytes": 11850798,
+      "sha256": "2c96012ff73a4197790bb34e61779e3b1a899b42beebd299641f6806fb83c120"
     },
     {
-      "path": "Build/bed42fd67ae5a632b0a229ebbaf6d3be.wasm.unityweb",
-      "bytes": 11824981,
-      "sha256": "f39519d1af5f781ce2e89df67243297f8609b78d0aeb469077ed66b6e029d9cf"
+      "path": "Build/6aea1da8473d4c713feb6c1429ab8829.data.unityweb",
+      "bytes": 15213702,
+      "sha256": "63d4f7835f9ca83389760256e3fa07fadc05f9a92a07b6e58aa2f298cbc2d067"
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "6af7b37d958fac0a7b84844ee5fb4c1634306e4f78e4a4c239d9e1404a05d259"
+      "sha256": "fd48f70416dfd3b5ecb548f66ffd7f5ed4f9da3383c15137a315227713f9601b"
     },
     {
       "path": "TemplateData/loading.jpg",
-      "bytes": 363438,
-      "sha256": "49fadc745ff60a7007f8c5c25eaf82c85ffb91e2f13d1330746f642c8ab2acb7"
+      "bytes": 363519,
+      "sha256": "c3382d385003caadb26ff9152d57c4040f98c136b0fbd37f2a3a5d1e6c21e5b8"
     },
     {
       "path": "index.html",
       "bytes": 11522,
-      "sha256": "c99f715250422457d017cb0e9dac55c091733d700a6f507a824fe152b7d9ffec"
+      "sha256": "efb85ad8af8bbddb1633483f1c691a4c74943143877bbfa92619619ca155698a"
     }
   ]
 }
