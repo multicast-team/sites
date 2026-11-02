@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#130417" />
+    <title>Reaper (working title)</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="./assets/main-DP9Q0kkn.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/art-ChcthxtQ.js">
+    <link rel="stylesheet" crossorigin href="./assets/main-JIMJI2Gd.css">
+  </head>
+  <body>
+    <main id="stage">
+      <div id="field-wrap">
+        <canvas id="field" aria-label="Game field: tap to swing the scythe"></canvas>
+        <div id="hud">
+          <div id="hud-left">
+            <div id="wave">Wave 1</div>
+            <div id="crystals-box"><img class="crystal-icon" alt="" /><span id="crystals">0</span></div>
+          </div>
+          <div id="souls-box"><span id="souls">0</span><span id="souls-label">souls</span></div>
+          <button id="mute" type="button">Sound: on</button>
+        </div>
+        <div id="tap-hint">Tap to reap!</div>
+      </div>
+      <section id="panel">
+        <div id="flame-bar">
+          <div id="flame-fill"></div>
+          <div id="flame-text">Lives 25</div>
+        </div>
+        <div id="cards"></div>
+        <button id="eject" type="button" style="visibility: hidden"><b>Lightning</b><span id="eject-hint"></span></button>
+      </section>
+      <div id="over" hidden>
+        <div id="over-card">
+          <h2>Out of lives</h2>
+          <div id="over-big">you reached wave<span id="over-wave">1</span></div>
+          <div id="over-record"></div>
+          <div class="over-stats">
+            <div><b id="over-reaped">0</b>souls</div>
+            <div><b id="over-combo">—</b>best combo</div>
+            <div><b id="over-time">0:00</b>time</div>
+          </div>
+          <div id="over-crystals">
+            <img class="crystal-icon" alt="" />
+            <span>+<b id="over-earned">0</b> crystals</span>
+            <span id="over-total"></span>
+          </div>
+          <div id="meta-cards"></div>
+          <button id="again" type="button">Run again</button>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
