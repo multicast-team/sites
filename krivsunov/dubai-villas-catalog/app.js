@@ -3,6 +3,7 @@
 
   const STORAGE_KEY = 'dubai-villas.notes.v1';
   const SHARED_STORAGE_KEY = 'dubai-villas.shared.v1';
+  const TOGGLES_STORAGE_KEY = 'dubai-villas.toggles.v1';
   const CLIENT_STORAGE_KEY = 'dubai-villas.client.v1';
   const AUTHOR_STORAGE_KEY = 'dubai-villas.author.v1';
   const CLOUD_OBJECT_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a19e08924213e1';
@@ -28,6 +29,7 @@
   const isTestNote = (value) => typeof value === 'string' && /Проверка заметки <script>|Импортированная проверка|Заметка из другой вкладки|Новая версия другой вкладки|Моя правка после другой вкладки/.test(value);
   let notes = Object.create(null);
   let sharedComments = Object.create(null);
+  let sharedToggles = Object.create(null);
   let boundEntryIds = Object.create(null);
   let clientId = 'guest';
   let authorName = '';
@@ -40,6 +42,7 @@
   const publishTimers = new Map();
   let cloudPutTimer = null;
   const noteFields = new Set();
+  const toggleWidgets = new Set();
 
   function el(tag, className, content) {
     const node = document.createElement(tag);
@@ -80,10 +83,6 @@
     const source = text(value);
     if (/^materials\/[a-z0-9_-]+\.pdf$/i.test(source)) return source;
     return safeUrl(source);
-  }
-
-  function action(label, url, unavailable, primary = false) {
-    return url ? externalLink(label, url, primary ? 'button' : 'button button-quiet') : el('span', 'disabled-link', unavailable);
   }
 
   let notifyTimer = 0;
@@ -130,7 +129,7 @@
     } catch {
       storageReadable = false;
       savedToDevice = false;
-      storageWarning('Не удалось прочитать хранилище браузера. Его содержимое не перезаписывается. Новые заметки останутся в этой вкладке: сохраните их через «Экспорт заметок» до закрытия страницы.');
+      storageWarning('Не удалось прочитать хранилище браузера. Его содержимое не перезаписывается. Новые заметки останутся в этой вкладке: сохраните их через «Экспорт JSON» до закрытия страницы.');
     }
     updateNotesCount();
   }
@@ -157,7 +156,7 @@
       } catch {
         notes = next;
         savedToDevice = false;
-        storageWarning('Браузер не смог сохранить заметки на устройстве. Они доступны в этой вкладке. Экспортируйте JSON до закрытия страницы; также можно открыть каталог в браузере по HTTP.');
+        storageWarning('Браузер не смог сохранить заметки на устройстве. Они доступны в этой вкладке. Экспортируйте JSON до закрытия страницы.');
       }
     } else {
       notes = next;
@@ -225,9 +224,52 @@
     return changed;
   }
 
+  function normalizeToggleEntry(rawToggle) {
+    if (!object(rawToggle)) return null;
+    const viewed = !!rawToggle.viewed;
+    const rent = !!rawToggle.rent;
+    const updatedAt = typeof rawToggle.updatedAt === 'number' && Number.isFinite(rawToggle.updatedAt) ? rawToggle.updatedAt : 1000;
+    const author = text(rawToggle.author).slice(0, 40);
+    return { viewed, rent, updatedAt, author };
+  }
+
+  function mergeToggleEntry(propertyId, rawToggle) {
+    if (!validId(propertyId)) return false;
+    const entry = normalizeToggleEntry(rawToggle);
+    if (!entry) return false;
+    const existing = sharedToggles[propertyId];
+    if (existing) {
+      if (existing.updatedAt > entry.updatedAt) return false;
+      if (existing.updatedAt === entry.updatedAt && existing.viewed === entry.viewed && existing.rent === entry.rent) return false;
+    }
+    sharedToggles[propertyId] = entry;
+    return true;
+  }
+
+  function mergeToggleMap(rawMap) {
+    if (!object(rawMap)) return false;
+    let changed = false;
+    for (const [propertyId, item] of Object.entries(rawMap)) {
+      if (mergeToggleEntry(propertyId, item)) changed = true;
+    }
+    return changed;
+  }
+
+  function getPropertyToggle(property) {
+    const id = property.id;
+    if (own(sharedToggles, id)) return sharedToggles[id];
+    return {
+      viewed: !!property.viewedDefault,
+      rent: !!property.rentDefault,
+      updatedAt: 1000,
+      author: ''
+    };
+  }
+
   function saveSharedToLocal() {
     try {
-      localStorage.setItem(SHARED_STORAGE_KEY, JSON.stringify({ version: 1, sharedComments }));
+      localStorage.setItem(SHARED_STORAGE_KEY, JSON.stringify({ version: 1, sharedComments, sharedToggles }));
+      localStorage.setItem(TOGGLES_STORAGE_KEY, JSON.stringify({ version: 1, sharedToggles }));
     } catch {}
   }
 
@@ -264,9 +306,9 @@
     if (count) {
       $('notes-count').textContent = `Заметок: ${count} · Общих комментариев: ${sharedTotal} (видны всем)`;
     } else if (sharedTotal) {
-      $('notes-count').textContent = `Общих комментариев: ${sharedTotal} · видны всем посетителям`;
+      $('notes-count').textContent = `Общих комментариев: ${sharedTotal} · сохраняются для всех`;
     } else {
-      $('notes-count').textContent = 'Все комментарии автоматически сохраняются и видны всем';
+      $('notes-count').textContent = 'Все комментарии и переключатели сохраняются автоматически и видны всем';
     }
     updateCommentBadges();
   }
@@ -339,27 +381,31 @@
 
   async function pushSnapshotToCloud() {
     try {
-      let remoteMap = Object.create(null);
+      let remoteComments = Object.create(null);
+      let remoteToggles = Object.create(null);
       try {
         const getResp = await fetch(CLOUD_OBJECT_URL, { cache: 'no-store' });
         if (getResp.ok) {
           const currentObj = await getResp.json();
-          if (currentObj && object(currentObj.data) && object(currentObj.data.sharedComments)) {
-            remoteMap = currentObj.data.sharedComments;
+          if (currentObj && object(currentObj.data)) {
+            if (object(currentObj.data.sharedComments)) remoteComments = currentObj.data.sharedComments;
+            if (object(currentObj.data.sharedToggles)) remoteToggles = currentObj.data.sharedToggles;
           }
         }
       } catch {}
-      if (mergeSharedMap(remoteMap)) {
+      const cChanged = mergeSharedMap(remoteComments);
+      const tChanged = mergeToggleMap(remoteToggles);
+      if (cChanged || tChanged) {
         saveSharedToLocal();
-        refreshNoteFields();
-        updateNotesCount();
+        if (cChanged) { refreshNoteFields(); updateNotesCount(); }
+        if (tChanged) refreshToggleWidgets();
       }
       await fetch(CLOUD_OBJECT_URL, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: 'dubai-villas-shared-comments-v1',
-          data: { version: 1, updatedAt: Date.now(), sharedComments }
+          data: { version: 1, updatedAt: Date.now(), sharedComments, sharedToggles }
         })
       });
     } catch {}
@@ -374,6 +420,20 @@
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ type: 'comment', propertyId, entry })
+      });
+    } catch {}
+    clearTimeout(cloudPutTimer);
+    cloudPutTimer = setTimeout(pushSnapshotToCloud, 400);
+  }
+
+  async function publishToggleToCloud(propertyId) {
+    if (!validId(propertyId) || !own(sharedToggles, propertyId)) return;
+    const toggle = sharedToggles[propertyId];
+    try {
+      await fetch(CLOUD_STREAM_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ type: 'toggle', propertyId, toggle })
       });
     } catch {}
     clearTimeout(cloudPutTimer);
@@ -730,11 +790,24 @@
       price: number(item.price),
       priceLabel: text(item.priceLabel),
       priceNote: text(item.priceNote),
+      ceilingHeightM: typeof item.ceilingHeightM === 'number' ? item.ceilingHeightM : 3.0,
+      ceilingMaxM: typeof item.ceilingMaxM === 'number' ? item.ceilingMaxM : 3.0,
+      ceiling: text(item.ceiling),
+      ceilingEstimateNote: text(item.ceilingEstimateNote),
+      projectType: text(item.projectType),
+      doubleHeight: text(item.doubleHeight) || 'no',
+      doubleHeightLabel: text(item.doubleHeightLabel) || 'Без второго света',
+      waterView: text(item.waterView) || 'no',
+      waterViewLabel: text(item.waterViewLabel) || 'Без вида на воду',
+      pool: text(item.pool) || 'no',
+      poolLabel: text(item.poolLabel) || 'Без своего бассейна',
+      viewedDefault: !!item.viewedDefault,
+      rentDefault: !!item.rentDefault,
       cover,
       images: pictures,
       videos,
       media: [...videos, ...pictures.map((picture) => ({ ...picture, type: 'image' }))],
-      documents: (Array.isArray(item.documents) ? item.documents : []).filter(object).map((doc) => ({href: documentUrl(doc.href), label: text(doc.label) || 'PDF с фотографиями'})).filter((doc) => doc.href),
+      documents: (Array.isArray(item.documents) ? item.documents : []).filter(object).map((doc) => ({ href: documentUrl(doc.href), label: text(doc.label) || 'PDF с фотографиями' })).filter((doc) => doc.href),
       description: text(item.description),
       facts: strings(item.facts),
       caveats: strings(item.caveats),
@@ -744,13 +817,26 @@
       mapUrl: safeUrl(item.mapUrl),
       locationLabel: text(item.locationLabel),
       agentPhone: text(item.agentPhone),
-      search: [item.title, item.area, item.agent, item.agentPhone, item.statusLabel, item.description, item.locationLabel, item.ceiling, item.listingUrl, ...strings(item.facts), ...strings(item.caveats)].filter((value) => typeof value === 'string').join(' ').toLocaleLowerCase('ru-RU')
+      search: [
+        item.title, item.area, item.agent, item.agentPhone, item.statusLabel,
+        item.description, item.locationLabel, item.ceiling, item.ceilingEstimateNote,
+        item.projectType, item.doubleHeightLabel, item.waterViewLabel, item.poolLabel,
+        item.listingUrl, ...strings(item.facts), ...strings(item.caveats)
+      ].filter((value) => typeof value === 'string').join(' ').toLocaleLowerCase('ru-RU')
     };
   });
 
   const AED_PER_USD = 3.6725;
   const GENERIC_PRICE_NOTE = 'Заявленная цена; актуальные условия уточняются.';
-  const statusTabs = [['', 'Все'], ['active', 'Актуальные'], ['selected', 'Выбрано'], ['review', 'На рассмотрении'], ['rejected', 'Отказ'], ['unavailable', 'Недоступно'], ['historical', 'Архив']];
+  const statusTabs = [
+    ['', 'Все'],
+    ['active', 'Актуальные'],
+    ['selected', 'Выбрано'],
+    ['review', 'На рассмотрении'],
+    ['rejected', 'Отказ'],
+    ['unavailable', 'Недоступно'],
+    ['historical', 'Архив']
+  ];
   const standalone = rawProperties.length === 1 && !!document.querySelector('base');
   const state = { status: '', view: 'grid' };
   let visibleList = properties;
@@ -821,6 +907,35 @@
     return 'Ссылки на сайт нет — только фото/видео риэлтора (переписка)';
   }
 
+  function agentContactLine(property) {
+    const line = el('p', 'card-agent');
+    const name = property.agent || 'Риэлтор не указан';
+    const wa = whatsappUrl(property.agentPhone);
+    const formatted = formatPhone(property.agentPhone);
+    if (wa) {
+      line.append(el('span', '', `Риэлтор: ${name} · `));
+      line.append(externalLink(`WhatsApp ${formatted} ↗`, wa, 'inline-ext-link wa-link'));
+    } else if (property.agent === 'Артур') {
+      line.append(el('span', '', 'Риэлтор: Артур · WhatsApp (группа) · '));
+      line.append(externalLink('TG @Art_Real_Estate ↗', 'https://t.me/Art_Real_Estate', 'inline-ext-link wa-link'));
+    } else {
+      line.append(el('span', '', `Риэлтор: ${name} · WhatsApp не указан`));
+    }
+    return line;
+  }
+
+  function sourceOriginLine(property) {
+    const line = el('p', 'card-source');
+    if (property.listingUrl) {
+      const site = sourceSiteName(property.listingUrl);
+      line.append(el('span', '', 'Откуда взят: '));
+      line.append(externalLink(`Сайт ${site} ↗`, property.listingUrl, 'inline-ext-link source-site-link'));
+    } else {
+      line.append(el('span', 'source-no-link', noLinkSourceLabel(property)));
+    }
+    return line;
+  }
+
   function usdLabel(aed) {
     return `≈ ${format.format(Math.round(aed / AED_PER_USD / 1000))} тыс. $ в год`;
   }
@@ -881,8 +996,117 @@
     const list = el('ul', 'specs');
     const items = specItems(property);
     for (const value of items) list.append(el('li', '', value));
-    if (!items.length) list.append(el('li', 'specs-empty', 'Метраж и спальни не указаны'));
+    if (!items.length) list.append(el('li', 'specs-empty', 'Метраж и спальни уточняются'));
     return list;
+  }
+
+  function featureChips(property) {
+    const wrap = el('div', 'feature-chips');
+    const ceilingChip = el('span', 'feature-chip chip-ceiling', `↕ Потолки: ${property.ceiling || `~${property.ceilingHeightM} м`}`);
+    if (property.ceilingEstimateNote) ceilingChip.title = property.ceilingEstimateNote;
+    wrap.append(ceilingChip);
+
+    const dhClass = property.doubleHeight === 'no' ? 'chip-double-no' : 'chip-double-yes';
+    const dhPrefix = property.doubleHeight === 'no' ? '' : '☀ ';
+    const dhChip = el('span', `feature-chip ${dhClass}`, `${dhPrefix}${property.doubleHeightLabel}`);
+    if (property.ceilingEstimateNote) dhChip.title = property.ceilingEstimateNote;
+    wrap.append(dhChip);
+
+    const wClass = property.waterView === 'yes' ? 'chip-water-yes' : (property.waterView === 'golf' ? 'chip-water-golf' : 'chip-water-no');
+    const wPrefix = property.waterView === 'yes' ? '≈ ' : (property.waterView === 'golf' ? '⛳ ' : '');
+    wrap.append(el('span', `feature-chip ${wClass}`, `${wPrefix}${property.waterViewLabel}`));
+
+    const pClass = property.pool === 'private' ? 'chip-pool-private' : (property.pool === 'community' ? 'chip-pool-community' : 'chip-pool-no');
+    const pPrefix = property.pool !== 'no' ? '🏊 ' : '';
+    wrap.append(el('span', `feature-chip ${pClass}`, `${pPrefix}${property.poolLabel}`));
+    return wrap;
+  }
+
+  function updateSingleToggleWidget(widget) {
+    const stateObj = getPropertyToggle(widget.property);
+    const viewed = !!stateObj.viewed;
+    const rent = !!stateObj.rent;
+    widget.viewedBtn.setAttribute('aria-checked', String(viewed));
+    widget.viewedLabel.textContent = viewed ? '✓ Смотрели' : 'Не смотрели';
+    widget.viewedBtn.title = viewed ? 'Нажмите, чтобы отметить «Не смотрели»' : 'Нажмите, чтобы отметить «Смотрели»';
+
+    widget.rentBtn.setAttribute('aria-checked', String(rent));
+    widget.rentLabel.textContent = rent ? '★ Снимаем!' : 'Не снимаем';
+    widget.rentBtn.title = rent ? 'Нажмите, чтобы переключить на «Не снимаем»' : 'Нажмите, чтобы переключить на «Снимаем!»';
+
+    if (widget.hostCard) {
+      widget.hostCard.classList.toggle('is-viewed', viewed);
+      widget.hostCard.classList.toggle('is-renting', rent);
+    }
+  }
+
+  function refreshToggleWidgets() {
+    for (const widget of toggleWidgets) {
+      if (!widget.root.isConnected) {
+        toggleWidgets.delete(widget);
+        continue;
+      }
+      updateSingleToggleWidget(widget);
+    }
+    renderStats();
+  }
+
+  function handleToggleFlip(property, field) {
+    const current = getPropertyToggle(property);
+    const nextViewed = field === 'viewed' ? !current.viewed : !!current.viewed;
+    const nextRent = field === 'rent' ? !current.rent : !!current.rent;
+    mergeToggleEntry(property.id, {
+      viewed: nextViewed,
+      rent: nextRent,
+      updatedAt: Date.now(),
+      author: currentAuthor()
+    });
+    saveSharedToLocal();
+    refreshToggleWidgets();
+    if ($('filter-viewed').value || $('filter-rent').value) {
+      render();
+    }
+    publishToggleToCloud(property.id);
+  }
+
+  function decisionToggles(property, hostCard = null) {
+    const root = el('div', 'decision-toggles');
+    root.setAttribute('role', 'group');
+    root.setAttribute('aria-label', `Отметки по объекту: ${property.title}`);
+
+    const viewedBtn = el('button', 'toggle-switch toggle-viewed');
+    viewedBtn.type = 'button';
+    viewedBtn.setAttribute('role', 'switch');
+    viewedBtn.dataset.toggle = 'viewed';
+    const viewedTrack = el('span', 'switch-track');
+    viewedTrack.append(el('span', 'switch-thumb'));
+    const viewedLabel = el('span', 'switch-label');
+    viewedBtn.append(viewedTrack, viewedLabel);
+
+    const rentBtn = el('button', 'toggle-switch toggle-rent');
+    rentBtn.type = 'button';
+    rentBtn.setAttribute('role', 'switch');
+    rentBtn.dataset.toggle = 'rent';
+    const rentTrack = el('span', 'switch-track');
+    rentTrack.append(el('span', 'switch-thumb'));
+    const rentLabel = el('span', 'switch-label');
+    rentBtn.append(rentTrack, rentLabel);
+
+    const widget = { property, root, viewedBtn, viewedLabel, rentBtn, rentLabel, hostCard };
+    updateSingleToggleWidget(widget);
+    toggleWidgets.add(widget);
+
+    viewedBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      handleToggleFlip(property, 'viewed');
+    });
+    rentBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      handleToggleFlip(property, 'rent');
+    });
+
+    root.append(viewedBtn, rentBtn);
+    return root;
   }
 
   function openButton(label, property, className) {
@@ -916,19 +1140,10 @@
     const group = el('div', 'quick-links');
     const wa = whatsappUrl(property.agentPhone);
     if (property.mapUrl) group.append(iconLink('pin', 'Карта', property.mapUrl, 'chip-link'));
+    if (wa) group.append(iconLink('chat', 'WhatsApp', wa, 'chip-link chip-wa'));
     if (property.listingUrl) group.append(iconLink('link', 'Сайт', property.listingUrl, 'chip-link'));
     else if (property.documents.length) group.append(iconLink('doc', 'PDF', property.documents[0].href, 'chip-link'));
     return group;
-  }
-
-  function brokerBlock(property) {
-    const wa = whatsappUrl(property.agentPhone);
-    const block = el('div', 'card-broker');
-    block.append(el('p', 'broker-name', property.agent || 'Брокер не указан'));
-    if (wa) block.append(iconLink('chat', `WhatsApp ${formatPhone(property.agentPhone)}`, wa, 'button button-wa'));
-    else if (property.agent === 'Артур') block.append(el('p', 'broker-note', 'Группа в WhatsApp с Артуром · TG @Art_Real_Estate'));
-    else block.append(el('p', 'broker-note', 'WhatsApp не сохранён'));
-    return block;
   }
 
   function cover(property, eager) {
@@ -953,13 +1168,27 @@
     title.append(openButton(property.title, property, 'title-button'));
     const meta = el('p', 'card-meta');
     meta.append(el('span', 'card-area', property.area || 'Район не указан'));
-    main.append(priceBlock(property), title, meta, specifications(property));
-    if (text(property.ceiling)) main.append(el('p', 'card-ceiling', `Потолки: ${text(property.ceiling)}`));
+    main.append(
+      priceBlock(property),
+      title,
+      decisionToggles(property, article),
+      meta,
+      agentContactLine(property),
+      sourceOriginLine(property),
+      specifications(property),
+      featureChips(property)
+    );
+    if (property.ceilingEstimateNote) {
+      const ceilBox = el('p', 'ceiling-summary');
+      ceilBox.append(el('strong', '', 'Оценка потолков по проекту и фото: '), el('span', '', property.ceilingEstimateNote));
+      ceilBox.title = property.ceilingEstimateNote;
+      main.append(ceilBox);
+    }
     if (property.description) main.append(el('p', 'description card-description', property.description));
     if (property.caveats.length) main.append(el('p', 'caveat', property.caveats[0] + (property.caveats.length > 1 ? ` · ещё ${property.caveats.length - 1} в карточке` : '')));
     const actions = el('div', 'card-actions');
     actions.append(openButton('Подробнее', property, 'button card-open'), quickLinks(property));
-    main.append(actions, brokerBlock(property));
+    main.append(actions);
     article.append(cover(property, index < 3), main, noteBlock(property));
     return article;
   }
@@ -984,7 +1213,11 @@
     const name = el('div', 'list-name');
     const title = el('h3', 'list-title');
     title.append(openButton(property.title, property, 'title-button'));
-    name.append(title, el('p', 'list-sub', [property.area || 'Район не указан', property.agent].filter(Boolean).join(' · ')));
+    name.append(
+      title,
+      el('p', 'list-sub', [property.area || 'Район не указан', property.ceiling ? `Потолки ${property.ceiling}` : '', property.waterViewLabel].filter(Boolean).join(' · ')),
+      decisionToggles(property, row)
+    );
     const price = el('div', 'list-price');
     if (property.price !== null) price.append(el('strong', '', format.format(property.price)), el('span', '', ` AED · ${usdLabel(property.price).replace(' в год', '')}`));
     else price.append(el('span', 'muted', property.priceLabel || 'Цена не указана'));
@@ -1058,26 +1291,36 @@
     const head = el('header', 'detail-head');
     const title = el('h2', 'detail-title', property.title);
     title.id = 'detail-title';
-    head.append(badges(property, true), title, el('p', 'detail-location', property.area || 'Район не указан'));
+    head.append(badges(property, true), title, el('p', 'detail-location', [property.area || 'Район не указан', property.projectType || '', property.agent ? `агент ${property.agent}` : ''].filter(Boolean).join(' · ')));
     container.append(head, mosaic(property));
 
     const layout = el('div', 'detail-layout');
     const mainCol = el('div', 'detail-main');
     const aside = el('aside', 'detail-aside');
 
+    const toggleCard = el('div', 'aside-card');
+    toggleCard.append(el('p', 'aside-label', 'Ваши отметки (видны всем)'), decisionToggles(property));
+    aside.append(toggleCard);
+
     const priceCard = el('div', 'aside-card');
     priceCard.append(priceBlock(property, true));
     const facts = el('dl', 'detail-facts');
     const rows = [
-      ['Спальни', number(property.bedrooms) === null ? '—' : format.format(property.bedrooms)],
-      ['Санузлы', number(property.bathrooms) === null ? '—' : format.format(property.bathrooms)],
-      ['Участок', number(property.plotM2) === null ? '—' : `${format.format(property.plotM2)} м²`],
-      ['Дом', number(property.buaM2) === null ? '—' : `${format.format(property.buaM2)} м²`],
-      ['Потолки', text(property.ceiling) || '—'],
-      ['Тип', types[property.type]]
+      ['Спальни', number(property.bedrooms) === null ? '—' : format.format(property.bedrooms), false],
+      ['Санузлы', number(property.bathrooms) === null ? '—' : format.format(property.bathrooms), false],
+      ['Участок', number(property.plotM2) === null ? '—' : `${format.format(property.plotM2)} м²`, false],
+      ['Дом', number(property.buaM2) === null ? '—' : `${format.format(property.buaM2)} м²`, false],
+      ['Высота потолков', text(property.ceiling) || '—', true],
+      ['Второй свет', text(property.doubleHeightLabel) || '—', true],
+      ['Вид на озеро / воду', text(property.waterViewLabel) || '—', true],
+      ['Бассейн', text(property.poolLabel) || '—', false],
+      ['Тип', types[property.type], false]
     ];
-    for (const [label, value] of rows) {
-      const row = el('div', value === '—' ? 'is-empty' : '');
+    for (const [label, value, fullRow] of rows) {
+      const classes = [];
+      if (value === '—') classes.push('is-empty');
+      if (fullRow) classes.push('full-row');
+      const row = el('div', classes.join(' '));
       row.append(el('dt', '', label), el('dd', '', value));
       facts.append(row);
     }
@@ -1085,13 +1328,13 @@
 
     const contact = el('div', 'aside-card');
     const wa = whatsappUrl(property.agentPhone);
-    contact.append(el('p', 'aside-label', 'Брокер'), el('p', 'aside-agent', property.agent || 'Не указан'));
+    contact.append(el('p', 'aside-label', 'Риэлтор и источник'), el('p', 'aside-agent', property.agent || 'Не указан'));
     if (wa) contact.append(iconLink('chat', `WhatsApp ${formatPhone(property.agentPhone)}`, wa, 'button button-wa'));
-    else if (property.agent === 'Артур') contact.append(el('p', 'aside-note', 'Группа в WhatsApp с Артуром · TG @Art_Real_Estate'));
+    else if (property.agent === 'Артур') contact.append(iconLink('chat', 'TG @Art_Real_Estate (группа WhatsApp)', 'https://t.me/Art_Real_Estate', 'button button-wa'));
     else contact.append(el('p', 'aside-note', 'WhatsApp не сохранён'));
     const links = el('div', 'aside-links');
     if (property.mapUrl) links.append(iconLink('pin', 'Открыть на карте', property.mapUrl));
-    if (property.listingUrl) links.append(iconLink('link', `Объявление · ${sourceSiteName(property.listingUrl)}`, property.listingUrl));
+    if (property.listingUrl) links.append(iconLink('link', `Сайт · ${sourceSiteName(property.listingUrl)}`, property.listingUrl));
     property.documents.forEach((doc) => links.append(iconLink('doc', doc.label, doc.href)));
     contact.append(links, el('p', 'aside-note', [property.locationLabel, precision(property)].filter(Boolean).join(' · ')));
     if (!property.listingUrl) contact.append(el('p', 'aside-note', noLinkSourceLabel(property)));
@@ -1100,6 +1343,20 @@
     const description = el('section', 'detail-section');
     description.append(el('h3', '', 'Описание'), el('p', 'description', property.description || 'Описание пока не предоставлено.'));
     mainCol.append(description);
+
+    if (property.ceilingEstimateNote || property.projectType) {
+      const ceilingSec = el('section', 'detail-section is-ceiling-box');
+      ceilingSec.append(
+        el('h3', '', 'Высота потолков, второй свет и видовые характеристики (по проекту и фото)'),
+        el('p', '', [
+          property.projectType ? `Проект / серия: ${property.projectType}.` : '',
+          property.ceilingEstimateNote,
+          `Второй свет: ${property.doubleHeightLabel}. Вид: ${property.waterViewLabel}. Бассейн: ${property.poolLabel}.`
+        ].filter(Boolean).join('\n'))
+      );
+      mainCol.append(ceilingSec);
+    }
+
     detailSection(mainCol, 'Что известно', property.facts);
     detailSection(mainCol, 'Обратить внимание', property.caveats, 'is-caveats');
     detailSection(mainCol, 'Что ещё уточнить', property.missing);
@@ -1149,10 +1406,18 @@
   }
 
   function fillFilter(id, field, allLabel) {
-    const values = [...new Set(properties.map((property) => property[field]))].sort((a, b) => a.localeCompare(b, 'ru'));
+    const counts = new Map();
+    for (const property of properties) {
+      const k = property[field] || '';
+      counts.set(k, (counts.get(k) || 0) + 1);
+    }
+    const values = [...counts.keys()].sort((a, b) => a.localeCompare(b, 'ru'));
     const select = $(id);
     select.replaceChildren(new Option(allLabel, ''));
-    values.forEach((value) => select.add(new Option(value || (field === 'area' ? 'Район не указан' : 'Агент не указан'), value || '∅')));
+    values.forEach((value) => {
+      const label = value || (field === 'area' ? 'Район не указан' : 'Агент не указан');
+      select.add(new Option(`${label} (${counts.get(value)})`, value || '∅'));
+    });
     return values;
   }
 
@@ -1165,30 +1430,115 @@
     return property.status === status;
   }
 
+  function matchesPriceFilter(property, priceFilter) {
+    if (!priceFilter) return true;
+    const p = property.price;
+    if (priceFilter === 'unknown') return p === null;
+    if (p === null) return false;
+    if (priceFilter === 'up-400') return p <= 400000;
+    if (priceFilter === 'up-450') return p <= 450000;
+    if (priceFilter === 'up-500') return p <= 500000;
+    if (priceFilter === 'up-550') return p <= 550000;
+    if (priceFilter === 'up-600') return p <= 600000;
+    if (priceFilter === '400-550') return p >= 400000 && p <= 550000;
+    if (priceFilter === 'from-500') return p >= 500000;
+    return true;
+  }
+
+  function matchesCeilingFilter(property, ceilingFilter) {
+    if (!ceilingFilter) return true;
+    const h = property.ceilingHeightM;
+    const maxH = property.ceilingMaxM;
+    if (ceilingFilter === 'high') return h >= 3.1 || maxH >= 4.0 || property.doubleHeight !== 'no';
+    if (ceilingFilter === '3.2+') return h >= 3.18;
+    if (ceilingFilter === '3.0+') return h >= 3.0;
+    if (ceilingFilter === 'double-5.5+') return maxH >= 5.5;
+    if (ceilingFilter === 'standard') return h <= 3.05 && property.doubleHeight === 'no';
+    return true;
+  }
+
+  function matchesWaterFilter(property, waterFilter) {
+    if (!waterFilter) return true;
+    if (waterFilter === 'yes') return property.waterView === 'yes';
+    if (waterFilter === 'water-or-golf') return property.waterView === 'yes' || property.waterView === 'golf';
+    if (waterFilter === 'golf') return property.waterView === 'golf';
+    if (waterFilter === 'no') return property.waterView === 'no';
+    return true;
+  }
+
+  function matchesDoubleHeightFilter(property, dhFilter) {
+    if (!dhFilter) return true;
+    if (dhFilter === 'any-yes') return property.doubleHeight !== 'no';
+    return property.doubleHeight === dhFilter;
+  }
+
+  function matchesPoolFilter(property, poolFilter) {
+    if (!poolFilter) return true;
+    if (poolFilter === 'any') return property.pool === 'private' || property.pool === 'community';
+    return property.pool === poolFilter;
+  }
+
   function baseFilter() {
     const query = $('search').value.trim().toLocaleLowerCase('ru-RU').split(/\s+/).filter(Boolean);
     const area = $('area').value;
     const agent = $('agent').value;
     const beds = Number($('beds').value) || 0;
+    const viewedFilter = $('filter-viewed').value;
+    const rentFilter = $('filter-rent').value;
+    const priceFilter = $('filter-price').value;
+    const ceilingFilter = $('filter-ceiling').value;
+    const waterFilter = $('filter-water').value;
+    const dhFilter = $('filter-double-height').value;
+    const poolFilter = $('filter-pool').value;
     const withComments = $('with-comments').checked;
-    return properties.filter((property) => query.every((word) => property.search.includes(word)) &&
-      (!area || (property.area || '∅') === area) &&
-      (!agent || (property.agent || '∅') === agent) &&
-      (!beds || (number(property.bedrooms) || 0) >= beds) &&
-      (!withComments || commentCount(property) > 0));
+
+    return properties.filter((property) => {
+      if (!query.every((word) => property.search.includes(word))) return false;
+      if (area && (property.area || '∅') !== area) return false;
+      if (agent && (property.agent || '∅') !== agent) return false;
+      if (beds && (number(property.bedrooms) || 0) < beds) return false;
+      if (withComments && commentCount(property) === 0) return false;
+
+      const tState = getPropertyToggle(property);
+      if (viewedFilter === 'yes' && !tState.viewed) return false;
+      if (viewedFilter === 'no' && tState.viewed) return false;
+      if (rentFilter === 'yes' && !tState.rent) return false;
+      if (rentFilter === 'no' && tState.rent) return false;
+
+      if (!matchesPriceFilter(property, priceFilter)) return false;
+      if (!matchesCeilingFilter(property, ceilingFilter)) return false;
+      if (!matchesWaterFilter(property, waterFilter)) return false;
+      if (!matchesDoubleHeightFilter(property, dhFilter)) return false;
+      if (!matchesPoolFilter(property, poolFilter)) return false;
+      return true;
+    });
   }
 
   const sorters = {
     'price-asc': (p) => p.price === null ? null : p.price,
     'price-desc': (p) => p.price === null ? null : -p.price,
+    'ceiling-desc': (p) => -(p.ceilingMaxM * 10 + p.ceilingHeightM),
     'plot-desc': (p) => number(p.plotM2) === null ? null : -p.plotM2,
     'bua-desc': (p) => number(p.buaM2) === null ? null : -p.buaM2,
     'beds-desc': (p) => number(p.bedrooms) === null ? null : -p.bedrooms,
     'media-desc': (p) => -p.media.length
   };
 
+  const FILTER_SELECT_IDS = [
+    'area', 'filter-viewed', 'filter-rent', 'filter-price',
+    'filter-ceiling', 'filter-water', 'filter-double-height',
+    'filter-pool', 'agent', 'beds'
+  ];
+
   function activeFilterCount() {
-    return ['area', 'agent', 'beds'].filter((id) => $(id).value).length + ($('with-comments').checked ? 1 : 0) + ($('sort').value !== 'source' ? 1 : 0);
+    let count = 0;
+    for (const id of FILTER_SELECT_IDS) {
+      const node = $(id);
+      if (node && node.value) count++;
+    }
+    if ($('with-comments').checked) count++;
+    if ($('sort').value !== 'source') count++;
+    return count;
   }
 
   function renderStatusTabs(base) {
@@ -1201,21 +1551,32 @@
       button.type = 'button';
       button.setAttribute('aria-pressed', String(state.status === value));
       button.append(el('span', '', label), el('span', 'tab-count', String(count)));
-      button.addEventListener('click', () => { state.status = value; render(); });
+      button.addEventListener('click', () => {
+        state.status = value;
+        if ($('status')) $('status').value = value;
+        render();
+      });
       tabs.append(button);
     }
   }
 
   function renderStats() {
     const stats = $('stats');
+    if (!stats) return;
     stats.replaceChildren();
-    const count = (status) => properties.filter((property) => property.status === status).length;
-    const prices = properties.filter((property) => matchesStatus(property, 'active') && property.price !== null).map((property) => property.price);
-    const items = [['Объектов', String(properties.length)], ['Выбрано', String(count('selected'))], ['Смотрим', String(count('review'))]];
-    if (prices.length) items.push(['Цены, тыс. AED', `${format.format(Math.min(...prices) / 1000)}–${format.format(Math.max(...prices) / 1000)}`]);
+    const viewedCount = properties.filter((p) => getPropertyToggle(p).viewed).length;
+    const rentCount = properties.filter((p) => getPropertyToggle(p).rent).length;
+    const waterCount = properties.filter((p) => p.waterView === 'yes').length;
+    const dhCount = properties.filter((p) => p.doubleHeight !== 'no').length;
+    const items = [
+      ['Объектов', String(properties.length)],
+      ['✓ Смотрели', String(viewedCount)],
+      ['★ Снимаем', String(rentCount)],
+      ['Второй свет', String(dhCount)],
+      ['У воды/озера', String(waterCount)]
+    ];
     for (const [label, value] of items) {
       const row = el('div');
-      if (label.startsWith('Цены')) row.title = 'Вилка цен выбранных и рассматриваемых объектов';
       row.append(el('dt', '', label), el('dd', '', value));
       stats.append(row);
     }
@@ -1226,7 +1587,9 @@
     const params = new URLSearchParams();
     if ($('search').value.trim()) params.set('q', $('search').value.trim());
     if (state.status) params.set('status', state.status);
-    for (const id of ['area', 'agent', 'beds']) if ($(id).value) params.set(id, $(id).value);
+    for (const id of FILTER_SELECT_IDS) {
+      if ($(id) && $(id).value) params.set(id, $(id).value);
+    }
     if ($('sort').value !== 'source') params.set('sort', $('sort').value);
     if ($('with-comments').checked) params.set('comments', '1');
     if (state.view !== 'grid') params.set('view', state.view);
@@ -1240,15 +1603,21 @@
     $('search').value = params.get('q') || '';
     const status = params.get('status') || '';
     state.status = statusTabs.some(([value]) => value === status) ? status : '';
-    for (const id of ['area', 'agent', 'beds', 'sort']) {
+    if ($('status')) $('status').value = state.status;
+    for (const id of [...FILTER_SELECT_IDS, 'sort']) {
+      const node = $(id);
       const value = params.get(id);
-      if (value && [...$(id).options].some((option) => option.value === value)) $(id).value = value;
+      if (node && value && [...node.options].some((option) => option.value === value)) node.value = value;
     }
     $('with-comments').checked = params.get('comments') === '1';
     state.view = params.get('view') === 'list' ? 'list' : 'grid';
   }
 
   function render() {
+    for (const id of [...FILTER_SELECT_IDS, 'status', 'sort']) {
+      const node = $(id);
+      if (node) node.classList.toggle('is-filtered', !!(node.value && node.value !== 'source'));
+    }
     const base = baseFilter();
     const filtered = base.filter((property) => matchesStatus(property, state.status));
     const sortKey = sorters[$('sort').value];
@@ -1262,10 +1631,12 @@
     });
     visibleList = filtered;
     renderStatusTabs(base);
+    renderStats();
     const grid = $('property-grid');
     grid.classList.toggle('is-list', state.view === 'list');
     grid.replaceChildren();
     for (const field of noteFields) if (!field.input.isConnected) noteFields.delete(field);
+    for (const widget of toggleWidgets) if (!widget.root.isConnected) toggleWidgets.delete(widget);
     const fragment = document.createDocumentFragment();
     if (state.view === 'list' && filtered.length) fragment.append(listHeader());
     filtered.forEach((property, index) => fragment.append(state.view === 'list' ? listRow(property, index) : card(property, index)));
@@ -1289,6 +1660,7 @@
   function resetFilters() {
     $('filters').reset();
     state.status = '';
+    if ($('status')) $('status').value = '';
     render();
   }
 
@@ -1305,9 +1677,17 @@
   }
 
   $('filters').addEventListener('submit', (event) => event.preventDefault());
-  let searchTimer = null;
-  $('search').addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(render, 120); });
-  ['area', 'agent', 'beds', 'sort', 'with-comments'].forEach((id) => $(id).addEventListener('change', render));
+  $('search').addEventListener('input', render);
+  [...FILTER_SELECT_IDS, 'sort', 'with-comments'].forEach((id) => {
+    const node = $(id);
+    if (node) node.addEventListener('change', render);
+  });
+  if ($('status')) {
+    $('status').addEventListener('change', () => {
+      state.status = $('status').value;
+      render();
+    });
+  }
   document.querySelectorAll('.view-toggle button').forEach((button) => button.addEventListener('click', () => { state.view = button.dataset.view; render(); }));
   $('filters-toggle').addEventListener('click', () => {
     const open = $('filters-toggle').getAttribute('aria-expanded') !== 'true';
@@ -1338,6 +1718,7 @@
     $('detail-content').replaceChildren();
     currentDetail = null;
     for (const field of noteFields) if (!field.input.isConnected) noteFields.delete(field);
+    for (const widget of toggleWidgets) if (!widget.root.isConnected) toggleWidgets.delete(widget);
     if (location.hash) {
       if (pushedHash) history.back();
       else history.replaceState(history.state, '', `${location.pathname}${location.search}`);
@@ -1364,7 +1745,7 @@
   }, { passive: true });
 
   $('export-notes').addEventListener('click', () => {
-    const payload = { version: 1, exportedAt: new Date().toISOString(), notes };
+    const payload = { version: 1, exportedAt: new Date().toISOString(), notes, sharedToggles };
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' }));
     const link = el('a');
     link.href = url;
@@ -1373,7 +1754,7 @@
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-    notify('Файл заметок подготовлен для скачивания. Он содержит только ваши комментарии; сохраните его в надёжном месте.');
+    notify('Файл заметок и переключателей подготовлен для скачивания.');
   });
 
   $('import-notes').addEventListener('click', () => $('notes-file').click());
@@ -1388,6 +1769,10 @@
       try { payload = JSON.parse((await file.text()).replace(/^\uFEFF/, '')); }
       catch { throw new Error('Файл не удалось прочитать как JSON. Используйте файл, созданный через «Экспорт JSON».'); }
       const imported = validateNotes(payload);
+      if (object(payload.sharedToggles) && mergeToggleMap(payload.sharedToggles)) {
+        saveSharedToLocal();
+        refreshToggleWidgets();
+      }
       const merged = Object.assign(Object.create(null), notes);
       let added = 0;
       let conflicts = 0;
@@ -1404,18 +1789,23 @@
       for (const [id, value] of Object.entries(merged)) {
         if (!isTestNote(value)) syncLocalNoteToShared(id, value, true);
       }
-      notify(`Импорт завершён. Добавлено: ${added}; объединено: ${conflicts}. При совпадении объекта оба текста сохранены вместе.${savedToDevice ? '' : ' Сохраните объединённые заметки экспортом: запись на устройство недоступна.'}`);
+      notify(`Импорт завершён. Добавлено: ${added}; объединено: ${conflicts}.`);
     } catch (error) { notify(error.message || 'Не удалось импортировать заметки. Существующие записи не изменены.', true); }
     finally { event.target.value = ''; button.disabled = false; }
   });
 
   window.addEventListener('storage', (event) => {
-    if (event.key === SHARED_STORAGE_KEY && event.newValue) {
+    if ((event.key === SHARED_STORAGE_KEY || event.key === TOGGLES_STORAGE_KEY) && event.newValue) {
       try {
         const parsed = JSON.parse(event.newValue);
-        if (object(parsed) && mergeSharedMap(parsed.sharedComments)) {
-          refreshNoteFields();
-          updateNotesCount();
+        if (object(parsed)) {
+          if (mergeSharedMap(parsed.sharedComments)) {
+            refreshNoteFields();
+            updateNotesCount();
+          }
+          if (mergeToggleMap(parsed.sharedToggles)) {
+            refreshToggleWidgets();
+          }
         }
       } catch {}
       return;
@@ -1456,9 +1846,18 @@
     $('updated-at').hidden = false;
   }
 
-  function initSharedComments() {
+  function initSharedState() {
+    for (const prop of properties) {
+      mergeToggleEntry(prop.id, {
+        viewed: !!prop.viewedDefault,
+        rent: !!prop.rentDefault,
+        updatedAt: 1000,
+        author: ''
+      });
+    }
     mergeSharedMap(INITIAL_SHARED_SEED);
     if (object(catalog.sharedComments)) mergeSharedMap(catalog.sharedComments);
+    if (object(catalog.sharedToggles)) mergeToggleMap(catalog.sharedToggles);
     try {
       const savedClient = localStorage.getItem(CLIENT_STORAGE_KEY);
       if (validId(savedClient)) clientId = savedClient;
@@ -1487,7 +1886,17 @@
       const rawShared = localStorage.getItem(SHARED_STORAGE_KEY);
       if (rawShared) {
         const parsed = JSON.parse(rawShared);
-        if (object(parsed)) mergeSharedMap(parsed.sharedComments);
+        if (object(parsed)) {
+          mergeSharedMap(parsed.sharedComments);
+          mergeToggleMap(parsed.sharedToggles);
+        }
+      }
+    } catch {}
+    try {
+      const rawToggles = localStorage.getItem(TOGGLES_STORAGE_KEY);
+      if (rawToggles) {
+        const parsed = JSON.parse(rawToggles);
+        if (object(parsed)) mergeToggleMap(parsed.sharedToggles);
       }
     } catch {}
   }
@@ -1513,12 +1922,16 @@
   }
 
   async function pullSharedFromCloud() {
-    let changed = false;
+    let cChanged = false;
+    let tChanged = false;
     try {
       const resp = await fetch(CLOUD_OBJECT_URL, { cache: 'no-store' });
       if (resp.ok) {
         const payload = await resp.json();
-        if (payload && object(payload.data) && mergeSharedMap(payload.data.sharedComments)) changed = true;
+        if (payload && object(payload.data)) {
+          if (mergeSharedMap(payload.data.sharedComments)) cChanged = true;
+          if (mergeToggleMap(payload.data.sharedToggles)) tChanged = true;
+        }
       }
     } catch {}
     try {
@@ -1530,17 +1943,27 @@
             const evt = JSON.parse(line);
             if (evt && evt.event === 'message' && typeof evt.message === 'string') {
               const msg = JSON.parse(evt.message);
-              if (msg && msg.type === 'comment' && validId(msg.propertyId) && mergeSharedEntry(msg.propertyId, msg.entry)) changed = true;
-              else if (msg && msg.type === 'snapshot' && mergeSharedMap(msg.sharedComments)) changed = true;
+              if (msg && msg.type === 'comment' && validId(msg.propertyId) && mergeSharedEntry(msg.propertyId, msg.entry)) cChanged = true;
+              else if (msg && msg.type === 'toggle' && validId(msg.propertyId) && mergeToggleEntry(msg.propertyId, msg.toggle)) tChanged = true;
+              else if (msg && msg.type === 'snapshot') {
+                if (mergeSharedMap(msg.sharedComments)) cChanged = true;
+                if (mergeToggleMap(msg.sharedToggles)) tChanged = true;
+              }
             }
           } catch {}
         }
       }
     } catch {}
-    if (changed) {
+    if (cChanged || tChanged) {
       saveSharedToLocal();
-      refreshNoteFields();
-      updateNotesCount();
+      if (cChanged) {
+        refreshNoteFields();
+        updateNotesCount();
+      }
+      if (tChanged) {
+        refreshToggleWidgets();
+        if ($('filter-viewed') && ($('filter-viewed').value || $('filter-rent').value)) render();
+      }
     }
   }
 
@@ -1558,13 +1981,24 @@
             const evt = JSON.parse(event.data);
             if (!evt || typeof evt.message !== 'string') return;
             const msg = JSON.parse(evt.message);
-            let changed = false;
-            if (msg && msg.type === 'comment' && validId(msg.propertyId)) changed = mergeSharedEntry(msg.propertyId, msg.entry);
-            else if (msg && msg.type === 'snapshot') changed = mergeSharedMap(msg.sharedComments);
-            if (changed) {
+            let cChanged = false;
+            let tChanged = false;
+            if (msg && msg.type === 'comment' && validId(msg.propertyId)) cChanged = mergeSharedEntry(msg.propertyId, msg.entry);
+            else if (msg && msg.type === 'toggle' && validId(msg.propertyId)) tChanged = mergeToggleEntry(msg.propertyId, msg.toggle);
+            else if (msg && msg.type === 'snapshot') {
+              cChanged = mergeSharedMap(msg.sharedComments);
+              tChanged = mergeToggleMap(msg.sharedToggles);
+            }
+            if (cChanged || tChanged) {
               saveSharedToLocal();
-              refreshNoteFields();
-              updateNotesCount();
+              if (cChanged) {
+                refreshNoteFields();
+                updateNotesCount();
+              }
+              if (tChanged) {
+                refreshToggleWidgets();
+                if ($('filter-viewed') && ($('filter-viewed').value || $('filter-rent').value)) render();
+              }
             }
           } catch {}
         });
@@ -1575,7 +2009,7 @@
     }, 25000);
   }
 
-  initSharedComments();
+  initSharedState();
   readNotes();
   reconcileLocalNotesWithShared();
   updateNotesCount();
