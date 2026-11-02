@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Экраны — Idle Frontline, разбор плейтеста</title>
+<meta name="description" content="Десять экранов Idle Frontline «сейчас → после правки» поверх кадров записи: цель, захват, снайпер, окно базы, тревоги, гарнизон, цены, подкрепление, помощники, кнопка «Назад».">
+<meta name="theme-color" content="#ECEEE5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400..800&family=Sofia+Sans+Extra+Condensed:wght@700..900&family=Rubik:wght@500..800&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/mock.css">
+</head>
+<body data-page="screens">
+<a class="skip" href="#main">К содержанию</a>
+<header class="top">
+  <div class="top__in">
+    <a class="brand" href="index.html"><b>Idle Frontline</b><span>разбор плейтеста</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Разделы</button>
+    <nav class="nav" id="nav" aria-label="Разделы сайта">
+      <a href="index.html">Обзор</a>
+      <a href="problems.html">Проблемы</a>
+      <a href="screens.html" aria-current="page">Экраны</a>
+      <a href="economy.html">Экономика</a>
+      <a href="plan.html">План</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section" style="padding-top:56px">
+    <div class="wrap">
+      <div class="section__head">
+        <h1 class="h2">Десять экранов: сейчас и после правки</h1>
+        <p class="lead">Слева — кадр из записи, справа — тот же экран с предложенной правкой. Макеты нарисованы поверх настоящих кадров, чтобы было видно, где именно что меняется. Тексты на английском, как в текущей версии игры.</p>
+        <ul class="legend">
+          <li><span class="pin-n pin-n--bad" style="width:22px;height:22px;font-size:12px;margin-right:8px">1</span>что мешает сейчас</li>
+          <li><span class="pin-n pin-n--fix" style="width:22px;height:22px;font-size:12px;margin-right:8px">A</span>что меняем</li>
+        </ul>
+      </div>
+      <nav class="tasks" aria-label="Экраны на странице">
+        <a class="task" href="#objective">Цель на экране</a><a class="task" href="#capture">Захват</a><a class="task" href="#sniper">Снайпер</a><a class="task" href="#base">Окно базы</a><a class="task" href="#alerts">Тревога</a><a class="task" href="#garrison">Гарнизон</a><a class="task" href="#price">Цена</a><a class="task" href="#reinforce">Подкрепление</a><a class="task" href="#companion">Помощник</a><a class="task" href="#back">Кнопка «Назад»</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- 1. ЦЕЛЬ -->
+  <section class="study" id="objective">
+    <div class="wrap">
+      <div class="study__head">
+        <h2>Одна цель на экране</h2>
+        <p class="lead">Самая частая проблема записи: игрок не знает, куда идти. Виджет цели отвечает на это сразу — что сделать, где и что за это будет.</p>
+        <div class="refs"><a href="problems.html#F01">F01</a><a href="problems.html#F04">F04</a><a href="problems.html#F25">F25</a><a href="problems.html#F29">F29</a><a href="problems.html#N7">N7</a></div>
+      </div>
+      <div class="study__grid">
+        <div>
+          <div class="toggle" role="group" aria-label="Что показать"><button type="button" class="chip" data-show="before" aria-pressed="false">Сейчас</button><button type="button" class="chip" data-show="after" aria-pressed="true">После правки</button></div>
+          <div class="phones" data-show="after">
+            <figure class="phone phone--before"><figcaption><span class="sw sw--lost"></span>Сейчас, кадр 51:00</figcaption>
+              <div class="screen"><img class="bg" src="img/s-bridge.webp" alt="Кадр 51:00: герой у моста, цели на экране нет" loading="lazy">
+                <span class="spot spot--bad" style="left:56%;top:36%">1</span>
+                <span class="spot spot--bad" style="left:21%;top:20%">2</span>
+                <span class="spot spot--bad" style="left:14%;top:47%">3</span>
+              </div></figure>
+            <figure class="phone phone--after"><figcaption><span class="sw sw--goal"></span>После правки</figcaption>
+              <div class="screen g"><img class="bg" src="img/s-bridge.webp" alt="" loading="lazy">
+                <div class="ov hud" style="left:8%;top:9.2%;width:84%;padding:1.3cqw 2.2cqw">
+                  <div class="row"><span class="dia"></span><div style="flex:1"><div class="hud__t">Capture the bridge</div><div class="hud__s">Opens the road to the next base</div></div><span class="hud__n">0/1</span></div>
+                </div>
+                <div class="mmap" style="left:8%;top:14.2%;width:26%;height:12%">
+                  <svg viewBox="0 0 100 100" aria-hidden="true">
+                    <defs><pattern id="mh" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#F1D9D2"/><rect width="3" height="8" fill="#C93F2F"/></pattern></defs>
+                    <rect width="100" height="100" fill="#E7E2CC"/>
+                    <path d="M0 58 L34 52 L48 62 L44 100 L0 100Z" fill="#14866F" opacity=".75"/>
+                    <path d="M54 0 L100 0 L100 70 L70 62 L58 40Z" fill="url(#mh)"/>
+                    <path d="M36 0 C40 30 34 52 46 64 C56 74 52 88 58 100" fill="none" stroke="#5B8DB8" stroke-width="7"/>
+                    <rect x="36" y="50" width="16" height="7" fill="#7A6A4A" transform="rotate(-12 44 53)"/>
+                    <path d="M44 41 L51 48 L44 55 L37 48Z" fill="#F5C431" stroke="#1D2A21" stroke-width="2"/>
+                    <path d="M14 78 L22 71 L30 78 V88 H14Z" fill="#fff" stroke="#1D2A21" stroke-width="2.5"/>
+                    <path d="M58 70 L66 76 L58 80Z" fill="#1D2A21"/>
+                  </svg>
+                </div>
+                <svg class="ov" viewBox="0 0 432 930" preserveAspectRatio="none" style="left:0;top:0;width:100%;height:100%" aria-hidden="true">
+                  <path d="M222 505 C200 470 170 455 130 436" fill="none" stroke="#F5C431" stroke-width="5" stroke-dasharray="10 9" stroke-linecap="round"/>
+                </svg>
+                <div class="ov" style="left:18%;top:39.5%;display:flex;flex-direction:column;align-items:center;gap:1cqw">
+                  <span class="chipg chipg--gold">Bridge</span><span class="dia" style="width:5cqw;height:5cqw"></span>
+                </div>
+                <div class="edge edge--left" style="left:1.5%;top:30%"><span class="edge__a"></span><span class="chipg" style="background:rgba(24,31,23,.86)">Next base · 140 m</span></div>
+                <span class="spot spot--fix" style="left:5%;top:9.5%">A</span>
+                <span class="spot spot--fix" style="left:36%;top:15%">B</span>
+                <span class="spot spot--fix" style="left:13%;top:37.5%">C</span>
+                <span class="spot spot--fix" style="left:4%;top:34%">D</span>
+              </div></figure>
+          </div>
+        </div>
+        <div class="study__side">
+          <div class="group"><h3>Что мешает сейчас</h3><ol class="pins">
+            <li><span class="pin-n pin-n--bad">1</span><div><b>Цели нет нигде</b>Ни в HUD, ни в мире. Шесть раз за сессию игрок говорит, что не знает, куда идти дальше.</div></li>
+            <li><span class="pin-n pin-n--bad">2</span><div><b>Карта не отличает своё от чужого</b>Нет границы территории, цели и точки возвращения.</div></li>
+            <li><span class="pin-n pin-n--bad">3</span><div><b>Открытый путь не подписан</b>Мост ведёт к следующей базе, но об этом знает только тот, кто уже прошёл.</div></li>
+          </ol></div>
+          <div class="group"><h3>Что меняем</h3><ol class="pins">
+            <li><span class="pin-n pin-n--fix">A</span><div><b>Виджет цели</b>Глагол, объект, прогресс и что откроется. Одна цель за раз; меняется сама по состоянию игры.</div></li>
+            <li><span class="pin-n pin-n--fix">B</span><div><b>Карта как штабная</b>Своё — зелёным, чужое — красной штриховкой, цель — жёлтым ромбом, дом — точка возвращения.</div></li>
+            <li><span class="pin-n pin-n--fix">C</span><div><b>Маркер и путь на земле</b>Пунктир от героя к цели; исчезает, когда цель достигнута.</div></li>
+            <li><span class="pin-n pin-n--fix">D</span><div><b>Стрелка у края</b>Появляется, только если цель за кадром.</div></li>
+          </ol></div>
+          <p class="source">Опора в коде: маркеры точек и ворот уже есть (Minimap.cs:28–32, 320–327). Сценарий целей нужно написать: в GD-сцене массивы задач пустые.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. ЗАХВАТ -->
+  <section class="study" id="capture">
+    <div class="wrap">
+      <div class="study__head">
+        <h2>Захват как договор</h2>
+        <p class="lead">Игрок должен знать условия победы до боя. Тогда новая волна — ожидаемый этап, а не обман.</p>
+        <div class="refs"><a href="problems.html#F02">F02</a><a href="problems.html#F22">F22</a><a href="problems.html#F23">F23</a><a href="problems.html#N6">N6</a></div>
+      </div>
+      <div class="study__grid">
+        <div>
+          <div class="toggle" role="group" aria-label="Что показать"><button type="button" class="chip" data-show="before" aria-pressed="false">Сейчас</button><button type="button" class="chip" data-show="after" aria-pressed="true">После правки</button></div>
+          <div class="phones" data-show="after">
+            <figure class="phone phone--before"><figcaption><span class="sw sw--lost"></span>Сейчас, кадр 22:40</figcaption>
+              <div class="screen"><img class="bg" src="img/s-capture.webp" alt="Кадр 22:40: штурм, условия захвата мелко подписаны в мире справа" loading="lazy">
+                <div class="ring" style="left:79%;top:41%;width:20.5%;height:9%"></div>
+                <span class="spot spot--bad" style="left:76%;top:39%">1</span>
+                <span class="spot spot--bad" style="left:70%;top:72%">2</span>
+                <span class="spot spot--bad" style="left:30%;top:36%">3</span>
+              </div></figure>
+            <figure class="phone phone--after"><figcaption><span class="sw sw--goal"></span>После правки</figcaption>
+              <div class="screen g"><img class="bg" src="img/s-capture.webp" alt="" loading="lazy">
+                <div class="erase" style="left:79%;top:40.5%;width:21%;height:9.5%"></div>
+                <div class="ov hud" style="left:4%;top:27.2%;width:92%">
+                  <div class="row" style="justify-content:space-between"><span class="hud__t">Capture Base 2</span><span class="chipg chipg--red">Source: defenders +100%</span></div>
+                  <div class="segs"><i class="done"></i><i class="done"></i><i class="now"></i><i></i></div>
+                  <div class="hud__s">Wave 3 of 4 · starts in 4 s</div>
+                </div>
+                <div class="ov hud" style="left:14%;top:40%;width:72%;text-align:center;box-shadow:0 0 0 .6cqw #86C440">
+                  <div class="hud__t" style="color:#B9E58A">Wave 2 cleared</div>
+                  <div class="hud__s">Next wave in <b style="color:#fff">4 s</b></div>
+                </div>
+                <div class="ov" style="left:50%;top:86%;transform:translateX(-50%)"><span class="chipg" style="background:rgba(24,31,23,.86)">Leave the circle — the assault restarts</span></div>
+                <span class="spot spot--fix" style="left:5%;top:27%">A</span>
+                <span class="spot spot--fix" style="left:12%;top:40%">B</span>
+                <span class="spot spot--fix" style="left:92%;top:26%">C</span>
+                <span class="spot spot--fix" style="left:10%;top:86%">D</span>
+              </div></figure>
+          </div>
+        </div>
+        <div class="study__side">
+          <div class="group"><h3>Что мешает сейчас</h3><ol class="pins">
+            <li><span class="pin-n pin-n--bad">1</span><div><b>Условия мелко и в мире</b>Waves / Kills / Turrets висят над точкой и теряются среди объектов.</div></li>
+            <li><span class="pin-n pin-n--bad">2</span><div><b>Опасная зона без источника</b>Красный круг есть, а кто его создаёт и как отключить — нет.</div></li>
+            <li><span class="pin-n pin-n--bad">3</span><div><b>Победа обманывает</b>На базе 2 защитники — это только волна 1 из N; следующая выходит через 2 с, без предупреждения.</div></li>
+          </ol></div>
+          <div class="group"><h3>Что меняем</h3><ol class="pins">
+            <li><span class="pin-n pin-n--fix">A</span><div><b>Полоса захвата, как у босса</b>Все волны видны заранее; текущая подсвечена. Это вариант, который предложили на встрече.</div></li>
+            <li><span class="pin-n pin-n--fix">B</span><div><b>Пауза с отсчётом</b>«Волна 2 зачищена, следующая через 4 с» — проверить 4 с вместо нынешних 2.</div></li>
+            <li><span class="pin-n pin-n--fix">C</span><div><b>Источник бафа назван</b>Чип в полосе и линия от источника к усиленным врагам; после разрушения — «−50%».</div></li>
+            <li><span class="pin-n pin-n--fix">D</span><div><b>Правило сброса — до потери</b>Одна строка, пока игрок в круге.</div></li>
+          </ol></div>
+          <p class="source">Balance.cs:1604–1620: для base_2 режим DefendersAsFirstWave, GetWaveDelay = 2 с.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. СНАЙПЕР -->
+  <section class="study" id="sniper">
+    <div class="wrap">
+      <div class="study__head">
+        <h2>Снайпер предупреждает до выстрела</h2>
+        <p class="lead">Сейчас урон приходит из-за края экрана. С телеграфом попадание становится честным, а уклонение — умением. Анимация показывает предложенный ритм.</p>
+        <div class="refs"><a href="problems.html#F06">F06</a></div>
+      </div>
+      <div class="study__grid">
+        <div>
+          <div class="toggle" role="group" aria-label="Что показать"><button type="button" class="chip" data-show="before" aria-pressed="false">Сейчас</button><button type="button" class="chip" data-show="after" aria-pressed="true">После правки</button></div>
+          <div class="phones" data-show="after">
+            <figure class="phone phone--before"><figcaption><span class="sw sw--lost"></span>Сейчас, кадр 13:00</figcaption>
+              <div class="screen"><img class="bg" src="img/s-field.webp" alt="Кадр 13:00: герой теряет здоровье, стрелка не видно" loading="lazy">
+                <span class="spot spot--bad" style="left:62%;top:50%">1</span>
+                <span class="spot spot--bad" style="left:66%;top:12%">2</span>
+              </div></figure>
+            <figure class="phone phone--after"><figcaption><span class="sw sw--goal"></span>После правки</figcaption>
+              <div class="screen g"><img class="bg" src="img/s-field.webp" alt="" loading="lazy">
+                <svg class="ov" viewBox="0 0 432 930" preserveAspectRatio="none" style="left:0;top:0;width:100%;height:100%" aria-hidden="true">
+                  <line class="laser" x1="292" y1="104" x2="221" y2="486" stroke="#FF4A3A" stroke-width="4" stroke-linecap="round" opacity=".95"/>
+                  <line class="laser" x1="292" y1="104" x2="221" y2="486" stroke="#FF4A3A" stroke-width="12" stroke-linecap="round" opacity=".25"/>
+                  <circle class="lockring" cx="221" cy="486" r="30" fill="none" stroke="#FF4A3A" stroke-width="5" stroke-dasharray="12 7"/>
+                </svg>
+                <div class="ov" style="left:60%;top:9.4%;display:flex;flex-direction:column;align-items:center;gap:.6cqw">
+                  <span class="chipg chipg--red" style="font-size:3.2cqw">▲ Sniper</span>
+                </div>
+                <div class="ov" style="left:60%;top:56%"><span class="chipg" style="background:rgba(24,31,23,.86)">Aim 1.2 s · lock 0.25 s</span></div>
+                <span class="spot spot--fix" style="left:84%;top:10.5%">A</span>
+                <span class="spot spot--fix" style="left:66%;top:28%">B</span>
+                <span class="spot spot--fix" style="left:36%;top:52%">C</span>
+              </div></figure>
+          </div>
+        </div>
+        <div class="study__side">
+          <div class="group"><h3>Что мешает сейчас</h3><ol class="pins">
+            <li><span class="pin-n pin-n--bad">1</span><div><b>Урон без источника</b>Здоровье падает, а стрелка не видно. Участники: «снайпер сверху сносит».</div></li>
+            <li><span class="pin-n pin-n--bad">2</span><div><b>Стрелок за краем</b>Нет метки направления — нечего обходить.</div></li>
+          </ol></div>
+          <div class="group"><h3>Что меняем</h3><ol class="pins">
+            <li><span class="pin-n pin-n--fix">A</span><div><b>Метка у края</b>Появляется, как только снайпер заметил героя.</div></li>
+            <li><span class="pin-n pin-n--fix">B</span><div><b>Лазер 1,2 с</b>Прицеливание видно на земле — есть время уйти.</div></li>
+            <li><span class="pin-n pin-n--fix">C</span><div><b>Фиксация 0,25 с</b>Кольцо сжимается перед выстрелом. Оба числа — стартовые значения для проверки на скорости ×1.</div></li>
+          </ol></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ОКНО БАЗЫ -->
+  <section class="study" id="base">
+    <div class="wrap">
+      <div class="study__head">
+        <h2>Окно базы: выпуск отдельно от добычи</h2>
+        <p class="lead">В окне турели написано Production: 216/min — так же, как у шахты. Поэтому игрок принимает турель за ещё одну шахту. В новом окне у каждого источника свой блок, своя причина и своя кнопка.</p>
+        <div class="refs"><a href="problems.html#F10">F10</a><a href="problems.html#F12">F12</a><a href="problems.html#F13">F13</a><a href="problems.html#F14">F14</a><a href="problems.html#F16">F16</a></div>
+      </div>
+      <div class="study__grid">
+        <div>
+          <div class="toggle" role="group" aria-label="Что показать"><button type="button" class="chip" data-show="before" aria-pressed="false">Сейчас</button><button type="button" class="chip" data-show="after" aria-pressed="true">После правки</button></div>
+          <div class="phones" data-show="after">
+            <figure class="phone phone--before"><figcaption><span class="sw sw--lost"></span>Сейчас, кадр 10:50</figcaption>
+              <div class="screen"><img class="bg" src="img/s-turret.webp" alt="Кадр 10:50: окно турели базы 1 с надписью Production 216/min" loading="lazy">
+                <div class="ring" style="left:32%;top:59%;width:46%;height:7.5%"></div>
+                <span class="spot spot--bad" style="left:30%;top:63%">1</span>
+                <span class="spot spot--bad" style="left:84%;top:51%">2</span>
+                <span class="spot spot--bad" style="left:50%;top:87%">3</span>
+                <span class="spot spot--bad" style="left:21%;top:20%">4</span>
+              </div></figure>
+            <figure class="phone phone--after"><figcaption><span class="sw sw--goal"></span>После правки</figcaption>
+              <div class="screen g"><img class="bg" src="img/s-turret.webp" alt="" loading="lazy">
+                <div class="ov" style="left:0;top:8.6%;width:100%;height:91.4%;background:#2B2519"></div>
+                <div class="ov" style="left:3%;top:9.4%;width:94%">
+                  <div class="ribbon out"><div class="win__h" style="font-size:5.4cqw">Base 1</div></div>
+                  <div class="row" style="justify-content:center;margin-top:1.2cqw"><span class="chipg chipg--gold">Level 2</span><span class="chipg" style="background:rgba(24,31,23,.86)">To level 3: factory 0/5 · turrets 3/5</span></div>
+                </div>
+                <div class="ov win" style="left:3%;top:22.5%;bottom:2%;width:94%;padding:1.6cqw 2.4cqw 2.4cqw;display:flex;flex-direction:column">
+                  <div class="sec" style="margin-top:0">
+                    <div class="sec__h"><span>Factory</span><span class="small">manager +20% here</span></div>
+                    <div class="row" style="justify-content:space-between;margin-top:.6cqw"><span class="big out">72 <span style="font-size:3.6cqw">Gear/min</span></span><span class="gb gb--y">Collect 180</span></div>
+                    <div class="small">60 base + 20% manager of this factory</div>
+                    <div class="bar"><i style="width:30%"></i></div>
+                    <div class="small" style="margin-top:.6cqw">Storage 180 / 600 · full in 5:50</div>
+                  </div>
+                  <div class="sec">
+                    <div class="sec__h"><span>Defence</span><span class="small">3 turrets · 3 gunners</span></div>
+                    <div class="big out" style="font-size:5cqw;margin-top:.6cqw">Turrets fire for 8:20</div>
+                    <div class="bar bar--gold"><i style="width:62%"></i></div>
+                    <div class="small" style="margin-top:1cqw">Loot from attackers: <b>+40 tokens</b> · last attack repelled, nothing lost</div>
+                  </div>
+                  <div class="sec">
+                    <div class="sec__h"><span>People</span><span class="small">tap to move</span></div>
+                    <div class="small" style="margin-top:.6cqw">Worker 1/1 · at the factory</div>
+                  </div>
+                  <div class="sec" style="background:#3B3424">
+                    <div class="sec__h" style="color:#F1E6C8"><span>Next upgrade · Factory 6</span><span class="small small--light">you have 1.8K</span></div>
+                    <div class="small small--light" style="margin-top:.8cqw;font-size:3cqw">Production <b style="color:#fff">72</b> → <b style="color:#B9E58A">84</b> Gear/min</div>
+                    <div class="small small--light" style="margin-top:.4cqw;font-size:3cqw">Storage <b style="color:#fff">600</b> → <b style="color:#B9E58A">720</b></div>
+                    <div style="margin-top:1.6cqw"><span class="gb gb--g" style="width:100%">Upgrade · 400 <span class="gear"></span></span></div>
+                  </div>
+                  <div class="row" style="margin-top:auto;padding-top:2cqw;gap:1.4cqw"><span class="gb gb--y" style="flex:1">Factory</span><span class="gb gb--off" style="flex:1">Defence</span><span class="gb gb--off" style="flex:1">Reinforce 🔒</span></div>
+                </div>
+                <span class="spot spot--fix" style="left:5%;top:24.5%">A</span>
+                <span class="spot spot--fix" style="left:5%;top:44%">B</span>
+                <span class="spot spot--fix" style="left:94%;top:16.5%">C</span>
+                <span class="spot spot--fix" style="left:94%;top:31%">D</span>
+                <span class="spot spot--fix" style="left:5%;top:66%">E</span>
+              </div></figure>
+          </div>
+        </div>
+        <div class="study__side">
+          <div class="group"><h3>Что мешает сейчас</h3><ol class="pins">
+            <li><span class="pin-n pin-n--bad">1</span><div><b>У турели «Production»</b>Расчётный доход обороны подписан как выпуск шахты — игрок читает его как постоянное производство.</div></li>
+            <li><span class="pin-n pin-n--bad">2</span><div><b>«TURRET MANAGMENT»</b>Опечатка в заголовке; то же в окне завода.</div></li>
+            <li><span class="pin-n pin-n--bad">3</span><div><b>Добыча и время в одной строке</b>LOOT ×9 → ×10 и 13 → 14 MIN без подписи, что это и почему выросло.</div></li>
+            <li><span class="pin-n pin-n--bad">4</span><div><b>«2/10» без пути</b>Непонятно, что поднимет уровень базы.</div></li>
+          </ol></div>
+          <div class="group"><h3>Что меняем</h3><ol class="pins">
+            <li><span class="pin-n pin-n--fix">A</span><div><b>Завод — постоянный выпуск</b>Скорость, из чего она сложилась, склад и кнопка сбора.</div></li>
+            <li><span class="pin-n pin-n--fix">B</span><div><b>Оборона — время и добыча</b>Сколько ещё стреляют турели и что принесла последняя атака.</div></li>
+            <li><span class="pin-n pin-n--fix">C</span><div><b>Путь к уровню 3</b>Сколько улучшений осталось в каждой категории.</div></li>
+            <li><span class="pin-n pin-n--fix">D</span><div><b>Бонус с адресом</b>«+20% этого завода»: видно, где работает менеджер, а общий бонус ассистента подписан отдельно.</div></li>
+            <li><span class="pin-n pin-n--fix">E</span><div><b>Улучшение: было → стало</b>По строке на параметр — так игрок поймёт, почему оборона стала держаться 10 минут вместо 5.</div></li>
+          </ol></div>
+          <p class="source">Числа в макете — для примера, кроме правил из кода: множитель рабочих, уровень базы после 5 улучшений завода и 5 турелей. Тексты Turret MANAGMENT и Factory Managment — в префабах Turret Base Panel и Mine Base Panel.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ТРЕВОГА -->
+  <section class="study" id="alerts">
+    <div class="wrap">
+      <div class="study__head">
+        <h2>Тревога называет причину</h2>
+        <p class="lead">Сейчас красный знак горит по одному условию — у построенных турелей меньше 30 с стрельбы. У недостроенной базы патронов ещё нет, и знак выглядит как авария. Участник прямо назвал это багом. Четыре состояния — четыре разных сообщения с действием.</p>
+        <div class="refs"><a href="problems.html#F15">F15</a><a href="problems.html#F10">F10</a></div>
+      </div>
+      <div class="study__grid">
+        <div>
+          <div class="toggle" role="group" aria-label="Что показать"><button type="button" class="chip" data-show="before" aria-pressed="false">Сейчас</button><button type="button" class="chip" data-show="after" aria-pressed="true">После правки</button></div>
+          <div class="phones" data-show="after">
+            <figure class="phone phone--before"><figcaption><span class="sw sw--lost"></span>Сейчас, кадр 43:00</figcaption>
+              <div class="screen"><img class="bg" src="img/s-alert.webp" alt="Кадр 43:00: красный знак тревоги на кнопке гарнизона, на базе ничего не происходит" loading="lazy">
+                <div class="ring" style="left:79%;top:47%;width:9%;height:5%"></div>
+                <span class="spot spot--bad" style="left:75%;top:46%">1</span>
+                <span class="spot spot--bad" style="left:52%;top:42%">2</span>
+                <span class="spot spot--bad" style="left:16%;top:50%">3</span>
+              </div></figure>
+            <figure class="phone phone--after"><figcaption><span class="sw sw--goal"></span>После правки</figcaption>
+              <div class="screen g" id="alert-screen"><img class="bg" src="img/s-alert.webp" alt="" loading="lazy">
+                <div class="ov toast" id="alert-toast" style="left:4%;top:9.4%;width:92%">
+                  <span class="toast__i" id="alert-icon">!</span>
+                  <div><div class="toast__t" id="alert-title">Base 2 is not finished</div><div class="toast__s" id="alert-sub">Turrets 2/3 — the base can't launch yet</div></div>
+                  <span class="gb gb--y" id="alert-btn">Build</span>
+                </div>
+                <div class="erase" style="left:79.5%;top:47%;width:8%;height:5%;border-radius:50%"></div>
+                <span class="ov" id="alert-badge" style="left:80.5%;top:47.5%;width:6cqw;height:6cqw;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:3.6cqw;color:#1D2A21;background:#9FB0C0;box-shadow:0 0 0 .5cqw #1D2A21">!</span>
+                <span class="spot spot--fix" style="left:5%;top:9.8%">A</span>
+                <span class="spot spot--fix" style="left:92%;top:52%">B</span>
+              </div></figure>
+          </div>
+          <div class="states" role="group" aria-label="Состояние тревоги">
+            <button type="button" class="chip" data-state="ammo" aria-pressed="false">Мало патронов</button>
+            <button type="button" class="chip" data-state="attack" aria-pressed="false">Атака</button>
+            <button type="button" class="chip" data-state="damaged" aria-pressed="false">Повреждено</button>
+            <button type="button" class="chip" data-state="unbuilt" aria-pressed="true">Не достроено</button>
+          </div>
+        </div>
+        <div class="study__side">
+          <div class="group"><h3>Что мешает сейчас</h3><ol class="pins">
+            <li><span class="pin-n pin-n--bad">1</span><div><b>Знак без причины</b>Срабатывает при запасе стрельбы ≤ 30 с, а в коде этот сигнал записан в поле underAttack.</div></li>
+            <li><span class="pin-n pin-n--bad">2</span><div><b>На базе ничего не изменилось</b>Игрок приходит — разрушений нет, атаки нет. Он перестаёт верить уведомлениям.</div></li>
+            <li><span class="pin-n pin-n--bad">3</span><div><b>Счётчики без подписи</b>«0/1» и «0/720» над базой — неясно, чего не хватает.</div></li>
+          </ol></div>
+          <div class="group"><h3>Что меняем</h3><ol class="pins">
+            <li><span class="pin-n pin-n--fix">A</span><div><b>Сообщение = база + причина + действие</b>Переключите состояния под телефоном: у каждого свой цвет, значок, текст и кнопка. Цвет никогда не единственный признак.</div></li>
+            <li><span class="pin-n pin-n--fix">B</span><div><b>Значок на кнопке — того же состояния</b>Гаснет, когда причина устранена.</div></li>
+          </ol></div>
+          <p class="source">BaseSiegeWarning.cs:64–76; BaseWidget.cs:140–142.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. ГАРНИЗОН -->
+  <section class="study" id="garrison">
+    <div class="wrap">
+      <div class="study__head">
+        <h2>Гарнизон: где люди и что изменит перевод</h2>
+        <p class="lead">«Почему у меня ноль из одного?» — единственный рабочий занят на первой базе, а экран этого не говорит. Люди — главная развилка экономики, её нужно показывать как выбор.</p>
+        <div class="refs"><a href="problems.html#F17">F17</a><a href="problems.html#F24">F24</a><a href="problems.html#F32">F32</a></div>
+      </div>
+      <div class="study__grid">
+        <div>
+          <div class="toggle" role="group" aria-label="Что показать"><button type="button" class="chip" data-show="before" aria-pressed="false">Сейчас</button><button type="button" class="chip" data-show="after" aria-pressed="true">После правки</button></div>
+          <div class="phones" data-show="after">
+            <figure class="phone phone--before"><figcaption><span class="sw sw--lost"></span>Сейчас, кадр 46:40</figcaption>
+              <div class="screen"><img class="bg" src="img/s-garrison.webp" alt="Кадр 46:40: гарнизон, вверху счётчик рабочих 0/1, на карточке 0>1 и кнопка Level Up" loading="lazy">
+                <div class="ring" style="left:73%;top:10%;width:25%;height:5.5%"></div>
+                <span class="spot spot--bad" style="left:70%;top:18%">1</span>
+                <span class="spot spot--bad" style="left:19%;top:88%">2</span>
+                <span class="spot spot--bad" style="left:20%;top:52%">3</span>
+              </div></figure>
+            <figure class="phone phone--after"><figcaption><span class="sw sw--goal"></span>После правки</figcaption>
+              <div class="screen g"><img class="bg" src="img/s-garrison.webp" alt="" loading="lazy">
+                <span class="ov chipg chipg--green" style="left:21%;top:51%">Worker ✓</span>
+                <span class="ov chipg chipg--red" style="left:61%;top:37.5%">No worker</span>
+                <div class="ov win" style="left:2%;top:62%;bottom:1.5%;width:96%;padding:1.8cqw 2.4cqw">
+                  <div class="sec__h" style="color:#3B2F1C"><span>Workers</span><span class="small">total 1 · free 0 · busy 1</span></div>
+                  <div class="sec" style="margin-top:1.2cqw;display:grid;grid-template-columns:1fr auto;gap:.4cqw 2cqw;align-items:center">
+                    <div><div style="font-weight:800;font-size:3.4cqw;color:#3B2F1C">Worker · Base 1, factory</div><div class="small">Base 1 makes 72 Gear/min with him</div></div>
+                    <span class="gb gb--y">Move</span>
+                  </div>
+                  <div class="sec" style="background:#3B3424;color:#fff">
+                    <div class="sec__h" style="color:#F1E6C8"><span>Move to Base 2?</span><span class="gb gb--y" style="font-size:2.8cqw;padding:.8cqw 1.8cqw">Confirm</span></div>
+                    <div class="row" style="justify-content:space-between;margin-top:.8cqw"><span class="small small--light">Base 1 · factory</span><b style="font-size:3.4cqw;color:#FF8C7A">72 → 0 Gear/min</b></div>
+                    <div class="row" style="justify-content:space-between;margin-top:.6cqw"><span class="small small--light">Base 2 · fuel</span><b style="font-size:3.4cqw;color:#B9E58A">0 → 10 Fuel/min</b></div>
+                  </div>
+                </div>
+                <span class="spot spot--fix" style="left:94%;top:65%">A</span>
+                <span class="spot spot--fix" style="left:94%;top:85.5%">B</span>
+                <span class="spot spot--fix" style="left:16%;top:47.5%">C</span>
+              </div></figure>
+          </div>
+        </div>
+        <div class="study__side">
+          <div class="group"><h3>Что мешает сейчас</h3><ol class="pins">
+            <li><span class="pin-n pin-n--bad">1</span><div><b>«0/1» читается двояко</b>Свободно ноль из одного или нанято ноль? Игрок решает, что игра сломалась.</div></li>
+            <li><span class="pin-n pin-n--bad">2</span><div><b>Главная кнопка — купить ещё</b>Level Up за 1K, а найти и перевести своего человека нельзя.</div></li>
+            <li><span class="pin-n pin-n--bad">3</span><div><b>На карте людей не видно</b>Неясно, на какой базе кто работает и где производство стоит.</div></li>
+          </ol></div>
+          <div class="group"><h3>Что меняем</h3><ol class="pins">
+            <li><span class="pin-n pin-n--fix">A</span><div><b>Всего, свободно, занят — и где</b>Каждый человек с базой и тем, что он сейчас даёт.</div></li>
+            <li><span class="pin-n pin-n--fix">B</span><div><b>Предпросмотр перевода</b>Что изменится на обеих базах — до подтверждения. Единственный рабочий — это весь выпуск завода, поэтому «72 → 0», а не «−1».</div></li>
+            <li><span class="pin-n pin-n--fix">C</span><div><b>Состояние баз на карте</b>Где работают, где стоит производство без людей.</div></li>
+          </ol></div>
+          <p class="source">WorkersModule.cs:56 — первый рабочий ×1, каждый следующий +0,5. Топливо 10/мин — для примера.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. ЦЕНА -->
+  <section class="study" id="price">
+    <div class="wrap">
+      <div class="study__head">
+        <h2>Цена: сколько есть, сколько нужно, где взять</h2>
+        <p class="lead">«Сейв ми, босс. Воркер. Но у меня такого нет, извини. Не знаю, где взять». Цена без запаса и источника — тупик. Предложение писать запас через дробь поддержали на встрече.</p>
+        <div class="refs"><a href="problems.html#F28">F28</a><a href="problems.html#N5">N5</a><a href="problems.html#N4">N4</a><a href="problems.html#F33">F33</a></div>
+      </div>
+      <div class="study__grid">
+        <div>
+          <div class="toggle" role="group" aria-label="Что показать"><button type="button" class="chip" data-show="before" aria-pressed="false">Сейчас</button><button type="button" class="chip" data-show="after" aria-pressed="true">После правки</button></div>
+          <div class="phones" data-show="after">
+            <figure class="phone phone--before"><figcaption><span class="sw sw--lost"></span>Сейчас, кадр 59:08</figcaption>
+              <div class="screen"><img class="bg" src="img/s-rescue.webp" alt="Кадр 59:08: окно спасения рабочего с ценой 30" loading="lazy">
+                <div class="ring" style="left:26%;top:61.5%;width:48%;height:7.5%"></div>
+                <span class="spot spot--bad" style="left:22%;top:65%">1</span>
+                <span class="spot spot--bad" style="left:24%;top:43%">2</span>
+              </div></figure>
+            <figure class="phone phone--after"><figcaption><span class="sw sw--goal"></span>После правки</figcaption>
+              <div class="screen g"><img class="bg" src="img/s-rescue.webp" alt="" loading="lazy">
+                <div class="ov win" style="left:2.5%;top:35%;bottom:27%;width:95%;padding:2.4cqw;background:#2E2A1E;box-shadow:inset 0 0 0 .6cqw #4A4330;color:#fff">
+                  <div class="win__h out">Worker</div>
+                  <div class="row" style="justify-content:center;gap:3cqw;margin-top:1.6cqw">
+                    <span style="width:20cqw;height:20cqw;border-radius:2cqw;background:#D7F23A;box-shadow:0 0 0 .6cqw #8A9A2A"></span>
+                    <span class="chipg" style="background:#F1E6C8;color:#3B2F1C;font-size:3.2cqw">Save me, boss!</span>
+                  </div>
+                  <div style="text-align:center;margin-top:2cqw;font-weight:700;font-size:3.4cqw;color:#B9E58A">Starts fuel production at Base 2</div>
+                  <div style="text-align:center;margin-top:2.4cqw"><span class="gb gb--off" style="font-size:3.8cqw">Rescue&nbsp; <span class="need">12</span>&nbsp;/ 30 <span class="coin"></span></span></div>
+                  <div style="text-align:center;margin-top:1.8cqw;font-size:3cqw;font-weight:700">Need 18 more · <span style="color:#F5C431;text-decoration:underline">Where to get ›</span></div>
+                </div>
+                <span class="spot spot--fix" style="left:8%;top:49.5%">A</span>
+                <span class="spot spot--fix" style="left:12%;top:58%">B</span>
+                <span class="spot spot--fix" style="left:90%;top:62.5%">C</span>
+              </div></figure>
+          </div>
+        </div>
+        <div class="study__side">
+          <div class="group"><h3>Что мешает сейчас</h3><ol class="pins">
+            <li><span class="pin-n pin-n--bad">1</span><div><b>«30» без запаса</b>Сколько у меня и сколько не хватает — нужно искать в другом окне.</div></li>
+            <li><span class="pin-n pin-n--bad">2</span><div><b>Неясно, зачем он нужен</b>Окно не говорит, что даст спасённый (N4: «Без понятия, почему он нужен»).</div></li>
+          </ol></div>
+          <div class="group"><h3>Что меняем</h3><ol class="pins">
+            <li><span class="pin-n pin-n--fix">A</span><div><b>Польза одной строкой</b>Что откроет спасение.</div></li>
+            <li><span class="pin-n pin-n--fix">B</span><div><b>«Есть / нужно» на кнопке</b>Недостающее — красным. Так же для всех цен в игре: подкрепление, улучшения, ранговые прокачки.</div></li>
+            <li><span class="pin-n pin-n--fix">C</span><div><b>«Где взять» рядом с ценой</b>Ведёт к настоящему источнику валюты, а не в магазин.</div></li>
+          </ol></div>
+          <p class="source">Цена спасения задаётся в точке на сцене (по умолчанию 50 Gold, ResourceRescuePoint.cs:37). Числа 12 и 18 — для примера.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. ПОДКРЕПЛЕНИЕ -->
+  <section class="study" id="reinforce">
+    <div class="wrap">
+      <div class="study__head">
+        <h2>Подкрепление: условие, запас, выбор водителей</h2>
+        <p class="lead">Вкладка REINFORCE видна в окне базы 2 до постройки здания подкрепления. Внутри панели игрок не видит, хватает ли топлива, сколько ждать и что выгоднее — один водитель или два.</p>
+        <div class="refs"><a href="problems.html#F26">F26</a><a href="problems.html#F28">F28</a><a href="problems.html#F29">F29</a><a href="economy.html#drivers">Расчёт водителей</a></div>
+      </div>
+      <div class="study__grid">
+        <div>
+          <div class="toggle" role="group" aria-label="Что показать"><button type="button" class="chip" data-show="before" aria-pressed="false">Сейчас</button><button type="button" class="chip" data-show="after" aria-pressed="true">После правки</button></div>
+          <div class="phones" data-show="after">
+            <figure class="phone phone--before"><figcaption><span class="sw sw--lost"></span>Сейчас, кадр 43:25</figcaption>
+              <div class="screen"><img class="bg" src="img/s-base2.webp" alt="Кадр 43:25: окно базы 2 с вкладкой REINFORCE" loading="lazy">
+                <div class="ring" style="left:66%;top:91.5%;width:33%;height:7.5%"></div>
+                <span class="spot spot--bad" style="left:62%;top:92%">1</span>
+                <span class="spot spot--bad" style="left:24%;top:38%">2</span>
+                <span class="spot spot--bad" style="left:84%;top:51%">3</span>
+              </div></figure>
+            <figure class="phone phone--after"><figcaption><span class="sw sw--goal"></span>После правки</figcaption>
+              <div class="screen g"><img class="bg" src="img/s-base2.webp" alt="" loading="lazy">
+                <div class="ov" style="left:0;top:8.6%;width:100%;height:91.4%;background:#2B2519"></div>
+                <div class="ov" style="left:3%;top:9.4%;width:94%"><div class="ribbon out"><div class="win__h" style="font-size:5.2cqw">Base 2 · Reinforce</div></div></div>
+                <div class="ov win" style="left:3%;top:18.5%;bottom:2%;width:94%;padding:1.6cqw 2.4cqw 2.4cqw;display:flex;flex-direction:column">
+                  <div class="sec" style="margin-top:0">
+                    <div class="sec__h"><span>Fuel</span><span class="small" style="color:#9E2A1C">need 70 more</span></div>
+                    <div class="row" style="justify-content:space-between;margin-top:.6cqw"><span class="big out"><span class="fuel"></span> 180 <span style="font-size:3.6cqw">/ 250</span></span><span style="font-weight:800;font-size:3cqw;color:#7A5500;text-decoration:underline">Where to get ›</span></div>
+                    <div class="bar bar--red"><i style="width:72%"></i></div>
+                  </div>
+                  <div class="sec">
+                    <div class="sec__h"><span>Drivers</span><span class="small">same 5:00 trip</span></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.6cqw;margin-top:1cqw">
+                      <div style="background:#F5C431;border-radius:1.4cqw;padding:1.4cqw;box-shadow:0 0 0 .5cqw #3B2F1C;color:#2A2116"><b style="font-size:3.4cqw">1 driver</b><div class="small" style="color:#2A2116">250 fuel → 20 XP</div></div>
+                      <div style="background:#D9C79A;border-radius:1.4cqw;padding:1.4cqw;color:#3B2F1C"><b style="font-size:3.4cqw">2 drivers</b><div class="small">500 fuel → 30 XP</div><div class="small" style="color:#9E2A1C">−25% XP per fuel</div></div>
+                    </div>
+                  </div>
+                  <div class="sec">
+                    <div class="sec__h"><span>Trips</span><span class="small">queue 1 / 5</span></div>
+                    <div class="small" style="margin-top:.6cqw">Trip 1 · back in 4:12</div>
+                    <div class="bar"><i style="width:16%"></i></div>
+                    <div class="small" style="margin-top:.8cqw">Every 5th trip: <b>20 hero stars instead of XP</b></div>
+                  </div>
+                  <div style="text-align:center;margin-top:auto;padding-top:2.2cqw"><span class="gb gb--off" style="width:100%">Send trip · need 250 <span class="fuel"></span></span></div>
+                  <div class="row" style="margin-top:2cqw;gap:1.4cqw"><span class="gb gb--off" style="flex:1">Factory</span><span class="gb gb--off" style="flex:1">Defence</span><span class="gb gb--y" style="flex:1">Reinforce</span></div>
+                </div>
+                <span class="spot spot--fix" style="left:5%;top:20.5%">A</span>
+                <span class="spot spot--fix" style="left:5%;top:36%">B</span>
+                <span class="spot spot--fix" style="left:5%;top:52.5%">C</span>
+                <span class="spot spot--fix" style="left:94%;top:11.5%">D</span>
+              </div></figure>
+          </div>
+        </div>
+        <div class="study__side">
+          <div class="group"><h3>Что мешает сейчас</h3><ol class="pins">
+            <li><span class="pin-n pin-n--bad">1</span><div><b>Вкладка до постройки</b>Подкрепление видно и, по словам участника, запускается без здания.</div></li>
+            <li><span class="pin-n pin-n--bad">2</span><div><b>Замок без условия</b>Set Manager закрыт, но не сказано, что его откроет.</div></li>
+            <li><span class="pin-n pin-n--bad">3</span><div><b>Опечатка MANAGMENT</b>Та же, что в окне турели базы 1.</div></li>
+          </ol></div>
+          <div class="group"><h3>Что меняем</h3><ol class="pins">
+            <li><span class="pin-n pin-n--fix">A</span><div><b>Запас топлива с недостачей</b>И переход к источнику.</div></li>
+            <li><span class="pin-n pin-n--fix">B</span><div><b>Выбор водителей как выбор</b>Второй водитель даёт в 1,5 раза больше опыта за вдвое большую цену, время рейса то же.</div></li>
+            <li><span class="pin-n pin-n--fix">C</span><div><b>Очередь и награда названы</b>Сколько ждать и что даст каждый пятый рейс.</div></li>
+            <li><span class="pin-n pin-n--fix">D</span><div><b>Подкрепление — с условием</b>До постройки вкладка показывает «Постройте здание подкрепления — 200 Fuel» с кнопкой, а не панель запуска.</div></li>
+          </ol></div>
+          <p class="source">Balance.cs:2145 — слотов водителей столько, каков уровень базы (максимум 5); 2184–2213 — 250 Fuel × 2^(водители − 1), 20 XP × 1,5^(водители − 1), рейс 300 с; каждый пятый рейс вместо опыта даёт 20 именных звёзд помощников базы (2160–2178; ReinforceModule.cs:172–174); 1566, 1578 — здание стоит 200 Fuel. ReinforceModule.cs:152–180 — запуск проверяет постройку.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. ПОМОЩНИК -->
+  <section class="study" id="companion">
+    <div class="wrap">
+      <div class="study__head">
+        <h2>Помощник: получить, поставить, убрать</h2>
+        <p class="lead">Спасённый повар «исчез» с карты, а уведомление не объяснило, кто это и где он, — ценность первой награды потерялась. Нужна карточка с ролью и одной кнопкой, а убирать из отряда — тем же жестом, что и добавлять.</p>
+        <div class="refs"><a href="problems.html#F18">F18</a><a href="problems.html#F27">F27</a><a href="problems.html#N4">N4</a></div>
+      </div>
+      <div class="study__grid">
+        <div>
+          <div class="toggle" role="group" aria-label="Что показать"><button type="button" class="chip" data-show="before" aria-pressed="false">Сейчас</button><button type="button" class="chip" data-show="after" aria-pressed="true">После правки</button></div>
+          <div class="phones" data-show="after">
+            <figure class="phone phone--before"><figcaption><span class="sw sw--lost"></span>Сейчас, кадр 34:00</figcaption>
+              <div class="screen"><img class="bg" src="img/x-3400.webp" alt="Кадр 34:00: экран отряда Battle Crew с кнопками Info и Remove" loading="lazy">
+                <div class="ring" style="left:4.5%;top:25.8%;width:21.5%;height:8.6%"></div>
+                <span class="spot spot--bad" style="left:30%;top:31%">1</span>
+                <span class="spot spot--bad" style="left:63%;top:24%">2</span>
+                <span class="spot spot--bad" style="left:52%;top:62%">3</span>
+              </div></figure>
+            <figure class="phone phone--after"><figcaption><span class="sw sw--goal"></span>После правки</figcaption>
+              <div class="screen g"><img class="bg" src="img/x-3400.webp" alt="" loading="lazy">
+                <div class="ov" style="left:0;top:0;width:100%;height:100%;background:rgba(20,18,12,.72)"></div>
+                <div class="ov win" style="left:7%;top:17%;width:86%;padding:2.4cqw;text-align:center">
+                  <div class="ribbon out" style="margin:-4.6cqw -1cqw 2cqw"><div class="win__h" style="font-size:5cqw">Cook rescued!</div></div>
+                  <div class="portrait" style="width:30cqw;aspect-ratio:95/130;margin:0 auto;background-image:url(img/s-cook.webp);background-size:454.7% auto;background-position:13.46% 14.5%"></div>
+                  <div style="font-weight:800;font-size:4.4cqw;margin-top:2cqw;color:#3B2F1C">Healer</div>
+                  <div class="small" style="font-size:3cqw;margin-top:.6cqw">Heals you and the squad every second</div>
+                  <div class="row" style="justify-content:center;gap:2cqw;margin-top:2.4cqw"><span class="gb gb--y" style="font-size:3.8cqw">Add to squad</span><span class="gb gb--off">Later</span></div>
+                </div>
+                <div class="ov" style="left:14%;top:72%;display:flex;gap:3cqw;align-items:center">
+                  <div style="position:relative;width:17cqw;aspect-ratio:95/130"><div class="portrait" style="width:100%;height:100%;background-image:url(img/s-cook.webp);background-size:454.7% auto;background-position:13.46% 14.5%"></div><span style="position:absolute;right:-2cqw;top:-2cqw;width:6.4cqw;height:6.4cqw;border-radius:50%;background:#E0483A;color:#fff;display:grid;place-items:center;font-weight:800;font-size:3.8cqw;box-shadow:0 0 0 .5cqw #fff">✕</span></div>
+                  <span class="chipg" style="background:rgba(24,31,23,.9);font-size:3cqw">✕ — remove from squad</span>
+                </div>
+                <span class="spot spot--fix" style="left:12%;top:18%">A</span>
+                <span class="spot spot--fix" style="left:28%;top:63.5%">B</span>
+                <span class="spot spot--fix" style="left:10%;top:79%">C</span>
+              </div></figure>
+          </div>
+        </div>
+        <div class="study__side">
+          <div class="group"><h3>Что мешает сейчас</h3><ol class="pins">
+            <li><span class="pin-n pin-n--bad">1</span><div><b>Убрать — маленькая кнопка под портретом</b>Remove пришлось объяснять голосом.</div></li>
+            <li><span class="pin-n pin-n--bad">2</span><div><b>Слот закрыт значком звания</b>Без текста, какое звание нужно и как его получить.</div></li>
+            <li><span class="pin-n pin-n--bad">3</span><div><b>«Отряд» и «на базе» — два списка без объяснения</b>Available / Not assigned at a base читается как техническая строка.</div></li>
+          </ol></div>
+          <div class="group"><h3>Что меняем</h3><ol class="pins">
+            <li><span class="pin-n pin-n--fix">A</span><div><b>Карточка спасения</b>Портрет, роль одной строкой и что он делает.</div></li>
+            <li><span class="pin-n pin-n--fix">B</span><div><b>Одна главная кнопка</b>«В отряд» сразу; если слоты заняты — выбор, кого заменить.</div></li>
+            <li><span class="pin-n pin-n--fix">C</span><div><b>Крестик в углу слота</b>Как предложили на встрече; после снятия — «вернулся в коллекцию».</div></li>
+          </ol></div>
+          <p class="source">Портрет повара взят из кадра 57:40. Повар нравится игрокам (лечение заметно) — карточка должна это усилить, а не заменить.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. НАЗАД -->
+  <section class="study" id="back">
+    <div class="wrap">
+      <div class="study__head">
+        <h2>«Назад» работает с первого нажатия</h2>
+        <p class="lead">Единственный блокер P0. В окне менеджера кнопка «Назад» срабатывает только верхним левым углом — игрок застревает.</p>
+        <div class="refs"><a href="problems.html#F20">F20</a></div>
+      </div>
+      <div class="study__grid">
+        <div>
+          <div class="toggle" role="group" aria-label="Что показать"><button type="button" class="chip" data-show="before" aria-pressed="false">Сейчас</button><button type="button" class="chip" data-show="after" aria-pressed="true">После правки</button></div>
+          <div class="phones" data-show="after">
+            <figure class="phone phone--before"><figcaption><span class="sw sw--lost"></span>Сейчас, кадр 09:55</figcaption>
+              <div class="screen"><img class="bg" src="img/s-manager.webp" alt="Кадр 09:55: окно менеджера с маленькой кнопкой «Назад» в левом верхнем углу" loading="lazy">
+                <div class="ring" style="left:5%;top:4.6%;width:10.5%;height:5.4%"></div>
+                <div class="ov" style="left:5.6%;top:5%;width:3.6%;height:1.8%;background:#C93F2F;opacity:.85"></div>
+                <span class="spot spot--bad" style="left:20%;top:4%">1</span>
+                <span class="spot spot--bad" style="left:40%;top:12%">2</span>
+              </div></figure>
+            <figure class="phone phone--after"><figcaption><span class="sw sw--goal"></span>После правки</figcaption>
+              <div class="screen g"><img class="bg" src="img/s-manager.webp" alt="" loading="lazy">
+                <div class="ov" style="left:0;top:2.6%;width:20.4%;height:9.5%;border:.7cqw dashed #F5C431;border-radius:2cqw;background:rgba(245,196,49,.16)"></div>
+                <div class="ov" style="left:5%;top:4.6%;width:10.5%;height:5.4%;border-radius:1.4cqw;box-shadow:0 0 0 .8cqw #F5C431"></div>
+                <span class="ov chipg chipg--gold" style="left:22%;top:5.6%">44 pt tap area</span>
+                <span class="spot spot--fix" style="left:21%;top:12.5%">A</span>
+              </div></figure>
+          </div>
+        </div>
+        <div class="study__side">
+          <div class="group"><h3>Что мешает сейчас</h3><ol class="pins">
+            <li><span class="pin-n pin-n--bad">1</span><div><b>Работает только угол</b>Красный квадрат — та часть, на которую советовали нажимать на встрече.</div></li>
+            <li><span class="pin-n pin-n--bad">2</span><div><b>Что-то перекрывает кнопку</b>Вероятный кандидат — портрет и плашка менеджера рядом с кнопкой; проверить raycastTarget и порядок слоёв.</div></li>
+          </ol></div>
+          <div class="group"><h3>Что меняем</h3><ol class="pins">
+            <li><span class="pin-n pin-n--fix">A</span><div><b>Вся кнопка плюс поля</b>Нажимаемая зона не меньше 44 pt — около 120×120 единиц канваса окна (1080×2338). Декор рядом не ловит нажатия. Системная «Назад» на Android закрывает верхнее окно.</div></li>
+          </ol></div>
+          <p class="source">В UI-патче cadc0c1 есть IBackHandler и UiSafeArea — основа для единого «Назад» уже есть; проверить на итоговой сцене и телефоне.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Шесть правил для всех экранов</h2>
+        <p class="lead">Вывод из десяти разборов: их стоит закрепить в гайде интерфейса, чтобы новые окна не повторяли старые ошибки.</p>
+      </div>
+      <ol class="protocol">
+        <li><b>Одна цель на экране.</b> Глагол, объект, прогресс, награда; стрелка, если цель за кадром.</li>
+        <li><b>Над объектом одна подпись.</b> Действие или прогресс; подробности по тапу.</li>
+        <li><b>У каждого нуля — причина и кнопка.</b> «Нет рабочего [Назначить]», а не «0».</li>
+        <li><b>У каждой цены — «есть / нужно» и «Где взять».</b> Недостающее — красным.</li>
+        <li><b>Было → стало по строке на параметр.</b> Особенно у улучшений и переводов людей.</li>
+        <li><b>Нажимаемая зона от 44 pt, состояние — не только цветом.</b> Значок и текст дублируют цвет.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div>Макеты — предложения, а не снимки готовых экранов. Числа в макетах для примера, кроме правил, подтверждённых кодом (подписаны под каждым экраном).</div>
+    <nav aria-label="Разделы"><a href="index.html">Обзор</a><a href="problems.html">Проблемы</a><a href="economy.html">Экономика</a><a href="plan.html">План</a></nav>
+  </div>
+</footer>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  // состояния тревоги
+  (function () {
+    var S = {
+      ammo: { c: "#F5C431", i: "◷", t: "Base 1: low ammo", s: "Turrets go silent in 0:30", b: "Deliver" },
+      attack: { c: "#E0483A", i: "!", t: "Base 1 under attack", s: "3 enemies at the factory", b: "Defend" },
+      damaged: { c: "#E8873A", i: "✚", t: "Base 1 factory damaged", s: "Production stopped · auto-repair in 0:42", b: "Go" },
+      unbuilt: { c: "#9FB0C0", i: "▲", t: "Base 2 is not finished", s: "Turrets 2/3 — the base can't launch yet", b: "Build" }
+    };
+    var toast = document.getElementById("alert-toast");
+    if (!toast) return;
+    document.querySelectorAll("[data-state]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var s = S[b.dataset.state];
+        toast.style.setProperty("--tc", s.c);
+        document.getElementById("alert-icon").textContent = s.i;
+        document.getElementById("alert-title").textContent = s.t;
+        document.getElementById("alert-sub").textContent = s.s;
+        document.getElementById("alert-btn").textContent = s.b;
+        var badge = document.getElementById("alert-badge");
+        badge.style.background = s.c; badge.textContent = s.i;
+        document.querySelectorAll("[data-state]").forEach(function (x) { x.setAttribute("aria-pressed", x === b); });
+      });
+    });
+    toast.style.setProperty("--tc", S.unbuilt.c);
+  })();
+</script>
+</body>
+</html>

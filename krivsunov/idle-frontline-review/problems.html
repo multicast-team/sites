@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Проблемы — Idle Frontline, разбор плейтеста</title>
+<meta name="description" content="40 замечаний по Idle Frontline: кадр записи, реплика игрока, причина, правка и критерий готовности.">
+<meta name="theme-color" content="#ECEEE5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400..800&family=Sofia+Sans+Extra+Condensed:wght@700..900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="problems">
+<a class="skip" href="#main">К содержанию</a>
+<header class="top">
+  <div class="top__in">
+    <a class="brand" href="index.html"><b>Idle Frontline</b><span>разбор плейтеста</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Разделы</button>
+    <nav class="nav" id="nav" aria-label="Разделы сайта">
+      <a href="index.html">Обзор</a>
+      <a href="problems.html" aria-current="page">Проблемы</a>
+      <a href="screens.html">Экраны</a>
+      <a href="economy.html">Экономика</a>
+      <a href="plan.html">План</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section" style="padding-top:56px">
+    <div class="wrap">
+      <div class="section__head">
+        <h1 class="h2">40 замечаний из записи</h1>
+        <p class="lead">У каждого пункта — кадр и реплика из записи, причина с точки зрения геймдизайна, конкретная правка и критерий готовности. Где помог код игры, указан файл и строка.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);gap:24px 48px;align-items:start" class="sp-wrap">
+        <div>
+          <div class="grid-sp" id="grid-sp" role="group" aria-label="Замечания по системам и приоритетам"></div>
+          <p class="note" style="margin-top:8px">Нажмите на число, чтобы отфильтровать список.</p>
+        </div>
+        <div class="measure" style="font-size:16px;color:var(--ink-2)">
+          <h2 class="h3" style="margin-bottom:8px">Как читать приоритеты</h2>
+          <p><span class="pri pri--P0">P0 блокер</span> — игрок не может продолжить; закрыть до любого теста.</p>
+          <p><span class="pri pri--P1">P1</span> — игрок теряет понимание игры или ресурс; закрывается в волнах 1–3.</p>
+          <p><span class="pri pri--P2">P2</span> — мешает, но обходится; часто закрывается попутно с общей правкой.</p>
+          <p class="note">Пункты <b>F01–F33</b> выделены при первом разборе, <b>N1–N7</b> найдены при повторной проверке всей расшифровки.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="filters" id="filters">
+    <div class="wrap filters__row">
+      <div class="fgroup" id="f-sys" aria-label="Система"></div>
+      <div class="fgroup"><span>Приоритет</span><span id="f-p" class="fgroup"></span></div>
+      <div class="fgroup"><span>Тип</span><span id="f-kind" class="fgroup"></span></div>
+      <div class="fgroup">
+        <label class="sr-only" for="f-q">Поиск</label>
+        <input class="search" id="f-q" type="search" placeholder="Поиск: топливо, снайпер…">
+        <label class="sr-only" for="f-sort">Порядок</label>
+        <select id="f-sort" class="search" style="width:auto">
+          <option value="time">По времени в записи</option>
+          <option value="pri">По приоритету</option>
+        </select>
+        <button type="button" class="chip" id="f-reset">Сбросить</button>
+      </div>
+      <span class="filters__meta" id="f-count" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="items" id="items"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div>Цитаты — по автоматической расшифровке записи, длинные реплики сокращены многоточием. Объём: S — до дня, M — 2–4 дня, L — неделя и больше; это оценка аналитика, её нужно пересчитать с командой.</div>
+    <nav aria-label="Разделы"><a href="index.html">Обзор</a><a href="screens.html">Экраны</a><a href="economy.html">Экономика</a><a href="plan.html">План</a></nav>
+  </div>
+</footer>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

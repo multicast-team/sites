@@ -1,0 +1,80 @@
+/* Макеты интерфейса игры поверх кадров записи. Все размеры в cqw — от ширины телефона. */
+.g { font-family: var(--font-game); color: #fff; line-height: 1.15; }
+.g * { box-sizing: border-box; }
+.ov { position: absolute; z-index: 3; }
+.out { text-shadow: 0 .35cqw 0 #2A2116, .3cqw 0 0 #2A2116, -.3cqw 0 0 #2A2116, 0 -.3cqw 0 #2A2116; }
+
+/* HUD-плашки (как «Cheats» в игре) */
+.hud { background: rgba(24, 31, 23, .86); border-radius: 2.6cqw; box-shadow: 0 0 0 .5cqw rgba(255,255,255,.18); padding: 1.6cqw 2.4cqw; }
+.hud__t { font-weight: 800; font-size: 3.9cqw; letter-spacing: .02em; text-transform: uppercase; }
+.hud__s { font-weight: 500; font-size: 2.9cqw; color: #D9DECF; margin-top: .4cqw; }
+.hud__n { font-weight: 800; font-size: 4.4cqw; color: #F5C431; }
+.row { display: flex; align-items: center; gap: 2cqw; }
+.dia { width: 4.2cqw; height: 4.2cqw; transform: rotate(45deg); background: #F5C431; box-shadow: 0 0 0 .5cqw #1D2A21; flex: none; margin: 0 .8cqw; }
+.chipg { display: inline-flex; align-items: center; gap: 1cqw; font-weight: 700; font-size: 2.8cqw; padding: .6cqw 1.6cqw; border-radius: 99px; background: rgba(255,255,255,.14); color: #fff; white-space: nowrap; }
+.chipg--red { background: #C93F2F; }
+.chipg--green { background: #2F8A55; }
+.chipg--gold { background: #F5C431; color: #1D2A21; }
+
+/* игровые окна */
+.win { background: #CBB37B; border: .9cqw solid #3B2F1C; border-radius: 2cqw; box-shadow: inset 0 0 0 .6cqw #E1CC97; color: #3B2F1C; }
+.win__h { font-weight: 800; font-size: 4.6cqw; text-transform: uppercase; color: #fff; text-align: center; }
+.ribbon { background: #7C9B3E; border: .8cqw solid #2F3A16; border-radius: 1cqw; padding: 1.4cqw 3cqw; text-align: center; box-shadow: inset 0 -1cqw 0 #5E7A2A; }
+.sec { background: #B79D66; border-radius: 1.4cqw; padding: 2cqw 2.4cqw; margin-top: 2cqw; box-shadow: inset 0 0 0 .4cqw #A88D57; }
+.sec__h { font-weight: 800; font-size: 3.1cqw; text-transform: uppercase; color: #3B2F1C; letter-spacing: .03em; display: flex; justify-content: space-between; align-items: center; }
+.big { font-weight: 800; font-size: 6.4cqw; color: #fff; }
+.small { font-size: 2.8cqw; font-weight: 600; color: #4A3C22; }
+.small--light { color: #F1E6C8; }
+.bar { height: 2.4cqw; background: #6B5A37; border-radius: 99px; overflow: hidden; margin-top: 1cqw; }
+.bar > i { display: block; height: 100%; background: #86C440; border-radius: 99px; }
+.bar--gold > i { background: #F5C431; }
+.bar--red > i { background: #E0483A; }
+
+/* кнопки игры */
+.gb { display: inline-flex; align-items: center; justify-content: center; gap: 1cqw; font-weight: 800; font-size: 3.4cqw; text-transform: uppercase; border-radius: 1.6cqw; padding: 1.4cqw 2.6cqw; color: #2A2116; white-space: nowrap; }
+.gb--y { background: #F5C431; box-shadow: inset 0 -1cqw 0 #C08A12, 0 0 0 .5cqw #3B2F1C; }
+.gb--g { background: #86C440; box-shadow: inset 0 -1cqw 0 #5E9A2A, 0 0 0 .5cqw #2F3A16; color: #fff; }
+.gb--off { background: #A89B7A; box-shadow: inset 0 -1cqw 0 #85795C, 0 0 0 .5cqw #3B2F1C; color: #F4EEDC; }
+.gb--ghost { background: transparent; color: #fff; box-shadow: 0 0 0 .4cqw rgba(255,255,255,.6); }
+.gb .need { color: #E0483A; }
+.coin { display: inline-block; width: 3.2cqw; height: 3.2cqw; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #FFE58A, #E3A21B 60%, #A8700E); box-shadow: 0 0 0 .3cqw #6B4708; vertical-align: -.5cqw; }
+.gear { display: inline-block; width: 3.2cqw; height: 3.2cqw; border-radius: 50%; background: #9FB0C0; box-shadow: 0 0 0 .5cqw #5C6B7A inset; vertical-align: -.5cqw; }
+.fuel { display: inline-block; width: 2.6cqw; height: 3.4cqw; border-radius: .6cqw; background: #D9473A; box-shadow: inset 0 .8cqw 0 #F07A5E; vertical-align: -.6cqw; }
+
+/* тосты тревоги */
+.toast { display: grid; grid-template-columns: 8cqw 1fr auto; gap: 2cqw; align-items: center; border-radius: 2.4cqw; padding: 2cqw 2.4cqw; background: rgba(24,31,23,.92); box-shadow: 0 0 0 .6cqw var(--tc, #F5C431); }
+.toast__i { width: 8cqw; height: 8cqw; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 4.6cqw; color: #1D2A21; background: var(--tc, #F5C431); }
+.toast__t { font-weight: 800; font-size: 3.4cqw; text-transform: uppercase; }
+.toast__s { font-size: 2.8cqw; color: #D9DECF; margin-top: .4cqw; }
+
+/* стёртые подписи */
+.erase { position: absolute; z-index: 2; backdrop-filter: blur(1.4cqw) saturate(.6); -webkit-backdrop-filter: blur(1.4cqw) saturate(.6); background: rgba(110, 130, 100, .35); border-radius: 2cqw; }
+
+/* мини-карта */
+.mmap { position: absolute; z-index: 3; border-radius: 1.4cqw; overflow: hidden; box-shadow: 0 0 0 .5cqw #1D2A21; }
+.mmap svg { display: block; width: 100%; height: 100%; }
+
+/* стрелка у края */
+.edge { position: absolute; z-index: 3; display: flex; align-items: center; gap: 1cqw; }
+.edge__a { width: 0; height: 0; border-top: 3.4cqw solid transparent; border-bottom: 3.4cqw solid transparent; }
+.edge--left .edge__a { border-right: 5cqw solid #F5C431; filter: drop-shadow(0 0 .5cqw #1D2A21); }
+
+/* портрет из кадра */
+.portrait { border-radius: 1.6cqw; background-repeat: no-repeat; box-shadow: 0 0 0 .6cqw #3B2F1C; }
+
+/* анимации снайпера — только без reduced motion */
+@keyframes laser { 0%, 15% { opacity: 0; } 30%, 80% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes lock { 0%, 60% { transform: scale(1.6); opacity: 0; } 75% { opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+.laser { animation: laser 2.4s ease-in-out infinite; }
+.lockring { animation: lock 2.4s ease-in infinite; transform-origin: center; transform-box: fill-box; }
+@media (prefers-reduced-motion: reduce) { .laser, .lockring { animation: none; } }
+
+/* переключатель состояний тревоги */
+.states { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 0; }
+.states .chip { font-size: 13.5px; }
+
+/* сегменты полосы захвата */
+.segs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2cqw; margin-top: 1.4cqw; }
+.segs i { height: 2.2cqw; border-radius: 99px; background: rgba(255,255,255,.22); }
+.segs i.done { background: #86C440; }
+.segs i.now { background: #F5C431; box-shadow: 0 0 0 .4cqw rgba(245,196,49,.35); }

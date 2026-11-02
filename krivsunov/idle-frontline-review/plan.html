@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>План — Idle Frontline, разбор плейтеста</title>
+<meta name="description" content="Что исправлять в Idle Frontline и в каком порядке: матрица влияния и усилий, пять волн работ, первые 10 минут, протокол следующего плейтеста.">
+<meta name="theme-color" content="#ECEEE5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400..800&family=Sofia+Sans+Extra+Condensed:wght@700..900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="plan">
+<a class="skip" href="#main">К содержанию</a>
+<header class="top">
+  <div class="top__in">
+    <a class="brand" href="index.html"><b>Idle Frontline</b><span>разбор плейтеста</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Разделы</button>
+    <nav class="nav" id="nav" aria-label="Разделы сайта">
+      <a href="index.html">Обзор</a>
+      <a href="problems.html">Проблемы</a>
+      <a href="screens.html">Экраны</a>
+      <a href="economy.html">Экономика</a>
+      <a href="plan.html" aria-current="page">План</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section" style="padding-top:56px">
+    <div class="wrap">
+      <div class="section__head">
+        <h1 class="h2">Что делать и в каком порядке</h1>
+        <p class="lead">25 правок закрывают все 40 замечаний. Слева вверху — то, что сильно помогает игроку и делается быстро. Наведите или нажмите на точку, чтобы увидеть, какие пункты закрывает правка.</p>
+      </div>
+      <div class="matrix-wrap">
+        <div id="matrix"></div>
+        <aside class="matrix-side">
+          <h3>Сделать сразу</h3>
+          <ul class="qlist" id="q-now"></ul>
+          <h3>Главные ставки</h3>
+          <ul class="qlist" id="q-big"></ul>
+          <h3>Заодно и позже</h3>
+          <ul class="qlist" id="q-rest"></ul>
+          <p class="note">Влияние и усилия — оценка аналитика по записи и коду, её нужно пересчитать с командой. Красные квадраты — волна 0 (блокер P0 и быстрые правки до следующего теста), их делать первыми независимо от места на матрице.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Пять волн работ</h2>
+        <p class="lead">Порядок важнее сроков: волны 1 и 2 идут параллельно, волны 3 и 4 — после проверки их результата. Новую карту, новый бой и новую экономику не стоит смешивать в одном тесте — иначе не понять, что сработало.</p>
+      </div>
+      <div class="waves" id="waves"></div>
+      <p class="note" style="margin-top:12px">S — до дня, M — 2–4 дня, L — неделя и больше.</p>
+    </div>
+  </section>
+
+  <section class="section" id="ftue">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Первые 10 минут: как есть и как предлагаем</h2>
+        <p class="lead">Запись начинается не с установки: игрок уже прошёл начало. Поэтому верхняя дорожка — первые 13 минут записи, нижняя — предлагаемый первый цикл для нового игрока.</p>
+      </div>
+      <div class="lanes">
+        <div class="lane lane--now">
+          <h3><span class="sw sw--lost"></span>Сейчас, по записи</h3>
+          <div class="steps">
+            <div class="step is-lost"><time>00:17</time><b>Рассказ о базе 2</b><span>После первого защитника пришли новые: «И меня это очень расстроило»</span></div>
+            <div class="step is-lost"><time>02:09</time><b>Построил базу</b><span>«Честно, я не знаю, что мне дальше делать»</span></div>
+            <div class="step is-lost"><time>05:58</time><b>Спас повара</b><span>Повар пропал с карты: «Он исчез!»</span></div>
+            <div class="step"><time>06:25</time><b>Спас носильщика</b><span>Носильщик забрал ручную доставку, хотя нехватки патронов не было</span></div>
+            <div class="step is-lost"><time>08:07</time><b>Заряжает пушки</b><span>«А что будет, если я не буду заряжать пушки?»</span></div>
+            <div class="step is-lost"><time>09:49</time><b>Окно менеджера</b><span>Не может выйти — блокер P0</span></div>
+            <div class="step is-lost"><time>12:23</time><b>Ищет путь</b><span>«Я не понимаю, куда мне идти в целом»</span></div>
+          </div>
+        </div>
+        <div class="lane lane--next">
+          <h3><span class="sw sw--goal"></span>Предлагаем: первый цикл за 8–12 минут при ×1</h3>
+          <div class="steps">
+            <div class="step"><b>Захват базы 1</b><span>Все волны видны заранее, победа — после последней</span></div>
+            <div class="step"><b>Завод и рабочий</b><span>Первый доход — раньше пушек</span></div>
+            <div class="step"><b>Первый сбор</b><span>Купить улучшение и увидеть эффект</span></div>
+            <div class="step"><b>Короткая атака</b><span>Защитить уже работающий завод</span></div>
+            <div class="step"><b>Турель и ящик</b><span>Оборона — ответ на угрозу, а не обязательная стройка</span></div>
+            <div class="step"><b>Спасти повара</b><span>Карточка с ролью и кнопкой «В отряд»</span></div>
+            <div class="step"><b>Цель: мост</b><span>Следующий рубеж и путь к базе 2</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="note" style="margin-top:14px">8–12 минут — стартовая цель для проверки, а не замер. Сейчас повар стоит 1000 Token (раньше 200) — проверить, укладывается ли его спасение в этот отрезок. В коде есть флаг RequireFactoryProductionForBaseAttack: нападения начинаются только после запуска завода. Сейчас он выключен («нападение теперь начинается с запуска базы») — обсудить, включить ли его для первой базы.</p>
+    </div>
+  </section>
+
+  <section class="section" id="test">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Как проверить следующий билд</h2>
+        <p class="lead">6–8 новых игроков, одинаковый старт, скорость ×1, без меню Cheats. Наблюдатель молчит и отмечает, где игрок потерял цель, сколько бегал зря и что понял неправильно.</p>
+      </div>
+      <div class="two">
+        <div>
+          <h3 style="margin-bottom:12px">Восемь задач для игрока</h3>
+          <ol class="protocol" style="grid-template-columns:1fr">
+            <li>Найти следующую цель и сказать, что даст её выполнение.</li>
+            <li>До боя объяснить, сколько волн будет и когда штурм сбросится.</li>
+            <li>Различить выпуск завода, добычу обороны и причину простоя.</li>
+            <li>Перевести рабочего, заранее сказав выпуск обеих баз.</li>
+            <li>Получить помощника, поставить в отряд и убрать.</li>
+            <li>Запустить рейс подкрепления и потратить награду.</li>
+            <li>Найти источник валюты и понять, когда он обновится.</li>
+            <li>Вернуться на нужную базу и восстановить работу.</li>
+          </ol>
+        </div>
+        <div>
+          <h3 style="margin-bottom:12px">Критерии успеха</h3>
+          <table class="list list--wrap">
+            <thead><tr><th>Метрика</th><th>Цель</th><th>Как мерить</th></tr></thead>
+            <tbody>
+              <tr><td>Блокеры взаимодействия</td><td>0</td><td>Наблюдатель</td></tr>
+              <tr><td>Захват базы 2 без подсказки</td><td>≥ 75% игроков</td><td>Протокол</td></tr>
+              <tr><td>От результата до следующего действия</td><td>медиана ≤ 15 с</td><td>objective_action</td></tr>
+              <tr><td>Моменты растерянности (что делать, где взять, как выйти)</td><td>меньше 14 за час</td><td>Запись сессии</td></tr>
+              <tr><td>Повторы замечаний P0–P1</td><td>нет</td><td>Сверка с этим разбором</td></tr>
+            </tbody>
+          </table>
+          <h3 style="margin:24px 0 10px">События для аналитики</h3>
+          <p class="note" style="font-size:15px">base1_captured, factory_built, first_collect, first_upgrade, first_siege_defended, companion_equipped, base2_captured, reinforce_started, reward_spent, desert_entered — время от установки до каждого шага покажет, где теряется темп. Плюс objective_action, capture_outcome, workforce_transfer, resource_blocked.</p>
+          <p class="note">Цели — стартовые гипотезы, а не замеры. Это поиск проблем, а не доказательство влияния на удержание.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two">
+      <div>
+        <h2 style="margin-bottom:16px">Уже договорились на встрече</h2>
+        <p class="note" style="margin-bottom:12px;font-size:15.5px">Эти пункты не требуют нового решения — можно брать в работу.</p>
+        <table class="list" id="agreed"></table>
+      </div>
+      <div>
+        <h2 style="margin-bottom:16px">Чего не делать сейчас</h2>
+        <ul class="donts">
+          <li>Новый инвентарь и управление оружием — на встрече подтвердили, что такой системы нет; это не задача текущего билда.</li>
+          <li>Новые валюты — сначала показать источники уже существующих.</li>
+          <li>Переделку всей карты — сначала прототип фронта на одном участке.</li>
+          <li>Общий быстрый переход между базами — сначала сократить лишнюю беготню расстановкой баз и целей.</li>
+          <li>Ослаблять напарников — игрокам приятно, что с ними безопасно.</li>
+          <li>Убирать ручную переноску ящиков — она нравится; автоматизацию давать позже.</li>
+          <li>Настраивать темп по этой записи — в ней ускорение ×2 и ×5 и меню Cheats.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Откуда данные и где их границы</h2>
+      </div>
+      <div class="two" style="font-size:16px;color:var(--ink-2)">
+        <div>
+          <p><b style="color:var(--ink)">Запись.</b> Одна сессия 1:02:45: экран одного игрока и обсуждение команды; часть реплик относится к экранам других участников. Речь расшифрована автоматически, тихие участки — повторно, более точной моделью. Цитаты на сайте сверены с расшифровкой, длинные сокращены многоточием.</p>
+          <p><b style="color:var(--ink)">Что запись не доказывает.</b> Как часто проблема встречается у всех игроков и как быстро проходится игра: в записи ускорение ×2 и ×5 и меню Cheats.</p>
+        </div>
+        <div>
+          <p><b style="color:var(--ink)">Код.</b> Снимки 0a9af842 (правила игры) и cadc0c1 (UI-патч). Проверены цепочки, связанные с замечаниями; файлы и строки указаны у пунктов. Это статическое чтение — сборка не запускалась.</p>
+          <p><b style="color:var(--ink)">Оценки.</b> Влияние, усилия и размер S/M/L — оценка аналитика. Макеты экранов — предложения, числа в них для примера.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div>Idle Frontline, разбор плейтеста 2 ноября 2026 года.</div>
+    <nav aria-label="Разделы"><a href="index.html">Обзор</a><a href="problems.html">Проблемы</a><a href="screens.html">Экраны</a><a href="economy.html">Экономика</a></nav>
+  </div>
+</footer>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  document.getElementById("agreed").innerHTML = "<thead><tr><th>Когда</th><th>О чём</th><th>Пункт</th></tr></thead><tbody>" +
+    IF.AGREED.map(function (a) { return "<tr><td>" + a.t + "</td><td>" + a.text + "</td><td><a href=\"problems.html#" + a.ref + "\">" + a.ref + "</a></td></tr>"; }).join("") + "</tbody>";
+</script>
+</body>
+</html>

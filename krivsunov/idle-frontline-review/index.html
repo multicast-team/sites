@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Idle Frontline — разбор плейтеста 2 ноября</title>
+<meta name="description" content="Где игрок перестаёт понимать Idle Frontline, что ему понравилось и что исправить в следующем билде: лента часовой сессии, причины, макеты экранов и план работ.">
+<meta property="og:title" content="Idle Frontline — разбор плейтеста">
+<meta property="og:description" content="Игрок берёт базы, но теряет фронт. Что исправить в следующем билде.">
+<meta name="theme-color" content="#ECEEE5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400..800&family=Sofia+Sans+Extra+Condensed:wght@700..900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="overview">
+<a class="skip" href="#main">К содержанию</a>
+<header class="top">
+  <div class="top__in">
+    <a class="brand" href="index.html"><b>Idle Frontline</b><span>разбор плейтеста</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Разделы</button>
+    <nav class="nav" id="nav" aria-label="Разделы сайта">
+      <a href="index.html" aria-current="page">Обзор</a>
+      <a href="problems.html">Проблемы</a>
+      <a href="screens.html">Экраны</a>
+      <a href="economy.html">Экономика</a>
+      <a href="plan.html">План</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div class="hero__text">
+        <p class="kicker">Плейтест 2 ноября 2026 года: запись экрана и обсуждение команды</p>
+        <h1 class="h-display">Игрок берёт базы, но теряет фронт</h1>
+        <p class="lead">Основные системы игры по отдельности понятны. Ломаются переходы между ними: после победы, постройки или покупки игрок не видит следующего шага. Ниже — где это происходит, почему и что исправить в следующем билде.</p>
+      </div>
+      <ul class="hero__facts" aria-label="Сводка">
+        <li><b class="num">63</b><span>минуты записи одной сессии, с расшифровкой и кадрами</span></li>
+        <li><b class="num">14</b><span>моментов, когда игрок не понимает, что делать, где взять или как выйти</span></li>
+        <li><b class="num">40</b><span>замечаний: один блокер, 27 важных, 12 второстепенных</span></li>
+        <li><b class="num">25</b><span>правок закрывают все замечания; 10 из них — меньше дня работы</span></li>
+      </ul>
+    </div>
+
+    <div class="wrap strip">
+      <div class="strip__head">
+        <h2 id="strip-title">63 минуты игры</h2>
+        <button class="btn btn--quiet" type="button" id="strip-list-btn" aria-expanded="false" aria-controls="strip-table">Показать списком</button>
+      </div>
+      <div class="strip__scroll" id="strip"></div>
+      <p class="strip__hint">Ленту можно прокручивать вбок. Нажмите на отметку, чтобы прочитать реплику.</p>
+      <ul class="legend">
+        <li><span class="sw sw--lost"></span>игрок не понимает, что делать</li>
+        <li><span class="sw sw--dot" style="background:#C93F2F"></span>замечание P1</li>
+        <li><span class="sw sw--dot" style="background:#D49A00"></span>замечание P2</li>
+        <li><span class="sw" style="background:#8E1F16;width:12px;height:12px;margin:0 8px 0 4px"></span>блокер P0</li>
+        <li><span class="sw sw--dot" style="background:#fff;box-shadow:inset 0 0 0 2.2px #5B4FB0"></span>найдено при перепроверке</li>
+        <li><span class="sw sw--tri"></span>понравилось</li>
+        <li><span class="sw sw--goal"></span>договорились</li>
+      </ul>
+      <div class="strip__table" id="strip-table" hidden></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Диагноз: петля рвётся на переходах</h2>
+        <p class="lead">Основной цикл уже собран: бой даёт ресурсы, захват даёт базу, база даёт доход, доход усиливает отряд. Но на каждом переходе игрок теряет нить, и объяснять приходится голосом.</p>
+      </div>
+      <div class="loop">
+        <div id="loop"><span class="sr-only" id="loop-title">Цикл игры</span><span class="sr-only" id="loop-desc">Четыре этапа: бой, захват, база, усиление. На каждом из четырёх переходов — разрыв.</span></div>
+        <ol class="breaks">
+          <li><span class="brk"><span>1</span></span><div><h3>Бой → захват: «Сколько ещё волн?»</h3><p>Победа над защитниками не заканчивает захват, а условия захвата мелко подписаны над точкой и теряются. Источник бафа не воспринимается как цель.</p><p class="refs"><a href="problems.html#F02">F02</a><a href="problems.html#F22">F22</a><a href="problems.html#F06">F06</a><a href="problems.html#F07">F07</a></p></div></li>
+          <li><span class="brk"><span>2</span></span><div><h3>Захват → база: «Зачем строить и защищать?»</h3><p>Пушки появляются раньше того, что они охраняют; добыча обороны смешана с выпуском завода; тревога у недостроенной базы выглядит как авария.</p><p class="refs"><a href="problems.html#F10">F10</a><a href="problems.html#F11">F11</a><a href="problems.html#F12">F12</a><a href="problems.html#F15">F15</a></p></div></li>
+          <li><span class="brk"><span>3</span></span><div><h3>База → усиление: «Где люди, сколько стоит, что даст?»</h3><p>0/1 рабочих без объяснения, цены без запаса, звание без шкалы, золотой ресурс без источника.</p><p class="refs"><a href="problems.html#F17">F17</a><a href="problems.html#F28">F28</a><a href="problems.html#F13">F13</a><a href="problems.html#F33">F33</a></p></div></li>
+          <li><span class="brk"><span>4</span></span><div><h3>Усиление → новый бой: «Куда идти дальше?»</h3><p>Следующая цель нигде не названа — ни в HUD, ни на карте. Сессия так и заканчивается.</p><p class="refs"><a href="problems.html#F01">F01</a><a href="problems.html#F04">F04</a><a href="problems.html#F29">F29</a><a href="problems.html#N7">N7</a></p></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Три правки, которые изменят больше всего</h2>
+        <p class="lead">Каждая закрывает один тип разрыва сразу во всей игре, а не одну жалобу.</p>
+      </div>
+      <div class="bets">
+        <div class="bet">
+          <div class="diamond" aria-hidden="true"></div>
+          <h3>Одна цель на экране</h3>
+          <p>Виджет цели в HUD: что сделать, где и что за это будет. Стрелка у края экрана и ромб на карте. Цель меняется сама по состоянию игры.</p>
+          <p class="eg">«Захвати мост 0/1 → откроется путь к следующей базе»</p>
+          <a href="screens.html#objective">Макет цели</a>
+        </div>
+        <div class="bet">
+          <div class="diamond" aria-hidden="true"></div>
+          <h3>Захват как договор</h3>
+          <p>До боя видно число волн и все условия, между волнами — отсчёт, источник бафа связан с врагами линией. Победа больше не обманывает.</p>
+          <p class="eg">«Волна 1/4 · Защитники» → «Волна 1 зачищена. Следующая через 4 с»</p>
+          <a href="screens.html#capture">Макет захвата</a>
+        </div>
+        <div class="bet">
+          <div class="diamond" aria-hidden="true"></div>
+          <h3>У каждого нуля — причина и кнопка</h3>
+          <p>Простой завода, нехватка валюты, тревога базы: интерфейс называет причину и сразу ведёт к решению.</p>
+          <p class="eg">«Производство 0: нет рабочего [Назначить]», «180 / 250 — не хватает 70 [Где взять]»</p>
+          <a href="screens.html#garrison">Макеты экономики</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <h2 id="blockers">Сначала — до следующего теста</h2>
+        <p class="lead">Пока они открыты, следующий плейтест будет измерять ошибки сборки, а не дизайн. Почти всё — меньше дня работы.</p>
+      </div>
+      <table class="blockers">
+        <thead><tr><th>Проблема</th><th>Чем подтверждено</th><th>Что сделать</th><th>Объём</th></tr></thead>
+        <tbody>
+          <tr><td><b>Из вложенного окна нельзя выйти</b><a href="problems.html#F20">F20</a>, единственный P0</td><td>Запись, 09:49–10:23: срабатывает только угол кнопки «Назад»</td><td>Найти перехватчик нажатий, сделать нажимаемой всю кнопку с полями не меньше 44 pt (≈120×120 единиц канваса)</td><td class="size">S</td></tr>
+          <tr><td><b>База 3 теряет золотой ресурс, пока герой дальше 30 м</b><a href="problems.html#F33">F33</a></td><td>Код: турели базы 3 платят GoldenToken, а фоновая осада сохраняет только Token</td><td>Учесть GoldenToken в двух местах: BaseSiegeSimulation.Tokens() считает только Token (стр. 392–393), StoreSimulatedTokens принимает только Token (BaseFacilityCore.cs:186–188)</td><td class="size">S</td></tr>
+          <tr><td><b>Тревога у недостроенной базы выглядит как «базу разрушили»</b><a href="problems.html#F15">F15</a></td><td>Запись, 43:00: участник называет это багом; в коде сигнал «мало патронов» записан как underAttack</td><td>Четыре разных состояния тревоги с причиной и кнопкой</td><td class="size">S</td></tr>
+          <tr><td><b>Вкладка подкрепления видна до постройки</b><a href="problems.html#F26">F26</a></td><td>Запись, 43:21; на кадре окна базы 2 вкладка REINFORCE видна сразу; в коде запуск уже проверяет постройку (ReinforceModule.cs:152)</td><td>Проверить все входы; до постройки вкладка предлагает построить здание</td><td class="size">S</td></tr>
+          <tr><td><b>Опечатка в заголовках окон</b></td><td>Кадры и префабы: «Turret MANAGMENT», «Factory Managment»</td><td>Исправить строки в Turret Base Panel и Mine Base Panel</td><td class="size">S</td></tr>
+          <tr><td><b>Нет одной рабочей сборки</b></td><td>Правила (0a9af842) и UI-патч (cadc0c1) — в разных снимках кода; какой из них в тестовой сборке, не подтверждено</td><td>Собрать одну версию, на которой пройдёт следующий тест</td><td class="size">M</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <h2>Что уже работает — не сломать</h2>
+        <p class="lead">Это моменты, где игрок быстро понял игру или получил удовольствие. Правки выше не должны их задеть.</p>
+      </div>
+      <div class="goods" id="goods"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head"><h2>Дальше по разделам</h2></div>
+      <nav class="sections" aria-label="Разделы разбора">
+        <a href="problems.html"><h3>Проблемы</h3><p>Все 40 замечаний с кадром, репликой, причиной, правкой и критерием готовности. Фильтры по системам и приоритету.</p></a>
+        <a href="screens.html"><h3>Экраны</h3><p>Десять экранов игры «сейчас → после правки» поверх реальных кадров записи.</p></a>
+        <a href="economy.html"><h3>Экономика</h3><p>Формулы из кода игры на интерактивных графиках: рабочие, водители, звание, восстановление, жара, золотой ресурс.</p></a>
+        <a href="plan.html"><h3>План</h3><p>Матрица «влияние × усилия», пять волн работ, первые 10 минут, протокол следующего теста.</p></a>
+      </nav>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div>Источники: запись плейтеста 2 ноября 2026 года (1:02:45), расшифровка речи и кадры; код игры — снимки 0a9af842 (правила) и cadc0c1 (UI-патч). Цитаты — по расшифровке, возможны неточности распознавания. Объём и влияние правок — оценка аналитика.</div>
+    <nav aria-label="Разделы"><a href="problems.html">Проблемы</a><a href="screens.html">Экраны</a><a href="economy.html">Экономика</a><a href="plan.html">План</a></nav>
+  </div>
+</footer>
+
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+  // что работает — карточки с кадрами
+  (function () {
+    var host = document.getElementById("goods");
+    host.innerHTML = IF.GOODS.map(function (g) {
+      return '<div class="good"><img src="img/' + g.frame + '.webp" alt="Кадр записи, ' + g.t + '" loading="lazy" width="92" height="198" data-zoom="img/' + g.frame + '.webp" data-caption="' + g.t + ': ' + g.title + '">' +
+        '<div><h3>' + g.title + '</h3><q>' + g.quote + '</q><p>' + g.text + '</p><span class="tc">' + g.t + '</span></div></div>';
+    }).join("");
+  })();
+</script>
+</body>
+</html>

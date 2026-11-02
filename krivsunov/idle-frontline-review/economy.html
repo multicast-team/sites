@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Экономика — Idle Frontline, разбор плейтеста</title>
+<meta name="description" content="Формулы Idle Frontline из кода на интерактивных графиках: рабочие, водители, восстановление базы, звание, жара, территориальный баф, золотой ресурс.">
+<meta name="theme-color" content="#ECEEE5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400..800&family=Sofia+Sans+Extra+Condensed:wght@700..900&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="economy">
+<a class="skip" href="#main">К содержанию</a>
+<header class="top">
+  <div class="top__in">
+    <a class="brand" href="index.html"><b>Idle Frontline</b><span>разбор плейтеста</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">Разделы</button>
+    <nav class="nav" id="nav" aria-label="Разделы сайта">
+      <a href="index.html">Обзор</a>
+      <a href="problems.html">Проблемы</a>
+      <a href="screens.html">Экраны</a>
+      <a href="economy.html" aria-current="page">Экономика</a>
+      <a href="plan.html">План</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section" style="padding-top:56px">
+    <div class="wrap">
+      <div class="section__head">
+        <h1 class="h2">Экономика, которую игрок не видит</h1>
+        <p class="lead">Правила игры логичны, но почти все они скрыты. Ниже — формулы прямо из кода (снимок 0a9af842) на графиках: что они значат для игрока и что показать в интерфейсе. Ползунки можно двигать.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <article class="econ" id="workers">
+      <div>
+        <h2>Единственный рабочий — это весь выпуск завода</h2>
+        <p class="lead">Первый рабочий включает завод на полную базовую скорость, каждый следующий добавляет половину. Без рабочих завод стоит.</p>
+        <div class="ctrl"><label for="in-workers">Рабочих на заводе</label><input id="in-workers" type="range" min="0" max="5" value="1" step="1"><output id="out-workers" for="in-workers">1</output></div>
+        <div class="readout" id="ro-workers" aria-live="polite"></div>
+        <div id="ch-workers"></div>
+        <p class="source">WorkersModule.cs:56; MineModule.cs:59–66. 72 Gear/мин — выпуск базы 1 на кадре 20:46: 60 базовых × 1,2 за менеджера (Crew Chief). Без менеджера — 60, бонус ассистента не учтён.</p>
+      </div>
+      <aside class="takeaway">
+        <h3>Почему это путает</h3>
+        <p>Переводя единственного рабочего, игрок теряет не «−1», а весь выпуск базы: 72 → 0. Счётчик 0/1 этого не показывает — так и появилось «почему у меня ноль из одного?» (47:20).</p>
+        <h3>Что показать</h3>
+        <ul><li>Перед переводом — выпуск обеих баз «было → стало».</li><li>На заводе без людей — «Производство 0: нет рабочего [Назначить]».</li></ul>
+        <p><a href="problems.html#F17">F17</a>, <a href="problems.html#F32">F32</a>, <a href="screens.html#garrison">макет гарнизона</a></p>
+      </aside>
+    </article>
+
+    <article class="econ" id="drivers">
+      <div>
+        <h2>Второй водитель: больше опыта, меньше отдачи</h2>
+        <p class="lead">Каждый следующий водитель удваивает цену рейса и умножает награду на 1,5. Время рейса не меняется — 5 минут.</p>
+        <div class="ctrl"><label for="in-drivers">Водителей в рейсе</label><input id="in-drivers" type="range" min="1" max="5" value="2" step="1"><output id="out-drivers" for="in-drivers">2</output></div>
+        <div class="readout" id="ro-drivers" aria-live="polite"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px 24px">
+          <figure style="margin:0"><figcaption class="note">Цена рейса, топливо</figcaption><div id="ch-cost"></div></figure>
+          <figure style="margin:0"><figcaption class="note">Награда, XP компаньонов</figcaption><div id="ch-xp"></div></figure>
+        </div>
+        <figure style="margin:12px 0 0"><figcaption class="note">Опыт за 100 топлива — отдача падает на четверть с каждым водителем</figcaption><div id="ch-eff"></div></figure>
+        <p class="source">Balance.cs:2191–2213 — 250 Fuel × 2^(d − 1), 20 XP × 1,5^(d − 1), рейс 300 с, очередь до 5 рейсов. Balance.cs:2145 — водителей не больше уровня базы (максимум 5). Без бонусов менеджера и без награды каждого пятого рейса.</p>
+      </div>
+      <aside class="takeaway">
+        <h3>Почему это путает</h3>
+        <p>Это обмен экономии топлива на скорость прокачки, но выглядит он как «двойная цена ни за что». При пяти водителях опыт на единицу топлива на 68% ниже, чем при одном.</p>
+        <h3>Что показать</h3>
+        <ul><li>Выбор водителей как два варианта с ценой, наградой и отдачей.</li><li>Запас топлива «есть / нужно» прямо в панели.</li><li>Назвать награду каждого пятого рейса: вместо опыта — 20 именных звёзд помощников базы (на базе 2 — Assassin, Cook, Desert Veteran, Crew Chief), с тем же множителем водителей.</li></ul>
+        <p><a href="problems.html#F28">F28</a>, <a href="screens.html#reinforce">макет подкрепления</a></p>
+      </aside>
+    </article>
+
+    <article class="econ" id="rebuild">
+      <div>
+        <h2>Восстановить разрушенную постройку — в 10 и 20 раз дороже</h2>
+        <p class="lead">Восстановление стоит max(цена, цена × (уровень базы − 1) × 10). Завод базы 1 на первом уровне — 150 Gear, на втором — 1500, на третьем — 3000.</p>
+        <div id="ch-rebuild"></div>
+        <p class="source">Balance.cs:1555–1587, GetLeveledCost. Пока постройка не разрушена полностью, ремонт бесплатный: рядом с героем вне боя — 5% здоровья в секунду (радиус 4), сам по себе — через 30 с по 1% в секунду.</p>
+      </div>
+      <aside class="takeaway">
+        <h3>Почему это важно</h3>
+        <p>Игрок не знает, что теряет при поражении, — поэтому не понимает и смысла обороны. А первое полное разрушение обходится очень дорого.</p>
+        <h3>Что показать</h3>
+        <ul><li>Цену восстановления и бесплатный ремонт — до того, как база упадёт.</li><li>Гипотеза для A/B: первая перестройка каждой постройки — по цене уровня 1.</li></ul>
+        <p><a href="problems.html#F10">F10</a>, <a href="problems.html#F15">F15</a></p>
+      </aside>
+    </article>
+
+    <article class="econ" id="rank">
+      <div>
+        <h2>Звание — это сумма уровней всех баз</h2>
+        <p class="lead">Первое звание даётся, когда сумма уровней баз достигает 3, дальше — 8, 13, 18… Уровень базы растёт после пяти улучшений завода и пяти — турелей.</p>
+        <div class="ctrl" id="rank-in" style="gap:10px 22px">
+          <label>База 1 <input type="number" min="0" max="10" value="2" style="width:56px;font:inherit;padding:4px 6px"></label>
+          <label>База 2 <input type="number" min="0" max="10" value="1" style="width:56px;font:inherit;padding:4px 6px"></label>
+          <label>База 3 <input type="number" min="0" max="10" value="0" style="width:56px;font:inherit;padding:4px 6px"></label>
+        </div>
+        <div class="readout" id="ro-rank" aria-live="polite"></div>
+        <div id="ch-rank"></div>
+        <p class="source">Balance.cs:2985–2999 — порог звания r: 5r − 2 (старый комментарий про 5/10 устарел). Balance.cs:1700 — 5 улучшений шахты и 5 турелей на уровень базы, максимум 10.</p>
+      </div>
+      <aside class="takeaway">
+        <h3>Почему это путает</h3>
+        <p>Правило простое, но нигде не написано: «Я ещё не понимаю, где мне взять звание» (16:08). Звание открывает слоты отряда и ранговые прокачки — то есть это главный двигатель силы.</p>
+        <h3>Что показать</h3>
+        <ul><li>Полосу «2/3 — ещё 1 уровень любой базы» рядом со званием (согласовано на встрече, 33:56).</li><li>Из закрытого слота отряда — переход к условию.</li></ul>
+        <p><a href="problems.html#F13">F13</a></p>
+      </aside>
+    </article>
+
+    <article class="econ" id="heat">
+      <div>
+        <h2>Без лечения жара в пустыне убивает за 34 секунды</h2>
+        <p class="lead">20 секунд жара копится, потом каждую секунду отнимает на 1% больше максимального здоровья: 1%, 2%, 3%… Броня не помогает, оазис снимает эффект.</p>
+        <div id="ch-heat"></div>
+        <p class="source">Balance.cs:5448–5451 — HeatBuildupDuration = 20 с, тик 1 с, шаг 1%, без учёта защиты; эффект «Оазис» снимает жару (Balance.cs:5387–5389). График — без лечения и без иммунитета Desert Veteran.</p>
+      </div>
+      <aside class="takeaway">
+        <h3>Почему это важно</h3>
+        <p>Это сильная и понятная механика региона — если о ней знать заранее. Участники прямо попросили показывать свойства зоны на карте (50:06), а игрок боялся идти в открытую пустыню (27:48).</p>
+        <h3>Что показать</h3>
+        <ul><li>На карте и у входа: «Жара: через 20 с урон растёт каждую секунду; оазис снимает».</li><li>Оазисы — значками на карте.</li></ul>
+        <p><a href="problems.html#F31">F31</a>, <a href="problems.html#N1">N1</a></p>
+      </aside>
+    </article>
+
+    <article class="econ" id="buff">
+      <div>
+        <h2>Снятие бафа делает бой примерно вчетверо легче</h2>
+        <p class="lead">Источник даёт связанным врагам +100% здоровья и +100% атаки. Опасность боя растёт как здоровье × урон, поэтому после разрушения источника она падает примерно в 4 раза. На встрече с этим спорили — нужен замер.</p>
+        <svg class="chart" viewBox="0 0 560 300" role="img" aria-label="Опасность боя: с бафом 4 клетки, без бафа 1 клетка">
+          <defs><pattern id="bh" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" fill="#F4DED8"/><rect width="2.6" height="8" fill="#C93F2F"/></pattern></defs>
+          <g transform="translate(70 30)">
+            <rect x="0" y="0" width="220" height="220" fill="url(#bh)" stroke="#C93F2F" stroke-width="2"/>
+            <rect x="0" y="110" width="110" height="110" fill="#1D2A21"/>
+            <line x1="110" y1="0" x2="110" y2="220" stroke="#C93F2F" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <line x1="0" y1="110" x2="220" y2="110" stroke="#C93F2F" stroke-width="1.5" stroke-dasharray="4 4"/>
+            <text x="55" y="172" text-anchor="middle" fill="#F7F8F2" font-size="15" font-weight="800">×1</text>
+            <text x="165" y="62" text-anchor="middle" fill="#1D2A21" font-size="15" font-weight="800">×4</text>
+            <text x="110" y="246" text-anchor="middle" fill="#46564A" font-size="13">урон врагов: ×1 → ×2</text>
+            <text x="-16" y="110" text-anchor="middle" fill="#46564A" font-size="13" transform="rotate(-90 -16 110)">здоровье врагов: ×1 → ×2</text>
+          </g>
+          <g transform="translate(330 60)" font-size="14">
+            <rect x="0" y="0" width="22" height="16" fill="url(#bh)" stroke="#C93F2F"/><text x="32" y="13" fill="#1D2A21" font-weight="700">источник цел — опасность ×4</text>
+            <rect x="0" y="34" width="22" height="16" fill="#1D2A21"/><text x="32" y="47" fill="#1D2A21" font-weight="700">источник разрушен — ×1</text>
+            <text x="0" y="96" fill="#46564A">Пример по сцене: баф уже</text>
+            <text x="0" y="116" fill="#46564A">заложен в числа врага, а</text>
+            <text x="0" y="136" fill="#46564A">разрушение источника делит</text>
+            <text x="0" y="156" fill="#46564A">их: здоровье 266 → 133,</text>
+            <text x="0" y="176" fill="#46564A">атака 11 → 5,5.</text>
+          </g>
+        </svg>
+        <p class="source">Balance.cs:5425 (TERRITORY_POINT: +attack%, +health%); EnemySpawner.cs:140, 149, 222; TerritoryWavePoint.cs:139. Пример 266 → 133 — расчёт по конфигурации сцены, не замер боя.</p>
+      </div>
+      <aside class="takeaway">
+        <h3>Почему это важно</h3>
+        <p>Механика «разрушь источник — ослабь врагов» хорошая. Но связь не видна: игрок не считал снайпера целью и переспросил «Какую вышку?» (35:30–35:55), а скачок вчетверо обесценивает прокачку героя на участке.</p>
+        <h3>Что показать</h3>
+        <ul><li>Линию от источника к усиленным врагам и подпись эффекта.</li><li>После разрушения — «−50% у защитников».</li><li>Замерить время боя до и после; при необходимости смягчить.</li></ul>
+        <p><a href="problems.html#F07">F07</a>, <a href="problems.html#F22">F22</a>, <a href="screens.html#capture">макет захвата</a></p>
+      </aside>
+    </article>
+
+    <article class="econ" id="golden">
+      <div>
+        <h2>Золотой ресурс: откуда приходит и куда утекает</h2>
+        <p class="lead">GoldenToken нужен для ранговых прокачек и спасения помощников. Первые уровни четырёх прокачек званий 1–2 стоят 500, Desert Veteran — 30; дальше каждая прокачка дорожает ×1,1 за уровень, уровней до 100. Источник нигде не назван, а один из источников в фоне теряется.</p>
+        <svg class="chart" viewBox="0 0 760 360" role="img" aria-label="Потоки GoldenToken: источники слева, траты справа, потеря при фоновой осаде базы 3">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#14866F"/></marker>
+            <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#1D2A21"/></marker>
+          </defs>
+          <g font-size="13.5" fill="#1D2A21">
+            <g><rect x="0" y="6" width="218" height="46" rx="6" fill="#F7F8F2" stroke="#14866F" stroke-width="1.5"/><text x="12" y="25" font-weight="750">Турели базы 3</text><text x="12" y="43" fill="#46564A">герой ближе 30 м</text></g>
+            <g><rect x="0" y="62" width="218" height="46" rx="6" fill="#F4DED8" stroke="#C93F2F" stroke-width="1.5" stroke-dasharray="5 4"/><text x="12" y="81" font-weight="750">Турели базы 3</text><text x="12" y="99" fill="#A8331F">герой дальше — теряется</text></g>
+            <g><rect x="0" y="118" width="218" height="46" rx="6" fill="#F7F8F2" stroke="#14866F" stroke-width="1.5"/><text x="12" y="137" font-weight="750">Танк 90</text><text x="12" y="155" fill="#46564A">40 до множителей</text></g>
+            <g><rect x="0" y="174" width="218" height="46" rx="6" fill="#F7F8F2" stroke="#14866F" stroke-width="1.5"/><text x="12" y="193" font-weight="750">Танк 130</text><text x="12" y="211" fill="#46564A">150 до множителей</text></g>
+            <g><rect x="0" y="230" width="218" height="46" rx="6" fill="#F7F8F2" stroke="#14866F" stroke-width="1.5"/><text x="12" y="249" font-weight="750">Танк 250, два в сцене</text><text x="12" y="267" fill="#46564A">500 до множителей</text></g>
+            <g><rect x="0" y="286" width="218" height="46" rx="6" fill="#F7F8F2" stroke="#14866F" stroke-width="1.5"/><text x="12" y="305" font-weight="750">Камикадзе</text><text x="12" y="323" fill="#46564A">30–50 до множителей</text></g>
+            <path d="M218 29 C270 29 280 162 322 162" fill="none" stroke="#14866F" stroke-width="3" marker-end="url(#ar)"/>
+            <path d="M218 141 C262 141 282 167 322 167" fill="none" stroke="#14866F" stroke-width="3" marker-end="url(#ar)"/>
+            <path d="M218 197 C262 197 282 172 322 172" fill="none" stroke="#14866F" stroke-width="3" marker-end="url(#ar)"/>
+            <path d="M218 253 C266 253 282 177 322 177" fill="none" stroke="#14866F" stroke-width="3" marker-end="url(#ar)"/>
+            <path d="M218 309 C270 309 284 182 322 182" fill="none" stroke="#14866F" stroke-width="3" marker-end="url(#ar)"/>
+            <path d="M218 85 C250 85 262 90 280 98" fill="none" stroke="#C93F2F" stroke-width="3" stroke-dasharray="6 5"/>
+            <text x="284" y="105" fill="#C93F2F" font-size="22" font-weight="800">✕</text>
+            <g><path d="M380 120 L436 172 L380 224 L324 172Z" fill="#F2B51D" stroke="#1D2A21" stroke-width="2"/><text x="380" y="168" text-anchor="middle" font-weight="800" font-size="14">Golden</text><text x="380" y="185" text-anchor="middle" font-weight="800" font-size="14">Token</text></g>
+            <text x="380" y="252" text-anchor="middle" fill="#46564A" font-size="12.5">источник в игре</text>
+            <text x="380" y="268" text-anchor="middle" fill="#46564A" font-size="12.5">не подписан</text>
+            <g font-size="13">
+              <path d="M436 172 C480 172 480 40 522 40" fill="none" stroke="#1D2A21" stroke-width="2" marker-end="url(#ar2)"/>
+              <path d="M436 172 C480 172 480 100 522 100" fill="none" stroke="#1D2A21" stroke-width="2" marker-end="url(#ar2)"/>
+              <path d="M436 172 C480 172 480 160 522 160" fill="none" stroke="#1D2A21" stroke-width="2" marker-end="url(#ar2)"/>
+              <path d="M436 172 C480 172 480 220 522 220" fill="none" stroke="#1D2A21" stroke-width="2" marker-end="url(#ar2)"/>
+              <path d="M436 172 C480 172 480 280 522 280" fill="none" stroke="#1D2A21" stroke-width="2" marker-end="url(#ar2)"/>
+              <rect x="524" y="20" width="236" height="40" rx="6" fill="#F7F8F2" stroke="#C6CDBF"/><text x="536" y="45"><tspan font-weight="800">100</tspan> урон по технике, звание 1</text>
+              <rect x="524" y="80" width="236" height="40" rx="6" fill="#F7F8F2" stroke="#C6CDBF"/><text x="536" y="105"><tspan font-weight="800">100</tspan> атака компаньонов, звание 1</text>
+              <rect x="524" y="140" width="236" height="40" rx="6" fill="#F7F8F2" stroke="#C6CDBF"/><text x="536" y="165"><tspan font-weight="800">100</tspan> сопротивление яду, звание 2</text>
+              <rect x="524" y="200" width="236" height="40" rx="6" fill="#F7F8F2" stroke="#C6CDBF"/><text x="536" y="225"><tspan font-weight="800">200</tspan> урон по животным, звание 2</text>
+              <rect x="524" y="260" width="236" height="40" rx="6" fill="#F7F8F2" stroke="#C6CDBF"/><text x="536" y="285"><tspan font-weight="800">30</tspan> спасение Desert Veteran</text>
+              <text x="760" y="330" text-anchor="end" fill="#1D2A21" font-weight="800">530 — только первые уровни</text>
+            </g>
+          </g>
+        </svg>
+        <p class="source">Balance.cs:1927 — турели base_3 платят GoldenToken (на уровнях 1–5 по наградам base_1); BaseFacilityCore.cs:186–188 — StoreSimulatedTokens принимает только Token; Balance.cs:2699–2740 — ранговые прокачки; Balance.cs:3314 — Desert Veteran 30. Награды врагов — из GD-сцены: танки «90», «130», «250» — 40, 150, 500; камикадзе — 30–50; враги части волн у точек — по 1. Balance.cs:2699–2748 — до 100 уровней, цена ×1,1 за уровень.</p>
+      </div>
+      <aside class="takeaway">
+        <h3>Почему это важно</h3>
+        <p>«Где взять золотые ошейники?» (1:01:51) — игрок находит источник только с подсказкой. А база 3, пока герой дальше 30 м, свою долю не копит: это ошибка кода, а не баланса.</p>
+        <h3>Что сделать</h3>
+        <ul><li>Исправить фоновую осаду до следующего теста — меньше дня.</li><li>«Где взять» у каждой цены в GoldenToken.</li><li>Гарантировать первые 100 к званию 1 — например, наградой за захват базы 3.</li></ul>
+        <p><a href="problems.html#F33">F33</a>, <a href="index.html#blockers">что сделать до теста</a></p>
+      </aside>
+    </article>
+
+    <article class="econ" id="prices">
+      <div>
+        <h2>Сколько стоят помощники</h2>
+        <p class="lead">Цены в разных валютах сравнивать на одной шкале нельзя, поэтому — таблицей. Повар подорожал в пять раз, и это первый помощник, которого игрок спасает на записи.</p>
+        <table class="list" style="max-width:640px">
+          <thead><tr><th>Помощник</th><th>Цена спасения</th><th>Было раньше</th></tr></thead>
+          <tbody>
+            <tr><td>Crew Chief</td><td><b>50</b> Token</td><td>50 Gold</td></tr>
+            <tr><td>Cook</td><td><b>1000</b> Token</td><td>200 Token</td></tr>
+            <tr><td>Desert Veteran</td><td><b>30</b> GoldenToken</td><td>10 GoldenToken</td></tr>
+            <tr><td>Jungle Veteran</td><td><b>1500</b> Gear</td><td>50 Gold</td></tr>
+          </tbody>
+        </table>
+        <p class="source">Balance.cs:3309–3316, GetCompanionRescuePrice; «было» — по комментариям «было до» в коде.</p>
+      </div>
+      <aside class="takeaway">
+        <h3>Что проверить</h3>
+        <p>Повар — самый понятный и любимый помощник на записи. При цене 1000 Token стоит проверить на новом сохранении, укладывается ли его спасение в первые 10 минут, как предлагается в плане первого цикла.</p>
+        <p><a href="plan.html#ftue">Первые 10 минут</a></p>
+      </aside>
+    </article>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div>Все формулы — статическое чтение кода (снимок 0a9af842); поведение собранной игры отдельно не замерялось. Графики без бонусов менеджеров, ассистента и множителей наград, если не сказано иное.</div>
+    <nav aria-label="Разделы"><a href="index.html">Обзор</a><a href="problems.html">Проблемы</a><a href="screens.html">Экраны</a><a href="plan.html">План</a></nav>
+  </div>
+</footer>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
