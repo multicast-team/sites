@@ -1,0 +1,102 @@
+/* =====================================================================
+   AI-стол · design tokens (brief §2–§3).  Owner: foundation.
+   Everything visual hangs off these variables — slides must not invent
+   parallel palettes, fonts or sizes.
+   ===================================================================== */
+
+@font-face { font-family: "Forum"; src: url("assets/fonts/font-forum.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya"; src: url("assets/fonts/font-alegreya.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya SC"; font-weight: 700; src: url("assets/fonts/font-alegreya-sc-bold.woff2") format("woff2"); font-display: swap; }
+
+:root {
+  /* ---- palette (§3) ---- */
+  --bg: #0B0907;            /* warm near-black */
+  --surface: #15100B;
+  --surface-deep: #1D150E;
+  --bronze-lo: #6B4E2A;
+  --bronze-hi: #A67C43;
+  --bronze: #8A6535;
+  --gold: #E0B25C;          /* ONLY "act now" + seal */
+  --gold-hi: #F5D58A;
+  --gold-lo: #9A6A22;
+  --ink: #EFE3C8;           /* parchment text */
+  --ink-2: #B7A585;         /* secondary text */
+  --enemy: #B8453A;
+  --dmg: #FF5A43;
+  --heal: #5FCF7A;
+  --magic: #5AA9FF;
+  --off: #5A5048;           /* unavailable */
+  --parch: #2A1F15;         /* dark parchment card base */
+  --parch-hi: #3A2C1E;
+
+  /* ---- hero colours (rule 9) ---- */
+  --c-guardian: #F0A838;
+  --c-fury: #FF6A3D;
+  --c-shadow: #B366FF;
+  --c-beacon: #F4E6B8;
+  --c-arcanist: #4FB8FF;
+  --c-voice: #3FD68A;
+  --hero: var(--gold);      /* set per element: style="--hero: var(--c-fury)" */
+
+  /* ---- materials ---- */
+  --g-bronze: linear-gradient(135deg, #4a3519 0%, #A67C43 28%, #6B4E2A 50%, #C29A5B 72%, #5a4020 100%);
+  --g-gold: linear-gradient(160deg, #7a5418 0%, #F5D58A 30%, #E0B25C 52%, #a8771f 78%, #F5D58A 100%);
+  --g-gold-text: linear-gradient(180deg, #FFF0C2 0%, #F5D58A 35%, #E0B25C 60%, #A8771F 100%);
+  --g-surface: radial-gradient(120% 90% at 50% 0%, #22180F 0%, #15100B 55%, #0E0A07 100%);
+  --g-parch: radial-gradient(130% 120% at 30% 20%, #3E2F20 0%, #2A1F15 55%, #1C140C 100%);
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .6  0 0 0 0 .5  0 0 0 0 .38  0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  --shadow-deep: 0 18px 40px rgba(0,0,0,.65), 0 4px 10px rgba(0,0,0,.5);
+  --inset-deep: inset 0 2px 0 rgba(255,230,180,.08), inset 0 -10px 24px rgba(0,0,0,.55);
+
+  /* ---- fonts ---- */
+  --f-title: "Forum", "Alegreya", Georgia, serif;          /* caps only, .08em */
+  --f-label: "Alegreya SC", "Alegreya", Georgia, serif;    /* one-word labels + numbers */
+  --f-text: "Alegreya", Georgia, serif;                     /* subtitles */
+
+  /* ---- physical size (rule 4). 43" 1920x1080 → 1 mm ≈ 2 px.
+         Deck switches 32"/43"/55" by setting data-screen on the stage. ---- */
+  --mm: 2px;
+}
+/* derived sizes are re-declared on [data-screen] so a stage-level --mm recomputes them */
+:root, [data-screen] {
+  --touch: calc(20 * var(--mm));   /* min touch target 40 */
+  --gap-touch: calc(5 * var(--mm));/* min gap 10 */
+  --slot: calc(30 * var(--mm));    /* ability medallion 60 */
+  --mic: calc(36 * var(--mm));     /* mic 72 */
+  --seal: calc(45 * var(--mm));    /* seal 90 */
+  --tile: calc(30 * var(--mm));    /* dice value tile 60 */
+  --fs-label: calc(9 * var(--mm)); /* 18 */
+  --fs-name: calc(14 * var(--mm)); /* 28 */
+  --fs-num: calc(16 * var(--mm));  /* 32 */
+}
+:root {
+  --cell: 80px;                    /* board cell: fixed by the 720 px centre band */
+
+  /* ---- motion (rule 11) ---- */
+  --t-tap: 90ms;         /* touch response ≤100 */
+  --t-mic: 220ms;        /* mic state ≤250 */
+  --t-move: 340ms;       /* transitions 300–400 */
+  --t-pop: 820ms;        /* number pop 700–900 */
+  --t-pulse: 1200ms;     /* main-action pulse, scale 1→1.04 */
+  --ease-out: cubic-bezier(.2,.8,.2,1);
+  --ease-back: cubic-bezier(.34,1.56,.64,1);
+  --ease-in: cubic-bezier(.5,0,.75,0);
+
+  /* ---- states (rule 10) ---- */
+  --dim-filter: saturate(.55) brightness(.75);
+  --dead-filter: grayscale(1) brightness(.6);
+  --off-filter: saturate(.5) brightness(.8);
+}
+
+/* screen size switch (deck: «32″ / 43″ / 55″»): 32" → 2.71 px/mm, 55" → 1.58 px/mm */
+[data-screen="32"] { --mm: 2.71px; }
+[data-screen="43"] { --mm: 2px; }
+[data-screen="55"] { --mm: 1.58px; }
+
+/* TV and phone have their own fixed scales (rule 5, 6) */
+[data-surface="tv"] { --fs-label: 32px; --fs-name: 56px; --fs-num: 96px; }
+[data-surface="phone"] { --touch: 48px; --slot: 56px; --mic: 80px; --seal: 64px; --tile: 56px; --fs-label: 14px; --fs-name: 20px; --fs-num: 28px; }
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --t-move: 1ms; --t-pop: 400ms; --t-pulse: 0ms; }
+}

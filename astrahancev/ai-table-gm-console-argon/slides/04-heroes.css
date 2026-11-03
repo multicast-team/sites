@@ -1,0 +1,179 @@
+/* Slide 04 · «Выбор героев».  Owner: screens «heroes».  Prefix h4- */
+
+/* ------------------------------------------------------------ table centre: the hall */
+.h4-center { overflow: hidden; }
+.h4-cover { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 900ms var(--ease-out); filter: brightness(.6); }
+.h4-center.is-go .h4-cover { opacity: 1; }
+.h4-hall { position: absolute; inset: 0; transition: opacity 600ms var(--ease-out); }
+.h4-center.is-go .h4-hall { opacity: 0; pointer-events: none; }
+
+.h4-row { position: absolute; left: 0; width: 1920px; height: 360px; }
+.h4-row--far { top: 0; rotate: 180deg; }
+.h4-row--near { top: 360px; }
+.h4-row__bg { position: absolute; inset: 0; background-size: 1920px auto !important; background-position: 50% 78% !important; background-repeat: no-repeat; filter: brightness(.5) saturate(.85); }
+.h4-row__shade { position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(8,6,4,.92) 0%, rgba(8,6,4,.35) 22%, rgba(8,6,4,0) 50%, rgba(8,6,4,.55) 100%),
+    radial-gradient(60% 120% at 50% 70%, transparent 40%, rgba(5,4,3,.85) 100%); }
+.h4-row__cards { position: absolute; left: 0; right: 0; top: 16px; height: 330px; display: flex; justify-content: center; gap: 44px; transition: transform 600ms var(--ease-out); }
+.h4-center.is-go .h4-row__cards { transform: scale(.9) translateY(40px); }
+.h4-spine { position: absolute; left: 50%; top: 360px; translate: -50% -50%; z-index: 3; pointer-events: none; filter: drop-shadow(0 0 10px rgba(224,178,92,.5)); }
+
+/* ------------------------------------------------------------ hero card */
+.h4-card { --hero: var(--gold); position: relative; width: 300px; height: 330px; flex: none; border-radius: 10px; display: block;
+  background: radial-gradient(90% 70% at 50% 35%, color-mix(in srgb, var(--hero) 14%, #120d08) 0%, #0d0906 75%);
+  transition: transform var(--t-move) var(--ease-back); }
+.h4-card__aura { position: absolute; inset: -34px -26px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--hero) 75%, transparent) 0%, color-mix(in srgb, var(--hero) 30%, transparent) 55%, transparent 100%);
+  opacity: .6; animation: h4-breathe 3.2s ease-in-out infinite; transition: opacity var(--t-move); }
+.h4-card:nth-child(2) .h4-card__aura { animation-delay: -1.1s; }
+.h4-card:nth-child(3) .h4-card__aura { animation-delay: -2.2s; }
+@keyframes h4-breathe { 0%, 100% { opacity: .45; transform: scale(.96); } 50% { opacity: .85; transform: scale(1.03); } }
+/* party of ≥3: free cards stop breathing, the «В путь» seal is the only pulse */
+.h4-hall.is-ready .h4-card__aura { animation: none; opacity: .5; transform: none; }
+.h4-card__plinth { position: absolute; left: 12%; right: 12%; bottom: 74px; height: 46px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--hero) 70%, transparent), transparent); opacity: .55; }
+.h4-card__art { position: absolute; inset: 0; border-radius: 10px; background-repeat: no-repeat; background-size: cover !important; background-position: 50% 4% !important;
+  -webkit-mask-image: linear-gradient(180deg, #000 58%, transparent 90%); mask-image: linear-gradient(180deg, #000 58%, transparent 90%);
+  transition: opacity var(--t-move); }
+.h4-card.is-store .h4-card__art {
+  -webkit-mask-image: radial-gradient(70% 62% at 50% 36%, #000 52%, transparent 100%); mask-image: radial-gradient(70% 62% at 50% 36%, #000 52%, transparent 100%); }
+.h4-card__fade { position: absolute; left: 0; right: 0; bottom: 0; height: 130px; border-radius: 0 0 10px 10px; pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(8,6,4,.88) 55%, rgba(8,6,4,.96)); }
+.h4-card__foot { position: absolute; left: 0; right: 0; bottom: 10px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.h4-card__name { font-family: var(--f-title); font-size: var(--fs-name); line-height: 1; text-transform: uppercase; letter-spacing: .08em; color: var(--hero);
+  text-shadow: 0 2px 0 #000, 0 0 16px color-mix(in srgb, var(--hero) 55%, transparent); white-space: nowrap; }
+.h4-card__abs { display: flex; gap: 12px; }
+.h4-ab { --s: 46px; width: var(--s); height: var(--s); border-radius: 50%; flex: none; background: #120d08 center / cover no-repeat;
+  box-shadow: 0 0 0 2px #0B0907, 0 0 0 4px #8A6535, 0 0 14px color-mix(in srgb, var(--hero) 55%, transparent), inset 0 -6px 10px rgba(0,0,0,.5); }
+.h4-card__frame { position: absolute !important; inset: 0; padding: 0 !important; background: none !important; pointer-events: none; border-radius: 10px;
+  box-shadow: inset 0 0 0 3px #0B0907, inset 0 0 0 4px color-mix(in srgb, var(--hero) 70%, transparent), inset 0 0 40px rgba(0,0,0,.6) !important; }
+.h4-card__frame .frame__body { display: none; }
+
+/* colour seal ring with the seat number */
+.h4-card__ring { position: absolute; right: 12px; top: 12px; width: 88px; height: 88px; z-index: 4; pointer-events: none; display: grid; place-items: center;
+  opacity: 0; transform: scale(.3) rotate(-30deg); transition: opacity 220ms ease-out, transform 360ms var(--ease-back); }
+.h4-card.is-taken .h4-card__ring { opacity: 1; transform: scale(1) rotate(0deg); }
+.h4-card.is-stamp .h4-card__ring { animation: h4-stamp 520ms var(--ease-out); }
+@keyframes h4-stamp { 0% { transform: scale(1.9) rotate(-20deg); opacity: 0; } 45% { transform: scale(.88) rotate(4deg); opacity: 1; } 70% { transform: scale(1.06); } 100% { transform: scale(1); } }
+.h4-ring { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 4px 6px rgba(0,0,0,.7)) drop-shadow(0 0 12px color-mix(in srgb, var(--hero) 60%, transparent)); }
+.h4-ring__wax { fill: color-mix(in srgb, var(--hero) 88%, #fff 12%); }
+.h4-ring__in { fill: color-mix(in srgb, var(--hero) 62%, #2a1608); stroke: rgba(0,0,0,.35); stroke-width: 1.5; }
+.h4-ring__dots { fill: none; stroke: rgba(255,250,235,.55); stroke-width: 1.4; stroke-dasharray: 1 4; stroke-linecap: round; }
+.h4-card__no { position: relative; font-family: var(--f-label); font-weight: 700; font-size: 44px; line-height: 1; color: #1a0f05; text-shadow: 0 1px 0 rgba(255,245,220,.6); }
+.h4-card__no .ic { width: 38px; height: 38px; color: #1a0f05; }
+
+.h4-card.is-taken .h4-card__art { opacity: .28; }
+.h4-card.is-taken .h4-card__aura { animation: none; opacity: .12; }
+.h4-card.is-taken .h4-card__plinth { opacity: .15; }
+.h4-card.is-taken .h4-card__name, .h4-card.is-taken .h4-card__abs { opacity: .45; }
+.h4-card.is-hop { animation: h4-hop 460ms var(--ease-out); }
+@keyframes h4-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-16px) scale(1.03); } }
+.h4-card.is-back { animation: h4-back 420ms var(--ease-back); }
+@keyframes h4-back { 0% { transform: scale(.92); } 60% { transform: scale(1.04); } 100% { transform: scale(1); } }
+.h4-card.is-nope { animation: ui-nope .4s linear; }
+/* pick-locked: grey, no aura, reason icon in a dark disc */
+.h4-card.is-locked .h4-card__art { filter: grayscale(1) brightness(.42); }
+.h4-card.is-locked .h4-card__aura, .h4-card.is-locked .h4-card__plinth { animation: none; opacity: 0; }
+.h4-card.is-locked .h4-card__name { color: var(--off); text-shadow: 0 2px 0 #000; }
+.h4-card.is-locked .h4-card__abs { opacity: .35; filter: grayscale(1); }
+.h4-card.is-locked .h4-card__frame { box-shadow: inset 0 0 0 3px #0B0907, inset 0 0 40px rgba(0,0,0,.6) !important; }
+.h4-card__lock { position: absolute; left: 50%; top: 96px; width: 92px; height: 92px; margin-left: -46px; border-radius: 50%; display: grid; place-items: center; z-index: 3; pointer-events: none;
+  font-size: 52px; color: var(--dmg, #C8483A); background: radial-gradient(circle at 40% 30%, #2a1f15, #0b0907); box-shadow: 0 0 0 3px #5A5048, 0 0 0 6px #0B0907, 0 8px 16px rgba(0,0,0,.7); }
+.h4-card__lock .ic { width: 52px; height: 52px; }
+
+/* ------------------------------------------------------------ empty seat: leather strip + one silhouette medallion */
+.h4-empty { position: relative; width: 820px; height: 180px; display: flex; align-items: center; justify-content: flex-start; padding: 10px 40px 0; border-radius: 12px; overflow: hidden; }
+.h4-empty--right { justify-content: flex-end; }
+.h4-empty__bg { position: absolute; inset: 0; pointer-events: none; background-size: cover; background-position: center; filter: brightness(.55) sepia(.2);
+  -webkit-mask-image: radial-gradient(90% 120% at 50% 50%, #000 40%, transparent 100%); mask-image: radial-gradient(90% 120% at 50% 50%, #000 40%, transparent 100%); }
+.h4-empty::after { content: ""; position: absolute; left: 6%; right: 6%; top: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(166,124,67,.55), transparent); }
+.h4-empty__medal { position: relative; width: calc(66 * var(--mm)); height: calc(66 * var(--mm)); flex: none; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 50% 40%, #1d150e, #0b0907 70%);
+  box-shadow: 0 0 0 3px #6B4E2A, 0 0 0 6px #0B0907, 0 0 0 8px rgba(166,124,67,.45), inset 0 -10px 22px rgba(0,0,0,.7), 0 10px 22px rgba(0,0,0,.6); }
+.h4-empty__sil { position: absolute; inset: 12%; border-radius: 50%; overflow: hidden; opacity: .7;
+  background:
+    radial-gradient(circle at 50% 36%, #3a2c1e 0 17%, transparent 17.5%),
+    radial-gradient(ellipse 46% 34% at 50% 100%, #3a2c1e 0 98%, transparent 100%); }
+.h4-empty__plus { position: relative; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-size: 36px; color: #1a0f05;
+  background: radial-gradient(circle at 38% 30%, #F5D58A, #A67C43 75%); box-shadow: 0 0 0 2px #0B0907, 0 0 0 4px #A67C43, 0 6px 10px rgba(0,0,0,.6); }
+.h4-empty.is-back { animation: h4-fadein 360ms var(--ease-out); }
+@keyframes h4-fadein { from { opacity: 0; transform: scale(.97); } }
+
+/* filled seat arrival */
+.h4-seat.is-pending { opacity: 0; }
+.h4-seat.is-in { animation: h4-seat-in 420ms var(--ease-back); }
+.h4-seat.is-in .medal { animation: h4-medal-in 520ms var(--ease-back); }
+@keyframes h4-seat-in { from { opacity: .3; } }
+@keyframes h4-medal-in { 0% { transform: scale(.7); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+.h4-seat .medal { cursor: pointer; }
+
+/* ------------------------------------------------------------ node: five party sockets */
+.h4-socks { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.h4-sock { position: absolute; width: 42px; height: 42px; translate: -50% -50%; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #241a10, #0b0907);
+  box-shadow: 0 0 0 2px #6B4E2A, 0 0 0 4px #0B0907, 0 3px 6px rgba(0,0,0,.6); transition: box-shadow var(--t-move); }
+.h4-sock::before { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; translate: -50% -50%; rotate: 45deg; background: #6B4E2A; border-radius: 2px; }
+.h4-sock.is-need { box-shadow: 0 0 0 2.5px var(--gold), 0 0 0 4.5px #0B0907, 0 0 14px rgba(224,178,92,.45); }
+.h4-sock.is-need::before { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+.h4-sock.is-opt { opacity: .85; }
+.h4-sock.is-need.is-short { box-shadow: 0 0 0 3px var(--gold), 0 0 0 5px #0B0907, 0 0 22px rgba(245,213,138,.75); }
+.h4-sock__img { position: absolute; inset: 2px; border-radius: 50%; background-size: cover; background-position: center; opacity: 0; transform: scale(.4); transition: opacity 200ms, transform 320ms var(--ease-back); }
+.h4-sock.is-full { box-shadow: 0 0 0 3px var(--hero), 0 0 0 5px #0B0907, 0 0 16px color-mix(in srgb, var(--hero) 80%, transparent); opacity: 1; }
+.h4-sock.is-full::before { opacity: 0; }
+.h4-sock.is-full .h4-sock__img { opacity: 1; transform: scale(1); }
+.h4-sock__dev { position: absolute; right: -8px; bottom: -6px; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 13px;
+  background: #1d150e; color: var(--ink-2); box-shadow: 0 0 0 1.5px #6B4E2A; }
+
+/* ------------------------------------------------------------ ends + fly */
+.h4-endbtn { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-size: 32px; color: var(--ink-2);
+  background: radial-gradient(circle at 40% 30%, #2a1f15, #120d08); box-shadow: 0 0 0 2px #6B4E2A, 0 6px 12px rgba(0,0,0,.6); opacity: .8; }
+.h4-anchor { position: absolute; width: 0; height: 0; }
+.h4-fly { position: absolute; width: 132px; height: 132px; border-radius: 50%; will-change: transform, opacity; z-index: 5;
+  box-shadow: 0 0 0 4px var(--hero), 0 0 0 7px #0B0907, 0 0 46px var(--hero), 0 14px 24px rgba(0,0,0,.6); }
+.h4-fly__img { position: absolute; inset: 0; border-radius: 50%; background-size: cover; background-position: center; }
+
+/* ------------------------------------------------------------ TV: six in a row */
+.h4tv { position: absolute; inset: 0; overflow: hidden; }
+.h4tv__bg { position: absolute; inset: 0; background-size: cover; background-position: center 60%; filter: brightness(.36) saturate(.8); }
+.h4tv__shade { position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(80% 70% at 50% 45%, transparent 40%, rgba(5,4,3,.9) 100%), linear-gradient(180deg, rgba(5,4,3,.6), transparent 22%, transparent 70%, rgba(5,4,3,.92)); }
+.h4tv__row { position: absolute; left: 70px; right: 70px; top: 130px; height: 720px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; }
+.h4tv__col { --hero: var(--gold); position: relative; }
+.h4tv__aura { position: absolute; left: -30px; right: -30px; top: 10px; height: 500px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--hero) 60%, transparent), color-mix(in srgb, var(--hero) 14%, transparent) 60%, transparent);
+  opacity: 0; transition: opacity 400ms var(--ease-out); }
+.h4tv__art { position: absolute; left: 0; right: 0; top: 0; height: 500px; background-repeat: no-repeat; background-size: cover !important; background-position: 50% 0 !important;
+  /* opaque art (no lighten blend): fade all four edges so the painted backdrop of each hero melts into the hall */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22%, #000 78%, transparent 100%), linear-gradient(180deg, transparent 0, #000 12%, #000 70%, transparent 98%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent 0, #000 22%, #000 78%, transparent 100%), linear-gradient(180deg, transparent 0, #000 12%, #000 70%, transparent 98%);
+  mask-composite: intersect;
+  filter: saturate(.35) brightness(.5); }
+.h4tv__col.is-store .h4tv__art {
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 55%, transparent 100%); mask-image: radial-gradient(70% 60% at 50% 40%, #000 55%, transparent 100%); }
+.h4tv__col.is-taken .h4tv__art { filter: none; }
+.h4tv__col.is-taken .h4tv__aura { opacity: .85; }
+.h4tv__badge { position: absolute; left: 50%; top: -64px; width: 88px; height: 88px; margin-left: -44px; display: grid; place-items: center; z-index: 2;
+  opacity: 0; transform: scale(.4); transition: opacity 220ms ease-out, transform 360ms var(--ease-back); }
+.h4tv__col.is-taken .h4tv__badge { opacity: 1; transform: scale(1); }
+.h4tv__col.is-stamp .h4tv__badge { animation: h4-stamp 520ms var(--ease-out); }
+.h4tv__no { position: relative; font-family: var(--f-label); font-weight: 700; font-size: 46px; line-height: 1; color: #1a0f05; text-shadow: 0 1px 0 rgba(255,245,220,.6); }
+.h4tv__no .ic { width: 44px; height: 44px; }
+.h4tv__name { position: absolute; left: -10px; right: -10px; top: 516px; text-align: center; font-family: var(--f-title); font-size: var(--fs-name); line-height: 1; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--hero); text-shadow: 0 3px 0 #000, 0 0 22px color-mix(in srgb, var(--hero) 50%, transparent); white-space: nowrap; opacity: .5; transition: opacity 300ms; }
+.h4tv__epi { position: absolute; left: -10px; right: -10px; top: 580px; text-align: center; font-family: var(--f-text); font-size: 32px; line-height: 1.05; color: var(--ink-2); white-space: nowrap; opacity: .5; transition: opacity 300ms; }
+.h4tv__abs { position: absolute; left: 0; right: 0; top: 628px; display: flex; justify-content: center; gap: 14px; opacity: .45; transition: opacity 300ms; }
+.h4tv__col.is-locked .h4tv__art { filter: grayscale(1) brightness(.38); }
+.h4tv__col.is-locked .h4tv__name { color: var(--off); text-shadow: 0 3px 0 #000; }
+.h4tv__lock { position: absolute; left: 50%; top: 170px; width: 110px; height: 110px; margin-left: -55px; border-radius: 50%; display: grid; place-items: center; z-index: 2;
+  color: var(--dmg, #C8483A); background: radial-gradient(circle at 40% 30%, #2a1f15, #0b0907); box-shadow: 0 0 0 3px #5A5048, 0 0 0 7px #0B0907, 0 10px 20px rgba(0,0,0,.7); }
+.h4tv__lock .ic { width: 62px; height: 62px; }
+.h4tv__col.is-taken .h4tv__name, .h4tv__col.is-taken .h4tv__epi, .h4tv__col.is-taken .h4tv__abs { opacity: 1; }
+.h4tv__sub { position: absolute; left: 50%; bottom: 58px; translate: -50% 0; display: flex; align-items: center; gap: 22px; padding: 10px 44px 10px 12px; border-radius: 70px;
+  background: rgba(10,7,5,.92); box-shadow: 0 0 0 2px #6B4E2A, 0 12px 30px rgba(0,0,0,.6); white-space: nowrap; }
+.h4tv__line { font-family: var(--f-text); font-size: 48px; line-height: 1.1; color: var(--ink); }
+
+@media (prefers-reduced-motion: reduce) {
+  .h4-card__aura { animation: none; }
+  .h4-card.is-stamp .h4-card__ring, .h4tv__col.is-stamp .h4tv__badge, .h4-card.is-hop, .h4-card.is-back, .h4-seat.is-in, .h4-seat.is-in .medal { animation: none; }
+}

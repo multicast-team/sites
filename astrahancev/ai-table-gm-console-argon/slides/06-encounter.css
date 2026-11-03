@@ -1,0 +1,74 @@
+/* Slide 06 · Перед боем.  Owner: story screens.  Scoped under .en */
+.en { position: absolute; inset: 0; }
+.en .seat__shelf { display: none; }
+.en-heroart { position: absolute; top: 7px; bottom: 0; width: 300px; pointer-events: none; opacity: 1; filter: brightness(.55) saturate(.8); transition: filter var(--t-move);
+  background-size: 100% auto !important; background-position: 50% 12% !important; background-repeat: no-repeat;
+  -webkit-mask-image: radial-gradient(60% 85% at 50% 40%, #000 45%, transparent 100%); mask-image: radial-gradient(60% 85% at 50% 40%, #000 45%, transparent 100%); }
+.seat--left .en-heroart { left: 420px; }
+.seat--right .en-heroart { right: 420px; }
+.seat.is-active .en-heroart { filter: none; }
+
+/* ---------- picture → map ---------- */
+.en-pic { position: absolute; inset: 0; background: #0b0907 center 60% / cover no-repeat; filter: brightness(.7); z-index: 2; pointer-events: none;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0, transparent 4%, #000 13%); mask-image: radial-gradient(circle at 50% 50%, transparent 0, transparent 4%, #000 13%);
+  transition: scale 1s cubic-bezier(.45,0,.7,.6), opacity .4s ease .55s; }
+.en-pic.is-out { opacity: 0; scale: 7; }
+.en-board { position: absolute; left: 480px; top: 0; width: 960px; height: 720px; opacity: .3; scale: 1.04; transition: opacity .7s ease, scale 1s var(--ease-out); z-index: 1; }
+.en-board.is-on { opacity: 1; scale: 1; }
+
+.en .tok.en-drop .tok__body { animation: en-drop .55s var(--ease-back) both; }
+@keyframes en-drop { from { opacity: 0; scale: 1.8; translate: 0 -30px; } 60% { opacity: 1; } }
+.en .tok.en-burst .tok__body { animation: en-burst .6s var(--ease-back) both; }
+@keyframes en-burst { 0% { opacity: 0; scale: .2; } 50% { opacity: 1; scale: 1.25; } 100% { scale: 1; } }
+.en-ring { position: absolute; width: 140px; height: 140px; margin: -70px 0 0 -70px; border-radius: 50%; border: 4px solid var(--dmg); box-shadow: 0 0 24px var(--dmg), inset 0 0 18px rgba(255,90,67,.6);
+  animation: en-ring .7s ease-out forwards; pointer-events: none; }
+@keyframes en-ring { from { opacity: 1; scale: .3; } to { opacity: 0; scale: 1.5; } }
+.en .tok.en-roller .tok__body { animation: ui-pulse .5s ease-in-out infinite; }
+
+/* ---------- goal emblem (right end) ---------- */
+.en-goal { display: flex; flex-direction: column; align-items: center; gap: 2px; opacity: 0; translate: 40px 0; transition: opacity .5s ease, translate .5s var(--ease-back); }
+.en-goal.is-on { opacity: 1; translate: 0 0; }
+.en-goal__crown { font-size: 44px; color: var(--gold-hi); filter: drop-shadow(0 0 10px rgba(224,178,92,.7)) drop-shadow(0 2px 0 #000); margin-bottom: -10px; z-index: 2; }
+.en-goal__arrow { font-size: 34px; color: var(--ink-2); rotate: 90deg; margin: 6px 0; }
+.en-goal__flee { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; font-size: 44px; color: #FFD9CF;
+  background: radial-gradient(circle at 40% 30%, #3a1510, #120604 75%); box-shadow: inset 0 0 0 2px var(--enemy), 0 4px 10px rgba(0,0,0,.8); }
+
+/* ---------- initiative inside the nodes ---------- */
+.node.en-has-init .node__sev { opacity: .1; scale: .7; }
+.en-init { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; z-index: 5; padding-top: 6px;
+  animation: en-init-in .4s var(--ease-back) both; }
+@keyframes en-init-in { from { opacity: 0; scale: .7; } }
+.en-init.is-out { opacity: 0; scale: .8; transition: opacity .35s ease, scale .35s ease; }
+.en-init__die { filter: drop-shadow(0 0 12px rgba(245,213,138,.35)); }
+.en-init.is-rolled .en-init__die { filter: drop-shadow(0 0 18px rgba(245,213,138,.8)); }
+.en-init__row { display: flex; gap: 10px; }
+.en-init__p { position: relative; width: 52px; height: 52px; border-radius: 50%; transition: scale var(--t-move) var(--ease-back), filter var(--t-move); filter: saturate(.5) brightness(.65); }
+.en-init__p::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; box-shadow: 0 0 0 3px var(--hero), 0 0 16px var(--hero); opacity: 0; transition: opacity var(--t-move); }
+.en-init__p.is-on { filter: none; scale: 1.18; z-index: 2; }
+.en-init__p.is-on::after { opacity: 1; }
+.en-init__p:disabled { cursor: default; }
+
+/* ---------- dice card out of the roller's seat ---------- */
+.en-roll { position: absolute; z-index: 9; }
+.en-roll--nearLeft { left: 40px; bottom: 190px; }
+.en-roll--nearRight { right: 40px; bottom: 190px; }
+.en-roll--farLeft { left: 40px; top: 190px; rotate: 180deg; }
+.en-roll--farRight { right: 40px; top: 190px; rotate: 180deg; }
+
+/* ---------- phase burst + strip ---------- */
+.en-phase { position: absolute; left: 50%; top: 50%; width: 240px; height: 240px; margin: -120px 0 0 -120px; border-radius: 50%; display: grid; place-items: center; z-index: 6; pointer-events: none;
+  background: radial-gradient(circle at 40% 30%, #4a3620, #120c07 72%); box-shadow: inset 0 0 0 3px var(--gold-hi), inset 0 0 0 10px #120c07, inset 0 0 0 11px rgba(224,178,92,.5), 0 0 80px rgba(245,213,138,.55);
+  animation: en-phase 1.5s var(--ease-out) both; }
+.en-phase.is-world { background: radial-gradient(circle at 40% 30%, #4a1a14, #140605 72%); box-shadow: inset 0 0 0 3px var(--enemy), inset 0 0 0 10px #140605, 0 0 80px rgba(184,69,58,.6); }
+.en-phase__ic { font-size: 140px; color: var(--gold-hi); }
+.en-phase.is-world .en-phase__ic { color: #FFD9CF; }
+@keyframes en-phase { 0% { opacity: 0; scale: .3; } 25% { opacity: 1; scale: 1.08; } 40% { scale: 1; } 75% { opacity: 1; } 100% { opacity: 0; scale: 1.25; } }
+.en-strip .tstrip__phase { animation: en-strip-in .4s var(--ease-back) both; }
+.en-strip .tstrip__m { animation: en-strip-in .45s var(--ease-back) var(--d, 0ms) both; }
+.en-strip .tstrip__m.is-current { animation: en-strip-in .45s var(--ease-back) var(--d, 0ms) both; }
+@keyframes en-strip-in { from { opacity: 0; scale: .4; translate: -60px 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .en-pic, .en-board, .en-goal { transition-duration: .01s; }
+  .en .tok.en-drop .tok__body, .en .tok.en-burst .tok__body, .en-ring, .en-phase, .en-strip .tstrip__m, .en-init { animation-duration: .01s; }
+}

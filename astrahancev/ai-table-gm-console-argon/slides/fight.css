@@ -1,0 +1,317 @@
+/* =====================================================================
+   AI-стол · fight screens (slides 07–10).  Owner: screens «fight».
+   Everything is scoped under .ft (the stage) and built on tokens.css.
+   ===================================================================== */
+
+/* ---------- board in the 720 px centre band ---------- */
+.ft .ft-board { position: absolute; left: 480px; top: 0; }
+.ft .board__map { filter: brightness(1.04) saturate(1.05) contrast(1.04); }
+.ft .board__grid { opacity: .75; }
+.ft .tok--hero .tok__hue { stroke-width: 6; filter: drop-shadow(0 0 4px var(--hero)); }
+/* a hunting board: everything but the targets and the hero sinks to 40 % (rule: «остальное гаснет до 40 %») */
+.ft .board.ft-hunt .tok:not(.is-target):not(.is-active) { opacity: .4; }
+.ft .board.ft-intents .tok--hero:not(.is-hit) .tok__body { filter: saturate(.85); }
+.ft .board.ft-intents .arrow--enemy { animation: arrow-in .3s ease-out both, ft-threat 1.2s ease-in-out infinite; }
+@keyframes ft-threat { 50% { opacity: .6; } }
+.ft .board .arrow.ft-faded { opacity: .22; transition: opacity .25s; animation: none; }
+
+/* drafted preview / result badge facing the far player */
+.ft .preview__it .ic { font-size: 28px; }
+.ft .preview.is-far { rotate: 180deg; }
+.ft .preview.ft-result { box-shadow: 0 0 0 2px var(--bronze-hi), 0 6px 10px rgba(0,0,0,.8); }
+
+/* ---------- main action (rule 1): one gold pulse ---------- */
+.ft .slot.ft-main .slot__disk { animation: ui-pulse var(--t-pulse) ease-in-out infinite;
+  box-shadow: 0 0 0 3px var(--gold), 0 0 22px 6px rgba(224,178,92,.5), 0 6px 10px rgba(0,0,0,.7); }
+.ft .slot.ft-main .slot__label { color: var(--gold-hi); }
+.ft .endturn.ft-main .endturn__disk { animation: ui-pulse var(--t-pulse) ease-in-out infinite; color: #3a2206;
+  background: radial-gradient(circle at 38% 30%, #FFF1C4, #E0B25C 50%, #9A6A22 100%);
+  box-shadow: 0 0 0 2px var(--gold-hi), 0 0 24px rgba(245,213,138,.6), 0 6px 10px rgba(0,0,0,.7); }
+.ft .endturn.ft-main .slot__label { color: var(--gold-hi); }
+.ft .ft-nudge.slot .slot__disk, .ft .ft-nudge.endturn .endturn__disk { animation-duration: .7s; }
+.ft .tok.ft-main .target-ring svg { animation-duration: 2.4s; }
+
+/* word budget (rule 2): only the lit seat speaks, ≤3 words */
+.ft .slot.ft-nolab .slot__label, .ft .slot__label.ft-hide { visibility: hidden; }
+.ft .seat.ft-rolling .slot__label { visibility: hidden; }
+.ft .seat .slot, .ft .seat .endturn { transition: translate var(--t-move) var(--ease-back), filter var(--t-move), opacity var(--t-move); }
+.ft .seat:not(.is-active) .slot, .ft .seat:not(.is-active) .endturn { opacity: .82; }
+
+/* hit / heal flash on the seat itself (the owner sees it at their edge) */
+.ft .seat::after { content: ""; position: absolute; inset: 7px 0 0 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(60% 140% at 50% 100%, rgba(255,90,67,.55), transparent 70%); }
+.ft .seat.ft-healed::after { background: radial-gradient(60% 140% at 50% 100%, rgba(95,207,122,.5), transparent 70%); }
+.ft .seat.ft-hurt::after, .ft .seat.ft-healed::after { animation: ft-seatflash .7s ease-out both; }
+@keyframes ft-seatflash { 15% { opacity: 1; } 100% { opacity: 0; } }
+.ft .seat.ft-hurt .medal { animation: tok-hit .38s ease-out; }
+.ft .seat.ft-react-on { filter: none; }
+
+/* ---------- cards sliding out of the seat (roll + reaction) ---------- */
+.ft .ft-cardslot { position: absolute; bottom: 146px; z-index: 30; }
+.ft .ft-cardslot--right { right: 16px; }
+.ft .ft-cardslot--left { left: 16px; }
+.ft .ft-cardslot .dcard { animation: ft-card-in .44s var(--ease-back) both; }
+.ft .ft-cardslot .dcard.is-leaving { animation: card-out .3s var(--ease-in) both; }
+@keyframes ft-card-in { from { opacity: 0; translate: 0 150px; scale: .82; } 60% { opacity: 1; } }
+.ft .ft-cardslot .dcard::before { content: ""; position: absolute; left: 50%; bottom: -26px; width: 44px; height: 26px; translate: -50% 0; pointer-events: none;
+  background: linear-gradient(180deg, #A67C43, transparent); clip-path: polygon(0 0, 100% 0, 50% 100%); opacity: .7; }
+.ft .dcard .tile { transition: background .12s, color .12s, scale .1s; }
+.ft .dcard .tile:active { scale: .92; }
+
+/* ---------- reaction card (offer-banner) ---------- */
+.ft .ft-react { --hero: var(--gold); position: relative; display: flex; align-items: center; gap: 18px; padding: 18px 22px 22px; border-radius: 10px; color: var(--ink);
+  background: var(--noise), var(--g-parch); background-size: 160px 160px, auto;
+  box-shadow: 0 0 0 2px #A67C43, 0 0 0 5px #120c07, 0 0 0 6px #6B4E2A, inset 0 3px 0 color-mix(in srgb, var(--hero) 75%, transparent), inset 0 0 40px rgba(0,0,0,.55), 0 0 40px color-mix(in srgb, var(--hero) 35%, transparent), 0 20px 40px rgba(0,0,0,.7);
+  animation: ft-card-in .44s var(--ease-back) both; }
+.ft .ft-react.is-yes, .ft .ft-react.is-no { animation: card-out .4s var(--ease-in) .05s both; }
+.ft .ft-react__threat { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.ft .ft-react__foe { width: 72px; height: 72px; border-radius: 50%; background: #120d08 center / cover no-repeat;
+  box-shadow: 0 0 0 3px var(--enemy), 0 0 0 5px #160705, 0 0 14px rgba(184,69,58,.6); }
+.ft .ft-react__roll { display: flex; align-items: center; gap: 4px; font-size: 30px; color: #FFD9CF; }
+.ft .ft-react__roll b { font-family: var(--f-label); font-size: 32px; line-height: 1; }
+.ft .ft-react__vs { font-size: 34px; color: var(--dmg); }
+.ft .ft-react__ab { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.ft .ft-react__pic { width: 108px; height: 108px; border-radius: 50%; background: #120d08 center / cover no-repeat;
+  box-shadow: 0 0 0 4px #A67C43, 0 0 0 7px #0f0a06, 0 0 0 9px var(--hero), 0 0 30px color-mix(in srgb, var(--hero) 70%, transparent);
+  animation: glow-pulse var(--t-pulse) ease-in-out infinite; }
+.ft .ft-react__lab { font-family: var(--f-label); font-weight: 700; font-size: var(--fs-label); line-height: 1; color: var(--ink); text-shadow: 0 2px 0 #000; }
+.ft .ft-react__gain { position: relative; width: 84px; height: 92px; display: grid; place-items: center; font-size: 84px; color: var(--hero); filter: drop-shadow(0 0 10px color-mix(in srgb, var(--hero) 60%, transparent)); }
+.ft .ft-react__gain .ic { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ft .ft-react__gain b { position: relative; font-family: var(--f-label); font-size: 32px; line-height: 1; color: var(--ink); translate: 0 -3px; text-shadow: 0 2px 0 #000; }
+.ft .ft-react__btns { display: flex; gap: 16px; margin-left: 8px; }
+.ft .ft-react__yes, .ft .ft-react__no { width: 80px; height: 80px; border-radius: 50%; display: grid; place-items: center; font-size: 42px; }
+.ft .ft-react__yes { color: #3a2206; background: radial-gradient(circle at 38% 30%, #FFF1C4, #E0B25C 50%, #9A6A22 100%); box-shadow: 0 0 0 2px #F5D58A, 0 0 22px rgba(245,213,138,.55), 0 6px 10px rgba(0,0,0,.7); }
+.ft .ft-react__no { color: var(--ink-2); background: radial-gradient(circle at 40% 30%, #2c2016, #120c07); box-shadow: inset 0 0 0 2px #6B4E2A, 0 4px 8px rgba(0,0,0,.7); }
+.ft .ft-react__yes .ic, .ft .ft-react__no .ic { stroke-width: 3; }
+.ft .ft-react__timer { position: absolute; left: 14px; right: 14px; bottom: 8px; height: 5px; border-radius: 3px; background: var(--hero); transform-origin: 0 50%;
+  box-shadow: 0 0 8px var(--hero); animation: ft-timer var(--ms) linear forwards; }
+@keyframes ft-timer { to { transform: scaleX(0); opacity: .4; } }
+
+/* ---------- world dice in the nodes ---------- */
+.ft .node.ft-world .node__sev { opacity: .22; scale: .8; }
+.ft .node .fx-roll__mod { right: -40px; }
+
+/* ---------- seal: the copy at the acting player's edge sits a touch forward ---------- */
+.ft .node__seal .seal { --s: var(--seal); }
+
+/* ---------- centre fx: turn baton, phase emblem ---------- */
+.ft .ft-baton { position: absolute; left: 960px; top: 360px; width: 0; height: 0; pointer-events: none; }
+.ft .ft-baton .medal { position: absolute; left: -95px; top: -95px; animation: ft-baton 1.25s var(--ease-out) both; }
+.ft .ft-baton.is-far .medal { rotate: 180deg; }
+.ft .ft-baton .medal__glow { opacity: 1; }
+.ft .ft-baton__rays { position: absolute; left: -210px; top: -210px; width: 420px; height: 420px; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--hero) 45%, transparent) 0%, color-mix(in srgb, var(--hero) 12%, transparent) 40%, transparent 66%);
+  animation: ft-rays 1.25s ease-out both; }
+@keyframes ft-baton { 0% { opacity: 0; scale: .4; } 22% { opacity: 1; scale: 1.08; } 38% { scale: 1; } 72% { opacity: 1; } 100% { opacity: 0; scale: .9; } }
+@keyframes ft-rays { 0% { opacity: 0; scale: .3; } 25% { opacity: 1; } 100% { opacity: 0; scale: 1.5; } }
+
+.ft .ft-phase { position: absolute; left: 960px; top: 360px; width: 220px; height: 220px; margin: -110px 0 0 -110px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 130px; color: var(--gold-hi); pointer-events: none;
+  background: radial-gradient(circle at 40% 30%, rgba(58,42,27,.95), rgba(15,10,6,.95) 75%);
+  box-shadow: inset 0 0 0 3px #A67C43, inset 0 0 0 9px #0f0a06, inset 0 0 0 10px rgba(166,124,67,.5), 0 0 80px rgba(224,178,92,.45), 0 20px 40px rgba(0,0,0,.8);
+  animation: ft-phase 1.35s var(--ease-out) both; }
+.ft .ft-phase.is-world { color: #F07A6C; box-shadow: inset 0 0 0 3px var(--enemy), inset 0 0 0 9px #0f0a06, inset 0 0 0 10px rgba(184,69,58,.5), 0 0 90px rgba(184,69,58,.55), 0 20px 40px rgba(0,0,0,.8); }
+.ft .ft-phase__ring { position: absolute; inset: -30px; border-radius: 50%; border: 3px solid currentColor; opacity: 0; animation: ft-ring 1.1s ease-out .1s both; }
+@keyframes ft-phase { 0% { opacity: 0; scale: .5; } 20% { opacity: 1; scale: 1.06; } 34% { scale: 1; } 75% { opacity: 1; } 100% { opacity: 0; scale: 1.15; } }
+@keyframes ft-ring { 0% { opacity: .9; scale: .7; } 100% { opacity: 0; scale: 1.6; } }
+
+/* hit burst at a token */
+.ft .ft-burst { position: absolute; width: 150px; height: 150px; margin: -75px 0 0 -75px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, rgba(255,250,235,.95) 0%, color-mix(in srgb, var(--c) 85%, transparent) 26%, color-mix(in srgb, var(--c) 30%, transparent) 52%, transparent 70%);
+  animation: ft-burst .6s cubic-bezier(.2,.8,.3,1) both; }
+@keyframes ft-burst { 0% { opacity: 0; scale: .2; } 18% { opacity: 1; } 100% { opacity: 0; scale: 1.5; } }
+.ft .ft-shieldfx { position: absolute; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, transparent 52%, rgba(79,184,255,.35) 64%, rgba(160,220,255,.9) 70%, transparent 74%);
+  animation: ft-shield 1.35s ease-out both; }
+@keyframes ft-shield { 0% { opacity: 0; scale: .5; } 20% { opacity: 1; scale: 1.08; } 70% { opacity: 1; scale: 1; } 100% { opacity: 0; scale: 1.25; } }
+
+/* ---------- area template ---------- */
+.ft .ft-aoe { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
+.ft .ft-aoe__shape { fill: color-mix(in srgb, var(--hero) 22%, transparent); stroke: var(--hero); stroke-width: 4; stroke-dasharray: 12 8;
+  filter: drop-shadow(0 0 10px var(--hero)); }
+.ft .ft-aoe.ft-main .ft-aoe__shape { animation: ft-aoe 1.2s ease-in-out infinite; }
+@keyframes ft-aoe { 50% { opacity: .7; } }
+.ft .ft-aoe.is-locked .ft-aoe__shape { stroke-dasharray: none; fill: color-mix(in srgb, var(--hero) 30%, transparent); }
+.ft .board.ft-aiming { cursor: crosshair; }
+.ft .tok.ft-inaoe .tok__body { filter: drop-shadow(0 0 10px var(--gold-hi)) brightness(1.15); scale: 1.06; }
+.ft .tok.ft-danger .tok__body { filter: drop-shadow(0 0 10px var(--dmg)); }
+.ft .board.is-targeting.ft-aiming .tok.ft-inaoe, .ft .board.is-targeting.ft-aiming .tok.ft-danger { opacity: 1; }
+
+/* ---------- left end: queue ---------- */
+.ft .ft-strip .tstrip__list { gap: 8px; }
+.ft .ft-strip .tstrip__phase { margin-bottom: 4px; }
+
+/* ---------- right end: goal emblem + service ---------- */
+.ft .ft-goal { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 6px; border-radius: 60px; }
+.ft .ft-goal__lead { position: relative; display: block; }
+.ft .ft-goal__crown { position: absolute; left: 50%; top: -30px; translate: -50% 0; font-size: 40px; color: var(--gold-hi); filter: drop-shadow(0 2px 2px #000) drop-shadow(0 0 8px rgba(224,178,92,.5)); }
+.ft .ft-goal__arrow { font-size: 34px; color: var(--ink-2); rotate: 90deg; }
+.ft .ft-goal__flee { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; font-size: 44px; color: var(--ink);
+  background: radial-gradient(circle at 40% 30%, #3a2a1b, #0f0a06 75%); box-shadow: inset 0 0 0 2px #6B4E2A, 0 4px 10px rgba(0,0,0,.8); }
+.ft .ft-goal.is-done .ft-goal__flee { color: var(--gold-hi); box-shadow: inset 0 0 0 2px var(--gold), 0 0 26px rgba(224,178,92,.6); animation: ui-pulse .6s ease-in-out 3; }
+.ft .ft-goal.is-done .medal { filter: var(--dead-filter); }
+.ft .ft-svc { display: grid; grid-template-columns: repeat(2, 52px); gap: 12px; margin-top: 26px; }
+.ft .ft-svc__b { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; color: var(--ink-2);
+  background: radial-gradient(circle at 40% 30%, #2c2016, #0f0a06 75%); box-shadow: inset 0 0 0 1.5px #5A4428, 0 3px 6px rgba(0,0,0,.7); }
+.ft .sheet__text { white-space: pre-line; }
+
+/* ---------- ghost hand (idle 8 s) ---------- */
+.ft .ft-hand { position: absolute; width: 74px; height: 74px; pointer-events: none; z-index: 5; }
+.ft .ft-hand svg { position: absolute; left: -18px; top: -4px; width: 74px; height: 74px; overflow: visible; filter: drop-shadow(0 6px 8px rgba(0,0,0,.7));
+  animation: ft-hand 1.4s ease-in-out infinite; transform-origin: 18px 4px; }
+.ft .ft-hand.is-far { rotate: 180deg; }
+.ft .ft-hand path { fill: rgba(255,244,214,.88); stroke: #2a1606; stroke-width: 2.5; stroke-linejoin: round; }
+.ft .ft-hand::before { content: ""; position: absolute; left: -22px; top: -22px; width: 44px; height: 44px; border-radius: 50%; border: 3px solid var(--gold-hi); opacity: 0;
+  animation: ft-handring 1.4s ease-out infinite; }
+@keyframes ft-hand { 0%, 100% { translate: 18px 26px; opacity: .55; } 45% { translate: 0 0; opacity: 1; } 55% { translate: 0 0; scale: .92; } }
+@keyframes ft-handring { 0%, 44% { opacity: 0; scale: .4; } 55% { opacity: 1; } 100% { opacity: 0; scale: 1.5; } }
+
+/* ---------- end of fight ---------- */
+.ft .ft-end { position: absolute; left: 960px; top: 360px; width: 0; height: 0; z-index: 7; pointer-events: none; }
+.ft .ft-end::before { content: ""; position: absolute; left: -760px; top: -360px; width: 1520px; height: 720px;
+  background: radial-gradient(50% 60% at 50% 50%, rgba(8,6,4,.85), rgba(8,6,4,.55) 60%, transparent 100%); animation: arrow-in .5s ease-out both; }
+.ft .ft-end__emb { position: absolute; left: -150px; top: -150px; width: 300px; height: 300px; display: grid; place-items: center; font-size: 250px; color: var(--ink-2);
+  animation: ft-phase-in .7s var(--ease-back) both; }
+.ft .ft-end.is-win .ft-end__emb { color: var(--gold-hi); filter: drop-shadow(0 0 30px rgba(224,178,92,.6)); }
+.ft .ft-end__emb i { position: absolute; inset: -40px; border-radius: 50%; background: radial-gradient(circle, rgba(224,178,92,.28), transparent 65%); }
+.ft .ft-end__w { position: absolute; left: -400px; width: 800px; top: 160px; text-align: center; font-size: 72px; line-height: 1; animation: arrow-in .5s ease-out .3s both; }
+.ft .ft-end__w--far { top: auto; bottom: 160px; rotate: 180deg; }
+@keyframes ft-phase-in { from { opacity: 0; scale: .4; } }
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ft .ft-hand svg, .ft .ft-hand::before { animation: none !important; }
+  .ft .ft-baton .medal, .ft .ft-phase { animation-duration: 1.2s !important; }
+}
+
+/* ---------- fixes after the first look ---------- */
+/* hourglass follows the shelf (brief: «Конец хода» отдельно, через зазор 24 px), not glued to the node */
+.ft .seat__id { flex: 0 1 auto; }
+.ft .seat__end { margin-left: 24px; align-self: flex-end; margin-bottom: 26px; }
+.ft .seat--right .seat__end { margin-left: 0; margin-right: 24px; }
+/* hunting dims the map, but keeps the painting readable */
+.ft .board.is-targeting .board__map::after { opacity: .62; }
+/* melee arc sits over the tokens: lift the preview above it */
+.ft .tok.ft-melee .tok__over { translate: -50% -34px; }
+/* components.css: `.stage button { font: inherit }` (0,1,1) beats `.tile` / `.dcard__ok` (0,1,0) — restore inside fight slides */
+.ft .dcard .tile { font-family: var(--f-label); font-weight: 700; font-size: calc(var(--tile) * .47); line-height: 1; }
+.ft .dcard .dcard__ok { font-size: 38px; }
+.ft .dcard .tile--key .ic { font-size: 26px; }
+/* 8–10 tiles would sit in one 800+ px row and push ✓ out of the card: two rows instead */
+.ft .dcard__tiles[style*="--cols: 8"] { grid-template-columns: repeat(4, var(--tile)); }
+.ft .dcard__tiles[style*="--cols: 9"], .ft .dcard__tiles[style*="--cols: 10"] { grid-template-columns: repeat(5, var(--tile)); }
+/* the leader's intent sits above its crown */
+.ft .tok--leader .tok__over { translate: -50% -20px; }
+.ft .tok--leader.ft-melee .tok__over { translate: -50% -50px; }
+/* the far twin (.tok__under) needs no lift: the melee arc and the crown are above the token */
+.ft .tok:has(.preview) { z-index: 6; }
+/* drafted: the seal is the one thing that pulses — the map comes back, the spare target ring steps back */
+.ft .board.ft-drafted.is-targeting .board__map::after { opacity: .3; }
+.ft .board.ft-drafted .tok.is-target:not(.is-picked) .target-ring { opacity: .35; }
+.ft .board.ft-drafted.ft-hunt .tok:not(.is-target):not(.is-active) { opacity: .6; }
+/* reach cells must read on the painted map */
+.ft .reach-cell { background: radial-gradient(circle, color-mix(in srgb, var(--hero) 34%, transparent) 0%, color-mix(in srgb, var(--hero) 14%, transparent) 75%);
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--hero) 55%, transparent); }
+/* 32″: everything grows by --mm, the 820 px seat gets tight — tighten the gaps, not the targets */
+.ft[data-screen="32"] .seat { gap: 10px; padding-left: 14px; padding-right: 14px; }
+.ft[data-screen="32"] .seat__shelf { gap: 8px; }
+.ft[data-screen="32"] .seat__end { margin-left: 12px; }
+.ft[data-screen="32"] .seat--right .seat__end { margin-left: 0; margin-right: 12px; }
+
+/* =====================================================================
+   Review fixes (clarity / craft / rules, round 2)
+   ===================================================================== */
+/* painted sides: no blurred smear of the map — the table surface, vignetted into the map edge */
+.ft .board__bleed { filter: none; background: radial-gradient(60% 75% at 50% 50%, transparent 30%, rgba(11,9,7,.55) 62%, rgba(11,9,7,.9) 100%),
+  var(--ft-surface, linear-gradient(#2a1f15, #120c07)) center / cover no-repeat !important; }
+.ft .board__bleed { -webkit-mask: none; mask: none; }
+.ft .tl__end--l, .ft .tl__end--r { background: none; }
+
+/* rule 1 — one pulse per moment: the main slot pulses, the active hero keeps a still glow */
+.ft .tok.is-active .tok__body { animation: none; }
+.ft .tok.is-active .tok__body::before { animation: none; opacity: .85; }
+.ft .tstrip__m.is-current .medal__glow { animation: none; opacity: .8; }
+.ft .node .medal__glow { animation: none; }
+
+/* active shelf: bronze → gold frame with the hero's glow; resting shelves plain bronze */
+.ft .seat.is-active .slot:not([data-state="used"]):not([data-state="disabled"]) > .slot__disk {
+  background: conic-gradient(from 210deg, #7a5a24, #F5D58A, #A67C43, #FFE9B0, #7a5a24);
+  box-shadow: 0 0 0 1px #0B0907, 0 0 14px color-mix(in srgb, var(--hero) 80%, transparent), 0 4px 8px rgba(0,0,0,.7); }
+.ft .seat.is-active .slot.ft-main > .slot__disk { box-shadow: 0 0 0 3px var(--gold), 0 0 22px 6px rgba(224,178,92,.5), 0 6px 10px rgba(0,0,0,.7); }
+/* cost marks readable: 30 px backing, 20 px glyph */
+.ft .slot__cost { width: 30px; height: 30px; left: -8px; top: -8px; font-size: 20px; background: radial-gradient(circle at 35% 30%, #2a1d10, #050302); box-shadow: 0 0 0 2px #A67C43, 0 2px 5px rgba(0,0,0,.9); }
+
+/* «Конец» under the hourglass on the lit seat */
+.ft .seat.is-active .endturn .slot__label { font-size: 18px; visibility: visible; }
+
+/* enemy tokens: brighter faces, leader bigger, small ones smaller; HP ring in side colour */
+.ft .tok--enemy .tok__img { filter: brightness(1.15) contrast(1.1); }
+.ft .tok--enemy { --hpc: var(--enemy); }
+.ft .tok--hero { --hpc: var(--hero); }
+.ft .tok--leader .tok__body { inset: -4%; }
+.ft .tok.ft-small .tok__body { inset: 13%; }
+
+/* target preview: parchment chip, ≥32 px digits, the die glyph shows its faces */
+.ft .preview { gap: 14px; padding: 6px 16px 6px 12px; border-radius: 30px; color: #2a1606;
+  background: linear-gradient(rgba(245,230,196,.82), rgba(214,190,146,.9)), var(--ft-parch, none) center / cover;
+  box-shadow: 0 0 0 2px #A67C43, 0 0 0 4px #1a120a, 0 0 18px rgba(224,178,92,.45), 0 8px 12px rgba(0,0,0,.8); }
+.ft .preview__it { gap: 4px; font-size: 40px; color: #2a1606; }
+.ft .preview__it .ic { font-size: 40px; }
+.ft .preview__it b { font-size: 34px; color: #2a1606; text-shadow: none; }
+.ft .preview__it.is-dmg, .ft .preview__it.is-dmg b { color: #9A2414; }
+.ft .preview__it.is-hit, .ft .preview__it.is-hit b { color: #6B4510; }
+.ft .preview__it.is-heal, .ft .preview__it.is-heal b { color: #1E6B34; }
+.ft .preview .die.ft-die { flex: none; }
+.ft .preview .ft-die .die__svg { filter: drop-shadow(0 2px 2px rgba(0,0,0,.6)); }
+.ft .preview .ft-die .die__num { font-size: 40px; }
+.ft .preview__it.is-dmg .ft-die .die__body { fill: #E8B4A4; }
+
+/* draft arrow: thick gold, running dashes (the seal is the pulse; this only flows) */
+.ft .board.ft-drafted .arrow__dash { stroke-width: 3.5; stroke-dasharray: 6 14; animation: ft-flow .9s linear infinite; }
+@keyframes ft-flow { to { stroke-dashoffset: -20; } }
+
+/* roll + reaction cards: dark parchment with a bronze edge, bone tiles */
+.ft .ft-cardslot { bottom: 192px; }
+.ft .ft-cardslot .dcard { background: linear-gradient(rgba(28,19,11,.80), rgba(14,9,5,.88)), var(--ft-parch, var(--g-parch)) center / cover;
+  box-shadow: 0 0 0 2px #A67C43, 0 0 0 5px #120c07, 0 0 0 6px #6B4E2A, inset 0 0 0 1px rgba(245,213,138,.35), inset 0 0 40px rgba(0,0,0,.6),
+    0 0 36px color-mix(in srgb, var(--hero) 30%, transparent), 0 20px 40px rgba(0,0,0,.75); }
+.ft .dcard .tile { font-size: 30px; color: #2a1606; border: 0;
+  background: radial-gradient(circle at 40% 30%, #FBF1DA, #E3CFA5 55%, #BFA272 100%);
+  box-shadow: inset 0 -4px 6px rgba(90,60,25,.45), inset 0 3px 3px rgba(255,255,255,.6), 0 0 0 1.5px #6B4E2A, 0 4px 6px rgba(0,0,0,.7); }
+.ft .dcard .tile.is-on { background: radial-gradient(circle at 40% 30%, #FFF1C4, #E0B25C 55%, #9A6A22 100%); box-shadow: 0 0 0 3px var(--gold-hi), 0 0 18px rgba(245,213,138,.7); }
+.ft .dcard .tile--nat { box-shadow: inset 0 -4px 6px rgba(90,60,25,.45), 0 0 0 2px var(--gold), 0 0 10px rgba(224,178,92,.5), 0 4px 6px rgba(0,0,0,.7); }
+.ft .dcard .die__edge { stroke: color-mix(in srgb, var(--hero) 75%, #3B2410); stroke-width: 1.8; }
+.ft .dcard .die.is-empty .die__num { font-size: 40px; }
+.ft .dcard .dcard__ok:not(:disabled) { box-shadow: 0 0 0 3px #7a4a14, 0 0 0 5px #F5D58A, 0 0 24px rgba(245,213,138,.6), 0 6px 10px rgba(0,0,0,.7); }
+.ft .ft-react { background: linear-gradient(rgba(28,19,11,.78), rgba(14,9,5,.88)), var(--ft-parch, var(--g-parch)) center / cover; }
+
+/* reaction «Да»: a tick, not a chevron */
+.ft .ft-tick { width: 52px; height: 52px; overflow: visible; }
+.ft .ft-tick path { fill: none; stroke: #3a2206; stroke-width: 6.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* world dice in the nodes: 160 px die, shield mod badge, gold flash on a hit, grey on a miss */
+.ft .node .fx-roll { z-index: 4; }
+.ft .node .fx-roll__mod { right: -46px; bottom: 18px; min-width: 56px; height: 62px; padding: 0 0 6px; border-radius: 0; font-size: 28px; color: #2a1606;
+  background: linear-gradient(180deg, #F5D58A, #A67C43); box-shadow: none; clip-path: polygon(50% 0, 100% 12%, 96% 58%, 50% 100%, 4% 58%, 0 12%);
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,.8)); }
+.ft .fx-roll.is-settled.ft-hit .die__svg { filter: drop-shadow(0 0 18px #FFD36B) drop-shadow(0 0 34px rgba(224,178,92,.8)) drop-shadow(0 6px 8px rgba(0,0,0,.75)); }
+.ft .fx-roll.is-settled.ft-miss .die { filter: grayscale(.85) brightness(.7); }
+
+/* damage numbers that reach a hero: big, full strength ~800 ms, also at the owner's seat */
+.ft .fx-pop.ft-seatpop { z-index: 40; }
+
+/* gear sheet rows */
+.ft .ft-gear { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.ft .ft-gear__b { display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 8px 12px; border-radius: 12px; font-family: var(--f-label); font-weight: 700; font-size: 20px; color: var(--ink);
+  background: radial-gradient(circle at 30% 20%, #33251a, #120c07 80%); box-shadow: inset 0 0 0 1.5px #6B4E2A, 0 3px 6px rgba(0,0,0,.6); text-align: left; }
+.ft .ft-gear__b .ic { font-size: 28px; color: var(--gold-hi); flex: none; }
+
+/* marker mode */
+.ft .ft-svc__b.is-on { color: #3a2206; background: radial-gradient(circle at 38% 30%, #FFF1C4, #E0B25C 50%, #9A6A22 100%); box-shadow: 0 0 0 2px #F5D58A, 0 0 16px rgba(245,213,138,.5); }
+.ft .board.ft-marking { cursor: cell; }
+.ft .ft-mark { position: absolute; width: 48px; height: 48px; margin: -24px 0 0 -24px; display: grid; place-items: center; font-size: 34px; color: var(--gold-hi);
+  border-radius: 50%; background: rgba(15,10,6,.7); box-shadow: 0 0 0 2px var(--gold), 0 0 14px rgba(224,178,92,.5); animation: toast-in .25s var(--ease-back) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ft .board.ft-drafted .arrow__dash { animation: none; }
+}
