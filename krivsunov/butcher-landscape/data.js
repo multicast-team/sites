@@ -7,8 +7,8 @@ window.WINDOWS = [
 "source": "",
 "orig": true,
 "shot": {
-"ios": "81f165",
-"android": "9a19dc",
+"ios": "642c43",
+"android": "bfc890",
 "orig": "cf7c22"
 }
 },
@@ -20,8 +20,8 @@ window.WINDOWS = [
 "source": "SafeArea/SettingsButton",
 "orig": true,
 "shot": {
-"ios": "6accc9",
-"android": "4fe063",
+"ios": "981aca",
+"android": "993332",
 "orig": "b40ad3"
 }
 },
@@ -33,8 +33,8 @@ window.WINDOWS = [
 "source": "HudButtons/Container/InnerContainer/InventoryButton",
 "orig": true,
 "shot": {
-"ios": "f081ca",
-"android": "6c07ba",
+"ios": "b4fcac",
+"android": "ddc630",
 "orig": "5a4e1e"
 }
 },
@@ -46,8 +46,8 @@ window.WINDOWS = [
 "source": "ButtonsContainer/Mail/Container/Image",
 "orig": true,
 "shot": {
-"ios": "c265bc",
-"android": "b09003",
+"ios": "2044f2",
+"android": "9e097c",
 "orig": "dde450"
 }
 },
@@ -59,8 +59,8 @@ window.WINDOWS = [
 "source": "ButtonsContainer/VipButton/Content/Btn",
 "orig": true,
 "shot": {
-"ios": "b5a716",
-"android": "fc8a8e",
+"ios": "74a50e",
+"android": "989327",
 "orig": "2a85b0"
 }
 },
@@ -72,8 +72,8 @@ window.WINDOWS = [
 "source": "ButtonsContainer/ProfileButton",
 "orig": true,
 "shot": {
-"ios": "aca481",
-"android": "f8ab04",
+"ios": "273cc1",
+"android": "13ffdb",
 "orig": "b66232"
 }
 },
@@ -85,8 +85,8 @@ window.WINDOWS = [
 "source": "SafeArea/Minimap",
 "orig": true,
 "shot": {
-"ios": "58bfd9",
-"android": "2c9d9d",
+"ios": "5bca94",
+"android": "a9fbdd",
 "orig": "3c9bcc"
 }
 },
@@ -98,8 +98,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Mines/Hud/Hud.prefab",
 "orig": true,
 "shot": {
-"ios": "d74e35",
-"android": "6be071",
+"ios": "a1f45f",
+"android": "8fd347",
 "orig": "27fd96"
 }
 },
@@ -111,8 +111,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Mines/Dialogue/DialogueWindow.prefab",
 "orig": true,
 "shot": {
-"ios": "7ac2bf",
-"android": "63e170",
+"ios": "2dfd65",
+"android": "e6f171",
 "orig": "af5f58"
 }
 },
@@ -124,8 +124,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Mines/Quests/QuestsWindow.prefab",
 "orig": true,
 "shot": {
-"ios": "a5dddd",
-"android": "95d6b8",
+"ios": "7ed3f8",
+"android": "3f226e",
 "orig": "2b455e"
 }
 },
@@ -137,8 +137,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/AmuletCrystalContextView.prefab",
 "orig": true,
 "shot": {
-"ios": "2eace2",
-"android": "646fe2",
+"ios": "42f06c",
+"android": "3db653",
 "orig": "c71c3d"
 }
 },
@@ -150,8 +150,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/AmuletCrystalEnchantmentResult.prefab",
 "orig": true,
 "shot": {
-"ios": "9042bd",
-"android": "5095a6",
+"ios": "46f6d8",
+"android": "9dd0f9",
 "orig": "f4143d"
 }
 },
@@ -163,8 +163,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/AmuletCrystalRarityChances.prefab",
 "orig": true,
 "shot": {
-"ios": "f354f6",
-"android": "fe8291",
+"ios": "c55580",
+"android": "aad81a",
 "orig": "693413"
 }
 },
@@ -176,8 +176,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/AmuletCrystalsBlacksmithView.prefab",
 "orig": true,
 "shot": {
-"ios": "beffd9",
-"android": "1b4702",
+"ios": "e7ac6d",
+"android": "8a42ac",
 "orig": "8b93c1"
 }
 },
@@ -189,8 +189,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Amulet/Crystals/AmuletCrystalsEnchantmentTutorial.prefab",
 "orig": true,
 "shot": {
-"ios": "7ea057",
-"android": "de11c5",
+"ios": "262b03",
+"android": "401a50",
 "orig": "593b74"
 }
 },
@@ -202,8 +202,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/AmuletCrystalsEnchantmentView.prefab",
 "orig": true,
 "shot": {
-"ios": "4ae4ee",
-"android": "0e6a90",
+"ios": "ff69cb",
+"android": "111086",
 "orig": "9e9bad"
 }
 },
@@ -215,8 +215,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/AmuletCrystalsView.prefab",
 "orig": true,
 "shot": {
-"ios": "77935a",
-"android": "092031",
+"ios": "2f81a8",
+"android": "3f4a07",
 "orig": "e97be2"
 }
 },
@@ -228,8 +228,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/AmuletCrystalUpgradesView.prefab",
 "orig": true,
 "shot": {
-"ios": "d6f549",
-"android": "29b69a",
+"ios": "3d5000",
+"android": "039b19",
 "orig": "3e76c1"
 }
 },
@@ -241,8 +241,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/CrystalRespawnedView.prefab",
 "orig": true,
 "shot": {
-"ios": "43187a",
-"android": "d46e9e",
+"ios": "c90aa1",
+"android": "e62803",
 "orig": "aa2f91"
 }
 },
@@ -254,8 +254,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/CrystalStatsFilterView.prefab",
 "orig": true,
 "shot": {
-"ios": "15b862",
-"android": "5db6c0",
+"ios": "0d3806",
+"android": "2dd277",
 "orig": "aa94ee"
 }
 },
@@ -267,8 +267,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/CrystalsTutorial.prefab",
 "orig": true,
 "shot": {
-"ios": "bf7b8d",
-"android": "889779",
+"ios": "3aee54",
+"android": "30eff4",
 "orig": "4f0d73"
 }
 },
@@ -280,8 +280,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/CrystalsUnlockView.prefab",
 "orig": true,
 "shot": {
-"ios": "5fc28a",
-"android": "c5c119",
+"ios": "9eb41c",
+"android": "0f67ba",
 "orig": "8ed13c"
 }
 },
@@ -293,8 +293,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/AmuletGraphLevelUnlockView.prefab",
 "orig": true,
 "shot": {
-"ios": "83c03d",
-"android": "79f196",
+"ios": "2a5da7",
+"android": "9109c3",
 "orig": "e0fbf7"
 }
 },
@@ -306,8 +306,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/AmuletProgressPopup.prefab",
 "orig": true,
 "shot": {
-"ios": "d9ce98",
-"android": "491489",
+"ios": "bc71fe",
+"android": "f3b241",
 "orig": "65cb33"
 }
 },
@@ -319,8 +319,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/AmuletSoulHarvestedView.prefab",
 "orig": true,
 "shot": {
-"ios": "97eb5b",
-"android": "188f1d",
+"ios": "5e6484",
+"android": "950c2c",
 "orig": "26d58d"
 }
 },
@@ -332,8 +332,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/AmuletTutorial.prefab",
 "orig": true,
 "shot": {
-"ios": "655d44",
-"android": "a9678c",
+"ios": "52a3ab",
+"android": "6158fc",
 "orig": "293e16"
 }
 },
@@ -345,8 +345,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/AmuletUnlockView.prefab",
 "orig": true,
 "shot": {
-"ios": "e31f2e",
-"android": "b830b8",
+"ios": "60bb33",
+"android": "1e8c09",
 "orig": "0764f0"
 }
 },
@@ -358,8 +358,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/AmuletUpgradesGraph.prefab",
 "orig": true,
 "shot": {
-"ios": "5dfc33",
-"android": "72b17a",
+"ios": "12a0f0",
+"android": "4804c5",
 "orig": "ea6219"
 }
 },
@@ -371,8 +371,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Blacksmith/BlacksmithHub.prefab",
 "orig": true,
 "shot": {
-"ios": "f348ed",
-"android": "b1184c",
+"ios": "df8179",
+"android": "f2629b",
 "orig": "7bd57a"
 }
 },
@@ -384,8 +384,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Blacksmith/BlacksmithItemChoice.prefab",
 "orig": true,
 "shot": {
-"ios": "1016cf",
-"android": "646dd5",
+"ios": "f328f1",
+"android": "f89bcd",
 "orig": "9c32c2"
 }
 },
@@ -397,8 +397,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Blacksmith/BlacksmithItemTakeOff.prefab",
 "orig": true,
 "shot": {
-"ios": "f4b265",
-"android": "8e09f7",
+"ios": "83bc70",
+"android": "1d7d6d",
 "orig": "ef8204"
 }
 },
@@ -410,8 +410,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Blacksmith/BlacksmithSharpeningComplete.prefab",
 "orig": true,
 "shot": {
-"ios": "69a502",
-"android": "61faf7",
+"ios": "fc7ce4",
+"android": "f1c9b4",
 "orig": "431ad8"
 }
 },
@@ -423,8 +423,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Blacksmith/BlacksmithSharpeningUnlocked.prefab",
 "orig": true,
 "shot": {
-"ios": "bbcf72",
-"android": "3e1407",
+"ios": "666783",
+"android": "86d066",
 "orig": "28c554"
 }
 },
@@ -436,8 +436,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Blacksmith/BlacksmithUpgradesGraph.prefab",
 "orig": true,
 "shot": {
-"ios": "324eb6",
-"android": "f28738",
+"ios": "17d721",
+"android": "6b0bcd",
 "orig": "a023de"
 }
 },
@@ -449,8 +449,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Blacksmith/BlacksmithUpgradesView.prefab",
 "orig": true,
 "shot": {
-"ios": "79413d",
-"android": "f9b994",
+"ios": "359c0f",
+"android": "e20a50",
 "orig": "1652a1"
 }
 },
@@ -462,8 +462,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/BossTower/BossRaidDefeatView.prefab",
 "orig": true,
 "shot": {
-"ios": "999349",
-"android": "24bd6c",
+"ios": "737d0c",
+"android": "3d936a",
 "orig": "309b94"
 }
 },
@@ -475,8 +475,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/BossTower/BossRaidRewardView.prefab",
 "orig": true,
 "shot": {
-"ios": "e96922",
-"android": "09bb9f",
+"ios": "1717cd",
+"android": "f38229",
 "orig": "0b8653"
 }
 },
@@ -488,8 +488,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/BossTower/BossRaidVictoryView.prefab",
 "orig": true,
 "shot": {
-"ios": "8b6747",
-"android": "e334e8",
+"ios": "fa0aaf",
+"android": "0fc9f0",
 "orig": "75c0df"
 }
 },
@@ -501,8 +501,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/BossTower/BossTowerBossDetailsView.prefab",
 "orig": true,
 "shot": {
-"ios": "63f198",
-"android": "7eeac3",
+"ios": "4acc86",
+"android": "8a5954",
 "orig": "d694e1"
 }
 },
@@ -514,8 +514,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/BossTower/BossTowerHub.prefab",
 "orig": true,
 "shot": {
-"ios": "d330c5",
-"android": "81faac",
+"ios": "77615c",
+"android": "2473ba",
 "orig": "cba012"
 }
 },
@@ -527,8 +527,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/BossTower/BossTowerLeaveView.prefab",
 "orig": true,
 "shot": {
-"ios": "f46502",
-"android": "bd03f7",
+"ios": "0fd2f8",
+"android": "844e95",
 "orig": "190fde"
 }
 },
@@ -540,8 +540,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/BossTower/BossTowerPortalUnlockView.prefab",
 "orig": true,
 "shot": {
-"ios": "9c3395",
-"android": "e18aa7",
+"ios": "20ff46",
+"android": "5c56cc",
 "orig": "4ee316"
 }
 },
@@ -553,8 +553,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/BossTower/BossTutorialView.prefab",
 "orig": true,
 "shot": {
-"ios": "d64496",
-"android": "5deabb",
+"ios": "6e7856",
+"android": "2b01ad",
 "orig": "a3481c"
 }
 },
@@ -566,8 +566,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Event/Roster/RosterEventEndLeagueNotificationView.prefab",
 "orig": true,
 "shot": {
-"ios": "70ccfc",
-"android": "ffe872",
+"ios": "f2ee6c",
+"android": "479ab0",
 "orig": "72edb6"
 }
 },
@@ -579,8 +579,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Event/Roster/RosterEventLeagueReachedView.prefab",
 "orig": true,
 "shot": {
-"ios": "d5cd80",
-"android": "52a287",
+"ios": "b7fc9b",
+"android": "c2ecf2",
 "orig": "66ead0"
 }
 },
@@ -592,8 +592,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Event/Roster/RosterEventStart.prefab",
 "orig": true,
 "shot": {
-"ios": "af3c20",
-"android": "d6419b",
+"ios": "cb57a9",
+"android": "5a407b",
 "orig": "f859bb"
 }
 },
@@ -605,8 +605,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Event/Roster/RosterEventTimeIsOver.prefab",
 "orig": true,
 "shot": {
-"ios": "6cfc14",
-"android": "fe5833",
+"ios": "4639d6",
+"android": "dcbae4",
 "orig": "23593e"
 }
 },
@@ -618,8 +618,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Event/Roster/RosterEventTutorial.prefab",
 "orig": true,
 "shot": {
-"ios": "cbfb02",
-"android": "4ef5b8",
+"ios": "903c31",
+"android": "90645f",
 "orig": "21de63"
 }
 },
@@ -631,8 +631,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Event/Roster/RosterRewardsPopup.prefab",
 "orig": true,
 "shot": {
-"ios": "61b051",
-"android": "5d9d2a",
+"ios": "e18fde",
+"android": "4335d5",
 "orig": "7249b7"
 }
 },
@@ -644,8 +644,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Event/EventStart.prefab",
 "orig": true,
 "shot": {
-"ios": "af77dc",
-"android": "b1b70f",
+"ios": "29027b",
+"android": "aa2c82",
 "orig": "aa285f"
 }
 },
@@ -657,8 +657,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Event/EventTutorial.prefab",
 "orig": true,
 "shot": {
-"ios": "98da30",
-"android": "6afab8",
+"ios": "d20e0d",
+"android": "01ea30",
 "orig": "b51e8f"
 }
 },
@@ -670,8 +670,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Achievements/AchievementsUnlocked.prefab",
 "orig": true,
 "shot": {
-"ios": "1aa44b",
-"android": "fd4be4",
+"ios": "4953f5",
+"android": "b3d69f",
 "orig": "82b919"
 }
 },
@@ -683,8 +683,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Achievements/AvatarEdit.prefab",
 "orig": true,
 "shot": {
-"ios": "43fc27",
-"android": "c5d983",
+"ios": "b775dd",
+"android": "4f1fd3",
 "orig": "a0527e"
 }
 },
@@ -696,8 +696,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/LevelPass/LevelPass.prefab",
 "orig": true,
 "shot": {
-"ios": "20a160",
-"android": "5ae4a2",
+"ios": "8fc5f8",
+"android": "6b976d",
 "orig": "b36488"
 }
 },
@@ -709,8 +709,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/LevelPass/LevelPassPurchase.prefab",
 "orig": true,
 "shot": {
-"ios": "469e3f",
-"android": "e5fd52",
+"ios": "a76a39",
+"android": "270027",
 "orig": "b7fca2"
 }
 },
@@ -722,8 +722,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Map/IslandMedalInfo.prefab",
 "orig": true,
 "shot": {
-"ios": "724a53",
-"android": "5bd375",
+"ios": "7db699",
+"android": "a1857c",
 "orig": "d4caf2"
 }
 },
@@ -735,8 +735,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Map/MapIslandMedalUpgradeView.prefab",
 "orig": true,
 "shot": {
-"ios": "ed0088",
-"android": "11b564",
+"ios": "42fae2",
+"android": "3c9a20",
 "orig": "23a207"
 }
 },
@@ -748,8 +748,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Profile/ProfileAccountDeleteConfirm.prefab",
 "orig": true,
 "shot": {
-"ios": "ec1428",
-"android": "c440d3",
+"ios": "ebdf3c",
+"android": "a65a39",
 "orig": "4364b9"
 }
 },
@@ -761,8 +761,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Profile/ProfileAccountSettings.prefab",
 "orig": true,
 "shot": {
-"ios": "d6d5d1",
-"android": "397cd3",
+"ios": "abb374",
+"android": "29e9c2",
 "orig": "f4caf8"
 }
 },
@@ -774,8 +774,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Profile/ProfileCloudSavesProblem.prefab",
 "orig": true,
 "shot": {
-"ios": "c26838",
-"android": "028e25",
+"ios": "557b67",
+"android": "869ddc",
 "orig": "a41f52"
 }
 },
@@ -787,8 +787,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Profile/ProfileConnectionLost.prefab",
 "orig": true,
 "shot": {
-"ios": "e65886",
-"android": "67b155",
+"ios": "228c2e",
+"android": "59259c",
 "orig": "8dac45"
 }
 },
@@ -800,8 +800,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Profile/ProfileHowToChangeAccount.prefab",
 "orig": true,
 "shot": {
-"ios": "6016c3",
-"android": "1c53ca",
+"ios": "99cced",
+"android": "8feca8",
 "orig": "e64ded"
 }
 },
@@ -813,8 +813,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Profile/ProfileNameEdit.prefab",
 "orig": true,
 "shot": {
-"ios": "2bbb1d",
-"android": "e96569",
+"ios": "a69f79",
+"android": "3a51f4",
 "orig": "4d4ed7"
 }
 },
@@ -826,8 +826,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Profile/ProfileOperationFailed.prefab",
 "orig": true,
 "shot": {
-"ios": "f632d0",
-"android": "c9bad6",
+"ios": "8ea201",
+"android": "815710",
 "orig": "d38dcd"
 }
 },
@@ -839,8 +839,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Profile/ProfilePasswordShowConfirm.prefab",
 "orig": true,
 "shot": {
-"ios": "7a3ab4",
-"android": "6b13d5",
+"ios": "204627",
+"android": "fe9b8a",
 "orig": "3d4fad"
 }
 },
@@ -852,8 +852,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Profile/ProfileSavesConflict.prefab",
 "orig": true,
 "shot": {
-"ios": "e43d5d",
-"android": "ab0479",
+"ios": "a38fc3",
+"android": "4424d6",
 "orig": "cda5e4"
 }
 },
@@ -865,8 +865,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Profile/ProfileSignIn.prefab",
 "orig": true,
 "shot": {
-"ios": "1b47f7",
-"android": "ac7b98",
+"ios": "cb2dfe",
+"android": "209d2d",
 "orig": "a6f895"
 }
 },
@@ -878,8 +878,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Rewarded/BuyGemsPopup.prefab",
 "orig": true,
 "shot": {
-"ios": "a2a4f0",
-"android": "042066",
+"ios": "6f33e2",
+"android": "0e6931",
 "orig": "3feab7"
 }
 },
@@ -891,8 +891,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Rewarded/RewardedOffer.prefab",
 "orig": true,
 "shot": {
-"ios": "2c29be",
-"android": "c07840",
+"ios": "b92816",
+"android": "6b5458",
 "orig": "fccd16"
 }
 },
@@ -904,8 +904,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Settings/SettingNotificationsPopupView.prefab",
 "orig": true,
 "shot": {
-"ios": "359509",
-"android": "808804",
+"ios": "1b0ba8",
+"android": "917321",
 "orig": "6b3a01"
 }
 },
@@ -917,8 +917,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Settings/SettingPromoCodeView.prefab",
 "orig": true,
 "shot": {
-"ios": "1fa376",
-"android": "96987c",
+"ios": "57f90f",
+"android": "2bdb70",
 "orig": "940b90"
 }
 },
@@ -930,8 +930,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Settings/SettingsLanguageSelect.prefab",
 "orig": true,
 "shot": {
-"ios": "8c5486",
-"android": "1d8f13",
+"ios": "26f1e4",
+"android": "ea6e64",
 "orig": "ec8aa9"
 }
 },
@@ -943,8 +943,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Statistic/Statistic.prefab",
 "orig": true,
 "shot": {
-"ios": "d8584e",
-"android": "b06366",
+"ios": "0caa4a",
+"android": "2badd5",
 "orig": "6e2e32"
 }
 },
@@ -956,8 +956,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Stats/PlayerStatsPopup.prefab",
 "orig": true,
 "shot": {
-"ios": "7c8954",
-"android": "1989f9",
+"ios": "a45d7c",
+"android": "e79091",
 "orig": "4e536b"
 }
 },
@@ -969,8 +969,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Stats/StatDescriptionView.prefab",
 "orig": true,
 "shot": {
-"ios": "511724",
-"android": "791111",
+"ios": "af7d77",
+"android": "7ee745",
 "orig": "8a93cf"
 }
 },
@@ -982,8 +982,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Stats/StatDetailsPopupView.prefab",
 "orig": true,
 "shot": {
-"ios": "583be9",
-"android": "8d5c05",
+"ios": "bb618a",
+"android": "9ed44a",
 "orig": "a71902"
 }
 },
@@ -995,8 +995,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/VIP/VipProgressPopup.prefab",
 "orig": true,
 "shot": {
-"ios": "d0a89e",
-"android": "a322bf",
+"ios": "7ee15b",
+"android": "deb936",
 "orig": "1b7922"
 }
 },
@@ -1008,8 +1008,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/RescueQuest/RescueQuestChestLocked.prefab",
 "orig": true,
 "shot": {
-"ios": "7b9c12",
-"android": "cb035e",
+"ios": "efb2f2",
+"android": "2f156a",
 "orig": "857269"
 }
 },
@@ -1021,8 +1021,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/Ui/Leaderboard/Leaderboard.prefab",
 "orig": true,
 "shot": {
-"ios": "50f2c2",
-"android": "f5ab6e",
+"ios": "37970e",
+"android": "8116c4",
 "orig": "94212f"
 }
 },
@@ -1034,8 +1034,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Shop.prefab",
 "orig": true,
 "shot": {
-"ios": "a92d7f",
-"android": "d05485",
+"ios": "05d9ca",
+"android": "5105bc",
 "orig": "74fd25"
 }
 },
@@ -1047,8 +1047,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/LegacyShop.prefab",
 "orig": true,
 "shot": {
-"ios": "fb33a5",
-"android": "adfcf9",
+"ios": "3ff565",
+"android": "9ddf68",
 "orig": "674ca1"
 }
 },
@@ -1060,8 +1060,8 @@ window.WINDOWS = [
 "source": "LoadingScreen ShowOverlayAsync",
 "orig": true,
 "shot": {
-"ios": "e07305",
-"android": "4418c5",
+"ios": "6560c5",
+"android": "496d63",
 "orig": "432e83"
 }
 },
@@ -1073,8 +1073,8 @@ window.WINDOWS = [
 "source": "PlayerDeathScreenView PlayAsync",
 "orig": true,
 "shot": {
-"ios": "fb14b1",
-"android": "aa0fbb",
+"ios": "bb537f",
+"android": "6a75c4",
 "orig": "bdbf3d"
 }
 },
@@ -1086,8 +1086,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/AbilityClaimView.prefab",
 "orig": true,
 "shot": {
-"ios": "b84bdc",
-"android": "3740ea",
+"ios": "28c4e5",
+"android": "d24cca",
 "orig": "02146d"
 }
 },
@@ -1099,8 +1099,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/AlertDialogView.prefab",
 "orig": true,
 "shot": {
-"ios": "e945ce",
-"android": "f69960",
+"ios": "8b0176",
+"android": "409c92",
 "orig": "e2cea8"
 }
 },
@@ -1112,8 +1112,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/ChestChancesInfo.prefab",
 "orig": true,
 "shot": {
-"ios": "d9f76e",
-"android": "74dbbf",
+"ios": "4c9c93",
+"android": "e3dfa4",
 "orig": "7a2bc9"
 }
 },
@@ -1125,8 +1125,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/ChestOpenView.prefab",
 "orig": true,
 "shot": {
-"ios": "8a4d99",
-"android": "1a1b9c",
+"ios": "b91364",
+"android": "ceace8",
 "orig": "edd9ee"
 }
 },
@@ -1138,8 +1138,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/EvolveItemView.prefab",
 "orig": true,
 "shot": {
-"ios": "87ab88",
-"android": "da6882",
+"ios": "933a21",
+"android": "b7a68b",
 "orig": "2b1acb"
 }
 },
@@ -1151,8 +1151,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/FirstBuyPack.prefab",
 "orig": true,
 "shot": {
-"ios": "3fb607",
-"android": "2db3da",
+"ios": "96b78b",
+"android": "f4b110",
 "orig": "0dfead"
 }
 },
@@ -1164,8 +1164,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/GlobalUpdateScreen_2_1.prefab",
 "orig": true,
 "shot": {
-"ios": "a1a7fb",
-"android": "4a4b76",
+"ios": "3f5910",
+"android": "d2be1d",
 "orig": "c2a839"
 }
 },
@@ -1177,8 +1177,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/GlobalUpdateScreen.prefab",
 "orig": true,
 "shot": {
-"ios": "242f23",
-"android": "9227ee",
+"ios": "203c6b",
+"android": "0a2c9c",
 "orig": "b51728"
 }
 },
@@ -1190,8 +1190,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/ItemMiniView.prefab",
 "orig": true,
 "shot": {
-"ios": "0f8fba",
-"android": "52f982",
+"ios": "6a9295",
+"android": "88c813",
 "orig": "6c332d"
 }
 },
@@ -1203,8 +1203,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/ItemSlotUnlockView.prefab",
 "orig": true,
 "shot": {
-"ios": "6e20ed",
-"android": "eaa78a",
+"ios": "69ff97",
+"android": "5c78bd",
 "orig": "12d124"
 }
 },
@@ -1216,8 +1216,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/PendingOrder.prefab",
 "orig": true,
 "shot": {
-"ios": "1555ae",
-"android": "84f5e0",
+"ios": "c5840c",
+"android": "775965",
 "orig": "488ce6"
 }
 },
@@ -1229,8 +1229,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/PurchaseReward.prefab",
 "orig": true,
 "shot": {
-"ios": "1fe36a",
-"android": "4aa8ee",
+"ios": "66c8ac",
+"android": "0fe9e0",
 "orig": "13df43"
 }
 },
@@ -1242,8 +1242,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/RateUs.prefab",
 "orig": true,
 "shot": {
-"ios": "490474",
-"android": "a9473b",
+"ios": "78cd22",
+"android": "240590",
 "orig": "68b2ce"
 }
 },
@@ -1255,8 +1255,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/ShopConfirmation.prefab",
 "orig": true,
 "shot": {
-"ios": "121c98",
-"android": "3c991b",
+"ios": "68a83f",
+"android": "9aab1b",
 "orig": "03ba41"
 }
 }
