@@ -33,8 +33,8 @@ window.WINDOWS = [
 "source": "HudButtons/Container/InnerContainer/InventoryButton",
 "orig": true,
 "shot": {
-"ios": "b4fcac",
-"android": "ddc630",
+"ios": "e3335b",
+"android": "664562",
 "orig": "5a4e1e"
 }
 },
@@ -150,8 +150,8 @@ window.WINDOWS = [
 "source": "Assets/Prefabs/UI/Amulet/Crystals/AmuletCrystalEnchantmentResult.prefab",
 "orig": true,
 "shot": {
-"ios": "46f6d8",
-"android": "9dd0f9",
+"ios": "00c8f7",
+"android": "1b3f60",
 "orig": "f4143d"
 }
 },
