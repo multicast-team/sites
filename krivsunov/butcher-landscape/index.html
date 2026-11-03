@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Butcher Hero — окна в горизонтали</title>
 <style>
-  :root { --bg: #101216; --card: #1a1d23; --line: #2a2e36; --text: #e8eaef; --muted: #9aa1ad; --accent: #ffc94a; }
+  :root { --bg: #101216; --card: #1a1d23; --line: #2a2e36; --text: #e8eaef; --muted: #9aa1ad; --accent: #ffc94a; --done: #5fd38a; }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   header { position: sticky; top: 0; z-index: 5; background: rgba(16, 18, 22, .94); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line);
@@ -17,6 +17,9 @@
   .seg button { border: 0; background: none; color: var(--muted); font: inherit; font-weight: 600; padding: 7px 14px; border-radius: 7px; cursor: pointer; }
   .seg button[aria-pressed="true"] { background: var(--accent); color: #1b1505; }
   input[type=search] { flex: 1 1 180px; min-width: 0; background: var(--card); border: 1px solid var(--line); color: var(--text); border-radius: 10px; padding: 9px 12px; font: inherit; }
+  .tools { display: flex; gap: 8px; }
+  .pill { border: 1px solid var(--line); background: var(--card); color: var(--muted); border-radius: 10px; padding: 8px 12px; font: inherit; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .pill[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #1b1505; }
   nav { display: flex; gap: 6px; overflow-x: auto; padding-top: 10px; scrollbar-width: none; }
   nav a { flex: none; color: var(--muted); text-decoration: none; font-size: 13px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; }
   nav a:hover { color: var(--text); border-color: var(--muted); }
@@ -35,20 +38,26 @@
   .shots.all .th.orig { grid-column: 2; grid-row: 1 / span 2; }
   .shots.all .th.orig img { height: 100%; aspect-ratio: auto; }
   .cnt { position: absolute; right: 6px; bottom: 6px; padding: 3px 7px; border-radius: 999px; background: rgba(0, 0, 0, .78); color: #fff; font-size: 11px; font-weight: 700; }
-  .cnt:empty { display: none; }
+  .cnt:empty, .cm-total:empty { display: none; }
+  .cnt.done { background: rgba(24, 92, 48, .9); }
   .noorig { grid-column: 2; grid-row: 1 / span 2; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; text-align: center; background: #000; }
   .meta { padding: 8px 10px 10px; }
   .meta b { display: block; font-size: 14px; }
   .meta small { color: var(--muted); font-size: 12px; word-break: break-all; }
-  .tag { display: inline-block; font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: .04em; padding: 2px 6px; }
+  .cm-total { float: right; margin-left: 8px; color: var(--accent); font-size: 12px; font-weight: 700; }
+  .cm-total.done { color: var(--done); }
   .empty { color: var(--muted); padding: 40px 0; text-align: center; }
-  #box { position: fixed; inset: 0; z-index: 10; background: #050608; display: none; flex-direction: column; }
-  #box.open { display: flex; }
+  #box, #feed { position: fixed; inset: 0; background: #050608; display: none; flex-direction: column; }
+  #box { z-index: 10; }
+  #feed { z-index: 11; }
+  #box.open, #feed.open { display: flex; }
   .bar { display: flex; align-items: center; gap: 10px; padding: calc(10px + env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) 10px max(14px, env(safe-area-inset-left)); flex-wrap: wrap; }
   .bar .title { flex: 1 1 200px; min-width: 0; }
   .bar .title b { display: block; font-size: 16px; }
   .bar .title small { color: var(--muted); }
   .icon { border: 1px solid var(--line); background: var(--card); color: var(--text); width: 40px; height: 40px; border-radius: 10px; font-size: 20px; cursor: pointer; }
+  .more { margin: 0 max(14px, env(safe-area-inset-right)) 8px max(14px, env(safe-area-inset-left)); padding: 6px 10px; border-radius: 10px; background: var(--card); color: var(--muted); font-size: 13px; }
+  .more button { border: 0; background: none; color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; padding: 0; }
   .stage { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center; padding: 0 max(8px, env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); touch-action: pan-y pinch-zoom; }
   .stage figure { margin: 0; flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; align-items: center; width: 100%; }
   .stage .pic { flex: 1 1 0; min-height: 80px; width: 100%; display: flex; align-items: center; justify-content: center; }
@@ -63,8 +72,14 @@
   .cm-list { flex: 0 1 auto; min-height: 0; overflow-y: auto; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
   .cm-list:empty { display: none; }
   .cm-list li { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; font-size: 13px; }
+  .cm-list li.done { opacity: .6; }
+  .cm-list li.done p { text-decoration: line-through; }
   .cm-list time { color: var(--muted); font-size: 11px; margin-left: 8px; }
+  .cm-list .old { color: #ffb74d; font-size: 11px; margin-left: 8px; }
+  .cm-list .win { display: block; color: var(--accent); font-weight: 600; text-decoration: none; margin-bottom: 2px; }
   .cm-list p { margin: 2px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .done-btn { float: right; border: 1px solid var(--line); background: none; color: var(--muted); border-radius: 7px; font: inherit; font-size: 12px; padding: 1px 7px; cursor: pointer; }
+  li.done .done-btn { color: var(--done); border-color: var(--done); }
   .cm-form { flex: none; display: flex; gap: 6px; }
   .cm-form input, .cm-form textarea { min-width: 0; background: var(--card); border: 1px solid var(--line); color: var(--text); border-radius: 8px; padding: 7px 9px; font: inherit; font-size: 14px; }
   .cm-form input { flex: 0 1 8.5em; }
@@ -72,9 +87,13 @@
   .cm-form button { flex: none; width: 40px; border: 0; border-radius: 8px; background: var(--accent); color: #1b1505; font-size: 16px; cursor: pointer; }
   .cm-form button:disabled { opacity: .5; cursor: wait; }
   .cm-err { color: #ff8a80; font-size: 12px; }
+  .feed-list { flex: 1; overflow-y: auto; width: min(100%, 860px); margin: 0 auto; padding: 0 max(12px, env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
+  .feed-list:empty::after { content: "Комментариев пока нет"; color: var(--muted); display: block; text-align: center; padding: 40px 0; }
+  .feed-list li { font-size: 14px; }
   .hint { color: var(--muted); font-size: 12px; text-align: center; padding-bottom: calc(6px + env(safe-area-inset-bottom)); }
   @media (max-width: 600px) { h1 { font-size: 16px; } .hint { display: none; } body.all .grid { grid-template-columns: 1fr; }
-    .seg { flex: 1 1 100%; } .seg button { flex: 1 1 auto; padding: 7px 6px; } .bar .seg { order: 1; } .bar .title { flex-basis: 120px; } }
+    .seg { flex: 1 1 100%; } .seg button { flex: 1 1 auto; padding: 7px 6px; } .bar .seg { order: 1; } .bar .title { flex-basis: 120px; }
+    .tools { flex: 1 1 100%; } .tools .pill { flex: 1 1 0; } }
   /* Узкий экран: всё столбиком, прокрутка с начала (при центровке верх переполнения недостижим). Шрифт полей 16px — иначе iOS увеличивает страницу. */
   @media (max-width: 700px) {
     .stage { overflow-y: auto; justify-content: flex-start; }
@@ -97,6 +116,10 @@
       <button data-p="ios">iOS</button><button data-p="android">Android</button><button data-p="both">Оба</button><button data-p="all">Оба + оригинал</button>
     </div>
     <input type="search" id="q" placeholder="Поиск окна…" aria-label="Поиск окна">
+    <div class="tools">
+      <button class="pill" id="onlyCm" aria-pressed="false">С комментариями</button>
+      <button class="pill" id="feedBtn">💬 Лента</button>
+    </div>
   </div>
   <nav id="nav"></nav>
 </header>
@@ -112,33 +135,57 @@
     <button class="icon" id="next" aria-label="Следующее окно">›</button>
     <button class="icon" id="close" aria-label="Закрыть">✕</button>
   </div>
+  <div class="more" id="more" hidden></div>
   <div class="stage" id="stage"></div>
   <div class="hint">← → — листать, I / A / B / O — iOS, Android, оба, оба + оригинал, Esc — закрыть, Enter в поле — отправить комментарий</div>
+</div>
+
+<div id="feed" role="dialog" aria-modal="true" aria-label="Все комментарии">
+  <div class="bar">
+    <div class="title"><b>Комментарии</b><small id="feedSub"></small></div>
+    <div class="seg" role="group" aria-label="Какие комментарии">
+      <button data-f="open">Открытые</button><button data-f="all">Все</button>
+    </div>
+    <button class="icon" id="feedClose" aria-label="Закрыть">✕</button>
+  </div>
+  <ol class="cm-list feed-list" id="feedList"></ol>
 </div>
 
 <script src="data.js"></script>
 <script>
 (() => {
   const items = window.WINDOWS || [];
+  const byId = new Map(items.map(it => [it.id, it]));
   const names = { ios: 'iOS · iPhone 15 Pro, 2556 × 1179', android: 'Android · 20:9, 2400 × 1080', orig: 'Оригинал · вертикаль iPhone, 1179 × 2556' };
-  // Комментарии: новый уходит в очередь ntfy.sh, GitHub Actions раз в 10 минут переносит очередь в JSON на ветке comments
-  // репозитория Mrak0be5.github.io. Сайт показывает перенесённые и ещё лежащие в очереди (она хранит 12 часов).
+  const short = { ios: 'iOS', android: 'Android', orig: 'оригинал' };
+  // Комментарии: новый уходит в очередь ntfy.sh, GitHub Actions раз в час переносит очередь в JSON на ветке comments
+  // репозитория Mrak0be5.github.io. Сайт показывает перенесённые и ещё лежащие в очереди (она хранит 12 часов),
+  // новые — сразу (подписка на очередь). Отметка «исправлено» — такое же сообщение очереди. FEED — уведомления людям
+  // (приложение ntfy): заголовок — окно и кадр, текст — имя и комментарий.
   const SITE = 'butcher-landscape';
   const QUEUE = 'https://ntfy.sh/bh-landscape-cm-nwk23eg5';
+  const FEED = QUEUE + '-feed';
   const STORE = 'https://raw.githubusercontent.com/Mrak0be5/Mrak0be5.github.io/refs/heads/comments/butcher-landscape.json';
   const TARGETS = { ios: 'к iOS', android: 'к Android', orig: 'к оригиналу' };
+  const touch = matchMedia('(pointer: coarse)').matches; // телефон: Enter — новая строка, отправка кнопкой
   const landscape = () => (platform === 'both' || platform === 'all' ? ['ios', 'android'] : [platform]);
+  const visible = () => landscape().concat(platform === 'all' ? ['orig'] : []);
   let platform = localStorage.getItem('platform') || 'ios';
+  let onlyCommented = localStorage.getItem('onlyCommented') === '1';
+  let feedMode = 'open';
   let shown = items, index = -1;
-  let comments = new Map(), byKey = new Map(), loadedAt = 0;
-  const mine = new Map();  // свои отправленные: в выдаче очереди появляются не сразу
+  let comments = new Map(), states = new Map(), byKey = new Map(), loadedAt = 0;
+  const mine = new Map(), myStates = new Map(); // свои: в выдаче очереди появляются не сразу
+  const drafts = new Map();                     // недописанные: «окно/кадр» → текст (переключение кадров и окон)
   const $ = s => document.querySelector(s);
   const groups = [...new Set(items.map(it => it.group))];
   const subtitle = `${items.length} окон · ${groups.length} разделов · iPhone и Android в ландшафте`;
-  $('#sub').textContent = subtitle;
+  const fmt = t => new Date(t * 1000).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const isDone = c => !!states.get(c.cid)?.done;
+  const listOf = (id, ps = ['ios', 'android', 'orig']) => ps.flatMap(p => byKey.get(id + '/' + p) || []);
 
   const thumb = (it, p) => `<span class="th${p === 'orig' ? ' orig' : ''}"><img loading="lazy" src="thumb/${p}/${it.id}.webp"
-    alt="${it.title} — ${{ ios: 'iOS', android: 'Android', orig: 'оригинал' }[p]}"><span class="cnt" data-k="${it.id}/${p}"></span></span>`;
+    alt="${it.title} — ${short[p]}"><span class="cnt" data-k="${it.id}/${p}"></span></span>`;
   const shotsHtml = it => landscape().map(p => thumb(it, p)).join('')
     + (platform !== 'all' ? '' : it.orig ? thumb(it, 'orig') : '<div class="noorig">нет<br>оригинала</div>');
   const cmHtml = (id, p) => `<div class="cm" data-id="${id}" data-p="${p}"><ol class="cm-list"></ol>
@@ -147,28 +194,43 @@
       <button aria-label="Отправить">➤</button></form><div class="cm-err" hidden></div></div>`;
 
   function render() {
+    reindex();
     const q = $('#q').value.trim().toLowerCase();
-    shown = items.filter(it => !q || (it.title + ' ' + it.group + ' ' + it.source).toLowerCase().includes(q));
+    shown = items.filter(it => (!q || (it.title + ' ' + it.group + ' ' + it.source).toLowerCase().includes(q)) && (!onlyCommented || listOf(it.id).length));
     const byGroup = groups.map(g => [g, shown.filter(it => it.group === g)]).filter(([, list]) => list.length);
     $('#nav').innerHTML = byGroup.map(([g, list], i) => `<a href="#g${i}">${g} · ${list.length}</a>`).join('');
     $('#main').innerHTML = byGroup.length ? byGroup.map(([g, list], i) => `
       <section><h2 id="g${i}">${g} <span>${list.length}</span></h2><div class="grid">${list.map(it => `
         <button class="card" data-id="${it.id}"><div class="shots${platform === 'all' ? ' all' : ''}">${shotsHtml(it)}</div>
-          <div class="meta"><b>${it.title}</b><small>${it.source || ''}</small></div></button>`).join('')}</div></section>`).join('')
-      : '<div class="empty">Ничего не нашлось</div>';
+          <div class="meta"><span class="cm-total" data-id="${it.id}"></span><b>${it.title}</b><small>${it.source || ''}</small></div></button>`).join('')}</div></section>`).join('')
+      : `<div class="empty">${onlyCommented ? 'Окон с комментариями пока нет' : 'Ничего не нашлось'}</div>`;
     document.body.classList.toggle('both', platform === 'both');
     document.body.classList.toggle('all', platform === 'all');
-    document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === platform));
-    update();
+    document.querySelectorAll('.seg button[data-p]').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === platform));
+    $('#onlyCm').setAttribute('aria-pressed', onlyCommented);
+    refresh();
   }
 
   function fromQueue(line) {
     try {
       const m = JSON.parse(line), c = m.event === 'message' && JSON.parse(m.message);
-      if (!c || c.site !== SITE || typeof c.cid !== 'string' || !/^w\d{3}$/.test(c.id) || !Object.hasOwn(TARGETS, c.p)
-          || typeof c.text !== 'string' || !c.text.trim()) return null;
-      return { cid: c.cid, nid: m.id, id: c.id, p: c.p, name: String(c.name || '').slice(0, 40), text: c.text.slice(0, 1000), t: m.time };
+      if (!c || c.site !== SITE) return null;
+      if (c.kind === 'state') {
+        if (typeof c.target !== 'string' || typeof c.done !== 'boolean') return null;
+        return { state: { cid: c.target, done: c.done, name: String(c.name || '').slice(0, 40), t: m.time, nid: m.id } };
+      }
+      if (typeof c.cid !== 'string' || !byId.has(c.id) || !Object.hasOwn(TARGETS, c.p) || typeof c.text !== 'string' || !c.text.trim()) return null;
+      return { comment: { cid: c.cid, nid: m.id, id: c.id, p: c.p, name: String(c.name || '').slice(0, 40), text: c.text.slice(0, 1000), t: m.time,
+                          v: typeof c.v === 'string' ? c.v.slice(0, 12) : '' } };
     } catch { return null; }
+  }
+
+  // Перенесённые (и удалённые из JSON) сообщения очереди не берём: ingested.
+  function merge(cs, ss, x, done = {}) {
+    const nid = (x.comment || x.state).nid;
+    if (Object.hasOwn(done, nid)) return;
+    if (x.comment && !cs.has(x.comment.cid)) cs.set(x.comment.cid, x.comment);
+    if (x.state) { const was = ss.get(x.state.cid); if (!was || was.t <= x.state.t) ss.set(x.state.cid, x.state); }
   }
 
   async function loadComments() {
@@ -176,38 +238,121 @@
     const [stored, queued] = await Promise.all([
       fetch(STORE, { cache: 'no-store' }).then(r => (r.ok ? r.json() : {})).catch(() => ({})),
       fetch(QUEUE + '/json?poll=1&since=all').then(r => (r.ok ? r.text() : '')).catch(() => '')]);
-    const done = stored.ingested || {}, next = new Map();
-    for (const c of stored.comments || []) next.set(c.cid, c);
-    for (const c of [...queued.split('\n').map(fromQueue), ...mine.values()])  // перенесённые и удалённые из очереди не берём
-      if (c && !Object.hasOwn(done, c.nid) && !next.has(c.cid)) next.set(c.cid, c);
-    comments = next;
-    update();
+    const done = stored.ingested || {}, cs = new Map(), ss = new Map();
+    for (const c of stored.comments || []) if (byId.has(c.id)) cs.set(c.cid, c);
+    for (const [cid, s] of Object.entries(stored.states || {})) ss.set(cid, { cid, ...s });
+    for (const x of queued.split('\n').map(fromQueue)) if (x) merge(cs, ss, x, done);
+    for (const c of mine.values()) merge(cs, ss, { comment: c }, done);
+    for (const s of myStates.values()) merge(cs, ss, { state: s }, done);
+    comments = cs;
+    states = ss;
+    changed();
   }
 
-  // Счётчики на плитках и списки под картинками открытого окна.
-  function update() {
+  // Новые сообщения очереди — сразу, без перезагрузки (EventSource сам переподключается).
+  function listen() {
+    if (!window.EventSource) return;
+    new EventSource(QUEUE + '/sse').onmessage = e => {
+      const x = fromQueue(e.data);
+      if (!x) return;
+      merge(comments, states, x);
+      changed();
+    };
+  }
+
+  function changed() {
+    if (onlyCommented) render(); // список окон зависит от комментариев
+    else { reindex(); refresh(); }
+  }
+
+  function reindex() {
     byKey = new Map();
     for (const c of [...comments.values()].sort((a, b) => a.t - b.t)) {
       const k = c.id + '/' + c.p;
       byKey.has(k) ? byKey.get(k).push(c) : byKey.set(k, [c]);
     }
-    $('#sub').textContent = subtitle + (comments.size ? ` · 💬 ${comments.size}` : '');
-    document.querySelectorAll('.cnt').forEach(el => { const n = byKey.get(el.dataset.k)?.length; el.textContent = n ? '💬 ' + n : ''; });
+  }
+
+  // Значок: открытые комментарии; все отмечены «исправлено» — галочка и их число.
+  function badge(el, list) {
+    const open = list.filter(c => !isDone(c)).length;
+    el.textContent = open ? '💬 ' + open : list.length ? '✓ ' + list.length : '';
+    el.classList.toggle('done', !open && list.length > 0);
+  }
+
+  function refresh() {
+    const all = [...comments.values()], open = all.filter(c => !isDone(c)).length;
+    $('#sub').textContent = subtitle + (all.length ? ` · 💬 ${open} открытых из ${all.length}` : '');
+    $('#feedBtn').textContent = '💬 Лента' + (open ? ' · ' + open : '');
+    document.querySelectorAll('.cnt').forEach(el => badge(el, byKey.get(el.dataset.k) || []));
+    document.querySelectorAll('.cm-total').forEach(el => badge(el, listOf(el.dataset.id)));
     document.querySelectorAll('#stage .cm').forEach(cm => {
-      cm.querySelector('.cm-list').replaceChildren(...(byKey.get(cm.dataset.id + '/' + cm.dataset.p) || []).map(c => {
-        const li = document.createElement('li'), name = document.createElement('b'), time = document.createElement('time'), text = document.createElement('p');
-        name.textContent = c.name || 'Аноним';
-        time.textContent = new Date(c.t * 1000).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-        text.textContent = c.text;
-        li.append(name, time, text);
-        return li;
-      }));
+      cm.querySelector('.cm-list').replaceChildren(...(byKey.get(cm.dataset.id + '/' + cm.dataset.p) || []).map(c => entry(c)));
     });
+    renderMore();
+    renderFeed();
+  }
+
+  function entry(c, feed = false) {
+    const it = byId.get(c.id), state = states.get(c.cid);
+    const li = document.createElement('li');
+    li.dataset.cid = c.cid;
+    li.classList.toggle('done', !!state?.done);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'done-btn';
+    button.textContent = state?.done ? '✓ исправлено' : 'исправлено?';
+    button.title = state?.done ? `Отметил${state.name ? ' ' + state.name : 'и'} ${fmt(state.t)} — нажмите, чтобы вернуть в работу` : 'Отметить «исправлено»';
+    li.append(button);
+    if (feed && it) {
+      const win = document.createElement('a');
+      win.className = 'win';
+      win.href = '#' + it.id;
+      win.textContent = `${it.title} · ${short[c.p]}`;
+      li.append(win);
+    }
+    const name = document.createElement('b');
+    name.textContent = c.name || 'Аноним';
+    const time = document.createElement('time');
+    time.textContent = fmt(c.t);
+    li.append(name, time);
+    if (c.v && it?.shot?.[c.p] && c.v !== it.shot[c.p]) {
+      const old = document.createElement('span');
+      old.className = 'old';
+      old.textContent = 'к прежнему кадру';
+      old.title = 'Кадр окна с тех пор пересняли';
+      li.append(old);
+    }
+    const text = document.createElement('p');
+    text.textContent = c.text;
+    li.append(text);
+    return li;
+  }
+
+  // В просмотре: комментарии к кадрам, которых сейчас не видно (смотрите iOS, а писали к Android).
+  function renderMore() {
+    const el = $('#more');
+    if (index < 0) { el.hidden = true; return; }
+    const it = shown[index], vis = visible();
+    const other = ['ios', 'android', 'orig'].filter(p => !vis.includes(p)).map(p => [p, (byKey.get(it.id + '/' + p) || []).length]).filter(([, n]) => n);
+    el.hidden = !other.length;
+    if (other.length) el.innerHTML = `Комментарии к другим кадрам: ${other.map(([p, n]) => `${short[p]} — ${n}`).join(', ')}.
+      <button type="button" data-show-all>Показать все кадры</button>`;
+  }
+
+  function renderFeed() {
+    if (!$('#feed').classList.contains('open')) return;
+    const all = [...comments.values()];
+    const list = all.filter(c => feedMode === 'all' || !isDone(c)).sort((a, b) => b.t - a.t);
+    $('#feedSub').textContent = feedMode === 'all' ? `${all.length} всего` : `${list.length} открытых из ${all.length}`;
+    $('#feedList').replaceChildren(...list.map(c => entry(c, true)));
+    document.querySelectorAll('#feed .seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.f === feedMode));
   }
 
   async function send(form) {
     const cm = form.closest('.cm'), text = form.querySelector('.cm-text'), button = form.querySelector('button'), err = cm.querySelector('.cm-err');
-    const c = { site: SITE, cid: crypto.randomUUID(), id: cm.dataset.id, p: cm.dataset.p,
+    const it = byId.get(cm.dataset.id);
+    const c = { site: SITE, cid: crypto.randomUUID(), id: cm.dataset.id, p: cm.dataset.p, v: it?.shot?.[cm.dataset.p] || '',
                 name: form.querySelector('.cm-name').value.trim().slice(0, 40), text: text.value.trim().slice(0, 1000) };
     if (!c.text || button.disabled) return;
     button.disabled = true;
@@ -216,20 +361,46 @@
       const r = await fetch(QUEUE, { method: 'POST', body: JSON.stringify(c) });
       if (!r.ok) throw new Error('ошибка ' + r.status);
       const m = await r.json();
-      const saved = { cid: c.cid, nid: m.id, id: c.id, p: c.p, name: c.name, text: c.text, t: m.time };
+      const saved = { cid: c.cid, nid: m.id, id: c.id, p: c.p, v: c.v, name: c.name, text: c.text, t: m.time };
       mine.set(saved.cid, saved);
       comments.set(saved.cid, saved);
+      drafts.delete(c.id + '/' + c.p);
       text.value = '';
       text.style.height = '';
-      update();
+      changed();
       const list = cm.querySelector('.cm-list');
       list.scrollTop = list.scrollHeight;
+      if (it) {
+        const link = location.origin + location.pathname + '#' + it.id;
+        fetch(`${FEED}?title=${encodeURIComponent(`${it.title} · ${short[c.p]}`)}&click=${encodeURIComponent(link)}`,
+              { method: 'POST', body: `${c.name || 'Аноним'}: ${c.text}` }).catch(() => {});
+      }
     } catch (e) {
       err.textContent = `Не отправилось (${e.message}), попробуйте ещё раз`;
       err.hidden = false;
     } finally {
       button.disabled = false;
     }
+  }
+
+  async function toggleDone(cid) {
+    const done = !states.get(cid)?.done;
+    const name = (localStorage.getItem('cmName') || '').trim().slice(0, 40);
+    const was = states.get(cid);
+    states.set(cid, { cid, done, name, t: Math.floor(Date.now() / 1000), nid: 'local' });
+    changed();
+    try {
+      const r = await fetch(QUEUE, { method: 'POST', body: JSON.stringify({ site: SITE, kind: 'state', target: cid, done, name }) });
+      if (!r.ok) throw new Error(r.status);
+      const m = await r.json();
+      const saved = { cid, done, name, t: m.time, nid: m.id };
+      myStates.set(cid, saved);
+      states.set(cid, saved);
+    } catch {
+      if (was) states.set(cid, was);
+      else states.delete(cid);
+    }
+    changed();
   }
 
   function setPlatform(p) {
@@ -251,11 +422,16 @@
     $('#stage').className = 'stage' + (platform === 'all' ? ' all' : '');
     $('#stage').innerHTML = platform === 'all' ? `<div class="col">${figs}</div>${orig}` : figs;
     $('#stage').scrollTop = 0;
-    document.querySelectorAll('#stage .cm-name').forEach(el => { el.value = localStorage.getItem('cmName') || ''; });
-    update();
-    if (Date.now() - loadedAt > 30000) loadComments();
+    const name = localStorage.getItem('cmName') || '';
+    document.querySelectorAll('#stage .cm').forEach(cm => {
+      cm.querySelector('.cm-name').value = name;
+      const draft = drafts.get(cm.dataset.id + '/' + cm.dataset.p);
+      if (draft) cm.querySelector('.cm-text').value = draft;
+    });
     $('#box').classList.add('open');
     history.replaceState(null, '', '#' + it.id);
+    refresh();
+    if (Date.now() - loadedAt > 30000) loadComments();
     for (const d of [1, -1]) {  // соседние окна — заранее
       const near = shown[(index + d + shown.length) % shown.length];
       landscape().concat(platform === 'all' && near.orig ? ['orig'] : []).forEach(p => { new Image().src = `img/${p}/${near.id}.webp`; });
@@ -268,8 +444,32 @@
     history.replaceState(null, '', location.pathname + location.search);
   }
 
-  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setPlatform(b.dataset.p)));
+  // Ссылка «#ключ» или старая «#w027» (номер шага прогона campl34).
+  function openHash(hash) {
+    const it = byId.get(hash) || items.find(x => x.old === hash);
+    if (!it) return false;
+    if (!shown.includes(it)) { onlyCommented = false; $('#q').value = ''; render(); }
+    open(shown.indexOf(it));
+    return true;
+  }
+
+  document.querySelectorAll('.seg button[data-p]').forEach(b => b.addEventListener('click', () => setPlatform(b.dataset.p)));
   $('#q').addEventListener('input', render);
+  $('#onlyCm').addEventListener('click', () => {
+    onlyCommented = !onlyCommented;
+    localStorage.setItem('onlyCommented', onlyCommented ? '1' : '0');
+    render();
+  });
+  $('#feedBtn').addEventListener('click', () => { $('#feed').classList.add('open'); renderFeed(); });
+  $('#feedClose').addEventListener('click', () => $('#feed').classList.remove('open'));
+  document.querySelectorAll('#feed .seg button').forEach(b => b.addEventListener('click', () => { feedMode = b.dataset.f; renderFeed(); }));
+  $('#feedList').addEventListener('click', e => {
+    const win = e.target.closest('.win');
+    if (!win) return;
+    e.preventDefault();
+    $('#feed').classList.remove('open');
+    openHash(win.getAttribute('href').slice(1));
+  });
   $('#main').addEventListener('click', e => {
     const card = e.target.closest('.card');
     if (card) open(shown.findIndex(it => it.id === card.dataset.id));
@@ -277,22 +477,32 @@
   $('#prev').addEventListener('click', () => open(index - 1));
   $('#next').addEventListener('click', () => open(index + 1));
   $('#close').addEventListener('click', close);
+  $('#more').addEventListener('click', e => { if (e.target.closest('[data-show-all]')) setPlatform('all'); });
+  document.addEventListener('click', e => {
+    const button = e.target.closest('.done-btn');
+    if (button) toggleDone(button.closest('li').dataset.cid);
+  });
   $('#stage').addEventListener('click', e => { if (e.target === e.currentTarget) close(); });
   $('#stage').addEventListener('submit', e => { e.preventDefault(); send(e.target); });
   $('#stage').addEventListener('keydown', e => {
-    if (e.target.matches('.cm-text') && e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(e.target.form); }
+    if (e.target.matches('.cm-text') && e.key === 'Enter' && !e.shiftKey && !e.isComposing && !touch) { e.preventDefault(); send(e.target.form); }
   });
   $('#stage').addEventListener('input', e => {
-    const el = e.target;
-    if (el.matches('.cm-text')) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight + 2, 120) + 'px'; }
+    const el = e.target, cm = el.closest('.cm');
+    if (el.matches('.cm-text')) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight + 2, 120) + 'px';
+      drafts.set(cm.dataset.id + '/' + cm.dataset.p, el.value);
+    }
     if (el.matches('.cm-name')) {
       localStorage.setItem('cmName', el.value);
       document.querySelectorAll('#stage .cm-name').forEach(other => { if (other !== el) other.value = el.value; });
     }
   });
   document.addEventListener('keydown', e => {
+    if ($('#feed').classList.contains('open')) { if (e.key === 'Escape') $('#feed').classList.remove('open'); return; }
     if (index < 0 || e.target === $('#q')) return;
-    if (e.target.closest('.cm-form')) { if (e.key === 'Escape') e.target.blur(); return; }  // печать в комментарии — не горячие клавиши
+    if (e.target.closest('.cm-form')) { if (e.key === 'Escape') e.target.blur(); return; } // печать в комментарии — не горячие клавиши
     const keys = { ArrowLeft: () => open(index - 1), ArrowRight: () => open(index + 1), Escape: close,
                    i: () => setPlatform('ios'), a: () => setPlatform('android'), b: () => setPlatform('both'), o: () => setPlatform('all') };
     const act = keys[e.key] || keys[e.key.toLowerCase()];
@@ -309,8 +519,9 @@
 
   render();
   loadComments();
+  listen();
   const start = location.hash.slice(1);
-  if (start) { const i = shown.findIndex(it => it.id === start); if (i >= 0) open(i); }
+  if (start) openHash(start);
 })();
 </script>
 </body>
