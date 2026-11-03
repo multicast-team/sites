@@ -975,9 +975,10 @@
   }
 
   function precision(property) {
-    if (!property.mapUrl) return 'Местоположение на карте не указано';
-    const labels = { exact: 'Точка: точный объект', entrance: 'Точка: въезд, не точный дом', area: 'Точка: район, не точный дом' };
-    return own(labels, property.mapPrecision) ? labels[property.mapPrecision] : 'Точность точки не подтверждена';
+    if (!property.mapUrl && !property.geo) return 'Местоположение на карте не указано';
+    const labels = { exact: 'Точка: точный объект', entrance: 'Точка: въезд, не точный дом', listing: 'Точка: из объявления', cluster: 'Точка: квартал, не точный дом', area: 'Точка: район, не точный дом' };
+    const prec = property.geo ? property.geo.precision : property.mapPrecision;
+    return own(labels, prec) ? labels[prec] : 'Точность точки не подтверждена';
   }
 
   function specItems(property) {
@@ -1580,6 +1581,8 @@
     property.geo = object(extra.geo) && Number.isFinite(extra.geo.lat) && Number.isFinite(extra.geo.lng) ? extra.geo : null;
     property.market = object(extra.market) && Number.isFinite(extra.market.median) ? extra.market : null;
     property.nearby = object(extra.nearby) ? extra.nearby : null;
+    property.satellite = object(extra.satellite) ? extra.satellite : null;
+    if (property.geo) property.mapUrl = `https://www.google.com/maps/search/?api=1&query=${property.geo.lat},${property.geo.lng}`;
     property.drive = object(extra.drive) ? extra.drive : null;
     property.listing = object(extra.listing) ? extra.listing : null;
     property.criteria = object(extra.criteria) ? extra.criteria : null;
@@ -1909,7 +1912,7 @@
 
   function driveText(property, key) {
     const d = property.drive && object(property.drive[key]) ? property.drive[key] : null;
-    return d ? `${property.geo && property.geo.precision === 'area' ? '≈' : ''}${d.min} мин · ${format.format(d.km)} км` : '—';
+    return d ? `${property.geo && roughPoint(property.geo) ? '≈' : ''}${d.min} мин · ${format.format(d.km)} км` : '—';
   }
 
   function openCompare() {
@@ -1978,7 +1981,7 @@
       const name = (destinations.find((x) => x.key === key) || {}).name || key;
       if (d) parts.push(`${name} ${d.min} мин`);
     }
-    const line = el('p', 'drive-line', `🚗 ${property.geo && property.geo.precision === 'area' ? '≈ ' : ''}${parts.join(' · ')}`);
+    const line = el('p', 'drive-line', `🚗 ${property.geo && roughPoint(property.geo) ? '≈ ' : ''}${parts.join(' · ')}`);
     line.title = 'На машине без пробок (OSRM). «≈» — от центра района, точный адрес неизвестен.';
     return line;
   }
@@ -2070,8 +2073,8 @@
     let missing = 0;
     list.forEach((p, i) => {
       if (!p.geo) { missing++; return; }
-      const area = p.geo.precision === 'area';
-      const jitter = area ? ((i % 5) - 2) * 0.0009 : 0;
+      const area = roughPoint(p.geo);
+      const jitter = p.geo.precision === 'area' ? ((i % 5) - 2) * 0.0009 : 0;
       const ll = [p.geo.lat + jitter, p.geo.lng - jitter];
       const color = STATUS_COLORS[p.status] || '#8d8f88';
       const marker = window.L.circleMarker(ll, { radius: area ? 8 : 10, color: area ? color : '#ffffff', weight: 2, fillColor: color, fillOpacity: area ? 0.35 : 0.95, dashArray: area ? '3' : null });
@@ -2084,7 +2087,7 @@
       window.L.marker([origin.lat, origin.lng], { title: 'Моя точка' }).addTo(catalogLayer).bindTooltip('Моя точка');
       points.push([origin.lat, origin.lng]);
     }
-    $('map-note').textContent = `${points.length - (origin ? 1 : 0)} вилл на карте${missing ? `, без координат: ${missing}` : ''}. Яркие точки — точный адрес или объявление, бледные — центр района.`;
+    $('map-note').textContent = `${points.length - (origin ? 1 : 0)} вилл на карте${missing ? `, без координат: ${missing}` : ''}. Яркие точки — дом, въезд или объявление, бледные — центр квартала или района.`;
     setTimeout(() => {
       catalogMap.invalidateSize();
       if (points.length) catalogMap.fitBounds(points, { padding: [36, 36], maxZoom: 15 });
@@ -2109,6 +2112,36 @@
     return [lat + (meters * Math.cos(az * r)) / 111320, lng + (meters * Math.sin(az * r)) / (111320 * Math.cos(lat * r))];
   }
 
+  function roughPoint(geo) { return geo.precision === 'area' || geo.precision === 'cluster'; }
+
+  const SAT_CHECK = {
+    house_ok: 'в точке вилла, совпадающая с фото',
+    house_plausible: 'в точке вилла, по снимку правдоподобна',
+    house_near: 'точка рядом с домом, на улице',
+    cluster_ok: 'точка в центре квартала, дом не установлен',
+    entrance: 'точка у въезда в комьюнити',
+    mismatch: 'в точке объявления другой дом — точное место неизвестно'
+  };
+
+  function satelliteSection(property) {
+    const s = property.satellite;
+    if (!s) return null;
+    const sec = el('section', 'detail-section');
+    sec.append(el('h3', '', `Со спутника${s.imageryDate ? ` (снимок ${s.imageryDate})` : ''}`));
+    const known = (v) => (v && v !== 'неизвестно' ? v : '');
+    sec.append(factRows([
+      ['Проверка точки', SAT_CHECK[s.check] || s.check],
+      ['Сад выходит на', known(s.gardenFacing)],
+      ['Сзади', known(s.backs)],
+      ['Стройка рядом', s.construction],
+      ['Дороги', s.roads],
+      ['Соседи', s.neighbors]
+    ]));
+    if (s.notes) sec.append(el('p', '', s.notes));
+    sec.append(el('p', 'aside-note', 'Разбор снимков Esri World Imagery (0,5 м). Снимок мог устареть: стройка за год могла закончиться или начаться.'));
+    return sec;
+  }
+
   function initDetailMap(property, container) {
     const box = container.querySelector('.detail-map');
     if (!box || !property.geo) return;
@@ -2121,10 +2154,10 @@
       const layers = baseLayers();
       layers['Спутник'].addTo(map);
       window.L.control.layers(layers).addTo(map);
-      map.setView([lat, lng], prec === 'area' ? 15 : 18);
-      if (prec === 'area') window.L.circle([lat, lng], { radius: 300, color: '#f6e3b0', weight: 2, fill: false, dashArray: '5' }).addTo(map).bindTooltip('Район: точный дом неизвестен');
+      map.setView([lat, lng], prec === 'area' ? 15 : (prec === 'cluster' ? 17 : 18));
+      if (roughPoint(property.geo)) window.L.circle([lat, lng], { radius: prec === 'area' ? 300 : 150, color: '#f6e3b0', weight: 2, fill: false, dashArray: '5' }).addTo(map).bindTooltip(prec === 'area' ? 'Район: точный дом неизвестен' : 'Квартал: точный дом неизвестен');
       else window.L.circleMarker([lat, lng], { radius: 8, color: '#ffffff', weight: 2, fillColor: '#a85a41', fillOpacity: 1 }).addTo(map);
-      if (prec !== 'area') {
+      if (!roughPoint(property.geo)) {
         for (const s of sunLines(lat)) {
           window.L.polyline([[lat, lng], destPoint(lat, lng, s.az, 70)], { color: s.color, weight: 4, opacity: 0.95 }).addTo(map).bindTooltip(s.label);
         }
@@ -2304,14 +2337,14 @@
     geoSec.append(el('h3', '', 'Расположение и окружение'));
     if (property.geo) {
       geoSec.append(el('div', 'detail-map'));
-      const precLabels = { exact: 'точный адрес', entrance: 'въезд в комьюнити', listing: 'точка из объявления', area: 'центр района — точный дом неизвестен' };
-      geoSec.append(el('p', 'aside-note', `Точка: ${precLabels[property.geo.precision] || property.geo.precision} (${property.geo.source}).${property.geo.precision !== 'area' ? ' Цветные лучи — откуда солнце: восход и закат летом и зимой, зимний полдень с юга. Летом в полдень солнце почти в зените.' : ''}`));
+      const precLabels = { exact: 'точный адрес', entrance: 'въезд в комьюнити', listing: 'точка из объявления', cluster: 'центр квартала — точный дом неизвестен', area: 'центр района — точный дом неизвестен' };
+      geoSec.append(el('p', 'aside-note', `Точка: ${precLabels[property.geo.precision] || property.geo.precision} (${property.geo.source}).${!roughPoint(property.geo) ? ' Цветные лучи — откуда солнце: восход и закат летом и зимой, зимний полдень с юга. Летом в полдень солнце почти в зените.' : ''}`));
       if (property.nearby) {
         const rows = NEARBY_LABELS.map(([key, label]) => {
           const n = object(property.nearby[key]) ? property.nearby[key] : null;
           return [label, n ? `${n.m < 1000 ? `${format.format(n.m)} м` : `${format.format(Math.round(n.m / 100) / 10)} км`}${n.name ? ` · ${n.name}` : ''}` : (key === 'construction' ? 'нет в радиусе 1 км' : 'нет поблизости')];
         });
-        geoSec.append(factRows(rows), el('p', 'aside-note', `Расстояния по OpenStreetMap${property.geo.precision === 'area' ? ' от центра района' : ''}. Стройки в OSM обновляются с опозданием — проверяйте на месте и по спутнику.`));
+        geoSec.append(factRows(rows), el('p', 'aside-note', `Расстояния по OpenStreetMap${roughPoint(property.geo) ? ' от центра квартала или района' : ''}. Стройки в OSM обновляются с опозданием — проверяйте на месте и по спутнику.`));
       }
     } else {
       geoSec.append(el('p', '', 'Координат пока нет.'));
@@ -2322,6 +2355,8 @@
       geoSec.append(el('h4', 'detail-subhead', 'Дорога на машине без пробок'), factRows(rows));
     }
     mainCol.append(geoSec);
+    const satSec = satelliteSection(property);
+    if (satSec) mainCol.append(satSec);
 
     const listing = property.listing;
     if (listing) {
