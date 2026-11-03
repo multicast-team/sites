@@ -2141,7 +2141,7 @@
     return [lat + (meters * Math.cos(az * r)) / 111320, lng + (meters * Math.sin(az * r)) / (111320 * Math.cos(lat * r))];
   }
 
-  function roughPoint(geo) { return geo.precision === 'area' || geo.precision === 'cluster'; }
+  function roughPoint(geo) { return geo.precision === 'area' || geo.precision === 'cluster' || geo.precision === 'unknown'; }
 
   const SAT_CHECK = {
     house_ok: 'в точке вилла, совпадающая с фото',
@@ -2167,6 +2167,26 @@
       ['Соседи', s.neighbors]
     ]));
     if (s.notes) sec.append(el('p', '', s.notes));
+    if (Array.isArray(s.images) && s.images.length) {
+      const shots = el('div', 'sat-shots');
+      for (const shot of s.images) {
+        if (!shot || typeof shot.src !== 'string') continue;
+        const link = el('a', 'sat-shot');
+        link.href = shot.src; link.target = '_blank'; link.rel = 'noopener';
+        const img = el('img'); img.src = shot.src; img.loading = 'lazy'; img.alt = text(shot.caption) || 'Спутниковый снимок';
+        link.append(img, el('span', '', text(shot.caption)));
+        shots.append(link);
+      }
+      sec.append(shots);
+    }
+    if (property.geo && Number.isFinite(property.geo.lat)) {
+      const ll = `${property.geo.lat.toFixed(6)},${property.geo.lng.toFixed(6)}`;
+      const links = el('p', 'sat-links');
+      const g = el('a', '', 'Google Maps (спутник)'); g.href = `https://www.google.com/maps/@${ll},19z/data=!3m1!1e3`; g.target = '_blank'; g.rel = 'noopener';
+      const q = el('a', '', `Координаты ${ll}`); q.href = `https://www.google.com/maps/search/?api=1&query=${ll}`; q.target = '_blank'; q.rel = 'noopener';
+      links.append(g, document.createTextNode(' · '), q);
+      sec.append(links);
+    }
     sec.append(el('p', 'aside-note', 'Разбор снимков Esri World Imagery (0,5 м). Снимок мог устареть: стройка за год могла закончиться или начаться.'));
     return sec;
   }
@@ -2366,7 +2386,7 @@
     geoSec.append(el('h3', '', 'Расположение и окружение'));
     if (property.geo) {
       geoSec.append(el('div', 'detail-map'));
-      const precLabels = { exact: 'точный адрес', entrance: 'въезд в комьюнити', listing: 'точка из объявления', cluster: 'центр квартала — точный дом неизвестен', area: 'центр района — точный дом неизвестен' };
+      const precLabels = { exact: 'точный дом', house_likely: 'вероятный дом — выбран по спутнику и фото', street: 'улица, дом не установлен', entrance: 'въезд в комьюнити', listing: 'точка из объявления', cluster: 'центр квартала — точный дом неизвестен', area: 'центр района — точный дом неизвестен' };
       geoSec.append(el('p', 'aside-note', `Точка: ${precLabels[property.geo.precision] || property.geo.precision} (${property.geo.source}).${!roughPoint(property.geo) ? ' Цветные лучи — откуда солнце: восход и закат летом и зимой, зимний полдень с юга. Летом в полдень солнце почти в зените.' : ''}`));
       if (property.nearby) {
         const rows = NEARBY_LABELS.map(([key, label]) => {
