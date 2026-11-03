@@ -1015,12 +1015,12 @@
     if (property.ceilingEstimateNote) dhChip.title = property.ceilingEstimateNote;
     wrap.append(dhChip);
 
-    const wClass = property.waterView === 'yes' ? 'chip-water-yes' : (property.waterView === 'golf' ? 'chip-water-golf' : 'chip-water-no');
-    const wPrefix = property.waterView === 'yes' ? '≈ ' : (property.waterView === 'golf' ? '⛳ ' : '');
+    const wClass = { yes: 'chip-water-yes', partial: 'chip-water-partial', golf: 'chip-water-golf' }[property.waterView] || 'chip-water-no';
+    const wPrefix = { yes: '≈ ', partial: '≈ ', golf: '⛳ ' }[property.waterView] || '';
     wrap.append(el('span', `feature-chip ${wClass}`, `${wPrefix}${property.waterViewLabel}`));
 
     const pClass = property.pool === 'private' ? 'chip-pool-private' : (property.pool === 'community' ? 'chip-pool-community' : 'chip-pool-no');
-    const pPrefix = property.pool !== 'no' ? '🏊 ' : '';
+    const pPrefix = property.pool === 'private' || property.pool === 'community' ? '🏊 ' : '';
     wrap.append(el('span', `feature-chip ${pClass}`, `${pPrefix}${property.poolLabel}`));
     return wrap;
   }
@@ -1590,8 +1590,9 @@
 
   function matchesWaterFilter(property, waterFilter) {
     if (!waterFilter) return true;
-    if (waterFilter === 'yes') return property.waterView === 'yes';
-    if (waterFilter === 'water-or-golf') return property.waterView === 'yes' || property.waterView === 'golf';
+    if (waterFilter === 'direct') return property.waterView === 'yes';
+    if (waterFilter === 'yes') return property.waterView === 'yes' || property.waterView === 'partial';
+    if (waterFilter === 'water-or-golf') return ['yes', 'partial', 'golf'].includes(property.waterView);
     if (waterFilter === 'golf') return property.waterView === 'golf';
     if (waterFilter === 'no') return property.waterView === 'no';
     return true;
@@ -1606,6 +1607,7 @@
   function matchesPoolFilter(property, poolFilter) {
     if (!poolFilter) return true;
     if (poolFilter === 'any') return property.pool === 'private' || property.pool === 'community';
+    if (poolFilter === 'no') return property.pool === 'no' || property.pool === 'community';
     return property.pool === poolFilter;
   }
 
@@ -1742,8 +1744,8 @@
     property.ceilingHeightM = property.ceilTypical || 0;
     property.ceilingMaxM = Math.max(0, ...[c.typical, c.living, c.dhHeight].filter(Array.isArray).map((r) => r[1]));
     const dh = range(c.dhHeight) ? ` ~${range(c.dhHeight)}` : '';
-    const labels = { yes: `Двусветная гостиная${dh}`, hall: `Двусветный зал-холл${dh}`, foyer: `Двусвет только у лестницы/входа${dh}`, no: 'Без второго света', unknown: 'Второй свет: не установлено' };
-    property.doubleHeight = c.dh === 'hall' ? 'yes' : (['yes', 'foyer', 'no', 'unknown'].includes(c.dh) ? c.dh : 'unknown');
+    const labels = { yes: `Двусветная гостиная${dh}`, hall: `Двусветный зал-холл${dh}`, foyer: `Двусвет только у лестницы/входа${dh}`, vaulted: `Высокий скатный потолок в гостиной${dh}`, no: 'Без второго света', unknown: 'Второй свет: не установлено' };
+    property.doubleHeight = c.dh === 'hall' ? 'yes' : (['yes', 'foyer', 'vaulted', 'no', 'unknown'].includes(c.dh) ? c.dh : 'unknown');
     property.doubleHeightLabel = labels[c.dh] || labels.unknown;
     const conf = { high: 'высокая', medium: 'средняя', low: 'низкая' }[c.confidence] || 'низкая';
     property.ceilingEstimateNote = `${text(c.note)} Основание: ${text(c.basis)}. Уверенность: ${conf}.`;
@@ -1753,7 +1755,7 @@
     const crit = property.criteria = object(property.criteria) ? { ...property.criteria } : {};
     if (Array.isArray(c.typical) && c.typical[0] >= 2.6) crit.ceiling = ['yes', `оценка по фото ~${range(c.typical)}`];
     if (c.dh === 'yes' || c.dh === 'hall') crit.doubleHeight = ['yes', property.doubleHeightLabel];
-    else if (c.dh === 'foyer' || c.dh === 'no') crit.doubleHeight = ['no', c.dh === 'foyer' ? 'двусвет только у лестницы/входа, зал одноэтажный' : 'по фото двусвета нет'];
+    else if (c.dh === 'foyer' || c.dh === 'no' || c.dh === 'vaulted') crit.doubleHeight = ['no', { foyer: 'двусвет только у лестницы/входа, зал одноэтажный', vaulted: 'высокий скатный потолок, но не второй свет' }[c.dh] || 'по фото двусвета нет'];
   }
 
   statusTabs.splice(1, 0, ['top', '🔥 ТОП']);

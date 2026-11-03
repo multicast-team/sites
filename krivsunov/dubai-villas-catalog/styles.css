@@ -219,6 +219,7 @@ h2 { font: normal 21px/1.2 var(--serif); letter-spacing: -.02em; margin: 0; }
 .chip-double-yes { background: #fff3d1; border-color: #e6c670; color: #614308; }
 .chip-double-no { background: #f2f0ea; border-color: #dedad0; color: #686b63; }
 .chip-water-yes { background: #e1f2f7; border-color: #a4d4e4; color: #124d63; }
+.chip-water-partial { background: #eef7fa; border-color: #c4e2ec; color: #2d5f71; }
 .chip-water-golf { background: #e6f3e6; border-color: #b5dbb7; color: #1f5427; }
 .chip-water-no { background: #f2f0ea; border-color: #dedad0; color: #686b63; }
 .chip-pool-private { background: #e3effb; border-color: #accbee; color: #164678; }
