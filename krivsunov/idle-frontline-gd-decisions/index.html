@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Idle Frontline — что решить геймдизайну после правок по плейтесту</title>
+<meta name="description" content="Три этапа правок по плейтесту Idle Frontline готовы. Здесь — всё, что осталось решить геймдизайнеру: что сейчас в сборке, какие варианты и где менять.">
+<meta name="theme-color" content="#ECEEE5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400..800&family=Sofia+Sans+Extra+Condensed:wght@700..900&display=swap">
+<style>
+:root {
+  --paper: #ECEEE5; --sheet: #F7F8F2; --white: #FFFFFF;
+  --ink: #1D2A21; --ink-2: #46564A; --ink-3: #5E6C62;
+  --rule: #C6CDBF; --rule-2: #DCE0D5;
+  --red: #C93F2F; --red-ink: #A8331F; --red-wash: #F4DED8;
+  --green: #14866F; --green-ink: #0F6E5A; --green-wash: #D5EAE2;
+  --gold: #D49A00; --gold-ink: #7A5500; --gold-fill: #F2B51D; --gold-wash: #F7E8BD;
+  --link: #245C9E;
+  --font-text: "Sofia Sans", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Sofia Sans Extra Condensed", "Sofia Sans", "Arial Narrow", sans-serif;
+  --wrap: 1180px; --r-s: 4px; --r-m: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 76px; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 var(--font-text); }
+a { color: var(--link); text-underline-offset: .18em; }
+img { max-width: 100%; display: block; }
+code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: .86em; background: var(--rule-2); padding: 1px 5px; border-radius: 3px; overflow-wrap: anywhere; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+.top { position: sticky; top: 0; z-index: 10; background: rgba(236, 238, 229, .94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--rule); }
+.top .wrap { display: flex; align-items: center; gap: 22px; min-height: 60px; }
+.brand { font: 800 25px/1 var(--font-display); color: var(--ink); text-decoration: none; white-space: nowrap; }
+.brand span { font: 500 14px/1 var(--font-text); color: var(--ink-3); margin-left: 8px; }
+.top nav { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
+.top nav a { color: var(--ink-2); text-decoration: none; font-weight: 600; font-size: 15px; padding: 6px 10px; border-radius: var(--r-s); }
+.top nav a:hover { background: var(--sheet); color: var(--ink); }
+
+.hero { padding: 52px 0 8px; }
+.hero__grid { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 32px 56px; align-items: end; }
+.kicker { font-size: 15px; font-weight: 600; color: var(--ink-3); margin: 0 0 16px; }
+h1 { font: 800 clamp(46px, 7vw, 92px)/.92 var(--font-display); margin: 0; max-width: 15ch; }
+.lead { font-size: 20px; line-height: 1.5; color: var(--ink-2); margin: 18px 0 0; max-width: 60ch; }
+.facts { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.facts li { display: grid; grid-template-columns: 58px 1fr; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+.facts b { font: 800 34px/1 var(--font-display); }
+.facts span { font-size: 15px; color: var(--ink-2); line-height: 1.35; }
+
+.howto { margin-top: 40px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 2px solid var(--ink); }
+.howto div { padding: 16px 18px 18px 0; border-right: 1px solid var(--rule); }
+.howto div + div { padding-left: 18px; }
+.howto div:last-child { border-right: 0; }
+.howto h3 { font: 800 22px/1.05 var(--font-display); margin: 0 0 6px; }
+.howto p { margin: 0; font-size: 15px; color: var(--ink-2); }
+
+.urgent { margin-top: 44px; background: var(--gold-wash); border-radius: var(--r-m); padding: 22px 26px 18px; }
+.urgent h2 { font: 800 34px/1 var(--font-display); margin: 0 0 6px; }
+.urgent p { margin: 0 0 12px; color: var(--ink-2); font-size: 16px; }
+.urgent ol { margin: 0; padding-left: 22px; columns: 2; column-gap: 40px; }
+.urgent li { break-inside: avoid; margin: 0 0 8px; font-weight: 600; }
+.urgent li a { color: var(--ink); text-decoration: none; }
+.urgent li a:hover { text-decoration: underline; }
+
+.filters { position: sticky; top: 60px; z-index: 9; background: var(--paper); border-bottom: 1px solid var(--rule); margin-top: 40px; }
+.filters .wrap { display: flex; gap: 8px 18px; align-items: center; flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; }
+.filters .lbl { font-size: 14px; color: var(--ink-3); font-weight: 600; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 99px; overflow: hidden; background: var(--sheet); }
+.seg button { border: 0; background: none; padding: 6px 12px; font: 600 14px/1.2 var(--font-text); color: var(--ink-2); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.count { margin-left: auto; font-size: 14px; color: var(--ink-3); }
+
+.group { padding-top: 46px; }
+.group__head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 4px; }
+.group__head h2 { font: 800 clamp(34px, 4vw, 48px)/1 var(--font-display); margin: 0; }
+.group__head p { margin: 0; color: var(--ink-3); font-size: 15px; }
+.group.is-empty { display: none; }
+
+.dec { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; padding: 22px 0 24px; border-bottom: 1px solid var(--rule); }
+.dec--fig { grid-template-columns: minmax(0, 1fr) 300px; }
+.dec[hidden] { display: none; }
+.dec__meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0 0 8px; }
+.kid { font-weight: 800; font-size: 13.5px; color: var(--ink); background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); border-radius: var(--r-s); padding: 0 7px; line-height: 1.7; margin-right: 6px; }
+.tag { font-size: 13px; font-weight: 650; color: var(--ink-2); background: var(--rule-2); border-radius: var(--r-s); padding: 1px 8px; }
+.tag--urgent { background: var(--gold-fill); color: var(--ink); }
+.dec h3 { font: 750 23px/1.22 var(--font-text); margin: 0 0 10px; max-width: 38ch; }
+.dec__label { margin: 12px 0 4px; font-size: 13px; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); }
+.dec p { margin: 0 0 6px; max-width: 74ch; }
+.ask { margin: 0; padding-left: 20px; max-width: 72ch; }
+.ask li { margin: 0 0 5px; }
+.ask li::marker { color: var(--gold); }
+.where { margin-top: 12px !important; font-size: 14.5px; color: var(--ink-3); }
+.where span { font-weight: 650; }
+.shot { margin: 0; align-self: start; }
+.shot img { width: 100%; border-radius: var(--r-m); box-shadow: 0 1px 0 var(--rule), 0 8px 24px rgba(29, 42, 33, .14); cursor: zoom-in; background: #2a2f2a; }
+.shot figcaption { font-size: 13.5px; color: var(--ink-3); margin-top: 8px; }
+
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 48px; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--rule-2); vertical-align: top; }
+th { font-size: 13px; color: var(--ink-3); font-weight: 650; border-bottom: 1.5px solid var(--ink); }
+.done { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid var(--ink); }
+.done li { padding: 8px 0; border-bottom: 1px solid var(--rule-2); font-size: 15px; display: flex; gap: 4px; align-items: baseline; }
+.section { padding-top: 60px; }
+.section h2 { font: 800 clamp(34px, 4vw, 48px)/1 var(--font-display); margin: 0 0 6px; }
+.section .sub { color: var(--ink-3); margin: 0 0 18px; font-size: 15.5px; }
+.foot { margin-top: 72px; border-top: 1px solid var(--rule); padding: 24px 0 40px; font-size: 14.5px; color: var(--ink-3); }
+.lightbox { border: 0; padding: 0; background: transparent; max-width: min(94vw, 560px); }
+.lightbox::backdrop { background: rgba(14, 22, 16, .84); }
+.lightbox img { width: 100%; max-height: 90vh; object-fit: contain; border-radius: var(--r-m); }
+.lightbox button { position: absolute; top: 8px; right: 8px; background: rgba(0, 0, 0, .6); color: #fff; border: 0; border-radius: 99px; width: 40px; height: 40px; font-size: 22px; cursor: pointer; }
+
+@media (max-width: 900px) {
+  .hero__grid { grid-template-columns: 1fr; }
+  .howto { grid-template-columns: 1fr 1fr; }
+  .howto div:nth-child(2) { border-right: 0; }
+  .howto div:nth-child(3) { padding-left: 0; }
+  .urgent ol { columns: 1; }
+  .split { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  body { font-size: 16px; }
+  .top nav { display: none; }
+  .dec--fig { grid-template-columns: 1fr; }
+  .shot { max-width: 300px; }
+  .howto { grid-template-columns: 1fr; }
+  .howto div { border-right: 0; padding-left: 0 !important; border-bottom: 1px solid var(--rule); }
+  .count { margin-left: 0; width: 100%; }
+  .filters { position: static; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">Idle Frontline<span>решения геймдизайна</span></a>
+    <nav aria-label="Разделы">
+      <a href="#urgent">Срочно</a>
+      <a href="#g-goal">Цель</a>
+      <a href="#g-combat">Бой</a>
+      <a href="#g-base">База</a>
+      <a href="#g-crew">Отряд</a>
+      <a href="#g-front">Фронт</a>
+      <a href="#switches">Переключатели</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div>
+        <p class="kicker">Правки по плейтесту 2 ноября · ветка NEWFIX_AFTER_PLAYTEST · 3 ноября 2026</p>
+        <h1>Код готов. Осталось решить геймдизайну</h1>
+        <p class="lead">Три этапа правок по разбору плейтеста сделаны и проверены в игре. Там, где нужен был выбор геймдизайнера, в сборке стоит осторожный вариант по умолчанию. Ниже — каждый такой выбор: что сейчас в игре, что решить и где поменять.</p>
+      </div>
+      <ul class="facts" aria-label="Сводка">
+        <li><b>25</b><span>решений ждут геймдизайнера</span></li>
+        <li><b>7</b><span>стоит принять до следующего плейтеста</span></li>
+        <li><b>10</b><span>из третьего этапа, 8 — из второго, 7 — из первого</span></li>
+        <li><b>25</b><span>пунктов плана сделаны в коде, список — внизу страницы</span></li>
+      </ul>
+    </div>
+    <div class="wrap">
+      <div class="howto">
+        <div><h3>Сейчас в сборке</h3><p>Что игрок увидит, если ничего не менять. Значения взяты из кода и замеров в Play Mode.</p></div>
+        <div><h3>Что решить</h3><p>Вопросы, на которые нужен ответ геймдизайнера. Варианты — подсказка, не рекомендация.</p></div>
+        <div><h3>Где менять</h3><p>Константа или класс. Большинство решений — одна строка в Balance.</p></div>
+        <div><h3>Метки</h3><p>«Число», «Правило», «Текст и награда», «Приоритет». Жёлтая — решить до плейтеста.</p></div>
+      </div>
+      <div class="urgent" id="urgent">
+        <h2>До следующего плейтеста</h2>
+        <p>От этих решений зависит, что увидят новые игроки. Остальные можно принимать по ходу.</p>
+        <ol><li><a href="#d-carrier-ab"><span class="kid">K22</span>Запускать ли A/B выдачи носильщика и с какими вариантами</a></li><li><a href="#d-desert-power"><span class="kid">K24</span>Рекомендуемая сила для пустыни</a></li><li><a href="#d-drivers"><span class="kid">K19</span>Водители подкрепления: второй водитель даёт на 25% меньше опыта за топливо</a></li><li><a href="#d-leash"><span class="kid">K11</span>Как далеко патруль гонится за героем</a></li><li><a href="#d-front"><span class="kid">K23</span>Оставить ли прототип фронта в сборке плейтеста</a></li><li><a href="#d-moving-shot"><span class="kid">K10</span>Стрельба на ходу без штрафа</a></li><li><a href="#d-factory-first"><span class="kid">K13</span>«Сначала завод» только на базе 1</a></li></ol>
+      </div>
+    </div>
+  </section>
+
+  <div class="filters" role="region" aria-label="Фильтры">
+    <div class="wrap">
+      <span class="lbl">Этап</span>
+      <div class="seg" data-filter="stage">
+        <button type="button" data-value="all" aria-pressed="true">Все</button>
+        <button type="button" data-value="1" aria-pressed="false">1</button>
+        <button type="button" data-value="2" aria-pressed="false">2</button>
+        <button type="button" data-value="3" aria-pressed="false">3</button>
+      </div>
+      <span class="lbl">Тип</span>
+      <div class="seg" data-filter="type">
+        <button type="button" data-value="all" aria-pressed="true">Все</button>
+        <button type="button" data-value="value" aria-pressed="false">Число</button>
+        <button type="button" data-value="rule" aria-pressed="false">Правило</button>
+        <button type="button" data-value="content" aria-pressed="false">Текст</button>
+        <button type="button" data-value="priority" aria-pressed="false">Приоритет</button>
+      </div>
+      <div class="seg" data-filter="urgent">
+        <button type="button" data-value="all" aria-pressed="true">Все</button>
+        <button type="button" data-value="1" aria-pressed="false">Только до плейтеста</button>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+
+  
+    <section class="group" id="g-goal">
+      <div class="wrap">
+        <div class="group__head"><h2>Цель и карта</h2><p>Куда ведёт HUD, что показано на карте и в мире.</p></div>
+        <div class="decs">
+      <article class="dec" id="d-desert-card-place" data-stage="3" data-type="rule" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K24</span><span class="tag">Этап 3</span><span class="tag">Правило</span></p>
+          <h3>Где показывать карточку пустыни и вести ли туда цель</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Карточка появляется в 22 м от края зоны жары, пока герой снаружи. Зона жары — прямоугольник 278 × 300 м, поэтому карточка видна вдоль всей его границы, в том числе севернее базы 1. Цель HUD по-прежнему ведёт к ближайшей вражеской базе; если база в жаре, к цели добавлено «heat zone». Ворота в пустыню (Gate_1) открываются захватом базы 2.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Показывать карточку вдоль всей границы или только у ворот Gate_1.</li><li>Нужна ли отдельная цель «войти в пустыню» и при каком условии игрок «готов».</li><li>Отмечать ли зону жары на мини-карте (сейчас там только оазисы).</li></ul>
+          <p class="where"><span>Где менять:</span> <code>WorldHintsHud.ZoneCardDistance = 22; GoalPlanner.FrontierGoal</code></p>
+        </div>
+      </article>
+      <article class="dec dec--fig" id="d-trip-wait" data-stage="3" data-type="priority" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K19</span><span class="tag">Этап 3</span><span class="tag">Приоритет</span></p>
+          <h3>Чем занять игрока, пока едет грузовик</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Пока рейс в пути, к цели HUD дописано «truck back 4:59». Если цель — дальний поход (дальше 70 м), а в 45 м есть ресурс, цель становится «Collect … nearby». Шаги баз не подменяются. После сбора опыта появляется цель «Level up Fighter · 10 XP» — она стоит выше улучшения завода.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Пороги 45 и 70 м.</li><li>Что ещё годится как задача на 5 минут: точка территории, пленный, ящик.</li><li>Ставить ли прокачку бойца выше улучшения завода.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>GoalPlanner.NearbyWhileWaiting = 45, FarGoal = 70, порядок в PickStep</code></p>
+        </div><figure class="shot"><img src="img/k19_goal_trip.webp" alt="Пока грузовик в пути, у цели — время его возвращения" loading="lazy"><figcaption>Пока грузовик в пути, у цели — время его возвращения</figcaption></figure>
+      </article>
+      <article class="dec" id="d-fails" data-stage="2" data-type="value" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K26</span><span class="tag">Этап 2</span><span class="tag">Число</span></p>
+          <h3>Другая цель после проваленных штурмов</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>После двух проваленных штурмов базы подряд цель предлагает взять точку у этой базы или «Base N is too strong: upgrade your soldier». Провалы забываются через 3 минуты. Рекомендуемой силы базы нет — цель не говорит, насколько усилиться.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Порог: 2 провала.</li><li>Нужна ли рекомендуемая сила базы (та же мера, что и для пустыни).</li></ul>
+          <p class="where"><span>Где менять:</span> <code>AssaultHistory.AlternativeAfter = 2, ForgetSeconds = 180</code></p>
+        </div>
+      </article>
+      <article class="dec dec--fig" id="d-goal-order" data-stage="1" data-type="priority" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K06</span><span class="tag">Этап 1</span><span class="tag">Приоритет</span></p>
+          <h3>Порядок целей на HUD</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Беда на базе → шаги базы (завод, рабочий, постройки, турели, водитель, рейс) → прокачка бойца → улучшение работающего завода → рубеж фронта или захват ближайшей базы с числом волн.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Подтвердить порядок; что важнее после захвата базы — экономика или следующий захват.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>GoalPlanner.Pick / PickStep</code></p>
+        </div><figure class="shot"><img src="img/k19_levelup.webp" alt="Новая цель после рейса: прокачать бойца" loading="lazy"><figcaption>Новая цель после рейса: прокачать бойца</figcaption></figure>
+      </article>
+      <article class="dec" id="d-loot-numbers" data-stage="1" data-type="content" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">—</span><span class="tag">Этап 1</span><span class="tag">Текст и награда</span></p>
+          <h3>Числа над убитым вором</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Не сделано: «+N returned» над вором требует всплывающих чисел в мире, а их в проекте нет.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Нужна ли система всплывающих чисел (тогда это отдельная задача).</li></ul>
+          <p class="where"><span>Где менять:</span> <code>—</code></p>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="group" id="g-combat">
+      <div class="wrap">
+        <div class="group__head"><h2>Бой и враги</h2><p>Стрельба, снайперы, патрули, точки территорий.</p></div>
+        <div class="decs">
+      <article class="dec dec--fig" id="d-leash" data-stage="3" data-type="value" data-urgent="1">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K11</span><span class="tag">Этап 3</span><span class="tag">Число</span><span class="tag tag--urgent">до плейтеста</span></p>
+          <h3>Как далеко патруль гонится за героем</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Раньше погоня мерилась от ближайшей точки всего маршрута — враги шли за героем вдоль всей трассы. Теперь маршрут стоит, пока кто-то из группы в бою, а погоня мерится от места, где группа остановилась. Замер в трёх прогонах: собака отстаёт в 33–37 м от этого места, постовой — в 34–37 м. Радиус берётся по старой формуле: зона спавнера × 3 + радиус агро (у этих патрулей 30 + 8–10 м).</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Оставить около 40 м или сократить погоню патрулей, например до 20 м.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Enemy.IsEnemyTooFarAwayFromSpawn; зона спавнера (zoneSizeX/Z = 10)</code></p>
+        </div><figure class="shot"><img src="img/k11_patrol.webp" alt="Собака и постовой дерутся, маршрут патруля стоит" loading="lazy"><figcaption>Собака и постовой дерутся, маршрут патруля стоит</figcaption></figure>
+      </article>
+      <article class="dec" id="d-moving-shot" data-stage="2" data-type="rule" data-urgent="1">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K10</span><span class="tag">Этап 2</span><span class="tag">Правило</span><span class="tag tag--urgent">до плейтеста</span></p>
+          <h3>Стрельба на ходу без штрафа</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Движение больше не сбрасывает начатый выстрел. Замер на текущей ветке: 4,3 выстрела в секунду стоя и 3,2 — с короткими перебежками (бег 0,25 с каждые 0,7 с), то есть на ходу темп ниже примерно на четверть.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Устраивает ли такая разница или нужен явный штраф (или, наоборот, полный темп) на бегу.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>APlayerController</code></p>
+        </div>
+      </article>
+      <article class="dec" id="d-aggro" data-stage="3" data-type="value" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K11</span><span class="tag">Этап 3</span><span class="tag">Число</span></p>
+          <h3>Радиусы агро у развилок</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Радиусы не менялись. Замер в игре: собаки — агро 8–10 м, с нюхом ×1,5 замечают с 12–15 м; постовые и стрелки — 8–13 м, удар с 8 м; танки — 6–8 м.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Уменьшать ли радиус собак на развилках маршрутов.</li><li>Показывать ли круг агро на земле, когда герой рядом.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Сцена: aggroRadius у спавнеров; Balance — множитель нюха</code></p>
+        </div>
+      </article>
+      <article class="dec" id="d-pair-aggro" data-stage="3" data-type="rule" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K11</span><span class="tag">Этап 3</span><span class="tag">Правило</span></p>
+          <h3>Вступает ли напарник по патрулю в бой</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Нет: второй участник стоит на своём месте в строю, пока герой не войдёт в его радиус. После боя оба возвращаются в строй пешком, без телепортации, и маршрут продолжается.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Оставить так или подтягивать напарника в бой (сложнее, но пара не разделяется).</li></ul>
+          <p class="where"><span>Где менять:</span> <code>EnemySpawner.HoldPatrolForGroup</code></p>
+        </div>
+      </article>
+      <article class="dec" id="d-sniper" data-stage="2" data-type="value" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K09</span><span class="tag">Этап 2</span><span class="tag">Число</span></p>
+          <h3>Сколько снайпер целится</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Прицел не меньше 1,2 с, за 0,25 с до выстрела луч фиксируется, метка SNIPER — на кольце вокруг героя.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Длительности прицела и фиксации — это баланс опасности снайпера.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>SniperTelegraph.AimSeconds = 1.2, LockSeconds = 0.25</code></p>
+        </div>
+      </article>
+      <article class="dec" id="d-weaken" data-stage="2" data-type="value" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K08</span><span class="tag">Этап 2</span><span class="tag">Число</span></p>
+          <h3>Скачок сложности после захвата точки</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Не менялся, только показан. Замер: захват точки снимает с защитников 50% здоровья и 50% урона — опасность боя падает примерно в 4 раза.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Оставить или смягчить (например −30% и −30%).</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Balance.Buffs — TERRITORY_POINT</code></p>
+        </div>
+      </article>
+      <article class="dec" id="d-wave-pause" data-stage="1" data-type="value" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K07</span><span class="tag">Этап 1</span><span class="tag">Число</span></p>
+          <h3>Пауза между волнами захвата</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>На базах 2 и 3 — 4 с (было 2 с), в HUD отсчёт «Next wave in N s».</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Значение паузы.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Balance.Frontline — пауза волны по ключу базы</code></p>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="group" id="g-base">
+      <div class="wrap">
+        <div class="group__head"><h2>База и экономика</h2><p>Завод, тревоги, подкрепление, ресурсы на карте.</p></div>
+        <div class="decs">
+      <article class="dec dec--fig" id="d-drivers" data-stage="3" data-type="value" data-urgent="1">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K19</span><span class="tag">Этап 3</span><span class="tag">Число</span><span class="tag tag--urgent">до плейтеста</span></p>
+          <h3>Водители подкрепления: второй водитель даёт на 25% меньше опыта за топливо</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Каждый следующий водитель удваивает цену рейса и умножает опыт на 1,5; рейс всегда 5 минут. Панель теперь пишет это прямо: «1 driver: 250 → 20 · 2 (base level 2): 500 → 30, −25% per fuel». Слотов водителей столько, каков уровень базы.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Так задумано (водитель — способ быстрее прокачаться за переплату) или выровнять: ×2 цена → ×2 опыт, либо водители сокращают время рейса.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Balance.Frontline.GetReinforceCost / GetReinforceRewardMultiplier / GetReinforceTripSeconds</code></p>
+        </div><figure class="shot"><img src="img/k19_reinforce_panel.webp" alt="Подписи под водителями и очередью рейсов" loading="lazy"><figcaption>Подписи под водителями и очередью рейсов</figcaption></figure>
+      </article>
+      <article class="dec" id="d-factory-first" data-stage="1" data-type="rule" data-urgent="1">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K13</span><span class="tag">Этап 1</span><span class="tag">Правило</span><span class="tag tag--urgent">до плейтеста</span></p>
+          <h3>«Сначала завод» только на базе 1</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>На базе 1 завод работает до запуска базы, а нападения начинаются после первого выпуска. На остальных базах нападения начинаются с запуска базы, как раньше.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Распространять ли правило на базы 2–3.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Balance.Frontline.FactoryBeforeLaunch (base_1); RequireFactoryProductionForBaseAttack = false</code></p>
+        </div>
+      </article>
+      <article class="dec dec--fig" id="d-respawn" data-stage="3" data-type="rule" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K20</span><span class="tag">Этап 3</span><span class="tag">Правило</span></p>
+          <h3>Ресурсы на карте: нужны ли разовые запасы</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Все ящики-ресурсы возвращаются: над собранным — «Back in 2:59», на мини-карте — блёклый значок и время. Разовых точек в игре нет: перк «Оруженосец», при котором собранное не возвращается, выключен в конфиге исследований. Задержки из сцены: 3, 5, 10, 20 и 30 минут.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Нужны ли разовые запасы (метка «One-time stock» — одна строка кода).</li><li>Возвращать ли перк «Оруженосец».</li><li>Подходят ли задержки 20–30 минут для крупных ящиков.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Сцена: spawnDelay у спавнеров-препятствий; ResearchesConfig — «squire»</code></p>
+        </div><figure class="shot"><img src="img/k20_respawn.webp" alt="Таймер над собранным ящиком и на мини-карте" loading="lazy"><figcaption>Таймер над собранным ящиком и на мини-карте</figcaption></figure>
+      </article>
+      <article class="dec" id="d-pads" data-stage="2" data-type="rule" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K21</span><span class="tag">Этап 2</span><span class="tag">Правило</span></p>
+          <h3>Площадки на земле вместо кнопок</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Площадка заменила плавающую кнопку только у управления постройками: встать на неё и постоять 0,6 с. Ящик патронов остаётся на базе, если герой уходит с ним за границу.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Переводить ли на площадки остальные мировые кнопки.</li><li>Правило ящика на границе: оставлять на базе или запрещать выход.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>GroundPad.HoldSeconds = 0.6; PlayerCrateCarrier</code></p>
+        </div>
+      </article>
+      <article class="dec" id="d-ammo-alert" data-stage="1" data-type="value" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K03</span><span class="tag">Этап 1</span><span class="tag">Число</span></p>
+          <h3>Когда тревожить «мало патронов»</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Срочная тревога — за 30 с до остановки турелей.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Порог в секундах.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>BaseSiegeWarning.WarningSeconds = 30</code></p>
+        </div>
+      </article>
+      <article class="dec" id="d-first-rank" data-stage="1" data-type="value" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">—</span><span class="tag">Этап 1</span><span class="tag">Число</span></p>
+          <h3>Гарантия первых золотых жетонов и дешёвый первый завод</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Не сделано: это решение баланса.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Гарантировать ли 100 GoldenToken к рангу 1.</li><li>Удешевлять ли первый завод.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Balance</code></p>
+        </div>
+      </article>
+      <article class="dec" id="d-transfer-preview" data-stage="1" data-type="rule" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K14</span><span class="tag">Этап 1</span><span class="tag">Правило</span></p>
+          <h3>Предпросмотр перевода рабочего</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Сделан итог сразу после нажатия: «было → стало» в выпуске завода. До нажатия результата не видно.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Нужен ли предпросмотр до нажатия.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Гарнизон</code></p>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="group" id="g-crew">
+      <div class="wrap">
+        <div class="group__head"><h2>Отряд и носильщики</h2><p>Помощники, их прокачка и выдача носильщика.</p></div>
+        <div class="decs">
+      <article class="dec dec--fig" id="d-carrier-ab" data-stage="3" data-type="rule" data-urgent="1">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K22</span><span class="tag">Этап 3</span><span class="tag">Правило</span><span class="tag tag--urgent">до плейтеста</span></p>
+          <h3>Запускать ли A/B выдачи носильщика и с какими вариантами</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Тест включён. Каждой установке один раз достаётся вариант A, B или C поровну. A — как раньше: носильщика можно спасти или нанять сразу. B — пленный-носильщик и найм в гарнизоне открываются после захвата базы 2. C — после трёх ручных доставок ящика в турель. Пока закрыто, над пленным строка «Carriers unlock after…», при открытии — плашка. События аналитики carrier_ab_variant и carrier_unlocked (вариант, доставки, число баз) уходят в AppMetrica.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Оставить три варианта или сравнивать два (например A и B).</li><li>Сколько ручных доставок в варианте C (сейчас 3).</li><li>Что считать успехом: время до захвата базы 2, число ручных доставок, удержание.</li><li>На плейтесте 6–8 игроков A/B ничего не покажет — там лучше включить один вариант для всех.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Balance.Frontline.CarrierUnlockVariants = "ABC" ("A" — тест выключен), CarrierUnlockDeliveries = 3</code></p>
+        </div><figure class="shot"><img src="img/k22_carrier_locked.webp" alt="Вариант B: носильщик закрыт до захвата базы 2" loading="lazy"><figcaption>Вариант B: носильщик закрыт до захвата базы 2</figcaption></figure>
+      </article>
+      <article class="dec" id="d-squad-full" data-stage="2" data-type="rule" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K17</span><span class="tag">Этап 2</span><span class="tag">Правило</span></p>
+          <h3>Новый помощник при полном отряде</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Карточка спасения пишет, попал ли боец в отряд. Если отряд полон, после нажатия открывается окно отряда: нажатие на бойца меняет их местами. Снятый боец возвращается в коллекцию.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Подтвердить поток или сразу ставить новичка в отряд вместо слабейшего.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>RevealScreen, CompanionSquadGroupedWindow</code></p>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+    <section class="group" id="g-front">
+      <div class="wrap">
+        <div class="group__head"><h2>Фронт и пустыня</h2><p>Прототип фронта, вход в новую зону.</p></div>
+        <div class="decs">
+      <article class="dec" id="d-desert-power" data-stage="3" data-type="value" data-urgent="1">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K24</span><span class="tag">Этап 3</span><span class="tag">Число</span><span class="tag tag--urgent">до плейтеста</span></p>
+          <h3>Рекомендуемая сила для пустыни</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>В карточке у края жары строки «Recommended» нет: в игре нет единой меры силы отряда, а придумывать её за геймдизайн нельзя. Поле для текста есть, оно пустое.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Чем мерить готовность: звание, уровень бойца, уровни баз, звёзды баз.</li><li>Какое значение писать для пустыни (и для следующих зон).</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Balance.Frontline.DesertRecommended = "" — непустая строка сразу появится в карточке</code></p>
+        </div>
+      </article>
+      <article class="dec" id="d-front" data-stage="2" data-type="rule" data-urgent="1">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K23</span><span class="tag">Этап 2</span><span class="tag">Правило</span><span class="tag tag--urgent">до плейтеста</span></p>
+          <h3>Оставить ли прототип фронта в сборке плейтеста</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Перед базой 2 два рубежа: мост (разбить патруль собака + постовой — после этого он больше не появляется) и снайперская вышка (захват ослабляет защитников). Флаги, круги на мини-карте, цель ведёт по рубежам.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Оставить включённым на следующий плейтест или выключить.</li><li>Масштабировать ли рубежи на другие участки и какие.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Balance.Frontline.FrontPrototype = true</code></p>
+        </div>
+      </article>
+      <article class="dec dec--fig" id="d-desert-reward" data-stage="3" data-type="content" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K24</span><span class="tag">Этап 3</span><span class="tag">Текст и награда</span></p>
+          <h3>Что пообещать игроку за пустыню</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Карточка пишет то, что есть в балансе: «Inside: Base 3 — Supplies factory, golden tokens from turrets». Плюс правило жары: «After 20 s you lose 1%, 2%, 3%… of max HP every second», «Stand in an oasis to cool down».</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Главная награда зоны одной строкой: золотые жетоны, помощник Desert Veteran, завод припасов или другое.</li><li>Оставить ли числа жары в тексте.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>WorldHintsHud.DesertCard — текст карточки</code></p>
+        </div><figure class="shot"><img src="img/k24_desert_card.webp" alt="Карточка у края жары, герой ещё снаружи" loading="lazy"><figcaption>Карточка у края жары, герой ещё снаружи</figcaption></figure>
+      </article>
+      <article class="dec" id="d-camp" data-stage="2" data-type="rule" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">K23</span><span class="tag">Этап 2</span><span class="tag">Правило</span></p>
+          <h3>Лагерь на взятом рубеже</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Не сделано: точка возрождения остаётся на базе, у моста лагеря нет.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Нужно ли возрождение на взятом рубеже (меняет правила смерти и беготни).</li></ul>
+          <p class="where"><span>Где менять:</span> <code>—</code></p>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
+
+  <section class="section" id="switches">
+    <div class="wrap split">
+      <div>
+        <h2>Переключатели</h2>
+        <p class="sub">Значения, которые геймдизайнер может поменять сам, не трогая логику.</p>
+        <table>
+          <thead><tr><th>Где</th><th>Сейчас</th><th>Что делает</th></tr></thead>
+          <tbody><tr><td><code>Balance.Frontline.CarrierUnlockVariants</code></td><td><code>"ABC"</code></td><td>Варианты A/B носильщика; "A" — тест выключен</td></tr><tr><td><code>Balance.Frontline.CarrierUnlockDeliveries</code></td><td><code>3</code></td><td>Ручных доставок до носильщика в варианте C</td></tr><tr><td><code>Balance.Frontline.DesertRecommended</code></td><td><code>""</code></td><td>Рекомендуемая сила в карточке пустыни; пусто — не показывается</td></tr><tr><td><code>Balance.Frontline.FrontPrototype</code></td><td><code>true</code></td><td>Прототип фронта база 1 → база 2</td></tr><tr><td><code>Balance.Frontline.FactoryBeforeLaunch</code></td><td><code>base_1</code></td><td>«Сначала завод» по базам</td></tr><tr><td><code>AssaultHistory.AlternativeAfter</code></td><td><code>2</code></td><td>Провалов штурма до другой цели</td></tr><tr><td><code>SniperTelegraph.AimSeconds / LockSeconds</code></td><td><code>1.2 / 0.25</code></td><td>Прицел и фиксация снайпера, с</td></tr><tr><td><code>BaseSiegeWarning.WarningSeconds</code></td><td><code>30</code></td><td>Тревога «мало патронов», с до остановки турелей</td></tr><tr><td><code>GroundPad.HoldSeconds</code></td><td><code>0.6</code></td><td>Сколько стоять на площадке</td></tr><tr><td><code>GoalPlanner.NearbyWhileWaiting / FarGoal</code></td><td><code>45 / 70</code></td><td>Ресурс рядом во время рейса, м</td></tr><tr><td><code>WorldHintsHud.ZoneCardDistance</code></td><td><code>22</code></td><td>С какого расстояния видна карточка жары, м</td></tr></tbody>
+        </table>
+      </div>
+      <div>
+        <h2>Уже сделано</h2>
+        <p class="sub">Пункты плана из разбора плейтеста, закрытые в коде за три этапа.</p>
+        <ul class="done"><li><span class="kid">K01</span>«Назад» по всей кнопке; декоративные дырки больше не перехватывают нажатия</li><li><span class="kid">K02</span>Фоновая осада базы 3 не теряет GoldenToken</li><li><span class="kid">K03</span>Тревоги базы: нападение, мало патронов, разрушение, повреждение</li><li><span class="kid">K04</span>Подкрепление до постройки показывает условие и цену</li><li><span class="kid">K06</span>Одна цель на HUD, стрелка, ромб на мини-карте</li><li><span class="kid">K07</span>Волны захвата и отсчёт в HUD</li><li><span class="kid">K12</span>Окно базы: выпуск отдельно от обороны, время до заполнения склада</li><li><span class="kid">K13</span>База 1: сначала завод, потом нападения</li><li><span class="kid">K14</span>Гарнизон: где работают люди, «было → стало»</li><li><span class="kid">K15</span>Цены «есть / нужно» и «Где взять»</li><li><span class="kid">K08</span>Источник усиления врагов виден: подпись, линии, −50% после захвата</li><li><span class="kid">K09</span>Телеграф снайпера и метка у героя</li><li><span class="kid">K10</span>Выстрел не сбрасывается движением</li><li><span class="kid">K16</span>Мини-карта: своё, чужое, дом возрождения</li><li><span class="kid">K17</span>Помощник: роль над пленным, замена при полном отряде, крестик</li><li><span class="kid">K18</span>Путь к званию и уровню базы словами</li><li><span class="kid">K21</span>Площадки на земле, ящик остаётся на базе</li><li><span class="kid">K23</span>Прототип фронта: мост и снайперская вышка</li><li><span class="kid">K26</span>Другая цель после двух провалов</li><li><span class="kid">K20</span>Таймер над собранным ресурсом и на мини-карте</li><li><span class="kid">K11</span>Патруль ждёт конца боя и собирается в строй, погоня — от места остановки</li><li><span class="kid">K24</span>Карточка у края жары, пометка «heat zone» у цели</li><li><span class="kid">K19</span>Подкрепление: что дают водители, очередь, цель во время рейса, прокачка после рейса</li><li><span class="kid">K22</span>A/B выдачи носильщика с событиями аналитики</li><li><span class="kid">K05</span>Опечатки на экране нет; внутреннее имя объекта исправлено</li></ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Idle Frontline, правки по плейтесту 2 ноября 2026 года. Разбор плейтеста с проблемами, экранами и планом: <a href="https://sites.aimulticast.org/krivsunov/idle-frontline-review/">idle-frontline-review</a>.</p>
+    <p>Всё в ветке NEWFIX_AFTER_PLAYTEST: этап 1 — 6cd83b1f, этап 2 — 42c47c0b, этап 3 — ffaab47d (поверх b68e9f79). Замеры сделаны в Play Mode на этой ветке. Тексты в игре — на английском, как в сборке.</p>
+  </div>
+</footer>
+
+<dialog class="lightbox" id="lightbox"><img alt=""><button type="button" aria-label="Закрыть">×</button></dialog>
+
+<script>
+(function () {
+  var state = { stage: "all", type: "all", urgent: "all" };
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".dec"));
+  var groups = Array.prototype.slice.call(document.querySelectorAll(".group"));
+  var count = document.getElementById("count");
+  function apply() {
+    var shown = 0;
+    cards.forEach(function (c) {
+      var ok = (state.stage === "all" || c.dataset.stage === state.stage) &&
+               (state.type === "all" || c.dataset.type === state.type) &&
+               (state.urgent === "all" || c.dataset.urgent === state.urgent);
+      c.hidden = !ok;
+      if (ok) shown++;
+    });
+    groups.forEach(function (g) { g.classList.toggle("is-empty", !g.querySelector(".dec:not([hidden])")); });
+    count.textContent = "Показано: " + shown + " из " + cards.length;
+  }
+  document.querySelectorAll(".seg").forEach(function (seg) {
+    seg.addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      seg.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      state[seg.dataset.filter] = b.dataset.value;
+      apply();
+    });
+  });
+  apply();
+  var box = document.getElementById("lightbox");
+  if (box && box.showModal) {
+    document.querySelectorAll(".shot img").forEach(function (img) {
+      img.addEventListener("click", function () { box.querySelector("img").src = img.src; box.querySelector("img").alt = img.alt; box.showModal(); });
+    });
+    box.querySelector("button").addEventListener("click", function () { box.close(); });
+    box.addEventListener("click", function (e) { if (e.target === box) box.close(); });
+  }
+})();
+</script>
+</body>
+</html>
