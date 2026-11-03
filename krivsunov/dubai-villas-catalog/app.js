@@ -1460,13 +1460,15 @@
 
   function matchesCeilingFilter(property, ceilingFilter) {
     if (!ceilingFilter) return true;
-    const h = property.ceilingHeightM;
-    const maxH = property.ceilingMaxM;
-    if (ceilingFilter === 'high') return h >= 3.1 || maxH >= 4.0 || property.doubleHeight === 'yes';
-    if (ceilingFilter === '3.2+') return h >= 3.18;
-    if (ceilingFilter === '3.0+') return h >= 3.0;
-    if (ceilingFilter === 'double-5.5+') return maxH >= 5.5;
-    if (ceilingFilter === 'standard') return h <= 3.05 && property.doubleHeight === 'no';
+    const rooms = property.ceilTypical || 0;
+    const living = Math.max(property.ceilLiving || 0, rooms);
+    const dhHall = property.doubleHeight === 'yes';
+    const m = ceilingFilter.match(/^rooms-(\d+(?:\.\d+)?)$/);
+    if (m) return rooms >= Number(m[1]) - 0.001;
+    if (ceilingFilter === 'living-3.4') return living >= 3.4 || dhHall;
+    if (ceilingFilter === 'living-4') return living >= 4 || dhHall;
+    if (ceilingFilter === 'double') return dhHall && (property.ceilDh || 0) >= 5.5;
+    if (ceilingFilter === 'known') return rooms > 0 && !property.ceilAnalog;
     return true;
   }
 
@@ -1605,13 +1607,18 @@
 
   function applyCeilingResearch(property, c) {
     if (!object(c)) return;
-    const range = (r) => (Array.isArray(r) && r.length === 2 ? `${String(r[0]).replace('.', ',')}–${String(r[1]).replace('.', ',')} м` : '');
+    const range = (r) => (Array.isArray(r) && r.length === 2 ? `${r[0].toFixed(1).replace('.', ',')}–${r[1].toFixed(1).replace('.', ',')} м` : '');
     const mid = (r) => (Array.isArray(r) && r.length === 2 ? Math.round(((r[0] + r[1]) / 2) * 100) / 100 : null);
+    const num = (v) => (Number.isFinite(v) ? (Math.round(v * 10) / 10).toFixed(1).replace('.', ',') : '');
+    property.ceilTypical = Number.isFinite(c.typicalBest) ? c.typicalBest : mid(c.typical);
+    property.ceilLiving = Number.isFinite(c.livingBest) ? c.livingBest : (mid(c.living) || property.ceilTypical);
+    property.ceilDh = Array.isArray(c.dhHeight) ? mid(c.dhHeight) : null;
+    property.ceilAnalog = !!c.analog;
     const parts = [];
-    if (range(c.typical)) parts.push(`комнаты ~${range(c.typical)}`);
-    if (range(c.living) && c.dh !== 'yes') parts.push(`гостиная ~${range(c.living)}`);
-    property.ceiling = parts.join(' · ') || 'нет данных';
-    property.ceilingHeightM = mid(c.typical) || mid(c.living) || 0;
+    if (property.ceilTypical) parts.push(`комнаты ≈${num(property.ceilTypical)} м${range(c.typical) ? ` (${range(c.typical)})` : ''}`);
+    if (property.ceilLiving && c.dh !== 'yes' && c.dh !== 'hall' && property.ceilLiving !== property.ceilTypical) parts.push(`гостиная ≈${num(property.ceilLiving)} м`);
+    property.ceiling = (parts.join(' · ') || 'нет данных') + (c.analog ? ' · по аналогам' : '');
+    property.ceilingHeightM = property.ceilTypical || 0;
     property.ceilingMaxM = Math.max(0, ...[c.typical, c.living, c.dhHeight].filter(Array.isArray).map((r) => r[1]));
     const dh = range(c.dhHeight) ? ` ~${range(c.dhHeight)}` : '';
     const labels = { yes: `Двусветная гостиная${dh}`, hall: `Двусветный зал-холл${dh}`, foyer: `Двусвет только у лестницы/входа${dh}`, no: 'Без второго света', unknown: 'Второй свет: не установлено' };
