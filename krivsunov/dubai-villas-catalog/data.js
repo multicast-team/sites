@@ -1,5 +1,5 @@
 window.VILLA_CATALOG = {
-  "updatedAt": "2026-11-03T02:55:51.394639+00:00",
+  "updatedAt": "2026-11-03T03:21:45.987930+00:00",
   "properties": [
     {
       "id": "samantha_ji_gardenhall500",
@@ -3238,8 +3238,8 @@ window.VILLA_CATALOG = {
       "plotM2": null,
       "buaM2": null,
       "ceiling": "~3.0–3.2 м (двухсветный холл у лестницы ~5.9 м)",
-      "status": "rejected",
-      "statusLabel": "Отказ · работы рядом",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "unknown",
       "cover": "gallery/turf-ed74eb575ae071.webp",
       "images": [
@@ -3442,7 +3442,6 @@ window.VILLA_CATALOG = {
       "description": "Вилла №17 с заявленным видом на гольф. Агент сообщил о ремонте соседней виллы и работах через дорогу.",
       "facts": [],
       "caveats": [
-        "Отклонена из-за соседних работ.",
         "Совпадение с ранее осмотренной TF19 не доказано."
       ],
       "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-damac-hills-the-turf-166526251.html",
@@ -3490,8 +3489,8 @@ window.VILLA_CATALOG = {
       "plotM2": null,
       "buaM2": null,
       "ceiling": "~3.1–3.2 м (большой второй свет в гостиной ~6.0–6.4 м)",
-      "status": "rejected",
-      "statusLabel": "Уже смотрели · отказ",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "unknown",
       "cover": "gallery/farm_gardens-16902bb346877c.webp",
       "images": [
@@ -3641,7 +3640,7 @@ window.VILLA_CATALOG = {
           "caption": "Фото из объявления"
         }
       ],
-      "description": "Ранее осмотренная вилла Farm Gardens 1. Не подошли вид, расположение и состояние окружения.",
+      "description": "Ранее осмотренная вилла Farm Gardens 1.",
       "facts": [],
       "caveats": [],
       "listingUrl": "https://www.propertyfinder.ae/to/160530411/en",
@@ -3769,8 +3768,8 @@ window.VILLA_CATALOG = {
       "plotM2": 352,
       "buaM2": null,
       "ceiling": "~3.2 м (скатный свод с балками в зале до ~4.2–4.4 м)",
-      "status": "rejected",
-      "statusLabel": "Отказ от просмотра",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "unknown",
       "cover": "gallery/samantha_whispering525-1b6a687d4f05ca.webp",
       "images": [
@@ -3877,8 +3876,8 @@ window.VILLA_CATALOG = {
       "plotM2": 180,
       "buaM2": null,
       "ceiling": "3.2 м на этажах (двухсветный атриум с лестницей ~6.2 м)",
-      "status": "rejected",
-      "statusLabel": "Отказ · таунхаус",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "townhouse",
       "cover": "gallery/ixora_rahul-e716692db58802.webp",
       "images": [
@@ -4278,8 +4277,8 @@ window.VILLA_CATALOG = {
       "plotM2": 929,
       "buaM2": 525,
       "ceiling": "~3.1–3.2 м (второй свет в гостиной ~6.0–6.4 м)",
-      "status": "rejected",
-      "statusLabel": "Уже смотрели · отказ",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "unknown",
       "cover": "gallery/keyzee_farm650-cfe4b286c005cc.webp",
       "images": [
@@ -4307,7 +4306,6 @@ window.VILLA_CATALOG = {
       "description": "Предложение KEYZEE с участком 10 000 sqft. По брошюре без мебели и свободно.",
       "facts": [],
       "caveats": [
-        "Не подошли окружение и виды.",
         "Возможный дубль Farm Gardens от Rahul не доказан."
       ],
       "listingUrl": "https://keyzeehomes.com/properties/5-bed-with-huge-plot-size--RU-R650k",
@@ -4358,8 +4356,8 @@ window.VILLA_CATALOG = {
       "plotM2": 690,
       "buaM2": 511,
       "ceiling": "~3.0–3.2 м (двухсветный холл у лестницы ~5.9 м)",
-      "status": "rejected",
-      "statusLabel": "Отказ · стройка рядом",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "unknown",
       "cover": "gallery/keyzee_golf_pdf-5e6c9f3db96bfd.webp",
       "images": [
@@ -4448,8 +4446,8 @@ window.VILLA_CATALOG = {
       "plotM2": null,
       "buaM2": null,
       "ceiling": "~3.0–3.2 м (двухсветный холл у лестницы ~5.9 м)",
-      "status": "rejected",
-      "statusLabel": "Отказ · не подошли виды",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "unknown",
       "cover": "gallery/robert_alt550-965ced973f680d.webp",
       "images": [
@@ -4557,7 +4555,6 @@ window.VILLA_CATALOG = {
       "description": "Отдельное предложение Robert из альбома фотографий; это не исходный Silver Springs за 475 000.",
       "facts": [],
       "caveats": [
-        "Не подошли вид из двора и вид с балкона.",
         "Точная идентификация и ссылка не получены."
       ],
       "listingUrl": "",
