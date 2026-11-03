@@ -1227,7 +1227,7 @@
     const body = el('div', 'sat-dialog-body');
     const facts = [];
     if (property.geo) facts.push(`Точка: ${SAT_PREC_SHORT[property.geo.precision] || property.geo.precision}`);
-    if (s.check && !['cluster_ok', 'entrance'].includes(s.check)) facts.push(SAT_CHECK[s.check] || s.check);
+    if (s.check && !['cluster_ok', 'entrance', 'unknown'].includes(s.check)) facts.push(SAT_CHECK[s.check] || s.check);
     if (s.imageryDate) facts.push(`снимок Esri ${s.imageryDate}`);
     if (facts.length) body.append(el('p', 'sat-dialog-facts', facts.join(' · ')));
     const shots = satImages(property);
