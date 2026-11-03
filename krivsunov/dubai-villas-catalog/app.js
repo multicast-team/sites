@@ -1227,7 +1227,7 @@
     const body = el('div', 'sat-dialog-body');
     const facts = [];
     if (property.geo) facts.push(`Точка: ${SAT_PREC_SHORT[property.geo.precision] || property.geo.precision}`);
-    if (s.check) facts.push(SAT_CHECK[s.check] || s.check);
+    if (s.check && !['cluster_ok', 'entrance'].includes(s.check)) facts.push(SAT_CHECK[s.check] || s.check);
     if (s.imageryDate) facts.push(`снимок Esri ${s.imageryDate}`);
     if (facts.length) body.append(el('p', 'sat-dialog-facts', facts.join(' · ')));
     const shots = satImages(property);
@@ -1244,8 +1244,8 @@
     } else {
       body.append(el('p', 'sat-dialog-empty', 'Точное место этой виллы пока не найдено, поэтому снимков нет.'));
     }
-    const known = (v) => (v && v !== 'неизвестно' ? v : '');
-    const rows = [['Сад выходит на', known(s.gardenFacing)], ['Сзади', known(s.backs)], ['Стройка рядом', s.construction], ['Дороги', s.roads], ['Соседи', s.neighbors]].filter((r) => r[1]);
+    const known = (v) => (v && !/^(неизвестно|не установлено|не определено|нет данных)\.?$/i.test(String(v).trim()) ? v : '');
+    const rows = [['Сад выходит на', known(s.gardenFacing)], ['Сзади', known(s.backs)], ['Стройка рядом', known(s.construction)], ['Дороги', known(s.roads)], ['Соседи', known(s.neighbors)]].filter((r) => r[1]);
     if (rows.length) body.append(factRows(rows));
     if (s.notes) body.append(el('p', 'sat-dialog-notes', s.notes));
     const links = el('p', 'sat-links sat-dialog-links');
