@@ -307,6 +307,8 @@ h2 { font: normal 21px/1.2 var(--serif); letter-spacing: -.02em; margin: 0; }
 .comments-panel p { font-size: 12.5px; line-height: 1.45; margin: 6px 0 0; }
 .comments-sync { display: flex; align-items: center; gap: 7px; font-weight: 600; }
 .small-dot { width: 8px; height: 8px; border-radius: 50%; background: #4f8a4c; flex-shrink: 0; box-shadow: 0 0 0 3px #4f8a4c26; }
+.small-dot.is-offline { background: #c98a2b; box-shadow: 0 0 0 3px #c98a2b26; }
+.sync-state { font-weight: 400; opacity: .72; }
 .toolbar-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 
 /* Уведомление и «наверх» */

@@ -6,7 +6,8 @@
   const TOGGLES_STORAGE_KEY = 'dubai-villas.toggles.v1';
   const CLIENT_STORAGE_KEY = 'dubai-villas.client.v1';
   const AUTHOR_STORAGE_KEY = 'dubai-villas.author.v1';
-  const CLOUD_OBJECT_URL = 'https://api.restful-api.dev/objects/ff808181a09d98f701a19e08924213e1';
+  // Общее состояние: снимок всех отметок и комментариев в textdb.dev + живая лента изменений в ntfy (хранит 12 ч).
+  const CLOUD_STATE_URL = 'https://textdb.dev/api/data/5b1c1c09-5455-4708-88ae-64e5835ea873';
   const CLOUD_STREAM_URL = 'https://ntfy.sh/dubai_villas_krivsunov_comments_v1';
   const INITIAL_SHARED_SEED = {
     war4_6br_tayyab_pdf: { owner: { id: 'owner', author: 'Автор подборки', text: 'Круто, надо посмотреть обязательно. ВДруг все таки зеленом там и вид нормальный', updatedAt: 1000 } },
@@ -40,7 +41,10 @@
   let lastOpener = null;
   let galleryDialog = null;
   const publishTimers = new Map();
-  let cloudPutTimer = null;
+  let cloudSyncTimer = null;
+  let cloudSyncRunning = false;
+  let cloudSyncAgain = false;
+  let cloudOkAt = 0;
   const noteFields = new Set();
   const toggleWidgets = new Set();
 
@@ -196,6 +200,10 @@
     };
   }
 
+  // Ключи для одинакового у всех выбора при равном времени правки: побеждает больший ключ.
+  const commentKey = (entry) => JSON.stringify([entry.deleted ? 1 : 0, entry.text, entry.author, entry.clientId]);
+  const toggleKey = (entry) => `${entry.viewed ? 1 : 0}${entry.rent ? 1 : 0}${entry.top ? 1 : 0}|${entry.author}`;
+
   function mergeSharedEntry(propertyId, rawEntry, fallbackId = '') {
     if (!validId(propertyId)) return false;
     const entry = normalizeSharedEntry(rawEntry, fallbackId);
@@ -203,8 +211,8 @@
     if (!own(sharedComments, propertyId)) sharedComments[propertyId] = Object.create(null);
     const existing = sharedComments[propertyId][entry.id];
     if (existing) {
-      if (existing.updatedAt > entry.updatedAt) return false;
-      if (existing.updatedAt === entry.updatedAt && existing.text === entry.text && existing.author === entry.author && existing.deleted === entry.deleted) return false;
+      if (entry.updatedAt <= 1000 || existing.updatedAt > entry.updatedAt) return false;
+      if (existing.updatedAt === entry.updatedAt && commentKey(entry) <= commentKey(existing)) return false;
     }
     sharedComments[propertyId][entry.id] = entry;
     return true;
@@ -240,8 +248,8 @@
     if (!entry) return false;
     const existing = sharedToggles[propertyId];
     if (existing) {
-      if (existing.updatedAt > entry.updatedAt) return false;
-      if (existing.updatedAt === entry.updatedAt && existing.viewed === entry.viewed && existing.rent === entry.rent && existing.top === entry.top) return false;
+      if (entry.updatedAt <= 1000 || existing.updatedAt > entry.updatedAt) return false;
+      if (existing.updatedAt === entry.updatedAt && toggleKey(entry) <= toggleKey(existing)) return false;
     }
     sharedToggles[propertyId] = entry;
     return true;
@@ -382,42 +390,111 @@
     }
   }
 
-  async function pushSnapshotToCloud() {
-    try {
-      let remoteComments = Object.create(null);
-      let remoteToggles = Object.create(null);
-      try {
-        const getResp = await fetch(CLOUD_OBJECT_URL, { cache: 'no-store' });
-        if (getResp.ok) {
-          const currentObj = await getResp.json();
-          if (currentObj && object(currentObj.data)) {
-            if (object(currentObj.data.sharedComments)) remoteComments = currentObj.data.sharedComments;
-            if (object(currentObj.data.sharedToggles)) remoteToggles = currentObj.data.sharedToggles;
-          }
-        }
-      } catch {}
-      const cChanged = mergeSharedMap(remoteComments);
-      const tChanged = mergeToggleMap(remoteToggles);
-      if (cChanged || tChanged) {
-        saveSharedToLocal();
-        if (cChanged) { refreshNoteFields(); updateNotesCount(); }
-        if (tChanged) refreshToggleWidgets();
+  function applySharedChanges(cChanged, tChanged) {
+    if (!cChanged && !tChanged) return;
+    saveSharedToLocal();
+    if (cChanged) {
+      refreshNoteFields();
+      updateNotesCount();
+    }
+    if (tChanged) {
+      refreshToggleWidgets();
+      if ($('filter-viewed') && ($('filter-viewed').value || $('filter-rent').value || $('filter-top').value)) render();
+    }
+  }
+
+  // В облако уходят только настоящие правки: записи со временем 1000 — это значения по умолчанию из каталога.
+  function cloudSnapshot() {
+    const toggles = {};
+    for (const [id, entry] of Object.entries(sharedToggles)) if (entry.updatedAt > 1000) toggles[id] = entry;
+    const comments = {};
+    for (const [id, entries] of Object.entries(sharedComments)) {
+      for (const [entryId, entry] of Object.entries(entries)) {
+        if (entry.updatedAt <= 1000) continue;
+        if (!own(comments, id)) comments[id] = {};
+        comments[id][entryId] = entry;
       }
-      await fetch(CLOUD_OBJECT_URL, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: 'dubai-villas-shared-comments-v1',
-          data: { version: 1, updatedAt: Date.now(), sharedComments, sharedToggles }
-        })
-      });
-    } catch {}
+    }
+    return { version: 2, updatedAt: Date.now(), sharedToggles: toggles, sharedComments: comments };
+  }
+
+  // После слияния локальное состояние не старее облачного; любое отличие значит, что в облаке не хватает наших правок.
+  function localAheadOf(remote) {
+    const remoteToggles = object(remote.sharedToggles) ? remote.sharedToggles : {};
+    for (const [id, entry] of Object.entries(sharedToggles)) {
+      if (entry.updatedAt <= 1000) continue;
+      const other = own(remoteToggles, id) ? normalizeToggleEntry(remoteToggles[id]) : null;
+      if (!other || other.updatedAt !== entry.updatedAt || toggleKey(other) !== toggleKey(entry)) return true;
+    }
+    const remoteComments = object(remote.sharedComments) ? remote.sharedComments : {};
+    for (const [id, entries] of Object.entries(sharedComments)) {
+      const remoteEntries = own(remoteComments, id) && object(remoteComments[id]) ? remoteComments[id] : {};
+      for (const [entryId, entry] of Object.entries(entries)) {
+        if (entry.updatedAt <= 1000) continue;
+        const other = own(remoteEntries, entryId) ? normalizeSharedEntry(remoteEntries[entryId], entryId) : null;
+        if (!other || other.updatedAt !== entry.updatedAt || commentKey(other) !== commentKey(entry)) return true;
+      }
+    }
+    return false;
+  }
+
+  function setCloudStatus(ok) {
+    if (ok) cloudOkAt = Date.now();
+    const dot = $('sync-dot');
+    if (!dot) return;
+    dot.classList.toggle('is-offline', !ok);
+    const time = cloudOkAt ? new Date(cloudOkAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Dubai' }) : '';
+    const label = ok ? `Отметки и комментарии синхронизированы для всех в ${time} (Дубай)`
+      : `Нет связи с общим хранилищем${time ? `, последняя синхронизация в ${time}` : ''}. Изменения сохранены на устройстве и уйдут всем, когда связь появится`;
+    dot.parentElement.title = label;
+    if ($('sync-state')) $('sync-state').textContent = ok ? ` · синхронизировано в ${time}` : ' · нет связи, отметки уйдут позже';
+  }
+
+  // Прочитать облачный снимок, влить его и, если у нас есть правки, которых там нет, записать объединённый снимок.
+  async function syncCloudState() {
+    clearTimeout(cloudSyncTimer);
+    cloudSyncTimer = null;
+    if (cloudSyncRunning) {
+      cloudSyncAgain = true;
+      return;
+    }
+    cloudSyncRunning = true;
+    try {
+      const resp = await fetch(CLOUD_STATE_URL, { cache: 'no-store' });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      let remote = {};
+      try { remote = JSON.parse((await resp.text()).trim() || '{}'); } catch {}
+      if (!object(remote)) remote = {};
+      applySharedChanges(mergeSharedMap(remote.sharedComments), mergeToggleMap(remote.sharedToggles));
+      if (localAheadOf(remote)) {
+        const body = JSON.stringify(cloudSnapshot());
+        // textdb.dev принимает только точный тип text/plain; application/json — запасной путь.
+        let put = await fetch(CLOUD_STATE_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body });
+        if (!put.ok) put = await fetch(CLOUD_STATE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
+        if (!put.ok) throw new Error(`HTTP ${put.status}`);
+      }
+      setCloudStatus(true);
+    } catch {
+      setCloudStatus(false);
+    } finally {
+      cloudSyncRunning = false;
+      if (cloudSyncAgain) {
+        cloudSyncAgain = false;
+        scheduleCloudSync(300);
+      }
+    }
+  }
+
+  function scheduleCloudSync(delay = 400) {
+    clearTimeout(cloudSyncTimer);
+    cloudSyncTimer = setTimeout(syncCloudState, delay);
   }
 
   async function publishEntryToCloud(propertyId, entryId) {
     if (!validId(propertyId) || !own(sharedComments, propertyId) || !own(sharedComments[propertyId], entryId)) return;
     const entry = sharedComments[propertyId][entryId];
     if (!entry || isTestNote(entry.text)) return;
+    scheduleCloudSync();
     try {
       await fetch(CLOUD_STREAM_URL, {
         method: 'POST',
@@ -425,13 +502,12 @@
         body: JSON.stringify({ type: 'comment', propertyId, entry })
       });
     } catch {}
-    clearTimeout(cloudPutTimer);
-    cloudPutTimer = setTimeout(pushSnapshotToCloud, 400);
   }
 
   async function publishToggleToCloud(propertyId) {
     if (!validId(propertyId) || !own(sharedToggles, propertyId)) return;
     const toggle = sharedToggles[propertyId];
+    scheduleCloudSync();
     try {
       await fetch(CLOUD_STREAM_URL, {
         method: 'POST',
@@ -439,8 +515,6 @@
         body: JSON.stringify({ type: 'toggle', propertyId, toggle })
       });
     } catch {}
-    clearTimeout(cloudPutTimer);
-    cloudPutTimer = setTimeout(pushSnapshotToCloud, 400);
   }
 
   function scheduleCloudPublish(propertyId, entryId, immediate = false) {
@@ -2922,6 +2996,7 @@
       if (object(payload.sharedToggles) && mergeToggleMap(payload.sharedToggles)) {
         saveSharedToLocal();
         refreshToggleWidgets();
+        scheduleCloudSync();
       }
       const merged = Object.assign(Object.create(null), notes);
       let added = 0;
@@ -3073,92 +3148,67 @@
     if (anyChanged) saveSharedToLocal();
   }
 
-  async function pullSharedFromCloud() {
+  function mergeStreamMessage(msg) {
+    if (!object(msg)) return [false, false];
+    if (msg.type === 'comment' && validId(msg.propertyId)) return [mergeSharedEntry(msg.propertyId, msg.entry), false];
+    if (msg.type === 'toggle' && validId(msg.propertyId)) return [false, mergeToggleEntry(msg.propertyId, msg.toggle)];
+    if (msg.type === 'snapshot') return [mergeSharedMap(msg.sharedComments), mergeToggleMap(msg.sharedToggles)];
+    return [false, false];
+  }
+
+  // Правки за последние 12 ч из ленты: так в снимок попадут и изменения из вкладок со старой версией сайта.
+  async function pullStreamBacklog() {
     let cChanged = false;
     let tChanged = false;
     try {
-      const resp = await fetch(CLOUD_OBJECT_URL, { cache: 'no-store' });
-      if (resp.ok) {
-        const payload = await resp.json();
-        if (payload && object(payload.data)) {
-          if (mergeSharedMap(payload.data.sharedComments)) cChanged = true;
-          if (mergeToggleMap(payload.data.sharedToggles)) tChanged = true;
-        }
-      }
-    } catch {}
-    try {
       const resp = await fetch(`${CLOUD_STREAM_URL}/json?poll=1&since=all`, { cache: 'no-store' });
       if (resp.ok) {
-        const rawLines = (await resp.text()).split('\n').filter(Boolean);
-        for (const line of rawLines) {
+        for (const line of (await resp.text()).split('\n')) {
+          if (!line) continue;
           try {
             const evt = JSON.parse(line);
-            if (evt && evt.event === 'message' && typeof evt.message === 'string') {
-              const msg = JSON.parse(evt.message);
-              if (msg && msg.type === 'comment' && validId(msg.propertyId) && mergeSharedEntry(msg.propertyId, msg.entry)) cChanged = true;
-              else if (msg && msg.type === 'toggle' && validId(msg.propertyId) && mergeToggleEntry(msg.propertyId, msg.toggle)) tChanged = true;
-              else if (msg && msg.type === 'snapshot') {
-                if (mergeSharedMap(msg.sharedComments)) cChanged = true;
-                if (mergeToggleMap(msg.sharedToggles)) tChanged = true;
-              }
-            }
+            if (!evt || evt.event !== 'message' || typeof evt.message !== 'string') continue;
+            const [c, t] = mergeStreamMessage(JSON.parse(evt.message));
+            cChanged = cChanged || c;
+            tChanged = tChanged || t;
           } catch {}
         }
       }
     } catch {}
-    if (cChanged || tChanged) {
-      saveSharedToLocal();
-      if (cChanged) {
-        refreshNoteFields();
-        updateNotesCount();
-      }
-      if (tChanged) {
-        refreshToggleWidgets();
-        if ($('filter-viewed') && ($('filter-viewed').value || $('filter-rent').value || $('filter-top').value)) render();
-      }
-    }
+    applySharedChanges(cChanged, tChanged);
   }
 
   function startCloudSync() {
-    if (typeof fetch !== 'function' || !/^https?:$/i.test(location.protocol)) {
-      pullSharedFromCloud();
-      return;
-    }
-    pullSharedFromCloud();
-    if (typeof EventSource === 'function') {
+    if (typeof fetch !== 'function') return;
+    pullStreamBacklog().finally(syncCloudState);
+    // Лента досылает всё с момента открытия страницы: события, пришедшие до подключения или во время обрыва, не теряются.
+    const streamSince = Math.floor(Date.now() / 1000) - 10;
+    let stream = null;
+    function openStream() {
+      if (typeof EventSource !== 'function') return;
       try {
-        const es = new EventSource(`${CLOUD_STREAM_URL}/sse`);
-        es.addEventListener('message', (event) => {
+        stream = new EventSource(`${CLOUD_STREAM_URL}/sse?since=${streamSince}`);
+        stream.addEventListener('message', (event) => {
           try {
             const evt = JSON.parse(event.data);
             if (!evt || typeof evt.message !== 'string') return;
-            const msg = JSON.parse(evt.message);
-            let cChanged = false;
-            let tChanged = false;
-            if (msg && msg.type === 'comment' && validId(msg.propertyId)) cChanged = mergeSharedEntry(msg.propertyId, msg.entry);
-            else if (msg && msg.type === 'toggle' && validId(msg.propertyId)) tChanged = mergeToggleEntry(msg.propertyId, msg.toggle);
-            else if (msg && msg.type === 'snapshot') {
-              cChanged = mergeSharedMap(msg.sharedComments);
-              tChanged = mergeToggleMap(msg.sharedToggles);
-            }
-            if (cChanged || tChanged) {
-              saveSharedToLocal();
-              if (cChanged) {
-                refreshNoteFields();
-                updateNotesCount();
-              }
-              if (tChanged) {
-                refreshToggleWidgets();
-                if ($('filter-viewed') && ($('filter-viewed').value || $('filter-rent').value || $('filter-top').value)) render();
-              }
-            }
+            const [c, t] = mergeStreamMessage(JSON.parse(evt.message));
+            applySharedChanges(c, t);
+            // Чужую правку дописывает в снимок первый открытый браузер (с разбросом, чтобы не писать хором).
+            if ((c || t) && !cloudSyncTimer) scheduleCloudSync(1500 + Math.random() * 3500);
           } catch {}
         });
       } catch {}
     }
+    openStream();
     setInterval(() => {
-      if (document.visibilityState !== 'hidden') pullSharedFromCloud();
-    }, 25000);
+      if (stream && stream.readyState === EventSource.CLOSED) openStream();
+      if (document.visibilityState !== 'hidden') syncCloudState();
+    }, 90000);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' || cloudSyncTimer) syncCloudState();
+    });
+    window.addEventListener('online', () => syncCloudState());
   }
 
   initSharedState();

@@ -6,17 +6,17 @@
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#f5f2ec">
   <meta name="description" content="Каталог предложений вилл Дубая: фотографии, местоположения, высоты потолков, переключатели просмотра и общие комментарии.">
-  <meta name="catalog-release" content="model3d-20261103">
+  <meta name="catalog-release" content="sync-20261103">
   <title>Виллы Дубая</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/"}}</script>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=model3d-20261103">
+  <link rel="stylesheet" href="styles.css?v=sync-20261103">
   <script src="vendor/leaflet/leaflet.js" defer></script>
-  <script src="enrich.js?v=model3d-20261103" defer></script>
-  <script src="data.js?v=model3d-20261103" defer></script>
-  <script src="app.js?v=model3d-20261103" defer></script>
+  <script src="enrich.js?v=sync-20261103" defer></script>
+  <script src="data.js?v=sync-20261103" defer></script>
+  <script src="app.js?v=sync-20261103" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#catalog">Перейти к объектам</a>
@@ -189,8 +189,8 @@
       </div>
       <section class="comments-panel" aria-labelledby="comments-panel-title">
         <h2 id="comments-panel-title">Комментарии и переключатели</h2>
-        <p class="comments-sync"><span class="small-dot" id="sync-dot" aria-hidden="true"></span><span id="notes-count">Загрузка комментариев…</span></p>
-        <p class="muted">Комментарии и положения переключателей («Смотрели / Не смотрели», «Снимаем / Не снимаем») сохраняются автоматически и видны всем посетителям. Резервная копия JSON:</p>
+        <p class="comments-sync"><span class="small-dot" id="sync-dot" aria-hidden="true"></span><span id="notes-count">Загрузка комментариев…</span><span id="sync-state" class="sync-state"></span></p>
+        <p class="muted">Комментарии, отметки «🔥 ТОП» и переключатели («Смотрели / Не смотрели», «Снимаем / Не снимаем») синхронизируются автоматически и одинаковы у всех посетителей. Резервная копия JSON:</p>
         <div class="toolbar-actions">
           <button id="export-notes" class="button button-quiet" type="button">Экспорт JSON <span aria-hidden="true">↓</span></button>
           <button id="import-notes" class="button button-quiet" type="button">Импорт JSON <span aria-hidden="true">↑</span></button>
