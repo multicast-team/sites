@@ -46,7 +46,7 @@ export function build(kit, opts = {}) {
     wood: pbr('wood_dark', 1.2, { color: 0x8c6c55 }, { normal: 0.5 }),
     glossy: new THREE.MeshPhysicalMaterial({ color: 0x0d0e12, roughness: 0.07, metalness: 0.25, clearcoat: 1, clearcoatRoughness: 0.03 }),
     red: new THREE.MeshPhysicalMaterial({ color: 0xc4102c, roughness: 0.22, metalness: 0.45, clearcoat: 1, clearcoatRoughness: 0.04 }),
-    rubber: new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.85 }),
+    rubber: new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.85 }), // матовый: и табло вывесок не бликует от своего неона
     chrome: MI.chrome,
     glass: new THREE.MeshStandardMaterial({ color: 0x0a1014, roughness: 0.04, transparent: true, opacity: 0.25, depthWrite: false, envMapIntensity: 1.5 }),
     leaf: new THREE.MeshStandardMaterial({ color: 0x1f3d2a, roughness: 0.55 })
@@ -213,7 +213,9 @@ export function build(kit, opts = {}) {
     }
     const t = new THREE.CanvasTexture(canvas);
     t.colorSpace = THREE.SRGBColorSpace;
-    const m = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: color, emissiveMap: t, emissiveIntensity: intensity, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+    t.anisotropy = 16; // при взгляде снизу мелкий уровень мипмапа усредняет буквы в сплошную светящуюся табличку
+    // чёрный металл не отражает ни ламп, ни неба: светятся только буквы, без светлой «таблички» под ними
+    const m = new THREE.MeshStandardMaterial({ color: 0x000000, metalness: 1, roughness: 1, emissive: color, emissiveMap: t, emissiveIntensity: intensity, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
     const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), m);
     mesh.position.set(x, y, z);
     mesh.rotation.y = ry;
@@ -393,9 +395,9 @@ export function build(kit, opts = {}) {
     light('foyer', -0.6, 6.4, 2.0, 0x00e5ff, 16, 9);
     light('foyer', 0.8, 6.1, 3.0, 0xff2bd6, 16, 9);
     // вертикальная вывеска над левой галереей
-    box(-IN, -IN + 0.06, F1 + 1.0, F1 + 3.8, 2.55, 4.05, C.plastic);
+    box(-IN, -IN + 0.06, F1 + 1.0, F1 + 3.8, 2.55, 4.05, C.rubber);
     neonText('アルワルカ', -IN + 0.07, F1 + 2.4, 3.3, 1.35, 2.6, Math.PI / 2, 0xff2bd6, { vertical: true, font: '700 170px "Yu Gothic", "Meiryo", "MS Gothic", "Noto Sans JP", sans-serif', intensity: 3.5 });
-    light('foyer', -3.2, F1 + 2.4, 3.3, 0xff2bd6, 10, 6);
+    light('foyer', -2.5, F1 + 2.4, 3.3, 0xff2bd6, 10, 6); // свет вывески — в метре от табло, иначе табло горит сплошным пятном
     // подсветка торцов галерей и малой гостиной
     for (const s of [1, -1]) box(s * VX - s * 0.04, s * VX, CG - 0.025, CG, VZ, kit.IN + 0.6, N.cyan);
     box(-VX, VX, CG - 0.025, CG, VZ - 0.04, VZ, N.cyan);
@@ -527,10 +529,10 @@ export function build(kit, opts = {}) {
     anim.push((t) => { globe.rotation.y = t * 0.5; wire.rotation.y = t * 0.5; });
     beam(1.5, F + 0.56, F + 1.3, -5.25, 0.32, 0x33e0ff);
     // вывеска над пантри
-    box(-IN, -IN + 0.05, F + 2.3, F + 3.15, -4.95, -3.05, C.plastic);
+    box(-IN, -IN + 0.05, F + 2.3, F + 3.15, -4.95, -3.05, C.rubber);
     neonText('ラーメン 24/7', -IN + 0.06, F + 2.72, -4.0, 1.85, 0.6, Math.PI / 2, 0xff2bd6, { intensity: 6, font: '700 150px "Yu Gothic", "Meiryo", "Segoe UI", sans-serif' });
     box(-IN + 0.02, -IN + 0.05, F + 0.86, F + 0.88, -5.4, -2.6, N.cyan);
-    light('mezz', -3.3, F + 2.6, -4.0, 0xff2bd6, 10, 6);
+    light('mezz', -2.4, F + 2.6, -4.0, 0xff2bd6, 10, 6);
     light('mezz', 3.0, F + 1.4, -4.95, 0x00e5ff, 8, 5);
     light('mezz', 0, F + 0.4, -2.8, 0x00e5ff, 7, 5);
     light('mezz', 1.5, F + 1.2, -5.25, 0x33e0ff, 6, 4);
@@ -583,10 +585,10 @@ export function build(kit, opts = {}) {
     cyl(0.04, 0.04, 0.45, cx, F + 0.23, cz, C.black, 10);
     cyl(0.32, 0.32, 0.03, cx, F + 0.04, cz, C.black, 5);
     solid(cx - 0.36, cx + 0.3, F, F + 1.35, cz - 0.3, cz + 0.3);
-    box(dx - 0.06, dx - 0.04, F + 1.85, F + 2.65, 2.45, 4.35, C.plastic);
-    neonText('LEVEL UP', dx - 0.065, F + 2.25, 3.4, 1.8, 0.55, -Math.PI / 2, 0x7dff3a, { intensity: 5 });
+    box(dx - 0.06, dx - 0.04, F + 1.85, F + 2.65, 2.45, 4.35, C.rubber);
+    neonText('LEVEL UP', dx - 0.065, F + 2.25, 3.4, 1.8, 0.55, -Math.PI / 2, 0x7dff3a, { intensity: 2.2 }); // зелёный в 2 раза ярче розового: при 5 ореол заливал табло
     light('bed2', 8.6, F + 1.2, 3.4, 0x00e5ff, 8, 5);
-    light('bed2', 8.9, F + 2.3, 3.4, 0x7dff3a, 8, 5);
+    light('bed2', 7.9, F + 2.3, 3.4, 0x7dff3a, 8, 5);
     light('bed2', 5.5, F + 0.2, 3.4, 0xff2244, 6, 4);
   }
 

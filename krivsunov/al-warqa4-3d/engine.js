@@ -426,11 +426,21 @@ export async function createEngine(container, opts) {
       composer.addPass(gtao);
     }
     bloom = null;
-    // пиковая яркость до свечения ограничена: от крошечных ярких точек не расползаются квадратные ореолы
+    // пиковая яркость до свечения ограничена: от крошечных ярких точек не расползаются квадратные ореолы.
+    // Зеркальный блик лампы на воде переполняет HalfFloat (Inf), а Inf·0 даёт NaN, который свечение размазывает
+    // в чёрный квадрат, — поэтому Inf заменяется пределом, NaN — нулём (проверка по битам, её не съест оптимизатор)
     composer.addPass(new ShaderPass({
       uniforms: { tDiffuse: { value: null }, maxValue: { value: 5.0 } },
       vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-      fragmentShader: 'uniform sampler2D tDiffuse; uniform float maxValue; varying vec2 vUv; void main(){ vec4 c = texture2D(tDiffuse, vUv); float m = max(max(c.r, c.g), c.b); gl_FragColor = vec4(c.rgb * min(1.0, maxValue / max(m, 1e-4)), c.a); }'
+      fragmentShader: `uniform sampler2D tDiffuse; uniform float maxValue; varying vec2 vUv;
+        void main() {
+          vec4 c = texture2D(tDiffuse, vUv);
+          uvec3 b = floatBitsToUint(c.rgb) & uvec3(0x7fffffffu);
+          c.rgb = mix(c.rgb, vec3(maxValue), equal(b, uvec3(0x7f800000u)));
+          c.rgb = max(mix(c.rgb, vec3(0.0), greaterThan(b, uvec3(0x7f800000u))), vec3(0.0));
+          float m = max(max(c.r, c.g), c.b);
+          gl_FragColor = vec4(c.rgb * min(1.0, maxValue / max(m, 1e-4)), 1.0);
+        }`
     }));
     if (Q.bloom && opts.debug?.bloom !== false) {
       bloom = new UnrealBloomPass(new THREE.Vector2(w, h), 0.4, 0.6, 1.0);
