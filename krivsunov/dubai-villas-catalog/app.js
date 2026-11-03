@@ -282,7 +282,7 @@
 
   function totalSharedCommentsCount() {
     let total = 0;
-    for (const propertyId of Object.keys(sharedComments)) total += getVisibleSharedComments(propertyId).length;
+    for (const propertyId of Object.keys(sharedComments)) if (!propertyId.startsWith('vote:')) total += getVisibleSharedComments(propertyId).length;
     return total;
   }
 
@@ -311,6 +311,7 @@
       $('notes-count').textContent = 'Все комментарии и переключатели сохраняются автоматически и видны всем';
     }
     updateCommentBadges();
+    updateVoteWidgets();
   }
 
   function formatCommentTime(timestamp) {
@@ -689,7 +690,7 @@
     thumbnails.setAttribute('aria-label', 'Все видео и фотографии');
     let current = startIndex;
     const buttons = property.media.map((item, index) => {
-      const button = el('button', 'gallery-thumbnail');
+      const button = el('button', item.dh ? 'gallery-thumbnail is-dh' : 'gallery-thumbnail');
       button.type = 'button';
       button.setAttribute('aria-label', `${item.type === 'video' ? 'Видео' : 'Фото'} · ${index + 1} из ${property.media.length}: ${item.caption || property.title}`);
       button.append(mediaPreview(item, '', false, true), el('span', 'thumbnail-number', String(index + 1)));
@@ -759,7 +760,7 @@
       syncDialogScroll();
       if (!galleryDialog && opener && opener.isConnected) opener.focus({ preventScroll: true });
     });
-    dialog.append(top, counter, viewport, caption, thumbnails);
+    dialog.append(top, counter, viewport, caption, galleryCategoryBar(property, buttons, show), thumbnails);
     document.body.append(dialog);
     dialog.showModal();
     syncDialogScroll();
@@ -1140,7 +1141,6 @@
     const group = el('div', 'quick-links');
     const wa = whatsappUrl(property.agentPhone);
     if (property.mapUrl) group.append(iconLink('pin', 'Карта', property.mapUrl, 'chip-link'));
-    if (wa) group.append(iconLink('chat', 'WhatsApp', wa, 'chip-link chip-wa'));
     if (property.listingUrl) group.append(iconLink('link', 'Сайт', property.listingUrl, 'chip-link'));
     else if (property.documents.length) group.append(iconLink('doc', 'PDF', property.documents[0].href, 'chip-link'));
     return group;
@@ -1154,7 +1154,7 @@
     button.addEventListener('click', () => property.media.length ? openGallery(property, 0, button) : openDetail(property, button));
     button.append(property.media.length ? mediaPreview(property.media[0], property.title, eager) : media('', property.title));
     const top = el('div', 'cover-top');
-    top.append(badges(property), commentBadge(property, 'cover-comments'));
+    top.append(badges(property), changeBadge(property), commentBadge(property, 'cover-comments'));
     button.append(top);
     if (property.media.length) button.append(el('span', 'cover-count', mediaSummary(property)));
     return button;
@@ -1170,13 +1170,15 @@
     meta.append(el('span', 'card-area', property.area || 'Район не указан'));
     main.append(
       priceBlock(property),
+      marketBadge(property),
       title,
       decisionToggles(property, article),
       meta,
-      agentContactLine(property),
       sourceOriginLine(property),
       specifications(property),
-      featureChips(property)
+      featureChips(property),
+      criteriaRow(property),
+      driveLine(property)
     );
     if (property.ceilingEstimateNote) {
       const ceilBox = el('p', 'ceiling-summary');
@@ -1188,7 +1190,7 @@
     if (property.caveats.length) main.append(el('p', 'caveat', property.caveats[0] + (property.caveats.length > 1 ? ` · ещё ${property.caveats.length - 1} в карточке` : '')));
     const actions = el('div', 'card-actions');
     actions.append(openButton('Подробнее', property, 'button card-open'), quickLinks(property));
-    main.append(actions);
+    main.append(actions, cardSocial(property), brokerBlock(property));
     article.append(cover(property, index < 3), main, noteBlock(property));
     return article;
   }
@@ -1270,6 +1272,7 @@
       button.setAttribute('aria-label', `Открыть ${kind.toLowerCase()} ${index + 1} из ${property.media.length}: ${item.caption || property.title}`);
       button.append(mediaPreview(item, item.caption || property.title, index === 0, index > 0));
       const rest = property.media.length - shown.length;
+      if (item.dh) button.append(el('span', 'mosaic-dh', '☀ второй свет'));
       if (index === shown.length - 1 && rest > 0) button.append(el('span', 'mosaic-more', `+${rest}`));
       button.addEventListener('click', () => openGallery(property, index, button));
       wrap.append(button);
@@ -1338,7 +1341,7 @@
     property.documents.forEach((doc) => links.append(iconLink('doc', doc.label, doc.href)));
     contact.append(links, el('p', 'aside-note', [property.locationLabel, precision(property)].filter(Boolean).join(' · ')));
     if (!property.listingUrl) contact.append(el('p', 'aside-note', noLinkSourceLabel(property)));
-    aside.append(priceCard, contact);
+    aside.append(priceCard, contact, ...detailAsideExtras(property));
 
     const description = el('section', 'detail-section');
     description.append(el('h3', '', 'Описание'), el('p', 'description', property.description || 'Описание пока не предоставлено.'));
@@ -1365,10 +1368,13 @@
     if (text(property.sourceNote)) detailSection(mainCol, 'Примечание к источнику', [text(property.sourceNote)]);
     const comments = el('section', 'detail-section detail-comments');
     comments.append(el('h3', '', 'Комментарии'), noteBlock(property));
+    detailMainExtras(property, mainCol);
     mainCol.append(comments);
 
     layout.append(mainCol, aside);
     container.append(layout);
+    initDetailMap(property, container);
+    markSeen(property);
   }
 
   function updateDialogNav() {
@@ -1427,6 +1433,7 @@
   function matchesStatus(property, status) {
     if (!status) return true;
     if (status === 'active') return property.status === 'selected' || property.status === 'review';
+    if (status === 'changed') return !!property.change;
     return property.status === status;
   }
 
@@ -1510,6 +1517,7 @@
       if (!matchesWaterFilter(property, waterFilter)) return false;
       if (!matchesDoubleHeightFilter(property, dhFilter)) return false;
       if (!matchesPoolFilter(property, poolFilter)) return false;
+      if ($('filter-criteria') && !matchesCriteriaFilter(property, $('filter-criteria').value)) return false;
       return true;
     });
   }
@@ -1521,7 +1529,11 @@
     'plot-desc': (p) => number(p.plotM2) === null ? null : -p.plotM2,
     'bua-desc': (p) => number(p.buaM2) === null ? null : -p.buaM2,
     'beds-desc': (p) => number(p.bedrooms) === null ? null : -p.bedrooms,
-    'media-desc': (p) => -p.media.length
+    'media-desc': (p) => -p.media.length,
+    'match-desc': (p) => { const s = criteriaScore(p); return -(s.yes * 10 - s.no * 15); },
+    'votes-desc': (p) => -voteScore(p),
+    'market-asc': (p) => { const i = marketInfo(p); return i ? i.diff : null; },
+    'origin-asc': (p) => p.originMin
   };
 
   const FILTER_SELECT_IDS = [
@@ -1529,6 +1541,829 @@
     'filter-ceiling', 'filter-water', 'filter-double-height',
     'filter-pool', 'agent', 'beds'
   ];
+
+  // ===== Данные из открытых источников (enrich.js): критерии, рынок, карта, дорога, голоса, сравнение, просмотры =====
+  const enrich = object(window.VILLA_ENRICH) ? window.VILLA_ENRICH : {};
+  const enrichProps = object(enrich.properties) ? enrich.properties : {};
+  const CATEGORY_LABELS = { living: 'Зал', facade: 'Фасад', kitchen: 'Кухня', bedroom: 'Спальни', bathroom: 'Ванные', garden: 'Сад', pool: 'Бассейн', view: 'Вид', plan: 'Планы', other: 'Другое' };
+  const CRITERIA = [
+    ['detached', 'Отдельная'], ['doubleHeight', '2-й свет'], ['view', 'Вид'], ['ceiling', 'Потолки 2,6+'],
+    ['noNeighborView', 'Не в соседа'], ['noConstruction', 'Без стройки'], ['plot', 'Участок'], ['condition', 'Новая/ремонт']
+  ];
+  const CRIT_MARK = { yes: '✓', no: '✗', unknown: '?' };
+  const BUDGET_AED = 587600;
+  const VOTE_PREFIX = 'vote:';
+  const SEEN_SLOT = 'dubai-villas.seen.v1';
+  const COMPARE_SLOT = 'dubai-villas.compare.v1';
+  const ORIGIN_SLOT = 'dubai-villas.origin.v1';
+  const ORIGIN_TIMES_SLOT = 'dubai-villas.origin-times.v1';
+  const STATUS_COLORS = { selected: '#3f7a40', review: '#c79a35', rejected: '#a85a41', unavailable: '#8d8f88', historical: '#8d8f88' };
+  const NEARBY_LABELS = [['golf', 'Гольф-поле'], ['water', 'Вода / озеро'], ['park', 'Парк'], ['supermarket', 'Супермаркет'], ['highway', 'Крупная трасса'], ['construction', 'Стройка (OSM)']];
+  const destinations = Array.isArray(enrich.destinations) ? enrich.destinations.filter((d) => object(d) && text(d.key)) : [];
+  const voteWidgets = new Set();
+  let compareIds = [];
+  let origin = null;
+  let pickingOrigin = false;
+  let catalogMap = null;
+  let catalogLayer = null;
+
+  for (const property of properties) {
+    const extra = object(enrichProps[property.id]) ? enrichProps[property.id] : {};
+    property.geo = object(extra.geo) && Number.isFinite(extra.geo.lat) && Number.isFinite(extra.geo.lng) ? extra.geo : null;
+    property.market = object(extra.market) && Number.isFinite(extra.market.median) ? extra.market : null;
+    property.nearby = object(extra.nearby) ? extra.nearby : null;
+    property.drive = object(extra.drive) ? extra.drive : null;
+    property.listing = object(extra.listing) ? extra.listing : null;
+    property.criteria = object(extra.criteria) ? extra.criteria : null;
+    property.viewings = (Array.isArray(extra.viewings) ? extra.viewings : []).filter((v) => object(v) && Number.isFinite(Date.parse(v.at)));
+    property.houseType = text(extra.houseType);
+    property.typeNote = text(extra.typeNote);
+    property.originMin = null;
+    const photos = object(extra.photos) ? extra.photos : {};
+    property.media = property.media.map((item) => {
+      const info = photos[item.type === 'video' ? item.poster : item.src];
+      return object(info) ? { ...item, cat: text(info.cat), dh: !!info.dh, best: !!info.best } : item;
+    });
+    const best = property.media.findIndex((item) => item.best && item.type !== 'video');
+    if (best > 0) property.media.unshift(...property.media.splice(best, 1));
+    const listing = property.listing;
+    if (listing) {
+      if (number(property.buaM2) === null && number(listing.buaM2)) { property.buaM2 = listing.buaM2; property.buaSource = 'по объявлению PF'; }
+      if (number(property.plotM2) === null && number(listing.plotM2) && listing.plotM2 !== listing.buaM2) { property.plotM2 = listing.plotM2; property.plotSource = 'по объявлению PF'; }
+      if (number(property.bedrooms) === null && /^\d+$/.test(String(listing.bedrooms || ''))) property.bedrooms = Number(listing.bedrooms);
+      if (number(property.bathrooms) === null && /^\d+$/.test(String(listing.bathrooms || ''))) property.bathrooms = Number(listing.bathrooms);
+    }
+    property.search += ` ${[property.houseType, property.typeNote].filter(Boolean).join(' ').toLocaleLowerCase('ru-RU')}`;
+  }
+
+  statusTabs.push(['changed', 'Новое']);
+  FILTER_SELECT_IDS.push('filter-criteria');
+
+  // --- Критерии пользователя ---
+  function criteriaList(property) {
+    const list = CRITERIA.map(([key, label]) => {
+      const raw = property.criteria && Array.isArray(property.criteria[key]) ? property.criteria[key] : null;
+      const v = raw && ['yes', 'no', 'unknown'].includes(raw[0]) ? raw[0] : 'unknown';
+      return { key, label, v, note: raw && text(raw[1]) ? text(raw[1]) : 'Нет данных' };
+    });
+    list.push({ key: 'budget', label: 'Бюджет', v: property.price === null ? 'unknown' : (property.price <= BUDGET_AED ? 'yes' : 'no'), note: property.price === null ? 'Цена не подтверждена' : `Лимит ${format.format(BUDGET_AED)} AED в год ($160 тыс.)` });
+    return list;
+  }
+
+  function criteriaScore(property) {
+    const list = criteriaList(property);
+    return { list, yes: list.filter((c) => c.v === 'yes').length, no: list.filter((c) => c.v === 'no').length, total: list.length };
+  }
+
+  function criteriaRow(property) {
+    const { list, yes, no, total } = criteriaScore(property);
+    const row = el('div', 'crit-row');
+    row.setAttribute('aria-label', `Критерии: подходит ${yes} из ${total}, не подходит ${no}`);
+    const score = el('span', `crit-score${no ? ' has-no' : ''}`, `${yes}/${total}`);
+    score.title = `Подходит ${yes} из ${total}, не подходит ${no}, неизвестно ${total - yes - no}`;
+    row.append(score);
+    for (const c of list) {
+      if (c.v === 'unknown') continue;
+      const chip = el('span', `crit crit-${c.v}`, `${CRIT_MARK[c.v]} ${c.label}`);
+      chip.title = c.note;
+      row.append(chip);
+    }
+    const unknown = list.filter((c) => c.v === 'unknown');
+    if (unknown.length) {
+      const more = el('span', 'crit-more', `? ${unknown.length}`);
+      more.title = `Неизвестно: ${unknown.map((c) => c.label).join(', ')}`;
+      row.append(more);
+    }
+    return row;
+  }
+
+  function matchesCriteriaFilter(property, value) {
+    if (!value) return true;
+    const { yes, no } = criteriaScore(property);
+    if (value === 'no-fails') return no === 0;
+    if (value === 'strong') return no === 0 && yes >= 6;
+    return true;
+  }
+
+  // --- Рынок аренды ---
+  function marketInfo(property) {
+    const m = property.market;
+    if (!m || property.price === null) return null;
+    return { ...m, diff: Math.round((property.price / m.median - 1) * 100) };
+  }
+
+  function marketBadge(property) {
+    const info = marketInfo(property);
+    if (!info) return document.createTextNode('');
+    const kind = info.diff <= -3 ? 'below' : (info.diff >= 3 ? 'above' : 'even');
+    const label = kind === 'even' ? 'На уровне рынка' : `${info.diff > 0 ? '+' : '−'}${Math.abs(info.diff)}% к рынку`;
+    const badge = el('p', `market-badge market-${kind}`, label);
+    badge.title = `Медиана ${format.format(info.median)} AED по ${info.n} объявлениям Property Finder (${info.scope}${info.bedrooms ? `, ${info.bedrooms} спален` : ''})`;
+    return badge;
+  }
+
+  function marketCard(property) {
+    const card = el('div', 'aside-card market-card');
+    const m = property.market;
+    card.append(el('p', 'aside-label', 'Рынок аренды'));
+    if (!m) {
+      card.append(el('p', 'aside-note', 'Сопоставимых объявлений не нашлось.'));
+      return card;
+    }
+    card.append(el('p', 'market-median', `Медиана ${format.format(m.median)} AED`), el('p', 'aside-note', `${m.n} объявлений · ${m.scope}${m.bedrooms ? ` · ${m.bedrooms} спален` : ' · все спальни'}`));
+    const info = marketInfo(property);
+    if (info) {
+      const lo = Math.min(m.p25, property.price) * 0.94;
+      const hi = Math.max(m.p75, property.price) * 1.06;
+      const pos = (v) => `${(((v - lo) / (hi - lo)) * 100).toFixed(1)}%`;
+      const bar = el('div', 'market-bar');
+      bar.setAttribute('aria-hidden', 'true');
+      const range = el('span', 'market-range');
+      range.style.left = pos(m.p25);
+      range.style.width = `calc(${pos(m.p75)} - ${pos(m.p25)})`;
+      const median = el('span', 'market-med');
+      median.style.left = pos(m.median);
+      const mine = el('span', 'market-me');
+      mine.style.left = pos(property.price);
+      bar.append(range, median, mine);
+      card.append(bar, el('p', 'aside-note', `Средняя половина объявлений: ${format.format(m.p25)}–${format.format(m.p75)} AED. Эта вилла: ${info.diff > 0 ? '+' : (info.diff < 0 ? '−' : '')}${Math.abs(info.diff)}% к медиане.`));
+    }
+    const contracts = property.listing && Array.isArray(property.listing.contracts) ? property.listing.contracts.filter(object) : [];
+    if (contracts.length) {
+      card.append(el('p', 'aside-label market-contracts-title', 'Договоры аренды похожих домов'));
+      const list = el('ul', 'market-contracts');
+      for (const c of contracts.slice(0, 6)) {
+        const date = Number.isFinite(Date.parse(c.date)) ? new Date(c.date).toLocaleDateString('ru-RU', { month: 'short', year: 'numeric' }) : '';
+        list.append(el('li', '', `${date} — ${format.format(c.aed)} AED${number(c.m2) ? ` · ${format.format(c.m2)} м²` : ''}`));
+      }
+      card.append(list, el('p', 'aside-note', 'Зарегистрированные договоры (DLD) из объявления Property Finder.'));
+    }
+    card.append(el('p', 'aside-note', `Источник: ${text(m.source) || 'объявления Property Finder'}. Это цены объявлений, не сделок.`));
+    return card;
+  }
+
+  // --- Голоса семьи (хранятся в той же общей ленте, что и комментарии) ---
+  function getVotes(property) {
+    const key = `${VOTE_PREFIX}${property.id}`;
+    if (!own(sharedComments, key)) return [];
+    return Object.values(sharedComments[key]).filter((entry) => entry && !entry.deleted && (entry.text === '+1' || entry.text === '-1'));
+  }
+
+  function myVote(property) {
+    const mine = getVotes(property).find((entry) => entry.id === clientId);
+    return mine ? (mine.text === '+1' ? 1 : -1) : 0;
+  }
+
+  function voteScore(property) {
+    return getVotes(property).reduce((sum, entry) => sum + (entry.text === '+1' ? 1 : -1), 0);
+  }
+
+  function setVote(property, value) {
+    const key = `${VOTE_PREFIX}${property.id}`;
+    const next = myVote(property) === value ? 0 : value;
+    mergeSharedEntry(key, { id: clientId, author: currentAuthor(), text: next ? (next > 0 ? '+1' : '-1') : '', updatedAt: Date.now(), clientId, deleted: !next });
+    saveSharedToLocal();
+    updateVoteWidgets();
+    scheduleCloudPublish(key, clientId, true);
+  }
+
+  function fillVoteWidget(widget) {
+    const votes = getVotes(widget.property);
+    const ups = votes.filter((entry) => entry.text === '+1');
+    const downs = votes.filter((entry) => entry.text === '-1');
+    const mine = myVote(widget.property);
+    widget.up.textContent = `👍 ${ups.length}`;
+    widget.down.textContent = `👎 ${downs.length}`;
+    widget.up.setAttribute('aria-pressed', String(mine > 0));
+    widget.down.setAttribute('aria-pressed', String(mine < 0));
+    widget.up.title = ups.length ? `За: ${ups.map((entry) => entry.author).join(', ')}` : 'Нравится';
+    widget.down.title = downs.length ? `Против: ${downs.map((entry) => entry.author).join(', ')}` : 'Не нравится';
+    widget.up.setAttribute('aria-label', `Нравится, голосов: ${ups.length}`);
+    widget.down.setAttribute('aria-label', `Не нравится, голосов: ${downs.length}`);
+  }
+
+  function voteWidget(property) {
+    const root = el('div', 'votes');
+    root.setAttribute('role', 'group');
+    root.setAttribute('aria-label', `Голоса: ${property.title}`);
+    const up = el('button', 'vote vote-up');
+    const down = el('button', 'vote vote-down');
+    up.type = down.type = 'button';
+    up.addEventListener('click', (event) => { event.stopPropagation(); setVote(property, 1); });
+    down.addEventListener('click', (event) => { event.stopPropagation(); setVote(property, -1); });
+    root.append(up, down);
+    const widget = { property, root, up, down };
+    fillVoteWidget(widget);
+    voteWidgets.add(widget);
+    return root;
+  }
+
+  function updateVoteWidgets() {
+    for (const widget of voteWidgets) {
+      if (!widget.root.isConnected) { voteWidgets.delete(widget); continue; }
+      fillVoteWidget(widget);
+    }
+  }
+
+  // --- Новое и изменившееся с прошлого визита ---
+  const changeSignature = (p) => [p.status, p.statusLabel, p.price, p.media.length].join('|');
+  let seenMap = null;
+  if (!standalone) {
+    try { seenMap = JSON.parse(localStorage.getItem(SEEN_SLOT) || 'null'); } catch { seenMap = null; }
+    if (!object(seenMap)) {
+      seenMap = {};
+      for (const p of properties) seenMap[p.id] = changeSignature(p);
+      try { localStorage.setItem(SEEN_SLOT, JSON.stringify(seenMap)); } catch {}
+    }
+    for (const p of properties) {
+      if (!own(seenMap, p.id)) { p.change = 'new'; continue; }
+      if (seenMap[p.id] === changeSignature(p)) { p.change = null; continue; }
+      const [status, label, price, mediaCount] = String(seenMap[p.id]).split('|');
+      const parts = [];
+      if (status !== p.status || label !== p.statusLabel) parts.push('статус');
+      if (price !== String(p.price)) parts.push('цена');
+      if (mediaCount !== String(p.media.length)) parts.push('фото');
+      p.change = 'changed';
+      p.changeNote = parts.join(', ');
+    }
+  }
+
+  function changeBadge(property) {
+    if (!property.change) return document.createTextNode('');
+    const badge = el('span', 'badge change-badge', property.change === 'new' ? 'Новое' : `Изменилось${property.changeNote ? `: ${property.changeNote}` : ''}`);
+    badge.dataset.changeFor = property.id;
+    return badge;
+  }
+
+  function markSeen(property) {
+    if (!seenMap || !property.change) return;
+    seenMap[property.id] = changeSignature(property);
+    property.change = null;
+    try { localStorage.setItem(SEEN_SLOT, JSON.stringify(seenMap)); } catch {}
+    document.querySelectorAll(`[data-change-for="${CSS.escape(property.id)}"]`).forEach((node) => node.remove());
+    renderChangesNotice();
+  }
+
+  function renderChangesNotice() {
+    const box = $('changes-notice');
+    if (!box) return;
+    const fresh = properties.filter((p) => p.change === 'new').length;
+    const changed = properties.filter((p) => p.change === 'changed').length;
+    box.hidden = standalone || !(fresh + changed);
+    if (box.hidden) return;
+    box.replaceChildren(el('span', '', `С вашего прошлого визита: ${[fresh ? `новых ${fresh}` : '', changed ? `изменилось ${changed}` : ''].filter(Boolean).join(', ')}.`));
+    const show = el('button', 'text-button', 'Показать');
+    show.type = 'button';
+    show.addEventListener('click', () => { state.status = 'changed'; render(); $('catalog').scrollIntoView({ block: 'start' }); });
+    const clear = el('button', 'text-button', 'Отметить всё просмотренным');
+    clear.type = 'button';
+    clear.addEventListener('click', () => {
+      for (const p of properties) { seenMap[p.id] = changeSignature(p); p.change = null; }
+      try { localStorage.setItem(SEEN_SLOT, JSON.stringify(seenMap)); } catch {}
+      if (state.status === 'changed') state.status = '';
+      render();
+    });
+    box.append(show, clear);
+  }
+
+  // --- Сравнение ---
+  try {
+    const saved = JSON.parse(localStorage.getItem(COMPARE_SLOT) || '[]');
+    if (Array.isArray(saved)) compareIds = saved.filter((id) => properties.some((p) => p.id === id)).slice(0, 4);
+  } catch {}
+
+  function saveCompare() {
+    try { localStorage.setItem(COMPARE_SLOT, JSON.stringify(compareIds)); } catch {}
+    updateCompareUI();
+  }
+
+  function toggleCompare(property) {
+    if (compareIds.includes(property.id)) compareIds = compareIds.filter((id) => id !== property.id);
+    else if (compareIds.length >= 4) { notify('Сравнивать можно до 4 вилл. Уберите одну из сравнения.'); return; }
+    else compareIds.push(property.id);
+    saveCompare();
+  }
+
+  function compareToggle(property) {
+    const button = el('button', 'compare-toggle');
+    button.type = 'button';
+    button.dataset.compareFor = property.id;
+    button.addEventListener('click', (event) => { event.stopPropagation(); toggleCompare(property); });
+    fillCompareToggle(button);
+    return button;
+  }
+
+  function fillCompareToggle(button) {
+    const on = compareIds.includes(button.dataset.compareFor);
+    button.setAttribute('aria-pressed', String(on));
+    button.textContent = on ? '✓ В сравнении' : '⇄ Сравнить';
+  }
+
+  function updateCompareUI() {
+    document.querySelectorAll('[data-compare-for]').forEach(fillCompareToggle);
+    const tray = $('compare-tray');
+    if (!tray) return;
+    tray.hidden = standalone || compareIds.length === 0;
+    $('compare-count').textContent = `Сравнение: ${compareIds.length} из 4`;
+    $('compare-open').disabled = compareIds.length < 2;
+  }
+
+  function driveText(property, key) {
+    const d = property.drive && object(property.drive[key]) ? property.drive[key] : null;
+    return d ? `${property.geo && property.geo.precision === 'area' ? '≈' : ''}${d.min} мин · ${format.format(d.km)} км` : '—';
+  }
+
+  function openCompare() {
+    const list = compareIds.map((id) => properties.find((p) => p.id === id)).filter(Boolean);
+    if (list.length < 2) return;
+    const table = el('table', 'compare-table');
+    const head = el('tr');
+    head.append(el('th', 'compare-corner', ''));
+    for (const p of list) {
+      const th = el('th');
+      const thumb = el('button', 'compare-thumb');
+      thumb.type = 'button';
+      thumb.append(p.media[0] ? mediaPreview(p.media[0], '', true, true) : media('', ''));
+      thumb.addEventListener('click', () => { $('compare-dialog').close(); openDetail(p, null); });
+      const remove = el('button', 'compare-remove', '×');
+      remove.type = 'button';
+      remove.setAttribute('aria-label', `Убрать из сравнения: ${p.title}`);
+      remove.addEventListener('click', () => { toggleCompare(p); if (compareIds.length < 2) $('compare-dialog').close(); else openCompare(); });
+      th.append(thumb, el('span', 'compare-title', p.title), remove);
+      head.append(th);
+    }
+    const thead = el('thead');
+    thead.append(head);
+    const body = el('tbody');
+    const yesNo = (c) => `${CRIT_MARK[c.v]} ${c.note}`;
+    const rows = [
+      ['Статус', (p) => statusText(p)],
+      ['Цена', (p) => p.price === null ? (p.priceLabel || 'Цена не указана') : `${format.format(p.price)} AED · ${usdLabel(p.price).replace(' в год', '')}`],
+      ['К рынку', (p) => { const i = marketInfo(p); return i ? `${i.diff > 0 ? '+' : (i.diff < 0 ? '−' : '')}${Math.abs(i.diff)}% (медиана ${format.format(i.median)})` : '—'; }],
+      ['Район', (p) => p.area || '—'],
+      ['Спальни', (p) => number(p.bedrooms) === null ? '—' : format.format(p.bedrooms)],
+      ['Санузлы', (p) => number(p.bathrooms) === null ? '—' : format.format(p.bathrooms)],
+      ['Участок', (p) => number(p.plotM2) === null ? '—' : `${format.format(p.plotM2)} м²`],
+      ['Дом', (p) => number(p.buaM2) === null ? '—' : `${format.format(p.buaM2)} м²`],
+      ['Потолки', (p) => p.ceiling || (p.ceilingHeightM ? `~${p.ceilingHeightM} м` : '—')],
+      ['Второй свет', (p) => p.doubleHeightLabel || '—'],
+      ['Вид', (p) => p.waterViewLabel || '—'],
+      ['Бассейн', (p) => p.poolLabel || '—'],
+      ...CRITERIA.map(([key, label]) => [`Критерий: ${label}`, (p) => yesNo(criteriaList(p).find((c) => c.key === key))]),
+      ['Критерии итого', (p) => { const s = criteriaScore(p); return `${s.yes} из ${s.total} ✓, ${s.no} ✗`; }],
+      ...destinations.map((d) => [`До ${d.name}`, (p) => driveText(p, d.key)]),
+      ['До моей точки', (p) => p.originMin === null ? '—' : `${p.originMin} мин`],
+      ['Голоса', (p) => { const v = getVotes(p); return `👍 ${v.filter((e) => e.text === '+1').length} · 👎 ${v.filter((e) => e.text === '-1').length}`; }],
+      ['Отметки', (p) => { const t = getPropertyToggle(p); return [t.viewed ? '✓ Смотрели' : 'Не смотрели', t.rent ? '★ Снимаем' : ''].filter(Boolean).join(' · '); }],
+      ['Брокер', (p) => p.agent || '—']
+    ];
+    for (const [label, value] of rows) {
+      const tr = el('tr');
+      tr.append(el('th', '', label));
+      for (const p of list) tr.append(el('td', /^✗/.test(value(p)) ? 'is-no' : (/^✓/.test(value(p)) ? 'is-yes' : ''), value(p)));
+      body.append(tr);
+    }
+    table.append(thead, body);
+    $('compare-content').replaceChildren(table);
+    if (!$('compare-dialog').open) $('compare-dialog').showModal();
+    syncDialogScroll();
+  }
+
+  // --- Дорога и «моя точка» ---
+  function driveLine(property) {
+    if (!property.drive && property.originMin === null) return document.createTextNode('');
+    const parts = [];
+    if (property.originMin !== null) parts.push(`моя точка ${property.originMin} мин`);
+    for (const key of ['marina', 'dxb']) {
+      const d = property.drive && object(property.drive[key]) ? property.drive[key] : null;
+      const name = (destinations.find((x) => x.key === key) || {}).name || key;
+      if (d) parts.push(`${name} ${d.min} мин`);
+    }
+    const line = el('p', 'drive-line', `🚗 ${property.geo && property.geo.precision === 'area' ? '≈ ' : ''}${parts.join(' · ')}`);
+    line.title = 'На машине без пробок (OSRM). «≈» — от центра района, точный адрес неизвестен.';
+    return line;
+  }
+
+  function originKey(o) { return o ? `${o.lat.toFixed(4)},${o.lng.toFixed(4)}` : ''; }
+
+  function applyOriginTimes(times) {
+    for (const p of properties) p.originMin = object(times) && Number.isFinite(times[p.id]) ? times[p.id] : null;
+  }
+
+  async function computeOriginTimes() {
+    if (!origin) { applyOriginTimes(null); return; }
+    const pts = properties.filter((p) => p.geo);
+    try {
+      const cached = JSON.parse(localStorage.getItem(ORIGIN_TIMES_SLOT) || 'null');
+      if (object(cached) && cached.key === originKey(origin) && cached.n === pts.length) { applyOriginTimes(cached.times); return; }
+    } catch {}
+    const coords = [`${origin.lng.toFixed(6)},${origin.lat.toFixed(6)}`, ...pts.map((p) => `${p.geo.lng.toFixed(6)},${p.geo.lat.toFixed(6)}`)].join(';');
+    try {
+      const resp = await fetch(`https://router.project-osrm.org/table/v1/driving/${coords}?sources=0&annotations=duration`);
+      const data = await resp.json();
+      if (data.code !== 'Ok') throw new Error(data.code);
+      const times = {};
+      pts.forEach((p, i) => { const sec = data.durations[0][i + 1]; if (Number.isFinite(sec)) times[p.id] = Math.round(sec / 60); });
+      applyOriginTimes(times);
+      try { localStorage.setItem(ORIGIN_TIMES_SLOT, JSON.stringify({ key: originKey(origin), n: pts.length, times })); } catch {}
+    } catch {
+      notify('Не удалось посчитать время до вашей точки: сервис маршрутов не ответил. Попробуйте позже.', true);
+    }
+  }
+
+  function updateOriginControls() {
+    if (!$('origin-status')) return;
+    $('pick-origin').textContent = pickingOrigin ? 'Кликните по карте…' : (origin ? 'Сменить мою точку' : 'Задать мою точку');
+    $('pick-origin').setAttribute('aria-pressed', String(pickingOrigin));
+    $('clear-origin').hidden = !origin;
+    $('origin-status').textContent = origin ? 'Время до вашей точки — на карточках и в сравнении. Точка хранится только в этом браузере.' : 'Отметьте свой дом или офис — посчитаем время в пути до каждой виллы. Точка хранится только в этом браузере.';
+  }
+
+  // --- Карта ---
+  function leafletReady() { return typeof window.L === 'object' && window.L && typeof window.L.map === 'function'; }
+
+  function baseLayers() {
+    return {
+      'Схема': window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }),
+      'Спутник': window.L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Снимки © Esri' })
+    };
+  }
+
+  function popupNode(property) {
+    const box = el('div', 'map-popup');
+    if (property.media[0]) box.append(mediaPreview(property.media[0], '', true, true));
+    box.append(el('strong', '', property.title), el('span', '', property.price === null ? (property.priceLabel || 'Цена не указана') : `${format.format(property.price)} AED / год`), el('span', 'muted', `${statusText(property)} · ${property.geo.source}`));
+    const open = el('button', 'button', 'Открыть');
+    open.type = 'button';
+    open.addEventListener('click', () => openDetail(property, null));
+    box.append(open);
+    return box;
+  }
+
+  function renderMapView(list) {
+    const box = $('map-view');
+    if (!box) return;
+    const on = state.view === 'map';
+    box.hidden = !on;
+    $('property-grid').hidden = on;
+    if (!on) return;
+    updateOriginControls();
+    const canvas = $('catalog-map');
+    if (!leafletReady()) { canvas.textContent = 'Карта не загрузилась: нужен доступ в интернет.'; return; }
+    if (!catalogMap) {
+      catalogMap = window.L.map(canvas, { scrollWheelZoom: true });
+      const layers = baseLayers();
+      layers['Схема'].addTo(catalogMap);
+      window.L.control.layers(layers).addTo(catalogMap);
+      catalogLayer = window.L.layerGroup().addTo(catalogMap);
+      catalogMap.on('click', async (event) => {
+        if (!pickingOrigin) return;
+        pickingOrigin = false;
+        origin = { lat: event.latlng.lat, lng: event.latlng.lng };
+        try { localStorage.setItem(ORIGIN_SLOT, JSON.stringify(origin)); } catch {}
+        updateOriginControls();
+        await computeOriginTimes();
+        render();
+      });
+    }
+    catalogLayer.clearLayers();
+    const points = [];
+    let missing = 0;
+    list.forEach((p, i) => {
+      if (!p.geo) { missing++; return; }
+      const area = p.geo.precision === 'area';
+      const jitter = area ? ((i % 5) - 2) * 0.0009 : 0;
+      const ll = [p.geo.lat + jitter, p.geo.lng - jitter];
+      const color = STATUS_COLORS[p.status] || '#8d8f88';
+      const marker = window.L.circleMarker(ll, { radius: area ? 8 : 10, color: area ? color : '#ffffff', weight: 2, fillColor: color, fillOpacity: area ? 0.35 : 0.95, dashArray: area ? '3' : null });
+      marker.bindTooltip(`${p.title}${p.price === null ? '' : ` · ${format.format(Math.round(p.price / 1000))} тыс.`}`);
+      marker.bindPopup(() => popupNode(p), { minWidth: 220 });
+      marker.addTo(catalogLayer);
+      points.push(ll);
+    });
+    if (origin) {
+      window.L.marker([origin.lat, origin.lng], { title: 'Моя точка' }).addTo(catalogLayer).bindTooltip('Моя точка');
+      points.push([origin.lat, origin.lng]);
+    }
+    $('map-note').textContent = `${points.length - (origin ? 1 : 0)} вилл на карте${missing ? `, без координат: ${missing}` : ''}. Яркие точки — точный адрес или объявление, бледные — центр района.`;
+    setTimeout(() => {
+      catalogMap.invalidateSize();
+      if (points.length) catalogMap.fitBounds(points, { padding: [36, 36], maxZoom: 15 });
+      else catalogMap.setView([25.1, 55.25], 11);
+    }, 30);
+  }
+
+  function sunLines(lat) {
+    const r = Math.PI / 180;
+    const rise = (decl) => Math.acos(Math.sin(decl * r) / Math.cos(lat * r)) / r;
+    const summer = rise(23.44);
+    const winter = rise(-23.44);
+    return [
+      { az: summer, label: 'Восход летом', color: '#f2b632' }, { az: 360 - summer, label: 'Закат летом', color: '#e06a2a' },
+      { az: winter, label: 'Восход зимой', color: '#f7d774' }, { az: 360 - winter, label: 'Закат зимой', color: '#c9542a' },
+      { az: 180, label: 'Полдень зимой — с юга', color: '#ffe08a' }
+    ];
+  }
+
+  function destPoint(lat, lng, az, meters) {
+    const r = Math.PI / 180;
+    return [lat + (meters * Math.cos(az * r)) / 111320, lng + (meters * Math.sin(az * r)) / (111320 * Math.cos(lat * r))];
+  }
+
+  function initDetailMap(property, container) {
+    const box = container.querySelector('.detail-map');
+    if (!box || !property.geo) return;
+    if (!leafletReady()) { box.textContent = 'Карта не загрузилась: нужен доступ в интернет.'; return; }
+    setTimeout(() => {
+      if (!box.isConnected || box.dataset.ready) return;
+      box.dataset.ready = '1';
+      const { lat, lng, precision: prec } = property.geo;
+      const map = window.L.map(box, { scrollWheelZoom: false });
+      const layers = baseLayers();
+      layers['Спутник'].addTo(map);
+      window.L.control.layers(layers).addTo(map);
+      map.setView([lat, lng], prec === 'area' ? 15 : 18);
+      if (prec === 'area') window.L.circle([lat, lng], { radius: 300, color: '#f6e3b0', weight: 2, fill: false, dashArray: '5' }).addTo(map).bindTooltip('Район: точный дом неизвестен');
+      else window.L.circleMarker([lat, lng], { radius: 8, color: '#ffffff', weight: 2, fillColor: '#a85a41', fillOpacity: 1 }).addTo(map);
+      if (prec !== 'area') {
+        for (const s of sunLines(lat)) {
+          window.L.polyline([[lat, lng], destPoint(lat, lng, s.az, 70)], { color: s.color, weight: 4, opacity: 0.95 }).addTo(map).bindTooltip(s.label);
+        }
+      }
+      map.invalidateSize();
+    }, 80);
+  }
+
+  // --- Просмотры ---
+  function formatViewing(at) {
+    return new Date(at).toLocaleString('ru-RU', { timeZone: 'Asia/Dubai', weekday: 'short', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+  }
+
+  function dubaiDay(at) { return new Date(at).toLocaleDateString('ru-RU', { timeZone: 'Asia/Dubai' }); }
+
+  function travelMinutes(a, b) {
+    const m = enrich.matrix;
+    if (!object(m) || !Array.isArray(m.ids) || !Array.isArray(m.min)) return null;
+    const i = m.ids.indexOf(a.id);
+    const j = m.ids.indexOf(b.id);
+    return i < 0 || j < 0 ? null : m.min[i][j];
+  }
+
+  function upcomingViewings() {
+    const from = Date.now() - 2 * 3600 * 1000;
+    return properties.flatMap((p) => p.viewings.filter((v) => v.state !== 'cancelled' && Date.parse(v.at) >= from).map((v) => ({ p, v, t: Date.parse(v.at) }))).sort((a, b) => a.t - b.t);
+  }
+
+  function icsEscape(value) { return String(value).replace(/\\/g, '\\\\').replace(/[,;]/g, (m) => `\\${m}`).replace(/\n/g, '\\n'); }
+
+  function icsStamp(ms) { return new Date(ms).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); }
+
+  function downloadIcs(items, filename) {
+    const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Villas Dubai//RU', 'CALSCALE:GREGORIAN'];
+    for (const { p, v, t } of items) {
+      lines.push('BEGIN:VEVENT', `UID:${p.id}-${t}@dubai-villas`, `DTSTAMP:${icsStamp(Date.now())}`, `DTSTART:${icsStamp(t)}`, `DTEND:${icsStamp(t + 45 * 60 * 1000)}`,
+        `SUMMARY:${icsEscape(`Просмотр: ${p.title}`)}`, `LOCATION:${icsEscape([p.area, p.geo ? `${p.geo.lat.toFixed(5)}, ${p.geo.lng.toFixed(5)}` : ''].filter(Boolean).join(' · '))}`,
+        `DESCRIPTION:${icsEscape([p.agent ? `Брокер: ${p.agent}${p.agentPhone ? ` ${formatPhone(p.agentPhone)}` : ''}` : '', text(v.note), propertyLink(p)].filter(Boolean).join('\n'))}`);
+      if (p.geo) lines.push(`GEO:${p.geo.lat.toFixed(6)};${p.geo.lng.toFixed(6)}`);
+      lines.push('END:VEVENT');
+    }
+    lines.push('END:VCALENDAR');
+    const url = URL.createObjectURL(new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' }));
+    const link = el('a');
+    link.href = url;
+    link.download = filename;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function renderViewings() {
+    const box = $('viewings');
+    if (!box) return;
+    const items = upcomingViewings();
+    box.hidden = standalone || !items.length;
+    if (box.hidden) return;
+    const head = el('div', 'viewings-head');
+    head.append(el('h2', '', 'Ближайшие просмотры'));
+    const all = el('button', 'button button-quiet', 'Все в календарь (.ics)');
+    all.type = 'button';
+    all.addEventListener('click', () => downloadIcs(items, 'villa-viewings.ics'));
+    head.append(all);
+    const list = el('div', 'viewings-list');
+    items.forEach((item, i) => {
+      const { p, v, t } = item;
+      const row = el('article', 'viewing-card');
+      row.append(el('p', 'viewing-time', formatViewing(t)));
+      const title = el('h3', 'viewing-title');
+      title.append(openButton(p.title, p, 'title-button'));
+      row.append(title, el('p', 'viewing-sub', [p.area, p.agent ? `брокер ${p.agent}` : ''].filter(Boolean).join(' · ')));
+      const prev = items[i - 1];
+      if (prev && dubaiDay(prev.t) === dubaiDay(t)) {
+        const min = travelMinutes(prev.p, p);
+        if (min !== null) row.append(el('p', 'viewing-travel', `🚗 от предыдущего ≈ ${min} мин без пробок · окно ${Math.round((t - prev.t) / 60000)} мин`));
+      }
+      if (text(v.note)) row.append(el('p', 'viewing-note', text(v.note)));
+      const ics = el('button', 'text-button', '+ в календарь');
+      ics.type = 'button';
+      ics.addEventListener('click', () => downloadIcs([item], `viewing-${p.id}.ics`));
+      row.append(ics);
+      list.append(row);
+    });
+    box.replaceChildren(head, list);
+  }
+
+  // --- Галерея: разделы и второй свет ---
+  function galleryCategoryBar(property, buttons, show) {
+    const counts = {};
+    for (const item of property.media) {
+      const key = item.type === 'video' ? 'video' : item.cat;
+      if (key) counts[key] = (counts[key] || 0) + 1;
+    }
+    const dh = property.media.filter((item) => item.dh).length;
+    if (Object.keys(counts).length < 2 && !dh) return document.createTextNode('');
+    const bar = el('div', 'gallery-cats');
+    bar.setAttribute('role', 'group');
+    bar.setAttribute('aria-label', 'Разделы фотографий');
+    const make = (key, label, count, test) => {
+      const chip = el('button', 'gallery-cat', `${label} · ${count}`);
+      chip.type = 'button';
+      chip.setAttribute('aria-pressed', String(key === ''));
+      chip.addEventListener('click', () => {
+        bar.querySelectorAll('.gallery-cat').forEach((node) => node.setAttribute('aria-pressed', String(node === chip)));
+        let first = -1;
+        buttons.forEach((button, index) => {
+          const ok = test(property.media[index]);
+          button.hidden = !ok;
+          if (ok && first < 0) first = index;
+        });
+        if (first >= 0) show(first);
+      });
+      bar.append(chip);
+    };
+    make('', 'Все', property.media.length, () => true);
+    if (dh) make('dh', '☀ Второй свет', dh, (item) => item.dh);
+    if (counts.video) make('video', 'Видео', counts.video, (item) => item.type === 'video');
+    for (const [key, label] of Object.entries(CATEGORY_LABELS)) {
+      if (counts[key]) make(key, label, counts[key], (item) => item.type !== 'video' && item.cat === key);
+    }
+    return bar;
+  }
+
+  // --- Окно объекта: дополнительные блоки ---
+  function brokerBlock(property) {
+    const wa = whatsappUrl(property.agentPhone);
+    const block = el('div', 'card-broker');
+    block.append(el('p', 'broker-name', property.agent || 'Брокер не указан'));
+    if (wa) block.append(iconLink('chat', `WhatsApp ${formatPhone(property.agentPhone)}`, wa, 'button button-wa'));
+    else if (property.agent === 'Артур') block.append(el('p', 'broker-note', 'Группа в WhatsApp с Артуром · TG @Art_Real_Estate'));
+    else block.append(el('p', 'broker-note', 'WhatsApp не сохранён'));
+    return block;
+  }
+
+  function cardSocial(property) {
+    const row = el('div', 'card-social');
+    row.append(voteWidget(property), compareToggle(property));
+    return row;
+  }
+
+  function criteriaCard(property) {
+    const card = el('div', 'aside-card');
+    const { list, yes, no, total } = criteriaScore(property);
+    card.append(el('p', 'aside-label', `Ваши критерии · ${yes} из ${total} ✓${no ? ` · ${no} ✗` : ''}`));
+    const ul = el('ul', 'crit-list');
+    for (const c of list) {
+      const li = el('li', `crit-item crit-${c.v}`);
+      li.append(el('span', 'crit-mark', CRIT_MARK[c.v]), el('span', 'crit-label', c.label), el('span', 'crit-note', c.note));
+      ul.append(li);
+    }
+    card.append(ul);
+    return card;
+  }
+
+  function detailAsideExtras(property) {
+    const social = el('div', 'aside-card');
+    social.append(el('p', 'aside-label', 'Голоса семьи и сравнение'), cardSocial(property));
+    return [social, criteriaCard(property), marketCard(property)];
+  }
+
+  function factRows(rows) {
+    const dl = el('dl', 'detail-facts extra-facts');
+    for (const [label, value] of rows) {
+      if (value === null || value === undefined || value === '') continue;
+      const row = el('div');
+      const dd = el('dd');
+      if (value instanceof Node) dd.append(value); else dd.textContent = value;
+      row.append(el('dt', '', label), dd);
+      dl.append(row);
+    }
+    return dl;
+  }
+
+  function detailMainExtras(property, mainCol) {
+    const geoSec = el('section', 'detail-section');
+    geoSec.append(el('h3', '', 'Расположение и окружение'));
+    if (property.geo) {
+      geoSec.append(el('div', 'detail-map'));
+      const precLabels = { exact: 'точный адрес', entrance: 'въезд в комьюнити', listing: 'точка из объявления', area: 'центр района — точный дом неизвестен' };
+      geoSec.append(el('p', 'aside-note', `Точка: ${precLabels[property.geo.precision] || property.geo.precision} (${property.geo.source}).${property.geo.precision !== 'area' ? ' Цветные лучи — откуда солнце: восход и закат летом и зимой, зимний полдень с юга. Летом в полдень солнце почти в зените.' : ''}`));
+      if (property.nearby) {
+        const rows = NEARBY_LABELS.map(([key, label]) => {
+          const n = object(property.nearby[key]) ? property.nearby[key] : null;
+          return [label, n ? `${n.m < 1000 ? `${format.format(n.m)} м` : `${format.format(Math.round(n.m / 100) / 10)} км`}${n.name ? ` · ${n.name}` : ''}` : (key === 'construction' ? 'нет в радиусе 1 км' : 'нет поблизости')];
+        });
+        geoSec.append(factRows(rows), el('p', 'aside-note', `Расстояния по OpenStreetMap${property.geo.precision === 'area' ? ' от центра района' : ''}. Стройки в OSM обновляются с опозданием — проверяйте на месте и по спутнику.`));
+      }
+    } else {
+      geoSec.append(el('p', '', 'Координат пока нет.'));
+    }
+    if (property.drive || property.originMin !== null) {
+      const rows = destinations.map((d) => [`До ${d.name}`, driveText(property, d.key)]);
+      if (property.originMin !== null) rows.unshift(['До моей точки', `${property.originMin} мин`]);
+      geoSec.append(el('h4', 'detail-subhead', 'Дорога на машине без пробок'), factRows(rows));
+    }
+    mainCol.append(geoSec);
+
+    const listing = property.listing;
+    if (listing) {
+      const sec = el('section', 'detail-section');
+      sec.append(el('h3', '', 'Из объявления Property Finder'));
+      const yes = (v) => (v === true ? 'да' : (v === false ? 'нет' : ''));
+      const furnished = { YES: 'с мебелью', NO: 'без мебели', PARTLY: 'частично' }[String(listing.furnished || '').toUpperCase()] || '';
+      const date = (v) => (v && Number.isFinite(Date.parse(v)) ? new Date(v).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }) : '');
+      sec.append(factRows([
+        ['Опубликовано', date(listing.listedDate)], ['Свободна с', date(listing.availableFrom)], ['Мебель', furnished],
+        ['Площадь дома', number(listing.buaM2) ? `${format.format(listing.buaM2)} м²` : ''],
+        ['Участок', number(listing.plotM2) && listing.plotM2 !== listing.buaM2 ? `${format.format(listing.plotM2)} м²` : ''],
+        ['Ремонт (upgraded)', yes(listing.upgraded)], ['Ландшафт', yes(listing.landscaped)], ['Цену снижали', listing.priceDrop ? 'да' : ''],
+        ['Объявление активно', yes(listing.available)]
+      ]));
+      const amenities = strings(listing.amenities);
+      if (amenities.length) {
+        const chips = el('div', 'amenity-chips');
+        amenities.forEach((a) => chips.append(el('span', 'amenity', a)));
+        sec.append(chips);
+      }
+      const links = el('div', 'detail-links');
+      if (safeUrl(listing.permitUrl)) links.append(iconLink('doc', 'Проверить разрешение DLD', listing.permitUrl));
+      strings(listing.floorPlans).map(safeUrl).filter(Boolean).forEach((url, i) => links.append(iconLink('doc', `Планировка ${i + 1}`, url)));
+      if (links.childNodes.length) sec.append(links);
+      mainCol.append(sec);
+    }
+
+    if (property.houseType || property.typeNote) {
+      const sec = el('section', 'detail-section');
+      sec.append(el('h3', '', 'Тип дома'));
+      if (property.houseType) sec.append(el('p', 'house-type', property.houseType));
+      if (property.typeNote) sec.append(el('p', 'description', property.typeNote));
+      mainCol.append(sec);
+    }
+
+    if (property.viewings.length) {
+      const sec = el('section', 'detail-section');
+      sec.append(el('h3', '', 'Просмотры'));
+      const ul = el('ul');
+      const states = { planned: 'запланирован', done: 'прошёл', cancelled: 'отменён' };
+      for (const v of property.viewings) ul.append(el('li', '', `${formatViewing(v.at)} — ${states[v.state] || v.state || 'запланирован'}${text(v.note) ? ` · ${text(v.note)}` : ''}`));
+      sec.append(ul);
+      const future = property.viewings.filter((v) => v.state !== 'cancelled' && Date.parse(v.at) > Date.now()).map((v) => ({ p: property, v, t: Date.parse(v.at) }));
+      if (future.length) {
+        const ics = el('button', 'button button-quiet', 'Добавить в календарь (.ics)');
+        ics.type = 'button';
+        ics.addEventListener('click', () => downloadIcs(future, `viewing-${property.id}.ics`));
+        sec.append(ics);
+      }
+      mainCol.append(sec);
+    }
+  }
+
+  // --- Офлайн ---
+  function registerOffline() {
+    if (!('serviceWorker' in navigator) || location.protocol !== 'https:') { if ($('save-offline')) $('save-offline').hidden = true; return; }
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      const data = event.data;
+      if (object(data) && data.type === 'precache-progress') {
+        notify(data.done >= data.total ? `Готово: ${data.total} файлов сохранено, каталог откроется без интернета.` : `Сохраняю для офлайна: ${data.done} из ${data.total}…`);
+      }
+    });
+    if ($('save-offline')) $('save-offline').addEventListener('click', async () => {
+      const reg = await navigator.serviceWorker.ready;
+      const urls = new Set();
+      for (const link of document.querySelectorAll('link[rel="stylesheet"], script[src]')) urls.add(new URL(link.href || link.src, document.baseURI).href);
+      urls.add(new URL('index.html', document.baseURI).href);
+      for (const p of properties.filter((x) => matchesStatus(x, 'active'))) {
+        if (p.detailPage) urls.add(new URL(p.detailPage, document.baseURI).href);
+        p.media.forEach((item, i) => {
+          if (item.thumb) urls.add(new URL(item.thumb, document.baseURI).href);
+          if (item.poster) urls.add(new URL(item.poster, document.baseURI).href);
+          if (item.type !== 'video' && i < 12) urls.add(new URL(item.src, document.baseURI).href);
+        });
+      }
+      reg.active.postMessage({ type: 'precache', urls: [...urls] });
+      notify(`Сохраняю для офлайна: ${urls.size} файлов…`);
+    });
+  }
 
   function activeFilterCount() {
     let count = 0;
@@ -1546,7 +2381,7 @@
     tabs.replaceChildren();
     for (const [value, label] of statusTabs) {
       const count = base.filter((property) => matchesStatus(property, value)).length;
-      if (value && value !== 'active' && !properties.some((property) => property.status === value)) continue;
+      if (value === 'changed' ? !count : (value && value !== 'active' && !properties.some((property) => property.status === value))) continue;
       const button = el('button', `status-tab${value ? ` tab-${value}` : ''}`);
       button.type = 'button';
       button.setAttribute('aria-pressed', String(state.status === value));
@@ -1610,7 +2445,7 @@
       if (node && value && [...node.options].some((option) => option.value === value)) node.value = value;
     }
     $('with-comments').checked = params.get('comments') === '1';
-    state.view = params.get('view') === 'list' ? 'list' : 'grid';
+    state.view = ['list', 'map'].includes(params.get('view')) ? params.get('view') : 'grid';
   }
 
   function render() {
@@ -1653,6 +2488,9 @@
     $('empty-title').textContent = properties.length ? 'По этим условиям ничего не найдено' : 'Предложения ещё не добавлены';
     $('empty-description').textContent = properties.length ? 'Попробуйте другой запрос или сбросьте фильтры. Архивные и отклонённые объекты тоже остаются в каталоге.' : 'Когда появятся данные, здесь будут все объекты, фотографии и точки на карте.';
     $('empty-reset').hidden = !properties.length;
+    renderMapView(filtered);
+    renderChangesNotice();
+    updateCompareUI();
     if ($('property-dialog').open) updateDialogNav();
     syncUrl();
   }
@@ -2023,8 +2861,25 @@
     buildDetail(properties[0], $('standalone-detail'));
   } else {
     readUrl();
+    try { origin = JSON.parse(localStorage.getItem(ORIGIN_SLOT) || 'null'); } catch { origin = null; }
+    if (!object(origin) || !Number.isFinite(origin.lat) || !Number.isFinite(origin.lng)) origin = null;
     render();
+    renderViewings();
     openFromHash(true);
+    if (origin) computeOriginTimes().then(() => render());
+    $('pick-origin').addEventListener('click', () => { pickingOrigin = !pickingOrigin; updateOriginControls(); });
+    $('clear-origin').addEventListener('click', () => {
+      origin = null;
+      try { localStorage.removeItem(ORIGIN_SLOT); } catch {}
+      applyOriginTimes(null);
+      render();
+    });
+    $('compare-open').addEventListener('click', openCompare);
+    $('compare-clear').addEventListener('click', () => { compareIds = []; saveCompare(); });
+    $('close-compare').addEventListener('click', () => $('compare-dialog').close());
+    $('compare-dialog').addEventListener('close', syncDialogScroll);
   }
+  $('print-detail').addEventListener('click', () => window.print());
+  registerOffline();
   startCloudSync();
 })();
