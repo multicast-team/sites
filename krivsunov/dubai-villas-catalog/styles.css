@@ -614,3 +614,11 @@ dialog::backdrop { background: #1c221ca8; backdrop-filter: blur(4px); }
 .detail-map, .map-canvas { position: relative; z-index: 0; isolation: isolate; }
 .ceiling-headline { font-weight: 650; }
 .ceiling-sources { margin: 4px 0 6px; padding-left: 18px; font-size: 13.5px; color: #4e554b; }
+
+/* Быстрый доступ к личному топу без раскрытия панели фильтров. */
+.quick-top-filter { display: inline-flex; align-items: center; gap: 7px; min-height: 34px; padding: 5px 12px; flex-shrink: 0; border: 1px solid #c28b30; border-radius: 8px; background: #fff2d5; color: #754500; font-size: 13px; font-weight: 750; }
+.quick-top-filter:hover { background: #ffe6ad; }
+.quick-top-filter[aria-pressed="true"] { background: #8b570e; border-color: #8b570e; color: white; }
+.quick-top-filter:focus-visible { outline: 3px solid #dca84680; outline-offset: 2px; }
+.quick-top-count { padding: 1px 6px; border-radius: 999px; background: #8b570e20; font-size: 12px; }
+.quick-top-filter[aria-pressed="true"] .quick-top-count { background: #ffffff2b; }

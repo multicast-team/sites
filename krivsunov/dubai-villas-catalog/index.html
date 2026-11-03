@@ -10,11 +10,11 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=ux-extras-20261103-5">
+  <link rel="stylesheet" href="styles.css?v=top-quick-20261103-1">
   <script src="vendor/leaflet/leaflet.js" defer></script>
   <script src="enrich.js?v=ux-extras-20261103-5" defer></script>
   <script src="data.js?v=ux-extras-20261103-5" defer></script>
-  <script src="app.js?v=ux-extras-20261103-5" defer></script>
+  <script src="app.js?v=top-quick-20261103-1" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#catalog">Перейти к объектам</a>
@@ -44,6 +44,7 @@
             <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
             <input id="search" type="search" placeholder="Поиск: район, агент, потолки, озеро, второй свет, детали…" autocomplete="off" enterkeyhint="search">
           </div>
+          <button id="quick-top" class="quick-top-filter" type="button" aria-pressed="false" title="Показать только виллы, отмеченные вами как ТОП">★ ТОП <span id="quick-top-count" class="quick-top-count">0</span></button>
           <button id="filters-toggle" class="filters-toggle" type="button" aria-expanded="false" aria-controls="filter-selects">Фильтры<span id="filters-active" class="filters-active" hidden></span></button>
           <label class="check-chip"><input id="with-comments" type="checkbox"><span>С комментариями</span></label>
           <div class="view-toggle" role="group" aria-label="Вид каталога">

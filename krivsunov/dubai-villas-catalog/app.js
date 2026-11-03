@@ -2501,6 +2501,12 @@
     const viewedCount = properties.filter((p) => getPropertyToggle(p).viewed).length;
     const rentCount = properties.filter((p) => getPropertyToggle(p).rent).length;
     const topCount = properties.filter((p) => getPropertyToggle(p).top).length;
+    const quickTop = $('quick-top');
+    if (quickTop) {
+      quickTop.setAttribute('aria-pressed', String($('filter-top').value === 'yes'));
+      quickTop.setAttribute('aria-label', `Только ТОП: ${topCount} объектов`);
+      $('quick-top-count').textContent = String(topCount);
+    }
     const waterCount = properties.filter((p) => p.waterView === 'yes').length;
     const dhCount = properties.filter((p) => p.doubleHeight === 'yes').length;
     const items = [
@@ -2587,7 +2593,7 @@
     $('reset-filters').hidden = !filteredAny;
     $('empty-state').hidden = filtered.length !== 0;
     $('empty-title').textContent = properties.length ? 'По этим условиям ничего не найдено' : 'Предложения ещё не добавлены';
-    $('empty-description').textContent = properties.length ? 'Попробуйте другой запрос или сбросьте фильтры. Архивные и отклонённые объекты тоже остаются в каталоге.' : 'Когда появятся данные, здесь будут все объекты, фотографии и точки на карте.';
+    $('empty-description').textContent = $('filter-top').value === 'yes' && !properties.some((p) => getPropertyToggle(p).top) ? 'Сначала отметьте понравившиеся виллы переключателем «ТОП» на карточках. Затем нажмите «★ ТОП», чтобы оставить только их.' : properties.length ? 'Попробуйте другой запрос или сбросьте фильтры. Архивные и отклонённые объекты тоже остаются в каталоге.' : 'Когда появятся данные, здесь будут все объекты, фотографии и точки на карте.';
     $('empty-reset').hidden = !properties.length;
     renderMapView(filtered);
     renderChangesNotice();
@@ -2617,6 +2623,10 @@
 
   $('filters').addEventListener('submit', (event) => event.preventDefault());
   $('search').addEventListener('input', render);
+  if ($('quick-top')) $('quick-top').addEventListener('click', () => {
+    $('filter-top').value = $('filter-top').value === 'yes' ? '' : 'yes';
+    render();
+  });
   [...FILTER_SELECT_IDS, 'sort', 'with-comments'].forEach((id) => {
     const node = $(id);
     if (node) node.addEventListener('change', render);
@@ -2744,6 +2754,7 @@
           }
           if (mergeToggleMap(parsed.sharedToggles)) {
             refreshToggleWidgets();
+            if ($('filter-top').value || $('filter-viewed').value || $('filter-rent').value) render();
           }
         }
       } catch {}
