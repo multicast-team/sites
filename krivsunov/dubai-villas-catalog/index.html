@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="styles.css?v=top-quick-20261103-1">
   <script src="vendor/leaflet/leaflet.js" defer></script>
-  <script src="enrich.js?v=review-reset-20261103-1" defer></script>
-  <script src="data.js?v=review-reset-20261103-1" defer></script>
+  <script src="enrich.js?v=remove-four-20261103-1" defer></script>
+  <script src="data.js?v=remove-four-20261103-1" defer></script>
   <script src="app.js?v=top-quick-20261103-1" defer></script>
 </head>
 <body>
@@ -57,10 +57,10 @@
         <div class="filter-selects" id="filter-selects">
           <label class="select-field"><span class="field-caption">Район</span><select id="area"><option value="">Все районы</option></select></label>
 
-          <label class="select-field"><span class="field-caption">Топ</span><select id="filter-top">
-            <option value="">Топ: все</option>
-            <option value="yes">🔥 Только топ</option>
-            <option value="no">Без топа</option>
+          <label class="select-field"><span class="field-caption">ТОП: показать или исключить</span><select id="filter-top">
+            <option value="">ТОП: все виллы</option>
+            <option value="yes">🔥 Только ТОП</option>
+            <option value="no">✕ Исключить всё из ТОП</option>
           </select></label>
 
           <label class="select-field"><span class="field-caption">Смотрели / Нет</span><select id="filter-viewed">
