@@ -1,4 +1,4 @@
-﻿number,id,title,outcome,duration_seconds,width,height,native_fps,cinematic_end_seconds,first_game_style_scene_seconds,G0_seconds,first_weapon_equipped_seconds,sheet_count,frame_count,drive_url,board_url
+﻿number,id,title,outcome,duration_seconds,width,height,native_fps,cinematic_end_seconds,first_game_style_scene_seconds,G0_seconds,first_new_weapon_equipped_seconds,sheet_count,frame_count,drive_url,board_url
 1,38:657,BC_Simple_001,green,34.2,1080,1920,60.0,—,0,0,"3,875–4",12,274,https://drive.google.com/file/d/1D1Fwf2XXwhnP6ebKL1HvV-1WCvs8YLJ1/view,https://www.figma.com/board/GJJsfEl3ZgQk0t9TBd33mb/BC_Creatives?node-id=38-657
 2,38:725,BC_Mushroom_001_Simple_001,green,44.23,1080,1920,60.0,10,10,10,14,15,354,https://drive.google.com/file/d/1fMvj7KmIUu8naSGURt06F7ROOjoMbw5S/view,https://www.figma.com/board/GJJsfEl3ZgQk0t9TBd33mb/BC_Creatives?node-id=38-725
 3,38:741,BC_Simple_002,green,38.55,1080,1920,60.0,—,0,0,"2,5",13,308,https://drive.google.com/file/d/1EGImql4U47XReVfh6Hmm12iKP5TIWRZ6/view,https://www.figma.com/board/GJJsfEl3ZgQk0t9TBd33mb/BC_Creatives?node-id=38-741
