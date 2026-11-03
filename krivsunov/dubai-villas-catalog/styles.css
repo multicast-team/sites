@@ -155,7 +155,7 @@ h2 { font: normal 21px/1.2 var(--serif); letter-spacing: -.02em; margin: 0; }
 .type-badge { color: var(--muted); background: var(--surface); border-color: var(--line-strong); }
 
 /* Переключатели Смотрели / Снимаем */
-.decision-toggles { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 6px; margin: 2px 0; }
+.decision-toggles { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 6px; margin: 2px 0; }
 .decision-toggles .switch-label { white-space: normal; }
 .toggle-switch { display: inline-flex; align-items: center; gap: 7px; min-height: 30px; padding: 4px 8px; border: 1px solid #d5d0c3; border-radius: 8px; background: #f5f3ec; color: #4d5249; font-size: 11.5px; font-weight: 650; text-align: left; line-height: 1.2; transition: all .15s ease; }
 .toggle-switch:hover { border-color: #aca696; background: #ece9df; }
@@ -171,9 +171,18 @@ h2 { font: normal 21px/1.2 var(--serif); letter-spacing: -.02em; margin: 0; }
 .toggle-rent[aria-checked="true"] { background: #d6f5dd; border-color: #207838; color: #114720; box-shadow: 0 1px 4px #20783824; }
 .toggle-rent[aria-checked="true"] .switch-track { background: #1c7c36; }
 
-.toggle-top[aria-checked="true"] { background: #fff1d6; border-color: #d98a1c; color: #7a4300; }
-.toggle-top[aria-checked="true"] .switch-track { background: #e08a12; }
-.property-card.is-top:not(.is-renting) { border: 2px solid #e09a2e; box-shadow: 0 0 0 2px #e09a2e22, var(--shadow); }
+/* Большой переключатель ТОП */
+.decision-toggles .toggle-top { grid-column: 1 / -1; justify-content: center; gap: 12px; min-height: 48px; padding: 8px 14px; border: 2px dashed #e0a24a; border-radius: 12px; background: #fff8ec; color: #9a5a08; font-size: 16px; font-weight: 800; letter-spacing: .02em; }
+.decision-toggles .toggle-top:hover { background: #ffefd2; border-color: #d4861c; }
+.decision-toggles .toggle-top .switch-track { width: 46px; height: 26px; background: #e7cfa6; }
+.decision-toggles .toggle-top .switch-thumb { top: 3px; left: 3px; width: 20px; height: 20px; }
+.decision-toggles .toggle-top[aria-checked="true"] .switch-thumb { transform: translateX(20px); }
+.decision-toggles .toggle-top[aria-checked="true"] { border: 2px solid #c2410c; background: linear-gradient(135deg, #ff9a1f, #f0531c 60%, #d6262f); color: #fff; text-shadow: 0 1px 2px #0003; box-shadow: 0 3px 12px #f0531c55; }
+.decision-toggles .toggle-top[aria-checked="true"] .switch-track { background: #ffffff55; }
+.decision-toggles .toggle-top .switch-label { white-space: nowrap; }
+.property-card.is-top { border: 3px solid #f0631c; box-shadow: 0 0 0 3px #f0631c26, 0 8px 24px #f0631c33; }
+.property-card.is-top .cover-button::after { content: '🔥 ТОП'; position: absolute; left: 10px; bottom: 10px; z-index: 3; padding: 6px 12px; border-radius: 999px; background: linear-gradient(135deg, #ff9a1f, #e0342a); color: #fff; font-weight: 800; font-size: 15px; letter-spacing: .04em; box-shadow: 0 2px 10px #0005; pointer-events: none; }
+.list-row.is-top { box-shadow: inset 4px 0 0 #f0631c; }
 
 /* Карточка */
 .card-main { padding: 10px 12px 6px; display: flex; flex-direction: column; flex: 1; gap: 5px; }

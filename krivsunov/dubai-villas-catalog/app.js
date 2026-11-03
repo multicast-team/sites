@@ -771,7 +771,7 @@
   }
 
   const catalog = object(window.VILLA_CATALOG) ? window.VILLA_CATALOG : {};
-  const rawProperties = Array.isArray(catalog.properties) ? catalog.properties.filter(object) : [];
+  const rawProperties = Array.isArray(catalog.properties) ? catalog.properties.filter((item) => object(item) && item.status !== 'unavailable') : [];
   const idCounts = new Map();
   for (const item of rawProperties) if (validId(item.id)) idCounts.set(item.id, (idCounts.get(item.id) || 0) + 1);
   const properties = rawProperties.map((item, index) => {
@@ -837,7 +837,6 @@
     ['selected', 'Выбрано'],
     ['review', 'На рассмотрении'],
     ['rejected', 'Отказ'],
-    ['unavailable', 'Недоступно'],
     ['historical', 'Архив']
   ];
   const standalone = rawProperties.length === 1 && !!document.querySelector('base');
@@ -1040,7 +1039,7 @@
 
     const top = !!stateObj.top;
     widget.topBtn.setAttribute('aria-checked', String(top));
-    widget.topLabel.textContent = top ? '🔥 Топ' : 'Не топ';
+    widget.topLabel.textContent = top ? '🔥 В ТОПЕ' : '☆ Добавить в ТОП';
     widget.topBtn.title = top ? 'Нажмите, чтобы убрать из топа' : 'Нажмите, чтобы добавить в топ';
 
     if (widget.hostCard) {
@@ -1130,7 +1129,7 @@
       handleToggleFlip(property, 'top');
     });
 
-    root.append(viewedBtn, rentBtn, topBtn);
+    root.append(topBtn, viewedBtn, rentBtn);
     return root;
   }
 
