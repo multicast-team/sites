@@ -1,0 +1,500 @@
+{
+ "ceramic_vase_01": {
+  "bytes": 81056,
+  "raw": 418457,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 2548,
+  "dims_mm": [
+   204.87193763256073,
+   206.37669414281845,
+   401.379804010503
+  ],
+  "name": "Ceramic Vase 01"
+ },
+ "potted_plant_01": {
+  "bytes": 1021400,
+  "raw": 9049704,
+  "res": "2k",
+  "tex": 1024,
+  "simplify": [
+   0.3,
+   0.008
+  ],
+  "polycount": 96030,
+  "dims_mm": [
+   588.9185070991516,
+   636.6117596626282,
+   1350.7787585258484
+  ],
+  "name": "Potted Plant 01"
+ },
+ "potted_plant_02": {
+  "bytes": 603676,
+  "raw": 4876997,
+  "res": "2k",
+  "tex": 1024,
+  "simplify": [
+   0.35,
+   0.008
+  ],
+  "polycount": 69806,
+  "dims_mm": [
+   701.1570334434509,
+   657.3865860700607,
+   841.1787391305552
+  ],
+  "name": "Potted Plant 02"
+ },
+ "potted_plant_04": {
+  "bytes": 179780,
+  "raw": 2122625,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 6097,
+  "dims_mm": [
+   170.27407884597778,
+   185.9453096985817,
+   267.5964875961654
+  ],
+  "name": "Potted Plant 04"
+ },
+ "ceramic_vase_02": {
+  "bytes": 128892,
+  "raw": 750161,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 2756,
+  "dims_mm": [
+   219.83815729618073,
+   221.4527726173401,
+   309.2874630820006
+  ],
+  "name": "Ceramic Vase 02"
+ },
+ "ceramic_vase_03": {
+  "bytes": 111224,
+  "raw": 765159,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 2784,
+  "dims_mm": [
+   112.45502531528473,
+   112.45502158999443,
+   414.438920259272
+  ],
+  "name": "Ceramic Vase 03"
+ },
+ "ceramic_vase_04": {
+  "bytes": 102252,
+  "raw": 596053,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 2224,
+  "dims_mm": [
+   183.31684917211533,
+   181.98027461767197,
+   342.3411250114441
+  ],
+  "name": "Ceramic Vase 04"
+ },
+ "marble_bust_01": {
+  "bytes": 192764,
+  "raw": 898283,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 17456,
+  "dims_mm": [
+   271.7496156692505,
+   299.713671207428,
+   514.9431824684143
+  ],
+  "name": "Marble Bust 01"
+ },
+ "bull_head": {
+  "bytes": 174612,
+  "raw": 2021370,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 17148,
+  "dims_mm": [
+   306.3598871231079,
+   280.7491421699524,
+   433.00686348811723
+  ],
+  "name": "Bull Head"
+ },
+ "standing_picture_frame_01": {
+  "bytes": 58176,
+  "raw": 447425,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 1634,
+  "dims_mm": [
+   200.7998451590538,
+   100.2768762409687,
+   249.65811520814896
+  ],
+  "name": "Standing Picture Frame 01"
+ },
+ "standing_picture_frame_02": {
+  "bytes": 77384,
+  "raw": 569572,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 2986,
+  "dims_mm": [
+   216.89216047525406,
+   102.28872299194336,
+   266.3925290107727
+  ],
+  "name": "Standing Picture Frame 02"
+ },
+ "wall_clock": {
+  "bytes": 96584,
+  "raw": 1564880,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 3658,
+  "dims_mm": [
+   320.4909861087799,
+   47.2230945505423,
+   320.4909861087799
+  ],
+  "name": "Wall Clock"
+ },
+ "book_encyclopedia_set_01": {
+  "bytes": 595528,
+  "raw": 3261046,
+  "res": "1k",
+  "tex": 1024,
+  "simplify": [
+   0.5,
+   0.002
+  ],
+  "polycount": 67306,
+  "dims_mm": [
+   551.2974057346582,
+   163.06233406066895,
+   237.41818653931634
+  ],
+  "name": "Book Encyclopedia Set 01"
+ },
+ "wine_bottles_01": {
+  "bytes": 711288,
+  "raw": 3909317,
+  "res": "1k",
+  "tex": 1024,
+  "simplify": null,
+  "polycount": 28848,
+  "dims_mm": [
+   676.3246953487396,
+   80.56290075182915,
+   331.367195234634
+  ],
+  "name": "Wine Bottles 01"
+ },
+ "wooden_bowl_01": {
+  "bytes": 147192,
+  "raw": 1823237,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 14122,
+  "dims_mm": [
+   313.08163702487946,
+   309.1423809528351,
+   93.69255532510579
+  ],
+  "name": "Wooden Bowl 01"
+ },
+ "chess_set": {
+  "bytes": 870144,
+  "raw": 6983829,
+  "res": "1k",
+  "tex": 1024,
+  "simplify": [
+   0.3,
+   0.003
+  ],
+  "polycount": 76920,
+  "dims_mm": [
+   553.2379746437073,
+   553.2379746437073,
+   112.3529537471768
+  ],
+  "name": "Chess Set"
+ },
+ "gaming_console": {
+  "bytes": 327840,
+  "raw": 2979450,
+  "res": "1k",
+  "tex": 512,
+  "simplify": [
+   0.35,
+   0.003
+  ],
+  "polycount": 31710,
+  "dims_mm": [
+   325.0104486942291,
+   318.54312121868134,
+   100.2653255709447
+  ],
+  "name": "Gaming Console"
+ },
+ "mid_century_lounge_chair": {
+  "bytes": 297780,
+  "raw": 7741064,
+  "res": "2k",
+  "tex": 1024,
+  "simplify": null,
+  "polycount": 6148,
+  "dims_mm": [
+   1008.6143612861633,
+   1190.310776233673,
+   1169.0847246776136
+  ],
+  "name": "Mid Century Lounge Chair"
+ },
+ "modern_arm_chair_01": {
+  "bytes": 322856,
+  "raw": 9221649,
+  "res": "2k",
+  "tex": 1024,
+  "simplify": null,
+  "polycount": 8916,
+  "dims_mm": [
+   820.3444182872772,
+   986.5616858005524,
+   1022.8520567470696
+  ],
+  "name": "Modern Arm Chair 01"
+ },
+ "Ottoman_01": {
+  "bytes": 329580,
+  "raw": 2517716,
+  "res": "2k",
+  "tex": 1024,
+  "simplify": null,
+  "polycount": 4240,
+  "dims_mm": [
+   884.5577836036682,
+   621.1484670639038,
+   624.3239195573551
+  ],
+  "name": "Ottoman 01"
+ },
+ "side_table_01": {
+  "bytes": 84076,
+  "raw": 505268,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 2756,
+  "dims_mm": [
+   550.0000715255737,
+   450.00001788139343,
+   550.6622816901654
+  ],
+  "name": "Side Table 01"
+ },
+ "dining_chair_02": {
+  "bytes": 242288,
+  "raw": 1918698,
+  "res": "2k",
+  "tex": 1024,
+  "simplify": [
+   0.6,
+   0.002
+  ],
+  "polycount": 22013,
+  "dims_mm": [
+   433.5707724094391,
+   576.4201134443283,
+   973.3776897192001
+  ],
+  "name": "Dining Chair 02"
+ },
+ "modern_wooden_cabinet": {
+  "bytes": 424564,
+  "raw": 8220577,
+  "res": "2k",
+  "tex": 1024,
+  "simplify": null,
+  "polycount": 24976,
+  "dims_mm": [
+   2440.0004148483276,
+   520.0000107288361,
+   680.1425069570541
+  ],
+  "name": "Modern Wooden Cabinet"
+ },
+ "outdoor_table_chair_set_01": {
+  "bytes": 412388,
+  "raw": 1242380,
+  "res": "1k",
+  "tex": 1024,
+  "simplify": null,
+  "polycount": 9828,
+  "dims_mm": [
+   776.0046124458313,
+   1831.0473561286926,
+   858.5816156119108
+  ],
+  "name": "Outdoor Table Chair Set 01"
+ },
+ "quiver_tree_01": {
+  "bytes": 1100720,
+  "raw": 21560536,
+  "res": "2k",
+  "tex": 1024,
+  "simplify": [
+   0.3,
+   0.004
+  ],
+  "polycount": 269522,
+  "dims_mm": [
+   1181.235671043396,
+   968.5054421424866,
+   2715.5103981494904
+  ],
+  "name": "Quiver Tree 01"
+ },
+ "quiver_tree_02": {
+  "bytes": 708640,
+  "raw": 11099232,
+  "res": "2k",
+  "tex": 1024,
+  "simplify": [
+   0.4,
+   0.004
+  ],
+  "polycount": 153887,
+  "dims_mm": [
+   872.0614314079285,
+   880.8198273181915,
+   1468.88018399477
+  ],
+  "name": "Quiver Tree 02"
+ },
+ "othonna_cerarioides": {
+  "bytes": 547272,
+  "raw": 7879771,
+  "res": "1k",
+  "tex": 512,
+  "simplify": [
+   0.15,
+   0.006
+  ],
+  "polycount": 651641,
+  "dims_mm": [
+   3970.029592514038,
+   1798.905849456787,
+   1969.5868343114853
+  ],
+  "name": "Othonna Cerarioides"
+ },
+ "cheiridopsis_succulent": {
+  "bytes": 308084,
+  "raw": 4261470,
+  "res": "1k",
+  "tex": 512,
+  "simplify": [
+   0.25,
+   0.006
+  ],
+  "polycount": 198888,
+  "dims_mm": [
+   2161.4569425582886,
+   958.6485624313354,
+   270.7609534263611
+  ],
+  "name": "Cheiridopsis Succulent"
+ },
+ "leipoldtia_schultzei": {
+  "bytes": 320348,
+  "raw": 13101968,
+  "res": "1k",
+  "tex": 512,
+  "simplify": [
+   0.07,
+   0.01
+  ],
+  "polycount": 654080,
+  "dims_mm": [
+   2311.8621706962585,
+   813.1060898303986,
+   317.10067950189114
+  ],
+  "name": "Leipoldtia Schultzei"
+ },
+ "crystalline_iceplant": {
+  "bytes": 198892,
+  "raw": 2612984,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 23487,
+  "dims_mm": [
+   1693.7321424484253,
+   738.1078898906708,
+   82.77220348827541
+  ],
+  "name": "Crystalline Iceplant"
+ },
+ "shrub_02": {
+  "bytes": 305376,
+  "raw": 1966425,
+  "res": "1k",
+  "tex": 1024,
+  "simplify": null,
+  "polycount": 52317,
+  "dims_mm": [
+   5340.904712677002,
+   2060.703456401825,
+   2070.5229938030243
+  ],
+  "name": "Shrub 02"
+ },
+ "wild_rooibos_bush": {
+  "bytes": 295668,
+  "raw": 2464496,
+  "res": "1k",
+  "tex": 512,
+  "simplify": [
+   0.6,
+   0.004
+  ],
+  "polycount": 76521,
+  "dims_mm": [
+   2285.276174545288,
+   854.104071855545,
+   543.936595087871
+  ],
+  "name": "Wild Rooibos Bush"
+ },
+ "flower_gazania": {
+  "bytes": 272212,
+  "raw": 2848844,
+  "res": "1k",
+  "tex": 512,
+  "simplify": null,
+  "polycount": 25819,
+  "dims_mm": [
+   1578.87464761734,
+   810.1679384708405,
+   400.5459398031235
+  ],
+  "name": "Flower Gazania"
+ }
+}

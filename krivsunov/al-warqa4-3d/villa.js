@@ -77,26 +77,42 @@ export function build(THREE, opts = {}) {
     t.repeat.set(0.35, 0.35);
     return t;
   })();
-  // лист пальмы: центральная жилка и узкие листочки, прозрачность по альфе
-  const frondTex = canvasTexture(128, 512, (ctx, w, h) => {
+  // лист пальмы: центральная жилка и частые узкие листочки разных оттенков, прозрачность по альфе
+  const frondTex = canvasTexture(256, 1024, (ctx, w, h) => {
     ctx.clearRect(0, 0, w, h);
-    ctx.strokeStyle = '#6d7f3a';
-    ctx.lineWidth = 5;
-    ctx.beginPath(); ctx.moveTo(w / 2, h); ctx.lineTo(w / 2, 6); ctx.stroke();
-    for (let y = h - 30; y > 20; y -= 9) {
-      const t = y / h, len = (w / 2 - 6) * Math.sin(Math.PI * (1 - t) * 0.95 + 0.15);
+    const rib = ctx.createLinearGradient(0, h, 0, 0);
+    rib.addColorStop(0, '#8a8a4a');
+    rib.addColorStop(1, '#5e7a34');
+    ctx.strokeStyle = rib;
+    ctx.lineWidth = 9;
+    ctx.beginPath(); ctx.moveTo(w / 2, h); ctx.lineTo(w / 2, 10); ctx.stroke();
+    for (let y = h - 50; y > 30; y -= 7) {
+      const t = y / h, len = (w / 2 - 10) * Math.sin(Math.PI * (1 - t) * 0.95 + 0.15) * (0.88 + rnd() * 0.12);
       for (const side of [-1, 1]) {
-        const g = 90 + Math.floor(rnd() * 50);
-        ctx.strokeStyle = `rgb(${40 + Math.floor(rnd() * 30)},${g},${30 + Math.floor(rnd() * 20)})`;
-        ctx.lineWidth = 3.2;
+        const g = 92 + Math.floor(rnd() * 60), dry = rnd() < 0.06;
+        ctx.strokeStyle = dry ? `rgb(${130 + Math.floor(rnd() * 40)},${120 + Math.floor(rnd() * 30)},60)` : `rgb(${34 + Math.floor(rnd() * 36)},${g},${26 + Math.floor(rnd() * 26)})`;
+        ctx.lineWidth = 4.2 + rnd() * 1.6;
         ctx.beginPath();
         ctx.moveTo(w / 2, y);
-        ctx.quadraticCurveTo(w / 2 + side * len * 0.6, y - 10, w / 2 + side * len, y - 26 - rnd() * 8);
+        ctx.quadraticCurveTo(w / 2 + side * len * 0.55, y - 16, w / 2 + side * len, y - 44 - rnd() * 14);
         ctx.stroke();
       }
     }
   });
 
+  const grassTime = { value: 0 };
+  const grassMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.82, side: THREE.DoubleSide });
+  grassMat.onBeforeCompile = (shader) => { // ветер: кончики травинок качаются, фаза — от места травинки
+    shader.uniforms.uTime = grassTime;
+    shader.vertexShader = 'uniform float uTime;\n' + shader.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+      #ifdef USE_INSTANCING
+        vec2 ip = vec2(instanceMatrix[3].x, instanceMatrix[3].z);
+      #else
+        vec2 ip = vec2(0.0);
+      #endif
+      float sway = sin(uTime * 1.7 + ip.x * 0.8 + ip.y * 0.6) * 0.6 + sin(uTime * 3.1 + ip.x * 2.3 + ip.y * 1.7) * 0.25;
+      transformed.z += sway * 0.3 * position.y * position.y;`);
+  };
   const M = {
     plaster: pbr('plaster', 2.4, { color: 0xf4efe7 }, { normal: 0.45 }),
     frame: pbr('concrete_white', 3.0, { color: 0xf8f4ec }, { normal: 0.35 }),
@@ -134,7 +150,7 @@ export function build(THREE, opts = {}) {
     carTail: new THREE.MeshStandardMaterial({ color: 0x440000, emissive: 0xff1a1a, emissiveIntensity: 0 })
   };
   night.push({ mat: M.ledFacade, on: 2.6 }, { mat: M.lampHead, on: 6 }, { mat: M.poolLight, on: 5 }, { mat: M.carLight, on: 3 }, { mat: M.carTail, on: 2 });
-  anim.push((t) => { waterNormal.offset.set(t * 0.012, t * 0.007); waterNormal.rotation = Math.sin(t * 0.05) * 0.2; });
+  anim.push((t) => { waterNormal.offset.set(t * 0.012, t * 0.007); waterNormal.rotation = Math.sin(t * 0.05) * 0.2; grassTime.value = t; });
 
   const MI = { // интерьер: материалы с userData.room получают отражения «комнатного» зонда просмотрщика
     wall: pbr('wall_paint', 2.4, { color: 0xf5efe6 }, { normal: 0.3, ao: 0.3 }),
@@ -156,7 +172,9 @@ export function build(THREE, opts = {}) {
     led: new THREE.MeshStandardMaterial({ color: 0x111111, emissive: 0xffd9a6, emissiveIntensity: 2.2 }),
     riser: new THREE.MeshStandardMaterial({ color: 0xf3e6cf, emissive: 0xffd8a0, emissiveIntensity: 0.5, roughness: 0.4 }),
     downlight: new THREE.MeshStandardMaterial({ color: 0x111111, emissive: 0xfff4e2, emissiveIntensity: 3 }),
-    slot: new THREE.MeshStandardMaterial({ color: 0x2c2e31, roughness: 0.7 })
+    slot: new THREE.MeshStandardMaterial({ color: 0x2c2e31, roughness: 0.7 }),
+    skirt: new THREE.MeshStandardMaterial({ color: 0xe4ddd2, roughness: 0.42 }),
+    plate: new THREE.MeshStandardMaterial({ color: 0xf2f1ee, roughness: 0.3 })
   };
   for (const [key, m] of Object.entries(MI)) m.userData.room = key === 'floor1' ? 'ff' : 'gf';
   for (const key of ['led', 'downlight', 'glass']) MI[key].userData.noCast = true;
@@ -334,8 +352,17 @@ export function build(THREE, opts = {}) {
   // Стена с проёмами: along 'x' — вдоль X (толщина t0..t1 по Z), 'z' — вдоль Z (толщина по X);
   // holes — [a0, a1, y0, y1, проход?]; проём без отметки «проход» (окно) для прогулки остаётся препятствием.
   // inner — [материал, знак]: грань, смотрящая внутрь дома, получает отделку.
+  const SKIRT = 0.085;
+  function skirting(along, s0, s1, y0, t0, t1, faces) { // faces: -1 — грань t0, +1 — грань t1
+    if (s1 - s0 < 0.05) return;
+    for (const f of faces) {
+      const [c0, c1] = f < 0 ? [t0 - 0.012, t0] : [t1, t1 + 0.012];
+      if (along === 'x') ib.box(s0, s1, y0, y0 + SKIRT, c0, c1, MI.skirt); else ib.box(c0, c1, y0, y0 + SKIRT, s0, s1, MI.skirt);
+    }
+  }
   function wall(batch, along, a0, a1, y0, y1, t0, t1, holes, mat, inner = null, physics = true) {
     const cut = (vals, lo, hi) => [...new Set(vals)].filter((v) => v >= lo && v <= hi).sort((p, q) => p - q);
+    const skirtFaces = mat === MI.wall ? [-1, 1] : inner && inner[0] === MI.wall ? [inner[1]] : null;
     const ua = cut([a0, a1, ...holes.flatMap((h) => [h[0], h[1]])], a0, a1);
     const uy = cut([y0, y1, ...holes.flatMap((h) => [h[2], h[3]])], y0, y1);
     for (let j = 0; j < uy.length - 1; j++) {
@@ -350,6 +377,7 @@ export function build(THREE, opts = {}) {
           if (inner) batch.boxSplit(...b, mat, inner[0], along === 'x' ? 'z' : 'x', inner[1]);
           else batch.box(...b, mat);
           if (physics) solid(b[0], b[1], b[2], b[3], b[4], b[5]);
+          if (skirtFaces && j === 0 && Math.min(Math.abs(y0 - F0), Math.abs(y0 - F1)) < 0.01) skirting(along, start, ua[i], y0, t0, t1, skirtFaces);
           start = null;
         }
       }
@@ -577,6 +605,44 @@ export function build(THREE, opts = {}) {
   lights.push({ pos: [cx, -0.3, cz], color: 0x58e6ff, intensity: 18, distance: 14, room: 'yard', set: 'night' });
   ground(rectXZ(-16.6, -6.4, -16.1, -10.6), 0.065, M.grass);
   ground(rectXZ(10.4, 16.6, -11.6, -7.9), 0.065, M.grass);
+  // травинки поверх газонов: изогнутая полоска из 4 сегментов, тёмная у земли и светлая к кончику
+  function grassField(x0, x1, z0, z1, y, density, skip = []) {
+    const pos = [], col = [], idx = [], seg = 4;
+    for (let i = 0; i <= seg; i++) {
+      const t = i / seg, w = 0.5 * (1 - t) * (1 - t * 0.25), bend = 0.28 * t * t;
+      pos.push(-w, t, bend, w, t, bend);
+      for (let k = 0; k < 2; k++) col.push(0.13 + 0.3 * t, 0.24 + 0.4 * t, 0.05 + 0.12 * t);
+      if (i < seg) idx.push(i * 2, i * 2 + 1, i * 2 + 2, i * 2 + 1, i * 2 + 3, i * 2 + 2);
+    }
+    const blade = new THREE.BufferGeometry();
+    blade.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    blade.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    const nor = new Float32Array(pos.length);
+    for (let i = 1; i < nor.length; i += 3) nor[i] = 1; // нормали вверх: травинка светится как газон, без тёмной изнанки
+    blade.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+    blade.setIndex(idx);
+    const total = Math.round((x1 - x0) * (z1 - z0) * density);
+    const mesh = new THREE.InstancedMesh(blade, grassMat, total);
+    const mat4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), sc = new THREE.Vector3(), p = new THREE.Vector3(), c = new THREE.Color();
+    let n = 0;
+    for (let i = 0; i < total; i++) {
+      const x = x0 + rnd() * (x1 - x0), z = z0 + rnd() * (z1 - z0);
+      if (skip.some(([a0, a1, b0, b1]) => x > a0 && x < a1 && z > b0 && z < b1)) continue;
+      const h = 0.035 + rnd() * rnd() * 0.09;
+      e.set((rnd() - 0.5) * 0.6, rnd() * Math.PI * 2, (rnd() - 0.5) * 0.6);
+      mat4.compose(p.set(x, y, z), q.setFromEuler(e), sc.set(0.006 + rnd() * 0.006, h, h));
+      mesh.setMatrixAt(n, mat4);
+      mesh.setColorAt(n, c.setRGB(0.8 + rnd() * 0.35, 0.82 + rnd() * 0.3, 0.75 + rnd() * 0.25));
+      n++;
+    }
+    mesh.count = n;
+    mesh.computeBoundingSphere();
+    mesh.userData.noCast = true;
+    mesh.userData.grass = n; // просмотрщик на «средней» оставляет треть травинок
+    root.add(mesh);
+  }
+  grassField(-16.6, -6.4, -16.1, -10.6, 0.065, 700, [[-15.7, -8.6, -14.5, -12.7]]);
+  grassField(10.4, 16.6, -11.6, -7.9, 0.065, 700);
   walk(-16.8, 16.8, 0.03, -16.3, -7.7);
   // душ у бассейна
   xb.box(10.05, 10.15, 0, 2.3, -8.65, -8.55, MI.chrome);
@@ -608,7 +674,7 @@ export function build(THREE, opts = {}) {
   walk(-16.8, -12.6, 0.03, -7.7, 6.7);
   // пальма: ствол с корой, 22 листа с прозрачными листочками
   const frondGeo = (() => {
-    const g = new THREE.PlaneGeometry(0.55, 1, 2, 10);
+    const g = new THREE.PlaneGeometry(0.55, 1, 2, 14);
     g.translate(0, 0.5, 0);
     const pos = g.attributes.position;
     for (let i = 0; i < pos.count; i++) {
@@ -620,23 +686,39 @@ export function build(THREE, opts = {}) {
     return g;
   })();
   function palm(x, z, h, lean = 0.06) {
-    const trunk = new THREE.CylinderGeometry(0.13, 0.24, h, 12, 6);
+    const rings = Math.max(8, Math.round(h / 0.16));
+    const trunk = new THREE.CylinderGeometry(0.13, 0.24, h, 16, rings * 4);
     const tp = trunk.attributes.position, tuv = trunk.attributes.uv;
-    for (let i = 0; i < tp.count; i++) tuv.setXY(i, tuv.getX(i) * 1.4, (tp.getY(i) + h / 2) / 1.0);
+    for (let i = 0; i < tp.count; i++) { // кольца-рубцы от старых листьев
+      const yy = tp.getY(i) + h / 2, k = 1 + 0.075 * Math.pow(Math.abs(Math.sin((yy / h) * rings * Math.PI)), 6);
+      tp.setX(i, tp.getX(i) * k);
+      tp.setZ(i, tp.getZ(i) * k);
+      tuv.setXY(i, tuv.getX(i) * 1.4, yy / 1.0);
+    }
+    trunk.computeVertexNormals();
     trunk.translate(0, h / 2, 0);
     trunk.rotateZ(lean);
     trunk.translate(x, 0, z);
     const top = new THREE.Vector3(x - Math.sin(lean) * h, Math.cos(lean) * h, z);
     const parts = [trunk];
-    const n = 22, size = Math.min(2.6, 1.1 + h * 0.27);
+    const n = 30, size = Math.min(2.7, 1.1 + h * 0.28);
     for (let i = 0; i < n; i++) {
       const f = frondGeo.clone();
-      const s = size * (0.8 + (i % 3) * 0.12);
+      const upper = i % 3 === 0, s = size * (upper ? 0.72 + rnd() * 0.12 : 0.85 + rnd() * 0.2);
       f.scale(s, s, s);
-      f.rotateX(0.35 - (i % 4) * 0.22);
-      f.rotateY((i / n) * Math.PI * 2 + (i % 2) * 0.13);
-      f.translate(top.x, top.y, top.z);
+      f.rotateZ((rnd() - 0.5) * 0.5);
+      f.rotateX(upper ? -0.45 + rnd() * 0.3 : 0.15 + rnd() * 0.55);
+      f.rotateY((i / n) * Math.PI * 2 * 3.0 + rnd() * 0.25);
+      f.translate(top.x, top.y - (upper ? 0 : 0.08), top.z);
       parts.push(f);
+    }
+    for (let i = 0; i < 7; i++) { // основания черешков под кроной
+      const g = new THREE.ConeGeometry(0.05, 0.32, 6);
+      g.translate(0, 0.16, 0);
+      g.rotateX(0.5 + rnd() * 0.4);
+      g.rotateY((i / 7) * Math.PI * 2);
+      g.translate(top.x, top.y - 0.22, top.z);
+      xb.geo(g, M.bark);
     }
     xb.geo(parts[0], M.bark);
     for (const f of parts.slice(1)) xb.geo(f, M.frond);
@@ -901,6 +983,21 @@ export function build(THREE, opts = {}) {
     const tA = swing > 0 ? face : face - width, tB = swing > 0 ? face + width : face;
     put(ah, ah + th, y0 + 0.01, y0 + h - 0.03, tA, tB);
     if (along === 'x') solid(ah, ah + th, y0, y0 + h, tA, tB); else solid(tA, tB, y0, y0 + h, ah, ah + th);
+    // ручки-рычаги с обеих сторон створки у свободного края
+    const tf = swing > 0 ? tB - 0.07 : tA + 0.07, dir = swing > 0 ? -1 : 1, hy = y0 + 1.0;
+    const metal = (aa0, aa1, yy0, yy1, tt0, tt1) => (along === 'x' ? ib.box(aa0, aa1, yy0, yy1, Math.min(tt0, tt1), Math.max(tt0, tt1), MI.chrome)
+      : ib.box(Math.min(tt0, tt1), Math.max(tt0, tt1), yy0, yy1, aa0, aa1, MI.chrome));
+    for (const [s0, s1] of [[ah - 0.055, ah], [ah + th, ah + th + 0.055]]) {
+      const o = s0 < ah ? s0 : s1 - 0.012;
+      metal(s0 < ah ? ah - 0.008 : ah + th, s0 < ah ? ah : ah + th + 0.008, hy - 0.035, hy + 0.035, tf - 0.025, tf + 0.025);
+      metal(Math.min(o, o + 0.012), Math.max(o, o + 0.012), hy - 0.01, hy + 0.01, tf, tf + dir * 0.13);
+      metal(s0 < ah ? ah - 0.05 : ah + th, s0 < ah ? ah : ah + th + 0.05, hy - 0.009, hy + 0.009, tf - 0.009, tf + 0.009);
+    }
+    // выключатель у проёма со стороны, противоположной петлям, на обеих гранях стены
+    const sa = hinge === 0 ? a1 + 0.2 : a0 - 0.2;
+    for (const [c0, c1] of [[t0 - 0.008, t0], [t1, t1 + 0.008]]) {
+      if (along === 'x') ib.box(sa - 0.045, sa + 0.045, y0 + 1.06, y0 + 1.15, c0, c1, MI.plate); else ib.box(c0, c1, y0 + 1.06, y0 + 1.15, sa - 0.045, sa + 0.045, MI.plate);
+    }
   }
   function partition(s, along, a0, a1, t0, t1, y0, y1, doors = [], h = 2.4) {
     let A = [a0, a1], T = [t0, t1], D = doors;

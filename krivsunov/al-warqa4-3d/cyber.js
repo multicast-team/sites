@@ -52,6 +52,28 @@ export function build(kit, opts = {}) {
     leaf: new THREE.MeshStandardMaterial({ color: 0x1f3d2a, roughness: 0.55 })
   };
   for (const m of [C.glossy, C.red, C.rubber, C.glass, C.leaf]) m.userData.room = 'gf';
+  Object.assign(C, {
+    curtain: pbr('fabric_grey', 0.45, { color: 0x3b3448, side: THREE.DoubleSide }, { normal: 0.9 }),
+    curtainLight: pbr('fabric_grey', 0.45, { color: 0xb9b2a8, side: THREE.DoubleSide }, { normal: 0.9 }),
+    towel: Object.assign(new THREE.MeshStandardMaterial({ color: 0xece8e0, roughness: 0.95, normalMap: tex('carpet_dark', 0.2)?.normal || null, normalScale: new THREE.Vector2(1.3, 1.3) }), { userData: { room: 'gf' } }),
+    velvet: pbr('fabric_grey', 0.3, { color: 0x6a3590 }, { normal: 0.9 }),
+    velvetTeal: pbr('fabric_grey', 0.3, { color: 0x1f6f7a }, { normal: 0.9 }),
+    sheet: pbr('fabric_grey', 0.35, { color: 0xe8e4dc }, { normal: 0.6 })
+  });
+  for (const k of ['curtain', 'curtainLight']) C[k].userData.keepUV = true;
+  const duvetMat = new Map(); // одеяло — тонкая драпировка, видна с обеих сторон
+  const duvetOf = (m) => {
+    if (!duvetMat.has(m)) { const d = m.clone(); d.side = THREE.DoubleSide; d.userData = { ...m.userData, keepUV: true }; duvetMat.set(m, d); }
+    return duvetMat.get(m);
+  };
+  // снаружи: без комнатного зонда отражений — у бассейна отражается небо
+  const outdoor = (m) => { delete m.userData.room; return m; };
+  const CX = {
+    frame: outdoor(new THREE.MeshStandardMaterial({ color: 0x1c1d21, roughness: 0.35, metalness: 0.7 })),
+    cushion: outdoor(pbr('fabric_grey', 0.5, { color: 0x2d3038 }, { normal: 0.9 })),
+    canopy: outdoor(pbr('fabric_grey', 0.8, { color: 0xd8d0c2, side: THREE.DoubleSide }, { normal: 0.6 })),
+    towel: outdoor(pbr('carpet_dark', 0.3, { color: 0x30c6d4 }, { normal: 1.0 }))
+  };
   C.glass.userData.noCast = true;
   const neonMat = (color, intensity = 5) => {
     const m = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: color, emissiveIntensity: intensity, roughness: 0.4 });
@@ -305,8 +327,18 @@ export function build(kit, opts = {}) {
     put(W - 0.24, 0.22, L - 0.12, 0, 0.19, L / 2 + 0.06, C.black, 0.02);
     put(W - 0.4, 0.012, L - 0.4, 0, 0.045, L / 2 + 0.1, glow, 0.005);
     put(W - 0.08, 0.22, L - 0.1, 0, 0.42, L / 2 + 0.05, C.fabricDark, 0.06);
-    put(W + 0.04, 0.08, L - 0.6, 0, 0.56, L / 2 + 0.28, duvet, 0.04);
-    for (const s of W > 1.6 ? [-1, 1] : [0]) put(W > 1.6 ? 0.72 : 0.78, 0.16, 0.2, s * 0.42, 0.6, 0.32, C.fabric, 0.07);
+    drape(hx, hz, ry, W - 0.04, 0.62, L - 0.06, 0.545, 0.24, duvet);
+    put(W + 0.02, 0.05, 0.2, 0, 0.565, 0.68, C.sheet, 0.025);              // отогнутый край одеяла
+    drape(hx, hz, ry, W - 0.02, L - 0.58, L - 0.12, 0.565, 0.2, glow === N.cyan ? C.velvet : C.velvetTeal, 0.004, false); // плед поперёк
+    const pw = W > 1.6 ? 0.7 : 0.8;
+    for (const s of W > 1.6 ? [-1, 1] : [0]) {
+      const [px, pz] = at2(s * 0.42, 0.33);
+      pillow(pw, 0.17, 0.42, px, F + 0.66, pz, ry, C.sheet, 0.42);
+    }
+    for (const [s, m] of [[-1, C.velvet], [1, C.velvetTeal]]) {
+      const [px, pz] = at2(s * 0.24, 0.52);
+      pillow(0.42, 0.13, 0.42, px, F + 0.68, pz, ry + s * 0.18, m, 0.5);
+    }
     put(W + 0.5, 1.05, 0.1, 0, 0.95, 0.05, head, 0.04);
     put(W + 0.6, 0.03, 0.012, 0, 1.53, 0.012, neon, 0.004);
     const a = at2(-W / 2, 0), c = at2(W / 2, L);
@@ -336,6 +368,93 @@ export function build(kit, opts = {}) {
     solid(x - 0.27, x + 0.27, F, F + 0.6, z - 0.27, z + 0.27);
   }
   function wallNeonLine(pts, mat, r = 0.012) { tube(pts, r, mat, 64); }
+  // подушка: сверхэллипсоид — плоские бока, толстая середина, тонкие края
+  function pillow(w, h, d, x, y, z, ry, mat, rx = 0) {
+    const g = new THREE.SphereGeometry(1, 28, 16);
+    const p = g.attributes.position, f = (v, e) => Math.sign(v) * Math.pow(Math.abs(v), e);
+    for (let i = 0; i < p.count; i++) {
+      const X = f(p.getX(i), 0.3), Z = f(p.getZ(i), 0.3), edge = Math.max(Math.abs(X), Math.abs(Z));
+      p.setXYZ(i, X * w / 2, f(p.getY(i), 0.85) * h / 2 * (1 - 0.55 * edge ** 4), Z * d / 2);
+    }
+    g.computeVertexNormals();
+    if (rx) g.rotateX(rx);
+    g.rotateY(ry);
+    g.translate(x, y, z);
+    b.geo(g, mat);
+  }
+  // драпировка поверх кровати: ровный верх с лёгкими складками, края скругляются и свисают;
+  // (hx, hz) — середина изголовья, ry — как у bed(), v0..v1 — от изголовья, hang — свес по бокам и в ногах
+  function drape(hx, hz, ry, W, v0, v1, top, hang, mat, amp = 0.007, foot = true) {
+    const P = rot(hx, hz, ry), r = 0.05, su = 2 + Math.ceil((W + 2 * hang) / 0.05), sv = 2 + Math.ceil((v1 - v0 + hang) / 0.05);
+    const g = new THREE.PlaneGeometry(1, 1, su, sv);
+    const pos = g.attributes.position, uv = g.attributes.uv;
+    const bend = (e) => (e <= 0 ? [0, 0] : e < r * Math.PI / 2 ? [r * Math.sin(e / r), r * (1 - Math.cos(e / r))] : [r, r + e - r * Math.PI / 2]);
+    for (let i = 0; i < pos.count; i++) {
+      const a = (pos.getX(i) + 0.5) * (W + 2 * hang) - W / 2 - hang, c = (0.5 - pos.getY(i)) * (v1 - v0 + (foot ? hang : 0)) + v0;
+      const [du, dyu] = bend(Math.abs(a) - W / 2), [dv, dyv] = foot ? bend(c - v1) : [0, 0];
+      const u = Math.sign(a) * (Math.min(Math.abs(a), W / 2) + du), v = Math.min(c, v1) + dv;
+      const flat = 1 - Math.min(1, (dyu + dyv) / 0.03);
+      const y = top - dyu - dyv + flat * amp * (Math.sin(a * 9 + 1.3) * Math.sin(c * 7 + 0.4) + 0.45 * Math.sin(a * 21 + c * 15))
+        - (1 - flat) * 0.012 * Math.sin(c * 31 + a * 4);
+      const [x, z] = P(u, v);
+      pos.setXYZ(i, x, F + y, z);
+      uv.setXY(i, a, c);
+    }
+    g.computeVertexNormals();
+    b.geo(g, duvetOf(mat));
+  }
+  // штора со складками в проёме окна: along — вдоль какой оси идёт окно, at — положение по другой оси
+  function curtain(along, a0, a1, at, y0, y1, mat = C.curtain) {
+    const w = a1 - a0, folds = Math.max(3, Math.round(w / 0.1));
+    const g = new THREE.PlaneGeometry(1, 1, folds * 6, 8);
+    const pos = g.attributes.position, uv = g.attributes.uv;
+    for (let i = 0; i < pos.count; i++) {
+      const u = pos.getX(i) + 0.5, v = pos.getY(i) + 0.5;
+      const off = Math.sin(u * folds * Math.PI * 2) * 0.028 * (0.75 + 0.25 * v) + Math.sin(u * 37 + v * 2) * 0.004;
+      const a = a0 + u * w, y = y0 + v * (y1 - y0);
+      if (along === 'x') pos.setXYZ(i, a, y, at + off); else pos.setXYZ(i, at + off, y, a);
+      uv.setXY(i, a * 1.6, y);
+    }
+    g.computeVertexNormals();
+    b.geo(g, mat);
+  }
+  function curtains(along, a0, a1, at, y0, y1, mat = C.curtain, panel = 0.5) { // пара штор по краям окна и карниз
+    curtain(along, a0, a0 + panel, at, y0, y1 - 0.02, mat);
+    curtain(along, a1 - panel, a1, at, y0, y1 - 0.02, mat);
+    if (along === 'x') box(a0, a1, y1 - 0.02, y1, at - 0.012, at + 0.012, C.black); else box(at - 0.012, at + 0.012, y1 - 0.02, y1, a0, a1, C.black);
+  }
+  // полотенцесушитель и полотенце на стене: axis/at/n — стена как у vanityGlow, u — середина
+  function towel(axis, at0, n, u, floor, mat = C.towel) {
+    const v = (a) => at0 + n * a, w = (a, c) => [Math.min(v(a), v(c)), Math.max(v(a), v(c))];
+    const [b0, b1] = w(0.055, 0.075), [t0, t1] = w(0.045, 0.085), y = floor + 1.42;
+    if (axis === 'x') { box(u - 0.3, u + 0.3, y - 0.01, y + 0.01, b0, b1, MI.chrome); rbox(0.44, 0.62, Math.abs(t1 - t0), 0.015, u, y - 0.3, (t0 + t1) / 2, mat); }
+    else { box(b0, b1, y - 0.01, y + 0.01, u - 0.3, u + 0.3, MI.chrome); rbox(Math.abs(t1 - t0), 0.62, 0.44, 0.015, (t0 + t1) / 2, y - 0.3, u, mat); }
+  }
+  // шезлонг у бассейна: рама, матрас, приподнятая спинка, подсветка снизу; ry — куда смотрят ноги
+  function lounger(x, z, ry) {
+    const P = rot(x, z, ry);
+    const put = (w, h, d, u, y, v, m, r = 0.03, rx = 0) => { const [px, pz] = P(u, v); rbox(w, h, d, r, px, y, pz, m, ry, rx); };
+    put(0.72, 0.05, 1.95, 0, 0.31, 0, CX.frame, 0.02);
+    for (const [u, vv] of [[-0.31, -0.86], [0.31, -0.86], [-0.31, 0.86], [0.31, 0.86]]) { const [lx, lz] = P(u, vv); cyl(0.022, 0.022, 0.29, lx, 0.175, lz, CX.frame, 8); }
+    put(0.68, 0.08, 1.22, 0, 0.375, 0.34, CX.cushion, 0.035);
+    put(0.68, 0.08, 0.74, 0, 0.6, -0.6, CX.cushion, 0.035, 0.62);
+    put(0.64, 0.05, 0.12, 0, 0.36, -0.95, CX.frame, 0.02);
+    put(0.6, 0.012, 1.8, 0, 0.27, 0, N.cyan, 0.005);
+    const e = [P(-0.38, -1.0), P(0.38, 1.0)];
+    solid(e[0][0], e[1][0], 0, 0.9, e[0][1], e[1][1]);
+  }
+  function umbrella(x, z, open = 1.35) {
+    cyl(0.024, 0.024, 2.32, x, 1.16, z, CX.frame, 10);
+    cyl(0.28, 0.3, 0.07, x, 0.035, z, CX.frame, 24);
+    const canopy = new THREE.ConeGeometry(open, 0.42, 8, 1, true);
+    canopy.translate(x, 2.32, z);
+    b.geo(canopy, CX.canopy);
+    const valance = new THREE.CylinderGeometry(open, open, 0.09, 8, 1, true);
+    valance.translate(x, 2.07, z);
+    b.geo(valance, CX.canopy);
+    for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2; tube([[x, 2.5, z], [x + Math.cos(a) * open * 0.55, 2.33, z + Math.sin(a) * open * 0.55], [x + Math.cos(a) * open, 2.1, z + Math.sin(a) * open]], 0.008, CX.frame, 8); }
+    solid(x - 0.3, x + 0.3, 0, 2.3, z - 0.3, z + 0.3);
+  }
 
   // ===================== 1-й ЭТАЖ =====================
   at(F0);
@@ -432,7 +551,6 @@ export function build(kit, opts = {}) {
     eggChair(-5.25, -1.35, 0.9 + Math.PI);
     neonLamp(-11.3, -6.35, 1.9, N.cyan);
     neonLamp(-11.3, 0.1, 1.9, N.pink);
-    plant(-6.1, -6.35, 1.5);
     // неоновая волна и надпись на стене у холла
     const wx = -4.27;
     wallNeonLine([[wx, F + 2.0, 0.3], [wx, F + 2.5, -0.3], [wx, F + 2.1, -0.9], [wx, F + 2.7, -1.5], [wx, F + 2.25, -2.2]], N.cyan, 0.014);
@@ -451,7 +569,6 @@ export function build(kit, opts = {}) {
     tube([[tx - 1.55, F + 0.802, tz + 0.1], [tx - 0.6, F + 0.802, tz - 0.15], [tx + 0.4, F + 0.802, tz + 0.12], [tx + 1.55, F + 0.802, tz - 0.08]], 0.02, N.cyan, 60);
     for (const s of [-1, 1]) rbox(0.08, 0.72, 0.9, 0.02, tx + s * 1.2, F + 0.37, tz, C.black);
     solid(tx - 1.6, tx + 1.6, F, F + 0.8, tz - 0.55, tz + 0.55);
-    for (const x of [7.4, 8.2, 9.0, 9.8]) { chair(x, tz - 0.78, 0, C.tuftedRed); chair(x, tz + 0.78, Math.PI, C.tuftedRed); }
     torus(1.05, 0.03, tx, F + 2.55, tz, N.pink);
     torus(0.7, 0.02, tx, F + 2.7, tz, N.violet);
     for (let i = 0; i < 3; i++) { const a = (i / 3) * Math.PI * 2; cyl(0.004, 0.004, 1.65, tx + Math.cos(a) * 1.05, F + 3.38, tz + Math.sin(a) * 1.05, C.black, 4); }
@@ -536,6 +653,11 @@ export function build(kit, opts = {}) {
     light('mezz', 3.0, F + 1.4, -4.95, 0x00e5ff, 8, 5);
     light('mezz', 0, F + 0.4, -2.8, 0x00e5ff, 7, 5);
     light('mezz', 1.5, F + 1.2, -5.25, 0x33e0ff, 6, 4);
+    // постамент под мраморным бюстом (модель Poly Haven) в конце правой галереи
+    rbox(0.38, 1.05, 0.38, 0.02, 3.05, F + 0.525, 3.75, C.glossy);
+    box(2.86, 3.24, F + 1.035, F + 1.045, 3.56, 3.94, N.cyan);
+    solid(2.84, 3.26, F, F + 1.75, 3.54, 3.96);
+    light('foyer', 2.7, F + 2.3, 3.4, 0xdff3ff, 5, 3);
   }
 
   // ----- спальня хозяина (правое крыло, у бассейна) -----
@@ -644,6 +766,27 @@ export function build(kit, opts = {}) {
     light('bed4', -5.5, F + 0.2, 3.4, 0x8a3bff, 6, 4);
   }
 
+  // ----- шторы: светлый лён внизу, плотный бархат в спальнях -----
+  curtains('x', -11.6, -4.4, -6.86, F0 + 0.06, CG - 0.02, C.curtainLight, 0.6);
+  curtains('x', 4.4, 11.6, -6.86, F0 + 0.06, CG - 0.02, C.curtainLight, 0.6);
+  curtains('z', -3.6, 0.3, -11.87, 1.4, 4.2, C.curtainLight, 0.45);
+  curtains('z', -3.6, 0.3, 11.87, 1.4, 4.2, C.curtainLight, 0.45);
+  curtains('x', -11.2, -8.8, 5.87, 1.35, 4.35, C.curtain, 0.45);
+  curtains('x', 4.6, 10.6, -6.5, 5.6, 8.5, C.curtain, 0.55);
+  curtains('x', -10.6, -4.6, -6.5, 5.6, 8.5, C.curtain, 0.55);
+  curtains('x', -10.5, -5.3, 5.5, 5.75, 8.35, C.curtain, 0.5);
+  curtain('x', 5.3, 5.8, 5.5, 5.75, 8.33, C.curtain);
+  curtain('x', 8.6, 9.1, 5.5, 5.75, 8.33, C.curtain);
+  box(5.3, 9.12, 8.33, 8.35, 5.488, 5.512, C.black);
+
+  // ----- полотенца в санузлах -----
+  towel('x', 3.0, 1, 7.85, F0);
+  towel('z', -6.1, -1, 3.35, F0);
+  towel('z', LZ, 1, -1.1, F1);
+  towel('z', 10.75, -1, 1.85, F1);
+  towel('z', -LZ, -1, -1.15, F1);
+  towel('z', -LZ, -1, 3.05, F1);
+
   // ----- санузлы: подсветка под тумбами и за зеркалами -----
   const vanityGlow = (axis, at0, n, u0, u1, floor, color) => {
     const v = (a) => at0 + n * a, w = (a, c) => [Math.min(v(a), v(c)), Math.max(v(a), v(c))];
@@ -660,6 +803,14 @@ export function build(kit, opts = {}) {
   vanityGlow('z', 10.75, -1, 2.3, 3.5, F1, N.pink);
   vanityGlow('z', -LZ, -1, -3.0, -1.6, F1, N.violet);
   vanityGlow('z', -LZ, -1, 1.2, 2.6, F1, N.cyan);
+
+  // ----- у бассейна: четыре шезлонга и два зонта, полотенца на шезлонгах -----
+  at(0.03);
+  for (const x of [-1.3, -0.2, 4.3, 5.4]) lounger(x, -14.7, 0);
+  umbrella(-0.75, -15.1, 1.2); // купол не заходит за заднюю ограду (z = -16,35)
+  umbrella(4.85, -15.1, 1.2);
+  for (const x of [-0.2, 4.3]) rbox(0.5, 0.03, 0.7, 0.012, x, 0.43, -14.15, CX.towel);
+  at(F0);
 
   // ----- снаружи: неон по борту бассейна, номер дома (видно вечером) -----
   const poolNeon = neonMat(0xff2bd6, 0);

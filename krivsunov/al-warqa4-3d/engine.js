@@ -1,6 +1,8 @@
 // Движок полной 3D-визуализации виллы: HDRI-небо и солнце по нему, мягкие тени, постобработка
 // (затенение GTAO, свечение неона, тонмаппинг), пул цветного света по комнатам, зонды отражений в доме,
 // режимы: обзор, пролёт по дому, прогулка от первого лица. Качество: ultra / high / medium.
+// Мебель и декор: процедурная обстановка (cyber.js) и модели Poly Haven (props.js, models/*.glb); на «ультра»
+// после первого кадра догружаются HD-текстуры (tex2k/: стены, камень и земля в 2K, мраморные полы в 4K).
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -11,6 +13,8 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { Walker } from './walk.js';
 
 export const QUALITY = {
@@ -29,6 +33,9 @@ export const TIMES = {
 const TEXTURES = ['plaster', 'concrete_white', 'travertine', 'pavers', 'deck', 'asphalt', 'sand', 'grass', 'pool', 'gravel', 'bark', 'metal_black',
   'bath_stone', 'wall_paint', 'oak', 'walnut', 'leather_black', 'leather_tufted', 'carpet_dark', 'metal_brushed', 'diamond', 'concrete_dark',
   'plastic_black', 'fabric_grey', 'wood_dark', 'floor_cream', 'floor_taupe'];
+// HD-набор (max/assets_pc.py --hd): тот же раскрой, большее разрешение
+const HD_TEXTURES = ['plaster', 'concrete_white', 'travertine', 'pavers', 'deck', 'asphalt', 'sand', 'grass', 'pool', 'bath_stone',
+  'wall_paint', 'concrete_dark', 'floor_cream', 'floor_taupe'];
 
 // Маршрут пролёта: сплайн через точки камеры и сплайн через точки взгляда с тем же параметром.
 function makeTour(stops) {
@@ -107,7 +114,7 @@ function sunFromHDR(texture) {
 }
 
 export async function createEngine(container, opts) {
-  const { villaModule, cyberModule, onProgress = () => {}, onTour = () => {}, onWalk = () => {}, onRoom = () => {} } = opts;
+  const { villaModule, cyberModule, propsModule, onProgress = () => {}, onTour = () => {}, onWalk = () => {}, onRoom = () => {} } = opts;
   let qualityName = opts.quality || 'ultra';
   let Q = QUALITY[qualityName];
   const renderer = new THREE.WebGLRenderer({ antialias: false, powerPreference: 'high-performance', preserveDrawingBuffer: !!opts.preserveDrawingBuffer });
@@ -138,10 +145,16 @@ export async function createEngine(container, opts) {
   const hdrCache = {};
   const loadHDR = (url) => hdrCache[url] || (hdrCache[url] = new Promise((resolve, reject) => rgbe.load(url, resolve, undefined, reject)));
   const firstHDR = loadHDR(TIMES[opts.time || 'day'].hdr);
+  // модели грузятся вместе с текстурами — одна полоса загрузки; ставятся после сборки дома
+  const gltfLoader = new GLTFLoader(manager).setMeshoptDecoder(MeshoptDecoder);
+  const propModels = {};
+  const propsLoading = cyberModule && propsModule ? Promise.all([...new Set(propsModule.PROPS.map((p) => p.id))].map((id) =>
+    gltfLoader.loadAsync(`models/${id}.glb`).then((g) => { propModels[id] = g; }, () => {}))) : Promise.resolve();
   await Promise.all(TEXTURES.map(async (name) => {
     const [map, normal, orm] = await Promise.all([loadTex(`tex/${name}_c.webp`, true), loadTex(`tex/${name}_n.webp`, false), loadTex(`tex/${name}_orm.webp`, false)]);
     base[name] = { map, normal, orm };
   }));
+  const clones = {}; // копии базовых текстур по материалам: им HD-набор подменяет источник картинки
   function tex(name, mpt, rotate = 0) {
     const b = base[name];
     if (!b || !b.map) return null;
@@ -153,8 +166,27 @@ export async function createEngine(container, opts) {
       t.rotation = rotate;
       t.needsUpdate = true;
       out[key] = t;
+      ((clones[name] ||= {})[key] ||= []).push(t);
     }
     return out;
+  }
+  let hdDone = null;
+  function upgradeTextures() { // по одной текстуре, без общего индикатора загрузки
+    if (hdDone) return hdDone;
+    const loader = new THREE.TextureLoader();
+    hdDone = (async () => {
+      let n = 0;
+      for (const name of HD_TEXTURES) for (const [key, suffix] of [['map', 'c'], ['normal', 'n'], ['orm', 'orm']]) {
+        if (!clones[name]?.[key]) continue;
+        const t = await loader.loadAsync(`tex2k/${name}_${suffix}.webp`).catch(() => null);
+        if (!t) continue;
+        // другой размер картинки: старое неизменяемое хранилище текстуры освобождается, иначе WebGL не примет кадр
+        for (const c of clones[name][key]) { c.dispose(); c.source = t.source; c.needsUpdate = true; }
+        n++;
+      }
+      return n;
+    })();
+    return hdDone;
   }
 
   // ---------- сцена ----------
@@ -173,6 +205,8 @@ export async function createEngine(container, opts) {
   const cyber = cyberModule ? cyberModule.build(villa.kit, { tex }) : null;
   scene.add(villa.root);
   if (cyber) scene.add(cyber.group);
+  await propsLoading;
+  const propsCount = cyber && propsModule ? propsModule.place(THREE, propModels, cyber.group, cyber.phys) : 0;
   const prepare = (root) => root.traverse((node) => {
     if (node.isMesh) {
       node.castShadow = !node.userData.noCast;
@@ -181,6 +215,17 @@ export async function createEngine(container, opts) {
   });
   prepare(villa.root);
   if (cyber) prepare(cyber.group);
+  const thinGrass = () => villa.root.traverse((node) => { if (node.userData.grass) node.count = qualityName === 'medium' ? Math.floor(node.userData.grass / 3) : node.userData.grass; });
+  thinGrass();
+  const triangles = () => { // треугольники сцены (копии травинок — по числу копий)
+    let n = 0;
+    scene.traverse((node) => {
+      if (!node.isMesh || !node.geometry) return;
+      const g = node.geometry, t = (g.index ? g.index.count : g.attributes.position.count) / 3;
+      n += node.isInstancedMesh ? t * node.count : t;
+    });
+    return Math.round(n);
+  };
 
   // зонды отражений в доме: кубическая съёмка из холла 1-го этажа и малой гостиной 2-го
   const probes = {};
@@ -527,6 +572,8 @@ export async function createEngine(container, opts) {
   buildComposer();
   resize();
   setView('start', true);
+  // таймер, а не кадр анимации: в фоновой вкладке кадры не идут, а догрузка нужна и проверочным снимкам
+  const hdReady = new Promise((resolve) => setTimeout(() => resolve(qualityName === 'ultra' && opts.hd !== false ? upgradeTextures() : 0), 0));
 
   const anims = villa.anim.concat(cyber ? cyber.anim : []);
   let running = true, last = performance.now(), clock = 0, frames = 0;
@@ -602,8 +649,10 @@ export async function createEngine(container, opts) {
       buildPool();
       buildComposer();
       resize();
+      thinGrass();
       assignPool(true);
       captureProbes();
+      if (name === 'ultra' && opts.hd !== false) upgradeTextures();
     },
     setAutoRotate(on) { if (on) { tour?.stop(); walker.stop(); } controls.autoRotate = !!on; },
     get autoRotate() { return controls.autoRotate; },
@@ -625,7 +674,8 @@ export async function createEngine(container, opts) {
       render(0);
     },
     get frames() { return frames; },
-    info() { return { hdr: scene.background?.userData?.stats, calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries }; },
+    hdReady,
+    info() { return { props: propsCount, sceneTriangles: triangles(), hdr: scene.background?.userData?.stats, calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries }; },
     dispose() {
       running = false;
       observer.disconnect();

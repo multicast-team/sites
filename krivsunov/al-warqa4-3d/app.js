@@ -2,6 +2,7 @@
 import { createEngine, QUALITY, TIMES } from './engine.js';
 import * as villaModule from './villa.js';
 import * as cyberModule from './cyber.js';
+import * as propsModule from './props.js';
 
 const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -45,7 +46,7 @@ async function main() {
     if (prog !== null) progress.firstElementChild.style.width = `${Math.round(prog * 100)}%`;
   };
   const engine = await createEngine($('stage'), {
-    villaModule, cyberModule, quality, time, furniture,
+    villaModule, cyberModule, propsModule, quality, time, furniture,
     onProgress: (k, url) => {
       bar.style.width = `${Math.round(k * 100)}%`;
       text.textContent = url ? decodeURIComponent(url.split('/').pop()) : '';
