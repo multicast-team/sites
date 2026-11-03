@@ -658,3 +658,20 @@ dialog::backdrop { background: #1c221ca8; backdrop-filter: blur(4px); }
 .sat-dialog-empty { padding: 18px; border-radius: 10px; background: var(--soft); }
 .sat-dialog-notes { margin: 10px 0; }
 .sat-dialog-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 6px; }
+
+/* 3D-модель виллы */
+.model3d-button { border-color: #2b4a3c; background: #2b4a3c; }
+.model3d-button::after { background: linear-gradient(90deg, #10241ae6 0%, #10241a99 45%, #10241a1f 100%); }
+.model3d-button.is-empty { background: #2b4a3c; border-color: #2b4a3c; }
+.model3d-dialog { max-width: 1240px; }
+.model3d-stage { position: relative; height: min(70dvh, 640px); margin: 0 16px; border-radius: 12px; overflow: hidden; background: #dfe7ee; touch-action: none; }
+.model3d-status { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 16px; text-align: center; color: #3b4a55; font-weight: 600; }
+.model3d-bar { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 16px 2px; }
+.model3d-bar .button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.model3d-note { margin: 0; padding: 6px 16px 0; }
+.model3d-dialog > .model3d-note:last-child { padding-bottom: 16px; }
+@media (max-width: 720px) {
+  .model3d-stage { height: 60dvh; margin: 0 8px; }
+  .model3d-bar { padding: 8px 8px 2px; }
+  .model3d-note { padding: 6px 8px 0; }
+}

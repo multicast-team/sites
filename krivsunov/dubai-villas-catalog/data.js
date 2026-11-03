@@ -542,7 +542,12 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой изогнутый бассейн ~10–12×4–5 м за гостиной",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "model3d": {
+        "module": "villa3d/war4_6br_tayyab_pdf.js",
+        "poster": "villa3d/war4_6br_tayyab_pdf.webp",
+        "note": "Модель собрана по 35 фото брошюры и 30 фото объявления dubizzle: форма дома, бассейн, двор, ограда, парковка и улицы углового участка. Поэтажного плана нет, поэтому размеры приблизительные (±1–2 м), а помещения внутри не показаны."
+      }
     },
     {
       "id": "damac_hills_samantha_1558",

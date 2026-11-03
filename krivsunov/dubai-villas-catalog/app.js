@@ -806,6 +806,11 @@
       poolLabel: text(item.poolLabel) || 'Без своего бассейна',
       viewedDefault: !!item.viewedDefault,
       rentDefault: !!item.rentDefault,
+      model3d: object(item.model3d) && /^villa3d\/[a-z0-9_-]+\.js$/i.test(text(item.model3d.module)) ? {
+        module: text(item.model3d.module),
+        poster: /^villa3d\/[a-z0-9_-]+\.webp$/i.test(text(item.model3d.poster)) ? text(item.model3d.poster) : '',
+        note: text(item.model3d.note)
+      } : null,
       cover,
       images: pictures,
       videos,
@@ -1275,6 +1280,83 @@
     close.focus({ preventScroll: true });
   }
 
+  // --- 3D-модель виллы: three.js и модуль модели грузятся только по кнопке ---
+  const MODEL3D_VIEWS = { start: 'Общий вид', street: 'С улицы', back: 'Сзади', pool: 'У бассейна', top: 'Сверху' };
+
+  function model3dButton(property, className = '') {
+    const button = el('button', `sat-big-button model3d-button ${className}`.trim());
+    button.type = 'button';
+    button.setAttribute('aria-haspopup', 'dialog');
+    button.setAttribute('aria-label', `3D-модель: ${property.title}`);
+    if (property.model3d.poster) {
+      const img = el('img');
+      img.src = property.model3d.poster; img.loading = 'lazy'; img.decoding = 'async'; img.alt = '';
+      button.append(img);
+    } else button.classList.add('is-empty');
+    const textBox = el('span', 'sat-big-text');
+    textBox.append(el('span', 'sat-big-label', '🧊 3D-МОДЕЛЬ'), el('span', 'sat-big-sub', 'дом и участок — покрутить'));
+    button.append(textBox);
+    button.addEventListener('click', (event) => { event.stopPropagation(); openModel3d(property, button); });
+    return button;
+  }
+
+  function openModel3d(property, opener) {
+    if (galleryDialog) galleryDialog.close();
+    const dialog = el('dialog', 'gallery-dialog model3d-dialog');
+    galleryDialog = dialog;
+    dialog.setAttribute('aria-labelledby', 'model3d-title');
+    const top = el('div', 'dialog-top');
+    const heading = el('h2', 'gallery-title', `3D-модель · ${property.title}`);
+    heading.id = 'model3d-title';
+    const close = el('button', 'close-button', '✕');
+    close.type = 'button';
+    close.setAttribute('aria-label', 'Закрыть');
+    top.append(heading, close);
+    const stage = el('div', 'model3d-stage');
+    const status = el('p', 'model3d-status', 'Загружаю 3D-модель…');
+    stage.append(status);
+    const bar = el('div', 'model3d-bar');
+    const note = el('p', 'aside-note model3d-note', property.model3d.note || 'Модель приблизительная, по фото.');
+    const hint = el('p', 'aside-note model3d-note', 'Вращать — мышью или пальцем, приближать — колесом или щипком, сдвигать — правой кнопкой или двумя пальцами.');
+    let viewer = null;
+    close.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => {
+      if (viewer) viewer.dispose();
+      viewer = null;
+      dialog.remove();
+      if (galleryDialog === dialog) galleryDialog = null;
+      syncDialogScroll();
+      if (opener && opener.isConnected) opener.focus({ preventScroll: true });
+    });
+    dialog.append(top, stage, bar, note, hint);
+    document.body.append(dialog);
+    dialog.showModal();
+    syncDialogScroll();
+    close.focus({ preventScroll: true });
+    Promise.all([import('./villa3d/viewer.js'), import(`./${property.model3d.module}`)]).then(([lib, model]) => {
+      if (!dialog.open) return;
+      status.remove();
+      viewer = lib.mount(stage, model.build);
+      for (const name of viewer.views) {
+        const button = el('button', 'button button-quiet', MODEL3D_VIEWS[name] || name);
+        button.type = 'button';
+        button.addEventListener('click', () => viewer.setView(name));
+        bar.append(button);
+      }
+      const spin = el('button', 'button button-quiet', '⟳ Вращение');
+      spin.type = 'button';
+      spin.setAttribute('aria-pressed', 'false');
+      spin.addEventListener('click', () => {
+        viewer.setAutoRotate(!viewer.autoRotate);
+        spin.setAttribute('aria-pressed', String(viewer.autoRotate));
+      });
+      bar.append(spin);
+    }).catch((error) => {
+      status.textContent = `3D-модель не загрузилась (${error.message}). Нужен браузер с поддержкой WebGL.`;
+    });
+  }
+
   function card(property, index) {
     const article = el('article', `property-card is-${property.status}`);
     article.dataset.id = property.id;
@@ -1306,7 +1388,9 @@
     if (property.caveats.length) main.append(el('p', 'caveat', property.caveats[0] + (property.caveats.length > 1 ? ` · ещё ${property.caveats.length - 1} в карточке` : '')));
     const actions = el('div', 'card-actions');
     actions.append(openButton('Подробнее', property, 'button card-open'), quickLinks(property));
-    main.append(satButton(property), actions, cardSocial(property), brokerBlock(property));
+    main.append(satButton(property));
+    if (property.model3d) main.append(model3dButton(property));
+    main.append(actions, cardSocial(property), brokerBlock(property));
     article.append(cover(property, index < 3), main, noteBlock(property));
     return article;
   }
@@ -1420,6 +1504,7 @@
     const toggleCard = el('div', 'aside-card');
     toggleCard.append(el('p', 'aside-label', 'Ваши отметки (видны всем)'), decisionToggles(property));
     aside.append(toggleCard, satButton(property, 'sat-big-detail'));
+    if (property.model3d) aside.append(model3dButton(property, 'sat-big-detail'));
 
     const priceCard = el('div', 'aside-card');
     priceCard.append(priceBlock(property, true));
