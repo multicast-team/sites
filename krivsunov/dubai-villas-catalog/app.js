@@ -1272,7 +1272,7 @@
       button.setAttribute('aria-label', `Открыть ${kind.toLowerCase()} ${index + 1} из ${property.media.length}: ${item.caption || property.title}`);
       button.append(mediaPreview(item, item.caption || property.title, index === 0, index > 0));
       const rest = property.media.length - shown.length;
-      if (item.dh) button.append(el('span', 'mosaic-dh', '☀ второй свет'));
+      if (item.dh) button.append(el('span', 'mosaic-dh', '☀ двусветный объём'));
       if (index === shown.length - 1 && rest > 0) button.append(el('span', 'mosaic-more', `+${rest}`));
       button.addEventListener('click', () => openGallery(property, index, button));
       wrap.append(button);
@@ -2202,7 +2202,7 @@
       bar.append(chip);
     };
     make('', 'Все', property.media.length, () => true);
-    if (dh) make('dh', '☀ Второй свет', dh, (item) => item.dh);
+    if (dh) make('dh', '☀ Двусветный объём', dh, (item) => item.dh);
     if (counts.video) make('video', 'Видео', counts.video, (item) => item.type === 'video');
     for (const [key, label] of Object.entries(CATEGORY_LABELS)) {
       if (counts[key]) make(key, label, counts[key], (item) => item.type !== 'video' && item.cat === key);
