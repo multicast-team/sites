@@ -1174,6 +1174,7 @@
       title,
       decisionToggles(property, article),
       meta,
+      agentContactLine(property),
       sourceOriginLine(property),
       specifications(property),
       featureChips(property),
