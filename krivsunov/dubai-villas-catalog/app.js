@@ -1007,8 +1007,8 @@
     if (property.ceilingEstimateNote) ceilingChip.title = property.ceilingEstimateNote;
     wrap.append(ceilingChip);
 
-    const dhClass = property.doubleHeight === 'no' ? 'chip-double-no' : 'chip-double-yes';
-    const dhPrefix = property.doubleHeight === 'no' ? '' : '☀ ';
+    const dhClass = property.doubleHeight === 'no' || property.doubleHeight === 'unknown' ? 'chip-double-no' : 'chip-double-yes';
+    const dhPrefix = property.doubleHeight === 'no' || property.doubleHeight === 'unknown' ? '' : '☀ ';
     const dhChip = el('span', `feature-chip ${dhClass}`, `${dhPrefix}${property.doubleHeightLabel}`);
     if (property.ceilingEstimateNote) dhChip.title = property.ceilingEstimateNote;
     wrap.append(dhChip);
@@ -1351,13 +1351,18 @@
     if (property.ceilingEstimateNote || property.projectType) {
       const ceilingSec = el('section', 'detail-section is-ceiling-box');
       ceilingSec.append(
-        el('h3', '', 'Высота потолков, второй свет и видовые характеристики (по проекту и фото)'),
+        el('h3', '', 'Высота потолков и второй свет'),
+        el('p', 'ceiling-headline', `Потолки: ${property.ceiling}. ${property.doubleHeightLabel}.`),
         el('p', '', [
-          property.projectType ? `Проект / серия: ${property.projectType}.` : '',
           property.ceilingEstimateNote,
-          `Второй свет: ${property.doubleHeightLabel}. Вид: ${property.waterViewLabel}. Бассейн: ${property.poolLabel}.`
+          `Вид: ${property.waterViewLabel}. Бассейн: ${property.poolLabel}.`
         ].filter(Boolean).join('\n'))
       );
+      if (property.ceilingSources && property.ceilingSources.length) {
+        const list = el('ul', 'ceiling-sources');
+        property.ceilingSources.forEach((s) => list.append(el('li', '', s)));
+        ceilingSec.append(el('p', 'aside-label', 'Источники'), list, el('p', 'aside-note', 'Застройщики высоту потолков не публикуют. Цифры — оценка по фото (двери, кухонные пеналы, ярусы окон), слова агентов и ваши отзывы. Норма Dubai Building Code — не меньше 2,7 м в жилых комнатах. Точно — только рулеткой на просмотре.'));
+      }
       mainCol.append(ceilingSec);
     }
 
@@ -1457,7 +1462,7 @@
     if (!ceilingFilter) return true;
     const h = property.ceilingHeightM;
     const maxH = property.ceilingMaxM;
-    if (ceilingFilter === 'high') return h >= 3.1 || maxH >= 4.0 || property.doubleHeight !== 'no';
+    if (ceilingFilter === 'high') return h >= 3.1 || maxH >= 4.0 || property.doubleHeight === 'yes';
     if (ceilingFilter === '3.2+') return h >= 3.18;
     if (ceilingFilter === '3.0+') return h >= 3.0;
     if (ceilingFilter === 'double-5.5+') return maxH >= 5.5;
@@ -1476,7 +1481,7 @@
 
   function matchesDoubleHeightFilter(property, dhFilter) {
     if (!dhFilter) return true;
-    if (dhFilter === 'any-yes') return property.doubleHeight !== 'no';
+    if (dhFilter === 'any-yes') return property.doubleHeight !== 'no' && property.doubleHeight !== 'unknown';
     return property.doubleHeight === dhFilter;
   }
 
@@ -1580,6 +1585,7 @@
     property.houseType = text(extra.houseType);
     property.typeNote = text(extra.typeNote);
     property.originMin = null;
+    applyCeilingResearch(property, extra.ceilings);
     const photos = object(extra.photos) ? extra.photos : {};
     property.media = property.media.map((item) => {
       const info = photos[item.type === 'video' ? item.poster : item.src];
@@ -1595,6 +1601,31 @@
       if (number(property.bathrooms) === null && /^\d+$/.test(String(listing.bathrooms || ''))) property.bathrooms = Number(listing.bathrooms);
     }
     property.search += ` ${[property.houseType, property.typeNote].filter(Boolean).join(' ').toLocaleLowerCase('ru-RU')}`;
+  }
+
+  function applyCeilingResearch(property, c) {
+    if (!object(c)) return;
+    const range = (r) => (Array.isArray(r) && r.length === 2 ? `${String(r[0]).replace('.', ',')}–${String(r[1]).replace('.', ',')} м` : '');
+    const mid = (r) => (Array.isArray(r) && r.length === 2 ? Math.round(((r[0] + r[1]) / 2) * 100) / 100 : null);
+    const parts = [];
+    if (range(c.typical)) parts.push(`комнаты ~${range(c.typical)}`);
+    if (range(c.living) && c.dh !== 'yes') parts.push(`гостиная ~${range(c.living)}`);
+    property.ceiling = parts.join(' · ') || 'нет данных';
+    property.ceilingHeightM = mid(c.typical) || mid(c.living) || 0;
+    property.ceilingMaxM = Math.max(0, ...[c.typical, c.living, c.dhHeight].filter(Array.isArray).map((r) => r[1]));
+    const dh = range(c.dhHeight) ? ` ~${range(c.dhHeight)}` : '';
+    const labels = { yes: `Двусветная гостиная${dh}`, hall: `Двусветный зал-холл${dh}`, foyer: `Двусвет только у лестницы/входа${dh}`, no: 'Без второго света', unknown: 'Второй свет: не установлено' };
+    property.doubleHeight = c.dh === 'hall' ? 'yes' : (['yes', 'foyer', 'no', 'unknown'].includes(c.dh) ? c.dh : 'unknown');
+    property.doubleHeightLabel = labels[c.dh] || labels.unknown;
+    const conf = { high: 'высокая', medium: 'средняя', low: 'низкая' }[c.confidence] || 'низкая';
+    property.ceilingEstimateNote = `${text(c.note)} Основание: ${text(c.basis)}. Уверенность: ${conf}.`;
+    property.ceilingSources = strings(c.sources);
+    property.ceilingConfidence = conf;
+    property.search += ` ${property.ceiling} ${property.doubleHeightLabel}`.toLocaleLowerCase('ru-RU');
+    const crit = property.criteria = object(property.criteria) ? { ...property.criteria } : {};
+    if (Array.isArray(c.typical) && c.typical[0] >= 2.6) crit.ceiling = ['yes', `оценка по фото ~${range(c.typical)}`];
+    if (c.dh === 'yes' || c.dh === 'hall') crit.doubleHeight = ['yes', property.doubleHeightLabel];
+    else if (c.dh === 'foyer' || c.dh === 'no') crit.doubleHeight = ['no', c.dh === 'foyer' ? 'двусвет только у лестницы/входа, зал одноэтажный' : 'по фото двусвета нет'];
   }
 
   statusTabs.push(['changed', 'Новое']);
@@ -2403,12 +2434,12 @@
     const viewedCount = properties.filter((p) => getPropertyToggle(p).viewed).length;
     const rentCount = properties.filter((p) => getPropertyToggle(p).rent).length;
     const waterCount = properties.filter((p) => p.waterView === 'yes').length;
-    const dhCount = properties.filter((p) => p.doubleHeight !== 'no').length;
+    const dhCount = properties.filter((p) => p.doubleHeight === 'yes').length;
     const items = [
       ['Объектов', String(properties.length)],
       ['✓ Смотрели', String(viewedCount)],
       ['★ Снимаем', String(rentCount)],
-      ['Второй свет', String(dhCount)],
+      ['Двусветный зал', String(dhCount)],
       ['У воды/озера', String(waterCount)]
     ];
     for (const [label, value] of items) {

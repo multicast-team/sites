@@ -598,3 +598,5 @@ dialog::backdrop { background: #1c221ca8; backdrop-filter: blur(4px); }
 .filters-toggle[aria-expanded="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
 .crit-more { padding: 2px 7px; border-radius: 7px; font-size: 11.5px; color: #8a8c84; background: #f0eee7; }
 .detail-map, .map-canvas { position: relative; z-index: 0; isolation: isolate; }
+.ceiling-headline { font-weight: 650; }
+.ceiling-sources { margin: 4px 0 6px; padding-left: 18px; font-size: 13.5px; color: #4e554b; }
