@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Тач-лаборатория · AI-стол</title>
+<style>
+@font-face { font-family: "Forum"; src: url("fonts/font-forum.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya"; src: url("fonts/font-alegreya.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Alegreya SC"; font-weight: 700; src: url("fonts/font-alegreya-sc-bold.woff2") format("woff2"); font-display: swap; }
+
+:root {
+  --bg: #0B0907; --surface: #15100B; --surface-deep: #1D150E;
+  --bronze-lo: #6B4E2A; --bronze-hi: #A67C43; --bronze: #8A6535;
+  --gold: #E0B25C; --gold-hi: #F5D58A; --gold-lo: #9A6A22;
+  --ink: #EFE3C8; --ink-2: #B7A585;
+  --enemy: #B8453A; --dmg: #FF5A43; --heal: #5FCF7A; --magic: #5AA9FF; --off: #5A5048;
+  --parch: #2A1F15; --parch-hi: #3A2C1E;
+  --g-gold-text: linear-gradient(180deg, #FFF0C2 0%, #F5D58A 35%, #E0B25C 60%, #A8771F 100%);
+  --g-parch: radial-gradient(130% 120% at 30% 20%, #3E2F20 0%, #2A1F15 55%, #1C140C 100%);
+  --f-title: "Forum", "Alegreya", Georgia, serif;
+  --f-label: "Alegreya SC", "Alegreya", Georgia, serif;
+  --f-text: "Alegreya", Georgia, serif;
+  --f-mono: ui-monospace, "DejaVu Sans Mono", Consolas, monospace;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; }
+@media (min-width: 1600px) { html { font-size: 18px; } }
+@media (min-width: 2400px) { html { font-size: 24px; } }
+@media (max-width: 700px) { html { font-size: 12px; } }
+
+html, body {
+  margin: 0; padding: 0; width: 100%; height: 100%; height: 100dvh;
+  overflow: hidden; background: var(--bg); color: var(--ink);
+  font-family: var(--f-text);
+  touch-action: none; overscroll-behavior: none;
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none; -webkit-text-size-adjust: 100%;
+  position: fixed; inset: 0;
+}
+#cv { position: fixed; inset: 0; width: 100vw; width: 100dvw; height: 100dvh; display: block; touch-action: none; }
+
+/* ---------- HUD ---------- */
+#ui {
+  position: fixed; inset: 0; pointer-events: none; padding: .7rem; gap: .7rem;
+  display: grid; overflow: hidden;
+  grid-template-columns: minmax(0, 36rem) 1fr minmax(0, 33rem);
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas: "count . right" "diag . right" ". . right" "btn . right";
+}
+#ui > * { min-width: 0; min-height: 0; }
+.panel {
+  background: linear-gradient(180deg, rgba(29,21,14,.86), rgba(15,11,7,.86));
+  border: 1px solid var(--bronze); border-radius: .7rem; padding: .6rem .8rem;
+  box-shadow: 0 .6rem 1.6rem rgba(0,0,0,.55), inset 0 1px 0 rgba(255,230,180,.08);
+  overflow: hidden;
+}
+h1 { margin: 0; font: 400 1.9rem/1.1 var(--f-title); letter-spacing: .08em; text-transform: uppercase;
+     background: var(--g-gold-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+h1 small { display: block; font: 400 .85rem var(--f-text); letter-spacing: .04em; color: var(--ink-2); text-transform: none; -webkit-text-fill-color: var(--ink-2); }
+h2 { margin: 0 0 .3rem; font: 400 1.05rem var(--f-title); letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
+.lab { font: 700 .8rem var(--f-label); letter-spacing: .06em; color: var(--ink-2); text-transform: uppercase; }
+.num { font: 700 1em var(--f-label); font-variant-numeric: tabular-nums; }
+
+#p-count { grid-area: count; }
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: .5rem; }
+.card { background: var(--g-parch); border: 1px solid var(--bronze-lo); border-radius: .5rem; padding: .35rem .6rem; }
+.pair { display: flex; align-items: flex-end; gap: 1rem; }
+.pair > div { display: flex; flex-direction: column; }
+.pair b { font: 700 3.4rem/1 var(--f-label); font-variant-numeric: tabular-nums;
+  background: var(--g-gold-text); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.pair .mx b { background: none; color: var(--ink); -webkit-text-fill-color: var(--ink); }
+.pair i { font: italic .85rem var(--f-text); color: var(--ink-2); }
+.card.sm { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+.card.sm b { font: 700 1.6rem var(--f-label); color: var(--gold-hi); font-variant-numeric: tabular-nums; }
+.card.sm b.warn { color: var(--dmg); }
+.env { margin: .5rem 0 0; display: grid; grid-template-columns: auto 1fr; gap: .1rem .7rem; font-size: .95rem; }
+.env dt { color: var(--ink-2); font: 700 .8rem var(--f-label); text-transform: uppercase; letter-spacing: .05em; align-self: center; }
+.env dd { margin: 0; font-variant-numeric: tabular-nums; }
+.env dd.ua { font-size: .75rem; line-height: 1.15; color: var(--ink-2); overflow: hidden; max-height: 2.3em; word-break: break-all; }
+
+#p-diag { grid-area: diag; display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; pointer-events: none; }
+#p-diag label { font: 700 .9rem var(--f-label); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); pointer-events: auto; }
+#diag { pointer-events: auto; width: 6.2rem; height: 3rem; min-height: 48px; font: 700 1.6rem var(--f-label); text-align: center;
+  color: var(--gold-hi); background: var(--bg); border: 2px solid var(--bronze-hi); border-radius: .5rem;
+  -webkit-user-select: text; user-select: text; touch-action: manipulation; }
+#diag:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(224,178,92,.3); }
+#scale { font-size: .95rem; color: var(--ink); line-height: 1.25; }
+#scale span { color: var(--ink-2); font-size: .8rem; display: block; }
+
+#right { grid-area: right; display: flex; flex-direction: column; gap: .7rem; min-height: 0; }
+#p-clu { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+#clusters { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: .4rem; }
+.cl { background: var(--g-parch); border-left: 4px solid var(--gold); border-radius: .35rem; padding: .3rem .55rem; font-size: .95rem; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.cl.old { border-left-color: var(--off); opacity: .75; }
+.cl b { font: 700 1.05rem var(--f-label); color: var(--gold-hi); }
+.cl .k { color: var(--ink-2); }
+.empty { color: var(--ink-2); font-style: italic; font-size: .95rem; line-height: 1.3; }
+#pairs { margin-top: .3rem; font-size: .85rem; color: var(--ink-2); font-variant-numeric: tabular-nums; max-height: 2.6em; overflow: hidden; }
+#p-log { flex: 0 0 auto; height: 15.5rem; display: flex; flex-direction: column; }
+#longest { font-size: .85rem; color: var(--ink-2); margin-bottom: .25rem; font-variant-numeric: tabular-nums; line-height: 1.25; max-height: 2.5em; overflow: hidden; }
+#log { flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column-reverse; font: .78rem/1.3 var(--f-mono); }
+#log div { flex: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#log .down { color: var(--heal); } #log .up { color: var(--ink); } #log .cancel { color: var(--dmg); }
+
+#btns { grid-area: btn; display: flex; gap: .6rem; flex-wrap: wrap; pointer-events: none; align-self: end; }
+button { pointer-events: auto; min-height: 48px; min-width: 48px; padding: 0 1.1rem; display: inline-flex; align-items: center; gap: .55rem;
+  font: 700 1.15rem var(--f-label); letter-spacing: .05em; text-transform: uppercase; color: var(--ink);
+  background: linear-gradient(180deg, var(--parch-hi), var(--parch)); border: 2px solid var(--bronze-hi); border-radius: .6rem;
+  touch-action: manipulation; cursor: pointer; }
+button svg { width: 1.5rem; height: 1.5rem; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+button.pri { color: #1b1208; background: linear-gradient(160deg, #7a5418, #F5D58A 35%, #E0B25C 60%, #a8771f); border-color: var(--gold-hi); }
+button:active { filter: brightness(1.25); transform: translateY(1px); }
+button .st { color: var(--gold-hi); }
+
+/* ---------- overlays ---------- */
+.veil { position: fixed; inset: 0; z-index: 10; background: rgba(6,4,2,.9); display: none; align-items: center; justify-content: center; padding: 1rem; pointer-events: auto; }
+.veil.on { display: flex; }
+.sheet { max-width: 70rem; width: 100%; max-height: 100%; background: var(--g-parch); border: 2px solid var(--bronze-hi); border-radius: .9rem; padding: 1.1rem 1.4rem; display: flex; flex-direction: column; gap: .8rem; box-shadow: 0 1.5rem 4rem rgba(0,0,0,.8); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; }
+.step { background: rgba(0,0,0,.28); border: 1px solid var(--bronze-lo); border-radius: .6rem; padding: .7rem .8rem; display: flex; flex-direction: column; gap: .35rem; }
+.step .n { font: 400 2.4rem/1 var(--f-title); color: var(--gold); }
+.step svg { width: 3.4rem; height: 3.4rem; stroke: var(--gold-hi); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.step b { font: 700 1.2rem var(--f-label); text-transform: uppercase; letter-spacing: .05em; color: var(--ink); }
+.step p { margin: 0; font-size: 1.05rem; line-height: 1.3; color: var(--ink-2); }
+.hint { font-size: 1.1rem; color: var(--gold-hi); line-height: 1.3; }
+.row { display: flex; gap: .7rem; flex-wrap: wrap; align-items: center; justify-content: flex-end; }
+#rep { margin: 0; flex: 1 1 auto; min-height: 0; overflow: auto; touch-action: pan-y; -webkit-overflow-scrolling: touch;
+  font: .85rem/1.3 var(--f-mono); color: var(--ink); white-space: pre-wrap; word-break: break-word;
+  background: rgba(0,0,0,.35); border: 1px solid var(--bronze-lo); border-radius: .5rem; padding: .7rem .9rem; column-width: 34rem; column-gap: 1.6rem; }
+#toast { color: var(--heal); font-size: 1.05rem; margin-right: auto; }
+#toast.bad { color: var(--dmg); }
+
+/* ---------- phones / narrow ---------- */
+@media (max-width: 700px) {
+  #ui { padding: .4rem; gap: .4rem; grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr auto auto;
+        grid-template-areas: "count" "diag" "." "right" "btn"; }
+  .panel { padding: .4rem .55rem; }
+  h1 { font-size: 1.5rem; } h1 small { display: none; }
+  .cards { gap: .3rem; margin-top: .3rem; }
+  .pair b { font-size: 2.6rem; } .pair { gap: .6rem; }
+  .card.sm b { font-size: 1.3rem; }
+  .env { margin-top: .3rem; font-size: .85rem; }
+  .panel { background: linear-gradient(180deg, rgba(29,21,14,.95), rgba(15,11,7,.95)); }
+  #p-diag { padding: .3rem .5rem; flex-wrap: nowrap; gap: .5rem; }
+  #p-diag label { font-size: .8rem; }
+  #diag { width: 4.6rem; font-size: 1.4rem; }
+  #scale { font-size: .8rem; } #scale span { display: none; }
+  #right { max-height: 34dvh; gap: .4rem; }
+  #p-log { height: 6.2rem; } #p-log h2 { display: none; }
+  #longest { display: none; }
+  #btns { gap: .4rem; }
+  button { padding: 0 .8rem; font-size: 1rem; }
+  .steps { grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .sheet { padding: .7rem; } .step { padding: .5rem; } .step svg { width: 2.4rem; height: 2.4rem; }
+  .step .n { font-size: 1.8rem; } .step p { font-size: .95rem; }
+  #rep { font-size: .72rem; column-width: auto; }
+}
+@media (max-height: 520px) { #p-log { display: none; } }
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<div id="ui">
+  <section class="panel" id="p-count">
+    <h1>Тач-лаборатория<small>AI-стол · замер, что отдаёт сенсорный экран</small></h1>
+    <div class="cards">
+      <div class="card"><div class="lab">Pointer · сейчас / макс</div>
+        <div class="pair"><div><b id="pNow">0</b><i>сейчас</i></div><div class="mx"><b id="pMax">0</b><i>максимум</i></div></div></div>
+      <div class="card"><div class="lab">Touch · сейчас / макс</div>
+        <div class="pair"><div><b id="tNow">0</b><i>touches.length</i></div><div class="mx"><b id="tMax">0</b><i>максимум</i></div></div></div>
+      <div class="card sm"><span class="lab">maxTouchPoints</span><b id="mtp">–</b></div>
+      <div class="card sm"><span class="lab">pointercancel</span><b id="pcan">0</b></div>
+    </div>
+    <dl class="env">
+      <dt>DPR</dt><dd id="dpr"></dd>
+      <dt>Экран</dt><dd id="scr"></dd>
+      <dt>Окно</dt><dd id="vp"></dd>
+      <dt>UA</dt><dd class="ua" id="ua"></dd>
+    </dl>
+  </section>
+
+  <section class="panel" id="p-diag" data-ui>
+    <label for="diag">Диагональ, дюймов</label>
+    <input id="diag" type="number" inputmode="decimal" min="5" max="150" step="0.1" value="43" autocomplete="off">
+    <div id="scale"></div>
+  </section>
+
+  <div id="right">
+    <section class="panel" id="p-clu">
+      <h2>Кластеры · точки ближе 70 мм</h2>
+      <div id="clusters"></div>
+      <div id="pairs"></div>
+    </section>
+    <section class="panel" id="p-log">
+      <h2>Журнал касаний</h2>
+      <div id="longest"></div>
+      <div id="log"></div>
+    </section>
+  </div>
+
+  <nav id="btns" data-ui>
+    <button id="bReset" data-ui type="button"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v5h5"/></svg>Сброс</button>
+    <button id="bRep" data-ui type="button" class="pri"><svg viewBox="0 0 24 24"><rect x="7" y="4" width="11" height="16" rx="2"/><path d="M4 8v11a2 2 0 0 0 2 2h8"/><path d="M10 9h5M10 13h5"/></svg>Отчёт</button>
+    <button id="bHelp" data-ui type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.6M12 17h.01"/></svg>Справка</button>
+    <button id="bFree" data-ui type="button"><svg viewBox="0 0 24 24"><path d="M8 13V6a1.5 1.5 0 0 1 3 0v5M11 11V4.5a1.5 1.5 0 0 1 3 0V11M14 11V6a1.5 1.5 0 0 1 3 0v8c0 4-2.5 6-5.5 6S7 18 6 15l-1.5-3a1.4 1.4 0 0 1 2.3-1.5L8 12"/></svg>Без руки: <span class="st" id="freeSt">?</span></button>
+  </nav>
+</div>
+
+<!-- первая справка -->
+<div class="veil" id="help" data-ui>
+  <div class="sheet" data-ui>
+    <h1>Как провести замер<small>4 шага, примерно 2 минуты</small></h1>
+    <div class="steps" data-ui>
+      <div class="step" data-ui><div class="n">1</div>
+        <svg viewBox="0 0 48 48"><path d="M10 26V12a2 2 0 0 1 4 0v10M14 22V8a2 2 0 0 1 4 0v14M18 22V9a2 2 0 0 1 4 0v14M22 23V12a2 2 0 0 1 4 0v18c0 6-4 10-9 10-4 0-7-3-9-7l-3-6a2 2 0 0 1 3.4-2L10 26"/></svg>
+        <b>Все пальцы</b><p>Прижмите к экрану сразу все пальцы обеих рук. Счётчик «максимум» покажет, сколько точек видит экран.</p></div>
+      <div class="step" data-ui><div class="n">2</div>
+        <svg viewBox="0 0 48 48"><circle cx="24" cy="12" r="6"/><path d="M14 40l3-18h14l3 18z"/><circle cx="18" cy="40" r="1.6"/><circle cx="30" cy="40" r="1.6"/><circle cx="24" cy="36" r="1.6"/></svg>
+        <b>Фишка в руке</b><p>Поставьте фишку на экран, держите её рукой 5 секунд. Должно появиться 3–4 кольца рядом, в «Кластерах» их расстояния в мм.</p></div>
+      <div class="step" data-ui><div class="n">3</div>
+        <svg viewBox="0 0 48 48"><circle cx="24" cy="14" r="6"/><path d="M14 42l3-18h14l3 18z"/><path d="M6 12l8 0M42 12l-8 0M24 2v0" stroke-dasharray="2 4"/></svg>
+        <b>Отпустите</b><p>Уберите руку, фишку оставьте стоять. Если кольца остались, фишка видна без руки. Нажмите «Без руки» и отметьте: видна или нет.</p></div>
+      <div class="step" data-ui><div class="n">4</div>
+        <svg viewBox="0 0 48 48"><rect x="13" y="6" width="22" height="30" rx="3"/><path d="M8 14v26a2 2 0 0 0 2 2h18M19 16h10M19 23h10M19 30h6"/></svg>
+        <b>Отчёт</b><p>Нажмите «Отчёт». Текст скопируется сам и откроется на экране. Сфотографируйте его или вставьте в сообщение.</p></div>
+    </div>
+    <div class="hint">Поставьте фишку, держите, потом отпустите руку. Если точки остались, фишка видна без руки. В поле «Диагональ» введите размер экрана в дюймах.</div>
+    <div class="row"><button type="button" id="bGo" data-ui class="pri"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>Понятно</button></div>
+  </div>
+</div>
+
+<!-- лист отчёта -->
+<div class="veil" id="repv" data-ui>
+  <div class="sheet" data-ui>
+    <h1>Отчёт<small>можно сфотографировать экран или вставить текст в сообщение</small></h1>
+    <pre id="rep" data-ui></pre>
+    <div class="row" data-ui>
+      <span id="toast"></span>
+      <button type="button" id="bCopy" data-ui class="pri"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>Копия</button>
+      <button type="button" id="bClose" data-ui><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+'use strict';
+
+/* ================= утилиты ================= */
+var $ = function (id) { return document.getElementById(id); };
+var cv = $('cv'), ctx = cv.getContext('2d');
+var CLUSTER_MM = 70;
+var COLORS = ['#F0A838', '#4FB8FF', '#3FD68A', '#B366FF', '#FF6A3D', '#F4E6B8', '#FF5A43', '#5AA9FF', '#E0B25C', '#5FCF7A'];
+var now = function () { return performance.now(); };
+var isUI = function (el) { return !!(el && el.closest && el.closest('[data-ui]')); };
+var fmt = function (v, d) { return (Math.round(v * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d); };
+var sec = function (ms) { return fmt(ms / 1000, 1); };
+var esc = function (s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); };
+
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+/* ================= состояние ================= */
+var T0 = now();
+var S;
+function freshState() {
+  return {
+    maxP: 0, maxT: 0, downs: 0, tDowns: 0, pcancel: 0, tcancel: 0,
+    ended: [],          // завершённые касания: {id, kind, dur, still, end}
+    log: [],            // строки журнала
+    types: {},          // pointerType -> count
+    maxW: 0, maxH: 0, maxRx: 0, maxRy: 0, maxForce: 0,
+    pMin: null, pMax: null, fMin: null,
+    hist: [],           // история кластеров
+    histSig: '',
+    maxAt: 0, maxTAt: 0,
+    startedAt: new Date()
+  };
+}
+S = freshState();
+var ptr = {};   // pointerId -> запись
+var tch = {};   // touch identifier -> запись
+var colorIdx = 0;
+var freeState = 0;   // 0 неизвестно, 1 видна, 2 не видна
+var diagIn = parseFloat(lsGet('touchlab.diag')) || 43;
+
+/* ================= масштаб мм ================= */
+function scrSize() {
+  var w = (screen && screen.width) || window.innerWidth, h = (screen && screen.height) || window.innerHeight;
+  return { w: w || window.innerWidth, h: h || window.innerHeight };
+}
+function mmPerPx() {
+  var s = scrSize(), d = parseFloat($('diag').value);
+  if (!(d > 0)) d = diagIn;
+  return d * 25.4 / Math.hypot(s.w, s.h);
+}
+function diagVal() { var d = parseFloat($('diag').value); return d > 0 ? d : diagIn; }
+
+/* ================= журнал ================= */
+function logAdd(cls, text) {
+  var t = (now() - T0) / 1000;
+  S.log.push({ cls: cls, text: 't+' + fmt(t, 1).padStart(6, ' ') + ' ' + text });
+  if (S.log.length > 80) S.log.shift();
+}
+
+/* ================= Pointer Events ================= */
+function onPointerDown(e) {
+  if (isUI(e.target)) return;
+  var k = mmPerPx(), t = now();
+  var r = {
+    id: e.pointerId, type: e.pointerType || '?', x: e.clientX, y: e.clientY, w: e.width, h: e.height,
+    p: e.pressure, t0: t, ax: e.clientX, ay: e.clientY, aT: t, still: 0,
+    color: COLORS[colorIdx++ % COLORS.length]
+  };
+  ptr[e.pointerId] = r;
+  S.downs++; S.types[r.type] = (S.types[r.type] || 0) + 1;
+  statSize(r.w, r.h, r.p);
+  var n = Object.keys(ptr).length;
+  if (n > S.maxP) { S.maxP = n; S.maxAt = t; }
+  logAdd('down', 'P#' + r.id + ' вниз  ' + r.type + ' ' + Math.round(r.x) + ',' + Math.round(r.y) + ' px  ' + fmt(r.x * k, 0) + ',' + fmt(r.y * k, 0) + ' мм  (' + n + ')');
+  snapshotClusters();
+  dirty = true; renderDom();
+}
+function onPointerMove(e) {
+  var r = ptr[e.pointerId]; if (!r) return;
+  var t = now();
+  r.x = e.clientX; r.y = e.clientY; r.w = e.width; r.h = e.height; r.p = e.pressure;
+  if (Math.hypot(r.x - r.ax, r.y - r.ay) > 4) { r.ax = r.x; r.ay = r.y; r.aT = t; }
+  statSize(r.w, r.h, r.p);
+  dirty = true;
+}
+function onPointerEnd(e) {
+  var r = ptr[e.pointerId]; if (!r) return;
+  var cancel = e.type === 'pointercancel', t = now();
+  var dur = t - r.t0, still = Math.max(r.still, t - r.aT);
+  delete ptr[e.pointerId];
+  if (cancel) S.pcancel++;
+  S.ended.push({ id: 'P#' + r.id, dur: dur, still: still, end: cancel ? 'cancel' : 'up' });
+  logAdd(cancel ? 'cancel' : 'up', 'P#' + r.id + (cancel ? ' CANCEL' : ' вверх ') + ' жил ' + sec(dur) + ' с, без движения ' + sec(still) + ' с  (' + Object.keys(ptr).length + ')');
+  snapshotClusters();
+  dirty = true; renderDom();
+}
+function statSize(w, h, p) {
+  if (w > S.maxW) S.maxW = w;
+  if (h > S.maxH) S.maxH = h;
+  if (typeof p === 'number') {
+    if (S.pMin === null || p < S.pMin) S.pMin = p;
+    if (S.pMax === null || p > S.pMax) S.pMax = p;
+  }
+}
+
+/* ================= Touch Events ================= */
+function onTouch(e) {
+  var seen = {}, t = now(), k = mmPerPx(), ui = isUI(e.target);
+  // только касания, начатые не на кнопках
+  for (var i = 0; i < e.touches.length; i++) {
+    var tc = e.touches[i];
+    if (isUI(tc.target)) continue;
+    var id = tc.identifier; seen[id] = true;
+    var r = tch[id];
+    var rx = tc.radiusX || 0, ry = tc.radiusY || 0, f = tc.force || 0;
+    if (!r) {
+      r = tch[id] = { id: id, x: tc.clientX, y: tc.clientY, rx: rx, ry: ry, f: f, t0: t, ax: tc.clientX, ay: tc.clientY, aT: t };
+      S.tDowns++;
+      logAdd('down', 'T#' + id + ' вниз  ' + Math.round(r.x) + ',' + Math.round(r.y) + ' px  r=' + fmt(rx, 1) + '×' + fmt(ry, 1) + ' f=' + fmt(f, 2));
+    } else {
+      r.x = tc.clientX; r.y = tc.clientY; r.rx = rx; r.ry = ry; r.f = f;
+      if (Math.hypot(r.x - r.ax, r.y - r.ay) > 4) { r.ax = r.x; r.ay = r.y; r.aT = t; }
+    }
+    if (rx > S.maxRx) S.maxRx = rx;
+    if (ry > S.maxRy) S.maxRy = ry;
+    if (f > S.maxForce) S.maxForce = f;
+  }
+  var cancel = e.type === 'touchcancel';
+  Object.keys(tch).forEach(function (id) {
+    if (seen[id]) return;
+    var r = tch[id]; delete tch[id];
+    if (cancel) S.tcancel++;
+    S.ended.push({ id: 'T#' + id, dur: t - r.t0, still: Math.max(0, t - r.aT), end: cancel ? 'cancel' : 'up' });
+    logAdd(cancel ? 'cancel' : 'up', 'T#' + id + (cancel ? ' CANCEL' : ' вверх ') + ' жил ' + sec(t - r.t0) + ' с');
+  });
+  var n = Object.keys(tch).length;
+  if (n > S.maxT) { S.maxT = n; S.maxTAt = t; }
+  if (!ui && e.cancelable && !(e.type === 'touchend' && false)) {
+    // не мешаем кнопкам: preventDefault только вне UI
+    if (e.type === 'touchstart' || e.type === 'touchmove') e.preventDefault();
+  }
+  dirty = true; renderDom();
+}
+
+/* ================= кластеры ================= */
+function activePoints() {
+  var a = [], id;
+  for (id in ptr) a.push({ id: 'P#' + id, x: ptr[id].x, y: ptr[id].y, color: ptr[id].color });
+  if (!a.length) for (id in tch) a.push({ id: 'T#' + id, x: tch[id].x, y: tch[id].y, color: '#E0B25C' });
+  return a;
+}
+function clusterize(pts) {
+  var k = mmPerPx(), n = pts.length, par = pts.map(function (_, i) { return i; });
+  function f(i) { while (par[i] !== i) { par[i] = par[par[i]]; i = par[i]; } return i; }
+  for (var i = 0; i < n; i++) for (var j = i + 1; j < n; j++)
+    if (Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y) * k < CLUSTER_MM) par[f(i)] = f(j);
+  var groups = {};
+  pts.forEach(function (p, i) { (groups[f(i)] = groups[f(i)] || []).push(p); });
+  var out = [], singles = 0;
+  Object.keys(groups).forEach(function (g) {
+    var m = groups[g];
+    if (m.length < 2) { singles++; return; }
+    out.push(describe(m, k));
+  });
+  out.sort(function (a, b) { return a.cx - b.cx; });
+  out.forEach(function (c, i) { c.n = i + 1; });
+  return { clusters: out, singles: singles };
+}
+function describe(m, k) {
+  var cx = 0, cy = 0; m.forEach(function (p) { cx += p.x; cy += p.y; }); cx /= m.length; cy /= m.length;
+  var o = m.slice().sort(function (a, b) { return Math.atan2(a.y - cy, a.x - cx) - Math.atan2(b.y - cy, b.x - cx); });
+  var N = o.length, sides = [], angles = [], diags = [], all = [];
+  function d(a, b) { return Math.hypot(a.x - b.x, a.y - b.y) * k; }
+  for (var i = 0; i < N; i++) for (var j = i + 1; j < N; j++) all.push(d(o[i], o[j]));
+  if (N === 2) { sides = [d(o[0], o[1])]; }
+  else {
+    for (i = 0; i < N; i++) {
+      var a = o[i], b = o[(i + 1) % N], p = o[(i + N - 1) % N];
+      sides.push(d(a, b));
+      var v1x = p.x - a.x, v1y = p.y - a.y, v2x = b.x - a.x, v2y = b.y - a.y;
+      var cos = (v1x * v2x + v1y * v2y) / (Math.hypot(v1x, v1y) * Math.hypot(v2x, v2y) || 1);
+      angles.push(Math.acos(Math.max(-1, Math.min(1, cos))) * 180 / Math.PI);
+    }
+    if (N === 4) diags = [d(o[0], o[2]), d(o[1], o[3])];
+  }
+  // ориентация по самой длинной стороне
+  var ang = null;
+  if (N >= 2) {
+    var best = -1, bi = 0;
+    for (i = 0; i < sides.length; i++) if (sides[i] > best) { best = sides[i]; bi = i; }
+    var A = o[bi], B = o[(bi + 1) % N];
+    ang = (Math.atan2(B.y - A.y, B.x - A.x) * 180 / Math.PI + 360) % 180;
+  }
+  var sorted = all.slice().sort(function (a, b) { return a - b; });
+  return { pts: o, ids: o.map(function (p) { return p.id; }), N: N, cx: cx, cy: cy, sides: sides, angles: angles, diags: diags, all: sorted, axis: ang, k: k };
+}
+function sigOf(cs) { return cs.map(function (c) { return c.N + ':' + c.all.map(function (v) { return Math.round(v / 2) * 2; }).join(','); }).join('|'); }
+function snapshotClusters() {
+  var r = clusterize(activePoints());
+  if (!r.clusters.length) return;
+  var sig = sigOf(r.clusters);
+  if (sig === S.histSig) return;
+  S.histSig = sig;
+  S.hist.push({ t: now(), clusters: r.clusters });
+  if (S.hist.length > 6) S.hist.shift();
+}
+function clText(c) {
+  var s = c.N + ' ' + plural(c.N, 'точка', 'точки', 'точек') + ' (' + c.ids.join(' ') + ')';
+  s += '; центр ' + fmt(c.cx * c.k, 0) + ',' + fmt(c.cy * c.k, 0) + ' мм';
+  if (c.N === 2) s += '; расстояние ' + fmt(c.sides[0], 1) + ' мм';
+  else {
+    s += '; стороны ' + c.sides.map(function (v) { return fmt(v, 1); }).join(' / ') + ' мм';
+    s += '; углы ' + c.angles.map(function (v) { return fmt(v, 0); }).join(' / ') + '°';
+    if (c.diags.length) s += '; диагонали ' + c.diags.map(function (v) { return fmt(v, 1); }).join(' / ') + ' мм';
+    else if (c.N > 4) s += '; макс. расстояние ' + fmt(c.all[c.all.length - 1], 1) + ' мм';
+  }
+  if (c.axis !== null && c.N >= 3) s += '; ось ' + fmt(c.axis, 0) + '°';
+  return s;
+}
+function plural(n, a, b, c) { var m = n % 100; if (m > 10 && m < 15) return c; m = n % 10; return m === 1 ? a : (m >= 2 && m <= 4 ? b : c); }
+
+/* ================= самые долгие ================= */
+function longest() {
+  var t = now(), arr = S.ended.map(function (e) { return { id: e.id, dur: e.dur, still: e.still, live: false }; });
+  Object.keys(ptr).forEach(function (id) { var r = ptr[id]; arr.push({ id: 'P#' + id, dur: t - r.t0, still: Math.max(r.still, t - r.aT), live: true }); });
+  Object.keys(tch).forEach(function (id) { var r = tch[id]; arr.push({ id: 'T#' + id, dur: t - r.t0, still: Math.max(0, t - r.aT), live: true }); });
+  arr.sort(function (a, b) { return b.dur - a.dur; });
+  return arr;
+}
+
+/* ================= DOM ================= */
+function renderDom() {
+  var P = Object.keys(ptr).length, Tn = Object.keys(tch).length;
+  $('pNow').textContent = P; $('pMax').textContent = S.maxP;
+  $('tNow').textContent = Tn; $('tMax').textContent = S.maxT;
+  $('pcan').textContent = S.pcancel; $('pcan').className = S.pcancel ? 'warn' : '';
+  $('mtp').textContent = (typeof navigator.maxTouchPoints === 'number') ? navigator.maxTouchPoints : 'нет';
+  var s = scrSize();
+  $('dpr').textContent = fmt(window.devicePixelRatio || 1, 2);
+  $('scr').textContent = s.w + '×' + s.h + ' css px (' + Math.round(s.w * (window.devicePixelRatio || 1)) + '×' + Math.round(s.h * (window.devicePixelRatio || 1)) + ' физ.)';
+  $('vp').textContent = window.innerWidth + '×' + window.innerHeight + ' css px';
+  $('ua').textContent = navigator.userAgent;
+  var k = mmPerPx();
+  $('scale').innerHTML = '1 мм = ' + fmt(1 / k, 2) + ' px &nbsp;·&nbsp; 1 px = ' + fmt(k, 3) + ' мм<span>' + fmt(diagVal() * 25.4, 0) + ' мм по диагонали, пропорции ' + s.w + ':' + s.h + '</span>';
+  $('freeSt').textContent = ['?', 'видна', 'нет'][freeState];
+
+  // кластеры
+  var r = clusterize(activePoints()), html = '';
+  if (r.clusters.length) {
+    r.clusters.forEach(function (c) {
+      html += '<div class="cl"><b>Кластер ' + c.n + '</b> · ' + c.N + ' ' + plural(c.N, 'точка', 'точки', 'точек') + ' <span class="k">' + c.ids.join(' ') + '</span><br>' +
+        (c.N === 2 ? 'расстояние <b>' + fmt(c.sides[0], 1) + ' мм</b>' :
+          'стороны <b>' + c.sides.map(function (v) { return fmt(v, 1); }).join(' / ') + ' мм</b><br>углы <b>' + c.angles.map(function (v) { return fmt(v, 0); }).join('° / ') + '°</b>' +
+          (c.diags.length ? '<br>диагонали ' + c.diags.map(function (v) { return fmt(v, 1); }).join(' / ') + ' мм' : '')) + '</div>';
+    });
+    if (r.singles) html += '<div class="empty">Одиночных точек: ' + r.singles + '</div>';
+  } else if (S.hist.length) {
+    var h = S.hist[S.hist.length - 1];
+    html += '<div class="empty">Сейчас кластеров нет' + (P + Tn ? ' (' + (P || Tn) + ' ' + plural(P || Tn, 'точка', 'точки', 'точек') + ', дальше 70 мм друг от друга)' : '') + '. Последний:</div>';
+    h.clusters.forEach(function (c) { html += '<div class="cl old"><b>Кластер ' + c.n + '</b> · ' + c.N + ' т.<br>' + (c.N === 2 ? fmt(c.sides[0], 1) + ' мм' : c.sides.map(function (v) { return fmt(v, 1); }).join(' / ') + ' мм · ' + c.angles.map(function (v) { return fmt(v, 0); }).join('° / ') + '°') + '</div>'; });
+  } else {
+    html = '<div class="empty">Поставьте фишку с 3–4 ножками (или 3 пальца рядом, 20–30 мм). Здесь появятся стороны и углы в мм.</div>';
+  }
+  $('clusters').innerHTML = html;
+
+  // пары
+  var pts = activePoints(), pairs = [];
+  for (var i = 0; i < pts.length; i++) for (var j = i + 1; j < pts.length; j++)
+    pairs.push({ s: pts[i].id + '–' + pts[j].id, d: Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y) * k });
+  pairs.sort(function (a, b) { return a.d - b.d; });
+  $('pairs').textContent = pairs.length ? 'Ближайшие пары: ' + pairs.slice(0, 8).map(function (p) { return p.s + ' ' + fmt(p.d, 1) + ' мм'; }).join(' · ') : '';
+
+  // долгие
+  var L = longest().slice(0, 4);
+  $('longest').textContent = L.length ? 'Дольше всех: ' + L.map(function (l) { return l.id + ' ' + sec(l.dur) + ' с' + (l.live ? '▸' : '') + ' (без движения ' + sec(l.still) + ')'; }).join(' · ') : 'Дольше всех: пока нет';
+
+  // журнал: показываем последние строки, CSS обрезает по высоте
+  var lg = '';
+  for (i = S.log.length - 1; i >= Math.max(0, S.log.length - 30); i--) lg += '<div class="' + S.log[i].cls + '">' + esc(S.log[i].text) + '</div>';
+  $('log').innerHTML = lg;
+  // порядок column-reverse: первая строка внизу, поэтому кладём новые первыми — внизу самые новые
+}
+
+/* ================= рисование ================= */
+function matchTouch(r) {
+  var best = null, bd = 8;
+  Object.keys(tch).forEach(function (id) { var d = Math.hypot(tch[id].x - r.x, tch[id].y - r.y); if (d < bd) { bd = d; best = tch[id]; } });
+  return best;
+}
+var dirty = true, W = 0, H = 0, DPR = 1;
+function resize() {
+  DPR = window.devicePixelRatio || 1; W = window.innerWidth; H = window.innerHeight;
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  dirty = true; renderDom();
+}
+function draw() {
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  var k = mmPerPx(), px = 1 / k;
+  // фон
+  var g = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, Math.max(W, H) * .7);
+  g.addColorStop(0, '#1D150E'); g.addColorStop(1, '#0B0907');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  // сетка 10 мм (слабая) и 50 мм (ярче)
+  function grid(stepMm, alpha) {
+    var step = stepMm * px; if (step < 6) return;
+    ctx.strokeStyle = 'rgba(166,124,67,' + alpha + ')'; ctx.lineWidth = 1; ctx.beginPath();
+    for (var x = 0; x <= W; x += step) { ctx.moveTo(Math.round(x) + .5, 0); ctx.lineTo(Math.round(x) + .5, H); }
+    for (var y = 0; y <= H; y += step) { ctx.moveTo(0, Math.round(y) + .5); ctx.lineTo(W, Math.round(y) + .5); }
+    ctx.stroke();
+  }
+  grid(10, .07); grid(50, .16);
+  // линейка 100 мм, снизу по центру
+  var rl = 100 * px, rx0 = W / 2 - rl / 2, ry0 = H - 26;
+  ctx.strokeStyle = '#A67C43'; ctx.lineWidth = 2; ctx.beginPath();
+  ctx.moveTo(rx0, ry0); ctx.lineTo(rx0 + rl, ry0);
+  for (var m = 0; m <= 100; m += 10) { var xx = rx0 + m * px; ctx.moveTo(xx, ry0); ctx.lineTo(xx, ry0 - (m % 50 === 0 ? 12 : 7)); }
+  ctx.stroke();
+  ctx.fillStyle = '#B7A585'; ctx.font = '700 13px "Alegreya SC", Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+  ctx.fillText('100 мм (приложите линейку)', W / 2, ry0 - 15);
+
+  var t = now();
+  var res = clusterize(activePoints());
+  // кластеры: контур, рёбра с подписями в мм
+  res.clusters.forEach(function (c) {
+    var rMax = 0; c.pts.forEach(function (p) { rMax = Math.max(rMax, Math.hypot(p.x - c.cx, p.y - c.cy)); });
+    ctx.save();
+    ctx.setLineDash([6, 6]); ctx.strokeStyle = 'rgba(224,178,92,.5)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(c.cx, c.cy, rMax + 40, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(224,178,92,.12)'; ctx.strokeStyle = 'rgba(245,213,138,.85)'; ctx.lineWidth = 2;
+    ctx.beginPath(); c.pts.forEach(function (p, i) { i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y); });
+    if (c.N > 2) ctx.closePath(); ctx.fill(); ctx.stroke();
+    // подписи рёбер
+    ctx.font = '700 14px "Alegreya SC", Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    var edges = c.N === 2 ? 1 : c.N;
+    for (var i = 0; i < edges; i++) {
+      var a = c.pts[i], b = c.pts[(i + 1) % c.N];
+      var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      var dx = mx - c.cx, dy = my - c.cy, dl = Math.hypot(dx, dy) || 1;
+      if (c.N === 2) { dx = -(b.y - a.y); dy = (b.x - a.x); dl = Math.hypot(dx, dy) || 1; }
+      var lx = mx + dx / dl * 24, ly = my + dy / dl * 24;
+      var txt = fmt(c.sides[i], 1) + ' мм';
+      var tw = ctx.measureText(txt).width + 10;
+      ctx.fillStyle = 'rgba(11,9,7,.85)'; ctx.fillRect(lx - tw / 2, ly - 10, tw, 20);
+      ctx.fillStyle = '#F5D58A'; ctx.fillText(txt, lx, ly);
+    }
+    // номер кластера
+    ctx.font = '700 18px "Alegreya SC", Georgia, serif'; ctx.fillStyle = '#E0B25C'; ctx.textAlign = 'center';
+    ctx.fillText('К' + c.n + ' · ' + c.N + ' т.', c.cx, c.cy - rMax - 58);
+    ctx.restore();
+  });
+
+  // кольца указателей
+  Object.keys(ptr).forEach(function (id) {
+    var r = ptr[id], col = r.color;
+    var rw = Math.max(6, r.w), rh = Math.max(6, r.h);
+    ctx.save();
+    ctx.fillStyle = col + '40'; ctx.strokeStyle = col; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.ellipse(r.x, r.y, rw / 2, rh / 2, 0, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(r.x, r.y, 17, 0, 7); ctx.stroke();
+    ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(r.x - 26, r.y); ctx.lineTo(r.x - 17, r.y); ctx.moveTo(r.x + 17, r.y); ctx.lineTo(r.x + 26, r.y); ctx.moveTo(r.x, r.y - 26); ctx.lineTo(r.x, r.y - 17); ctx.moveTo(r.x, r.y + 17); ctx.lineTo(r.x, r.y + 26); ctx.stroke();
+    // подпись, отодвинутая от центра кластера
+    var cl = null; res.clusters.forEach(function (c) { if (c.ids.indexOf('P#' + id) >= 0) cl = c; });
+    var dx = 1, dy = -1;
+    if (cl) { dx = r.x - cl.cx; dy = r.y - cl.cy; var dl = Math.hypot(dx, dy) || 1; dx /= dl; dy /= dl; if (Math.hypot(r.x - cl.cx, r.y - cl.cy) < 2) { dx = 1; dy = -1; } }
+    var lines = [
+      '#' + r.id + ' · ' + r.type + ' · ' + sec(t - r.t0) + ' с',
+      Math.round(r.x) + ',' + Math.round(r.y) + ' px · ' + fmt(r.x * k, 0) + ',' + fmt(r.y * k, 0) + ' мм',
+      fmt(r.w, 1) + '×' + fmt(r.h, 1) + ' px · ' + fmt(r.w * k, 1) + '×' + fmt(r.h * k, 1) + ' мм · p ' + fmt(r.p, 2)
+    ];
+    var tm = matchTouch(r); if (tm) lines.push('touch T#' + tm.id + ' · r ' + fmt(tm.rx, 1) + '×' + fmt(tm.ry, 1) + ' · force ' + fmt(tm.f, 2));
+    var LS = W < 700 ? .8 : 1;
+    ctx.font = '600 ' + Math.round(14 * LS) + 'px "Alegreya", Georgia, serif'; ctx.textBaseline = 'middle';
+    var bw = 0; lines.forEach(function (l) { bw = Math.max(bw, ctx.measureText(l).width); }); bw += 14;
+    var LH = Math.round(18 * LS), bh = lines.length * LH + 8;
+    var bx = r.x + dx * 62 - (dx < -.3 ? bw : (dx > .3 ? 0 : bw / 2));
+    var by = r.y + dy * 62 - (dy < -.3 ? bh : (dy > .3 ? 0 : bh / 2));
+    bx = Math.max(4, Math.min(W - bw - 4, bx)); by = Math.max(4, Math.min(H - bh - 4, by));
+    ctx.fillStyle = 'rgba(11,9,7,.82)'; ctx.fillRect(bx, by, bw, bh);
+    ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.strokeRect(bx + .5, by + .5, bw - 1, bh - 1);
+    ctx.fillStyle = '#EFE3C8'; ctx.textAlign = 'left';
+    lines.forEach(function (l, i) { ctx.fillStyle = i === 0 ? col : '#EFE3C8'; ctx.fillText(l, bx + 7, by + 4 + LH / 2 + i * LH); });
+    ctx.restore();
+  });
+
+  // Touch Events: пунктирные квадраты (радиус из радиусов касания)
+  Object.keys(tch).forEach(function (id) {
+    var r = tch[id], hw = Math.max(14, r.rx), hh = Math.max(14, r.ry);
+    ctx.save();
+    ctx.setLineDash([5, 4]); ctx.strokeStyle = '#B7A585'; ctx.lineWidth = 2;
+    ctx.strokeRect(r.x - hw, r.y - hh, hw * 2, hh * 2); ctx.setLineDash([]);
+    var paired = false; Object.keys(ptr).forEach(function (pid) { if (matchTouch(ptr[pid]) === r) paired = true; });
+    if (!paired) { ctx.font = '600 12px "Alegreya", Georgia, serif'; ctx.fillStyle = '#B7A585'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('T#' + id + ' r' + fmt(r.rx, 0) + '×' + fmt(r.ry, 0) + ' f' + fmt(r.f, 2), r.x, Math.min(H - 16, r.y + hh + 3)); }
+    ctx.restore();
+  });
+
+  // подсказка в центре, пока пусто
+  if (!Object.keys(ptr).length && !Object.keys(tch).length) {
+    ctx.fillStyle = 'rgba(183,165,133,.55)'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = '400 ' + Math.max(18, Math.min(34, W / 40)) + 'px "Forum", Georgia, serif';
+    var msg = ['Поставьте фишку, держите,', 'потом отпустите руку.', 'Если точки остались, фишка видна без руки.'];
+    var lh = Math.max(24, Math.min(44, W / 32));
+    msg.forEach(function (m, i) { ctx.fillText(m, W / 2, H / 2 + (i - 1) * lh); });
+  }
+}
+var lastDom = 0;
+function frame() {
+  var live = Object.keys(ptr).length + Object.keys(tch).length > 0;
+  if (dirty || live) {
+    draw(); dirty = false;
+    var t = now();
+    if (live && t - lastDom > 120) { lastDom = t; renderDom(); }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ================= отчёт ================= */
+function buildReport() {
+  var k = mmPerPx(), s = scrSize(), L = [], t = now();
+  var pad = function (v) { return v < 10 ? '0' + v : '' + v; }, d = new Date();
+  L.push('ОТЧЁТ ТАЧ-ЛАБОРАТОРИИ AI-СТОЛА');
+  L.push('Дата: ' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ' · замер идёт ' + sec(t - T0) + ' с');
+  L.push('');
+  L.push('== МАКСИМУМЫ ==');
+  L.push('Pointer: максимум одновременно ' + S.maxP + ' (сейчас ' + Object.keys(ptr).length + '), всего касаний ' + S.downs);
+  L.push('Touch: touches.length максимум ' + S.maxT + ' (сейчас ' + Object.keys(tch).length + '), всего касаний ' + S.tDowns);
+  L.push('navigator.maxTouchPoints: ' + (typeof navigator.maxTouchPoints === 'number' ? navigator.maxTouchPoints : 'нет'));
+  L.push('pointercancel: ' + S.pcancel + ' · touchcancel: ' + S.tcancel);
+  L.push('Типы указателей: ' + (Object.keys(S.types).map(function (x) { return x + '×' + S.types[x]; }).join(', ') || 'нет'));
+  L.push('Максимальный контакт: ' + fmt(S.maxW, 1) + '×' + fmt(S.maxH, 1) + ' px = ' + fmt(S.maxW * k, 1) + '×' + fmt(S.maxH * k, 1) + ' мм (width/height)');
+  L.push('Давление pressure: ' + (S.pMax === null ? 'нет данных' : 'от ' + fmt(S.pMin, 2) + ' до ' + fmt(S.pMax, 2)));
+  L.push('Touch radiusX/Y максимум: ' + fmt(S.maxRx, 1) + '/' + fmt(S.maxRy, 1) + ' px · force максимум ' + fmt(S.maxForce, 2));
+  L.push('Фишка без руки: ' + ['не отмечено', 'ВИДНА (точки остались после отпускания руки)', 'НЕ ВИДНА (точки пропали)'][freeState]);
+  L.push('');
+  L.push('== ЭКРАН ==');
+  L.push('Диагональ: ' + fmt(diagVal(), 1) + '" (' + fmt(diagVal() * 25.4, 0) + ' мм), 1 мм = ' + fmt(1 / k, 2) + ' px, 1 px = ' + fmt(k, 3) + ' мм');
+  L.push('Экран: ' + s.w + '×' + s.h + ' css px, окно ' + window.innerWidth + '×' + window.innerHeight + ', DPR ' + fmt(window.devicePixelRatio || 1, 2));
+  L.push('UA: ' + navigator.userAgent);
+  L.push('');
+  L.push('== САМЫЕ ДОЛГИЕ КАСАНИЯ ==');
+  var lg = longest().slice(0, 5);
+  if (!lg.length) L.push('нет данных');
+  lg.forEach(function (l) { L.push(l.id + ': ' + sec(l.dur) + ' с' + (l.live ? ' (ещё держится)' : '') + ', без движения до ' + sec(l.still) + ' с'); });
+  var still = longest().sort(function (a, b) { return b.still - a.still; })[0];
+  if (still) L.push('Дольше всего неподвижно: ' + still.id + ' ' + sec(still.still) + ' с');
+  L.push('');
+  L.push('== КЛАСТЕРЫ (точки ближе ' + CLUSTER_MM + ' мм) ==');
+  var cur = clusterize(activePoints());
+  if (cur.clusters.length) {
+    L.push('Сейчас на экране:');
+    cur.clusters.forEach(function (c) { L.push('  К' + c.n + ': ' + clText(c)); });
+  } else L.push('Сейчас кластеров нет.');
+  if (S.hist.length) {
+    L.push('Последние кластеры (старые выше):');
+    S.hist.forEach(function (h) {
+      h.clusters.forEach(function (c) { L.push('  [t+' + fmt((h.t - T0) / 1000, 1) + ' с] К' + c.n + ': ' + clText(c)); });
+    });
+  }
+  var pts = activePoints(), pairs = [];
+  for (var i = 0; i < pts.length; i++) for (var j = i + 1; j < pts.length; j++)
+    pairs.push(pts[i].id + '–' + pts[j].id + ' ' + fmt(Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y) * k, 1) + ' мм');
+  if (pairs.length) L.push('Расстояния между текущими точками: ' + pairs.slice(0, 15).join(', '));
+  L.push('');
+  L.push('== ЖУРНАЛ (последние ' + Math.min(8, S.log.length) + ') ==');
+  S.log.slice(-8).forEach(function (e) { L.push(e.text); });
+  return L.join('\n');
+}
+var toastTimer = 0;
+function toast(msg, bad) { var el = $('toast'); el.textContent = msg; el.className = bad ? 'bad' : ''; clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.textContent = ''; }, 6000); }
+function copyText(txt) {
+  function fallback() {
+    try {
+      var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('data-ui', '');
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;user-select:text;-webkit-user-select:text';
+      document.body.appendChild(ta); ta.select();
+      var ok = document.execCommand && document.execCommand('copy'); document.body.removeChild(ta);
+      toast(ok ? 'Отчёт скопирован в буфер' : 'Не удалось скопировать: сфотографируйте экран', !ok);
+    } catch (e) { toast('Не удалось скопировать: сфотографируйте экран', true); }
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(function () { toast('Отчёт скопирован в буфер'); }, fallback);
+  } else fallback();
+}
+function openReport() { var txt = buildReport(); $('rep').textContent = txt; $('repv').classList.add('on'); copyText(txt); return txt; }
+
+/* ================= кнопки и защита ================= */
+function reset() {
+  var keep = { done: true };
+  S = freshState(); S.maxP = Object.keys(ptr).length; S.maxT = Object.keys(tch).length;
+  logAdd('up', '— сброс —');
+  dirty = true; renderDom();
+}
+function bind(id, fn) { $(id).addEventListener('click', function (e) { e.preventDefault(); fn(); }); }
+bind('bReset', reset);
+bind('bRep', openReport);
+bind('bCopy', function () { copyText($('rep').textContent); });
+bind('bClose', function () { $('repv').classList.remove('on'); });
+bind('bHelp', function () { $('help').classList.add('on'); });
+bind('bGo', function () { $('help').classList.remove('on'); lsSet('touchlab.seen', '1'); });
+$('help').addEventListener('click', function (e) { if (e.target === $('help')) { $('help').classList.remove('on'); lsSet('touchlab.seen', '1'); } });
+bind('bFree', function () { freeState = (freeState + 1) % 3; renderDom(); });
+$('diag').addEventListener('input', function () {
+  var v = parseFloat($('diag').value); if (v > 0) { diagIn = v; lsSet('touchlab.diag', String(v)); }
+  dirty = true; renderDom();
+});
+$('diag').value = String(diagIn);
+
+// обработчики на window, в capture, чтобы ничего не терялось
+['pointerdown'].forEach(function (n) { window.addEventListener(n, onPointerDown, { capture: true, passive: false }); });
+window.addEventListener('pointermove', onPointerMove, { capture: true, passive: true });
+['pointerup', 'pointercancel'].forEach(function (n) { window.addEventListener(n, onPointerEnd, { capture: true, passive: true }); });
+['touchstart', 'touchmove', 'touchend', 'touchcancel'].forEach(function (n) { window.addEventListener(n, onTouch, { capture: true, passive: false }); });
+
+// блокировки жестов, меню, выделения, зума
+['contextmenu', 'selectstart', 'dragstart', 'dblclick', 'gesturestart', 'gesturechange', 'gestureend'].forEach(function (n) {
+  document.addEventListener(n, function (e) { if (n === 'selectstart' && e.target && e.target.id === 'diag') return; e.preventDefault(); }, { passive: false });
+});
+document.addEventListener('wheel', function (e) { e.preventDefault(); }, { passive: false });
+document.addEventListener('keydown', function (e) {
+  if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].indexOf(e.key) >= 0) e.preventDefault();
+});
+window.addEventListener('scroll', function () { window.scrollTo(0, 0); });
+window.addEventListener('resize', resize);
+window.addEventListener('orientationchange', resize);
+
+// первое открытие
+if (!lsGet('touchlab.seen')) $('help').classList.add('on');
+
+resize();
+logAdd('up', 'готово: коснитесь экрана');
+renderDom();
+requestAnimationFrame(frame);
+
+// для автопроверки (ничего не отправляет наружу)
+window.__touchlab = { report: buildReport, state: function () { return { maxP: S.maxP, maxT: S.maxT, pcancel: S.pcancel, active: Object.keys(ptr).length, tactive: Object.keys(tch).length }; } };
+})();
+</script>
+</body>
+</html>
