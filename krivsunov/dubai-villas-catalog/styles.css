@@ -670,6 +670,11 @@ dialog::backdrop { background: #1c221ca8; backdrop-filter: blur(4px); }
 .model3d-status { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 16px; text-align: center; color: #3b4a55; font-weight: 600; }
 .model3d-bar { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 16px 2px; }
 .model3d-bar .button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.model3d-bar .model3d-tour-button, .model3d-bar .model3d-tour-button[aria-pressed="true"] { background: #2b4a3c; border-color: #2b4a3c; color: #fff; }
+.model3d-bar .model3d-tour-button:hover { background: #1f3a2e; border-color: #1f3a2e; }
+.model3d-tour-label { position: absolute; left: 12px; top: 12px; max-width: calc(100% - 24px); padding: 7px 11px 8px; border-radius: 10px; background: #10241acc; color: #fff; font-size: 14px; font-weight: 700; line-height: 1.25; pointer-events: none; }
+.model3d-tour-progress { display: block; width: 180px; max-width: 100%; height: 3px; margin-top: 6px; border-radius: 2px; background: #ffffff40; overflow: hidden; }
+.model3d-tour-progress > span { display: block; width: 0; height: 100%; background: #f5c26b; }
 .model3d-note { margin: 0; padding: 6px 16px 0; }
 .model3d-dialog > .model3d-note:last-child { padding-bottom: 16px; }
 @media (max-width: 720px) {

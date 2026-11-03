@@ -883,7 +883,8 @@
       model3d: object(item.model3d) && /^villa3d\/[a-z0-9_-]+\.js$/i.test(text(item.model3d.module)) ? {
         module: text(item.model3d.module),
         poster: /^villa3d\/[a-z0-9_-]+\.webp$/i.test(text(item.model3d.poster)) ? text(item.model3d.poster) : '',
-        note: text(item.model3d.note)
+        note: text(item.model3d.note),
+        interior: !!item.model3d.interior
       } : null,
       cover,
       images: pictures,
@@ -1368,7 +1369,7 @@
       button.append(img);
     } else button.classList.add('is-empty');
     const textBox = el('span', 'sat-big-text');
-    textBox.append(el('span', 'sat-big-label', '🧊 3D-МОДЕЛЬ'), el('span', 'sat-big-sub', 'дом и участок — покрутить'));
+    textBox.append(el('span', 'sat-big-label', '🧊 3D-МОДЕЛЬ'), el('span', 'sat-big-sub', property.model3d.interior ? 'дом, участок и пролёт по комнатам' : 'дом и участок — покрутить'));
     button.append(textBox);
     button.addEventListener('click', (event) => { event.stopPropagation(); openModel3d(property, button); });
     return button;
@@ -1393,6 +1394,25 @@
     const note = el('p', 'aside-note model3d-note', property.model3d.note || 'Модель приблизительная, по фото.');
     const hint = el('p', 'aside-note model3d-note', 'Вращать — мышью или пальцем, приближать — колесом или щипком, сдвигать — правой кнопкой или двумя пальцами.');
     let viewer = null;
+    let tourButton = null;
+    let tourStop = null;
+    const tourLabel = el('div', 'model3d-tour-label');
+    const tourText = el('span', 'model3d-tour-text');
+    const tourBar = el('span', 'model3d-tour-progress');
+    const tourFill = el('span');
+    tourBar.append(tourFill);
+    tourLabel.append(tourText, tourBar);
+    tourLabel.hidden = true;
+    tourLabel.setAttribute('aria-live', 'polite');
+    function updateTour(info) { // состояние пролёта по дому: кнопки, подпись комнаты, полоска хода
+      if (!tourButton) return;
+      tourButton.textContent = info.state === 'playing' ? '⏸ Пауза' : info.state === 'paused' ? '▶ Продолжить' : '▶ Пролёт по дому';
+      tourButton.setAttribute('aria-pressed', String(info.state !== 'idle'));
+      tourStop.hidden = info.state === 'idle';
+      tourLabel.hidden = info.state === 'idle';
+      tourText.textContent = info.state === 'paused' ? `${info.label || 'Пауза'} · пауза, можно осмотреться` : (info.label || '');
+      tourFill.style.width = `${Math.round(Math.min(1, info.progress) * 100)}%`;
+    }
     close.addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
     dialog.addEventListener('close', () => {
@@ -1408,10 +1428,37 @@
     dialog.showModal();
     syncDialogScroll();
     close.focus({ preventScroll: true });
+    if (location.protocol === 'file:') { // модули three.js браузер не грузит из файла на диске
+      status.textContent = '3D-модель открывается на сайте каталога — в копии на диске браузер её не загружает.';
+      const online = el('a', 'button', 'Открыть на сайте');
+      online.href = `https://sites.aimulticast.org/krivsunov/dubai-villas-catalog/properties/${encodeURIComponent(property.id)}.html`;
+      online.target = '_blank';
+      online.rel = 'noopener';
+      bar.append(online);
+      return;
+    }
     Promise.all([import('./villa3d/viewer.js'), import(`./${property.model3d.module}`)]).then(([lib, model]) => {
       if (!dialog.open) return;
       status.remove();
-      viewer = lib.mount(stage, model.build);
+      viewer = lib.mount(stage, model.build, { onTour: updateTour });
+      if (viewer.tour) {
+        stage.append(tourLabel);
+        tourButton = el('button', 'button model3d-tour-button', '▶ Пролёт по дому');
+        tourButton.type = 'button';
+        tourButton.setAttribute('aria-pressed', 'false');
+        tourButton.addEventListener('click', () => {
+          const tour = viewer.tour;
+          if (tour.state === 'playing') tour.pause();
+          else if (tour.state === 'paused') tour.resume();
+          else tour.start();
+        });
+        tourStop = el('button', 'button button-quiet', '■ Выйти из пролёта');
+        tourStop.type = 'button';
+        tourStop.hidden = true;
+        tourStop.addEventListener('click', () => viewer.tour.stop());
+        bar.append(tourButton, tourStop);
+        hint.textContent += ` Пролёт по дому — около ${Math.round(viewer.tour.duration / 10) * 10} секунд; нажмите на модель, чтобы остановиться и осмотреться, кнопка «Продолжить» ведёт дальше.`;
+      }
       for (const name of viewer.views) {
         const button = el('button', 'button button-quiet', MODEL3D_VIEWS[name] || name);
         button.type = 'button';
