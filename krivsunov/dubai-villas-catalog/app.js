@@ -1058,6 +1058,8 @@
       updateSingleToggleWidget(widget);
     }
     renderStats();
+    if (state.status === 'top') render();
+    else if ($('status-tabs')) renderStatusTabs(baseFilter());
   }
 
   function handleToggleFlip(property, field) {
@@ -1463,6 +1465,7 @@
     if (!status) return true;
     if (status === 'active') return property.status === 'selected' || property.status === 'review';
     if (status === 'changed') return !!property.change;
+    if (status === 'top') return !!getPropertyToggle(property).top;
     return property.status === status;
   }
 
@@ -1663,6 +1666,7 @@
     else if (c.dh === 'foyer' || c.dh === 'no') crit.doubleHeight = ['no', c.dh === 'foyer' ? 'двусвет только у лестницы/входа, зал одноэтажный' : 'по фото двусвета нет'];
   }
 
+  statusTabs.splice(1, 0, ['top', '🔥 ТОП']);
   statusTabs.push(['changed', 'Новое']);
   FILTER_SELECT_IDS.push('filter-criteria');
 
@@ -2480,7 +2484,7 @@
     tabs.replaceChildren();
     for (const [value, label] of statusTabs) {
       const count = base.filter((property) => matchesStatus(property, value)).length;
-      if (value === 'changed' ? !count : (value && value !== 'active' && !properties.some((property) => property.status === value))) continue;
+      if (value === 'changed' ? !count : (value && value !== 'active' && value !== 'top' && !properties.some((property) => property.status === value))) continue;
       const button = el('button', `status-tab${value ? ` tab-${value}` : ''}`);
       button.type = 'button';
       button.setAttribute('aria-pressed', String(state.status === value));

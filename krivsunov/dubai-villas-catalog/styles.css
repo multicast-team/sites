@@ -82,6 +82,10 @@ input::placeholder, textarea::placeholder { color: #85897f; opacity: 1; }
 .status-tab .tab-count { min-width: 20px; padding: 1px 5px; border-radius: 999px; background: var(--soft); font-size: 11px; font-weight: 650; text-align: center; font-variant-numeric: tabular-nums; }
 .status-tab[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: white; }
 .status-tab[aria-pressed="true"] .tab-count { background: #ffffff2b; }
+.status-tab.tab-top { border: 2px solid #f0631c; color: #b5470b; font-weight: 800; font-size: 13.5px; padding: 3px 9px 3px 13px; background: #fff4e6; }
+.status-tab.tab-top .tab-count { background: #f0631c22; color: #9a3a06; }
+.status-tab.tab-top[aria-pressed="true"] { background: linear-gradient(135deg, #ff9a1f, #f0531c 60%, #d6262f); border-color: #c2410c; color: #fff; box-shadow: 0 3px 10px #f0531c55; }
+.status-tab.tab-top[aria-pressed="true"] .tab-count { background: #ffffff40; color: #fff; }
 .status-tab::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: .25; display: none; }
 .tab-selected::before, .tab-review::before, .tab-rejected::before, .tab-unavailable::before, .tab-historical::before, .tab-viewed::before, .tab-rent::before { display: block; opacity: 1; }
 .tab-selected::before, .tab-rent::before { background: #2e8540; }
