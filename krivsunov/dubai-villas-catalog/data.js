@@ -15,8 +15,8 @@ window.VILLA_CATALOG = {
       "plotM2": 1026,
       "buaM2": 481,
       "ceiling": "~3.0 м (второй свет в зале ~6.0–6.2 м)",
-      "status": "selected",
-      "statusLabel": "Выбрано для просмотра",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "villa",
       "cover": "gallery/samantha_ji_gardenhall500-88e1e86dc3545c.webp",
       "images": [
@@ -114,8 +114,8 @@ window.VILLA_CATALOG = {
       "plotM2": null,
       "buaM2": null,
       "ceiling": "~3.1–3.2 м (ровный потолок, пролёт у лестницы)",
-      "status": "selected",
-      "statusLabel": "Выбрано для просмотра",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "villa",
       "cover": "gallery/polo-bbb6c96551b47d.webp",
       "images": [
@@ -318,8 +318,8 @@ window.VILLA_CATALOG = {
       "plotM2": null,
       "buaM2": null,
       "ceiling": "~3.5–3.8 м в зале (холл со вторым светом ~6.5 м)",
-      "status": "selected",
-      "statusLabel": "Выбрано для просмотра",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "villa",
       "cover": "gallery/war4_6br_tayyab_pdf-36b533c8f1b357.webp",
       "images": [
@@ -544,7 +544,7 @@ window.VILLA_CATALOG = {
     },
     {
       "id": "damac_hills_samantha_1558",
-      "title": "DAMAC Hills · выбранная вилла",
+      "title": "DAMAC Hills · вилла у гольф-поля",
       "area": "DAMAC Hills",
       "agent": "Samantha Cross",
       "agentPhone": "+971585356693",
@@ -556,8 +556,8 @@ window.VILLA_CATALOG = {
       "plotM2": null,
       "buaM2": null,
       "ceiling": "~3.0–3.2 м (второй свет у входа/лестницы ~5.9 м)",
-      "status": "selected",
-      "statusLabel": "Выбрано · идентификация",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "unknown",
       "cover": "gallery/damac_hills_samantha_1558-2c7b85bf4e3dac.webp",
       "images": [
@@ -597,7 +597,7 @@ window.VILLA_CATALOG = {
           "caption": "Кадр из видео риэлтора"
         }
       ],
-      "description": "Дом, выбранный по группе фотографий и видео Samantha. С балкона видны гольф и зрелые деревья.",
+      "description": "Дом по группе фотографий и видео Samantha. С балкона видны гольф и зрелые деревья.",
       "facts": [
         "Дополнительное фото показывает основную гостиную с широким остеклением."
       ],
@@ -667,8 +667,8 @@ window.VILLA_CATALOG = {
       "plotM2": null,
       "buaM2": null,
       "ceiling": "~2.9–3.0 м (декоративные балки, один уровень)",
-      "status": "selected",
-      "statusLabel": "Выбрано · тип уточняется",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "unknown",
       "cover": "gallery/santorini-2ebf83eaf0ac82.webp",
       "images": [
@@ -832,7 +832,7 @@ window.VILLA_CATALOG = {
       "listingUrl": "https://www.propertyfinder.ae/to/155091791/en",
       "mapUrl": "https://maps.google.com/maps/search/DAMAC%20Lagoons/@25.016435623168945,55.244808197021484,17z?hl=ru",
       "mapPrecision": "entrance",
-      "locationLabel": "Главный въезд DAMAC Lagoons · точка встречи",
+      "locationLabel": "Главный въезд DAMAC Lagoons",
       "missing": [
         "Точная точка дома"
       ],
@@ -2665,7 +2665,7 @@ window.VILLA_CATALOG = {
       "facts": [],
       "caveats": [
         "Не доказано соответствие брошюры котировке 600 000.",
-        "Не объединено с позднее выбранной виллой DAMAC Hills."
+        "Не объединено с другой виллой DAMAC Hills от Samantha."
       ],
       "listingUrl": "",
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=DAMAC%20Hills%2C%20Dubai",
@@ -3095,9 +3095,7 @@ window.VILLA_CATALOG = {
         }
       ],
       "description": "Альтернативный дом с pin, подписанным Orange Lake street F64.",
-      "facts": [
-        "02.11 в 17:14 Артур сообщил в группе, что показ этой виллы согласован на вторник в 17:30 (5:30 PM)."
-      ],
+      "facts": [],
       "caveats": [
         "Публичная ссылка, цена и текущая доступность не получены."
       ],
@@ -3562,8 +3560,8 @@ window.VILLA_CATALOG = {
       "plotM2": null,
       "buaM2": null,
       "ceiling": "~3.0 м (большой второй свет в гостиной ~5.8–6.0 м)",
-      "status": "selected",
-      "statusLabel": "Решили посмотреть",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
       "type": "linked",
       "cover": "gallery/palm_p-b15810952b9388.webp",
       "images": [
@@ -3643,7 +3641,7 @@ window.VILLA_CATALOG = {
           "caption": "Фото из объявления"
         }
       ],
-      "description": "Canal 68. Steven подтвердил две соединённые виллы; после уточнения формата этот дом решили посмотреть.",
+      "description": "Canal 68. Steven подтвердил две соединённые виллы.",
       "facts": [],
       "caveats": [
         "Это смежная вилла, не полностью отдельное здание.",
