@@ -10,11 +10,11 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=ux-extras-20261103-2">
+  <link rel="stylesheet" href="styles.css?v=ux-extras-20261103-3">
   <script src="vendor/leaflet/leaflet.js" defer></script>
-  <script src="enrich.js?v=ux-extras-20261103-2" defer></script>
-  <script src="data.js?v=ux-extras-20261103-2" defer></script>
-  <script src="app.js?v=ux-extras-20261103-2" defer></script>
+  <script src="enrich.js?v=ux-extras-20261103-3" defer></script>
+  <script src="data.js?v=ux-extras-20261103-3" defer></script>
+  <script src="app.js?v=ux-extras-20261103-3" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#catalog">Перейти к объектам</a>
@@ -55,6 +55,12 @@
 
         <div class="filter-selects" id="filter-selects">
           <label class="select-field"><span class="field-caption">Район</span><select id="area"><option value="">Все районы</option></select></label>
+
+          <label class="select-field"><span class="field-caption">Топ</span><select id="filter-top">
+            <option value="">Топ: все</option>
+            <option value="yes">🔥 Только топ</option>
+            <option value="no">Без топа</option>
+          </select></label>
 
           <label class="select-field"><span class="field-caption">Смотрели / Нет</span><select id="filter-viewed">
             <option value="">Просмотр: все</option>

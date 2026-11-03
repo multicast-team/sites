@@ -228,9 +228,10 @@
     if (!object(rawToggle)) return null;
     const viewed = !!rawToggle.viewed;
     const rent = !!rawToggle.rent;
+    const top = !!rawToggle.top;
     const updatedAt = typeof rawToggle.updatedAt === 'number' && Number.isFinite(rawToggle.updatedAt) ? rawToggle.updatedAt : 1000;
     const author = text(rawToggle.author).slice(0, 40);
-    return { viewed, rent, updatedAt, author };
+    return { viewed, rent, top, updatedAt, author };
   }
 
   function mergeToggleEntry(propertyId, rawToggle) {
@@ -240,7 +241,7 @@
     const existing = sharedToggles[propertyId];
     if (existing) {
       if (existing.updatedAt > entry.updatedAt) return false;
-      if (existing.updatedAt === entry.updatedAt && existing.viewed === entry.viewed && existing.rent === entry.rent) return false;
+      if (existing.updatedAt === entry.updatedAt && existing.viewed === entry.viewed && existing.rent === entry.rent && existing.top === entry.top) return false;
     }
     sharedToggles[propertyId] = entry;
     return true;
@@ -261,6 +262,7 @@
     return {
       viewed: !!property.viewedDefault,
       rent: !!property.rentDefault,
+      top: false,
       updatedAt: 1000,
       author: ''
     };
@@ -1036,9 +1038,15 @@
     widget.rentLabel.textContent = rent ? '★ Снимаем!' : 'Не снимаем';
     widget.rentBtn.title = rent ? 'Нажмите, чтобы переключить на «Не снимаем»' : 'Нажмите, чтобы переключить на «Снимаем!»';
 
+    const top = !!stateObj.top;
+    widget.topBtn.setAttribute('aria-checked', String(top));
+    widget.topLabel.textContent = top ? '🔥 Топ' : 'Не топ';
+    widget.topBtn.title = top ? 'Нажмите, чтобы убрать из топа' : 'Нажмите, чтобы добавить в топ';
+
     if (widget.hostCard) {
       widget.hostCard.classList.toggle('is-viewed', viewed);
       widget.hostCard.classList.toggle('is-renting', rent);
+      widget.hostCard.classList.toggle('is-top', top);
     }
   }
 
@@ -1057,15 +1065,17 @@
     const current = getPropertyToggle(property);
     const nextViewed = field === 'viewed' ? !current.viewed : !!current.viewed;
     const nextRent = field === 'rent' ? !current.rent : !!current.rent;
+    const nextTop = field === 'top' ? !current.top : !!current.top;
     mergeToggleEntry(property.id, {
       viewed: nextViewed,
       rent: nextRent,
+      top: nextTop,
       updatedAt: Date.now(),
       author: currentAuthor()
     });
     saveSharedToLocal();
     refreshToggleWidgets();
-    if ($('filter-viewed').value || $('filter-rent').value) {
+    if ($('filter-viewed').value || $('filter-rent').value || $('filter-top').value) {
       render();
     }
     publishToggleToCloud(property.id);
@@ -1094,7 +1104,16 @@
     const rentLabel = el('span', 'switch-label');
     rentBtn.append(rentTrack, rentLabel);
 
-    const widget = { property, root, viewedBtn, viewedLabel, rentBtn, rentLabel, hostCard };
+    const topBtn = el('button', 'toggle-switch toggle-top');
+    topBtn.type = 'button';
+    topBtn.setAttribute('role', 'switch');
+    topBtn.dataset.toggle = 'top';
+    const topTrack = el('span', 'switch-track');
+    topTrack.append(el('span', 'switch-thumb'));
+    const topLabel = el('span', 'switch-label');
+    topBtn.append(topTrack, topLabel);
+
+    const widget = { property, root, viewedBtn, viewedLabel, rentBtn, rentLabel, topBtn, topLabel, hostCard };
     updateSingleToggleWidget(widget);
     toggleWidgets.add(widget);
 
@@ -1106,8 +1125,12 @@
       event.stopPropagation();
       handleToggleFlip(property, 'rent');
     });
+    topBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      handleToggleFlip(property, 'top');
+    });
 
-    root.append(viewedBtn, rentBtn);
+    root.append(viewedBtn, rentBtn, topBtn);
     return root;
   }
 
@@ -1501,6 +1524,7 @@
     const beds = Number($('beds').value) || 0;
     const viewedFilter = $('filter-viewed').value;
     const rentFilter = $('filter-rent').value;
+    const topFilter = $('filter-top').value;
     const priceFilter = $('filter-price').value;
     const ceilingFilter = $('filter-ceiling').value;
     const waterFilter = $('filter-water').value;
@@ -1520,6 +1544,8 @@
       if (viewedFilter === 'no' && tState.viewed) return false;
       if (rentFilter === 'yes' && !tState.rent) return false;
       if (rentFilter === 'no' && tState.rent) return false;
+      if (topFilter === 'yes' && !tState.top) return false;
+      if (topFilter === 'no' && tState.top) return false;
 
       if (!matchesPriceFilter(property, priceFilter)) return false;
       if (!matchesCeilingFilter(property, ceilingFilter)) return false;
@@ -1546,7 +1572,7 @@
   };
 
   const FILTER_SELECT_IDS = [
-    'area', 'filter-viewed', 'filter-rent', 'filter-price',
+    'area', 'filter-top', 'filter-viewed', 'filter-rent', 'filter-price',
     'filter-ceiling', 'filter-water', 'filter-double-height',
     'filter-pool', 'agent', 'beds'
   ];
@@ -1956,7 +1982,7 @@
       ...destinations.map((d) => [`До ${d.name}`, (p) => driveText(p, d.key)]),
       ['До моей точки', (p) => p.originMin === null ? '—' : `${p.originMin} мин`],
       ['Голоса', (p) => { const v = getVotes(p); return `👍 ${v.filter((e) => e.text === '+1').length} · 👎 ${v.filter((e) => e.text === '-1').length}`; }],
-      ['Отметки', (p) => { const t = getPropertyToggle(p); return [t.viewed ? '✓ Смотрели' : 'Не смотрели', t.rent ? '★ Снимаем' : ''].filter(Boolean).join(' · '); }],
+      ['Отметки', (p) => { const t = getPropertyToggle(p); return [t.top ? '🔥 Топ' : '', t.viewed ? '✓ Смотрели' : 'Не смотрели', t.rent ? '★ Снимаем' : ''].filter(Boolean).join(' · '); }],
       ['Брокер', (p) => p.agent || '—']
     ];
     for (const [label, value] of rows) {
@@ -2475,11 +2501,13 @@
     stats.replaceChildren();
     const viewedCount = properties.filter((p) => getPropertyToggle(p).viewed).length;
     const rentCount = properties.filter((p) => getPropertyToggle(p).rent).length;
+    const topCount = properties.filter((p) => getPropertyToggle(p).top).length;
     const waterCount = properties.filter((p) => p.waterView === 'yes').length;
     const dhCount = properties.filter((p) => p.doubleHeight === 'yes').length;
     const items = [
       ['Объектов', String(properties.length)],
       ['✓ Смотрели', String(viewedCount)],
+      ['🔥 Топ', String(topCount)],
       ['★ Снимаем', String(rentCount)],
       ['Двусветный зал', String(dhCount)],
       ['У воды/озера', String(waterCount)]
@@ -2763,6 +2791,7 @@
       mergeToggleEntry(prop.id, {
         viewed: !!prop.viewedDefault,
         rent: !!prop.rentDefault,
+        top: false,
         updatedAt: 1000,
         author: ''
       });
@@ -2874,7 +2903,7 @@
       }
       if (tChanged) {
         refreshToggleWidgets();
-        if ($('filter-viewed') && ($('filter-viewed').value || $('filter-rent').value)) render();
+        if ($('filter-viewed') && ($('filter-viewed').value || $('filter-rent').value || $('filter-top').value)) render();
       }
     }
   }
@@ -2909,7 +2938,7 @@
               }
               if (tChanged) {
                 refreshToggleWidgets();
-                if ($('filter-viewed') && ($('filter-viewed').value || $('filter-rent').value)) render();
+                if ($('filter-viewed') && ($('filter-viewed').value || $('filter-rent').value || $('filter-top').value)) render();
               }
             }
           } catch {}
