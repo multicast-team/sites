@@ -1,5 +1,5 @@
 window.VILLA_CATALOG = {
-  "updatedAt": "2026-11-03T02:35:05.082844+00:00",
+  "updatedAt": "2026-11-03T02:54:46.446311+00:00",
   "properties": [
     {
       "id": "samantha_ji_gardenhall500",
@@ -2297,76 +2297,6 @@ window.VILLA_CATALOG = {
       "waterViewLabel": "Вид на гольф-поле и озеро/пруд слева",
       "pool": "no",
       "poolLabel": "Без своего бассейна (участок 641 м²)",
-      "viewedDefault": false,
-      "rentDefault": false
-    },
-    {
-      "id": "samantha_orange595",
-      "title": "Orange Lake · Lake View",
-      "area": "Jumeirah Golf Estates",
-      "agent": "Samantha Cross",
-      "agentPhone": "+971585356693",
-      "price": 595000,
-      "priceLabel": "595 000 AED / год",
-      "priceNote": "Заявленная цена; актуальные условия уточняются.",
-      "bedrooms": 4,
-      "bathrooms": 5,
-      "plotM2": null,
-      "buaM2": null,
-      "ceiling": "~3.2–3.4 м (высокий входной холл ~6.0 м)",
-      "status": "review",
-      "statusLabel": "На рассмотрении",
-      "type": "unknown",
-      "cover": "gallery/samantha_orange595-117f5d44dd7bac.webp",
-      "images": [
-        {
-          "src": "gallery/samantha_orange595-117f5d44dd7bac.webp",
-          "thumb": "gallery/thumb-samantha_orange595-117f5d44dd7bac.webp",
-          "caption": "Фото риэлтора"
-        }
-      ],
-      "description": "Предложение Orange Lake / Fire: в материалах видны бассейн и газон; заявлен вид на озеро.",
-      "facts": [
-        "Указана площадь 5 715 sqft, её тип не уточнён."
-      ],
-      "caveats": [
-        "Точный номер дома не получен.",
-        "Возможное совпадение с ранее осмотренными домами не доказано."
-      ],
-      "listingUrl": "",
-      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Jumeirah%20Golf%20Estates%2C%20Dubai",
-      "mapPrecision": "area",
-      "locationLabel": "Точный адрес не получен",
-      "missing": [
-        "Точная точка дома",
-        "Публичная ссылка на фото и описание"
-      ],
-      "requestState": "Ссылки и точки запрошены. Агент пояснила, что часть предложений внутренняя, без публичных объявлений.",
-      "ref": "",
-      "possibleDuplicateIds": [
-        "arthur_jge_original",
-        "arthur_f64"
-      ],
-      "sourceNote": "По присланному объявлению и сообщениям агента; актуальность требует подтверждения.",
-      "documents": [],
-      "detailPage": "properties/samantha_orange595.html",
-      "videos": [
-        {
-          "src": "videos/samantha_orange595-cca956ee110524.mp4",
-          "caption": "Видео риэлтора",
-          "poster": "gallery/samantha_orange595-117f5d44dd7bac.webp"
-        }
-      ],
-      "projectType": "Jumeirah Golf Estates · Orange Lake (Indigo Properties, 4BR, 5 715 sqft)",
-      "ceilingHeightM": 3.3,
-      "ceilingMaxM": 6.0,
-      "ceilingEstimateNote": "Средиземноморские виллы Orange Lake (Indigo Properties) проектировались с увеличенной высотой этажа ~3.2–3.4 м на первом уровне, высокими арочными проёмами и двухсветным парадным холлом (~5.8–6.0 м).",
-      "doubleHeight": "foyer",
-      "doubleHeightLabel": "Двухсветный входной холл по проекту (~6.0 м)",
-      "waterView": "yes",
-      "waterViewLabel": "Вид на озеро (Lake View)",
-      "pool": "private",
-      "poolLabel": "Свой бассейн во дворе",
       "viewedDefault": false,
       "rentDefault": false
     },
