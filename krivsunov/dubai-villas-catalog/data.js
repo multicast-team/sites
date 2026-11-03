@@ -1,5 +1,5 @@
 window.VILLA_CATALOG = {
-  "updatedAt": "2026-11-03T03:34:37.165750+00:00",
+  "updatedAt": "2026-11-03T03:51:28.272135+00:00",
   "properties": [
     {
       "id": "samantha_ji_gardenhall500",
@@ -1274,6 +1274,604 @@ window.VILLA_CATALOG = {
       "waterViewLabel": "Вид на озеро кластера",
       "pool": "private",
       "poolLabel": "Свой большой бассейн",
+      "viewedDefault": false,
+      "rentDefault": false
+    },
+    {
+      "id": "ji38",
+      "title": "Jumeirah Islands · Cluster 38 · с мебелью",
+      "area": "Jumeirah Islands",
+      "agent": "Damoon Bahman Morsali · Aeon & Trisl",
+      "agentPhone": "+97142977444",
+      "price": 1350000,
+      "priceLabel": "1 350 000 AED / год",
+      "priceNote": "Цена из объявления. Это в 2+ раза дороже остальных вариантов в Jumeirah Islands (там 595–600 тыс.).",
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "plotM2": 987,
+      "buaM2": null,
+      "ceiling": "",
+      "status": "review",
+      "statusLabel": "Новое · 03.11",
+      "type": "villa",
+      "cover": "gallery/ji38-9bdf4c10af5e40.webp",
+      "images": [
+        {
+          "src": "gallery/ji38-9bdf4c10af5e40.webp",
+          "thumb": "gallery/thumb-ji38-9bdf4c10af5e40.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-602d72a3f2236c.webp",
+          "thumb": "gallery/thumb-ji38-602d72a3f2236c.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-c8bfedf4da32f8.webp",
+          "thumb": "gallery/thumb-ji38-c8bfedf4da32f8.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-38cedc00162444.webp",
+          "thumb": "gallery/thumb-ji38-38cedc00162444.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-09a3589103fbc8.webp",
+          "thumb": "gallery/thumb-ji38-09a3589103fbc8.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-bb8c265321d4e4.webp",
+          "thumb": "gallery/thumb-ji38-bb8c265321d4e4.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-f5e15b82298e42.webp",
+          "thumb": "gallery/thumb-ji38-f5e15b82298e42.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-94e4cd483bd943.webp",
+          "thumb": "gallery/thumb-ji38-94e4cd483bd943.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-3266827ea6380b.webp",
+          "thumb": "gallery/thumb-ji38-3266827ea6380b.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-a7c6805eae35e9.webp",
+          "thumb": "gallery/thumb-ji38-a7c6805eae35e9.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-77d5b2c090cb49.webp",
+          "thumb": "gallery/thumb-ji38-77d5b2c090cb49.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-5ed76e5ef38377.webp",
+          "thumb": "gallery/thumb-ji38-5ed76e5ef38377.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-25a2385c691bf7.webp",
+          "thumb": "gallery/thumb-ji38-25a2385c691bf7.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-2d879a9179249c.webp",
+          "thumb": "gallery/thumb-ji38-2d879a9179249c.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-417be45da8fa24.webp",
+          "thumb": "gallery/thumb-ji38-417be45da8fa24.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-0be0515d90de9e.webp",
+          "thumb": "gallery/thumb-ji38-0be0515d90de9e.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-035861b61037dd.webp",
+          "thumb": "gallery/thumb-ji38-035861b61037dd.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-f24cf9aba9d2e4.webp",
+          "thumb": "gallery/thumb-ji38-f24cf9aba9d2e4.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-2612c29350d9d8.webp",
+          "thumb": "gallery/thumb-ji38-2612c29350d9d8.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-c4710f16ae5881.webp",
+          "thumb": "gallery/thumb-ji38-c4710f16ae5881.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-25a15379106d44.webp",
+          "thumb": "gallery/thumb-ji38-25a15379106d44.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-95db57f20cf8b1.webp",
+          "thumb": "gallery/thumb-ji38-95db57f20cf8b1.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-f9175a35d58d26.webp",
+          "thumb": "gallery/thumb-ji38-f9175a35d58d26.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-7fbfdee7d3f4e4.webp",
+          "thumb": "gallery/thumb-ji38-7fbfdee7d3f4e4.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-f7f9ce9576fd9d.webp",
+          "thumb": "gallery/thumb-ji38-f7f9ce9576fd9d.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-ba7549a5fb7bf8.webp",
+          "thumb": "gallery/thumb-ji38-ba7549a5fb7bf8.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-1372d3534d95d6.webp",
+          "thumb": "gallery/thumb-ji38-1372d3534d95d6.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-165f35abb927b6.webp",
+          "thumb": "gallery/thumb-ji38-165f35abb927b6.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-8545b605742617.webp",
+          "thumb": "gallery/thumb-ji38-8545b605742617.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji38-8b955a6c500990.webp",
+          "thumb": "gallery/thumb-ji38-8b955a6c500990.webp",
+          "caption": "Фото из объявления"
+        }
+      ],
+      "description": "Вилла с мебелью в Cluster 38 (Mediterranean Clusters): 4 спальни, 5 санузлов, участок 10 622 sqft (≈987 м²). Ландшафтный сад, парадный въезд и своя подъездная дорожка, окна в пол, кухня с техникой премиум-класса.",
+      "facts": [
+        "Объявление Property Finder 158717736 размещено 13.10.2026.",
+        "Мебель: есть (premium furnished).",
+        "Площадь дома в объявлении не указана отдельно — указан только участок 10 622 sqft."
+      ],
+      "caveats": [
+        "Цена 1 350 000 AED в год сильно выше бюджета.",
+        "Бассейн в объявлении не упомянут.",
+        "Номер дома в кластере неизвестен; точка на карте — центр Cluster 38."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-jumeirah-islands-mediterranean-clusters-cluster-38-158717736.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.053822%2C55.154694&z=16&hl=ru",
+      "mapPrecision": "area",
+      "locationLabel": "Cluster 38, Mediterranean Clusters, Jumeirah Islands · точка кластера из объявления",
+      "missing": [
+        "Точная точка дома"
+      ],
+      "requestState": "",
+      "ref": "Portal-AT-405686",
+      "possibleDuplicateIds": [],
+      "sourceNote": "По публичному объявлению Property Finder, прочитано 03.11.2026; у агента ещё не уточнялось.",
+      "documents": [],
+      "detailPage": "properties/ji38.html",
+      "videos": [],
+      "projectType": "Nakheel · Jumeirah Islands · Cluster 38 (Mediterranean)",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не оценивалась.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не проверен",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "unknown",
+      "poolLabel": "Бассейн не указан",
+      "viewedDefault": false,
+      "rentDefault": false
+    },
+    {
+      "id": "ji_oasis_sale",
+      "title": "Jumeirah Islands · Oasis Clusters · продажа",
+      "area": "Jumeirah Islands",
+      "agent": "Adeel Malik · Luxe Haven Real Estate",
+      "agentPhone": "+971527903622",
+      "price": null,
+      "priceLabel": "29 950 000 AED · продажа",
+      "priceNote": "Объявление о ПРОДАЖЕ, не об аренде. Годовая аренда не указана — уточнять у агента, сдаётся ли дом.",
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "plotM2": 1026,
+      "buaM2": 520,
+      "ceiling": "",
+      "status": "review",
+      "statusLabel": "Продажа · новое 03.11",
+      "type": "villa",
+      "cover": "gallery/ji_oasis_sale-4715c49367ae8e.webp",
+      "images": [
+        {
+          "src": "gallery/ji_oasis_sale-4715c49367ae8e.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-4715c49367ae8e.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-f6518094906456.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-f6518094906456.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-8cc5b6777e413b.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-8cc5b6777e413b.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-4fdd88b5a8433c.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-4fdd88b5a8433c.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-a6bb3f91ac02fb.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-a6bb3f91ac02fb.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-27ef5c691413d7.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-27ef5c691413d7.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-8cadf43ec87bf0.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-8cadf43ec87bf0.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-c5039b506dcca2.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-c5039b506dcca2.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-114ad3174f310c.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-114ad3174f310c.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-6ef7e3067ed92e.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-6ef7e3067ed92e.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-87c740b88071a5.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-87c740b88071a5.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-7f1e364e59580d.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-7f1e364e59580d.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-8d3b44bb9dd7f8.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-8d3b44bb9dd7f8.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-90f4469e1caed7.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-90f4469e1caed7.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-015cc501e5991a.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-015cc501e5991a.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-2bdfdade1f2d11.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-2bdfdade1f2d11.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-f585c4f636fcd0.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-f585c4f636fcd0.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-e3e190db163322.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-e3e190db163322.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-73d02c8c161978.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-73d02c8c161978.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-2d7d94e6b84bd4.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-2d7d94e6b84bd4.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-fa832a6af986b4.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-fa832a6af986b4.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-bc9e89016f6152.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-bc9e89016f6152.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-d185bbce79925c.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-d185bbce79925c.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-85e7de233f7676.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-85e7de233f7676.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-6ab69abbc19a66.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-6ab69abbc19a66.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-47544c4785e876.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-47544c4785e876.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-b60ca541340eb0.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-b60ca541340eb0.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-162e0bdac965fd.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-162e0bdac965fd.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-6962daaa7a42af.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-6962daaa7a42af.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji_oasis_sale-e0c4a2d66ff717.webp",
+          "thumb": "gallery/thumb-ji_oasis_sale-e0c4a2d66ff717.webp",
+          "caption": "Фото из объявления"
+        }
+      ],
+      "description": "Полностью отремонтированная вилла Nakheel в Oasis Clusters: 4 спальни, 5 санузлов, дом 5 600 sqft (≈520 м²) на участке ≈11 000 sqft (≈1 026 м²). Свой бассейн и сад, дизайнерская мебель, премиальные полы.",
+      "facts": [
+        "Объявление Property Finder 144599293 (продажа), размещено 14.09.2026.",
+        "Мебель: частично (по объявлению — bespoke furnishings).",
+        "Объект готов (completed), полностью отремонтирован."
+      ],
+      "caveats": [
+        "Это объявление о продаже за 29 950 000 AED — аренду нужно отдельно уточнить у агента.",
+        "Номер кластера и дома не указан; точка на карте — центр Oasis Clusters."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/buy/villa-for-sale-dubai-jumeirah-islands-oasis-clusters-144599293.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.050962%2C55.166000&z=16&hl=ru",
+      "mapPrecision": "area",
+      "locationLabel": "Oasis Clusters, Jumeirah Islands · точка кластера из объявления",
+      "missing": [
+        "Точная точка дома"
+      ],
+      "requestState": "",
+      "ref": "LH-1371",
+      "possibleDuplicateIds": [],
+      "sourceNote": "По публичному объявлению Property Finder, прочитано 03.11.2026; у агента ещё не уточнялось.",
+      "documents": [],
+      "detailPage": "properties/ji_oasis_sale.html",
+      "videos": [],
+      "projectType": "Nakheel · Jumeirah Islands · Oasis Clusters",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не оценивалась.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не проверен",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "private",
+      "poolLabel": "Свой бассейн (по объявлению)",
+      "viewedDefault": false,
+      "rentDefault": false
+    },
+    {
+      "id": "ji25_sale",
+      "title": "Jumeirah Islands · Cluster 25 · продажа",
+      "area": "Jumeirah Islands",
+      "agent": "Rajesh Lalwani · DNL Properties",
+      "agentPhone": "+971555546855",
+      "price": null,
+      "priceLabel": "21 900 000 AED · продажа",
+      "priceNote": "Объявление о ПРОДАЖЕ, не об аренде. Годовая аренда не указана — уточнять у агента.",
+      "bedrooms": 4,
+      "bathrooms": 5,
+      "plotM2": 818,
+      "buaM2": 488,
+      "ceiling": "",
+      "status": "review",
+      "statusLabel": "Продажа · новое 03.11",
+      "type": "villa",
+      "cover": "gallery/ji25_sale-008f20a1c4e616.webp",
+      "images": [
+        {
+          "src": "gallery/ji25_sale-008f20a1c4e616.webp",
+          "thumb": "gallery/thumb-ji25_sale-008f20a1c4e616.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-6e041a5a2264f8.webp",
+          "thumb": "gallery/thumb-ji25_sale-6e041a5a2264f8.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-c0b9ce9fa633f7.webp",
+          "thumb": "gallery/thumb-ji25_sale-c0b9ce9fa633f7.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-f5148b9229a34e.webp",
+          "thumb": "gallery/thumb-ji25_sale-f5148b9229a34e.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-1432a8960a779b.webp",
+          "thumb": "gallery/thumb-ji25_sale-1432a8960a779b.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-f48e6ec7b23b16.webp",
+          "thumb": "gallery/thumb-ji25_sale-f48e6ec7b23b16.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-2c46e425b4b5db.webp",
+          "thumb": "gallery/thumb-ji25_sale-2c46e425b4b5db.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-579eaa47b3b385.webp",
+          "thumb": "gallery/thumb-ji25_sale-579eaa47b3b385.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-826c0bb591e91d.webp",
+          "thumb": "gallery/thumb-ji25_sale-826c0bb591e91d.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-5c2a7af5466639.webp",
+          "thumb": "gallery/thumb-ji25_sale-5c2a7af5466639.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-46bb24ea4714bb.webp",
+          "thumb": "gallery/thumb-ji25_sale-46bb24ea4714bb.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-5d16a983df0141.webp",
+          "thumb": "gallery/thumb-ji25_sale-5d16a983df0141.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-047fc18a6b5d22.webp",
+          "thumb": "gallery/thumb-ji25_sale-047fc18a6b5d22.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-04c35a0f6d4c73.webp",
+          "thumb": "gallery/thumb-ji25_sale-04c35a0f6d4c73.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-9cd4200a79338f.webp",
+          "thumb": "gallery/thumb-ji25_sale-9cd4200a79338f.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-e8a9d789907513.webp",
+          "thumb": "gallery/thumb-ji25_sale-e8a9d789907513.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-41b760304a0727.webp",
+          "thumb": "gallery/thumb-ji25_sale-41b760304a0727.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-3678822fe4a1aa.webp",
+          "thumb": "gallery/thumb-ji25_sale-3678822fe4a1aa.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-41702e57b2f8cc.webp",
+          "thumb": "gallery/thumb-ji25_sale-41702e57b2f8cc.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-67438870f6947c.webp",
+          "thumb": "gallery/thumb-ji25_sale-67438870f6947c.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-1fae1bfe6558e6.webp",
+          "thumb": "gallery/thumb-ji25_sale-1fae1bfe6558e6.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-16b5efd81fe410.webp",
+          "thumb": "gallery/thumb-ji25_sale-16b5efd81fe410.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-f141c704dbd4bb.webp",
+          "thumb": "gallery/thumb-ji25_sale-f141c704dbd4bb.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-2630ce74af1abb.webp",
+          "thumb": "gallery/thumb-ji25_sale-2630ce74af1abb.webp",
+          "caption": "Фото из объявления"
+        },
+        {
+          "src": "gallery/ji25_sale-eefdbbc2d5940b.webp",
+          "thumb": "gallery/thumb-ji25_sale-eefdbbc2d5940b.webp",
+          "caption": "Фото из объявления"
+        }
+      ],
+      "description": "Пустая (vacant) отремонтированная вилла рядом с клубным домом: 4 спальни + комната для персонала, 5 санузлов, дом 5 250 sqft (≈488 м²), участок 8 800 sqft (≈818 м²). Свой бассейн и сад, большой передний двор, навес для машин; внизу гостиная, семейная комната, столовая и гостевая спальня с санузлом.",
+      "facts": [
+        "Объявление Property Finder 160078463 (продажа), размещено 16.10.2026.",
+        "Без мебели; улучшены и фасад, и интерьер.",
+        "Видео-тур из объявления: https://www.youtube.com/watch?v=MUym2PoqaOA"
+      ],
+      "caveats": [
+        "Это объявление о продаже за 21 900 000 AED — аренду нужно отдельно уточнить у агента.",
+        "Описание противоречит карточке: в тексте «for Rent» и «European Cluster», а объявление — продажа в Contemporary Cluster 25.",
+        "Номер дома неизвестен; точка на карте — центр Cluster 25."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/buy/villa-for-sale-dubai-jumeirah-islands-contemporary-cluster-cluster-25-160078463.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.053957%2C55.165916&z=16&hl=ru",
+      "mapPrecision": "area",
+      "locationLabel": "Cluster 25, Contemporary Cluster, Jumeirah Islands · точка кластера из объявления",
+      "missing": [
+        "Точная точка дома"
+      ],
+      "requestState": "",
+      "ref": "DNL-S-14165",
+      "possibleDuplicateIds": [],
+      "sourceNote": "По публичному объявлению Property Finder, прочитано 03.11.2026; у агента ещё не уточнялось.",
+      "documents": [],
+      "detailPage": "properties/ji25_sale.html",
+      "videos": [],
+      "projectType": "Nakheel · Jumeirah Islands · Cluster 25 (Contemporary)",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не оценивалась.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не проверен",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "private",
+      "poolLabel": "Свой бассейн (по объявлению)",
       "viewedDefault": false,
       "rentDefault": false
     },
