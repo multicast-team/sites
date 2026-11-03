@@ -1185,6 +1185,96 @@
     return button;
   }
 
+  const SAT_PREC_SHORT = { exact: 'точный дом', house_likely: 'вероятный дом', street: 'улица', entrance: 'въезд в комьюнити', listing: 'точка объявления', cluster: 'квартал, дом не установлен', area: 'район, дом не установлен' };
+
+  function satImages(property) {
+    const s = property.satellite;
+    return s && Array.isArray(s.images) ? s.images.filter((shot) => shot && typeof shot.src === 'string' && shot.src) : [];
+  }
+
+  function satButton(property, className = '') {
+    const shots = satImages(property);
+    const button = el('button', `sat-big-button ${className}`.trim());
+    button.type = 'button';
+    button.setAttribute('aria-haspopup', 'dialog');
+    button.setAttribute('aria-label', `Со спутника: ${property.title}`);
+    if (shots.length) {
+      const img = el('img');
+      img.src = shots[0].src; img.loading = 'lazy'; img.decoding = 'async'; img.alt = '';
+      button.append(img);
+    } else button.classList.add('is-empty');
+    const textBox = el('span', 'sat-big-text');
+    textBox.append(el('span', 'sat-big-label', '🛰 СО СПУТНИКА'));
+    textBox.append(el('span', 'sat-big-sub', property.geo ? (SAT_PREC_SHORT[property.geo.precision] || property.geo.precision) : 'место дома не найдено'));
+    button.append(textBox);
+    button.addEventListener('click', (event) => { event.stopPropagation(); openSatellite(property, button); });
+    return button;
+  }
+
+  function openSatellite(property, opener) {
+    if (galleryDialog) galleryDialog.close();
+    const s = property.satellite || {};
+    const dialog = el('dialog', 'gallery-dialog sat-dialog');
+    galleryDialog = dialog;
+    dialog.setAttribute('aria-labelledby', 'sat-dialog-title');
+    const top = el('div', 'dialog-top');
+    const heading = el('h2', 'gallery-title', `Со спутника · ${property.title}`);
+    heading.id = 'sat-dialog-title';
+    const close = el('button', 'close-button', '✕');
+    close.type = 'button';
+    close.setAttribute('aria-label', 'Закрыть');
+    top.append(heading, close);
+    const body = el('div', 'sat-dialog-body');
+    const facts = [];
+    if (property.geo) facts.push(`Точка: ${SAT_PREC_SHORT[property.geo.precision] || property.geo.precision}`);
+    if (s.check) facts.push(SAT_CHECK[s.check] || s.check);
+    if (s.imageryDate) facts.push(`снимок Esri ${s.imageryDate}`);
+    if (facts.length) body.append(el('p', 'sat-dialog-facts', facts.join(' · ')));
+    const shots = satImages(property);
+    if (shots.length) {
+      const grid = el('div', 'sat-dialog-shots');
+      for (const shot of shots) {
+        const link = el('a', 'sat-dialog-shot');
+        link.href = shot.src; link.target = '_blank'; link.rel = 'noopener';
+        const img = el('img'); img.src = shot.src; img.decoding = 'async'; img.alt = text(shot.caption) || 'Спутниковый снимок';
+        link.append(img, el('span', '', text(shot.caption)));
+        grid.append(link);
+      }
+      body.append(grid);
+    } else {
+      body.append(el('p', 'sat-dialog-empty', 'Точное место этой виллы пока не найдено, поэтому снимков нет.'));
+    }
+    const known = (v) => (v && v !== 'неизвестно' ? v : '');
+    const rows = [['Сад выходит на', known(s.gardenFacing)], ['Сзади', known(s.backs)], ['Стройка рядом', s.construction], ['Дороги', s.roads], ['Соседи', s.neighbors]].filter((r) => r[1]);
+    if (rows.length) body.append(factRows(rows));
+    if (s.notes) body.append(el('p', 'sat-dialog-notes', s.notes));
+    const links = el('p', 'sat-links sat-dialog-links');
+    if (property.geo && Number.isFinite(property.geo.lat)) {
+      const ll = `${property.geo.lat.toFixed(6)},${property.geo.lng.toFixed(6)}`;
+      const g = el('a', 'button', 'Открыть в Google Maps (спутник)'); g.href = `https://www.google.com/maps/@${ll},19z/data=!3m1!1e3`; g.target = '_blank'; g.rel = 'noopener';
+      const q = el('a', 'button button-quiet', `Координаты ${ll}`); q.href = `https://www.google.com/maps/search/?api=1&query=${ll}`; q.target = '_blank'; q.rel = 'noopener';
+      links.append(g, q);
+    } else if (property.area) {
+      const g = el('a', 'button button-quiet', `Район на Google Maps: ${property.area}`); g.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.area + ', Dubai')}`; g.target = '_blank'; g.rel = 'noopener';
+      links.append(g);
+    }
+    if (links.childNodes.length) body.append(links);
+    body.append(el('p', 'aside-note', 'Снимки Esri World Imagery (0,5 м). Отметка — проверенная точка; если указан квартал или район, точный дом не установлен. Снимок мог устареть.'));
+    close.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => {
+      dialog.remove();
+      if (galleryDialog === dialog) galleryDialog = null;
+      syncDialogScroll();
+      if (opener && opener.isConnected) opener.focus({ preventScroll: true });
+    });
+    dialog.append(top, body);
+    document.body.append(dialog);
+    dialog.showModal();
+    syncDialogScroll();
+    close.focus({ preventScroll: true });
+  }
+
   function card(property, index) {
     const article = el('article', `property-card is-${property.status}`);
     article.dataset.id = property.id;
@@ -1216,7 +1306,7 @@
     if (property.caveats.length) main.append(el('p', 'caveat', property.caveats[0] + (property.caveats.length > 1 ? ` · ещё ${property.caveats.length - 1} в карточке` : '')));
     const actions = el('div', 'card-actions');
     actions.append(openButton('Подробнее', property, 'button card-open'), quickLinks(property));
-    main.append(actions, cardSocial(property), brokerBlock(property));
+    main.append(satButton(property), actions, cardSocial(property), brokerBlock(property));
     article.append(cover(property, index < 3), main, noteBlock(property));
     return article;
   }
@@ -1329,7 +1419,7 @@
 
     const toggleCard = el('div', 'aside-card');
     toggleCard.append(el('p', 'aside-label', 'Ваши отметки (видны всем)'), decisionToggles(property));
-    aside.append(toggleCard);
+    aside.append(toggleCard, satButton(property, 'sat-big-detail'));
 
     const priceCard = el('div', 'aside-card');
     priceCard.append(priceBlock(property, true));

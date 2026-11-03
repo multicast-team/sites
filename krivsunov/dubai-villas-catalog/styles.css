@@ -633,3 +633,27 @@ dialog::backdrop { background: #1c221ca8; backdrop-filter: blur(4px); }
 .sat-shot img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 8px; background: #20262b; }
 .sat-shot span { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); }
 .sat-links { margin: 6px 0 0; font-size: 13px; }
+
+/* Большая кнопка «Со спутника» */
+.sat-big-button { position: relative; display: flex; align-items: flex-end; width: 100%; min-height: 92px; margin: 8px 0 2px; padding: 0; border: 2px solid #1d3b52; border-radius: 10px; overflow: hidden; background: #1d3b52; color: #fff; cursor: pointer; text-align: left; box-shadow: 0 2px 8px #0e223326; transition: transform .15s, box-shadow .15s; }
+.sat-big-button img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(1.1) brightness(.85); }
+.sat-big-button::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #0d1c28e6 0%, #0d1c2899 45%, #0d1c2820 100%); }
+.sat-big-button:hover { transform: translateY(-1px); box-shadow: 0 6px 18px #0e223340; }
+.sat-big-button:hover img { filter: saturate(1.15) brightness(.95); }
+.sat-big-text { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; }
+.sat-big-label { font-size: 19px; font-weight: 800; letter-spacing: .04em; line-height: 1.1; text-shadow: 0 1px 3px #0009; }
+.sat-big-sub { font-size: 12.5px; opacity: .92; text-shadow: 0 1px 2px #0009; }
+.sat-big-button.is-empty { min-height: 64px; background: #5a6470; border-color: #5a6470; }
+.sat-big-button.is-empty::after { display: none; }
+.sat-big-detail { margin: 0 0 12px; min-height: 120px; }
+.sat-big-detail .sat-big-label { font-size: 22px; }
+.sat-dialog { max-width: 1240px; }
+.sat-dialog-body { padding: 4px 16px 18px; }
+.sat-dialog-facts { margin: 4px 0 10px; font-weight: 600; }
+.sat-dialog-shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; margin-bottom: 12px; }
+.sat-dialog-shot { display: block; color: inherit; text-decoration: none; }
+.sat-dialog-shot img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 10px; background: #20262b; }
+.sat-dialog-shot span { display: block; margin-top: 4px; font-size: 12.5px; color: var(--muted); }
+.sat-dialog-empty { padding: 18px; border-radius: 10px; background: var(--soft); }
+.sat-dialog-notes { margin: 10px 0; }
+.sat-dialog-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 6px; }
