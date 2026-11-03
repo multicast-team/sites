@@ -1,0 +1,2928 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0F0B1A" />
+  <title>Одна Яма × Gemini — Верифицированный питч для Максима</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Rubik:wght@400;500;600;700;800&family=Unbounded:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #0D0917;
+      --bg-hall: #151026;
+      --bg-card: #1D1734;
+      --bg-card-elevated: #251E42;
+      --bg-glass: rgba(29, 23, 52, 0.84);
+      --border-subtle: rgba(255, 255, 255, 0.09);
+      --border-bright: rgba(255, 210, 46, 0.35);
+      --duck-yellow: #FFD22E;
+      --duck-yellow-dark: #D99B00;
+      --duck-blue: #38BDF8;
+      --duck-purple: #C084FC;
+      --duck-gold: #F59E0B;
+      --pit-glow: #9333EA;
+      --pit-rim: #A855F7;
+      --boost-green: #10B981;
+      --danger-red: #F43F5E;
+      --amber-warn: #FBBF24;
+      --text-main: #F8FAFC;
+      --text-Soft: #CBD5E1;
+      --text-muted: #94A3B8;
+      --radius-xl: 22px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-card: 0 14px 34px -8px rgba(0, 0, 0, 0.55);
+      --shadow-glow-yellow: 0 0 28px rgba(255, 210, 46, 0.25);
+      --shadow-glow-pit: 0 0 36px rgba(168, 85, 247, 0.35);
+      --font-display: 'Unbounded', 'Rubik', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-body: 'Rubik', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    body {
+      background-color: var(--bg-deep);
+      background-image:
+        radial-gradient(circle at 50% 0%, rgba(147, 51, 234, 0.22) 0%, transparent 55%),
+        radial-gradient(circle at 85% 20%, rgba(255, 210, 46, 0.08) 0%, transparent 40%),
+        linear-gradient(180deg, #0D0917 0%, #130E24 50%, #0D0917 100%);
+      overflow-x: hidden;
+      padding-bottom: 88px;
+    }
+
+    /* Subtle workshop floor tile grid */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Sticky Top Navigation (Mobile 390px friendly) */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 9, 23, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 8px 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 12px;
+    }
+
+    .brand-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.82rem;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 210, 46, 0.1);
+      border: 1px solid rgba(255, 210, 46, 0.28);
+    }
+
+    .brand-pill .pit-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--duck-yellow);
+      box-shadow: 0 0 10px var(--duck-yellow);
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.75; }
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .nav-links::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 11px;
+      min-height: 38px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-Soft);
+      text-decoration: none;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid transparent;
+      transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-link:active,
+    .nav-link.active {
+      background: rgba(255, 210, 46, 0.16);
+      color: var(--duck-yellow);
+      border-color: rgba(255, 210, 46, 0.35);
+      transform: scale(0.97);
+    }
+
+    /* Animated Conveyor Belt Strip */
+    .conveyor-strip {
+      position: relative;
+      height: 38px;
+      background: repeating-linear-gradient(
+        90deg,
+        #19132B 0px,
+        #19132B 24px,
+        #221A3A 24px,
+        #221A3A 28px
+      );
+      border-bottom: 2px solid #2E244D;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    .conveyor-track {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      white-space: nowrap;
+      animation: beltMove 22s linear infinite;
+      padding-left: 100%;
+    }
+
+    @keyframes beltMove {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .belt-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--text-Soft);
+      padding: 2px 9px;
+      border-radius: 99px;
+      background: rgba(13, 9, 23, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .belt-item.yellow { color: var(--duck-yellow); border-color: rgba(255, 210, 46, 0.3); }
+    .belt-item.blue { color: var(--duck-blue); border-color: rgba(56, 189, 248, 0.3); }
+    .belt-item.purple { color: var(--duck-purple); border-color: rgba(192, 132, 252, 0.3); }
+    .belt-item.gold { color: var(--duck-gold); border-color: rgba(245, 158, 11, 0.4); }
+    .belt-item.green { color: var(--boost-green); border-color: rgba(16, 185, 129, 0.35); }
+
+    /* Hero Section */
+    .hero {
+      padding: 28px 0 24px;
+      position: relative;
+    }
+
+    .hero-card {
+      background: linear-gradient(155deg, rgba(37, 30, 66, 0.94) 0%, rgba(21, 16, 38, 0.96) 100%);
+      border: 1px solid rgba(255, 210, 46, 0.25);
+      border-radius: var(--radius-xl);
+      padding: 24px 18px;
+      box-shadow: var(--shadow-card), var(--shadow-glow-pit);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(255, 210, 46, 0.08) 55%, transparent 72%);
+      pointer-events: none;
+    }
+
+    .eyebrow-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 5px 10px;
+      border-radius: 999px;
+    }
+
+    .badge-verified {
+      background: rgba(16, 185, 129, 0.16);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .badge-branch {
+      background: rgba(168, 85, 247, 0.16);
+      color: #D8B4FE;
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.55rem, 5.6vw, 2.65rem);
+      font-weight: 900;
+      line-height: 1.14;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .hero-title .accent-yellow {
+      color: var(--duck-yellow);
+      text-shadow: 0 0 22px rgba(255, 210, 46, 0.32);
+    }
+
+    .hero-title .accent-pit {
+      background: linear-gradient(90deg, #C084FC, #38BDF8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-quote {
+      background: rgba(13, 9, 23, 0.65);
+      border-left: 3px solid var(--duck-yellow);
+      padding: 12px 14px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      font-size: 0.92rem;
+      color: var(--text-Soft);
+      margin-bottom: 18px;
+    }
+
+    .hero-quote strong {
+      color: var(--duck-yellow);
+      font-weight: 700;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    @media (min-width: 640px) {
+      .kpi-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      .hero-card {
+        padding: 32px 28px;
+      }
+    }
+
+    .kpi-box {
+      background: rgba(13, 9, 23, 0.62);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .kpi-val {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--duck-yellow);
+    }
+
+    .kpi-val.green { color: #34D399; }
+    .kpi-val.cyan { color: var(--duck-blue); }
+    .kpi-val.purple { color: var(--duck-purple); }
+
+    .kpi-label {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, #FFE055 0%, #F5B800 100%);
+      color: #161026;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(245, 184, 0, 0.35);
+      transition: transform 0.12s ease;
+      flex: 1 1 auto;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.97);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.2s ease;
+      flex: 1 1 auto;
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.97);
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    /* Section Headers */
+    .section {
+      padding: 28px 0 12px;
+      scroll-margin-top: 64px;
+    }
+
+    .section-header {
+      margin-bottom: 18px;
+    }
+
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--duck-yellow);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.28rem, 4.5vw, 1.85rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .section-desc {
+      font-size: 0.92rem;
+      color: var(--text-Soft);
+    }
+
+    /* Interactive Mini-Demo Card */
+    .demo-wrapper {
+      background: linear-gradient(180deg, #1E1736 0%, #140F25 100%);
+      border: 2px solid rgba(255, 210, 46, 0.42);
+      border-radius: var(--radius-xl);
+      padding: 14px;
+      box-shadow: var(--shadow-card), var(--shadow-glow-yellow);
+    }
+
+    .demo-top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .demo-status-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .hud-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: rgba(13, 9, 23, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .hud-chip.money { color: #34D399; border-color: rgba(52, 211, 153, 0.35); }
+    .hud-chip.goal { color: var(--duck-yellow); border-color: rgba(255, 210, 46, 0.35); }
+    .hud-chip.combo { color: var(--duck-purple); border-color: rgba(192, 132, 252, 0.4); }
+
+    .sound-btn {
+      min-height: 38px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .canvas-stage {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      aspect-ratio: 390 / 480;
+      background: #CBC4E2;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      box-shadow: inset 0 0 32px rgba(21, 16, 38, 0.35);
+    }
+
+    #pitDemoCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: pointer;
+    }
+
+    .demo-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ctrl-btn {
+      min-height: 50px;
+      padding: 8px 6px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.78rem;
+      line-height: 1.2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      transition: transform 0.1s ease;
+    }
+
+    .ctrl-btn:active {
+      transform: scale(0.95);
+    }
+
+    .ctrl-btn.train {
+      background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
+      color: #082F49;
+      border-color: #7DD3FC;
+    }
+
+    .ctrl-btn.throw {
+      background: linear-gradient(180deg, #34D399 0%, #059669 100%);
+      color: #064E3B;
+      border-color: #6EE7B7;
+    }
+
+    .ctrl-btn.bomb {
+      background: linear-gradient(180deg, #FFD22E 0%, #EAB308 100%);
+      color: #1E1300;
+      border-color: #FEF08A;
+    }
+
+    .demo-caption {
+      max-width: 520px;
+      margin: 10px auto 0;
+      font-size: 0.78rem;
+      color: var(--text-Soft);
+      text-align: center;
+      background: rgba(13, 9, 23, 0.55);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* Top-5 Ideas Cards */
+    .ideas-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .idea-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 18px 16px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+
+    .idea-card.top-one {
+      border: 2px solid rgba(255, 210, 46, 0.5);
+      background: linear-gradient(165deg, #241C42 0%, #1A1430 100%);
+    }
+
+    .idea-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .idea-rank-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rank-pill {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: var(--duck-yellow);
+      color: #140E24;
+    }
+
+    .verdict-pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 99px;
+      text-transform: uppercase;
+    }
+
+    .verdict-pill.take {
+      background: rgba(16, 185, 129, 0.18);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.45);
+    }
+
+    .verdict-pill.refine {
+      background: rgba(251, 191, 36, 0.16);
+      color: #FBBF24;
+      border: 1px solid rgba(251, 191, 36, 0.45);
+    }
+
+    .cost-pill {
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--duck-blue);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 4px 10px;
+      border-radius: 99px;
+    }
+
+    .idea-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.08rem, 3.8vw, 1.35rem);
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .idea-why {
+      font-size: 0.9rem;
+      color: var(--text-Soft);
+      margin-bottom: 14px;
+    }
+
+    /* Timeline steps inside idea */
+    .timeline-steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    @media (min-width: 720px) {
+      .timeline-steps {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .idea-card {
+        padding: 22px 22px;
+      }
+    }
+
+    .step-box {
+      background: rgba(13, 9, 23, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+    }
+
+    .step-time {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--duck-yellow);
+      margin-bottom: 4px;
+      display: inline-block;
+      background: rgba(255, 210, 46, 0.12);
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+
+    .step-text {
+      font-size: 0.84rem;
+      color: var(--text-Soft);
+      line-height: 1.42;
+    }
+
+    /* Verification & Code Boxes */
+    .verify-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 680px) {
+      .verify-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .verify-box {
+      border-radius: var(--radius-md);
+      padding: 11px 13px;
+      font-size: 0.83rem;
+      line-height: 1.45;
+    }
+
+    .verify-box.code-state {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      color: #E0F2FE;
+    }
+
+    .verify-box.fix-required {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #D1FAE5;
+    }
+
+    .verify-box-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .verify-box.code-state .verify-box-title { color: var(--duck-blue); }
+    .verify-box.fix-required .verify-box-title { color: #34D399; }
+
+    .idea-meta-footer {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .meta-tag {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+    }
+
+    /* UX Section & Tabs */
+    .segmented-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+      background: rgba(13, 9, 23, 0.65);
+      padding: 6px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .seg-btn {
+      flex: 1 1 220px;
+      min-height: 46px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-Soft);
+      font-family: var(--font-body);
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-align: center;
+    }
+
+    .seg-btn.active {
+      background: linear-gradient(180deg, rgba(255, 210, 46, 0.22) 0%, rgba(255, 210, 46, 0.1) 100%);
+      color: var(--duck-yellow);
+      border-color: rgba(255, 210, 46, 0.45);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    .ux-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .ux-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (min-width: 760px) {
+      .ux-card {
+        grid-template-columns: 260px 1fr;
+        padding: 20px;
+        gap: 22px;
+      }
+    }
+
+    .frame-stage {
+      position: relative;
+      width: 100%;
+      max-width: 280px;
+      margin: 0 auto;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      background: #0D0917;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.6);
+    }
+
+    .frame-stage img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .frame-overlay-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .frame-stage.hide-markers .frame-overlay-layer {
+      opacity: 0.08;
+    }
+
+    .bbox {
+      position: absolute;
+      border: 2.5px solid #F43F5E;
+      background: rgba(244, 63, 94, 0.22);
+      border-radius: 6px;
+      box-shadow: 0 0 0 2px rgba(13, 9, 23, 0.75), 0 0 16px rgba(244, 63, 94, 0.75);
+      animation: pulseBox 2s infinite ease-in-out;
+    }
+
+    .bbox.amber {
+      border-color: #FBBF24;
+      background: rgba(251, 191, 36, 0.2);
+      box-shadow: 0 0 0 2px rgba(13, 9, 23, 0.75), 0 0 16px rgba(251, 191, 36, 0.7);
+    }
+
+    @keyframes pulseBox {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .bbox-tag {
+      position: absolute;
+      top: -22px;
+      left: 0;
+      background: #F43F5E;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+    }
+
+    .bbox.amber .bbox-tag {
+      background: #F59E0B;
+      color: #140E24;
+    }
+
+    .bbox-tag.bottom {
+      top: auto;
+      bottom: -22px;
+    }
+
+    .bbox-tag.right {
+      left: auto;
+      right: 0;
+    }
+
+    .frame-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 8px;
+      max-width: 280px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .frame-toggle-btn {
+      width: 100%;
+      min-height: 38px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text-Soft);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .ux-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ux-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ux-num {
+      font-family: var(--font-display);
+      font-size: 0.76rem;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: rgba(244, 63, 94, 0.2);
+      color: #FDA4AF;
+      border: 1px solid rgba(244, 63, 94, 0.45);
+    }
+
+    .ux-coord-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--duck-yellow);
+      background: rgba(255, 210, 46, 0.1);
+      border: 1px solid rgba(255, 210, 46, 0.28);
+      padding: 3px 9px;
+      border-radius: 99px;
+    }
+
+    .ux-title {
+      font-family: var(--font-display);
+      font-size: 1.08rem;
+      font-weight: 800;
+      line-height: 1.28;
+    }
+
+    .ux-problem-box {
+      background: rgba(244, 63, 94, 0.08);
+      border-left: 3px solid var(--danger-red);
+      padding: 10px 12px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.86rem;
+      color: var(--text-Soft);
+    }
+
+    .ux-fix-box {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 3px solid var(--boost-green);
+      padding: 10px 12px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.86rem;
+      color: #ECFDF5;
+    }
+
+    .ux-fix-box strong,
+    .ux-problem-box strong {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .ux-problem-box strong { color: #FDA4AF; }
+    .ux-fix-box strong { color: #34D399; }
+
+    /* Texts Section (10 Before -> After) */
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .filter-pill {
+      min-height: 38px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-Soft);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      background: var(--duck-yellow);
+      color: #140E24;
+      border-color: var(--duck-yellow);
+      font-weight: 700;
+    }
+
+    .texts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 720px) {
+      .texts-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .text-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .text-card-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .code-loc {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: var(--duck-blue);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .char-count {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      color: #34D399;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    .diff-pair {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .diff-before {
+      background: rgba(244, 63, 94, 0.09);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 9px 11px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #FDA4AF;
+      position: relative;
+    }
+
+    .diff-after {
+      background: rgba(16, 185, 129, 0.13);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: var(--radius-sm);
+      padding: 10px 11px;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.94rem;
+      color: #ECFDF5;
+      box-shadow: inset 0 0 14px rgba(16, 185, 129, 0.1);
+    }
+
+    .diff-label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .diff-before .diff-label {
+      background: rgba(244, 63, 94, 0.25);
+      color: #FECDD3;
+    }
+
+    .diff-after .diff-label {
+      background: #10B981;
+      color: #052E16;
+    }
+
+    .text-why {
+      font-size: 0.8rem;
+      color: var(--text-Soft);
+      line-height: 1.38;
+    }
+
+    /* Footer */
+    .site-footer {
+      margin-top: 36px;
+      padding: 22px 16px;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Mobile-First Navigation -->
+  <header class="top-nav">
+    <div class="nav-inner">
+      <a href="#top" class="brand-pill">
+        <span class="pit-dot"></span>
+        <span>ЯМА × GEMINI</span>
+      </a>
+      <nav class="nav-links" aria-label="Разделы питча">
+        <a href="#demo-section" class="nav-link active">🕹️ Демка №1</a>
+        <a href="#ideas-section" class="nav-link">🦆 Топ-5 идей</a>
+        <a href="#ux-section" class="nav-link">📐 5 UX-правок</a>
+        <a href="#texts-section" class="nav-link">✍️ 10 текстов</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Animated Conveyor Belt Ticker -->
+  <div class="conveyor-strip" aria-hidden="true">
+    <div class="conveyor-track">
+      <span class="belt-item yellow">🦆 Утка ×1</span>
+      <span class="belt-item blue">🦆 Синяя ×2</span>
+      <span class="belt-item purple">🦆 Фиолетовая ×5</span>
+      <span class="belt-item gold">🦆 Золотая ×10</span>
+      <span class="belt-item green">✓ Топ-5 идей проверены по v6j</span>
+      <span class="belt-item yellow">🕳️ Яме нужно · КОМБО ×20</span>
+      <span class="belt-item blue">🐱 Кот Шпуля у новой покупки</span>
+      <span class="belt-item purple">📦 Коробка 10/10 · PRD сохранён</span>
+      <span class="belt-item gold">🦆 Утиный Паровозик · 15–30 мин</span>
+      <span class="belt-item green">✓ 250/250 строк сверено со strings.tsv</span>
+      <!-- Duplicate for seamless loop -->
+      <span class="belt-item yellow">🦆 Утка ×1</span>
+      <span class="belt-item blue">🦆 Синяя ×2</span>
+      <span class="belt-item purple">🦆 Фиолетовая ×5</span>
+      <span class="belt-item gold">🦆 Золотая ×10</span>
+      <span class="belt-item green">✓ Топ-5 идей проверены по v6j</span>
+      <span class="belt-item yellow">🕳️ Яме нужно · КОМБО ×20</span>
+      <span class="belt-item blue">🐱 Кот Шпуля у новой покупки</span>
+      <span class="belt-item purple">📦 Коробка 10/10 · PRD сохранён</span>
+      <span class="belt-item gold">🦆 Утиный Паровозик · 15–30 мин</span>
+    </div>
+  </div>
+
+  <main id="top" class="container">
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow-row">
+          <span class="badge badge-verified">✓ Только подтверждённое проверкой (03.11.2026)</span>
+          <span class="badge badge-branch">Ветка v6j · HEAD 7edb202</span>
+        </div>
+        <h1 class="hero-title">
+          Питч для Максима: <span class="accent-yellow">«Одна Яма»</span> × <span class="accent-pit">Gemini 4 Argon</span>
+        </h1>
+        <p class="hero-quote">
+          Фокус строго по критерию Максима: <strong>«чтобы плейтайм был хороший, каждую минуту было чем заняться как в обелиске, ролики достаточно показывались и была стена, чтобы хотели нажимать»</strong>. Всё отклонённое проверкой, дубли кода v6j и скрытые множители сверх потолка <code>×10</code> убраны.
+        </p>
+
+        <div class="kpi-grid">
+          <div class="kpi-box">
+            <span class="kpi-val">Топ-5</span>
+            <span class="kpi-label">Идей «брать» (3 чистых + 2 после точечной правки)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-val green">62 / 78</span>
+            <span class="kpi-label">Подтверждённых UX-наблюдений по 16 кадрам (5 главных на разборе)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-val cyan">10 лучших</span>
+            <span class="kpi-label">Правок текста «было → стало» из 250 сверенных строк</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-val purple">15–30 мин</span>
+            <span class="kpi-label">Окно главы I, которое закрывает интерактивный прототип №1 ниже</span>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="#demo-section" class="btn-primary">🕹️ Потыкать прототип Топ-1 идеи</a>
+          <a href="#ideas-section" class="btn-secondary">🦆 Смотреть Топ-5 «брать»</a>
+          <a href="#ux-section" class="btn-secondary">📐 Кадры UX с разметкой</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE CANVAS MINI-DEMO (TOP-1 VERIFIED IDEA: #7 DUCK TRAIN + #1 PIT RIM INHALE) -->
+    <section id="demo-section" class="section">
+      <div class="section-header">
+        <div class="section-kicker">🕹️ Живой прототип ощущения · тач 390 px</div>
+        <h2 class="section-title">Мини-демка Топ-1 идеи: «Утиный Паровозик» + «Вдох обода Ямы»</h2>
+        <p class="section-desc">
+          Прототип закрывает пустое окно 15–30 мин (п. 97) без новой валюты. <strong>Тапай пальцем по бегущей веренице утят</strong> (или жми кнопки внизу), чтобы перехватить стайку броском «Кинуть», собрать стопку и взорвать комбо-бомбу с упругим вдохом обода Ямы!
+        </p>
+      </div>
+
+      <div class="demo-wrapper">
+        <div class="demo-top-bar">
+          <div class="demo-status-pills">
+            <span class="hud-chip money" id="demoMoney">$ 14,6K</span>
+            <span class="hud-chip goal" id="demoPitNeed">🕳️ Яме нужно: 48 🦆</span>
+            <span class="hud-chip combo" id="demoCombo">🔥 КОМБО ×1</span>
+          </div>
+          <button type="button" class="sound-btn" id="demoSoundBtn" aria-pressed="true">🔊 Звук: ВКЛ</button>
+        </div>
+
+        <div class="canvas-stage" id="canvasStage">
+          <canvas id="pitDemoCanvas" width="390" height="480"></canvas>
+        </div>
+
+        <div class="demo-controls">
+          <button type="button" class="ctrl-btn train" id="btnSpawnTrain">
+            <span>🦆 Паровозик</span>
+            <small style="font-size:0.66rem;opacity:0.85;">Мама + 8 утят</small>
+          </button>
+          <button type="button" class="ctrl-btn throw" id="btnIntercept">
+            <span>🎯 Кинуть в строй</span>
+            <small style="font-size:0.66rem;opacity:0.85;">Рассыпать стайку</small>
+          </button>
+          <button type="button" class="ctrl-btn bomb" id="btnBombPit">
+            <span>💥 Бомба в Яму!</span>
+            <small style="font-size:0.66rem;opacity:0.85;">Вдох обода + перья</small>
+          </button>
+        </div>
+
+        <p class="demo-caption" id="demoHintText">
+          👆 Тапни прямо по Маме-Утке в шлеме или утятам на экране: перехвати все 8 утят до края зала, чтобы Мама-Утка нырнула сальто в Яму (+1 мин дохода)!
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 1: TOP-5 VERIFIED IDEAS -->
+    <section id="ideas-section" class="section">
+      <div class="section-header">
+        <div class="section-kicker">🦆 Проверено по коду v6j и решениям Максима</div>
+        <h2 class="section-title">Топ-5 идей с вердиктом «Брать»</h2>
+        <p class="section-desc">
+          Честный срез проверки: чистый вердикт «брать» получили 3 идеи (<strong>№7, №12, №6</strong>), а 4-й и 5-й взяты лучшие из «доработать» (<strong>№10, №1</strong>) строго после удаления конфликтующих с балансом и кодом деталей.
+        </p>
+      </div>
+
+      <div class="ideas-list">
+
+        <!-- IDEA #1 (No. 7) -->
+        <article class="idea-card top-one">
+          <div class="idea-head">
+            <div class="idea-rank-group">
+              <span class="rank-pill">ТОП-1 · Идея №7</span>
+              <span class="verdict-pill take">✓ Вердикт: БРАТЬ</span>
+            </div>
+            <span class="cost-pill">Цена в Unity: M–L (3 дня)</span>
+          </div>
+          <h3 class="idea-title">«Утиный Паровозик (Побег стайки)» — перехват вереницы раз в 7 минут</h3>
+          <p class="idea-why">
+            <strong>Почему №1:</strong> Единственная идея, которая прямо закрывает открытый вопрос Максима о просадке темпа в окне <strong>15–30 минут</strong> (п. 97, жалоба G5 «после третьего стола подустал, хочется нового») без ввода новой валюты и без отдельных окон. Задействует купленную способность «Кинуть» (решение 02.11 №2) и быстрый сбор стопки за 2 с (п. 43).
+          </p>
+          <div class="timeline-steps">
+            <div class="step-box">
+              <span class="step-time">0:00–0:03</span>
+              <p class="step-text">Раз в ~7–8 мин (не раньше 12-й минуты игры) сбоку зала с кряканьем выбегает <strong>Мама-Утка в лётном шлеме</strong>, а за ней гуськом семенят цепочкой 8 цветных утят (синие <code>×2</code>, фиолетовые <code>×5</code>, золотые <code>×10</code>).</p>
+            </div>
+            <div class="step-box">
+              <span class="step-time">0:03–0:10</span>
+              <p class="step-text">Игрок бежит наперерез или бьёт по голове колонны прицельным броском <strong>«Кинуть»</strong>: строй с писком рассыпается вокруг Ямы, и герой за 2 с пылесосит всю стайку в руки для мощного комбо-сброса.</p>
+            </div>
+            <div class="step-box">
+              <span class="step-time">0:10–0:14</span>
+              <p class="step-text">Если перехватить всех 8 утят до того, как Мама-Утка уйдёт за край зала, она сама с разбегу ныряет сальто в Яму и даёт всплеск <code>+1 мин дохода</code>.</p>
+            </div>
+          </div>
+          <div class="verify-grid">
+            <div class="verify-box code-state">
+              <div class="verify-box-title">🔍 Состояние кода v6j</div>
+              В коде ещё нет. Ближайшее: «счастливая утка» по расписанию (<code>Prod/HallLuckyBeat.cs</code>, 90/210/330 с) и золотой лоток — другие по форме. Утки выходят в обычное состояние <code>Product</code>, деньги идут штатно через Яму.
+            </div>
+            <div class="verify-box fix-required">
+              <div class="verify-box-title">🛠️ Правка проверки перед внедрением</div>
+              Оценивать в <strong>M–L (3 дня, не 2)</strong>: 8 тел <code>Product</code> вереницей, модель мамы-утки, метки серии <code>HeroCombo.Mark</code> и лимит <code>BodyBudget</code>. Ограничить число золотых <code>×10</code> в веренице по модели (п. 21), сразу заложить реакцию бота фермы (<code>SectorBotPolicy</code>) и правило AFK/офлайн (событие не копится).
+            </div>
+          </div>
+          <div class="idea-meta-footer">
+            <span class="meta-tag">Библия: п. 15, п. 17, 13 E.4 №36 (бит-чарт главы I)</span>
+            <span class="meta-tag">Сверка: NB 1315–1325, 1382–1385, 657–663</span>
+            <span class="meta-tag">Образцы: Egg, Inc., idle-аркады SayGames (из памяти)</span>
+          </div>
+        </article>
+
+        <!-- IDEA #2 (No. 12) -->
+        <article class="idea-card">
+          <div class="idea-head">
+            <div class="idea-rank-group">
+              <span class="rank-pill">ТОП-2 · Идея №12</span>
+              <span class="verdict-pill take">✓ Вердикт: БРАТЬ</span>
+            </div>
+            <span class="cost-pill">Цена в Unity: S–M (1–2 дня)</span>
+          </div>
+          <h3 class="idea-title">«Паспорт Утковода во вкладке „Яма“» — звёзды-вехи прямо на схемке уток</h3>
+          <p class="idea-why">
+            <strong>Почему №2:</strong> Буквально реализует слова Максима <em>«вместо опыта — прогрессия по количеству предметов, по уткам»</em> (PT 197) и запрос <em>«чтобы каждую минуту было чем заняться, как в обелиске»</em>. Ложится прямо в уже готовую схемку цветных уток во вкладке «Яма» без единого нового экрана.
+          </p>
+          <div class="timeline-steps">
+            <div class="step-box">
+              <span class="step-time">0:00–0:02</span>
+              <p class="step-text">Внизу вкладки «Яма» листа «Прокачки» под ячейками готовой схемки <code>[Утка] [Синяя ×2] [Фиол. ×5] [Золотая ×10]</code> горят по <strong>3 звезды-вехи</strong> и крупный счётчик сданных в Яму штук (кегль <code>≥ 12 pt</code>).</p>
+            </div>
+            <div class="step-box">
+              <span class="step-time">0:02–0:04</span>
+              <p class="step-text">При закрытии порога звезды над Ямой в мире взлетает стикер <code>«★ Синий Магнат I!»</code>, давая бонус к ценности с учётом потолка, а иконка утки в схемке получает забавный аксессуар (бабочка → монокль → цилиндр).</p>
+            </div>
+            <div class="step-box">
+              <span class="step-time">0:04–0:06</span>
+              <p class="step-text">Подробности и прогресс до следующей звезды показываются только в одной существующей карточке по тапу на ячейку схемки — без загромождения ячеек мелким шрифтом.</p>
+            </div>
+          </div>
+          <div class="verify-grid">
+            <div class="verify-box code-state">
+              <div class="verify-box-title">🔍 Состояние кода v6j</div>
+              Схемка цветных уток уже в листе (<code>Ui/HallUpgSheet.cs:141, 335–340</code>, <code>DuckScheme</code>), хук глотка с цветом есть (<code>Ui/HallDuckFeedback.cs:72</code>, <code>HallValue.BitsOf</code>). Но счётчиков по цветам в <code>OnePitState</code> ещё нет — их нужно завести и сохранять.
+            </div>
+            <div class="verify-box fix-required">
+              <div class="verify-box-title">🛠️ Правка проверки перед внедрением</div>
+              Завести новые счётчики по цветам в <code>OnePitState</code> (+сейв). Пороги звёзд откалибровать по модели (поток ~36 уток/мин, за главу I проходит ~1660 уток,<code>Goal.cs:15–17</code>). Любой бонус к цене обязан учитывать потолок <code>HallMulCap ×10</code>; на старте без шуток-досье (весь текст — только в карточке по тапу).
+            </div>
+          </div>
+          <div class="idea-meta-footer">
+            <span class="meta-tag">Библия: п. 64 (2–3 почти закрытые цели), п. 19, 13 B.2 №7</span>
+            <span class="meta-tag">Сверка: PT 197, NB 644–655, 957–964, 1163–1170</span>
+            <span class="meta-tag">Образцы: Idle Obelisk Miner, Idle Slayer (из памяти)</span>
+          </div>
+        </article>
+
+        <!-- IDEA #3 (No. 6) -->
+        <article class="idea-card">
+          <div class="idea-head">
+            <div class="idea-rank-group">
+              <span class="rank-pill">ТОП-3 · Идея №6</span>
+              <span class="verdict-pill take">✓ Вердикт: БРАТЬ</span>
+            </div>
+            <span class="cost-pill">Цена в Unity: S (до 1 дня)</span>
+          </div>
+          <h3 class="idea-title">«Счётчик Миллиардера и титулы цеха» — слот-барабан и ранги на северном табло</h3>
+          <p class="idea-why">
+            <strong>Почему №3:</strong> Сверхдешёвая (до 1 дня) и на 100 % безопасная для баланса косметика на уже готовом северном табло «ВСЕГО ЗАРАБОТАНО». Создаёт залипательный микро-крючок: <em>«ещё 40 секунд поиграю — добью табло до круглой суммы и посмотрю новую смешную кличку цеха»</em>.
+          </p>
+          <div class="timeline-steps">
+            <div class="step-box">
+              <span class="step-time">0:00–0:02</span>
+              <p class="step-text">Когда табло «Всего заработано: $N» на северной стене пробивает круглую веху, его цифры прокручиваются как барабаны слот-машины со звоном кассы <code>«КА-ЧИНГ!»</code>.</p>
+            </div>
+            <div class="step-box">
+              <span class="step-time">0:02–0:04</span>
+              <p class="step-text">Под суммой на табло со стуком переворачивается табличка с ироничным титулом цеха: <code>«Гараж с утятами» → «Пластиковый Картель» → «Барон Пружин» → «Император Одной Ямы»</code>.</p>
+            </div>
+            <div class="step-box">
+              <span class="step-time">0:04–0:06</span>
+              <p class="step-text">Герой прямо на бегу (<strong>без остановки и без сброса скорости движения</strong> по п. 74 библии) вскидывает руку в победном жесте.</p>
+            </div>
+          </div>
+          <div class="verify-grid">
+            <div class="verify-box code-state">
+              <div class="verify-box-title">🔍 Состояние кода v6j</div>
+              Табло «ВСЕГО ЗАРАБОТАНО» уже есть и плавно катит число (<code>Ui/GoalBoard.cs:7–12</code>). Нужна только таблица порогов, строка титула под суммой и триггер звука/барабана.
+            </div>
+            <div class="verify-box fix-required">
+              <div class="verify-box-title">🛠️ Правка проверки перед внедрением</div>
+              <strong>Убрать внеочередную «гарантированно Редкую» коробку</strong> (она ломала бы PRD-доли <code>CratePrdC</code> в <code>V3b.cs:103</code> и чистый сюрприз по п. 19 и п. 70). Таблицу денежных порогов растянуть до миллиардов: к главе III доход достигает ~1,5–1,85 M/мин (NB 1157), поэтому <code>$1M</code> проходится уже в главах I–II.
+            </div>
+          </div>
+          <div class="idea-meta-footer">
+            <span class="meta-tag">Библия: п. 64, п. 66, п. 74 (без остановки потока)</span>
+            <span class="meta-tag">Сверка: NB 591–595, 889–896, 1172–1180</span>
+            <span class="meta-tag">Образцы: AdVenture Capitalist, Egg, Inc. (из памяти)</span>
+          </div>
+        </article>
+
+        <!-- IDEA #4 (No. 10) -->
+        <article class="idea-card">
+          <div class="idea-head">
+            <div class="idea-rank-group">
+              <span class="rank-pill">ТОП-4 · Идея №10</span>
+              <span class="verdict-pill refine">⚡ Доработать → БРАТЬ (чистая косметика)</span>
+            </div>
+            <span class="cost-pill">Цена в Unity: M (2 дня)</span>
+          </div>
+          <h3 class="idea-title">«Полка трофеев на будке Шпули» — коллекция диковинок за каждую 10-ю коробку</h3>
+          <p class="idea-why">
+            <strong>Почему №4:</strong> Изящно закрывает открытый вопрос команды из <code>next-batch-maxim.md</code> (п. 70, стр. 999: <em>«что давать за серию Коробка 10/10, сейчас только счётчик в попапе»</em>), используя уже стоящую слева будку кота Шпули и готовый счётчик <code>10/10</code>.
+          </p>
+          <div class="timeline-steps">
+            <div class="step-box">
+              <span class="step-time">0:00–0:03</span>
+              <p class="step-text">При раскрытии каждой 10-й коробки (<code>Коробка 10/10</code> с золотой рамкой) вместе с цветными утками из коробки со звоном вылетает смешная <strong>Диковинка Ямы</strong> (Утка-Вантуз, Золотая Гайка с глазами, Заводной Мяч на ножках).</p>
+            </div>
+            <div class="step-box">
+              <span class="step-time">0:03–0:05</span>
+              <p class="step-text">Фигурка из 3–5 примитивов по дуге перелетает на крышу <strong>будки кота Шпули</strong> слева, занимая один из 10 слотов деревянной полки прямо в игровом мире.</p>
+            </div>
+            <div class="step-box">
+              <span class="step-time">0:05–0:07</span>
+              <p class="step-text">Шпуля запрыгивает на крышу будки, обнюхивает новый трофей и довольно мурлычет — живая коллекция видна прямо в цеху без новых окон UI.</p>
+            </div>
+          </div>
+          <div class="verify-grid">
+            <div class="verify-box code-state">
+              <div class="verify-box-title">🔍 Состояние кода v6j</div>
+              Будка кота и принос утки уже в коде (<code>Cat/HallCat.cs:29, 379</code>); попап «Коробка N/10» и золотая рамка на 10/10 уже сделаны (<code>Ui/CrateRevealPlate.cs:8</code>, <code>V3b.cs</code>).
+            </div>
+            <div class="verify-box fix-required">
+              <div class="verify-box-title">🛠️ Правка проверки перед внедрением</div>
+              Сделать трофеи <strong>на 100 % косметическими</strong>: убрать предлагавшийся бонус <code>+3 % к ценам навсегда</code> (он нарушал решение Максима п. 19: <em>«ничто в прогрессе не зависит от числа собранных коробок; пропустил — ничего не потерял»</em>) и <strong>убрать карточку по тапу на будку</strong> (меньше экранов по PT 196–207).
+            </div>
+          </div>
+          <div class="idea-meta-footer">
+            <span class="meta-tag">Библия: п. 15 (возврат D1–D7)</span>
+            <span class="meta-tag">Сверка: NB 999 (вопрос 10/10), NB 302–313 (п. 19), 1389</span>
+            <span class="meta-tag">Образцы: Cats &amp; Soup, Tsuki's Odyssey (из памяти)</span>
+          </div>
+        </article>
+
+        <!-- IDEA #5 (No. 1) -->
+        <article class="idea-card">
+          <div class="idea-head">
+            <div class="idea-rank-group">
+              <span class="rank-pill">ТОП-5 · Идея №1</span>
+              <span class="verdict-pill refine">⚡ Доработать → БРАТЬ (вдох обода + отрыжка)</span>
+            </div>
+            <span class="cost-pill">Цена в Unity: S (до 1 дня)</span>
+          </div>
+          <h3 class="idea-title">«Щёки Ямы» — упругий вдох обода и залп перьев на крупном комбо</h3>
+          <p class="idea-why">
+            <strong>Почему №5:</strong> Усиливает главный 15-секундный цикл игры («собрал стопку → взорвал комбо-бомбу у Ямы»), который игрок повторяет сотни раз за сессию, делая первые 5 минут игры сочным футажом для CPI-креативов.
+          </p>
+          <div class="timeline-steps">
+            <div class="step-box">
+              <span class="step-time">0:00–0:02</span>
+              <p class="step-text">Герой подбегает с полной стопкой к краю Ямы или нажимает <strong>«Кинуть» / «Скинуть»</strong>: вся пачка уходит в воронку за 0,5–1 с (по п. 17 у Ямы нет лимита приёма).</p>
+            </div>
+            <div class="step-box">
+              <span class="step-time">0:02–0:04</span>
+              <p class="step-text">На серии комбо <code>×15+</code> каменный обод Ямы на <code>0,3 с</code> упруго расширяется (<strong>«вдыхает»</strong>), заглатывает пачку с низким басовым гулом <code>«АМ-М!»</code> и сжимается обратно.</p>
+            </div>
+            <div class="step-box">
+              <span class="step-time">0:04–0:05</span>
+              <p class="step-text">В финале крупной серии (<code>×20+</code>) из жерла Ямы вылетает залп готовых частиц (<code>Confetti</code> / <code>Glitter</code> / <code>GoldRain</code>) со звуком довольной резиновой отрыжки-кряка.</p>
+            </div>
+          </div>
+          <div class="verify-grid">
+            <div class="verify-box code-state">
+              <div class="verify-box-title">🔍 Состояние кода v6j</div>
+              Выплата комбо (<code>HeroCombo.cs:161</code>, <code>ComboWorld.ShowPay</code>), монеты, «пых» <code>Splash</code> при глотке (<code>IntakeDispatcher.cs:300</code>), скейл при глотке (<code>PitHole.cs:486–494</code>) и вспышка камней обода (<code>PitVisual.cs:263, 453</code>) <strong>уже есть</strong>. Нет именно упругого «вдоха» обода и финальной отрыжки с перьями.
+            </div>
+            <div class="verify-box fix-required">
+              <div class="verify-box-title">🛠️ Правка проверки перед внедрением</div>
+              <strong>Убрать золотой пузырь с «+$X»</strong> (выплата <code>ShowPay</code> уже есть в том же слоте — дубль нарушал бы п. 28.6 и п. 49) и <strong>убрать скрип стопки в такт шагам</strong> (конфликт с п. 31: звук утки ≤ 2–3 голоса). Для салюта использовать штатный <code>Game.Fx.Burst</code> и готовые <code>FxId</code> (<code>Core/Ids.cs:122+</code>) вместо отдельного <code>ParticleSystem</code>.
+            </div>
+          </div>
+          <div class="idea-meta-footer">
+            <span class="meta-tag">Библия: п. 36 (отклик = числу), п. 37 (первые 5 мин для съёмки), 13 D.1 №10</span>
+            <span class="meta-tag">Сверка: PT 107–109, 131–134, NB 264–273, 1189–1197</span>
+            <span class="meta-tag">Образцы: All in Hole, Hole.io (из памяти)</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- SECTION 2: 5 CONFIRMED UX FIXES WITH FRAME OVERLAYS -->
+    <section id="ux-section" class="section">
+      <div class="section-header">
+        <div class="section-kicker">📐 По кадрам 390×844 и 540×960 · кропы ×3–4 сверены</div>
+        <h2 class="section-title">5 подтверждённых правок UX с разметкой на кадрах</h2>
+        <p class="section-desc">
+          Из 78 проверенных пунктов подтверждены 62 (отклонённые проверкой предложения — вроде прогона гремлина стоя или удаления уровня у Ямы — полностью исключены). Переключай между <strong>5 новыми находками (которых ещё нет в пачке)</strong> и <strong>5 главными проблемами по вреду для плейтайма</strong>.
+        </p>
+      </div>
+
+      <div class="segmented-tabs" role="tablist">
+        <button type="button" class="seg-btn active" id="tabUxNew" role="tab" aria-selected="true">
+          🆕 Топ-5 подтверждённых НОВЫХ (нет в пачке)
+        </button>
+        <button type="button" class="seg-btn" id="tabUxPlaytime" role="tab" aria-selected="false">
+          🔥 Топ-5 подтверждённых по вреду для плейтайма
+        </button>
+      </div>
+
+      <!-- TAB A: 5 CONFIRMED NEW UX FIXES (NOT IN BATCH YET) -->
+      <div class="ux-grid" id="uxPanelNew">
+
+        <!-- NEW UX #1: Frame 05 -->
+        <article class="ux-card">
+          <div>
+            <div class="frame-stage" id="frameNew1">
+              <img src="img/05-upgrades-early.png" alt="Кадр 05 — ошибки склонения в шапке листа Прокачки" loading="lazy" />
+              <div class="frame-overlay-layer">
+                <!-- x: 13..376, y: 240..308 on 390x844 -->
+                <div class="bbox" style="left: 3.3%; top: 28.4%; width: 93.1%; height: 8.1%;">
+                  <span class="bbox-tag">«В Яме 31 утку · ещё 4 уток» + пустой слот</span>
+                </div>
+              </div>
+            </div>
+            <div class="frame-toolbar">
+              <button type="button" class="frame-toggle-btn" data-target="frameNew1">👁️ Показать / скрыть рамку на кадре</button>
+            </div>
+          </div>
+          <div class="ux-content">
+            <div class="ux-badge-row">
+              <span class="ux-num">НОВОЕ #1 · Кадр 05 (390×844)</span>
+              <span class="ux-coord-badge">x: 13..376, y: 240..308 px</span>
+              <span class="badge badge-verified">✓ Подтверждено (стр. 29, 34)</span>
+            </div>
+            <h3 class="ux-title">Падежи в шапке листа «Прокачки»: «В Яме 31 утку», «ещё 4 уток» и пустой белый слот слева</h3>
+            <div class="ux-problem-box">
+              <strong>Что на кадре (2-я минута игры):</strong>
+              В главной карточке прогресса листа «Прокачки» числительные рассогласованы по падежу: дословно написано <code>«В Яме 31 утку»</code> и <code>«Ур. 1 · ещё 4 уток»</code> (при этом ниже <code>«ещё 44 утки»</code> — верно). Слева от заголовка пустует белый прямоугольник <code>72×55 px</code> под невыведенную иконку.
+            </div>
+            <div class="ux-fix-box">
+              <strong>Подтверждённая правка:</strong>
+              Прогнать все счётчики шапки через единую функцию склонения числительных (<code>1 утка / 2–4 утки / 5–20 уток</code>, в предложном/именительном падеже: <code>«В Яме 31 утка»</code>, <code>«ещё 4 утки»</code>) + поставить иконку Ямы в пустой левый слот карточки (или сдвинуть текст влево).
+            </div>
+          </div>
+        </article>
+
+        <!-- NEW UX #2: Frame 11 -->
+        <article class="ux-card">
+          <div>
+            <div class="frame-stage" id="frameNew2">
+              <img src="img/11-crate-lift.png" alt="Кадр 11 — тост Затор на ленте вылезает за капсулу" loading="lazy" />
+              <div class="frame-overlay-layer">
+                <!-- x: 248..516, y: 100..128 on 540x960 -->
+                <div class="bbox" style="left: 45.9%; top: 10.0%; width: 50.4%; height: 3.8%;">
+                  <span class="bbox-tag bottom right">Капсула до x≈475, хвост «быстрее 5» до x≈517</span>
+                </div>
+              </div>
+            </div>
+            <div class="frame-toolbar">
+              <button type="button" class="frame-toggle-btn" data-target="frameNew2">👁️ Показать / скрыть рамку на кадре</button>
+            </div>
+          </div>
+          <div class="ux-content">
+            <div class="ux-badge-row">
+              <span class="ux-num">НОВОЕ #2 · Кадры 09, 11–13 (540×960)</span>
+              <span class="ux-coord-badge">x: 248..517, y: 100..128 px</span>
+              <span class="badge badge-verified">✓ Подтверждено (стр. 51)</span>
+            </div>
+            <h3 class="ux-title">Тост «Затор на ленте — открой „Прокачки“: Лента быстрее 5» вылезает за тёмную капсулу</h3>
+            <div class="ux-problem-box">
+              <strong>Что на кадре (у самой цели главы I):</strong>
+              Тёмная подложка-капсула верхнего тоста заканчивается на <code>x ≈ 475 px</code>, а хвост строки <code>«быстрее 5»</code> продолжается вправо до <code>x ≈ 517 px</code> прямо поверх светлого ореола Ямы и теряет читаемость. В пачке п. 60 есть автоподбор кегля, но выход текста за капсулу не учтён.
+            </div>
+            <div class="ux-fix-box">
+              <strong>Подтверждённая правка:</strong>
+              Сократить формулировку тоста до ёмкого <code>«Затор — Лента быстрее»</code> (в лимите плашки ≤ 28 зн.) и привязать ширину подложки капсулы к фактической ширине текста с горизонтальным внутренним отступом.
+            </div>
+          </div>
+        </article>
+
+        <!-- NEW UX #3: Frame 01 -->
+        <article class="ux-card">
+          <div>
+            <div class="frame-stage" id="frameNew3">
+              <img src="img/01-start-new-game.png" alt="Кадр 01 — Собери утку обрезано правым краем и призрак нормы главы" loading="lazy" />
+              <div class="frame-overlay-layer">
+                <!-- Box 1: Собери ут x: 277..390, y: 673..709 on 390x844 -->
+                <div class="bbox" style="left: 71.0%; top: 79.7%; width: 29.0%; height: 4.3%;">
+                  <span class="bbox-tag right">«Собери ут» срезано на 390 px</span>
+                </div>
+                <!-- Box 2: Призрак нормы x: 205..325, y: 86..105 on 390x844 -->
+                <div class="bbox amber" style="left: 52.5%; top: 10.0%; width: 30.8%; height: 2.8%;">
+                  <span class="bbox-tag bottom right">Призрак «Норма главы: 0 / 420 000»</span>
+                </div>
+              </div>
+            </div>
+            <div class="frame-toolbar">
+              <button type="button" class="frame-toggle-btn" data-target="frameNew3">👁️ Показать / скрыть рамку на кадре</button>
+            </div>
+          </div>
+          <div class="ux-content">
+            <div class="ux-badge-row">
+              <span class="ux-num">НОВОЕ #3 · Кадры 01–02 (390×844)</span>
+              <span class="ux-coord-badge">x: 277..390, y: 673..709 px</span>
+              <span class="badge badge-verified">✓ Подтверждено (стр. 11, 12, 18)</span>
+            </div>
+            <h3 class="ux-title">Первая подсказка игры «Собери утку» обрезана правым краем («Собери ут») и перекрыта кольцом</h3>
+            <div class="ux-problem-box">
+              <strong>Что на кадре (0:00 первой сессии):</strong>
+              Самая первая подсказка новичка у станка режется правым срезом экрана <code>390 px</code> до <code>«Собери ут»</code>, а на кадре 02 (`x: 222..252, y: 658..686`) жёлтое кольцо прогресса закрывает первую букву <code>«С»</code>. Плюс на кропе ×4 в плашке «Яме нужно» справа от числа <code>35</code> просвечивает неотключённый призрак <code>«Норма главы 0 / 420 000»</code> (`y ≈ 86..98`).
+            </div>
+            <div class="ux-fix-box">
+              <strong>Подтверждённая правка:</strong>
+              Сдвинуть подсказку внутрь безопасной рамки <code>390 px</code> и поднять слой текста над жёлтым кольцом (либо снять плашку в связке с линией-маячком на полу по п. 81). Полностью вычистить остаток строки «Норма главы» из префаба плашки «Яме нужно» и добавить проверку в автотест.
+            </div>
+          </div>
+        </article>
+
+        <!-- NEW UX #4: Frame 09 -->
+        <article class="ux-card">
+          <div>
+            <div class="frame-stage" id="frameNew4">
+              <img src="img/09-cat-shpulya.png" alt="Кадр 09 — Золотая утка Отнеси в Яму перекрыта иконкой и обрезана" loading="lazy" />
+              <div class="frame-overlay-layer">
+                <!-- Box 1: Золотая утка! Отнеси в Яму x: 225..538, y: 718..818 on 540x960 -->
+                <div class="bbox" style="left: 41.7%; top: 74.8%; width: 58.0%; height: 10.4%;">
+                  <span class="bbox-tag right">Иконка закрыла «Отнеси», край режет «в Ям»</span>
+                </div>
+              </div>
+            </div>
+            <div class="frame-toolbar">
+              <button type="button" class="frame-toggle-btn" data-target="frameNew4">👁️ Показать / скрыть рамку на кадре</button>
+            </div>
+          </div>
+          <div class="ux-content">
+            <div class="ux-badge-row">
+              <span class="ux-num">НОВОЕ #4 · Кадры 09, 11, 13 (540×960)</span>
+              <span class="ux-coord-badge">x: 225..540, y: 638..818 px</span>
+              <span class="badge badge-verified">✓ Подтверждено (стр. 52)</span>
+            </div>
+            <h3 class="ux-title">«Золотая утка! Отнеси в Яму» обрезана правым краем («в Ям»), а иконка закрывает слово «Отнеси»</h3>
+            <div class="ux-problem-box">
+              <strong>Что на кадре (самая денежная подпись в мире):</strong>
+              У золотого лотка справа сталкиваются сразу 4 слоя: подпись <code>«Золотая утка! Отнеси в Яму»</code> режется правым краем на <code>«Отнеси в Ям»</code> (кадры 11, 13), круглая рамка иконки золотой утки (<code>x: 382..435</code>) ложится прямо поверх слова <code>«Отнеси»</code>, а рядом прыгает стрелка «Прокачки».
+            </div>
+            <div class="ux-fix-box">
+              <strong>Подтверждённая правка:</strong>
+              Поднять подпись выше лотка с отступом от правого среза экрана, развести слот иконки в сторону и сократить текст до проверенного <code>«Золотая утка! Неси в Яму сам»</code> (либо полностью убрать дублирующее уведомление в мире по п. 64).
+            </div>
+          </div>
+        </article>
+
+        <!-- NEW UX #5: Frame 13 -->
+        <article class="ux-card">
+          <div>
+            <div class="frame-stage" id="frameNew5">
+              <img src="img/13-wall-key-ch2.png" alt="Кадр 13 — Чип Ключ в главу II выглядит как бесплатная награда" loading="lazy" />
+              <div class="frame-overlay-layer">
+                <!-- Box 1: Чип Ключ -> гл. II x: 274..476, y: 8..101 on 540x960 -->
+                <div class="bbox" style="left: 50.7%; top: 0.8%; width: 37.4%; height: 9.7%;">
+                  <span class="bbox-tag bottom right">Чип «🔒 Ключ → гл. II» неотличим от бесплатной награды</span>
+                </div>
+              </div>
+            </div>
+            <div class="frame-toolbar">
+              <button type="button" class="frame-toggle-btn" data-target="frameNew5">👁️ Показать / скрыть рамку на кадре</button>
+            </div>
+          </div>
+          <div class="ux-content">
+            <div class="ux-badge-row">
+              <span class="ux-num">НОВОЕ #5 · Кадры 09–13 (540×960)</span>
+              <span class="ux-coord-badge">x: 288..356, y: 66..92 px</span>
+              <span class="badge badge-verified">✓ Подтверждено (стр. 2)</span>
+            </div>
+            <h3 class="ux-title">Стена «🔒 Ключ → гл. II» оформлена один в один как бесплатная награда уровня</h3>
+            <div class="ux-problem-box">
+              <strong>Что на кадре (финал главы I):</strong>
+              В нижней строке плашки «Яме нужно» чип <code>«🔒 Ключ → гл. II»</code> нарисован точно таким же серым чипом с замочком, как и автоматические бесплатные награды предыдущих уровней (<code>«🔒 Яма шире»</code>, <code>«🔒 Фиол. утка 6 %»</code> на кадрах 01–08). Игрок думает, что после 84 уток глава II откроется сама, и не понимает, что Ключ — это платная покупка-стена.
+            </div>
+            <div class="ux-fix-box">
+              <strong>Подтверждённая правка:</strong>
+              Визуально развести бесплатные награды уровня (помечать <code>+</code> / подарком без замка) и платную стену «Ключ эволюции» (показывать ценник покупки и призыв <code>«Купи ключ эволюции!»</code> по L841/L849, а при далекой цели — давать оффер ролика <code>«×2 к уткам»</code> по п. 50).
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- TAB B: 5 CONFIRMED BY PLAYTIME HARM -->
+      <div class="ux-grid hidden" id="uxPanelPlaytime">
+
+        <!-- PLAYTIME UX #1: Frame 06 -->
+        <article class="ux-card">
+          <div>
+            <div class="frame-stage" id="framePlay1">
+              <img src="img/06-belt-cannon-offer.png" alt="Кадр 06 — тупиковая куча на ленте и отдельная пушка" loading="lazy" />
+              <div class="frame-overlay-layer">
+                <!-- Куча x: 190..245, y: 214..285 on 540x960 -->
+                <div class="bbox" style="left: 35.2%; top: 22.3%; width: 10.2%; height: 7.4%;">
+                  <span class="bbox-tag">Тупиковая куча вдали от Ямы</span>
+                </div>
+                <!-- Пушка слева x: 8..84, y: 440..558 on 540x960 -->
+                <div class="bbox amber" style="left: 1.5%; top: 45.8%; width: 14.1%; height: 12.3%;">
+                  <span class="bbox-tag bottom">Пушка отдельно</span>
+                </div>
+              </div>
+            </div>
+            <div class="frame-toolbar">
+              <button type="button" class="frame-toggle-btn" data-target="framePlay1">👁️ Показать / скрыть рамку на кадре</button>
+            </div>
+          </div>
+          <div class="ux-content">
+            <div class="ux-badge-row">
+              <span class="ux-num">ПЛЕЙТАЙМ #1 · Кадры 06, 08 (540×960)</span>
+              <span class="ux-coord-badge">x: 190..245, y: 214..285 px</span>
+              <span class="badge badge-verified">✓ Подтверждено (стр. 1 · п. 93, реш. №3, №7)</span>
+            </div>
+            <h3 class="ux-title">Первая лента везёт уток в тупиковую кучу посреди зала, а пушка стоит отдельно</h3>
+            <div class="ux-problem-box">
+              <strong>Что на кадре (10–20-я минута):</strong>
+              Лента обрывается кучей уток на <code>x: 190..245, y: 214..285</code> далеко от Ямы, пушка слева (<code>x: 8..84, y: 440..558</code>) к ленте не подключена, а на 20:12 (кадр 08) игра пишет тост <code>«Носи уток с ленты к Яме»</code>. Первая автоматизация ощущается как наказание.
+            </div>
+            <div class="ux-fix-box">
+              <strong>Подтверждённая правка (решения Максима №3 и №7 + п. 93):</strong>
+              Лента везёт уток ближе к Яме, пушка работает отдельным генератором-стрелком, а на кружке и маячке ленты пишется честный текст: <code>«Лента везёт уток ближе к Яме»</code>.
+            </div>
+          </div>
+        </article>
+
+        <!-- PLAYTIME UX #2: Frame 14 -->
+        <article class="ux-card">
+          <div>
+            <div class="frame-stage" id="framePlay2">
+              <img src="img/14-chapter-ii.png" alt="Кадр 14 — самоходные мячи в главе II, герой стоит без дела" loading="lazy" />
+              <div class="frame-overlay-layer">
+                <!-- Дорожка с вентиляторами x: 0..405, y: 500..630 on 540x960 -->
+                <div class="bbox" style="left: 0.5%; top: 52.1%; width: 74.5%; height: 13.5%;">
+                  <span class="bbox-tag">Мячи со старта сами летят по дорожке</span>
+                </div>
+                <!-- Герой стоит x: 238..302, y: 640..712 on 540x960 -->
+                <div class="bbox amber" style="left: 44.1%; top: 66.7%; width: 11.9%; height: 7.5%;">
+                  <span class="bbox-tag bottom">Герой без дела</span>
+                </div>
+              </div>
+            </div>
+            <div class="frame-toolbar">
+              <button type="button" class="frame-toggle-btn" data-target="framePlay2">👁️ Показать / скрыть рамку на кадре</button>
+            </div>
+          </div>
+          <div class="ux-content">
+            <div class="ux-badge-row">
+              <span class="ux-num">ПЛЕЙТАЙМ #2 · Кадр 14 (540×960)</span>
+              <span class="ux-coord-badge">x: 0..405, y: 520..700 px</span>
+              <span class="badge badge-verified">✓ Подтверждено (стр. 3 · п. 22, 48, 73)</span>
+            </div>
+            <h3 class="ux-title">Глава II: мячи со старта сами летят в Яму, кружков на полу нет, у героя нет дела</h3>
+            <div class="ux-problem-box">
+              <strong>Что на кадре (старт главы II):</strong>
+              Станок мячей, дорожка с бортиками и два вентилятора уже построены со старта, кружков покупок на полу нет, и герой стоит посреди цеха без дела (<code>x: 254..286, y: 654..700</code>). Прямое нарушение главного правила «каждую минуту есть чем заняться».
+            </div>
+            <div class="ux-fix-box">
+              <strong>Подтверждённая правка (в работе по п. 22, 48, 73):</strong>
+              Начинать главу II с ручной сборки мячей справа от Ямы и линии-маячка на полу, а вентиляторы, мотор и пружинящие бортики открывать последовательно через кружки покупок.
+            </div>
+          </div>
+        </article>
+
+        <!-- PLAYTIME UX #3: Frame 06 & 09 -->
+        <article class="ux-card">
+          <div>
+            <div class="frame-stage" id="framePlay3">
+              <img src="img/06-belt-cannon-offer.png" alt="Кадр 06 — микрошрифт 5-9 px и перекрытие кнопкой ролика" loading="lazy" />
+              <div class="frame-overlay-layer">
+                <!-- Позолота x: 54..206, y: 438..466 on 540x960 -->
+                <div class="bbox" style="left: 10.0%; top: 45.6%; width: 28.1%; height: 3.2%;">
+                  <span class="bbox-tag">~9 px (на 390px → 6.5 px), контраст 1.5:1</span>
+                </div>
+                <!-- Кнопка ролика закрыла Собери утку x: 340..533, y: 707..773 -->
+                <div class="bbox amber" style="left: 63.0%; top: 73.6%; width: 35.7%; height: 6.9%;">
+                  <span class="bbox-tag bottom right">Кнопка закрыла «Соб[ери утку]»</span>
+                </div>
+              </div>
+            </div>
+            <div class="frame-toolbar">
+              <button type="button" class="frame-toggle-btn" data-target="framePlay3">👁️ Показать / скрыть рамку на кадре</button>
+            </div>
+          </div>
+          <div class="ux-content">
+            <div class="ux-badge-row">
+              <span class="ux-num">ПЛЕЙТАЙМ #3 · Кадры 06, 09–13 (540×960)</span>
+              <span class="ux-coord-badge">x: 54..206, y: 438..466 px</span>
+              <span class="badge badge-verified">✓ Подтверждено (стр. 5, 8 · п. 60, 106, 109)</span>
+            </div>
+            <h3 class="ux-title">Микрошрифт 5–9 px и слепые белые подписи на светлом полу (контраст 1,44–1,7:1)</h3>
+            <div class="ux-problem-box">
+              <strong>Что на кадре (замер NB п. 106 совпадает):</strong>
+              Белые подписи кружков (<code>«Позолота: 1 из 10 уток $20 → $200»</code> на К06, <code>«б в Яму: в Яму из пушки 65 % → 100 %»</code> с обрезанным началом на К09–13) имеют высоту 7–9 px (на экране 390 px сжимаются до 5–6,5 px) и контраст 1,44–1,7:1 на плитке <code>#CBC4E2</code>.
+            </div>
+            <div class="ux-fix-box">
+              <strong>Подтверждённая правка (п. 60, 62, 104, 106, 109):</strong>
+              Все мировые подписи кружков, кнопок и таймера выводить на контрастных тёмных плашках с кеглем <code>≥ 11–12 pt</code>, без обрезки левым/правым краем и без перекрытия кнопкой ролика.
+            </div>
+          </div>
+        </article>
+
+        <!-- PLAYTIME UX #4: Frame 07 -->
+        <article class="ux-card">
+          <div>
+            <div class="frame-stage" id="framePlay4">
+              <img src="img/07-upgrades-late.png" alt="Кадр 07 — Рабочий стол Слой 6 блокирует прокачку Стопки" loading="lazy" />
+              <div class="frame-overlay-layer">
+                <!-- Рабочий стол Слой 6 x: 276..367, y: 480..522 on 390x844 -->
+                <div class="bbox" style="left: 70.8%; top: 56.9%; width: 23.3%; height: 5.0%;">
+                  <span class="bbox-tag right">Замок «Рабочий стол Слой 6»</span>
+                </div>
+                <!-- Слепой текст Ур. 6 еще 350 уток x: 92..366, y: 267..283 -->
+                <div class="bbox amber" style="left: 23.6%; top: 31.6%; width: 70.3%; height: 2.2%;">
+                  <span class="bbox-tag">Белый текст на светлой шкале</span>
+                </div>
+              </div>
+            </div>
+            <div class="frame-toolbar">
+              <button type="button" class="frame-toggle-btn" data-target="framePlay4">👁️ Показать / скрыть рамку на кадре</button>
+            </div>
+          </div>
+          <div class="ux-content">
+            <div class="ux-badge-row">
+              <span class="ux-num">ПЛЕЙТАЙМ #4 · Кадры 01, 05, 07 (390×844)</span>
+              <span class="ux-coord-badge">x: 276..367, y: 480..522 px</span>
+              <span class="badge badge-verified">✓ Подтверждено (стр. 4 · реш. №1, п. 86, 91)</span>
+            </div>
+            <h3 class="ux-title">Лист «Прокачки»: стена замков («скорость не нужна») и немой «Рабочий стол Слой 6»</h3>
+            <div class="ux-problem-box">
+              <strong>Что на кадре (кадры 05 и 07):</strong>
+              В раннем листе 5 из 6 строк закрыты замками (<code>«Герой мало ходит — скорость не нужна»</code> ужат до ~8,5 px) и висит блок «Сила героя — гонять гремлинов» на 1-й минуте. В позднем листе (К07) прокачку «Стопки» стопорит неподписанный в мире <code>«Рабочий стол Слой 6»</code>.
+            </div>
+            <div class="ux-fix-box">
+              <strong>Подтверждённая правка (решение Максима №1 от 02.11 + п. 86, 91):</strong>
+              Полностью убрать «Рабочий стол» из мира и потолки слоёв из листа, прятать блок «Сила героя» до первого гремлина, а на замках писать только короткое прямое условие без рассуждений.
+            </div>
+          </div>
+        </article>
+
+        <!-- PLAYTIME UX #5: Frame 13 -->
+        <article class="ux-card">
+          <div>
+            <div class="frame-stage" id="framePlay5">
+              <img src="img/13-wall-key-ch2.png" alt="Кадр 13 — Стена Ключ в главу II без цены и как награда" loading="lazy" />
+              <div class="frame-overlay-layer">
+                <div class="bbox" style="left: 50.7%; top: 0.8%; width: 37.4%; height: 9.7%;">
+                  <span class="bbox-tag bottom right">Стена «Ключ → гл. II» без цены и как награда</span>
+                </div>
+              </div>
+            </div>
+            <div class="frame-toolbar">
+              <button type="button" class="frame-toggle-btn" data-target="framePlay5">👁️ Показать / скрыть рамку на кадре</button>
+            </div>
+          </div>
+          <div class="ux-content">
+            <div class="ux-badge-row">
+              <span class="ux-num">ПЛЕЙТАЙМ #5 · Кадры 08–13 (540×960)</span>
+              <span class="ux-coord-badge">x: 274..476, y: 8..101 px</span>
+              <span class="badge badge-verified">✓ Подтверждено (стр. 2 · L841, L849, п. 50)</span>
+            </div>
+            <h3 class="ux-title">Стена «Ключ → гл. II» без явной цены и неотличима от бесплатной награды уровня</h3>
+            <div class="ux-problem-box">
+              <strong>Что на кадре (главная стена главы I):</strong>
+              Чип <code>«🔒 Ключ → гл. II»</code> оформлен точно как бесплатная награда уровня, без цены покупки на плашке, поэтому игрок не считывает стену, ради которой нужно копить деньги или жать ролик.
+            </div>
+            <div class="ux-fix-box">
+              <strong>Подтверждённая правка (L841, L849, п. 50, п. 58):</strong>
+              Отличить чип платного Ключа от бесплатных наград, выводить строку покупки Ключа с ценой и показывать оффер ролика (<code>«×2 к уткам»</code>), когда до эволюции далеко.
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- SECTION 3: 10 BEST VERIFIED TEXT REWRITES -->
+    <section id="texts-section" class="section">
+      <div class="section-header">
+        <div class="section-kicker">✍️ Автопроверка 250/250 по strings.tsv и коду OnePit</div>
+        <h2 class="section-title">10 лучших «Было → Стало» для первой сессии</h2>
+        <p class="section-desc">
+          Отобраны из 64 полностью годных правок, реально работающих в главе I при <code>FlowV3</code> (по умолчанию). Все 10 уложены строго в лимиты вида (подпись ≤ 18, попап/плашка/подсказка ≤ 28, облачко ≤ 40 зн.) и бьют глаголом в действие игрока.
+        </p>
+      </div>
+
+      <div class="filter-pills" role="group" aria-label="Фильтр по типу UI">
+        <button type="button" class="filter-pill active" data-filter="all">Все 10 лучших</button>
+        <button type="button" class="filter-pill" data-filter="beacon">Подсказки маячка (5)</button>
+        <button type="button" class="filter-pill" data-filter="world">Над объектами и Шпуля (2)</button>
+        <button type="button" class="filter-pill" data-filter="hud">HUD и Попапы (3)</button>
+      </div>
+
+      <div class="texts-grid" id="textsGrid">
+
+        <!-- TEXT #1 -->
+        <article class="text-card" data-cat="hud">
+          <div class="text-card-top">
+            <span class="code-loc">#1 · Evo/ChapterLine.cs:55</span>
+            <span class="char-count">плашка HUD · 19 зн. (≤ 28)</span>
+          </div>
+          <div class="diff-pair">
+            <div class="diff-before"><span class="diff-label">Было</span>нужен ключ эволюции</div>
+            <div class="diff-after"><span class="diff-label">Стало</span>Купи ключ эволюции!</div>
+          </div>
+          <p class="text-why"><strong>Почему работает:</strong> Стена главы I — <code>EvoKey</code> является именно покупкой (<code>BuyCircle</code>); повелительный глагол «Купи» сразу говорит игроку, что делать.</p>
+        </article>
+
+        <!-- TEXT #2 -->
+        <article class="text-card" data-cat="beacon">
+          <div class="text-card-top">
+            <span class="code-loc">#2 · Ui/GoalBeacon.cs:109</span>
+            <span class="char-count">подсказка · 25 зн. (≤ 28)</span>
+          </div>
+          <div class="diff-pair">
+            <div class="diff-before"><span class="diff-label">Было</span>Мотор заработал — сборщик крутит сам</div>
+            <div class="diff-after"><span class="diff-label">Стало</span>Мотор крутит сборщик сам!</div>
+          </div>
+          <p class="text-why"><strong>Почему работает:</strong> Первая автоматизация — короче на 11 знаков без тире; игрок мгновенно считывает, что стоять в кружке руками больше не обязательно.</p>
+        </article>
+
+        <!-- TEXT #3 -->
+        <article class="text-card" data-cat="beacon">
+          <div class="text-card-top">
+            <span class="code-loc">#3 · Ui/GoalBeacon.cs:111</span>
+            <span class="char-count">подсказка · 28 зн. (≤ 28)</span>
+          </div>
+          <div class="diff-pair">
+            <div class="diff-before"><span class="diff-label">Было</span>Лента поехала — утки едут ближе к Яме</div>
+            <div class="diff-after"><span class="diff-label">Стало</span>Лента везёт уток ближе к Яме</div>
+          </div>
+          <p class="text-why"><strong>Почему работает:</strong> Честно про первую ленту по решению Максима (п. 93): активный глагол «везёт» без лишнего тире, утки едут ближе, а не сразу в Яму.</p>
+        </article>
+
+        <!-- TEXT #4 -->
+        <article class="text-card" data-cat="beacon">
+          <div class="text-card-top">
+            <span class="code-loc">#4 · Ui/GoalBeacon.cs:110</span>
+            <span class="char-count">подсказка · 27 зн. (≤ 28)</span>
+          </div>
+          <div class="diff-pair">
+            <div class="diff-before"><span class="diff-label">Было</span>Новый сборщик — собирай и с него</div>
+            <div class="diff-after"><span class="diff-label">Стало</span>Новый стол! Бери уток и тут</div>
+          </div>
+          <p class="text-why"><strong>Почему работает:</strong> Второй сборщик — бодрый призыв к действию без тавтологии «сборщик — собирай», а слово «стол» совпадает с соседним UI.</p>
+        </article>
+
+        <!-- TEXT #5 -->
+        <article class="text-card" data-cat="world">
+          <div class="text-card-top">
+            <span class="code-loc">#5 · Prod/HallProduction.cs:212</span>
+            <span class="char-count">подпись · 16 зн. (≤ 18)</span>
+          </div>
+          <div class="diff-pair">
+            <div class="diff-before"><span class="diff-label">Было</span>Собирай здесь, пока\nпервый стол работает сам</div>
+            <div class="diff-after"><span class="diff-label">Стало</span>Ещё стол для рук</div>
+          </div>
+          <p class="text-why"><strong>Почему работает:</strong> Подпись второго верстака в мире — вместо двух мелких строк (44 зн.) одна крупная и мгновенно понятная фраза в строгом лимите ≤ 18 знаков.</p>
+        </article>
+
+        <!-- TEXT #6 -->
+        <article class="text-card" data-cat="beacon">
+          <div class="text-card-top">
+            <span class="code-loc">#6 · Ui/GoalBeacon.cs:129</span>
+            <span class="char-count">подсказка · 28 зн. (≤ 28)</span>
+          </div>
+          <div class="diff-pair">
+            <div class="diff-before"><span class="diff-label">Было</span>Стоит: куча полна — отнеси уток к Яме</div>
+            <div class="diff-after"><span class="diff-label">Стало</span>Куча полна! Унеси уток в Яму</div>
+          </div>
+          <p class="text-why"><strong>Почему работает:</strong> Когда станок встал из-за переполнения — причина и нужное действие даны в одной энергичной фразе без канцелярского двоеточия и тире.</p>
+        </article>
+
+        <!-- TEXT #7 -->
+        <article class="text-card" data-cat="hud">
+          <div class="text-card-top">
+            <span class="code-loc">#7 · Econ/HallAway.cs:164</span>
+            <span class="char-count">попап · 17 зн. (≤ 28)</span>
+          </div>
+          <div class="diff-pair">
+            <div class="diff-before"><span class="diff-label">Было</span>Пока вас не было</div>
+            <div class="diff-after"><span class="diff-label">Стало</span>Пока тебя не было</div>
+          </div>
+          <p class="text-why"><strong>Почему работает:</strong> Первое возвращение в игру (AFK-копилка) — выравнивает тон обращения на дружелюбное «ты» в едином стиле с <code>HallAway.cs:248</code>.</p>
+        </article>
+
+        <!-- TEXT #8 -->
+        <article class="text-card" data-cat="world">
+          <div class="text-card-top">
+            <span class="code-loc">#8 · Cat/HallCat.cs:33</span>
+            <span class="char-count">облачко · 27 зн. (≤ 40)</span>
+          </div>
+          <div class="diff-pair">
+            <div class="diff-before"><span class="diff-label">Было</span>Шпуля сидит у того,\nчто скоро купишь</div>
+            <div class="diff-after"><span class="diff-label">Стало</span>Шпуля ждёт у новой покупки!</div>
+          </div>
+          <p class="text-why"><strong>Почему работает:</strong> Облачко над котом Шпулей — одна читая строка без переноса <code>\n</code> и без тяжеловесного «у того, что», смысл сохранён на 100 %.</p>
+        </article>
+
+        <!-- TEXT #9 -->
+        <article class="text-card" data-cat="hud">
+          <div class="text-card-top">
+            <span class="code-loc">#9 · Ui/GoalTree.cs:60</span>
+            <span class="char-count">попап · 28 зн. (≤ 28)</span>
+          </div>
+          <div class="diff-pair">
+            <div class="diff-before"><span class="diff-label">Было</span>Бросай в Яму — каждый уровень открывает новое</div>
+            <div class="diff-after"><span class="diff-label">Стало</span>Корми Яму — открывай новинки</div>
+          </div>
+          <p class="text-why"><strong>Почему работает:</strong> Окно целей — ужато с 45 до 28 знаков, убрано сухое «каждый уровень открывает новое», появился живой образ «Корми Яму».</p>
+        </article>
+
+        <!-- TEXT #10 -->
+        <article class="text-card" data-cat="beacon">
+          <div class="text-card-top">
+            <span class="code-loc">#10 · Ui/GoalBeacon.cs:113</span>
+            <span class="char-count">подсказка · 28 зн. (≤ 28)</span>
+          </div>
+          <div class="diff-pair">
+            <div class="diff-before"><span class="diff-label">Было</span>Новый ствол — пушка бьёт чаще</div>
+            <div class="diff-after"><span class="diff-label">Стало</span>Ещё ствол — пушка бьёт чаще!</div>
+          </div>
+          <p class="text-why"><strong>Почему работает:</strong> Покупка второго ствола пушки — «Ещё ствол» точнее передаёт добавление ствола к существующей пушке, чем сухое «Новый ствол».</p>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    «Одна Яма» (DuckPit) × Gemini 4 Argon · Для геймдизайнера Максима · Только верифицированные данные (03.11.2026)
+  </footer>
+
+  <!-- INTERACTIVE SCRIPT: UX TABS, TEXT FILTERS & 60FPS DUCK TRAIN + PIT INHALE PROTOTYPE -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* --- 1. UX Tabs Switching --- */
+      const tabUxNew = document.getElementById('tabUxNew');
+      const tabUxPlaytime = document.getElementById('tabUxPlaytime');
+      const uxPanelNew = document.getElementById('uxPanelNew');
+      const uxPanelPlaytime = document.getElementById('uxPanelPlaytime');
+
+      if (tabUxNew && tabUxPlaytime) {
+        tabUxNew.addEventListener('click', function () {
+          tabUxNew.classList.add('active');
+          tabUxNew.setAttribute('aria-selected', 'true');
+          tabUxPlaytime.classList.remove('active');
+          tabUxPlaytime.setAttribute('aria-selected', 'false');
+          uxPanelNew.classList.remove('hidden');
+          uxPanelPlaytime.classList.add('hidden');
+        });
+
+        tabUxPlaytime.addEventListener('click', function () {
+          tabUxPlaytime.classList.add('active');
+          tabUxPlaytime.setAttribute('aria-selected', 'true');
+          tabUxNew.classList.remove('active');
+          tabUxNew.setAttribute('aria-selected', 'false');
+          uxPanelPlaytime.classList.remove('hidden');
+          uxPanelNew.classList.add('hidden');
+        });
+      }
+
+      /* --- 2. Frame Bounding-Box Toggle --- */
+      document.querySelectorAll('.frame-toggle-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const targetId = btn.getAttribute('data-target');
+          const stage = document.getElementById(targetId);
+          if (stage) {
+            stage.classList.toggle('hide-markers');
+          }
+        });
+      });
+
+      /* --- 3. Text Rewrite Category Filter --- */
+      const filterBtns = document.querySelectorAll('.filter-pill');
+      const textCards = document.querySelectorAll('.text-card');
+
+      filterBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          filterBtns.forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          const filter = btn.getAttribute('data-filter');
+          textCards.forEach(function (card) {
+            if (filter === 'all' || card.getAttribute('data-cat') === filter) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
+            }
+          });
+        });
+      });
+
+      /* --- 4. WebAudio Synthesized Tactile Sound Effects --- */
+      let soundEnabled = true;
+      let audioCtx = null;
+      const soundBtn = document.getElementById('demoSoundBtn');
+
+      function ensureAudio() {
+        if (!soundEnabled) return null;
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        return audioCtx;
+      }
+
+      function playSfx(type) {
+        const ctx = ensureAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        if (type === 'quack') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(520, now);
+          osc.frequency.exponentialRampToValueAtTime(780, now + 0.06);
+          osc.frequency.exponentialRampToValueAtTime(420, now + 0.14);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } else if (type === 'inhale') {
+          // Bassy Pit gulp "АМ-М!"
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(150, now);
+          osc.frequency.exponentialRampToValueAtTime(68, now + 0.26);
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.29);
+        } else if (type === 'burp') {
+          // Satisfied rubber burp-quack on combo x15+
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(110, now);
+          osc.frequency.linearRampToValueAtTime(240, now + 0.12);
+          osc.frequency.exponentialRampToValueAtTime(95, now + 0.32);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.34);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'jackpot') {
+          // Mama Duck somersault +1 min income!
+          [523.25, 659.25, 783.99, 1046.5].forEach(function (freq, idx) {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.055);
+            gain.gain.setValueAtTime(0.14, now + idx * 0.055);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.055 + 0.22);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.055);
+            osc.stop(now + idx * 0.055 + 0.23);
+          });
+        }
+      }
+
+      if (soundBtn) {
+        soundBtn.addEventListener('click', function () {
+          soundEnabled = !soundEnabled;
+          soundBtn.textContent = soundEnabled ? '🔊 Звук: ВКЛ' : '🔇 Звук: ВЫКЛ';
+          soundBtn.setAttribute('aria-pressed', String(soundEnabled));
+          if (soundEnabled) playSfx('quack');
+        });
+      }
+
+      /* --- 5. Interactive Canvas Prototype: #7 Duck Train + #1 Pit Rim Inhale --- */
+      const canvas = document.getElementById('pitDemoCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      const W = 390;
+      const H = 480;
+
+      // Game state
+      let money = 14600;
+      let pitNeed = 48;
+      let combo = 1;
+      let comboTimer = 0; // 0..1
+
+      const pit = {
+        x: W * 0.5,
+        y: 112,
+        baseRadius: 52,
+        scale: 1,
+        scaleVel: 0,
+        rimFlash: 0,
+        stones: []
+      };
+
+      for (let i = 0; i < 14; i++) {
+        const ang = (i / 14) * Math.PI * 2;
+        pit.stones.push({ ang: ang, bounce: 0 });
+      }
+
+      const hero = {
+        x: W * 0.5,
+        y: 375,
+        targetX: W * 0.5,
+        targetY: 375,
+        stack: [], // array of duck colors/multipliers held in hands
+        maxStack: 16
+      };
+
+      // Duck Train state (Idea #7)
+      let mamaDuck = null;
+      let trainDucks = []; // following mama or scattered on floor
+      let flyingDucks = []; // flying into Pit or thrown ball
+      let particles = [];
+      let floatingTexts = [];
+
+      const DUCK_TYPES = [
+        { kind: 'blue', color: '#38BDF8', stroke: '#0284C7', mul: 2, label: '×2' },
+        { kind: 'purple', color: '#C084FC', stroke: '#7E22CE', mul: 5, label: '×5' },
+        { kind: 'gold', color: '#FFD22E', stroke: '#D97706', mul: 10, label: '×10' }
+      ];
+
+      function updateHud() {
+        const moneyEl = document.getElementById('demoMoney');
+        const needEl = document.getElementById('demoPitNeed');
+        const comboEl = document.getElementById('demoCombo');
+        if (moneyEl) {
+          moneyEl.textContent = '$ ' + (money >= 1000 ? (money / 1000).toFixed(1).replace('.', ',') + 'K' : money);
+        }
+        if (needEl) {
+          needEl.textContent = '🕳️ Яме нужно: ' + pitNeed + ' 🦆';
+        }
+        if (comboEl) {
+          comboEl.textContent = '🔥 КОМБО ×' + combo;
+        }
+      }
+
+      function addFloatingText(x, y, text, color, size) {
+        floatingTexts.push({
+          x: x,
+          y: y,
+          text: text,
+          color: color || '#FFD22E',
+          size: size || 15,
+          life: 1.0,
+          vy: -1.3
+        });
+      }
+
+      function spawnFeathersAndConfetti(x, y, count) {
+        const palette = ['#FFD22E', '#38BDF8', '#C084FC', '#34D399', '#F43F5E', '#FFF'];
+        for (let i = 0; i < count; i++) {
+          const angle = -Math.PI / 2 + (Math.random() - 0.5) * 2.2;
+          const speed = 2.2 + Math.random() * 5.2;
+          particles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 1.5,
+            rot: Math.random() * Math.PI * 2,
+            vrot: (Math.random() - 0.5) * 0.25,
+            color: palette[i % palette.length],
+            w: 5 + Math.random() * 5,
+            h: 3 + Math.random() * 4,
+            life: 1.0
+          });
+        }
+      }
+
+      // Spawn the Duck Train (Mama Duck in aviator helmet + 8 ducklings, max 3 gold as per verification!)
+      function spawnDuckTrain() {
+        mamaDuck = {
+          x: -28,
+          y: 255,
+          vx: 1.45,
+          phase: 0,
+          active: true,
+          diving: false,
+          diveT: 0
+        };
+        trainDucks = [];
+        let goldCount = 0;
+        for (let i = 0; i < 8; i++) {
+          // Strictly limit gold ducks in train (<= 3 gold out of 8, per verified.md fix!)
+          let typeIdx = i % 3;
+          if (typeIdx === 2) {
+            if (goldCount >= 3) typeIdx = 1;
+            else goldCount++;
+          }
+          const t = DUCK_TYPES[typeIdx];
+          trainDucks.push({
+            id: i,
+            x: -28 - (i + 1) * 28,
+            y: 255,
+            vx: 0,
+            vy: 0,
+            state: 'train', // 'train' | 'scattered' | 'collected'
+            color: t.color,
+            stroke: t.stroke,
+            mul: t.mul,
+            label: t.label,
+            wobble: i * 0.7
+          });
+        }
+        playSfx('quack');
+        addFloatingText(W * 0.5, 215, '🦆 ПАРОВОЗИК! Перехвати 8 утят!', '#38BDF8', 14);
+        const hint = document.getElementById('demoHintText');
+        if (hint) {
+          hint.textContent = '🎯 Тапни по цепочке утят (или нажми «Кинуть в строй»), чтобы рассыпать стайку вокруг Ямы!';
+        }
+      }
+
+      // Intercept / Scatter the train at target point
+      function interceptTrain(tx, ty) {
+        let scatteredAny = false;
+        trainDucks.forEach(function (d, idx) {
+          if (d.state === 'train') {
+            d.state = 'scattered';
+            const ang = (idx / 8) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+            const dist = 38 + Math.random() * 55;
+            d.targetX = Math.max(36, Math.min(W - 36, (tx || d.x) + Math.cos(ang) * dist));
+            d.targetY = Math.max(185, Math.min(H - 65, (ty || d.y) + Math.sin(ang) * dist));
+            scatteredAny = true;
+          }
+        });
+
+        if (scatteredAny) {
+          playSfx('quack');
+          addFloatingText(tx || W * 0.5, (ty || 255) - 18, 'КИНУТЬ! Строй рассыпался!', '#34D399', 14);
+          // Move hero to vacuum them up
+          hero.targetX = Math.max(45, Math.min(W - 45, tx || W * 0.5));
+          hero.targetY = Math.max(210, Math.min(H - 60, ty || 265));
+          const hint = document.getElementById('demoHintText');
+          if (hint) {
+            hint.textContent = '🧲 Герой пылесосит утят в стопку! Теперь жми «💥 Бомба в Яму!» или тапни по самой Яме!';
+          }
+        } else if (!mamaDuck || !mamaDuck.active) {
+          spawnDuckTrain();
+        }
+      }
+
+      // Trigger Mama Duck Somersault dive into the Pit when all 8 ducklings are caught!
+      function checkMamaSomersault() {
+        if (!mamaDuck || !mamaDuck.active || mamaDuck.diving) return;
+        const remainingInTrain = trainDucks.filter(function (d) { return d.state === 'train'; }).length;
+        if (remainingInTrain === 0) {
+          mamaDuck.diving = true;
+          mamaDuck.diveT = 0;
+          mamaDuck.startX = mamaDuck.x;
+          mamaDuck.startY = mamaDuck.y;
+          playSfx('jackpot');
+          addFloatingText(mamaDuck.x, mamaDuck.y - 20, 'САЛЬТО МАМЫ-УТКИ!', '#FFD22E', 15);
+        }
+      }
+
+      // Throw all held stack + scattered ducks into the Pit (Combo Bomb + Idea #1 Pit Rim Inhale!)
+      function launchBombIntoPit() {
+        // Also vacuum any remaining scattered ducks on floor so one tap feels super rewarding
+        trainDucks.forEach(function (d) {
+          if (d.state === 'scattered' && hero.stack.length < hero.maxStack) {
+            d.state = 'collected';
+            hero.stack.push({ color: d.color, stroke: d.stroke, mul: d.mul });
+          }
+        });
+
+        if (hero.stack.length === 0) {
+          // If hands are empty, spawn a fresh volley of 8 ducks from hero to demonstrate Pit inhale immediately
+          for (let i = 0; i < 8; i++) {
+            const t = DUCK_TYPES[i % 3];
+            hero.stack.push({ color: t.color, stroke: t.stroke, mul: t.mul });
+          }
+        }
+
+        const count = hero.stack.length;
+        for (let i = 0; i < count; i++) {
+          const item = hero.stack[i];
+          flyingDucks.push({
+            startX: hero.x + (Math.random() - 0.5) * 18,
+            startY: hero.y - 24 - i * 6,
+            x: hero.x,
+            y: hero.y - 24 - i * 6,
+            t: -i * 0.045, // staggered volley over 0.4s
+            color: item.color,
+            stroke: item.stroke,
+            mul: item.mul
+          });
+        }
+        hero.stack = [];
+        checkMamaSomersault();
+      }
+
+      function onDuckSwallowed(mul, isMamaBonus) {
+        combo += isMamaBonus ? 5 : 1;
+        comboTimer = 1.0;
+        const payout = isMamaBonus ? 1850 : 25 * mul * Math.min(10, Math.max(1, Math.floor(combo / 3)));
+        money += payout;
+        pitNeed = Math.max(0, pitNeed - (isMamaBonus ? 5 : 1));
+        if (pitNeed === 0) {
+          pitNeed = 50;
+          addFloatingText(pit.x, pit.y + 58, 'ЯМА ШИРЕ! Новый уровень!', '#C084FC', 15);
+        }
+
+        // Idea #1: Elastic Rim Inhale ("вдох обода на 0,3 с")
+        pit.scale = Math.min(1.34, pit.scale + (isMamaBonus ? 0.28 : 0.11));
+        pit.rimFlash = 1.0;
+        pit.stones.forEach(function (s) {
+          s.bounce = Math.min(10, s.bounce + 4 + Math.random() * 4);
+        });
+
+        playSfx('inhale');
+
+        // Idea #1: On large combo (x15+) or Mama bonus -> burp feathers & confetti (NO duplicate golden +$X bubble!)
+        if (combo >= 15 || isMamaBonus) {
+          spawnFeathersAndConfetti(pit.x, pit.y, isMamaBonus ? 34 : 18);
+          playSfx('burp');
+          if (isMamaBonus) {
+            addFloatingText(pit.x, pit.y - 36, '+1 МИН ДОХОДА! +$' + payout, '#34D399', 16);
+          } else if (combo % 5 === 0) {
+            addFloatingText(pit.x, pit.y - 32, 'АМ-М! ОТРЫЖКА ПЕРЬЯМИ ×' + combo, '#FFD22E', 14);
+          }
+        } else {
+          // Standard slot payout (ComboWorld.ShowPay)
+          addFloatingText(pit.x + (Math.random() - 0.5) * 40, pit.y - 22, '+$' + payout, '#FFD22E', 13);
+        }
+
+        updateHud();
+      }
+
+      // Pointer / Touch handling on Canvas
+      function getCanvasPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches && e.touches[0] ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches && e.touches[0] ? e.touches[0].clientY : e.clientY;
+        return {
+          x: ((clientX - rect.left) / rect.width) * W,
+          y: ((clientY - rect.top) / rect.height) * H
+        };
+      }
+
+      let isDragging = false;
+
+      function handlePointerDown(e) {
+        e.preventDefault();
+        ensureAudio();
+        isDragging = true;
+        const pos = getCanvasPos(e);
+
+        // 1. Tap near the Pit -> launch bomb stack into Pit!
+        const distToPit = Math.hypot(pos.x - pit.x, pos.y - pit.y);
+        if (distToPit < pit.baseRadius + 38) {
+          launchBombIntoPit();
+          return;
+        }
+
+        // 2. Tap near any duck in the train or Mama Duck -> intercept train!
+        const hitTrain = trainDucks.some(function (d) {
+          return d.state === 'train' && Math.hypot(pos.x - d.x, pos.y - d.y) < 48;
+        }) || (mamaDuck && mamaDuck.active && Math.hypot(pos.x - mamaDuck.x, pos.y - mamaDuck.y) < 52);
+
+        if (hitTrain) {
+          interceptTrain(pos.x, pos.y);
+          return;
+        }
+
+        // 3. Otherwise move hero toward finger & vacuum scattered ducks
+        hero.targetX = Math.max(36, Math.min(W - 36, pos.x));
+        hero.targetY = Math.max(185, Math.min(H - 45, pos.y));
+      }
+
+      function handlePointerMove(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const pos = getCanvasPos(e);
+        hero.targetX = Math.max(36, Math.min(W - 36, pos.x));
+        hero.targetY = Math.max(185, Math.min(H - 45, pos.y));
+      }
+
+      function handlePointerUp() {
+        isDragging = false;
+      }
+
+      canvas.addEventListener('mousedown', handlePointerDown);
+      canvas.addEventListener('mousemove', handlePointerMove);
+      window.addEventListener('mouseup', handlePointerUp);
+
+      canvas.addEventListener('touchstart', handlePointerDown, { passive: false });
+      canvas.addEventListener('touchmove', handlePointerMove, { passive: false });
+      window.addEventListener('touchend', handlePointerUp);
+
+      // Control buttons
+      const btnSpawnTrain = document.getElementById('btnSpawnTrain');
+      const btnIntercept = document.getElementById('btnIntercept');
+      const btnBombPit = document.getElementById('btnBombPit');
+
+      if (btnSpawnTrain) {
+        btnSpawnTrain.addEventListener('click', function () {
+          ensureAudio();
+          spawnDuckTrain();
+        });
+      }
+      if (btnIntercept) {
+        btnIntercept.addEventListener('click', function () {
+          ensureAudio();
+          const activeTrainDuck = trainDucks.find(function (d) { return d.state === 'train'; });
+          if (activeTrainDuck) {
+            interceptTrain(activeTrainDuck.x, activeTrainDuck.y);
+          } else {
+            spawnDuckTrain();
+            setTimeout(function () { interceptTrain(W * 0.5, 255); }, 350);
+          }
+        });
+      }
+      if (btnBombPit) {
+        btnBombPit.addEventListener('click', function () {
+          ensureAudio();
+          launchBombIntoPit();
+        });
+      }
+
+      // Helper to draw a cute rubber duck
+      function drawDuck(x, y, radius, bodyColor, strokeColor, label, hasHelmet, scale) {
+        ctx.save();
+        ctx.translate(x, y);
+        if (scale && scale !== 1) ctx.scale(scale, scale);
+
+        // Shadow
+        ctx.fillStyle = 'rgba(21, 16, 38, 0.22)';
+        ctx.beginPath();
+        ctx.ellipse(0, radius * 0.75, radius * 0.95, radius * 0.42, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Body
+        ctx.fillStyle = bodyColor;
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Wing highlight
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.beginPath();
+        ctx.ellipse(-radius * 0.2, 2, radius * 0.45, radius * 0.28, -0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Beak
+        ctx.fillStyle = '#F97316';
+        ctx.beginPath();
+        ctx.ellipse(radius * 0.78, -2, radius * 0.42, radius * 0.25, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Eye
+        ctx.fillStyle = '#0F172A';
+        ctx.beginPath();
+        ctx.arc(radius * 0.35, -radius * 0.28, 2.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Aviator Helmet for Mama Duck
+        if (hasHelmet) {
+          ctx.fillStyle = '#78350F';
+          ctx.strokeStyle = '#FBBF24';
+          ctx.lineWidth = 1.8;
+          ctx.beginPath();
+          ctx.arc(0, -radius * 0.25, radius * 0.88, Math.PI, 0);
+          ctx.fill();
+          ctx.stroke();
+          // Goggles
+          ctx.fillStyle = '#38BDF8';
+          ctx.fillRect(radius * 0.05, -radius * 0.65, radius * 0.65, 5);
+        }
+
+        // Multiplier label
+        if (label) {
+          ctx.fillStyle = '#140E24';
+          ctx.font = 'bold 9px "JetBrains Mono", monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(label, -2, 4);
+        }
+
+        ctx.restore();
+      }
+
+      // Main 60fps Loop
+      function tick() {
+        ctx.clearRect(0, 0, W, H);
+
+        // 1. Workshop Floor Tiles (#CBC4E2 like in-game screenshots)
+        ctx.fillStyle = '#CBC4E2';
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.strokeStyle = 'rgba(147, 132, 189, 0.28)';
+        ctx.lineWidth = 1;
+        for (let gx = 0; gx < W; gx += 39) {
+          ctx.beginPath();
+          ctx.moveTo(gx, 0);
+          ctx.lineTo(gx, H);
+          ctx.stroke();
+        }
+        for (let gy = 0; gy < H; gy += 39) {
+          ctx.beginPath();
+          ctx.moveTo(0, gy);
+          ctx.lineTo(W, gy);
+          ctx.stroke();
+        }
+
+        // Dashed path track for the Duck Train
+        ctx.save();
+        ctx.strokeStyle = 'rgba(30, 23, 54, 0.22)';
+        ctx.lineWidth = 3;
+        ctx.setLineDash([8, 8]);
+        ctx.beginPath();
+        ctx.moveTo(0, 255);
+        ctx.lineTo(W, 255);
+        ctx.stroke();
+        ctx.restore();
+
+        // 2. Spring physics on Pit Rim scale
+        pit.scale += (1 - pit.scale) * 0.16;
+        if (pit.rimFlash > 0) pit.rimFlash = Math.max(0, pit.rimFlash - 0.05);
+        if (comboTimer > 0) {
+          comboTimer = Math.max(0, comboTimer - 0.004);
+          if (comboTimer === 0) {
+            combo = 1;
+            updateHud();
+          }
+        }
+
+        // Draw Pit Outer Glow
+        const r = pit.baseRadius * pit.scale;
+        const grad = ctx.createRadialGradient(pit.x, pit.y, r * 0.2, pit.x, pit.y, r * 1.65);
+        grad.addColorStop(0, 'rgba(147, 51, 234, 0.55)');
+        grad.addColorStop(0.6, 'rgba(168, 85, 247, 0.22)');
+        grad.addColorStop(1, 'rgba(168, 85, 247, 0)');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(pit.x, pit.y, r * 1.65, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw Stone Rim (with stone bounce & flash from PitVisual.cs)
+        pit.stones.forEach(function (s) {
+          if (s.bounce > 0) s.bounce *= 0.84;
+          const sr = r + 7 + s.bounce;
+          const sx = pit.x + Math.cos(s.ang) * sr;
+          const sy = pit.y + Math.sin(s.ang) * sr * 0.82;
+          ctx.fillStyle = pit.rimFlash > 0.2 ? '#FDE047' : '#645986';
+          ctx.strokeStyle = '#2E2546';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(sx, sy, 9.5 * pit.scale, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        });
+
+        // Draw Pit Vortex Hole
+        const holeGrad = ctx.createRadialGradient(pit.x, pit.y, 4, pit.x, pit.y, r);
+        holeGrad.addColorStop(0, '#090514');
+        holeGrad.addColorStop(0.7, '#2E1065');
+        holeGrad.addColorStop(1, '#7E22CE');
+        ctx.fillStyle = holeGrad;
+        ctx.beginPath();
+        ctx.ellipse(pit.x, pit.y, r, r * 0.82, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Pit Combo & Timer Bar above Pit (per Maxim's PT #7: combo timer bar + dark pill)
+        ctx.fillStyle = 'rgba(19, 14, 36, 0.86)';
+        ctx.beginPath();
+        ctx.roundRect(pit.x - 74, pit.y - r - 38, 148, 26, 8);
+        ctx.fill();
+
+        ctx.fillStyle = '#FFD22E';
+        ctx.font = '800 12px "Unbounded", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('КОМБО ×' + combo, pit.x, pit.y - r - 21);
+
+        // Combo timer bar
+        ctx.fillStyle = 'rgba(255,255,255,0.18)';
+        ctx.fillRect(pit.x - 58, pit.y - r - 16, 116, 3);
+        ctx.fillStyle = '#38BDF8';
+        ctx.fillRect(pit.x - 58, pit.y - r - 16, 116 * comboTimer, 3);
+
+        // 3. Update & Draw Mama Duck & Duck Train
+        if (mamaDuck && mamaDuck.active) {
+          if (mamaDuck.diving) {
+            mamaDuck.diveT += 0.045;
+            const t = Math.min(1, mamaDuck.diveT);
+            mamaDuck.x = mamaDuck.startX + (pit.x - mamaDuck.startX) * t;
+            mamaDuck.y = mamaDuck.startY + (pit.y - mamaDuck.startY) * t - Math.sin(t * Math.PI) * 95;
+            drawDuck(mamaDuck.x, mamaDuck.y, 17, '#FFD22E', '#B45309', 'МАМА', true, 1 - t * 0.35);
+            if (t >= 1) {
+              mamaDuck.active = false;
+              onDuckSwallowed(10, true);
+            }
+          } else {
+            mamaDuck.x += mamaDuck.vx;
+            mamaDuck.phase += 0.18;
+            const bobY = mamaDuck.y + Math.sin(mamaDuck.phase) * 3.5;
+            drawDuck(mamaDuck.x, bobY, 17, '#FFD22E', '#B45309', 'МАМА', true, 1);
+
+            if (mamaDuck.x > W + 190) {
+              // Respawn train automatically so the demo is always alive
+              spawnDuckTrain();
+            }
+          }
+        }
+
+        trainDucks.forEach(function (d, idx) {
+          if (d.state === 'train' && mamaDuck && mamaDuck.active && !mamaDuck.diving) {
+            const targetX = mamaDuck.x - (idx + 1) * 29;
+            const targetY = mamaDuck.y + Math.sin(mamaDuck.phase - (idx + 1) * 0.65) * 6;
+            d.x += (targetX - d.x) * 0.35;
+            d.y += (targetY - d.y) * 0.35;
+            drawDuck(d.x, d.y, 12.5, d.color, d.stroke, d.label, false, 1);
+          } else if (d.state === 'scattered') {
+            d.x += (d.targetX - d.x) * 0.16;
+            d.y += (d.targetY - d.y) * 0.16;
+
+            // Check if hero vacuums this scattered duck
+            const distToHero = Math.hypot(hero.x - d.x, hero.y - d.y);
+            if (distToHero < 64 && hero.stack.length < hero.maxStack) {
+              d.state = 'collected';
+              hero.stack.push({ color: d.color, stroke: d.stroke, mul: d.mul });
+              playSfx('quack');
+              checkMamaSomersault();
+            } else {
+              drawDuck(d.x, d.y, 12.5, d.color, d.stroke, d.label, false, 1);
+            }
+          }
+        });
+
+        // 4. Update & Draw Hero in Yellow Hardhat + Stack in Hands
+        hero.x += (hero.targetX - hero.x) * 0.18;
+        hero.y += (hero.targetY - hero.y) * 0.18;
+
+        // Green pickup circle around hero
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.55)';
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.1)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(hero.x, hero.y, 44, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Hero shoulders & hardhat
+        ctx.fillStyle = '#2563EB';
+        ctx.beginPath();
+        ctx.roundRect(hero.x - 16, hero.y - 10, 32, 22, 8);
+        ctx.fill();
+
+        ctx.fillStyle = '#FFD22E';
+        ctx.strokeStyle = '#92400E';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(hero.x, hero.y - 2, 13, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw stacked ducks in hero's hands (wobbling slightly)
+        hero.stack.forEach(function (item, idx) {
+          const sway = Math.sin(Date.now() * 0.008 + idx * 0.45) * 2.5;
+          const sy = hero.y - 22 - idx * 7.5;
+          drawDuck(hero.x + sway, sy, 9.5, item.color, item.stroke, '', false, 1);
+        });
+
+        // Stack counter pill on dark backing (per UX fix #106)
+        ctx.fillStyle = 'rgba(19, 14, 36, 0.85)';
+        ctx.beginPath();
+        ctx.roundRect(hero.x - 24, hero.y + 16, 48, 18, 6);
+        ctx.fill();
+        ctx.fillStyle = '#F8FAFC';
+        ctx.font = 'bold 10px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(hero.stack.length + '/' + hero.maxStack, hero.x, hero.y + 28);
+
+        // 5. Flying Ducks Volley into Pit
+        for (let i = flyingDucks.length - 1; i >= 0; i--) {
+          const fd = flyingDucks[i];
+          fd.t += 0.065;
+          if (fd.t < 0) continue;
+          const t = Math.min(1, fd.t);
+          fd.x = fd.startX + (pit.x - fd.startX) * t;
+          fd.y = fd.startY + (pit.y - fd.startY) * t - Math.sin(t * Math.PI) * 65;
+          drawDuck(fd.x, fd.y, 11, fd.color, fd.stroke, '', false, 1 - t * 0.35);
+          if (t >= 1) {
+            onDuckSwallowed(fd.mul, false);
+            flyingDucks.splice(i, 1);
+          }
+        }
+
+        // 6. Feathers & Confetti Particles (Idea #1)
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.18;
+          p.rot += p.vrot;
+          p.life -= 0.024;
+          if (p.life <= 0) {
+            particles.splice(i, 1);
+            continue;
+          }
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.globalAlpha = Math.max(0, p.life);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        }
+
+        // 7. Floating World Texts (on dark pills for readability!)
+        for (let i = floatingTexts.length - 1; i >= 0; i--) {
+          const ft = floatingTexts[i];
+          ft.y += ft.vy;
+          ft.life -= 0.02;
+          if (ft.life <= 0) {
+            floatingTexts.splice(i, 1);
+            continue;
+          }
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, ft.life);
+          ctx.font = '800 ' + ft.size + 'px "Rubik", sans-serif';
+          const tw = ctx.measureText(ft.text).width;
+          ctx.fillStyle = 'rgba(13, 9, 23, 0.82)';
+          ctx.beginPath();
+          ctx.roundRect(ft.x - tw / 2 - 8, ft.y - ft.size, tw + 16, ft.size + 8, 6);
+          ctx.fill();
+          ctx.fillStyle = ft.color;
+          ctx.textAlign = 'center';
+          ctx.fillText(ft.text, ft.x, ft.y);
+          ctx.restore();
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      // Launch initial Duck Train & start loop
+      spawnDuckTrain();
+      updateHud();
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>
