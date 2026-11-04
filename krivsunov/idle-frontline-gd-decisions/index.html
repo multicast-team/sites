@@ -151,15 +151,15 @@ th { font-size: 13px; color: var(--ink-3); font-weight: 650; border-bottom: 1.5p
   <section class="hero">
     <div class="wrap hero__grid">
       <div>
-        <p class="kicker">Правки по плейтесту 2 ноября · ветка NEWFIX_AFTER_PLAYTEST · 3 ноября 2026</p>
+        <p class="kicker">Правки по плейтесту 2 ноября · ветка NEWFIX_AFTER_PLAYTEST · 4 ноября 2026</p>
         <h1>Код готов. Осталось решить геймдизайну</h1>
-        <p class="lead">Три этапа правок по разбору плейтеста сделаны и проверены в игре. Там, где нужен был выбор геймдизайнера, в сборке стоит осторожный вариант по умолчанию. Ниже — каждый такой выбор: что сейчас в игре, что решить и где поменять.</p>
+        <p class="lead">Три этапа правок по разбору плейтеста и доработка фидбека сделаны и проверены в игре. Там, где нужен был выбор геймдизайнера, в сборке стоит осторожный вариант по умолчанию. Ниже — каждый такой выбор: что сейчас в игре, что решить и где поменять.</p>
       </div>
       <ul class="facts" aria-label="Сводка">
-        <li><b>25</b><span>решений ждут геймдизайнера</span></li>
+        <li><b>26</b><span>решений ждут геймдизайнера</span></li>
         <li><b>7</b><span>стоит принять до следующего плейтеста</span></li>
-        <li><b>10</b><span>из третьего этапа, 8 — из второго, 7 — из первого</span></li>
-        <li><b>25</b><span>пунктов плана сделаны в коде, список — внизу страницы</span></li>
+        <li><b>2</b><span>из фидбека, 10 — из третьего этапа, 8 — из второго, 6 — из первого</span></li>
+        <li><b>31</b><span>пунктов плана сделаны в коде, список — внизу страницы</span></li>
       </ul>
     </div>
     <div class="wrap">
@@ -185,6 +185,7 @@ th { font-size: 13px; color: var(--ink-3); font-weight: 650; border-bottom: 1.5p
         <button type="button" data-value="1" aria-pressed="false">1</button>
         <button type="button" data-value="2" aria-pressed="false">2</button>
         <button type="button" data-value="3" aria-pressed="false">3</button>
+        <button type="button" data-value="4" aria-pressed="false">Фидбек</button>
       </div>
       <span class="lbl">Тип</span>
       <div class="seg" data-filter="type">
@@ -250,17 +251,6 @@ th { font-size: 13px; color: var(--ink-3); font-weight: 650; border-bottom: 1.5p
           <ul class="ask"><li>Подтвердить порядок; что важнее после захвата базы — экономика или следующий захват.</li></ul>
           <p class="where"><span>Где менять:</span> <code>GoalPlanner.Pick / PickStep</code></p>
         </div><figure class="shot"><img src="img/k19_levelup.webp" alt="Новая цель после рейса: прокачать бойца" loading="lazy"><figcaption>Новая цель после рейса: прокачать бойца</figcaption></figure>
-      </article>
-      <article class="dec" id="d-loot-numbers" data-stage="1" data-type="content" data-urgent="0">
-        <div class="dec__body">
-          <p class="dec__meta"><span class="kid">—</span><span class="tag">Этап 1</span><span class="tag">Текст и награда</span></p>
-          <h3>Числа над убитым вором</h3>
-          <p class="dec__label">Сейчас в сборке</p>
-          <p>Не сделано: «+N returned» над вором требует всплывающих чисел в мире, а их в проекте нет.</p>
-          <p class="dec__label">Что решить</p>
-          <ul class="ask"><li>Нужна ли система всплывающих чисел (тогда это отдельная задача).</li></ul>
-          <p class="where"><span>Где менять:</span> <code>—</code></p>
-        </div>
       </article>
         </div>
       </div>
@@ -513,6 +503,35 @@ th { font-size: 13px; color: var(--ink-3); font-weight: 650; border-bottom: 1.5p
         </div>
       </div>
     </section>
+    <section class="group" id="g-feel">
+      <div class="wrap">
+        <div class="group__head"><h2>Звук и отклик</h2><p>Звук игры, срыв захвата, отклик боя и улучшений.</p></div>
+        <div class="decs">
+      <article class="dec dec--fig" id="d-capture-grace" data-stage="4" data-type="value" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">ФБ</span><span class="tag">Фидбек</span><span class="tag">Число</span></p>
+          <h3>Дать ли секунды, чтобы вернуться в зону захвата</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Вышел из зоны захвата базы или точки — захват сразу сбрасывается на волну 0. Теперь это хотя бы видно: красная лента «Capture failed · You left the zone · wave 2 of 4», у края зоны кольцо краснеет и пульсирует, звук срыва. При смерти — «Killed by a sniper» (снайпер, танк, босс, турель или «enemies»). Отсрочка уже в коде, но выключена: если её включить, на HUD идёт отсчёт «Back to the zone: 3 s», вернулся вовремя — захват продолжается.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Оставить срыв сразу (0) или дать 2–3 с на возврат.</li><li>Одинаково для баз и территориальных точек или только для точек.</li><li>Сбрасывать ли захват при смерти героя (сейчас — всегда).</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Balance.Frontline.CaptureLeaveGraceDefault = 0 (секунды; 0 — срыв сразу, как было)</code></p>
+        </div><figure class="shot"><img src="img/fb_capture_failed.webp" alt="Срыв захвата точки: лента с причиной и волной" loading="lazy"><figcaption>Срыв захвата точки: лента с причиной и волной</figcaption></figure>
+      </article>
+      <article class="dec" id="d-sound-pack" data-stage="4" data-type="content" data-urgent="0">
+        <div class="dec__body">
+          <p class="dec__meta"><span class="kid">ФБ</span><span class="tag">Фидбек</span><span class="tag">Текст и награда</span></p>
+          <h3>Временный звук: оставить на плейтест или заменить</h3>
+          <p class="dec__label">Сейчас в сборке</p>
+          <p>Из 35 звуков коллекции файлы были у двух — игра была почти без звука. Теперь клипы, которые уже лежали в проекте, стоят у 29 событий из 44: выстрелы, попадания, смерть врага, монеты, кнопки, тиканье, тревога базы, волны, срыв и праздник захвата, прицел снайпера, ящик в турель, улучшение, сердцебиение при малом здоровье. Клипы мультяшные: Epic Toon FX — набор к магическим эффектам, остальное — демо Feel и NiceVibrations. 91 вид оружия из 97 звучит одним выстрелом (два клипа вперемешку), тяжёлое — ниже. Шагов и голосов нет.</p>
+          <p class="dec__label">Что решить</p>
+          <ul class="ask"><li>Оставить временный звук на плейтест или сначала заменить звуками под жанр (пак или генерация).</li><li>Чего не хватает больше всего: разные выстрелы по видам оружия, шаги, голоса, звук интерфейса.</li><li>Громкость тревоги, выстрелов врагов и монет относительно музыки.</li></ul>
+          <p class="where"><span>Где менять:</span> <code>Resources/Melenitas Dev/Sounds Good/SoundCollection.asset — клипы по событиям; громкость — Rules в CodeBase/Features/Audio/GameSfx.cs</code></p>
+        </div>
+      </article>
+        </div>
+      </div>
+    </section>
 
   <section class="section" id="switches">
     <div class="wrap split">
@@ -521,13 +540,13 @@ th { font-size: 13px; color: var(--ink-3); font-weight: 650; border-bottom: 1.5p
         <p class="sub">Значения, которые геймдизайнер может поменять сам, не трогая логику.</p>
         <table>
           <thead><tr><th>Где</th><th>Сейчас</th><th>Что делает</th></tr></thead>
-          <tbody><tr><td><code>Balance.Frontline.CarrierUnlockVariants</code></td><td><code>"ABC"</code></td><td>Варианты A/B носильщика; "A" — тест выключен</td></tr><tr><td><code>Balance.Frontline.CarrierUnlockDeliveries</code></td><td><code>3</code></td><td>Ручных доставок до носильщика в варианте C</td></tr><tr><td><code>Balance.Frontline.DesertRecommended</code></td><td><code>""</code></td><td>Рекомендуемая сила в карточке пустыни; пусто — не показывается</td></tr><tr><td><code>Balance.Frontline.FrontPrototype</code></td><td><code>true</code></td><td>Прототип фронта база 1 → база 2</td></tr><tr><td><code>Balance.Frontline.FactoryBeforeLaunch</code></td><td><code>base_1</code></td><td>«Сначала завод» по базам</td></tr><tr><td><code>AssaultHistory.AlternativeAfter</code></td><td><code>2</code></td><td>Провалов штурма до другой цели</td></tr><tr><td><code>SniperTelegraph.AimSeconds / LockSeconds</code></td><td><code>1.2 / 0.25</code></td><td>Прицел и фиксация снайпера, с</td></tr><tr><td><code>BaseSiegeWarning.WarningSeconds</code></td><td><code>30</code></td><td>Тревога «мало патронов», с до остановки турелей</td></tr><tr><td><code>GroundPad.HoldSeconds</code></td><td><code>0.6</code></td><td>Сколько стоять на площадке</td></tr><tr><td><code>GoalPlanner.NearbyWhileWaiting / FarGoal</code></td><td><code>45 / 70</code></td><td>Ресурс рядом во время рейса, м</td></tr><tr><td><code>WorldHintsHud.ZoneCardDistance</code></td><td><code>22</code></td><td>С какого расстояния видна карточка жары, м</td></tr></tbody>
+          <tbody><tr><td><code>Balance.Frontline.CarrierUnlockVariants</code></td><td><code>"ABC"</code></td><td>Варианты A/B носильщика; "A" — тест выключен</td></tr><tr><td><code>Balance.Frontline.CarrierUnlockDeliveries</code></td><td><code>3</code></td><td>Ручных доставок до носильщика в варианте C</td></tr><tr><td><code>Balance.Frontline.DesertRecommended</code></td><td><code>""</code></td><td>Рекомендуемая сила в карточке пустыни; пусто — не показывается</td></tr><tr><td><code>Balance.Frontline.FrontPrototype</code></td><td><code>true</code></td><td>Прототип фронта база 1 → база 2</td></tr><tr><td><code>Balance.Frontline.FactoryBeforeLaunch</code></td><td><code>base_1</code></td><td>«Сначала завод» по базам</td></tr><tr><td><code>AssaultHistory.AlternativeAfter</code></td><td><code>2</code></td><td>Провалов штурма до другой цели</td></tr><tr><td><code>SniperTelegraph.AimSeconds / LockSeconds</code></td><td><code>1.2 / 0.25</code></td><td>Прицел и фиксация снайпера, с</td></tr><tr><td><code>BaseSiegeWarning.WarningSeconds</code></td><td><code>30</code></td><td>Тревога «мало патронов», с до остановки турелей</td></tr><tr><td><code>GroundPad.HoldSeconds</code></td><td><code>0.6</code></td><td>Сколько стоять на площадке</td></tr><tr><td><code>GoalPlanner.NearbyWhileWaiting / FarGoal</code></td><td><code>45 / 70</code></td><td>Ресурс рядом во время рейса, м</td></tr><tr><td><code>WorldHintsHud.ZoneCardDistance</code></td><td><code>22</code></td><td>С какого расстояния видна карточка жары, м</td></tr><tr><td><code>Balance.Frontline.CaptureLeaveGraceDefault</code></td><td><code>0</code></td><td>Секунд на возврат в зону захвата; 0 — срыв сразу</td></tr><tr><td><code>Balance.Frontline.GameSounds / MusicDuck</code></td><td><code>true / 0.35</code></td><td>Звук из клипов проекта; громкость музыки на тревоге и захвате</td></tr><tr><td><code>Balance.Frontline.CaptureFailCallout</code></td><td><code>true</code></td><td>Лента срыва захвата с причиной, кольцо у края зоны</td></tr><tr><td><code>Balance.Frontline.UpgradeFeedback</code></td><td><code>true</code></td><td>Отклик покупки улучшения и нового уровня базы</td></tr><tr><td><code>Balance.Frontline.PlaytestAnalytics</code></td><td><code>true</code></td><td>События плейтеста в AppMetrica</td></tr><tr><td><code>Balance.Frontline.WaveCallouts / ThreatMarkers / HitDirection</code></td><td><code>true</code></td><td>«+N» и ленты волн; стрелки за кадром; красный край</td></tr><tr><td><code>Balance.Frontline.ResourcePopups / CaptureSpread</code></td><td><code>true</code></td><td>«+N» в мире; заливка земли и наш флаг</td></tr><tr><td><code>Balance.Frontline.WaveClearHitStop / WaveClearShake / CapturePullBackFov</code></td><td><code>0.04 / 0.35 / 8</code></td><td>Заминка и тряска на последнем враге волны; отъезд камеры, °</td></tr></tbody>
         </table>
       </div>
       <div>
         <h2>Уже сделано</h2>
         <p class="sub">Пункты плана из разбора плейтеста, закрытые в коде за три этапа.</p>
-        <ul class="done"><li><span class="kid">K01</span>«Назад» по всей кнопке; декоративные дырки больше не перехватывают нажатия</li><li><span class="kid">K02</span>Фоновая осада базы 3 не теряет GoldenToken</li><li><span class="kid">K03</span>Тревоги базы: нападение, мало патронов, разрушение, повреждение</li><li><span class="kid">K04</span>Подкрепление до постройки показывает условие и цену</li><li><span class="kid">K06</span>Одна цель на HUD, стрелка, ромб на мини-карте</li><li><span class="kid">K07</span>Волны захвата и отсчёт в HUD</li><li><span class="kid">K12</span>Окно базы: выпуск отдельно от обороны, время до заполнения склада</li><li><span class="kid">K13</span>База 1: сначала завод, потом нападения</li><li><span class="kid">K14</span>Гарнизон: где работают люди, «было → стало»</li><li><span class="kid">K15</span>Цены «есть / нужно» и «Где взять»</li><li><span class="kid">K08</span>Источник усиления врагов виден: подпись, линии, −50% после захвата</li><li><span class="kid">K09</span>Телеграф снайпера и метка у героя</li><li><span class="kid">K10</span>Выстрел не сбрасывается движением</li><li><span class="kid">K16</span>Мини-карта: своё, чужое, дом возрождения</li><li><span class="kid">K17</span>Помощник: роль над пленным, замена при полном отряде, крестик</li><li><span class="kid">K18</span>Путь к званию и уровню базы словами</li><li><span class="kid">K21</span>Площадки на земле, ящик остаётся на базе</li><li><span class="kid">K23</span>Прототип фронта: мост и снайперская вышка</li><li><span class="kid">K26</span>Другая цель после двух провалов</li><li><span class="kid">K20</span>Таймер над собранным ресурсом и на мини-карте</li><li><span class="kid">K11</span>Патруль ждёт конца боя и собирается в строй, погоня — от места остановки</li><li><span class="kid">K24</span>Карточка у края жары, пометка «heat zone» у цели</li><li><span class="kid">K19</span>Подкрепление: что дают водители, очередь, цель во время рейса, прокачка после рейса</li><li><span class="kid">K22</span>A/B выдачи носильщика с событиями аналитики</li><li><span class="kid">K05</span>Опечатки на экране нет; внутреннее имя объекта исправлено</li></ul>
+        <ul class="done"><li><span class="kid">K01</span>«Назад» по всей кнопке; декоративные дырки больше не перехватывают нажатия</li><li><span class="kid">K02</span>Фоновая осада базы 3 не теряет GoldenToken</li><li><span class="kid">K03</span>Тревоги базы: нападение, мало патронов, разрушение, повреждение</li><li><span class="kid">K04</span>Подкрепление до постройки показывает условие и цену</li><li><span class="kid">K06</span>Одна цель на HUD, стрелка, ромб на мини-карте</li><li><span class="kid">K07</span>Волны захвата и отсчёт в HUD</li><li><span class="kid">K12</span>Окно базы: выпуск отдельно от обороны, время до заполнения склада</li><li><span class="kid">K13</span>База 1: сначала завод, потом нападения</li><li><span class="kid">K14</span>Гарнизон: где работают люди, «было → стало»</li><li><span class="kid">K15</span>Цены «есть / нужно» и «Где взять»</li><li><span class="kid">K08</span>Источник усиления врагов виден: подпись, линии, −50% после захвата</li><li><span class="kid">K09</span>Телеграф снайпера и метка у героя</li><li><span class="kid">K10</span>Выстрел не сбрасывается движением</li><li><span class="kid">K16</span>Мини-карта: своё, чужое, дом возрождения</li><li><span class="kid">K17</span>Помощник: роль над пленным, замена при полном отряде, крестик</li><li><span class="kid">K18</span>Путь к званию и уровню базы словами</li><li><span class="kid">K21</span>Площадки на земле, ящик остаётся на базе</li><li><span class="kid">K23</span>Прототип фронта: мост и снайперская вышка</li><li><span class="kid">K26</span>Другая цель после двух провалов</li><li><span class="kid">K20</span>Таймер над собранным ресурсом и на мини-карте</li><li><span class="kid">K11</span>Патруль ждёт конца боя и собирается в строй, погоня — от места остановки</li><li><span class="kid">K24</span>Карточка у края жары, пометка «heat zone» у цели</li><li><span class="kid">K19</span>Подкрепление: что дают водители, очередь, цель во время рейса, прокачка после рейса</li><li><span class="kid">K22</span>A/B выдачи носильщика с событиями аналитики</li><li><span class="kid">K05</span>Опечатки на экране нет; внутреннее имя объекта исправлено</li><li><span class="kid">ФБ</span>Волны без сюрприза: «+N» над подкреплением, лента «Wave 2 of 4», заминка на последнем враге</li><li><span class="kid">ФБ</span>Стрелки к врагам за краем экрана, красный край со стороны удара</li><li><span class="kid">ФБ</span>«+N» в мире: завод, ящик в турель, украденное у вора</li><li><span class="kid">ФБ</span>Захват как взятие земли: заливка от флага, наш флаг, мини-карта</li><li><span class="kid">ФБ</span>Звук из клипов проекта, срыв захвата с причиной, отклик улучшений и нового уровня базы</li><li><span class="kid">ФБ</span>14 событий плейтеста в AppMetrica: шаги первого цикла, итог штурма, цель, перевод рабочего, нехватка</li></ul>
       </div>
     </div>
   </section>
