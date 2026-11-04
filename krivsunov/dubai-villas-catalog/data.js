@@ -1,5 +1,5 @@
 window.VILLA_CATALOG = {
-  "updatedAt": "2026-11-04T14:33:28.192853+00:00",
+  "updatedAt": "2026-11-04T15:49:15.151104+00:00",
   "properties": [
     {
       "id": "arthur_nas_20261104_a6b943ee",
@@ -179,7 +179,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:53:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_f121a34f",
@@ -350,7 +352,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:53:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_37d676e0",
@@ -625,7 +629,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:54:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_e94119ef",
@@ -845,7 +851,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:54:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_75315156",
@@ -1106,7 +1114,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:54:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_0fc4cf73",
@@ -1317,7 +1327,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:55:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_38e9cc59",
@@ -1568,7 +1580,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:55:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_00365f5c",
@@ -1779,7 +1793,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:55:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_14fd0f77",
@@ -1980,7 +1996,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:55:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_e1cf1773",
@@ -2180,7 +2198,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:55:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_bde97c0d",
@@ -2400,7 +2420,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:55:00+00:00"
     },
     {
       "id": "arthur_nas_20261104_9c929c8e",
@@ -2565,7 +2587,9 @@ window.VILLA_CATALOG = {
       "rentDefault": false,
       "isNew": true,
       "addedAt": "2026-11-04",
-      "newBatch": "arthur-pdf-20261104"
+      "newBatch": "arthur-pdf-20261104",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-04T11:55:00+00:00"
     },
     {
       "id": "samantha_ji_gardenhall500",
@@ -2664,7 +2688,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~10×5 м вдоль дома",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "polo",
@@ -2869,7 +2894,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой L-образный бассейн ~9–11×4 м у поля",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "war4_6br_tayyab_pdf",
@@ -3112,7 +3138,8 @@ window.VILLA_CATALOG = {
         "poster": "villa3d/war4_6br_tayyab_pdf.webp",
         "note": "Модель собрана по 35 фото брошюры и 30 фото объявления dubizzle: дом, бассейн, двор, ограда, парковка, улицы углового участка и интерьер — холл со вторым светом и П-образной лестницей, гостиная и столовая у бассейна, 6 спален с санузлами (одна — кабинет), малая гостиная с пантри, прачечная и комната прислуги. Поэтажного плана нет, поэтому размеры и расстановка комнат приблизительные (±1–2 м); мебели нет — дом сдаётся без неё.",
         "interior": true
-      }
+      },
+      "addedAt": "2026-11-02"
     },
     {
       "id": "damac_hills_samantha_1558",
@@ -3223,7 +3250,8 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет (на видео — соседский) · общий",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "santorini",
@@ -3427,7 +3455,8 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет (сад песчаный) · общий бассейн",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "ji24",
@@ -3580,7 +3609,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~8×4 м с беседкой",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "ji10",
@@ -3692,7 +3722,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~8–9×4 м у забора к воде",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "ji38",
@@ -3709,7 +3740,7 @@ window.VILLA_CATALOG = {
       "buaM2": null,
       "ceiling": "комнаты ≈3,1 м (2,9–3,3 м)",
       "status": "review",
-      "statusLabel": "Новое · 03.11",
+      "statusLabel": "На рассмотрении",
       "type": "villa",
       "cover": "gallery/ji38-9bdf4c10af5e40.webp",
       "images": [
@@ -3900,7 +3931,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~8–10×4 м за домом",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-03"
     },
     {
       "id": "ji_oasis_sale",
@@ -3917,7 +3949,7 @@ window.VILLA_CATALOG = {
       "buaM2": 520,
       "ceiling": "комнаты ≈2,9 м (2,8–3,1 м)",
       "status": "review",
-      "statusLabel": "Продажа · новое 03.11",
+      "statusLabel": "Продажа",
       "type": "villa",
       "cover": "gallery/ji_oasis_sale-4715c49367ae8e.webp",
       "images": [
@@ -4107,7 +4139,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой длинный бассейн ~12–15 м вдоль дома",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-03"
     },
     {
       "id": "ji25_sale",
@@ -4124,7 +4157,7 @@ window.VILLA_CATALOG = {
       "buaM2": 488,
       "ceiling": "комнаты ≈3,0 м (2,8–3,2 м)",
       "status": "review",
-      "statusLabel": "Продажа · новое 03.11",
+      "statusLabel": "Продажа",
       "type": "villa",
       "cover": "gallery/ji25_sale-008f20a1c4e616.webp",
       "images": [
@@ -4290,7 +4323,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~8×3,5 м сбоку дома",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-03"
     },
     {
       "id": "palm_f",
@@ -4465,7 +4499,8 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет · общий бассейн и пляж в ~50 м",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "turf_450",
@@ -4649,7 +4684,8 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет · общий бассейн комьюнити",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "legacy_canal",
@@ -4853,7 +4889,8 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет · общий бассейн и пляж в ~50 м",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "legacy_whitefield",
@@ -4977,11 +5014,12 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет (в саду газон) · общий в комьюнити",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "arthur_silver480",
-      "title": "Silver Springs · 480 000 AED (новое 02.11)",
+      "title": "Silver Springs · 480 000 AED",
       "area": "DAMAC Hills",
       "agent": "Артур",
       "agentPhone": "",
@@ -4994,7 +5032,7 @@ window.VILLA_CATALOG = {
       "buaM2": 465,
       "ceiling": "комнаты ≈3,1 м (2,9–3,3 м) · гостиная ≈3,4 м",
       "status": "review",
-      "statusLabel": "Новое · 02.11",
+      "statusLabel": "На рассмотрении",
       "type": "villa",
       "cover": "gallery/arthur_silver480-b0bb796c1bd2c5.webp",
       "images": [
@@ -5092,7 +5130,7 @@ window.VILLA_CATALOG = {
       "missing": [
         "Точная точка дома"
       ],
-      "requestState": "Новое предложение Артура за последние 48 часов (02.11 в 17:40).",
+      "requestState": "Предложено Артуром 02.11 в 17:40.",
       "ref": "",
       "possibleDuplicateIds": [
         "legacy_silver"
@@ -5111,7 +5149,10 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет (на фото — соседский) · общий",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-03",
+      "sourceAgentId": "arthur",
+      "offeredAt": "2026-11-02T17:40:00+04:00"
     },
     {
       "id": "samantha_esmeralda460",
@@ -5175,7 +5216,8 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего, судя по фото, нет · общий в комьюнити",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "samantha_jebel550",
@@ -5265,7 +5307,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~8×3,5 м в конце газона",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "samantha_jp600",
@@ -5357,7 +5400,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~10–12×4–5 м с полкой для лежаков",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "samantha_belair600",
@@ -5444,7 +5488,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~8×4 м за домом (джакузи не видно)",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "carly_jp3",
@@ -5550,7 +5595,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~7–8×3,5–4 м во дворе",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "carly_saheel549",
@@ -5740,7 +5786,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой фигурный бассейн ~9×4 м с мозаикой",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "carly_santorini378",
@@ -5810,7 +5857,8 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет · общий бассейн",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "arthur_f64",
@@ -5872,7 +5920,9 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн в саду у гольфа",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02",
+      "sourceAgentId": "arthur"
     },
     {
       "id": "arthur_silver340",
@@ -6033,7 +6083,9 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет · общий бассейн",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02",
+      "sourceAgentId": "arthur"
     },
     {
       "id": "turf",
@@ -6284,7 +6336,8 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет · общий бассейн комьюнити",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "yasmin_samantha_425",
@@ -6368,7 +6421,8 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет · общий бассейн Yasmin в ~130 м",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "samantha_whispering525",
@@ -6476,7 +6530,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~8–9×3–4 м у ограды на гольф",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "rahul_ar3",
@@ -6586,7 +6641,8 @@ window.VILLA_CATALOG = {
       "pool": "private",
       "poolLabel": "Свой бассейн ~12×3,5 м вдоль террасы",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "robert_alt550",
@@ -6739,7 +6795,8 @@ window.VILLA_CATALOG = {
       "pool": "no",
       "poolLabel": "Своего нет (бассейн на фото — у соседа)",
       "viewedDefault": false,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     },
     {
       "id": "arthur_tf19",
@@ -6794,7 +6851,9 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет (по спутнику) · общий в комьюнити",
       "viewedDefault": true,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02",
+      "sourceAgentId": "arthur"
     },
     {
       "id": "legacy_longview",
@@ -6946,7 +7005,8 @@ window.VILLA_CATALOG = {
       "pool": "community",
       "poolLabel": "Своего нет · общий бассейн-лагуна в ~150 м",
       "viewedDefault": true,
-      "rentDefault": false
+      "rentDefault": false,
+      "addedAt": "2026-11-02"
     }
   ],
   "sharedComments": {

@@ -956,6 +956,35 @@
     return many;
   }
 
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const dubaiDate = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Dubai', year: 'numeric', month: '2-digit', day: '2-digit' });
+  const fullDate = new Intl.DateTimeFormat('ru-RU', { timeZone: 'Asia/Dubai', day: 'numeric', month: 'long', year: 'numeric' });
+
+  function isRecentArthur(property, now = Date.now()) {
+    const offered = Date.parse(property.offeredAt);
+    const age = now - offered;
+    return property.sourceAgentId === 'arthur' && Number.isFinite(offered) && age >= 0 && age < DAY_MS;
+  }
+
+  function addedDateLabel(value, now = Date.now()) {
+    const added = Date.parse(/^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T12:00:00+04:00` : value);
+    if (!Number.isFinite(added)) return 'дата неизвестна';
+    const day = (date) => Date.parse(dubaiDate.format(date) + 'T00:00:00Z');
+    const days = Math.round((day(now) - day(added)) / DAY_MS);
+    return days === 0 ? 'сегодня' : days === 1 ? 'вчера' : days === 2 ? 'позавчера' : fullDate.format(added);
+  }
+
+  function addedDateLine(property) {
+    const line = el('p', 'added-date');
+    const date = el('time', '', addedDateLabel(property.addedAt));
+    if (property.addedAt) {
+      date.dateTime = property.addedAt;
+      date.title = `Добавлено на сайт: ${property.addedAt} · даты по Дубаю`;
+    }
+    line.append('Добавлено на сайт: ', date);
+    return line;
+  }
+
   function formatPhone(raw) {
     const clean = text(raw);
     const digits = clean.replace(/\D/g, '');
@@ -1039,7 +1068,11 @@
 
   function badges(property, withType = false) {
     const group = el('div', 'badges');
-    if (property.isNew === true) group.append(el('span', 'badge new-badge', 'Новое'));
+    if (isRecentArthur(property)) {
+      const badge = el('span', 'badge new-badge', 'Новое · Артур · 24 ч');
+      badge.dataset.offeredAt = property.offeredAt;
+      group.append(badge);
+    }
     group.append(el('span', `badge status-${property.status}`, statusText(property)));
     if ((withType && property.type !== 'unknown') || property.type === 'townhouse' || property.type === 'linked') group.append(el('span', 'badge type-badge', types[property.type]));
     return group;
@@ -1493,6 +1526,7 @@
       title,
       decisionToggles(property, article),
       meta,
+      addedDateLine(property),
       agentContactLine(property),
       sourceOriginLine(property),
       specifications(property),
@@ -1539,6 +1573,7 @@
     title.append(openButton(property.title, property, 'title-button'));
     name.append(
       title,
+      addedDateLine(property),
       el('p', 'list-sub', [property.area || 'Район не указан', property.ceiling ? `Потолки ${property.ceiling}` : '', property.waterViewLabel].filter(Boolean).join(' · ')),
       decisionToggles(property, row)
     );
@@ -1616,7 +1651,7 @@
     const head = el('header', 'detail-head');
     const title = el('h2', 'detail-title', property.title);
     title.id = 'detail-title';
-    head.append(badges(property, true), title, el('p', 'detail-location', [property.area || 'Район не указан', property.projectType || '', property.agent ? `агент ${property.agent}` : ''].filter(Boolean).join(' · ')));
+    head.append(badges(property, true), title, addedDateLine(property), el('p', 'detail-location', [property.area || 'Район не указан', property.projectType || '', property.agent ? `агент ${property.agent}` : ''].filter(Boolean).join(' · ')));
     container.append(head, mosaic(property));
 
     const layout = el('div', 'detail-layout');
@@ -1834,7 +1869,7 @@
     const withComments = $('with-comments').checked;
 
     return properties.filter((property) => {
-      if (state.onlyNew && property.isNew !== true) return false;
+      if (state.onlyNew && !isRecentArthur(property)) return false;
       if (!query.every((word) => property.search.includes(word))) return false;
       if (area && (property.area || '∅') !== area) return false;
       if (agent && (property.agent || '∅') !== agent) return false;
@@ -2834,9 +2869,9 @@
     }
     const quickNew = $('quick-new');
     if (quickNew) {
-      const newCount = properties.filter((p) => p.isNew === true).length;
+      const newCount = properties.filter((p) => isRecentArthur(p)).length;
       quickNew.setAttribute('aria-pressed', String(state.onlyNew));
-      quickNew.setAttribute('aria-label', `Только новые: ${newCount} объектов во всей подборке`);
+      quickNew.setAttribute('aria-label', `Новые предложения Артура за последние 24 часа: ${newCount} объектов`);
       $('quick-new-count').textContent = String(newCount);
     }
     const waterCount = properties.filter((p) => p.waterView === 'yes').length;
@@ -3308,6 +3343,21 @@
     $('compare-dialog').addEventListener('close', syncDialogScroll);
   }
   $('print-detail').addEventListener('click', () => window.print());
+  let recentIds = properties.filter((p) => isRecentArthur(p)).map((p) => p.id).join(',');
+  function refreshDates() {
+    const next = properties.filter((p) => isRecentArthur(p)).map((p) => p.id).join(',');
+    if (next !== recentIds) {
+      recentIds = next;
+      if (!standalone && state.onlyNew) render();
+      else renderStats();
+    }
+    for (const date of document.querySelectorAll('.added-date time[datetime]')) date.textContent = addedDateLabel(date.dateTime);
+    for (const badge of document.querySelectorAll('.new-badge[data-offered-at]')) {
+      if (!isRecentArthur({ sourceAgentId: 'arthur', offeredAt: badge.dataset.offeredAt })) badge.remove();
+    }
+  }
+  setInterval(refreshDates, 60000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refreshDates(); });
   registerOffline();
   startCloudSync();
 })();

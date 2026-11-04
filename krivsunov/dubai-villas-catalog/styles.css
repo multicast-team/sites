@@ -157,6 +157,8 @@ h2 { font: normal 21px/1.2 var(--serif); letter-spacing: -.02em; margin: 0; }
 .status-rejected { color: #fff; background: #a85a41; }
 .status-unavailable, .status-historical { color: #4e524b; background: #e4e3dc; }
 .badge.new-badge { background: #087f5b; color: #fff; border-color: #065f46; padding: 3px 10px; font-size: 12px; font-weight: 800; box-shadow: 0 2px 6px #065f4633; }
+.added-date { margin: 4px 0 8px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.added-date time { color: var(--ink); font-weight: 700; }
 .type-badge { color: var(--muted); background: var(--surface); border-color: var(--line-strong); }
 
 /* Переключатели Смотрели / Снимаем */

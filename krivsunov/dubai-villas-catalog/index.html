@@ -6,17 +6,17 @@
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#f5f2ec">
   <meta name="description" content="Каталог предложений вилл Дубая: фотографии, местоположения, высоты потолков, переключатели просмотра и общие комментарии.">
-  <meta name="catalog-release" content="arthur-new-20261104-1">
+  <meta name="catalog-release" content="arthur-24h-20261104-2">
   <title>Виллы Дубая</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/"}}</script>
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-  <link rel="stylesheet" href="styles.css?v=arthur-new-20261104-1">
+  <link rel="stylesheet" href="styles.css?v=arthur-24h-20261104-2">
   <script src="vendor/leaflet/leaflet.js" defer></script>
-  <script src="enrich.js?v=arthur-new-20261104-1" defer></script>
-  <script src="data.js?v=arthur-new-20261104-1" defer></script>
-  <script src="app.js?v=arthur-new-20261104-1" defer></script>
+  <script src="enrich.js?v=arthur-24h-20261104-2" defer></script>
+  <script src="data.js?v=arthur-24h-20261104-2" defer></script>
+  <script src="app.js?v=arthur-24h-20261104-2" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#catalog">Перейти к объектам</a>
@@ -47,7 +47,7 @@
             <input id="search" type="search" placeholder="Поиск: район, агент, потолки, озеро, второй свет, детали…" autocomplete="off" enterkeyhint="search">
           </div>
           <button id="quick-top" class="quick-top-filter" type="button" aria-pressed="false" title="Показать только виллы, отмеченные вами как ТОП">★ ТОП <span id="quick-top-count" class="quick-top-count">0</span></button>
-          <button id="quick-new" class="quick-top-filter quick-new-filter" type="button" aria-pressed="false" title="Показать новые объекты; сочетается с ТОП и остальными фильтрами">Новые <span id="quick-new-count" class="quick-top-count">0</span></button>
+          <button id="quick-new" class="quick-top-filter quick-new-filter" type="button" aria-pressed="false" title="Только предложения Артура за последние 24 часа; сочетается с ТОП и остальными фильтрами">Новые · 24 ч <span id="quick-new-count" class="quick-top-count">0</span></button>
           <button id="filters-toggle" class="filters-toggle" type="button" aria-expanded="false" aria-controls="filter-selects">Фильтры<span id="filters-active" class="filters-active" hidden></span></button>
           <label class="check-chip"><input id="with-comments" type="checkbox"><span>С комментариями</span></label>
           <div class="view-toggle" role="group" aria-label="Вид каталога">
