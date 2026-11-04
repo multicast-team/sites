@@ -1,0 +1,281 @@
+window,title,project,id,local_estimate_usd,records,sessions,agents,input_uncached,cache_read,cache_write,output,reasoning_included_in_output,models_usd,unpriced_records
+all,Idle Obelisk порт,MultiCode,mcp:89df4067-7fcb-4a85-9613-90bdc43b2942,1543.738217,12263,39,327,4724481,2533139817,218755825,5150400,382068,"{""claude-opus-5-5"": 1081.5562450000014, ""claude-opus-4-8"": 25.143500500000005, ""claude-sonnet-5-5"": 350.83856349999985, ""gpt-6.1-sol"": 35.981702999999996, ""gpt-6-luna"": 0.00774872, ""claude-haiku-5-5"": 1.6132829749999993, ""grok-4.7-build"": 0.15394551999999997, ""gpt-6-astra"": 48.403938, ""gemini-4-argon"": 0.03929}",0
+all,Поляна POLUS,POLUS,mcp:2a81ecfb-1e95-4e7d-aa3c-29fd76005293,767.117091,8031,5,108,629454,1816675678,86690933,3320443,133994,"{""claude-opus-5-5"": 558.2572828000009, ""claude-sonnet-5-5"": 193.3473522000001, ""claude-haiku-5-5"": 0.08226661, ""gpt-6.1-sol"": 15.247111000000006, ""gemini-3.8-flash"": 0.183078375}",0
+all,Онлайн-игра с мастером,Claude-Code-Game-Master,200c8968-f34c-46df-a255-df2e3e59b653,457.447027,6741,18,154,9382046,1224721262,41202862,3981833,748296,"{""claude-opus-5-5"": 277.3994195999994, ""claude-sonnet-5-5"": 95.14096520000002, ""gpt-6.1-sol"": 54.59259579999996, ""claude-haiku-5-5"": 0.4084301850000001, ""gpt-6-luna"": 0.00910542, ""gemini-4-argon"": 29.808959800000018, ""antigravity-unknown"": 0.0, ""claude-sonnet-5-5-medium"": 0.0875514}",18
+all,hub-2881911267ec4e39,orchestra hub-2881911267ec4e39,mcp:1c5ca018-122d-46ec-8a73-7510e540333f,25.495023,148,1,0,296,68723846,1654942,173718,0,"{""claude-opus-5-5"": 25.495023200000002}",0
+all,"Orchestra → MultiCode: промпты, скиллы и поведение агентов",MultiCode,mcp:e771c100-feb6-4b7d-a9ec-84aa14b2fe0a,19.772274,294,1,14,588,37841129,2417524,235729,0,"{""claude-sonnet-5-5"": 8.996081300000005, ""claude-opus-5-5"": 10.776193000000001}",0
+all,hub-enforce-hub-sol,hub-enforce-hub-sol,mcp:a06bb0cd-c08a-4262-98ee-f681b32b70e8,19.102862,215,1,0,1264061,61403904,0,267699,187127,"{""gpt-6.1-sol"": 19.102861800000007}",0
+all,hub-hub-completion-directive,hub-hub-completion-directive,mcp:f6ae3873-e980-4c74-b18b-aaf09e16c4dd,17.154689,232,1,0,569623,65039744,0,334500,222377,"{""gpt-6.1-sol"": 17.1546892}",0
+all,GEMINI,MultiCode,5f67fb72-b421-46a4-87bd-f899a8766e57,10.704107,222,5,0,3087864,24265004,0,311045,63027,"{""gpt-6.1-sol"": 1.4266603999999998, ""gemini-4-argon"": 9.2774462, ""antigravity-unknown"": 0.0}",8
+all,hub-gemini-design,hub-gemini-design,mcp:27c10d7b-5f03-434f-bb20-fd7f43c9f007,7.018848,112,1,0,295362,27991424,0,146278,75586,"{""gpt-6.1-sol"": 7.0188476}",0
+all,hub-rostov-ot-research-hub,hub-rostov-ot-research-hub,mcp:de1e6fdf-3538-4d13-898e-e2dd28b33f3a,5.420352,98,1,0,306455,21942144,0,107460,34524,"{""gpt-6.1-sol"": 5.4203522}",0
+all,hub-467d174871fc446a,orchestra hub-467d174871fc446a,mcp:25a77373-6236-4e15-bec5-953bcca607e6,3.983812,54,1,0,108,7639925,325087,41498,0,"{""claude-opus-5-5"": 3.9838120000000004}",0
+all,bench:astra6-high,MultiCode,mcp:344e8c20-7533-40cd-a12d-f2150cc71605,3.73405,16,1,0,135898,1550720,0,16487,1688,"{""gpt-6-astra"": 3.73405}",0
+all,hub-research-creator-mode,hub-research-creator-mode,mcp:3c11a7be-52b5-4a43-8695-a7b31475b9eb,3.691873,83,2,0,145297,11211919,135193,47832,3911,"{""claude-opus-5-5"": 2.9275688, ""gpt-6.1-sol"": 0.7643040000000002}",0
+all,hub-camera-budget,hub-camera-budget,mcp:278e8617-67f5-4889-8ff4-ab3c21e683d4,3.574196,56,1,0,333676,12671232,0,58173,15456,"{""gpt-6.1-sol"": 3.5741960000000006}",0
+all,bench:astra6-medium,MultiCode,mcp:545d6640-92d8-4536-b5cb-5e665313d50d,3.387542,17,1,0,129930,1547392,0,10817,354,"{""gpt-6-astra"": 3.3875420000000003}",0
+all,SOL,MultiCode,d1de9604-755e-48d1-8d7e-6e76344ff513,3.383168,62,1,0,544950,12132352,0,56661,20011,"{""gpt-6.1-sol"": 3.3831676000000006}",0
+all,hub-visual_literature_books,hub-visual_literature_books,mcp:1d5cd7c6-80a7-41da-96ad-f16fd8260d81,2.357705,64,1,0,262203,11898368,0,34173,8384,"{""gpt-6.1-sol"": 2.3577054000000004}",0
+all,hub-1c2556f459984a01,orchestra hub-1c2556f459984a01,mcp:b5293670-b8c9-4939-a6c2-750db6cf5b8e,2.300385,59,1,0,242272,10349952,0,59495,22246,"{""gpt-6.1-sol"": 2.300385}",0
+all,hub-44cebebe601c4b63,orchestra hub-44cebebe601c4b63,mcp:a9aac9d5-b37b-4337-93d2-1b4691aa1d78,2.204433,7,1,0,411492,2450176,0,4562,1012,"{""gpt-6.1-sol"": 2.2044332}",0
+all,hub-cached-requirements-hub,hub-cached-requirements-hub,mcp:5ca885b8-9a83-454c-a3ac-2fd7058e1167,1.902056,60,1,0,213440,9407360,0,53444,9947,"{""gpt-6.1-sol"": 1.9020559999999995}",0
+all,hub-workshop-cloud-gpu,hub-workshop-cloud-gpu,mcp:eaaadcab-1c15-4862-a20e-77632f28d743,1.878587,66,1,0,193873,10077312,0,48311,12552,"{""gpt-6.1-sol"": 1.8785871999999997}",0
+all,bench:sol56-high,MultiCode,mcp:a68d0391-bb7e-4d1c-9fca-057543dd9188,1.843842,24,1,0,142818,2298624,0,17656,6728,"{""gpt-5.6-sol"": 1.8438416}",0
+all,hub-fix-hub-workspace-recovery,hub-fix-hub-workspace-recovery,mcp:46ac54c9-1ba6-4789-9c2f-aa3ca3d35e05,1.792425,71,1,0,135990,9320448,0,58840,32223,"{""gpt-6.1-sol"": 1.7924247999999996}",0
+all,hub-research-claude-vps,hub-research-claude-vps,mcp:6afba381-bec4-4b4a-8a80-f0e45f020dc6,1.680111,45,2,0,182952,5514477,82511,35153,9336,"{""claude-sonnet-5-5"": 0.6841229, ""gpt-6.1-sol"": 0.9959879999999999}",0
+all,bench:grok47fast-high,MultiCode,mcp:b7cee067-e3fb-4a27-8c95-e6f781d78e22,1.67961,1,1,0,259601,2701440,0,81514,57512,"{""grok-4.7-build-fast"": 1.67960952}",1
+all,bench:agy-sonnet55-medium,MultiCode,mcp:dc67ea12-4bdd-45e6-8f1c-b7adac7c556b,1.42802,21,1,0,229160,2840798,0,68562,0,"{""claude-sonnet-5-5-medium"": 1.4280198000000002}",0
+all,hub-integrate-gemini,hub-integrate-gemini,mcp:7bc7c1cc-1d05-46b9-9fdd-9b96eec9441d,1.38869,57,1,0,125001,6414080,0,49728,20758,"{""gpt-6.1-sol"": 1.3886900000000004}",0
+all,svc:argon-yama-ux,MultiCode,mcp:009f83f4-6f43-4fbd-b637-78c977715185,1.358233,8,1,0,337095,589633,0,62508,36452,"{""gemini-4-argon"": 1.3582333}",0
+all,svc:argon-yama-texts,MultiCode,mcp:9c3a0fce-de7b-42a5-95fb-a8159679c819,1.220014,15,1,0,754392,1346758,0,62767,40421,"{""gemini-4-argon"": 1.2200138, ""antigravity-unknown"": 0.0}",2
+all,hub-bitrix-actions-research-hub,hub-bitrix-actions-research-hub,mcp:52fcbfc3-0190-47d5-a5c2-c14a84b53424,1.105466,35,1,0,182393,4805504,0,26013,6601,"{""gpt-6.1-sol"": 1.1054663999999996}",0
+all,svc:argon-yama-site,MultiCode,mcp:12219d38-3b00-4049-b913-57c3958a8096,1.068336,7,1,0,240087,377022,0,55046,12956,"{""gemini-4-argon"": 1.0683362}",0
+all,hub-books_deep_oge_ege,hub-books_deep_oge_ege,mcp:21bfc734-ef74-42dc-822f-0d9b5762a149,1.055586,32,1,0,244408,4553600,0,11141,3020,"{""gpt-6.1-sol"": 1.055586}",0
+all,hub-partial-requirements-hub,hub-partial-requirements-hub,mcp:fa7aadeb-00aa-4c98-8d31-ad33984b95be,1.012712,30,1,0,114113,3101056,0,47438,7063,"{""gpt-6.1-sol"": 1.0127116000000003}",0
+all,bench:grokbuild,MultiCode,mcp:f307c7b2-e8b6-42b2-bccb-0a88be2bf5a8,0.999168,1,1,0,294885,3708544,0,82448,49112,"{""grok-4.7-build"": 0.9991682}",0
+all,hub-fix-late-task-completion,hub-fix-late-task-completion,mcp:e909a6a8-7746-4a92-a573-0daf7b133202,0.961689,23,1,0,46,2819737,93532,16382,0,"{""claude-sonnet-5-5"": 0.9616893999999998}",0
+all,bench:sol61-xhigh,MultiCode,mcp:07e53021-5fce-466c-8a13-0524f7088b6a,0.921305,26,1,0,147099,2986368,0,32847,13314,"{""gpt-6.1-sol"": 0.9213047999999999}",0
+all,svc:argon-yama-ideas,MultiCode,mcp:c76ff2ac-7da2-4f51-b22e-01d9df6a87a3,0.825566,10,1,0,285577,971353,0,33297,18120,"{""gemini-4-argon"": 0.8255665, ""antigravity-unknown"": 0.0}",2
+all,hub-1f7c0486dfcc4550,orchestra hub-1f7c0486dfcc4550,mcp:a5a29d51-762c-4867-a6f4-f027abfa41b3,0.814391,37,1,0,129203,3457152,0,21027,6312,"{""gpt-6.1-sol"": 0.8143911999999996}",0
+all,bench:flash38-high,MultiCode,mcp:34b0152f-59f8-4fc3-9386-b34d169815fe,0.789436,50,1,0,296486,4046057,0,70298,44716,"{""gemini-3.8-flash"": 0.7894362750000001}",0
+all,hub-research-t3-accounting,hub-research-t3-accounting,mcp:273d7c53-6d5f-4d2d-9997-74496cbccfa4,0.755417,21,1,0,171761,2405248,0,17137,4585,"{""gpt-6.1-sol"": 0.7554168000000001}",0
+all,bench:grok47-xhigh,MultiCode,mcp:3b7a93b5-63d4-4c3b-8fee-7f9658c5c9b1,0.71422,1,1,0,202684,2250496,0,77237,55287,"{""grok-4.7-build"": 0.71421964}",0
+all,bench:grok47-low,MultiCode,mcp:42d17078-c85a-4818-9d31-b9f051e78c75,0.714197,1,1,0,187355,2669568,0,65181,45537,"{""grok-4.7-build"": 0.7141972}",0
+all,hub-pentest-requirements-hub,hub-pentest-requirements-hub,mcp:4c7f4970-c3f0-40a4-9ddc-1438b44df00f,0.713265,22,1,0,75819,1648768,0,39675,6695,"{""gpt-6.1-sol"": 0.7132648}",0
+all,bench:grok47-high,MultiCode,mcp:c2796c42-f7e6-426e-9e9a-15f96bd03ad0,0.701572,1,1,0,197011,2472832,0,72168,50572,"{""grok-4.7-build"": 0.70157164}",0
+all,hub-da40a422392c4eb9,orchestra hub-da40a422392c4eb9,mcp:0a4377de-8e72-414c-ab7e-c13852cf29f2,0.685136,20,1,0,154437,2158720,0,16039,2592,"{""gpt-6.1-sol"": 0.685136}",0
+all,hub-d0dc44969ca74bb1,orchestra hub-d0dc44969ca74bb1,mcp:7c02e78f-aa89-4287-a41f-318235b3cd6d,0.677077,7,1,0,249965,1491968,0,2795,526,"{""gpt-6.1-sol"": 0.6770768000000001}",0
+all,bench:sol61-high,MultiCode,mcp:9b487b53-147f-4323-a253-78e41a97f314,0.650116,19,1,0,139098,1879296,0,18399,3576,"{""gpt-6.1-sol"": 0.6501156}",0
+all,hub-research-planb-mods,hub-research-planb-mods,mcp:03559310-3c49-4c39-a6c4-ebc1b9f5860a,0.6139,29,1,0,54376,2073984,0,29775,5977,"{""gpt-6.1-sol"": 0.6139004}",0
+all,bench:argon-low,MultiCode,mcp:93cb1264-c370-4b28-b923-932846470c03,0.605505,13,1,0,131658,1192694,0,22292,0,"{""gemini-4-argon"": 0.6055053999999999}",0
+all,hub-research-delivery,hub-research-delivery,mcp:6723d93a-b3b6-4c4d-a1fe-0b3f2e6c6386,0.59355,23,1,0,118699,2028416,0,15331,4028,"{""gpt-6.1-sol"": 0.5935495999999999}",0
+all,hub-research-delivery,hub-research-delivery,mcp:acf9db8d-fca0-4875-8941-bf1160d941fb,0.592867,22,1,0,112431,1867648,0,18124,6869,"{""gpt-6.1-sol"": 0.5928667999999999}",0
+all,argon:longdoc,MultiCode,mcp:0a0876c4-7745-497d-bfd6-616c8a7012ac,0.578234,4,1,0,89064,155060,0,38460,18744,"{""gemini-4-argon"": 0.578234}",0
+all,bench:sol61-low,MultiCode,mcp:10e1ad62-8c32-43b9-97f2-66e51a6d268e,0.546918,18,1,0,133472,1654144,0,11456,354,"{""gpt-6.1-sol"": 0.5469184}",0
+all,argon:write,MultiCode,mcp:27e81f1c-f464-4cdb-ac1f-09f0f4e6d199,0.538696,22,1,0,94925,1100557,0,23879,10952,"{""gemini-4-argon"": 0.5386957000000001}",0
+all,bench:sol6-medium,MultiCode,mcp:2d887875-f775-4ad2-b5cb-2329f71cfaf4,0.52567,17,1,0,97874,1197312,0,9046,945,"{""gpt-6-sol"": 0.5256704}",0
+all,bench:grok46-high,MultiCode,mcp:54288d3f-4b11-4596-b336-c12a852f3b05,0.511683,1,1,0,177000,1684992,0,51409,34955,"{""grok-4.6-build"": 0.511683}",0
+all,bench:terra56-medium,MultiCode,mcp:32727879-2b56-4ff2-9bbb-790f3b9f4854,0.422897,11,1,0,95467,637696,0,8702,1581,"{""gpt-5.6-terra"": 0.4228972}",0
+all,hub-fix-gemini-ci,hub-fix-gemini-ci,mcp:061d794f-1974-4316-b9ad-3e5dd9135cf5,0.38101,17,1,0,83529,1135616,0,10039,3012,"{""gpt-6.1-sol"": 0.3810096000000001}",0
+all,argon:code,MultiCode,mcp:01d870ab-2e2c-4fb9-8a88-040f7a29bfa6,0.348039,2,1,0,28784,18508,0,28862,18898,"{""gemini-4-argon"": 0.3480388}",0
+all,unmapped:00c91973-9809-4c0a-89bf-139901c90fd9,не сопоставлено,unmapped:00c91973-9809-4c0a-89bf-139901c90fd9,0.265957,13,1,0,26,532452,28326,8860,0,"{""claude-sonnet-5-5"": 0.2659574}",0
+all,unmapped:60633fa1-ddba-46c3-9f7a-d88d1af5fdae,не сопоставлено,unmapped:60633fa1-ddba-46c3-9f7a-d88d1af5fdae,0.261323,8,1,0,16,321357,53944,6216,0,"{""claude-sonnet-5-5"": 0.2613234}",0
+all,unmapped:3b2b9d58-13a7-4ac3-9241-e1a74884c225,не сопоставлено,unmapped:3b2b9d58-13a7-4ac3-9241-e1a74884c225,0.26115,7,1,0,14,276159,53900,7114,0,"{""claude-sonnet-5-5"": 0.2611498}",0
+all,bench:flash38-low,MultiCode,mcp:04b19889-8d59-462f-8090-dbd0995746a7,0.248143,29,1,0,147081,1115308,0,14449,0,"{""gemini-3.8-flash"": 0.24814260000000002}",0
+all,bench:grok45-high,MultiCode,mcp:f6243839-6e74-4271-a0b4-459af24b2cd4,0.227305,1,1,0,119661,1141120,0,14481,2590,"{""grok-4.5-build"": 0.22730496}",0
+all,unmapped:fe49f64a-c95d-4916-bc34-9dc27d8f4702,не сопоставлено,unmapped:fe49f64a-c95d-4916-bc34-9dc27d8f4702,0.200666,6,1,0,12,214937,52110,2738,0,"{""claude-sonnet-5-5"": 0.2006664}",0
+all,argon:vision,MultiCode,mcp:474c4ae6-05cd-484d-abac-7d3bdcf9dc96,0.16718,2,1,0,21710,18596,0,12190,6511,"{""gemini-4-argon"": 0.1671796}",0
+all,unmapped:9e6ad37d-e2af-4250-b903-38700787cb43,не сопоставлено,unmapped:9e6ad37d-e2af-4250-b903-38700787cb43,0.131933,3,1,0,6,69192,38821,2103,0,"{""claude-sonnet-5-5"": 0.13193290000000002}",0
+all,unmapped:9f124a5f-60d2-4bb3-9f27-35f26e43252d,не сопоставлено,unmapped:9f124a5f-60d2-4bb3-9f27-35f26e43252d,0.125483,5,1,0,10,172889,23926,3107,0,"{""claude-sonnet-5-5"": 0.1254828}",0
+all,unmapped:f3ec7375-a58e-4657-a4de-a1f3c08066c3,не сопоставлено,unmapped:f3ec7375-a58e-4657-a4de-a1f3c08066c3,0.121975,5,1,0,10,176174,23284,2851,0,"{""claude-sonnet-5-5"": 0.12197480000000001}",0
+all,unmapped:f1e03b9d-86f0-4593-b4fe-187790df600b,не сопоставлено,unmapped:f1e03b9d-86f0-4593-b4fe-187790df600b,0.114381,4,1,0,8,127974,22924,3146,0,"{""claude-sonnet-5-5"": 0.1143808}",0
+all,unmapped:c3531446-5f15-48b0-882c-2d7a891ab73a,не сопоставлено,unmapped:c3531446-5f15-48b0-882c-2d7a891ab73a,0.104042,6,1,0,12,207263,17630,1849,0,"{""claude-sonnet-5-5"": 0.1040416}",0
+all,unmapped:2658f5d2-9b4d-40e0-9fc9-87ba07ea9f4a,не сопоставлено,unmapped:2658f5d2-9b4d-40e0-9fc9-87ba07ea9f4a,0.091513,1,1,0,2,0,16349,488,0,"{""claude-opus-5-5"": 0.09151300000000001}",0
+all,unmapped:2d840bca-2d4e-45df-8f6a-a27aafb39f00,не сопоставлено,unmapped:2d840bca-2d4e-45df-8f6a-a27aafb39f00,0.075627,4,1,0,8,121741,16481,1006,0,"{""claude-sonnet-5-5"": 0.0756267}",0
+all,bench:luna56-medium,MultiCode,mcp:76268bd9-d402-46fd-b908-2dfa57243d8a,0.060323,18,1,0,96960,1285376,0,12686,2995,"{""gpt-5.6-luna"": 0.06032272000000001}",0
+all,unmapped:cf68de65-f6b5-4f2c-b532-635670b6cb47,не сопоставлено,unmapped:cf68de65-f6b5-4f2c-b532-635670b6cb47,0.042634,1,1,0,2,0,15088,491,0,"{""claude-sonnet-5-5"": 0.042634000000000005}",0
+all,bench:luna6-high,MultiCode,mcp:44a29014-12d4-427d-adf8-1440ba135a39,0.040864,20,1,0,153051,1731072,0,16496,6594,"{""gpt-6-luna"": 0.040863819999999995}",0
+all,bench:luna6-medium,MultiCode,mcp:eace0b11-5b43-456d-818e-4dee3a7b5816,0.020633,12,1,0,86482,734848,0,9272,1049,"{""gpt-6-luna"": 0.02063268}",0
+all,unmapped:01a19cdc-2e45-7133-971e-ef96ee8a22d3,не сопоставлено,unmapped:01a19cdc-2e45-7133-971e-ef96ee8a22d3,0.015163,2,1,0,5858,29568,0,49,0,"{""gpt-6.1-sol"": 0.015162799999999997}",0
+all,unmapped:01a19cdb-e8e3-7cd0-a018-a56f281f042f,не сопоставлено,unmapped:01a19cdb-e8e3-7cd0-a018-a56f281f042f,0.015145,2,1,0,5854,29568,0,48,0,"{""gpt-6.1-sol"": 0.015144799999999998}",0
+all,unmapped:71f215ac-2620-47a3-a883-3e8297136496,не сопоставлено,unmapped:71f215ac-2620-47a3-a883-3e8297136496,0.011259,5,1,1,12,119470,78463,510,0,"{""claude-haiku-5-5"": 0.011258775}",0
+all,bench:terra61-low,MultiCode,mcp:eb2cb1c5-caee-437c-a06c-9c487759d0fa,0.0,11,1,0,82735,651264,0,4541,0,"{""gpt-6.1-terra"": 0.0}",11
+all,bench:terra61-high,MultiCode,mcp:a85fae15-1cfa-4df9-bf2b-c97d0342ec2c,0.0,13,1,0,99489,897536,0,6594,235,"{""gpt-6.1-terra"": 0.0}",13
+all,bench:gptoss120b,MultiCode,mcp:4c92e8bc-f6b8-4f16-82d0-eb022eb139d8,0.0,15,1,0,29496,175040,0,5137,0,"{""gpt-oss-120b-medium"": 0.0}",15
+ban_before24,Idle Obelisk порт,MultiCode,mcp:89df4067-7fcb-4a85-9613-90bdc43b2942,747.633276,4259,4,107,140291,883473885,118636726,1769954,5544,"{""claude-opus-5-5"": 630.0464583999989, ""claude-opus-4-8"": 18.324198500000005, ""claude-sonnet-5-5"": 98.85666269999989, ""gpt-6.1-sol"": 0.362792, ""gpt-6-luna"": 0.00774872, ""claude-haiku-5-5"": 0.01637241, ""grok-4.7-build"": 0.0190434}",0
+ban_before24,Онлайн-игра с мастером,Claude-Code-Game-Master,200c8968-f34c-46df-a255-df2e3e59b653,262.547945,3540,10,104,670598,638268971,22756414,1820025,21214,"{""claude-opus-5-5"": 228.9600165999995, ""claude-sonnet-5-5"": 30.52672639999998, ""gpt-6.1-sol"": 3.041526400000001, ""claude-haiku-5-5"": 0.0105702, ""gpt-6-luna"": 0.00910542}",0
+ban_before24,Поляна POLUS,POLUS,mcp:2a81ecfb-1e95-4e7d-aa3c-29fd76005293,261.414416,2269,3,22,235896,516423253,29541253,876098,13341,"{""claude-opus-5-5"": 241.36360300000015, ""claude-sonnet-5-5"": 18.080420900000018, ""claude-haiku-5-5"": 0.014988025, ""gpt-6.1-sol"": 1.9554035999999995}",0
+ban_before24,"Orchestra → MultiCode: промпты, скиллы и поведение агентов",MultiCode,mcp:e771c100-feb6-4b7d-a9ec-84aa14b2fe0a,19.772274,294,1,14,588,37841129,2417524,235729,0,"{""claude-sonnet-5-5"": 8.996081300000005, ""claude-opus-5-5"": 10.776193000000001}",0
+ban_before24,hub-research-creator-mode,hub-research-creator-mode,mcp:3c11a7be-52b5-4a43-8695-a7b31475b9eb,3.691873,83,2,0,145297,11211919,135193,47832,3911,"{""claude-opus-5-5"": 2.9275688, ""gpt-6.1-sol"": 0.7643040000000002}",0
+ban_before24,hub-1c2556f459984a01,orchestra hub-1c2556f459984a01,mcp:b5293670-b8c9-4939-a6c2-750db6cf5b8e,2.300385,59,1,0,242272,10349952,0,59495,22246,"{""gpt-6.1-sol"": 2.300385}",0
+ban_before24,hub-enforce-hub-sol,hub-enforce-hub-sol,mcp:a06bb0cd-c08a-4262-98ee-f681b32b70e8,2.227616,83,1,0,201236,12551936,0,56995,25540,"{""gpt-6.1-sol"": 2.2276156}",0
+ban_before24,hub-fix-hub-workspace-recovery,hub-fix-hub-workspace-recovery,mcp:46ac54c9-1ba6-4789-9c2f-aa3ca3d35e05,1.792425,71,1,0,135990,9320448,0,58840,32223,"{""gpt-6.1-sol"": 1.7924247999999996}",0
+ban_before24,hub-research-claude-vps,hub-research-claude-vps,mcp:6afba381-bec4-4b4a-8a80-f0e45f020dc6,1.680111,45,2,0,182952,5514477,82511,35153,9336,"{""claude-sonnet-5-5"": 0.6841229, ""gpt-6.1-sol"": 0.9959879999999999}",0
+ban_before24,hub-hub-completion-directive,hub-hub-completion-directive,mcp:f6ae3873-e980-4c74-b18b-aaf09e16c4dd,1.101554,42,1,0,151363,5238784,0,27495,8236,"{""gpt-6.1-sol"": 1.1015544000000002}",0
+ban_before24,hub-fix-late-task-completion,hub-fix-late-task-completion,mcp:e909a6a8-7746-4a92-a573-0daf7b133202,0.961689,23,1,0,46,2819737,93532,16382,0,"{""claude-sonnet-5-5"": 0.9616893999999998}",0
+ban_before24,hub-research-t3-accounting,hub-research-t3-accounting,mcp:273d7c53-6d5f-4d2d-9997-74496cbccfa4,0.755417,21,1,0,171761,2405248,0,17137,4585,"{""gpt-6.1-sol"": 0.7554168000000001}",0
+ban_before24,SOL,MultiCode,d1de9604-755e-48d1-8d7e-6e76344ff513,0.753135,25,1,0,184957,2714112,0,11181,4245,"{""gpt-6.1-sol"": 0.7531351999999999}",0
+ban_before24,hub-da40a422392c4eb9,orchestra hub-da40a422392c4eb9,mcp:0a4377de-8e72-414c-ab7e-c13852cf29f2,0.685136,20,1,0,154437,2158720,0,16039,2592,"{""gpt-6.1-sol"": 0.685136}",0
+ban_before24,unmapped:2658f5d2-9b4d-40e0-9fc9-87ba07ea9f4a,не сопоставлено,unmapped:2658f5d2-9b4d-40e0-9fc9-87ba07ea9f4a,0.091513,1,1,0,2,0,16349,488,0,"{""claude-opus-5-5"": 0.09151300000000001}",0
+ban_before24,unmapped:cf68de65-f6b5-4f2c-b532-635670b6cb47,не сопоставлено,unmapped:cf68de65-f6b5-4f2c-b532-635670b6cb47,0.042634,1,1,0,2,0,15088,491,0,"{""claude-sonnet-5-5"": 0.042634000000000005}",0
+ban_before24,unmapped:01a19cdc-2e45-7133-971e-ef96ee8a22d3,не сопоставлено,unmapped:01a19cdc-2e45-7133-971e-ef96ee8a22d3,0.015163,2,1,0,5858,29568,0,49,0,"{""gpt-6.1-sol"": 0.015162799999999997}",0
+ban_before24,unmapped:01a19cdb-e8e3-7cd0-a018-a56f281f042f,не сопоставлено,unmapped:01a19cdb-e8e3-7cd0-a018-a56f281f042f,0.015145,2,1,0,5854,29568,0,48,0,"{""gpt-6.1-sol"": 0.015144799999999998}",0
+ban_before24,unmapped:71f215ac-2620-47a3-a883-3e8297136496,не сопоставлено,unmapped:71f215ac-2620-47a3-a883-3e8297136496,0.011259,5,1,1,12,119470,78463,510,0,"{""claude-haiku-5-5"": 0.011258775}",0
+ban_after24,Idle Obelisk порт,MultiCode,mcp:89df4067-7fcb-4a85-9613-90bdc43b2942,352.626197,4080,36,169,4027271,880222716,45999184,2008066,353314,"{""claude-opus-4-8"": 6.819302, ""claude-opus-5-5"": 41.04170000000001, ""claude-sonnet-5-5"": 223.7678801000001, ""grok-4.7-build"": 0.13490212, ""claude-haiku-5-5"": 1.5969105649999995, ""gpt-6-astra"": 48.403938, ""gpt-6.1-sol"": 30.822274600000004, ""gemini-4-argon"": 0.03929}",0
+ban_after24,Онлайн-игра с мастером,Claude-Code-Game-Master,200c8968-f34c-46df-a255-df2e3e59b653,192.853094,3187,11,53,8711420,582761983,18223353,2152191,727082,"{""claude-opus-5-5"": 46.393414400000026, ""claude-sonnet-5-5"": 64.61423879999995, ""claude-haiku-5-5"": 0.397859985, ""gpt-6.1-sol"": 51.55106939999997, ""gemini-4-argon"": 29.808959800000018, ""antigravity-unknown"": 0.0, ""claude-sonnet-5-5-medium"": 0.0875514}",18
+ban_after24,Поляна POLUS,POLUS,mcp:2a81ecfb-1e95-4e7d-aa3c-29fd76005293,142.063439,1713,2,30,97850,345534418,23857771,773504,88727,"{""claude-opus-5-5"": 15.306692, ""claude-haiku-5-5"": 0.054877249999999995, ""gpt-6.1-sol"": 11.560466199999999, ""claude-sonnet-5-5"": 115.14140329999998}",0
+ban_after24,hub-enforce-hub-sol,hub-enforce-hub-sol,mcp:a06bb0cd-c08a-4262-98ee-f681b32b70e8,16.875246,132,1,0,1062825,48851968,0,210704,161587,"{""gpt-6.1-sol"": 16.875246200000007}",0
+ban_after24,hub-hub-completion-directive,hub-hub-completion-directive,mcp:f6ae3873-e980-4c74-b18b-aaf09e16c4dd,16.053135,190,1,0,418260,59800960,0,307005,214141,"{""gpt-6.1-sol"": 16.05313480000001}",0
+ban_after24,GEMINI,MultiCode,5f67fb72-b421-46a4-87bd-f899a8766e57,9.894699,206,5,0,2841358,23080047,0,291255,57150,"{""gpt-6.1-sol"": 1.4266603999999998, ""gemini-4-argon"": 8.468038499999999, ""antigravity-unknown"": 0.0}",8
+ban_after24,hub-gemini-design,hub-gemini-design,mcp:27c10d7b-5f03-434f-bb20-fd7f43c9f007,7.018848,112,1,0,295362,27991424,0,146278,75586,"{""gpt-6.1-sol"": 7.0188476}",0
+ban_after24,hub-rostov-ot-research-hub,hub-rostov-ot-research-hub,mcp:de1e6fdf-3538-4d13-898e-e2dd28b33f3a,5.420352,98,1,0,306455,21942144,0,107460,34524,"{""gpt-6.1-sol"": 5.4203522}",0
+ban_after24,bench:astra6-high,MultiCode,mcp:344e8c20-7533-40cd-a12d-f2150cc71605,3.73405,16,1,0,135898,1550720,0,16487,1688,"{""gpt-6-astra"": 3.73405}",0
+ban_after24,hub-camera-budget,hub-camera-budget,mcp:278e8617-67f5-4889-8ff4-ab3c21e683d4,3.574196,56,1,0,333676,12671232,0,58173,15456,"{""gpt-6.1-sol"": 3.5741960000000006}",0
+ban_after24,bench:astra6-medium,MultiCode,mcp:545d6640-92d8-4536-b5cb-5e665313d50d,3.387542,17,1,0,129930,1547392,0,10817,354,"{""gpt-6-astra"": 3.3875420000000003}",0
+ban_after24,SOL,MultiCode,d1de9604-755e-48d1-8d7e-6e76344ff513,2.630032,37,1,0,359993,9418240,0,45480,15766,"{""gpt-6.1-sol"": 2.6300323999999997}",0
+ban_after24,hub-visual_literature_books,hub-visual_literature_books,mcp:1d5cd7c6-80a7-41da-96ad-f16fd8260d81,2.357705,64,1,0,262203,11898368,0,34173,8384,"{""gpt-6.1-sol"": 2.3577054000000004}",0
+ban_after24,hub-cached-requirements-hub,hub-cached-requirements-hub,mcp:5ca885b8-9a83-454c-a3ac-2fd7058e1167,1.902056,60,1,0,213440,9407360,0,53444,9947,"{""gpt-6.1-sol"": 1.9020559999999995}",0
+ban_after24,hub-workshop-cloud-gpu,hub-workshop-cloud-gpu,mcp:eaaadcab-1c15-4862-a20e-77632f28d743,1.878587,66,1,0,193873,10077312,0,48311,12552,"{""gpt-6.1-sol"": 1.8785871999999997}",0
+ban_after24,bench:sol56-high,MultiCode,mcp:a68d0391-bb7e-4d1c-9fca-057543dd9188,1.843842,24,1,0,142818,2298624,0,17656,6728,"{""gpt-5.6-sol"": 1.8438416}",0
+ban_after24,bench:grok47fast-high,MultiCode,mcp:b7cee067-e3fb-4a27-8c95-e6f781d78e22,1.67961,1,1,0,259601,2701440,0,81514,57512,"{""grok-4.7-build-fast"": 1.67960952}",1
+ban_after24,bench:agy-sonnet55-medium,MultiCode,mcp:dc67ea12-4bdd-45e6-8f1c-b7adac7c556b,1.42802,21,1,0,229160,2840798,0,68562,0,"{""claude-sonnet-5-5-medium"": 1.4280198000000002}",0
+ban_after24,hub-integrate-gemini,hub-integrate-gemini,mcp:7bc7c1cc-1d05-46b9-9fdd-9b96eec9441d,1.38869,57,1,0,125001,6414080,0,49728,20758,"{""gpt-6.1-sol"": 1.3886900000000004}",0
+ban_after24,svc:argon-yama-ux,MultiCode,mcp:009f83f4-6f43-4fbd-b637-78c977715185,1.358233,8,1,0,337095,589633,0,62508,36452,"{""gemini-4-argon"": 1.3582333}",0
+ban_after24,svc:argon-yama-texts,MultiCode,mcp:9c3a0fce-de7b-42a5-95fb-a8159679c819,1.220014,15,1,0,754392,1346758,0,62767,40421,"{""gemini-4-argon"": 1.2200138, ""antigravity-unknown"": 0.0}",2
+ban_after24,svc:argon-yama-site,MultiCode,mcp:12219d38-3b00-4049-b913-57c3958a8096,1.068336,7,1,0,240087,377022,0,55046,12956,"{""gemini-4-argon"": 1.0683362}",0
+ban_after24,hub-partial-requirements-hub,hub-partial-requirements-hub,mcp:fa7aadeb-00aa-4c98-8d31-ad33984b95be,1.012712,30,1,0,114113,3101056,0,47438,7063,"{""gpt-6.1-sol"": 1.0127116000000003}",0
+ban_after24,bench:grokbuild,MultiCode,mcp:f307c7b2-e8b6-42b2-bccb-0a88be2bf5a8,0.999168,1,1,0,294885,3708544,0,82448,49112,"{""grok-4.7-build"": 0.9991682}",0
+ban_after24,bench:sol61-xhigh,MultiCode,mcp:07e53021-5fce-466c-8a13-0524f7088b6a,0.921305,26,1,0,147099,2986368,0,32847,13314,"{""gpt-6.1-sol"": 0.9213047999999999}",0
+ban_after24,svc:argon-yama-ideas,MultiCode,mcp:c76ff2ac-7da2-4f51-b22e-01d9df6a87a3,0.825566,10,1,0,285577,971353,0,33297,18120,"{""gemini-4-argon"": 0.8255665, ""antigravity-unknown"": 0.0}",2
+ban_after24,bench:flash38-high,MultiCode,mcp:34b0152f-59f8-4fc3-9386-b34d169815fe,0.789436,50,1,0,296486,4046057,0,70298,44716,"{""gemini-3.8-flash"": 0.7894362750000001}",0
+ban_after24,bench:grok47-xhigh,MultiCode,mcp:3b7a93b5-63d4-4c3b-8fee-7f9658c5c9b1,0.71422,1,1,0,202684,2250496,0,77237,55287,"{""grok-4.7-build"": 0.71421964}",0
+ban_after24,bench:grok47-low,MultiCode,mcp:42d17078-c85a-4818-9d31-b9f051e78c75,0.714197,1,1,0,187355,2669568,0,65181,45537,"{""grok-4.7-build"": 0.7141972}",0
+ban_after24,hub-pentest-requirements-hub,hub-pentest-requirements-hub,mcp:4c7f4970-c3f0-40a4-9ddc-1438b44df00f,0.713265,22,1,0,75819,1648768,0,39675,6695,"{""gpt-6.1-sol"": 0.7132648}",0
+ban_after24,bench:grok47-high,MultiCode,mcp:c2796c42-f7e6-426e-9e9a-15f96bd03ad0,0.701572,1,1,0,197011,2472832,0,72168,50572,"{""grok-4.7-build"": 0.70157164}",0
+ban_after24,bench:sol61-high,MultiCode,mcp:9b487b53-147f-4323-a253-78e41a97f314,0.650116,19,1,0,139098,1879296,0,18399,3576,"{""gpt-6.1-sol"": 0.6501156}",0
+ban_after24,hub-research-planb-mods,hub-research-planb-mods,mcp:03559310-3c49-4c39-a6c4-ebc1b9f5860a,0.6139,29,1,0,54376,2073984,0,29775,5977,"{""gpt-6.1-sol"": 0.6139004}",0
+ban_after24,bench:argon-low,MultiCode,mcp:93cb1264-c370-4b28-b923-932846470c03,0.605505,13,1,0,131658,1192694,0,22292,0,"{""gemini-4-argon"": 0.6055053999999999}",0
+ban_after24,hub-research-delivery,hub-research-delivery,mcp:6723d93a-b3b6-4c4d-a1fe-0b3f2e6c6386,0.59355,23,1,0,118699,2028416,0,15331,4028,"{""gpt-6.1-sol"": 0.5935495999999999}",0
+ban_after24,hub-research-delivery,hub-research-delivery,mcp:acf9db8d-fca0-4875-8941-bf1160d941fb,0.592867,22,1,0,112431,1867648,0,18124,6869,"{""gpt-6.1-sol"": 0.5928667999999999}",0
+ban_after24,argon:longdoc,MultiCode,mcp:0a0876c4-7745-497d-bfd6-616c8a7012ac,0.578234,4,1,0,89064,155060,0,38460,18744,"{""gemini-4-argon"": 0.578234}",0
+ban_after24,bench:sol61-low,MultiCode,mcp:10e1ad62-8c32-43b9-97f2-66e51a6d268e,0.546918,18,1,0,133472,1654144,0,11456,354,"{""gpt-6.1-sol"": 0.5469184}",0
+ban_after24,argon:write,MultiCode,mcp:27e81f1c-f464-4cdb-ac1f-09f0f4e6d199,0.538696,22,1,0,94925,1100557,0,23879,10952,"{""gemini-4-argon"": 0.5386957000000001}",0
+ban_after24,bench:sol6-medium,MultiCode,mcp:2d887875-f775-4ad2-b5cb-2329f71cfaf4,0.52567,17,1,0,97874,1197312,0,9046,945,"{""gpt-6-sol"": 0.5256704}",0
+ban_after24,bench:grok46-high,MultiCode,mcp:54288d3f-4b11-4596-b336-c12a852f3b05,0.511683,1,1,0,177000,1684992,0,51409,34955,"{""grok-4.6-build"": 0.511683}",0
+ban_after24,bench:terra56-medium,MultiCode,mcp:32727879-2b56-4ff2-9bbb-790f3b9f4854,0.422897,11,1,0,95467,637696,0,8702,1581,"{""gpt-5.6-terra"": 0.4228972}",0
+ban_after24,hub-fix-gemini-ci,hub-fix-gemini-ci,mcp:061d794f-1974-4316-b9ad-3e5dd9135cf5,0.38101,17,1,0,83529,1135616,0,10039,3012,"{""gpt-6.1-sol"": 0.3810096000000001}",0
+ban_after24,argon:code,MultiCode,mcp:01d870ab-2e2c-4fb9-8a88-040f7a29bfa6,0.348039,2,1,0,28784,18508,0,28862,18898,"{""gemini-4-argon"": 0.3480388}",0
+ban_after24,bench:flash38-low,MultiCode,mcp:04b19889-8d59-462f-8090-dbd0995746a7,0.248143,29,1,0,147081,1115308,0,14449,0,"{""gemini-3.8-flash"": 0.24814260000000002}",0
+ban_after24,bench:grok45-high,MultiCode,mcp:f6243839-6e74-4271-a0b4-459af24b2cd4,0.227305,1,1,0,119661,1141120,0,14481,2590,"{""grok-4.5-build"": 0.22730496}",0
+ban_after24,argon:vision,MultiCode,mcp:474c4ae6-05cd-484d-abac-7d3bdcf9dc96,0.16718,2,1,0,21710,18596,0,12190,6511,"{""gemini-4-argon"": 0.1671796}",0
+ban_after24,bench:luna56-medium,MultiCode,mcp:76268bd9-d402-46fd-b908-2dfa57243d8a,0.060323,18,1,0,96960,1285376,0,12686,2995,"{""gpt-5.6-luna"": 0.06032272000000001}",0
+ban_after24,bench:luna6-high,MultiCode,mcp:44a29014-12d4-427d-adf8-1440ba135a39,0.040864,20,1,0,153051,1731072,0,16496,6594,"{""gpt-6-luna"": 0.040863819999999995}",0
+ban_after24,bench:luna6-medium,MultiCode,mcp:eace0b11-5b43-456d-818e-4dee3a7b5816,0.020633,12,1,0,86482,734848,0,9272,1049,"{""gpt-6-luna"": 0.02063268}",0
+ban_after24,bench:terra61-low,MultiCode,mcp:eb2cb1c5-caee-437c-a06c-9c487759d0fa,0.0,11,1,0,82735,651264,0,4541,0,"{""gpt-6.1-terra"": 0.0}",11
+ban_after24,bench:terra61-high,MultiCode,mcp:a85fae15-1cfa-4df9-bf2b-c97d0342ec2c,0.0,13,1,0,99489,897536,0,6594,235,"{""gpt-6.1-terra"": 0.0}",13
+ban_after24,bench:gptoss120b,MultiCode,mcp:4c92e8bc-f6b8-4f16-82d0-eb022eb139d8,0.0,15,1,0,29496,175040,0,5137,0,"{""gpt-oss-120b-medium"": 0.0}",15
+recent24,Idle Obelisk порт,MultiCode,mcp:89df4067-7fcb-4a85-9613-90bdc43b2942,245.334467,3172,35,162,4494530,563812767,32472031,1667297,368594,"{""claude-opus-5-5"": 28.406113600000005, ""claude-sonnet-5-5"": 131.2693043000003, ""claude-haiku-5-5"": 1.5969105649999995, ""gpt-6-astra"": 48.403938, ""gpt-6.1-sol"": 35.618911000000004, ""gemini-4-argon"": 0.03929}",0
+recent24,Онлайн-игра с мастером,Claude-Code-Game-Master,200c8968-f34c-46df-a255-df2e3e59b653,136.554835,2321,9,32,7981007,419888910,11836627,1704086,579302,"{""claude-opus-5-5"": 30.143781799999996, ""gpt-6.1-sol"": 39.0796322, ""claude-haiku-5-5"": 0.36197005499999996, ""claude-sonnet-5-5"": 37.07293979999998, ""gemini-4-argon"": 29.808959800000018, ""antigravity-unknown"": 0.0, ""claude-sonnet-5-5-medium"": 0.0875514}",18
+recent24,Поляна POLUS,POLUS,mcp:2a81ecfb-1e95-4e7d-aa3c-29fd76005293,126.905687,1495,3,23,290584,307675323,22357717,492978,31926,"{""claude-opus-5-5"": 14.3446072, ""claude-sonnet-5-5"": 110.63435879999992, ""claude-haiku-5-5"": 0.012401335, ""gpt-6.1-sol"": 1.7312412000000001, ""gemini-3.8-flash"": 0.183078375}",0
+recent24,GEMINI,MultiCode,5f67fb72-b421-46a4-87bd-f899a8766e57,10.704107,222,5,0,3087864,24265004,0,311045,63027,"{""gpt-6.1-sol"": 1.4266603999999998, ""gemini-4-argon"": 9.2774462, ""antigravity-unknown"": 0.0}",8
+recent24,hub-gemini-design,hub-gemini-design,mcp:27c10d7b-5f03-434f-bb20-fd7f43c9f007,7.018848,112,1,0,295362,27991424,0,146278,75586,"{""gpt-6.1-sol"": 7.0188476}",0
+recent24,hub-rostov-ot-research-hub,hub-rostov-ot-research-hub,mcp:de1e6fdf-3538-4d13-898e-e2dd28b33f3a,5.420352,98,1,0,306455,21942144,0,107460,34524,"{""gpt-6.1-sol"": 5.4203522}",0
+recent24,bench:astra6-high,MultiCode,mcp:344e8c20-7533-40cd-a12d-f2150cc71605,3.73405,16,1,0,135898,1550720,0,16487,1688,"{""gpt-6-astra"": 3.73405}",0
+recent24,hub-camera-budget,hub-camera-budget,mcp:278e8617-67f5-4889-8ff4-ab3c21e683d4,3.574196,56,1,0,333676,12671232,0,58173,15456,"{""gpt-6.1-sol"": 3.5741960000000006}",0
+recent24,bench:astra6-medium,MultiCode,mcp:545d6640-92d8-4536-b5cb-5e665313d50d,3.387542,17,1,0,129930,1547392,0,10817,354,"{""gpt-6-astra"": 3.3875420000000003}",0
+recent24,hub-cached-requirements-hub,hub-cached-requirements-hub,mcp:5ca885b8-9a83-454c-a3ac-2fd7058e1167,1.902056,60,1,0,213440,9407360,0,53444,9947,"{""gpt-6.1-sol"": 1.9020559999999995}",0
+recent24,hub-workshop-cloud-gpu,hub-workshop-cloud-gpu,mcp:eaaadcab-1c15-4862-a20e-77632f28d743,1.878587,66,1,0,193873,10077312,0,48311,12552,"{""gpt-6.1-sol"": 1.8785871999999997}",0
+recent24,bench:sol56-high,MultiCode,mcp:a68d0391-bb7e-4d1c-9fca-057543dd9188,1.843842,24,1,0,142818,2298624,0,17656,6728,"{""gpt-5.6-sol"": 1.8438416}",0
+recent24,bench:grok47fast-high,MultiCode,mcp:b7cee067-e3fb-4a27-8c95-e6f781d78e22,1.67961,1,1,0,259601,2701440,0,81514,57512,"{""grok-4.7-build-fast"": 1.67960952}",1
+recent24,SOL,MultiCode,d1de9604-755e-48d1-8d7e-6e76344ff513,1.631097,13,1,0,312332,3650304,0,12798,3391,"{""gpt-6.1-sol"": 1.6310968}",0
+recent24,bench:agy-sonnet55-medium,MultiCode,mcp:dc67ea12-4bdd-45e6-8f1c-b7adac7c556b,1.42802,21,1,0,229160,2840798,0,68562,0,"{""claude-sonnet-5-5-medium"": 1.4280198000000002}",0
+recent24,hub-integrate-gemini,hub-integrate-gemini,mcp:7bc7c1cc-1d05-46b9-9fdd-9b96eec9441d,1.38869,57,1,0,125001,6414080,0,49728,20758,"{""gpt-6.1-sol"": 1.3886900000000004}",0
+recent24,svc:argon-yama-ux,MultiCode,mcp:009f83f4-6f43-4fbd-b637-78c977715185,1.358233,8,1,0,337095,589633,0,62508,36452,"{""gemini-4-argon"": 1.3582333}",0
+recent24,svc:argon-yama-texts,MultiCode,mcp:9c3a0fce-de7b-42a5-95fb-a8159679c819,1.220014,15,1,0,754392,1346758,0,62767,40421,"{""gemini-4-argon"": 1.2200138, ""antigravity-unknown"": 0.0}",2
+recent24,hub-bitrix-actions-research-hub,hub-bitrix-actions-research-hub,mcp:52fcbfc3-0190-47d5-a5c2-c14a84b53424,1.105466,35,1,0,182393,4805504,0,26013,6601,"{""gpt-6.1-sol"": 1.1054663999999996}",0
+recent24,svc:argon-yama-site,MultiCode,mcp:12219d38-3b00-4049-b913-57c3958a8096,1.068336,7,1,0,240087,377022,0,55046,12956,"{""gemini-4-argon"": 1.0683362}",0
+recent24,hub-books_deep_oge_ege,hub-books_deep_oge_ege,mcp:21bfc734-ef74-42dc-822f-0d9b5762a149,1.055586,32,1,0,244408,4553600,0,11141,3020,"{""gpt-6.1-sol"": 1.055586}",0
+recent24,hub-partial-requirements-hub,hub-partial-requirements-hub,mcp:fa7aadeb-00aa-4c98-8d31-ad33984b95be,1.012712,30,1,0,114113,3101056,0,47438,7063,"{""gpt-6.1-sol"": 1.0127116000000003}",0
+recent24,bench:grokbuild,MultiCode,mcp:f307c7b2-e8b6-42b2-bccb-0a88be2bf5a8,0.999168,1,1,0,294885,3708544,0,82448,49112,"{""grok-4.7-build"": 0.9991682}",0
+recent24,bench:sol61-xhigh,MultiCode,mcp:07e53021-5fce-466c-8a13-0524f7088b6a,0.921305,26,1,0,147099,2986368,0,32847,13314,"{""gpt-6.1-sol"": 0.9213047999999999}",0
+recent24,svc:argon-yama-ideas,MultiCode,mcp:c76ff2ac-7da2-4f51-b22e-01d9df6a87a3,0.825566,10,1,0,285577,971353,0,33297,18120,"{""gemini-4-argon"": 0.8255665, ""antigravity-unknown"": 0.0}",2
+recent24,bench:flash38-high,MultiCode,mcp:34b0152f-59f8-4fc3-9386-b34d169815fe,0.789436,50,1,0,296486,4046057,0,70298,44716,"{""gemini-3.8-flash"": 0.7894362750000001}",0
+recent24,bench:grok47-xhigh,MultiCode,mcp:3b7a93b5-63d4-4c3b-8fee-7f9658c5c9b1,0.71422,1,1,0,202684,2250496,0,77237,55287,"{""grok-4.7-build"": 0.71421964}",0
+recent24,bench:grok47-low,MultiCode,mcp:42d17078-c85a-4818-9d31-b9f051e78c75,0.714197,1,1,0,187355,2669568,0,65181,45537,"{""grok-4.7-build"": 0.7141972}",0
+recent24,hub-pentest-requirements-hub,hub-pentest-requirements-hub,mcp:4c7f4970-c3f0-40a4-9ddc-1438b44df00f,0.713265,22,1,0,75819,1648768,0,39675,6695,"{""gpt-6.1-sol"": 0.7132648}",0
+recent24,bench:grok47-high,MultiCode,mcp:c2796c42-f7e6-426e-9e9a-15f96bd03ad0,0.701572,1,1,0,197011,2472832,0,72168,50572,"{""grok-4.7-build"": 0.70157164}",0
+recent24,bench:sol61-high,MultiCode,mcp:9b487b53-147f-4323-a253-78e41a97f314,0.650116,19,1,0,139098,1879296,0,18399,3576,"{""gpt-6.1-sol"": 0.6501156}",0
+recent24,hub-research-planb-mods,hub-research-planb-mods,mcp:03559310-3c49-4c39-a6c4-ebc1b9f5860a,0.6139,29,1,0,54376,2073984,0,29775,5977,"{""gpt-6.1-sol"": 0.6139004}",0
+recent24,bench:argon-low,MultiCode,mcp:93cb1264-c370-4b28-b923-932846470c03,0.605505,13,1,0,131658,1192694,0,22292,0,"{""gemini-4-argon"": 0.6055053999999999}",0
+recent24,hub-research-delivery,hub-research-delivery,mcp:6723d93a-b3b6-4c4d-a1fe-0b3f2e6c6386,0.59355,23,1,0,118699,2028416,0,15331,4028,"{""gpt-6.1-sol"": 0.5935495999999999}",0
+recent24,hub-research-delivery,hub-research-delivery,mcp:acf9db8d-fca0-4875-8941-bf1160d941fb,0.592867,22,1,0,112431,1867648,0,18124,6869,"{""gpt-6.1-sol"": 0.5928667999999999}",0
+recent24,argon:longdoc,MultiCode,mcp:0a0876c4-7745-497d-bfd6-616c8a7012ac,0.578234,4,1,0,89064,155060,0,38460,18744,"{""gemini-4-argon"": 0.578234}",0
+recent24,bench:sol61-low,MultiCode,mcp:10e1ad62-8c32-43b9-97f2-66e51a6d268e,0.546918,18,1,0,133472,1654144,0,11456,354,"{""gpt-6.1-sol"": 0.5469184}",0
+recent24,argon:write,MultiCode,mcp:27e81f1c-f464-4cdb-ac1f-09f0f4e6d199,0.538696,22,1,0,94925,1100557,0,23879,10952,"{""gemini-4-argon"": 0.5386957000000001}",0
+recent24,bench:sol6-medium,MultiCode,mcp:2d887875-f775-4ad2-b5cb-2329f71cfaf4,0.52567,17,1,0,97874,1197312,0,9046,945,"{""gpt-6-sol"": 0.5256704}",0
+recent24,bench:grok46-high,MultiCode,mcp:54288d3f-4b11-4596-b336-c12a852f3b05,0.511683,1,1,0,177000,1684992,0,51409,34955,"{""grok-4.6-build"": 0.511683}",0
+recent24,bench:terra56-medium,MultiCode,mcp:32727879-2b56-4ff2-9bbb-790f3b9f4854,0.422897,11,1,0,95467,637696,0,8702,1581,"{""gpt-5.6-terra"": 0.4228972}",0
+recent24,hub-fix-gemini-ci,hub-fix-gemini-ci,mcp:061d794f-1974-4316-b9ad-3e5dd9135cf5,0.38101,17,1,0,83529,1135616,0,10039,3012,"{""gpt-6.1-sol"": 0.3810096000000001}",0
+recent24,argon:code,MultiCode,mcp:01d870ab-2e2c-4fb9-8a88-040f7a29bfa6,0.348039,2,1,0,28784,18508,0,28862,18898,"{""gemini-4-argon"": 0.3480388}",0
+recent24,bench:flash38-low,MultiCode,mcp:04b19889-8d59-462f-8090-dbd0995746a7,0.248143,29,1,0,147081,1115308,0,14449,0,"{""gemini-3.8-flash"": 0.24814260000000002}",0
+recent24,bench:grok45-high,MultiCode,mcp:f6243839-6e74-4271-a0b4-459af24b2cd4,0.227305,1,1,0,119661,1141120,0,14481,2590,"{""grok-4.5-build"": 0.22730496}",0
+recent24,argon:vision,MultiCode,mcp:474c4ae6-05cd-484d-abac-7d3bdcf9dc96,0.16718,2,1,0,21710,18596,0,12190,6511,"{""gemini-4-argon"": 0.1671796}",0
+recent24,bench:luna56-medium,MultiCode,mcp:76268bd9-d402-46fd-b908-2dfa57243d8a,0.060323,18,1,0,96960,1285376,0,12686,2995,"{""gpt-5.6-luna"": 0.06032272000000001}",0
+recent24,bench:luna6-high,MultiCode,mcp:44a29014-12d4-427d-adf8-1440ba135a39,0.040864,20,1,0,153051,1731072,0,16496,6594,"{""gpt-6-luna"": 0.040863819999999995}",0
+recent24,bench:luna6-medium,MultiCode,mcp:eace0b11-5b43-456d-818e-4dee3a7b5816,0.020633,12,1,0,86482,734848,0,9272,1049,"{""gpt-6-luna"": 0.02063268}",0
+recent24,bench:terra61-low,MultiCode,mcp:eb2cb1c5-caee-437c-a06c-9c487759d0fa,0.0,11,1,0,82735,651264,0,4541,0,"{""gpt-6.1-terra"": 0.0}",11
+recent24,bench:terra61-high,MultiCode,mcp:a85fae15-1cfa-4df9-bf2b-c97d0342ec2c,0.0,13,1,0,99489,897536,0,6594,235,"{""gpt-6.1-terra"": 0.0}",13
+recent24,bench:gptoss120b,MultiCode,mcp:4c92e8bc-f6b8-4f16-82d0-eb022eb139d8,0.0,15,1,0,29496,175040,0,5137,0,"{""gpt-oss-120b-medium"": 0.0}",15
+previous24,Idle Obelisk порт,MultiCode,mcp:89df4067-7fcb-4a85-9613-90bdc43b2942,615.374886,4350,5,108,220453,982819278,86231252,1925783,13474,"{""claude-opus-5-5"": 435.80364980000064, ""claude-opus-4-8"": 25.143500500000005, ""claude-sonnet-5-5"": 153.88687690000003, ""gpt-6.1-sol"": 0.362792, ""gpt-6-luna"": 0.00774872, ""claude-haiku-5-5"": 0.01637241, ""grok-4.7-build"": 0.15394551999999997}",0
+previous24,Онлайн-игра с мастером,Claude-Code-Game-Master,200c8968-f34c-46df-a255-df2e3e59b653,318.846204,4406,12,122,1401011,801142044,29143140,2268130,168994,"{""claude-opus-5-5"": 245.2096491999995, ""claude-sonnet-5-5"": 58.06802540000006, ""gpt-6.1-sol"": 15.512963599999987, ""claude-haiku-5-5"": 0.046460129999999995, ""gpt-6-luna"": 0.00910542}",0
+previous24,Поляна POLUS,POLUS,mcp:2a81ecfb-1e95-4e7d-aa3c-29fd76005293,213.192861,2180,3,34,330140,464585963,26198764,1024443,102068,"{""claude-opus-5-5"": 137.96234760000002, ""claude-sonnet-5-5"": 61.64477799999997, ""claude-haiku-5-5"": 0.069865275, ""gpt-6.1-sol"": 13.515869799999999}",0
+previous24,"Orchestra → MultiCode: промпты, скиллы и поведение агентов",MultiCode,mcp:e771c100-feb6-4b7d-a9ec-84aa14b2fe0a,19.772274,294,1,14,588,37841129,2417524,235729,0,"{""claude-sonnet-5-5"": 8.996081300000005, ""claude-opus-5-5"": 10.776193000000001}",0
+previous24,hub-enforce-hub-sol,hub-enforce-hub-sol,mcp:a06bb0cd-c08a-4262-98ee-f681b32b70e8,19.102862,215,1,0,1264061,61403904,0,267699,187127,"{""gpt-6.1-sol"": 19.102861800000007}",0
+previous24,hub-hub-completion-directive,hub-hub-completion-directive,mcp:f6ae3873-e980-4c74-b18b-aaf09e16c4dd,17.154689,232,1,0,569623,65039744,0,334500,222377,"{""gpt-6.1-sol"": 17.1546892}",0
+previous24,hub-research-creator-mode,hub-research-creator-mode,mcp:3c11a7be-52b5-4a43-8695-a7b31475b9eb,3.691873,83,2,0,145297,11211919,135193,47832,3911,"{""claude-opus-5-5"": 2.9275688, ""gpt-6.1-sol"": 0.7643040000000002}",0
+previous24,hub-visual_literature_books,hub-visual_literature_books,mcp:1d5cd7c6-80a7-41da-96ad-f16fd8260d81,2.357705,64,1,0,262203,11898368,0,34173,8384,"{""gpt-6.1-sol"": 2.3577054000000004}",0
+previous24,hub-fix-hub-workspace-recovery,hub-fix-hub-workspace-recovery,mcp:46ac54c9-1ba6-4789-9c2f-aa3ca3d35e05,1.792425,71,1,0,135990,9320448,0,58840,32223,"{""gpt-6.1-sol"": 1.7924247999999996}",0
+previous24,SOL,MultiCode,d1de9604-755e-48d1-8d7e-6e76344ff513,1.752071,49,1,0,232618,8482048,0,43863,16620,"{""gpt-6.1-sol"": 1.7520708000000003}",0
+previous24,hub-research-claude-vps,hub-research-claude-vps,mcp:6afba381-bec4-4b4a-8a80-f0e45f020dc6,1.680111,45,2,0,182952,5514477,82511,35153,9336,"{""claude-sonnet-5-5"": 0.6841229, ""gpt-6.1-sol"": 0.9959879999999999}",0
+previous24,hub-fix-late-task-completion,hub-fix-late-task-completion,mcp:e909a6a8-7746-4a92-a573-0daf7b133202,0.961689,23,1,0,46,2819737,93532,16382,0,"{""claude-sonnet-5-5"": 0.9616893999999998}",0
+previous24,hub-research-t3-accounting,hub-research-t3-accounting,mcp:273d7c53-6d5f-4d2d-9997-74496cbccfa4,0.755417,21,1,0,171761,2405248,0,17137,4585,"{""gpt-6.1-sol"": 0.7554168000000001}",0
+previous24,unmapped:2658f5d2-9b4d-40e0-9fc9-87ba07ea9f4a,не сопоставлено,unmapped:2658f5d2-9b4d-40e0-9fc9-87ba07ea9f4a,0.091513,1,1,0,2,0,16349,488,0,"{""claude-opus-5-5"": 0.09151300000000001}",0
+previous24,unmapped:cf68de65-f6b5-4f2c-b532-635670b6cb47,не сопоставлено,unmapped:cf68de65-f6b5-4f2c-b532-635670b6cb47,0.042634,1,1,0,2,0,15088,491,0,"{""claude-sonnet-5-5"": 0.042634000000000005}",0
+previous24,unmapped:01a19cdc-2e45-7133-971e-ef96ee8a22d3,не сопоставлено,unmapped:01a19cdc-2e45-7133-971e-ef96ee8a22d3,0.015163,2,1,0,5858,29568,0,49,0,"{""gpt-6.1-sol"": 0.015162799999999997}",0
+previous24,unmapped:01a19cdb-e8e3-7cd0-a018-a56f281f042f,не сопоставлено,unmapped:01a19cdb-e8e3-7cd0-a018-a56f281f042f,0.015145,2,1,0,5854,29568,0,48,0,"{""gpt-6.1-sol"": 0.015144799999999998}",0
+previous24,unmapped:71f215ac-2620-47a3-a883-3e8297136496,не сопоставлено,unmapped:71f215ac-2620-47a3-a883-3e8297136496,0.011259,5,1,1,12,119470,78463,510,0,"{""claude-haiku-5-5"": 0.011258775}",0
+since_ban,Idle Obelisk порт,MultiCode,mcp:89df4067-7fcb-4a85-9613-90bdc43b2942,372.740643,4379,36,175,4576924,939368652,47441281,2181437,376524,"{""claude-opus-4-8"": 6.819302, ""claude-opus-5-5"": 42.96884600000002, ""claude-sonnet-5-5"": 237.15854290000024, ""grok-4.7-build"": 0.13490212, ""claude-haiku-5-5"": 1.5969105649999995, ""gpt-6-astra"": 48.403938, ""gpt-6.1-sol"": 35.618911000000004, ""gemini-4-argon"": 0.03929}",0
+since_ban,Поляна POLUS,POLUS,mcp:2a81ecfb-1e95-4e7d-aa3c-29fd76005293,196.585927,2512,4,46,387042,502537064,31622100,1019174,120653,"{""claude-opus-5-5"": 22.173938800000006, ""claude-haiku-5-5"": 0.067278585, ""gpt-6.1-sol"": 13.291707400000005, ""claude-sonnet-5-5"": 160.86992360000013, ""gemini-3.8-flash"": 0.183078375}",0
+since_ban,Онлайн-игра с мастером,Claude-Code-Game-Master,200c8968-f34c-46df-a255-df2e3e59b653,192.853094,3187,11,53,8711420,582761983,18223353,2152191,727082,"{""claude-opus-5-5"": 46.393414400000026, ""claude-sonnet-5-5"": 64.61423879999995, ""claude-haiku-5-5"": 0.397859985, ""gpt-6.1-sol"": 51.55106939999997, ""gemini-4-argon"": 29.808959800000018, ""antigravity-unknown"": 0.0, ""claude-sonnet-5-5-medium"": 0.0875514}",18
+since_ban,hub-enforce-hub-sol,hub-enforce-hub-sol,mcp:a06bb0cd-c08a-4262-98ee-f681b32b70e8,16.875246,132,1,0,1062825,48851968,0,210704,161587,"{""gpt-6.1-sol"": 16.875246200000007}",0
+since_ban,hub-hub-completion-directive,hub-hub-completion-directive,mcp:f6ae3873-e980-4c74-b18b-aaf09e16c4dd,16.053135,190,1,0,418260,59800960,0,307005,214141,"{""gpt-6.1-sol"": 16.05313480000001}",0
+since_ban,GEMINI,MultiCode,5f67fb72-b421-46a4-87bd-f899a8766e57,10.704107,222,5,0,3087864,24265004,0,311045,63027,"{""gpt-6.1-sol"": 1.4266603999999998, ""gemini-4-argon"": 9.2774462, ""antigravity-unknown"": 0.0}",8
+since_ban,hub-gemini-design,hub-gemini-design,mcp:27c10d7b-5f03-434f-bb20-fd7f43c9f007,7.018848,112,1,0,295362,27991424,0,146278,75586,"{""gpt-6.1-sol"": 7.0188476}",0
+since_ban,hub-rostov-ot-research-hub,hub-rostov-ot-research-hub,mcp:de1e6fdf-3538-4d13-898e-e2dd28b33f3a,5.420352,98,1,0,306455,21942144,0,107460,34524,"{""gpt-6.1-sol"": 5.4203522}",0
+since_ban,bench:astra6-high,MultiCode,mcp:344e8c20-7533-40cd-a12d-f2150cc71605,3.73405,16,1,0,135898,1550720,0,16487,1688,"{""gpt-6-astra"": 3.73405}",0
+since_ban,hub-camera-budget,hub-camera-budget,mcp:278e8617-67f5-4889-8ff4-ab3c21e683d4,3.574196,56,1,0,333676,12671232,0,58173,15456,"{""gpt-6.1-sol"": 3.5741960000000006}",0
+since_ban,bench:astra6-medium,MultiCode,mcp:545d6640-92d8-4536-b5cb-5e665313d50d,3.387542,17,1,0,129930,1547392,0,10817,354,"{""gpt-6-astra"": 3.3875420000000003}",0
+since_ban,SOL,MultiCode,d1de9604-755e-48d1-8d7e-6e76344ff513,2.630032,37,1,0,359993,9418240,0,45480,15766,"{""gpt-6.1-sol"": 2.6300323999999997}",0
+since_ban,hub-visual_literature_books,hub-visual_literature_books,mcp:1d5cd7c6-80a7-41da-96ad-f16fd8260d81,2.357705,64,1,0,262203,11898368,0,34173,8384,"{""gpt-6.1-sol"": 2.3577054000000004}",0
+since_ban,hub-cached-requirements-hub,hub-cached-requirements-hub,mcp:5ca885b8-9a83-454c-a3ac-2fd7058e1167,1.902056,60,1,0,213440,9407360,0,53444,9947,"{""gpt-6.1-sol"": 1.9020559999999995}",0
+since_ban,hub-workshop-cloud-gpu,hub-workshop-cloud-gpu,mcp:eaaadcab-1c15-4862-a20e-77632f28d743,1.878587,66,1,0,193873,10077312,0,48311,12552,"{""gpt-6.1-sol"": 1.8785871999999997}",0
+since_ban,bench:sol56-high,MultiCode,mcp:a68d0391-bb7e-4d1c-9fca-057543dd9188,1.843842,24,1,0,142818,2298624,0,17656,6728,"{""gpt-5.6-sol"": 1.8438416}",0
+since_ban,bench:grok47fast-high,MultiCode,mcp:b7cee067-e3fb-4a27-8c95-e6f781d78e22,1.67961,1,1,0,259601,2701440,0,81514,57512,"{""grok-4.7-build-fast"": 1.67960952}",1
+since_ban,bench:agy-sonnet55-medium,MultiCode,mcp:dc67ea12-4bdd-45e6-8f1c-b7adac7c556b,1.42802,21,1,0,229160,2840798,0,68562,0,"{""claude-sonnet-5-5-medium"": 1.4280198000000002}",0
+since_ban,hub-integrate-gemini,hub-integrate-gemini,mcp:7bc7c1cc-1d05-46b9-9fdd-9b96eec9441d,1.38869,57,1,0,125001,6414080,0,49728,20758,"{""gpt-6.1-sol"": 1.3886900000000004}",0
+since_ban,svc:argon-yama-ux,MultiCode,mcp:009f83f4-6f43-4fbd-b637-78c977715185,1.358233,8,1,0,337095,589633,0,62508,36452,"{""gemini-4-argon"": 1.3582333}",0
+since_ban,svc:argon-yama-texts,MultiCode,mcp:9c3a0fce-de7b-42a5-95fb-a8159679c819,1.220014,15,1,0,754392,1346758,0,62767,40421,"{""gemini-4-argon"": 1.2200138, ""antigravity-unknown"": 0.0}",2
+since_ban,hub-bitrix-actions-research-hub,hub-bitrix-actions-research-hub,mcp:52fcbfc3-0190-47d5-a5c2-c14a84b53424,1.105466,35,1,0,182393,4805504,0,26013,6601,"{""gpt-6.1-sol"": 1.1054663999999996}",0
+since_ban,svc:argon-yama-site,MultiCode,mcp:12219d38-3b00-4049-b913-57c3958a8096,1.068336,7,1,0,240087,377022,0,55046,12956,"{""gemini-4-argon"": 1.0683362}",0
+since_ban,hub-books_deep_oge_ege,hub-books_deep_oge_ege,mcp:21bfc734-ef74-42dc-822f-0d9b5762a149,1.055586,32,1,0,244408,4553600,0,11141,3020,"{""gpt-6.1-sol"": 1.055586}",0
+since_ban,hub-partial-requirements-hub,hub-partial-requirements-hub,mcp:fa7aadeb-00aa-4c98-8d31-ad33984b95be,1.012712,30,1,0,114113,3101056,0,47438,7063,"{""gpt-6.1-sol"": 1.0127116000000003}",0
+since_ban,bench:grokbuild,MultiCode,mcp:f307c7b2-e8b6-42b2-bccb-0a88be2bf5a8,0.999168,1,1,0,294885,3708544,0,82448,49112,"{""grok-4.7-build"": 0.9991682}",0
+since_ban,bench:sol61-xhigh,MultiCode,mcp:07e53021-5fce-466c-8a13-0524f7088b6a,0.921305,26,1,0,147099,2986368,0,32847,13314,"{""gpt-6.1-sol"": 0.9213047999999999}",0
+since_ban,svc:argon-yama-ideas,MultiCode,mcp:c76ff2ac-7da2-4f51-b22e-01d9df6a87a3,0.825566,10,1,0,285577,971353,0,33297,18120,"{""gemini-4-argon"": 0.8255665, ""antigravity-unknown"": 0.0}",2
+since_ban,bench:flash38-high,MultiCode,mcp:34b0152f-59f8-4fc3-9386-b34d169815fe,0.789436,50,1,0,296486,4046057,0,70298,44716,"{""gemini-3.8-flash"": 0.7894362750000001}",0
+since_ban,bench:grok47-xhigh,MultiCode,mcp:3b7a93b5-63d4-4c3b-8fee-7f9658c5c9b1,0.71422,1,1,0,202684,2250496,0,77237,55287,"{""grok-4.7-build"": 0.71421964}",0
+since_ban,bench:grok47-low,MultiCode,mcp:42d17078-c85a-4818-9d31-b9f051e78c75,0.714197,1,1,0,187355,2669568,0,65181,45537,"{""grok-4.7-build"": 0.7141972}",0
+since_ban,hub-pentest-requirements-hub,hub-pentest-requirements-hub,mcp:4c7f4970-c3f0-40a4-9ddc-1438b44df00f,0.713265,22,1,0,75819,1648768,0,39675,6695,"{""gpt-6.1-sol"": 0.7132648}",0
+since_ban,bench:grok47-high,MultiCode,mcp:c2796c42-f7e6-426e-9e9a-15f96bd03ad0,0.701572,1,1,0,197011,2472832,0,72168,50572,"{""grok-4.7-build"": 0.70157164}",0
+since_ban,bench:sol61-high,MultiCode,mcp:9b487b53-147f-4323-a253-78e41a97f314,0.650116,19,1,0,139098,1879296,0,18399,3576,"{""gpt-6.1-sol"": 0.6501156}",0
+since_ban,hub-research-planb-mods,hub-research-planb-mods,mcp:03559310-3c49-4c39-a6c4-ebc1b9f5860a,0.6139,29,1,0,54376,2073984,0,29775,5977,"{""gpt-6.1-sol"": 0.6139004}",0
+since_ban,bench:argon-low,MultiCode,mcp:93cb1264-c370-4b28-b923-932846470c03,0.605505,13,1,0,131658,1192694,0,22292,0,"{""gemini-4-argon"": 0.6055053999999999}",0
+since_ban,hub-research-delivery,hub-research-delivery,mcp:6723d93a-b3b6-4c4d-a1fe-0b3f2e6c6386,0.59355,23,1,0,118699,2028416,0,15331,4028,"{""gpt-6.1-sol"": 0.5935495999999999}",0
+since_ban,hub-research-delivery,hub-research-delivery,mcp:acf9db8d-fca0-4875-8941-bf1160d941fb,0.592867,22,1,0,112431,1867648,0,18124,6869,"{""gpt-6.1-sol"": 0.5928667999999999}",0
+since_ban,argon:longdoc,MultiCode,mcp:0a0876c4-7745-497d-bfd6-616c8a7012ac,0.578234,4,1,0,89064,155060,0,38460,18744,"{""gemini-4-argon"": 0.578234}",0
+since_ban,bench:sol61-low,MultiCode,mcp:10e1ad62-8c32-43b9-97f2-66e51a6d268e,0.546918,18,1,0,133472,1654144,0,11456,354,"{""gpt-6.1-sol"": 0.5469184}",0
+since_ban,argon:write,MultiCode,mcp:27e81f1c-f464-4cdb-ac1f-09f0f4e6d199,0.538696,22,1,0,94925,1100557,0,23879,10952,"{""gemini-4-argon"": 0.5386957000000001}",0
+since_ban,bench:sol6-medium,MultiCode,mcp:2d887875-f775-4ad2-b5cb-2329f71cfaf4,0.52567,17,1,0,97874,1197312,0,9046,945,"{""gpt-6-sol"": 0.5256704}",0
+since_ban,bench:grok46-high,MultiCode,mcp:54288d3f-4b11-4596-b336-c12a852f3b05,0.511683,1,1,0,177000,1684992,0,51409,34955,"{""grok-4.6-build"": 0.511683}",0
+since_ban,bench:terra56-medium,MultiCode,mcp:32727879-2b56-4ff2-9bbb-790f3b9f4854,0.422897,11,1,0,95467,637696,0,8702,1581,"{""gpt-5.6-terra"": 0.4228972}",0
+since_ban,hub-fix-gemini-ci,hub-fix-gemini-ci,mcp:061d794f-1974-4316-b9ad-3e5dd9135cf5,0.38101,17,1,0,83529,1135616,0,10039,3012,"{""gpt-6.1-sol"": 0.3810096000000001}",0
+since_ban,argon:code,MultiCode,mcp:01d870ab-2e2c-4fb9-8a88-040f7a29bfa6,0.348039,2,1,0,28784,18508,0,28862,18898,"{""gemini-4-argon"": 0.3480388}",0
+since_ban,bench:flash38-low,MultiCode,mcp:04b19889-8d59-462f-8090-dbd0995746a7,0.248143,29,1,0,147081,1115308,0,14449,0,"{""gemini-3.8-flash"": 0.24814260000000002}",0
+since_ban,bench:grok45-high,MultiCode,mcp:f6243839-6e74-4271-a0b4-459af24b2cd4,0.227305,1,1,0,119661,1141120,0,14481,2590,"{""grok-4.5-build"": 0.22730496}",0
+since_ban,argon:vision,MultiCode,mcp:474c4ae6-05cd-484d-abac-7d3bdcf9dc96,0.16718,2,1,0,21710,18596,0,12190,6511,"{""gemini-4-argon"": 0.1671796}",0
+since_ban,bench:luna56-medium,MultiCode,mcp:76268bd9-d402-46fd-b908-2dfa57243d8a,0.060323,18,1,0,96960,1285376,0,12686,2995,"{""gpt-5.6-luna"": 0.06032272000000001}",0
+since_ban,bench:luna6-high,MultiCode,mcp:44a29014-12d4-427d-adf8-1440ba135a39,0.040864,20,1,0,153051,1731072,0,16496,6594,"{""gpt-6-luna"": 0.040863819999999995}",0
+since_ban,bench:luna6-medium,MultiCode,mcp:eace0b11-5b43-456d-818e-4dee3a7b5816,0.020633,12,1,0,86482,734848,0,9272,1049,"{""gpt-6-luna"": 0.02063268}",0
+since_ban,bench:terra61-low,MultiCode,mcp:eb2cb1c5-caee-437c-a06c-9c487759d0fa,0.0,11,1,0,82735,651264,0,4541,0,"{""gpt-6.1-terra"": 0.0}",11
+since_ban,bench:terra61-high,MultiCode,mcp:a85fae15-1cfa-4df9-bf2b-c97d0342ec2c,0.0,13,1,0,99489,897536,0,6594,235,"{""gpt-6.1-terra"": 0.0}",13
+since_ban,bench:gptoss120b,MultiCode,mcp:4c92e8bc-f6b8-4f16-82d0-eb022eb139d8,0.0,15,1,0,29496,175040,0,5137,0,"{""gpt-oss-120b-medium"": 0.0}",15

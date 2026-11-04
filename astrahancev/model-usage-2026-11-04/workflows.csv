@@ -1,0 +1,304 @@
+window,title,project,id,local_estimate_usd,records,sessions,agents,input_uncached,cache_read,cache_write,output,reasoning_included_in_output,models_usd,unpriced_records
+all,yama-v3-all,MultiCode,wf_656822d3-627,292.668707,1527,1,9,3054,361665882,50914565,495716,0,"{""claude-opus-5-5"": 230.64616479999972, ""claude-sonnet-5-5"": 62.02254260000002}",0
+all,polus-feel-1,POLUS,wf_c22d6929-688,153.454227,2091,1,42,4182,405340002,26122155,730810,0,"{""claude-sonnet-5-5"": 153.4418252000002, ""claude-haiku-5-5"": 0.012401335}",0
+all,polus-matter-w1,POLUS,wf_1f2cd6c5-d77,139.717594,1218,1,11,2436,264251711,16147551,407900,0,"{""claude-sonnet-5-5"": 6.6712077, ""claude-opus-5-5"": 133.046386}",0
+all,polus-fix-6,POLUS,wf_e5065431-445,125.534565,1212,1,6,2424,357800944,9209556,428962,0,"{""claude-opus-5-5"": 122.71267340000001, ""claude-sonnet-5-5"": 2.8218919000000002}",0
+all,polus-backlog-7,POLUS,wf_55555274-e42,113.300674,1165,1,10,2330,251595962,11336885,343183,0,"{""claude-opus-5-5"": 111.49641560000008, ""claude-sonnet-5-5"": 1.8042587999999997}",0
+all,obelisk-full-p5-11,MultiCode,wf_8a3e1ed2-277,102.853169,1581,1,34,3162,307045003,6378260,477011,0,"{""claude-opus-5-5"": 102.85316860000012}",0
+all,polus-matter-w2,POLUS,wf_bcd402d2-7da,95.751319,1020,2,12,319248,257666883,9675561,459995,102068,"{""claude-opus-5-5"": 63.35896739999997, ""claude-sonnet-5-5"": 18.837311600000003, ""claude-haiku-5-5"": 0.069865275, ""gpt-6.1-sol"": 13.485174599999999}",0
+all,yama-v6i-resume,MultiCode,wf_8313c9b5-e11,85.454694,485,1,11,970,61570102,14530079,141550,0,"{""claude-sonnet-5-5"": 3.957316800000001, ""claude-opus-5-5"": 81.49737760000004}",0
+all,yama-v2-wave2,MultiCode,wf_4041f2bf-e68,75.413177,277,1,2,554,60113379,12407929,67432,0,"{""claude-opus-5-5"": 75.41317680000004}",0
+all,model-bench,MultiCode,wf_74bfbf22-b3f,74.753972,1168,55,109,5992428,111635650,5829172,1177715,483349,"{""claude-haiku-5-5"": 1.1818299300000004, ""claude-sonnet-5-5"": 7.2877427999999975, ""gpt-6.1-sol"": 2.1183388, ""gpt-6-astra"": 52.632974000000004, ""gpt-6.1-terra"": 0.0, ""gpt-6-luna"": 0.0614965, ""gpt-6-sol"": 0.5256704, ""gpt-5.6-sol"": 1.8438416, ""gpt-5.6-terra"": 0.4228972, ""gpt-5.6-luna"": 0.06032272000000001, ""grok-4.7-build"": 3.12915668, ""grok-4.7-build-fast"": 1.67960952, ""grok-4.6-build"": 0.511683, ""grok-4.5-build"": 0.22730496, ""gemini-4-argon"": 0.6055053999999999, ""claude-sonnet-5-5-medium"": 1.4280198000000002, ""gemini-3.8-flash"": 1.037578875, ""gpt-oss-120b-medium"": 0.0}",40
+all,yama-rework-v6j,MultiCode,wf_dd67c946-7c1,69.391751,616,1,3,1232,251089412,6285086,345869,0,"{""claude-sonnet-5-5"": 69.39175139999999}",0
+all,yama-ch2-v4,MultiCode,wf_d972a796-667,68.966213,195,1,1,390,67277739,10772165,82414,0,"{""claude-opus-5-5"": 68.96621280000002}",0
+all,table-concept-build,Claude-Code-Game-Master,wf_63219980-29f,68.218314,1042,1,20,2084,202489616,4063783,369657,0,"{""claude-opus-5-5"": 68.21831420000007}",0
+all,speed-everything,MultiCode,wf_cad7b72d-1e3,64.882653,407,1,8,814,68789650,10518548,129392,0,"{""claude-opus-5-5"": 58.91029680000002, ""claude-sonnet-5-5"": 5.9723561999999975}",0
+all,yama-integration-v6g,MultiCode,wf_e87019a8-034,58.387455,308,1,3,616,56028007,9156410,69867,0,"{""claude-opus-5-5"": 58.387455400000015}",0
+all,yama-ch3-v4,MultiCode,wf_209c8714-1e6,55.292273,191,1,1,382,57201302,8357029,103267,0,"{""claude-opus-5-5"": 55.292273400000006}",0
+all,yama-v2-wave1,MultiCode,wf_e9cce168-50f,51.636008,269,1,2,538,47074028,8192530,62820,0,"{""claude-opus-5-5"": 51.63600760000002}",0
+all,yama-v6k-argon,MultiCode,wf_8b5e7d85-ece,51.010024,468,1,3,936,119685285,10219538,152225,0,"{""claude-sonnet-5-5"": 51.010023999999966}",0
+all,yama-fastbot,MultiCode,wf_9a576a46-819,48.522996,193,1,3,386,35231945,8136489,73228,0,"{""claude-sonnet-5-5"": 1.2715741, ""claude-opus-5-5"": 47.251421400000005}",0
+all,yama-gold,MultiCode,wf_c36ec26e-30d,35.796668,213,1,3,426,44875822,5085547,79165,0,"{""claude-opus-5-5"": 35.515036, ""claude-sonnet-5-5"": 0.2816324}",0
+all,yama-integration-v6f,MultiCode,wf_1e3a0859-6d6,33.229865,168,1,1,336,32398281,5218157,32904,0,"{""claude-opus-5-5"": 33.22986520000001}",0
+all,yama-rework-v6j,MultiCode,wf_befd2c28-47c,30.586041,365,1,5,730,55290979,7228182,145593,0,"{""claude-sonnet-5-5"": 30.58604080000003}",0
+all,table-concept-next,Claude-Code-Game-Master,wf_8893c540-a41,27.126664,394,1,10,788,62949026,2706070,105168,0,"{""claude-opus-5-5"": 24.464253799999987, ""claude-sonnet-5-5"": 2.6624103999999997}",0
+all,ai-table-hub-master,Claude-Code-Game-Master,wf_e9f2f4cf-a5b,25.190843,194,1,7,388,34267046,3518766,80636,0,"{""claude-opus-5-5"": 23.8162564, ""claude-sonnet-5-5"": 1.3745863}",0
+all,polus-polish-5,POLUS,wf_f6e62228-0c1,23.924032,285,1,2,570,80018783,1286079,74380,0,"{""claude-opus-5-5"": 23.924031600000003}",0
+all,yama-v2-ak,MultiCode,wf_f01eec9f-357,23.208349,116,1,1,232,22350704,3613092,33591,0,"{""claude-opus-5-5"": 23.208348800000003}",0
+all,polus-physics-video,POLUS,wf_2cc94aff-d04,21.333277,260,1,7,520,45248310,2019515,126952,0,"{""claude-opus-5-5"": 20.74753080000001, ""claude-sonnet-5-5"": 0.5857457}",0
+all,codex-smooth,Orchestra (ops),wf_45ee0214-165,18.239769,225,1,5,450,35452350,1943093,105866,0,"{""claude-sonnet-5-5"": 1.4349283, ""claude-opus-5-5"": 16.8048412}",0
+all,yama-rework-v6j,MultiCode,wf_07658ec7-8af,17.201797,245,1,4,490,38617833,3563168,56933,0,"{""claude-sonnet-5-5"": 17.20179659999999}",0
+all,orchestra-to-multicode-r2,MultiCode,wf_5be2c634-09b,17.125318,273,1,14,546,34610487,2171312,197249,0,"{""claude-sonnet-5-5"": 8.996081300000005, ""claude-opus-5-5"": 8.1292366}",0
+all,yama-rework-v6j,MultiCode,wf_1ac0dc3a-35d,15.560638,217,1,2,434,43319850,2426612,82927,0,"{""claude-sonnet-5-5"": 15.560637999999994}",0
+all,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_93489d2b-54c,12.625692,180,1,4,360,29066708,2502972,55420,0,"{""claude-sonnet-5-5"": 12.625691600000007}",0
+all,ai-table-copy-port-pilot,Claude-Code-Game-Master,wf_b36cd614-79d,12.306584,187,1,6,374,34991132,1860412,65658,0,"{""claude-sonnet-5-5"": 12.3065844}",0
+all,codex-calm,Orchestra (ops),wf_9618f497-02f,12.094696,229,1,5,458,35954542,760498,76992,0,"{""claude-opus-5-5"": 11.145378000000003, ""claude-sonnet-5-5"": 0.9493179000000002}",0
+all,argon-yama,MultiCode,wf_0ab2e65f-cb7,11.480119,206,5,9,1617483,27890494,1429801,307103,107949,"{""claude-haiku-5-5"": 0.22482428000000007, ""claude-sonnet-5-5"": 6.783144500000001, ""gemini-4-argon"": 4.472149800000001, ""antigravity-unknown"": 0.0}",4
+all,polus-matter-plan,POLUS,wf_09956b47-a9a,11.396873,111,1,3,222,18478272,1203724,137615,0,"{""claude-opus-5-5"": 9.674063400000001, ""claude-sonnet-5-5"": 1.7228100000000006}",0
+all,yama-feedback-v6h,MultiCode,wf_3ba08226-7d1,11.368964,203,1,6,406,29401827,1638535,109516,0,"{""claude-sonnet-5-5"": 10.4505302, ""claude-opus-5-5"": 0.9184342000000001}",0
+all,orchestra-disk-health,Orchestra (ops),wf_5fc51e8b-cef,10.829108,281,1,14,562,29606445,1015090,125570,0,"{""claude-opus-5-5"": 3.8764063999999996, ""claude-sonnet-5-5"": 6.952701600000001}",0
+all,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_29f845f4-edb,10.616384,185,2,3,262858,42529281,424167,161049,112864,"{""claude-haiku-5-5"": 0.016067940000000003, ""gpt-6.1-sol"": 9.0525288, ""claude-sonnet-5-5"": 1.5477873}",0
+all,argon-blueprint-check,MultiCode,wf_cd854dc7-5aa,10.128411,183,1,4,366,35387896,945940,68525,0,"{""claude-sonnet-5-5"": 10.1284112}",0
+all,idle-design-skills,MultiCode,wf_2d2c0c43-efe,9.930738,156,1,7,312,26784400,1056656,39028,0,"{""claude-sonnet-5-5"": 3.1251625999999995, ""claude-opus-5-5"": 6.8055753999999995}",0
+all,yama-v6l-check,MultiCode,wf_0abba6c1-747,8.824266,174,1,5,348,27471886,1067617,66015,0,"{""claude-sonnet-5-5"": 8.8242657}",0
+all,ai-table-gm-console-slide,Claude-Code-Game-Master,wf_2c0ba777-f9d,7.772511,76,1,2,152,13589023,1727545,73554,0,"{""claude-sonnet-5-5"": 7.7725111}",0
+all,yama-rework-v6j,MultiCode,wf_35a77d7c-5fc,7.581978,168,1,4,336,25605590,884023,25013,0,"{""claude-sonnet-5-5"": 7.581977500000003}",0
+all,polus-fx-donors,POLUS,wf_60c20b5e-01b,7.532333,106,1,6,212,13616620,929045,56143,0,"{""claude-sonnet-5-5"": 2.0047336999999996, ""claude-opus-5-5"": 5.527598800000001}",0
+all,yama-v6l-blueprint,MultiCode,wf_6aabd142-c40,7.180743,152,1,3,304,27575935,625395,10146,0,"{""claude-sonnet-5-5"": 7.1807425}",0
+all,table-concept-finish,Claude-Code-Game-Master,wf_f2afe87c-2a5,6.275298,126,1,1,252,26364756,242997,39435,0,"{""claude-sonnet-5-5"": 6.275297699999999}",0
+all,polus-physics-explain,POLUS,wf_924d51ca-42a,5.799059,95,1,4,190,13440555,757024,62456,0,"{""claude-sonnet-5-5"": 4.0173108, ""claude-opus-5-5"": 1.7817482000000004}",0
+all,ad-skills-install,MultiCode,wf_cfbb891f-74c,5.572516,82,1,5,164,10810371,785948,33390,0,"{""claude-opus-5-5"": 3.6033826, ""claude-sonnet-5-5"": 1.9691330999999996}",0
+all,ua-tutorials-study,MultiCode,wf_026e1dfc-312,5.247166,104,1,7,208,11371385,882299,28967,0,"{""claude-sonnet-5-5"": 3.375238300000001, ""claude-opus-5-5"": 1.8719282}",0
+all,codex-memory,Orchestra (ops),wf_fe722de9-a78,5.082075,87,1,5,174,8977437,719129,45204,0,"{""claude-opus-5-5"": 2.7012426, ""claude-sonnet-5-5"": 2.380832300000001}",0
+all,obelisk-ob11,MultiCode,wf_610844f9-e4a,4.756989,57,1,2,114,9582618,552030,19147,0,"{""claude-sonnet-5-5"": 0.35648880000000005, ""claude-opus-5-5"": 4.4004998}",0
+all,yama-v6l-theme,MultiCode,wf_57d042cc-7b6,4.566397,77,1,1,154,17373683,259197,44336,0,"{""claude-sonnet-5-5"": 4.5663971000000005}",0
+all,workflow-dashboard,MultiCode,wf_adee72c8-09c,4.512669,86,1,2,172,13757669,330768,25170,0,"{""claude-sonnet-5-5"": 0.6949752, ""claude-opus-5-5"": 3.8176935999999992}",0
+all,video-workflows-explainer,MultiCode,wf_950cdd3a-01c,4.386055,59,1,2,118,6908418,740072,27760,0,"{""claude-opus-5-5"": 2.7433916, ""claude-sonnet-5-5"": 1.6426630000000002}",0
+all,content-factory-research,MultiCode,wf_e4f8aade-331,4.212717,70,1,9,140,7100844,684681,41820,0,"{""claude-sonnet-5-5"": 2.2803152000000004, ""claude-opus-5-5"": 1.9324016}",0
+all,ai-table-ui-tickets,Claude-Code-Game-Master,wf_726fdbb8-7e3,4.0913,99,1,5,198,16745096,437195,25043,0,"{""claude-haiku-5-5"": 0.06499215000000001, ""claude-sonnet-5-5"": 4.0263081}",0
+all,table-redesign-research,Claude-Code-Game-Master,wf_fef47818-64a,3.831884,69,1,9,138,6187562,772061,23834,0,"{""claude-sonnet-5-5"": 2.8852877999999995, ""claude-opus-5-5"": 0.9465966000000001}",0
+all,polus-matter-design,POLUS,wf_aee3b9c7-bd5,3.754933,33,1,5,66,3269090,684834,36124,0,"{""claude-opus-5-5"": 2.3146762000000005, ""claude-sonnet-5-5"": 1.4402567999999998}",0
+all,codex-slow,Orchestra (ops),wf_00451c77-f77,3.728725,74,1,5,148,7314575,467948,34741,0,"{""claude-opus-5-5"": 2.118437, ""claude-sonnet-5-5"": 1.6102879999999997}",0
+all,tg-voice-orchestra,MultiCode,wf_1bc3d5be-20b,3.657051,77,1,7,154,7873271,500563,32292,0,"{""claude-sonnet-5-5"": 1.8410236, ""claude-opus-5-5"": 1.8160275999999997}",0
+all,yama-ch2-facts,MultiCode,wf_3d150860-406,3.303351,76,1,3,152,10252347,387027,28501,0,"{""claude-sonnet-5-5"": 3.3033509000000003}",0
+all,argon-trial-r2,MultiCode,wf_ef3008e0-441,3.290608,78,5,5,234579,7272786,677227,117952,55105,"{""claude-haiku-5-5"": 0.137596505, ""claude-sonnet-5-5"": 1.5208631999999995, ""gemini-4-argon"": 1.6321480999999995}",0
+all,ai-table-human-gm-research,Claude-Code-Game-Master,wf_4721ed57-2f1,3.138462,65,1,4,130,8543411,487416,21098,0,"{""claude-sonnet-5-5"": 3.1384622}",0
+all,study-ai-table,Claude-Code-Game-Master,wf_865e649e-228,3.083027,62,1,7,124,5462071,513826,40472,0,"{""claude-sonnet-5-5"": 2.4355734999999994, ""claude-opus-5-5"": 0.6474532}",0
+all,disk-guard-review,Orchestra (ops),wf_d7a1355c-d76,3.056612,50,1,4,100,4908410,344814,44737,0,"{""claude-opus-5-5"": 2.143628, ""claude-sonnet-5-5"": 0.912984}",0
+all,ai-table-hub-master-deploy,Claude-Code-Game-Master,wf_f19658c5-649,2.758106,79,1,4,158,7440002,428248,19917,0,"{""claude-sonnet-5-5"": 2.7581063999999995}",0
+all,ai-table-ui-qa,Claude-Code-Game-Master,wf_02f84c4b-902,2.613967,57,1,2,114,5747265,1129363,17582,0,"{""claude-haiku-5-5"": 0.104757875, ""claude-sonnet-5-5"": 2.509209400000001}",0
+all,ai-table-ui-v52-v53-r3,Claude-Code-Game-Master,wf_8d5d87fd-2b0,2.525438,54,1,3,108,6228085,397050,28698,0,"{""claude-sonnet-5-5"": 2.525438}",0
+all,ai-table-hub-master-finish,Claude-Code-Game-Master,wf_1014d0c6-f57,2.26451,44,1,2,88,4839444,451918,16665,0,"{""claude-sonnet-5-5"": 2.2645097999999995}",0
+all,yama-rework-v6j,MultiCode,wf_5f18617f-960,2.131065,48,1,3,96,5782452,324633,16280,0,"{""claude-sonnet-5-5"": 2.1310648999999997}",0
+all,ai-table-ui-qa,Claude-Code-Game-Master,wf_5221dad2-b8a,2.126661,45,1,2,90,3992990,809131,9553,0,"{""claude-haiku-5-5"": 0.04160393, ""claude-sonnet-5-5"": 2.0850569}",0
+all,rules-apply-and-capabilities,MultiCode,wf_e380f10f-c08,2.108683,40,1,3,80,4549175,226812,10659,0,"{""claude-opus-5-5"": 1.8508056, ""claude-sonnet-5-5"": 0.2578779}",0
+all,dashboard-full-texts,MultiCode,wf_2ea972f8-eb8,1.937418,42,1,1,84,5816149,256504,13276,0,"{""claude-sonnet-5-5"": 1.9374177999999997}",0
+all,argon-trial,MultiCode,wf_bd112252-de6,1.932402,30,1,10,60,2430344,728476,11868,0,"{""claude-sonnet-5-5"": 1.9064203000000002, ""claude-haiku-5-5"": 0.025981925000000003}",0
+all,ai-table-human-gm-qa,Claude-Code-Game-Master,wf_7f4c535c-a29,1.884783,46,1,3,92,4260326,728792,4591,0,"{""claude-sonnet-5-5"": 1.8251585000000004, ""claude-haiku-5-5"": 0.059624474999999996}",0
+all,ad-creative-skills,MultiCode,wf_5c45a145-e20,1.773933,28,1,5,56,2307201,346673,16799,0,"{""claude-sonnet-5-5"": 1.1569464, ""claude-opus-5-5"": 0.6169868000000001}",0
+all,gplay-publish-skill,MultiCode,wf_aa2c4ab8-d4e,1.758109,34,1,2,68,4176123,208872,7458,0,"{""claude-opus-5-5"": 1.3779688000000005, ""claude-sonnet-5-5"": 0.3801398}",0
+all,table-concept-finish,Claude-Code-Game-Master,wf_ae51009c-b25,1.56799,48,1,1,96,5442541,144132,11896,0,"{""claude-sonnet-5-5"": 1.5679902}",0
+all,ai-table-human-gm-qa,Claude-Code-Game-Master,wf_b6f4bc00-bf1,1.378469,39,1,2,78,4050004,401549,8663,0,"{""claude-sonnet-5-5"": 1.3509857, ""claude-haiku-5-5"": 0.02748368}",0
+all,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_699eaf3a-1c4,1.377225,33,1,1,66,4408275,130103,17018,0,"{""claude-sonnet-5-5"": 1.3772245}",0
+all,rules-to-global,MultiCode,wf_49e3312a-00d,1.342931,23,1,3,46,2232802,207489,16956,0,"{""claude-sonnet-5-5"": 0.8029199999999999, ""claude-opus-5-5"": 0.5400114000000001}",0
+all,ai-table-ui-qa,Claude-Code-Game-Master,wf_e3f3b266-667,1.254896,37,1,2,74,3649393,303222,9984,0,"{""claude-haiku-5-5"": 0.017527685, ""claude-sonnet-5-5"": 1.2373679}",0
+all,heavy-relax-hook,MultiCode,wf_1023b60c-d83,0.911888,18,1,2,36,1601822,145480,6920,0,"{""claude-sonnet-5-5"": 0.3459958, ""claude-opus-5-5"": 0.5658926000000001}",0
+all,argon-trial-r2,MultiCode,wf_5a946f7e-b97,0.902468,21,1,5,42,2351898,306558,17249,0,"{""claude-haiku-5-5"": 0.026677924999999998, ""claude-sonnet-5-5"": 0.8757901}",0
+all,caption-ai-table-shots,Claude-Code-Game-Master,wf_edfe5929-ca6,0.880045,12,1,6,24,732896,241891,12869,0,"{""claude-sonnet-5-5"": 0.8800447}",0
+all,ai-table-hub-master-polish,Claude-Code-Game-Master,wf_502e2f81-3f0,0.877028,32,1,4,64,2841287,177948,6818,0,"{""claude-sonnet-5-5"": 0.8662695999999999, ""claude-haiku-5-5"": 0.01075829}",0
+all,ai-table-touch-lab,Claude-Code-Game-Master,wf_0829cbdc-25e,0.821296,20,1,1,40,2545603,109414,3856,0,"{""claude-sonnet-5-5"": 0.8212955999999999}",0
+all,ai-table-hub-master-finish,Claude-Code-Game-Master,wf_10cdf7f9-a13,0.68489,18,1,1,36,1679727,109989,7390,0,"{""claude-sonnet-5-5"": 0.6848899}",0
+all,yama-v6k-argon,MultiCode,wf_9d32ea49-7da,0.599462,9,1,3,18,697418,182929,262,0,"{""claude-sonnet-5-5"": 0.5994621000000001}",0
+all,workflow-dashboard,MultiCode,wf_e5adb86d-259,0.426419,9,1,1,18,805412,44629,2106,0,"{""claude-opus-5-5"": 0.4264194}",0
+all,tg-video-transcribe,MultiCode,wf_fdeffd65-7f9,0.27643,8,1,1,16,692853,43663,2867,0,"{""claude-sonnet-5-5"": 0.2764301}",0
+all,ext-worker-test,MultiCode,wf_d1224678-ed1,0.035416,5,2,2,26896,225053,108884,1280,209,"{""claude-haiku-5-5"": 0.01637241, ""grok-4.7-build"": 0.0190434}",0
+all,wait-argon-gm-slide,Claude-Code-Game-Master,wf_9d3345cf-faf,0.032985,4,1,1,8,81831,248867,2116,0,"{""claude-haiku-5-5"": 0.032985485}",0
+all,watch-sol-v52-v53,Claude-Code-Game-Master,wf_509712db-e0d,0.019634,2,1,1,4,0,156084,246,0,"{""claude-haiku-5-5"": 0.019633899999999996}",0
+all,ai-table-ui-qa,Claude-Code-Game-Master,wf_d7e03dec-c8b,0.00983,1,1,1,2,0,77888,188,0,"{""claude-haiku-5-5"": 0.009830199999999999}",0
+all,ai-table-ui-check,Claude-Code-Game-Master,wf_e12011d9-0cb,0.003165,1,1,1,2,58125,19769,224,0,"{""claude-haiku-5-5"": 0.0031645749999999998}",0
+ban_before24,yama-v3-all,MultiCode,wf_656822d3-627,251.230861,1030,1,9,2060,263529159,46425886,300683,0,"{""claude-opus-5-5"": 200.3718363999999, ""claude-sonnet-5-5"": 50.859024399999974}",0
+ban_before24,polus-matter-w1,POLUS,wf_1f2cd6c5-d77,139.717594,1218,1,11,2436,264251711,16147551,407900,0,"{""claude-sonnet-5-5"": 6.6712077, ""claude-opus-5-5"": 133.046386}",0
+ban_before24,yama-v6i-resume,MultiCode,wf_8313c9b5-e11,85.454694,485,1,11,970,61570102,14530079,141550,0,"{""claude-sonnet-5-5"": 3.957316800000001, ""claude-opus-5-5"": 81.49737760000004}",0
+ban_before24,polus-matter-w2,POLUS,wf_bcd402d2-7da,76.707877,764,2,9,224314,197396937,7189775,317773,13341,"{""claude-opus-5-5"": 63.35896739999997, ""claude-sonnet-5-5"": 11.4092132, ""claude-haiku-5-5"": 0.014988025, ""gpt-6.1-sol"": 1.9247083999999997}",0
+ban_before24,yama-ch2-v4,MultiCode,wf_d972a796-667,68.966213,195,1,1,390,67277739,10772165,82414,0,"{""claude-opus-5-5"": 68.96621280000002}",0
+ban_before24,table-concept-build,Claude-Code-Game-Master,wf_63219980-29f,68.218314,1042,1,20,2084,202489616,4063783,369657,0,"{""claude-opus-5-5"": 68.21831420000007}",0
+ban_before24,speed-everything,MultiCode,wf_cad7b72d-1e3,64.882653,407,1,8,814,68789650,10518548,129392,0,"{""claude-opus-5-5"": 58.91029680000002, ""claude-sonnet-5-5"": 5.9723561999999975}",0
+ban_before24,yama-ch3-v4,MultiCode,wf_209c8714-1e6,55.292273,191,1,1,382,57201302,8357029,103267,0,"{""claude-opus-5-5"": 55.292273400000006}",0
+ban_before24,yama-fastbot,MultiCode,wf_9a576a46-819,48.522996,193,1,3,386,35231945,8136489,73228,0,"{""claude-sonnet-5-5"": 1.2715741, ""claude-opus-5-5"": 47.251421400000005}",0
+ban_before24,yama-gold,MultiCode,wf_c36ec26e-30d,35.796668,213,1,3,426,44875822,5085547,79165,0,"{""claude-opus-5-5"": 35.515036, ""claude-sonnet-5-5"": 0.2816324}",0
+ban_before24,polus-backlog-7,POLUS,wf_55555274-e42,29.797155,173,1,2,346,32936079,4493967,36936,0,"{""claude-opus-5-5"": 29.79715480000001}",0
+ban_before24,table-concept-next,Claude-Code-Game-Master,wf_8893c540-a41,27.126664,394,1,10,788,62949026,2706070,105168,0,"{""claude-opus-5-5"": 24.464253799999987, ""claude-sonnet-5-5"": 2.6624103999999997}",0
+ban_before24,ai-table-hub-master,Claude-Code-Game-Master,wf_e9f2f4cf-a5b,25.190843,194,1,7,388,34267046,3518766,80636,0,"{""claude-opus-5-5"": 23.8162564, ""claude-sonnet-5-5"": 1.3745863}",0
+ban_before24,codex-smooth,Orchestra (ops),wf_45ee0214-165,18.239769,225,1,5,450,35452350,1943093,105866,0,"{""claude-sonnet-5-5"": 1.4349283, ""claude-opus-5-5"": 16.8048412}",0
+ban_before24,orchestra-to-multicode-r2,MultiCode,wf_5be2c634-09b,17.125318,273,1,14,546,34610487,2171312,197249,0,"{""claude-sonnet-5-5"": 8.996081300000005, ""claude-opus-5-5"": 8.1292366}",0
+ban_before24,codex-calm,Orchestra (ops),wf_9618f497-02f,12.094696,229,1,5,458,35954542,760498,76992,0,"{""claude-opus-5-5"": 11.145378000000003, ""claude-sonnet-5-5"": 0.9493179000000002}",0
+ban_before24,yama-feedback-v6h,MultiCode,wf_3ba08226-7d1,11.368964,203,1,6,406,29401827,1638535,109516,0,"{""claude-sonnet-5-5"": 10.4505302, ""claude-opus-5-5"": 0.9184342000000001}",0
+ban_before24,orchestra-disk-health,Orchestra (ops),wf_5fc51e8b-cef,10.829108,281,1,14,562,29606445,1015090,125570,0,"{""claude-opus-5-5"": 3.8764063999999996, ""claude-sonnet-5-5"": 6.952701600000001}",0
+ban_before24,idle-design-skills,MultiCode,wf_2d2c0c43-efe,9.930738,156,1,7,312,26784400,1056656,39028,0,"{""claude-sonnet-5-5"": 3.1251625999999995, ""claude-opus-5-5"": 6.8055753999999995}",0
+ban_before24,ad-skills-install,MultiCode,wf_cfbb891f-74c,5.572516,82,1,5,164,10810371,785948,33390,0,"{""claude-opus-5-5"": 3.6033826, ""claude-sonnet-5-5"": 1.9691330999999996}",0
+ban_before24,ua-tutorials-study,MultiCode,wf_026e1dfc-312,5.247166,104,1,7,208,11371385,882299,28967,0,"{""claude-sonnet-5-5"": 3.375238300000001, ""claude-opus-5-5"": 1.8719282}",0
+ban_before24,codex-memory,Orchestra (ops),wf_fe722de9-a78,5.082075,87,1,5,174,8977437,719129,45204,0,"{""claude-opus-5-5"": 2.7012426, ""claude-sonnet-5-5"": 2.380832300000001}",0
+ban_before24,workflow-dashboard,MultiCode,wf_adee72c8-09c,4.512669,86,1,2,172,13757669,330768,25170,0,"{""claude-sonnet-5-5"": 0.6949752, ""claude-opus-5-5"": 3.8176935999999992}",0
+ban_before24,video-workflows-explainer,MultiCode,wf_950cdd3a-01c,4.386055,59,1,2,118,6908418,740072,27760,0,"{""claude-opus-5-5"": 2.7433916, ""claude-sonnet-5-5"": 1.6426630000000002}",0
+ban_before24,content-factory-research,MultiCode,wf_e4f8aade-331,4.212717,70,1,9,140,7100844,684681,41820,0,"{""claude-sonnet-5-5"": 2.2803152000000004, ""claude-opus-5-5"": 1.9324016}",0
+ban_before24,yama-rework-v6j,MultiCode,wf_dd67c946-7c1,3.846925,83,1,3,166,12397577,400611,36555,0,"{""claude-sonnet-5-5"": 3.8469249}",0
+ban_before24,table-redesign-research,Claude-Code-Game-Master,wf_fef47818-64a,3.831884,69,1,9,138,6187562,772061,23834,0,"{""claude-sonnet-5-5"": 2.8852877999999995, ""claude-opus-5-5"": 0.9465966000000001}",0
+ban_before24,codex-slow,Orchestra (ops),wf_00451c77-f77,3.728725,74,1,5,148,7314575,467948,34741,0,"{""claude-opus-5-5"": 2.118437, ""claude-sonnet-5-5"": 1.6102879999999997}",0
+ban_before24,tg-voice-orchestra,MultiCode,wf_1bc3d5be-20b,3.657051,77,1,7,154,7873271,500563,32292,0,"{""claude-sonnet-5-5"": 1.8410236, ""claude-opus-5-5"": 1.8160275999999997}",0
+ban_before24,study-ai-table,Claude-Code-Game-Master,wf_865e649e-228,3.083027,62,1,7,124,5462071,513826,40472,0,"{""claude-sonnet-5-5"": 2.4355734999999994, ""claude-opus-5-5"": 0.6474532}",0
+ban_before24,disk-guard-review,Orchestra (ops),wf_d7a1355c-d76,3.056612,50,1,4,100,4908410,344814,44737,0,"{""claude-opus-5-5"": 2.143628, ""claude-sonnet-5-5"": 0.912984}",0
+ban_before24,table-concept-finish,Claude-Code-Game-Master,wf_f2afe87c-2a5,2.520491,61,1,1,122,9499675,165725,20600,0,"{""claude-sonnet-5-5"": 2.5204914999999994}",0
+ban_before24,yama-rework-v6j,MultiCode,wf_5f18617f-960,2.131065,48,1,3,96,5782452,324633,16280,0,"{""claude-sonnet-5-5"": 2.1310648999999997}",0
+ban_before24,rules-apply-and-capabilities,MultiCode,wf_e380f10f-c08,2.108683,40,1,3,80,4549175,226812,10659,0,"{""claude-opus-5-5"": 1.8508056, ""claude-sonnet-5-5"": 0.2578779}",0
+ban_before24,dashboard-full-texts,MultiCode,wf_2ea972f8-eb8,1.937418,42,1,1,84,5816149,256504,13276,0,"{""claude-sonnet-5-5"": 1.9374177999999997}",0
+ban_before24,ad-creative-skills,MultiCode,wf_5c45a145-e20,1.773933,28,1,5,56,2307201,346673,16799,0,"{""claude-sonnet-5-5"": 1.1569464, ""claude-opus-5-5"": 0.6169868000000001}",0
+ban_before24,gplay-publish-skill,MultiCode,wf_aa2c4ab8-d4e,1.758109,34,1,2,68,4176123,208872,7458,0,"{""claude-opus-5-5"": 1.3779688000000005, ""claude-sonnet-5-5"": 0.3801398}",0
+ban_before24,ai-table-hub-master-finish,Claude-Code-Game-Master,wf_1014d0c6-f57,1.465166,39,1,2,78,4363861,176831,15016,0,"{""claude-sonnet-5-5"": 1.4651656999999996}",0
+ban_before24,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_699eaf3a-1c4,1.377225,33,1,1,66,4408275,130103,17018,0,"{""claude-sonnet-5-5"": 1.3772245}",0
+ban_before24,rules-to-global,MultiCode,wf_49e3312a-00d,1.342931,23,1,3,46,2232802,207489,16956,0,"{""claude-sonnet-5-5"": 0.8029199999999999, ""claude-opus-5-5"": 0.5400114000000001}",0
+ban_before24,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_29f845f4-edb,1.204567,44,2,2,146513,5587272,78280,35012,16998,"{""claude-haiku-5-5"": 0.0105702, ""gpt-6.1-sol"": 1.1939971999999999}",0
+ban_before24,heavy-relax-hook,MultiCode,wf_1023b60c-d83,0.911888,18,1,2,36,1601822,145480,6920,0,"{""claude-sonnet-5-5"": 0.3459958, ""claude-opus-5-5"": 0.5658926000000001}",0
+ban_before24,caption-ai-table-shots,Claude-Code-Game-Master,wf_edfe5929-ca6,0.880045,12,1,6,24,732896,241891,12869,0,"{""claude-sonnet-5-5"": 0.8800447}",0
+ban_before24,ai-table-hub-master-finish,Claude-Code-Game-Master,wf_10cdf7f9-a13,0.68489,18,1,1,36,1679727,109989,7390,0,"{""claude-sonnet-5-5"": 0.6848899}",0
+ban_before24,workflow-dashboard,MultiCode,wf_e5adb86d-259,0.426419,9,1,1,18,805412,44629,2106,0,"{""claude-opus-5-5"": 0.4264194}",0
+ban_before24,tg-video-transcribe,MultiCode,wf_fdeffd65-7f9,0.27643,8,1,1,16,692853,43663,2867,0,"{""claude-sonnet-5-5"": 0.2764301}",0
+ban_before24,ext-worker-test,MultiCode,wf_d1224678-ed1,0.035416,5,2,2,26896,225053,108884,1280,209,"{""claude-haiku-5-5"": 0.01637241, ""grok-4.7-build"": 0.0190434}",0
+ban_after24,polus-feel-1,POLUS,wf_c22d6929-688,107.713305,1396,1,26,2792,270915892,19096621,578299,0,"{""claude-sonnet-5-5"": 107.71330490000003}",0
+ban_after24,model-bench,MultiCode,wf_74bfbf22-b3f,74.753972,1168,55,109,5992428,111635650,5829172,1177715,483349,"{""claude-haiku-5-5"": 1.1818299300000004, ""claude-sonnet-5-5"": 7.2877427999999975, ""gpt-6.1-sol"": 2.1183388, ""gpt-6-astra"": 52.632974000000004, ""gpt-6.1-terra"": 0.0, ""gpt-6-luna"": 0.0614965, ""gpt-6-sol"": 0.5256704, ""gpt-5.6-sol"": 1.8438416, ""gpt-5.6-terra"": 0.4228972, ""gpt-5.6-luna"": 0.06032272000000001, ""grok-4.7-build"": 3.12915668, ""grok-4.7-build-fast"": 1.67960952, ""grok-4.6-build"": 0.511683, ""grok-4.5-build"": 0.22730496, ""gemini-4-argon"": 0.6055053999999999, ""claude-sonnet-5-5-medium"": 1.4280198000000002, ""gemini-3.8-flash"": 1.037578875, ""gpt-oss-120b-medium"": 0.0}",40
+ban_after24,yama-rework-v6j,MultiCode,wf_dd67c946-7c1,65.544826,533,1,3,1066,238691835,5884475,309314,0,"{""claude-sonnet-5-5"": 65.5448265}",0
+ban_after24,yama-v6k-argon,MultiCode,wf_8b5e7d85-ece,51.010024,468,1,3,936,119685285,10219538,152225,0,"{""claude-sonnet-5-5"": 51.010023999999966}",0
+ban_after24,yama-rework-v6j,MultiCode,wf_befd2c28-47c,30.586041,365,1,5,730,55290979,7228182,145593,0,"{""claude-sonnet-5-5"": 30.58604080000003}",0
+ban_after24,polus-matter-w2,POLUS,wf_bcd402d2-7da,19.043442,256,2,4,94934,60269946,2485786,142222,88727,"{""claude-haiku-5-5"": 0.054877249999999995, ""gpt-6.1-sol"": 11.560466199999999, ""claude-sonnet-5-5"": 7.428098399999998}",0
+ban_after24,yama-rework-v6j,MultiCode,wf_07658ec7-8af,17.201797,245,1,4,490,38617833,3563168,56933,0,"{""claude-sonnet-5-5"": 17.20179659999999}",0
+ban_after24,yama-rework-v6j,MultiCode,wf_1ac0dc3a-35d,15.560638,217,1,2,434,43319850,2426612,82927,0,"{""claude-sonnet-5-5"": 15.560637999999994}",0
+ban_after24,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_93489d2b-54c,12.625692,180,1,4,360,29066708,2502972,55420,0,"{""claude-sonnet-5-5"": 12.625691600000007}",0
+ban_after24,ai-table-copy-port-pilot,Claude-Code-Game-Master,wf_b36cd614-79d,12.306584,187,1,6,374,34991132,1860412,65658,0,"{""claude-sonnet-5-5"": 12.3065844}",0
+ban_after24,argon-yama,MultiCode,wf_0ab2e65f-cb7,11.480119,206,5,9,1617483,27890494,1429801,307103,107949,"{""claude-haiku-5-5"": 0.22482428000000007, ""claude-sonnet-5-5"": 6.783144500000001, ""gemini-4-argon"": 4.472149800000001, ""antigravity-unknown"": 0.0}",4
+ban_after24,argon-blueprint-check,MultiCode,wf_cd854dc7-5aa,10.128411,183,1,4,366,35387896,945940,68525,0,"{""claude-sonnet-5-5"": 10.1284112}",0
+ban_after24,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_29f845f4-edb,9.411817,141,2,2,116345,36942009,345887,126037,95866,"{""claude-haiku-5-5"": 0.005497739999999999, ""gpt-6.1-sol"": 7.8585316, ""claude-sonnet-5-5"": 1.5477873}",0
+ban_after24,ai-table-gm-console-slide,Claude-Code-Game-Master,wf_2c0ba777-f9d,7.772511,76,1,2,152,13589023,1727545,73554,0,"{""claude-sonnet-5-5"": 7.7725111}",0
+ban_after24,yama-rework-v6j,MultiCode,wf_35a77d7c-5fc,7.581978,168,1,4,336,25605590,884023,25013,0,"{""claude-sonnet-5-5"": 7.581977500000003}",0
+ban_after24,yama-v6l-blueprint,MultiCode,wf_6aabd142-c40,7.180743,152,1,3,304,27575935,625395,10146,0,"{""claude-sonnet-5-5"": 7.1807425}",0
+ban_after24,ai-table-ui-tickets,Claude-Code-Game-Master,wf_726fdbb8-7e3,4.0913,99,1,5,198,16745096,437195,25043,0,"{""claude-haiku-5-5"": 0.06499215000000001, ""claude-sonnet-5-5"": 4.0263081}",0
+ban_after24,table-concept-finish,Claude-Code-Game-Master,wf_f2afe87c-2a5,3.754806,65,1,1,130,16865081,77272,18835,0,"{""claude-sonnet-5-5"": 3.7548062000000004}",0
+ban_after24,argon-trial-r2,MultiCode,wf_ef3008e0-441,3.290608,78,5,5,234579,7272786,677227,117952,55105,"{""claude-haiku-5-5"": 0.137596505, ""claude-sonnet-5-5"": 1.5208631999999995, ""gemini-4-argon"": 1.6321480999999995}",0
+ban_after24,ai-table-human-gm-research,Claude-Code-Game-Master,wf_4721ed57-2f1,3.138462,65,1,4,130,8543411,487416,21098,0,"{""claude-sonnet-5-5"": 3.1384622}",0
+ban_after24,ai-table-hub-master-deploy,Claude-Code-Game-Master,wf_f19658c5-649,2.758106,79,1,4,158,7440002,428248,19917,0,"{""claude-sonnet-5-5"": 2.7581063999999995}",0
+ban_after24,ai-table-ui-qa,Claude-Code-Game-Master,wf_02f84c4b-902,2.613967,57,1,2,114,5747265,1129363,17582,0,"{""claude-haiku-5-5"": 0.104757875, ""claude-sonnet-5-5"": 2.509209400000001}",0
+ban_after24,ai-table-ui-v52-v53-r3,Claude-Code-Game-Master,wf_8d5d87fd-2b0,2.525438,54,1,3,108,6228085,397050,28698,0,"{""claude-sonnet-5-5"": 2.525438}",0
+ban_after24,ai-table-ui-qa,Claude-Code-Game-Master,wf_5221dad2-b8a,2.126661,45,1,2,90,3992990,809131,9553,0,"{""claude-haiku-5-5"": 0.04160393, ""claude-sonnet-5-5"": 2.0850569}",0
+ban_after24,argon-trial,MultiCode,wf_bd112252-de6,1.932402,30,1,10,60,2430344,728476,11868,0,"{""claude-sonnet-5-5"": 1.9064203000000002, ""claude-haiku-5-5"": 0.025981925000000003}",0
+ban_after24,ai-table-human-gm-qa,Claude-Code-Game-Master,wf_7f4c535c-a29,1.884783,46,1,3,92,4260326,728792,4591,0,"{""claude-sonnet-5-5"": 1.8251585000000004, ""claude-haiku-5-5"": 0.059624474999999996}",0
+ban_after24,table-concept-finish,Claude-Code-Game-Master,wf_ae51009c-b25,1.56799,48,1,1,96,5442541,144132,11896,0,"{""claude-sonnet-5-5"": 1.5679902}",0
+ban_after24,ai-table-human-gm-qa,Claude-Code-Game-Master,wf_b6f4bc00-bf1,1.378469,39,1,2,78,4050004,401549,8663,0,"{""claude-sonnet-5-5"": 1.3509857, ""claude-haiku-5-5"": 0.02748368}",0
+ban_after24,ai-table-ui-qa,Claude-Code-Game-Master,wf_e3f3b266-667,1.254896,37,1,2,74,3649393,303222,9984,0,"{""claude-haiku-5-5"": 0.017527685, ""claude-sonnet-5-5"": 1.2373679}",0
+ban_after24,argon-trial-r2,MultiCode,wf_5a946f7e-b97,0.902468,21,1,5,42,2351898,306558,17249,0,"{""claude-haiku-5-5"": 0.026677924999999998, ""claude-sonnet-5-5"": 0.8757901}",0
+ban_after24,ai-table-hub-master-polish,Claude-Code-Game-Master,wf_502e2f81-3f0,0.877028,32,1,4,64,2841287,177948,6818,0,"{""claude-sonnet-5-5"": 0.8662695999999999, ""claude-haiku-5-5"": 0.01075829}",0
+ban_after24,ai-table-touch-lab,Claude-Code-Game-Master,wf_0829cbdc-25e,0.821296,20,1,1,40,2545603,109414,3856,0,"{""claude-sonnet-5-5"": 0.8212955999999999}",0
+ban_after24,ai-table-hub-master-finish,Claude-Code-Game-Master,wf_1014d0c6-f57,0.799344,5,1,1,10,475583,275087,1649,0,"{""claude-sonnet-5-5"": 0.7993441}",0
+ban_after24,yama-v6k-argon,MultiCode,wf_9d32ea49-7da,0.599462,9,1,3,18,697418,182929,262,0,"{""claude-sonnet-5-5"": 0.5994621000000001}",0
+ban_after24,wait-argon-gm-slide,Claude-Code-Game-Master,wf_9d3345cf-faf,0.032985,4,1,1,8,81831,248867,2116,0,"{""claude-haiku-5-5"": 0.032985485}",0
+ban_after24,watch-sol-v52-v53,Claude-Code-Game-Master,wf_509712db-e0d,0.019634,2,1,1,4,0,156084,246,0,"{""claude-haiku-5-5"": 0.019633899999999996}",0
+ban_after24,ai-table-ui-qa,Claude-Code-Game-Master,wf_d7e03dec-c8b,0.00983,1,1,1,2,0,77888,188,0,"{""claude-haiku-5-5"": 0.009830199999999999}",0
+ban_after24,ai-table-ui-check,Claude-Code-Game-Master,wf_e12011d9-0cb,0.003165,1,1,1,2,58125,19769,224,0,"{""claude-haiku-5-5"": 0.0031645749999999998}",0
+recent24,polus-feel-1,POLUS,wf_c22d6929-688,110.64676,1373,1,23,2746,280603280,20346115,389095,0,"{""claude-sonnet-5-5"": 110.63435879999992, ""claude-haiku-5-5"": 0.012401335}",0
+recent24,model-bench,MultiCode,wf_74bfbf22-b3f,74.753972,1168,55,109,5992428,111635650,5829172,1177715,483349,"{""claude-haiku-5-5"": 1.1818299300000004, ""claude-sonnet-5-5"": 7.2877427999999975, ""gpt-6.1-sol"": 2.1183388, ""gpt-6-astra"": 52.632974000000004, ""gpt-6.1-terra"": 0.0, ""gpt-6-luna"": 0.0614965, ""gpt-6-sol"": 0.5256704, ""gpt-5.6-sol"": 1.8438416, ""gpt-5.6-terra"": 0.4228972, ""gpt-5.6-luna"": 0.06032272000000001, ""grok-4.7-build"": 3.12915668, ""grok-4.7-build-fast"": 1.67960952, ""grok-4.6-build"": 0.511683, ""grok-4.5-build"": 0.22730496, ""gemini-4-argon"": 0.6055053999999999, ""claude-sonnet-5-5-medium"": 1.4280198000000002, ""gemini-3.8-flash"": 1.037578875, ""gpt-oss-120b-medium"": 0.0}",40
+recent24,yama-v6k-argon,MultiCode,wf_8b5e7d85-ece,51.010024,468,1,3,936,119685285,10219538,152225,0,"{""claude-sonnet-5-5"": 51.010023999999966}",0
+recent24,yama-rework-v6j,MultiCode,wf_befd2c28-47c,30.586041,365,1,5,730,55290979,7228182,145593,0,"{""claude-sonnet-5-5"": 30.58604080000003}",0
+recent24,ai-table-copy-port-pilot,Claude-Code-Game-Master,wf_b36cd614-79d,12.306584,187,1,6,374,34991132,1860412,65658,0,"{""claude-sonnet-5-5"": 12.3065844}",0
+recent24,argon-yama,MultiCode,wf_0ab2e65f-cb7,11.480119,206,5,9,1617483,27890494,1429801,307103,107949,"{""claude-haiku-5-5"": 0.22482428000000007, ""claude-sonnet-5-5"": 6.783144500000001, ""gemini-4-argon"": 4.472149800000001, ""antigravity-unknown"": 0.0}",4
+recent24,argon-blueprint-check,MultiCode,wf_cd854dc7-5aa,10.128411,183,1,4,366,35387896,945940,68525,0,"{""claude-sonnet-5-5"": 10.1284112}",0
+recent24,yama-v6l-check,MultiCode,wf_0abba6c1-747,8.824266,174,1,5,348,27471886,1067617,66015,0,"{""claude-sonnet-5-5"": 8.8242657}",0
+recent24,ai-table-gm-console-slide,Claude-Code-Game-Master,wf_2c0ba777-f9d,7.772511,76,1,2,152,13589023,1727545,73554,0,"{""claude-sonnet-5-5"": 7.7725111}",0
+recent24,yama-v6l-blueprint,MultiCode,wf_6aabd142-c40,7.180743,152,1,3,304,27575935,625395,10146,0,"{""claude-sonnet-5-5"": 7.1807425}",0
+recent24,yama-v6l-theme,MultiCode,wf_57d042cc-7b6,4.566397,77,1,1,154,17373683,259197,44336,0,"{""claude-sonnet-5-5"": 4.5663971000000005}",0
+recent24,ai-table-ui-tickets,Claude-Code-Game-Master,wf_726fdbb8-7e3,4.0913,99,1,5,198,16745096,437195,25043,0,"{""claude-haiku-5-5"": 0.06499215000000001, ""claude-sonnet-5-5"": 4.0263081}",0
+recent24,argon-trial-r2,MultiCode,wf_ef3008e0-441,3.290608,78,5,5,234579,7272786,677227,117952,55105,"{""claude-haiku-5-5"": 0.137596505, ""claude-sonnet-5-5"": 1.5208631999999995, ""gemini-4-argon"": 1.6321480999999995}",0
+recent24,ai-table-human-gm-research,Claude-Code-Game-Master,wf_4721ed57-2f1,3.138462,65,1,4,130,8543411,487416,21098,0,"{""claude-sonnet-5-5"": 3.1384622}",0
+recent24,ai-table-ui-qa,Claude-Code-Game-Master,wf_02f84c4b-902,2.613967,57,1,2,114,5747265,1129363,17582,0,"{""claude-haiku-5-5"": 0.104757875, ""claude-sonnet-5-5"": 2.509209400000001}",0
+recent24,ai-table-ui-qa,Claude-Code-Game-Master,wf_5221dad2-b8a,2.126661,45,1,2,90,3992990,809131,9553,0,"{""claude-haiku-5-5"": 0.04160393, ""claude-sonnet-5-5"": 2.0850569}",0
+recent24,argon-trial,MultiCode,wf_bd112252-de6,1.932402,30,1,10,60,2430344,728476,11868,0,"{""claude-sonnet-5-5"": 1.9064203000000002, ""claude-haiku-5-5"": 0.025981925000000003}",0
+recent24,ai-table-human-gm-qa,Claude-Code-Game-Master,wf_7f4c535c-a29,1.884783,46,1,3,92,4260326,728792,4591,0,"{""claude-sonnet-5-5"": 1.8251585000000004, ""claude-haiku-5-5"": 0.059624474999999996}",0
+recent24,ai-table-human-gm-qa,Claude-Code-Game-Master,wf_b6f4bc00-bf1,1.378469,39,1,2,78,4050004,401549,8663,0,"{""claude-sonnet-5-5"": 1.3509857, ""claude-haiku-5-5"": 0.02748368}",0
+recent24,ai-table-ui-qa,Claude-Code-Game-Master,wf_e3f3b266-667,1.254896,37,1,2,74,3649393,303222,9984,0,"{""claude-haiku-5-5"": 0.017527685, ""claude-sonnet-5-5"": 1.2373679}",0
+recent24,argon-trial-r2,MultiCode,wf_5a946f7e-b97,0.902468,21,1,5,42,2351898,306558,17249,0,"{""claude-haiku-5-5"": 0.026677924999999998, ""claude-sonnet-5-5"": 0.8757901}",0
+recent24,ai-table-touch-lab,Claude-Code-Game-Master,wf_0829cbdc-25e,0.821296,20,1,1,40,2545603,109414,3856,0,"{""claude-sonnet-5-5"": 0.8212955999999999}",0
+recent24,yama-v6k-argon,MultiCode,wf_9d32ea49-7da,0.599462,9,1,3,18,697418,182929,262,0,"{""claude-sonnet-5-5"": 0.5994621000000001}",0
+recent24,wait-argon-gm-slide,Claude-Code-Game-Master,wf_9d3345cf-faf,0.032985,4,1,1,8,81831,248867,2116,0,"{""claude-haiku-5-5"": 0.032985485}",0
+recent24,ai-table-ui-qa,Claude-Code-Game-Master,wf_d7e03dec-c8b,0.00983,1,1,1,2,0,77888,188,0,"{""claude-haiku-5-5"": 0.009830199999999999}",0
+recent24,ai-table-ui-check,Claude-Code-Game-Master,wf_e12011d9-0cb,0.003165,1,1,1,2,58125,19769,224,0,"{""claude-haiku-5-5"": 0.0031645749999999998}",0
+previous24,polus-matter-w2,POLUS,wf_bcd402d2-7da,95.751319,1020,2,12,319248,257666883,9675561,459995,102068,"{""claude-opus-5-5"": 63.35896739999997, ""claude-sonnet-5-5"": 18.837311600000003, ""claude-haiku-5-5"": 0.069865275, ""gpt-6.1-sol"": 13.485174599999999}",0
+previous24,yama-v6i-resume,MultiCode,wf_8313c9b5-e11,85.454694,485,1,11,970,61570102,14530079,141550,0,"{""claude-sonnet-5-5"": 3.957316800000001, ""claude-opus-5-5"": 81.49737760000004}",0
+previous24,yama-rework-v6j,MultiCode,wf_dd67c946-7c1,69.391751,616,1,3,1232,251089412,6285086,345869,0,"{""claude-sonnet-5-5"": 69.39175139999999}",0
+previous24,yama-ch2-v4,MultiCode,wf_d972a796-667,68.966213,195,1,1,390,67277739,10772165,82414,0,"{""claude-opus-5-5"": 68.96621280000002}",0
+previous24,table-concept-build,Claude-Code-Game-Master,wf_63219980-29f,68.218314,1042,1,20,2084,202489616,4063783,369657,0,"{""claude-opus-5-5"": 68.21831420000007}",0
+previous24,speed-everything,MultiCode,wf_cad7b72d-1e3,64.882653,407,1,8,814,68789650,10518548,129392,0,"{""claude-opus-5-5"": 58.91029680000002, ""claude-sonnet-5-5"": 5.9723561999999975}",0
+previous24,polus-matter-w1,POLUS,wf_1f2cd6c5-d77,58.787994,313,1,3,626,58447474,9068707,87623,0,"{""claude-opus-5-5"": 58.78799379999995}",0
+previous24,yama-ch3-v4,MultiCode,wf_209c8714-1e6,55.292273,191,1,1,382,57201302,8357029,103267,0,"{""claude-opus-5-5"": 55.292273400000006}",0
+previous24,yama-fastbot,MultiCode,wf_9a576a46-819,44.43444,143,1,3,286,27439192,7733908,47393,0,"{""claude-sonnet-5-5"": 1.2715741, ""claude-opus-5-5"": 43.16286579999999}",0
+previous24,polus-feel-1,POLUS,wf_c22d6929-688,42.807466,718,1,19,1436,124736722,5776040,341715,0,"{""claude-sonnet-5-5"": 42.80746639999998}",0
+previous24,yama-gold,MultiCode,wf_c36ec26e-30d,35.796668,213,1,3,426,44875822,5085547,79165,0,"{""claude-opus-5-5"": 35.515036, ""claude-sonnet-5-5"": 0.2816324}",0
+previous24,table-concept-next,Claude-Code-Game-Master,wf_8893c540-a41,27.126664,394,1,10,788,62949026,2706070,105168,0,"{""claude-opus-5-5"": 24.464253799999987, ""claude-sonnet-5-5"": 2.6624103999999997}",0
+previous24,ai-table-hub-master,Claude-Code-Game-Master,wf_e9f2f4cf-a5b,25.190843,194,1,7,388,34267046,3518766,80636,0,"{""claude-opus-5-5"": 23.8162564, ""claude-sonnet-5-5"": 1.3745863}",0
+previous24,codex-smooth,Orchestra (ops),wf_45ee0214-165,18.239769,225,1,5,450,35452350,1943093,105866,0,"{""claude-sonnet-5-5"": 1.4349283, ""claude-opus-5-5"": 16.8048412}",0
+previous24,yama-rework-v6j,MultiCode,wf_07658ec7-8af,17.201797,245,1,4,490,38617833,3563168,56933,0,"{""claude-sonnet-5-5"": 17.20179659999999}",0
+previous24,orchestra-to-multicode-r2,MultiCode,wf_5be2c634-09b,17.125318,273,1,14,546,34610487,2171312,197249,0,"{""claude-sonnet-5-5"": 8.996081300000005, ""claude-opus-5-5"": 8.1292366}",0
+previous24,yama-rework-v6j,MultiCode,wf_1ac0dc3a-35d,15.560638,217,1,2,434,43319850,2426612,82927,0,"{""claude-sonnet-5-5"": 15.560637999999994}",0
+previous24,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_93489d2b-54c,12.625692,180,1,4,360,29066708,2502972,55420,0,"{""claude-sonnet-5-5"": 12.625691600000007}",0
+previous24,codex-calm,Orchestra (ops),wf_9618f497-02f,12.094696,229,1,5,458,35954542,760498,76992,0,"{""claude-opus-5-5"": 11.145378000000003, ""claude-sonnet-5-5"": 0.9493179000000002}",0
+previous24,yama-feedback-v6h,MultiCode,wf_3ba08226-7d1,11.368964,203,1,6,406,29401827,1638535,109516,0,"{""claude-sonnet-5-5"": 10.4505302, ""claude-opus-5-5"": 0.9184342000000001}",0
+previous24,orchestra-disk-health,Orchestra (ops),wf_5fc51e8b-cef,10.829108,281,1,14,562,29606445,1015090,125570,0,"{""claude-opus-5-5"": 3.8764063999999996, ""claude-sonnet-5-5"": 6.952701600000001}",0
+previous24,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_29f845f4-edb,10.616384,185,2,3,262858,42529281,424167,161049,112864,"{""claude-haiku-5-5"": 0.016067940000000003, ""gpt-6.1-sol"": 9.0525288, ""claude-sonnet-5-5"": 1.5477873}",0
+previous24,idle-design-skills,MultiCode,wf_2d2c0c43-efe,9.930738,156,1,7,312,26784400,1056656,39028,0,"{""claude-sonnet-5-5"": 3.1251625999999995, ""claude-opus-5-5"": 6.8055753999999995}",0
+previous24,yama-rework-v6j,MultiCode,wf_35a77d7c-5fc,7.581978,168,1,4,336,25605590,884023,25013,0,"{""claude-sonnet-5-5"": 7.581977500000003}",0
+previous24,table-concept-finish,Claude-Code-Game-Master,wf_f2afe87c-2a5,6.275298,126,1,1,252,26364756,242997,39435,0,"{""claude-sonnet-5-5"": 6.275297699999999}",0
+previous24,ad-skills-install,MultiCode,wf_cfbb891f-74c,5.572516,82,1,5,164,10810371,785948,33390,0,"{""claude-opus-5-5"": 3.6033826, ""claude-sonnet-5-5"": 1.9691330999999996}",0
+previous24,ua-tutorials-study,MultiCode,wf_026e1dfc-312,5.247166,104,1,7,208,11371385,882299,28967,0,"{""claude-sonnet-5-5"": 3.375238300000001, ""claude-opus-5-5"": 1.8719282}",0
+previous24,codex-memory,Orchestra (ops),wf_fe722de9-a78,5.082075,87,1,5,174,8977437,719129,45204,0,"{""claude-opus-5-5"": 2.7012426, ""claude-sonnet-5-5"": 2.380832300000001}",0
+previous24,workflow-dashboard,MultiCode,wf_adee72c8-09c,4.512669,86,1,2,172,13757669,330768,25170,0,"{""claude-sonnet-5-5"": 0.6949752, ""claude-opus-5-5"": 3.8176935999999992}",0
+previous24,video-workflows-explainer,MultiCode,wf_950cdd3a-01c,4.386055,59,1,2,118,6908418,740072,27760,0,"{""claude-opus-5-5"": 2.7433916, ""claude-sonnet-5-5"": 1.6426630000000002}",0
+previous24,content-factory-research,MultiCode,wf_e4f8aade-331,4.212717,70,1,9,140,7100844,684681,41820,0,"{""claude-sonnet-5-5"": 2.2803152000000004, ""claude-opus-5-5"": 1.9324016}",0
+previous24,table-redesign-research,Claude-Code-Game-Master,wf_fef47818-64a,3.831884,69,1,9,138,6187562,772061,23834,0,"{""claude-sonnet-5-5"": 2.8852877999999995, ""claude-opus-5-5"": 0.9465966000000001}",0
+previous24,codex-slow,Orchestra (ops),wf_00451c77-f77,3.728725,74,1,5,148,7314575,467948,34741,0,"{""claude-opus-5-5"": 2.118437, ""claude-sonnet-5-5"": 1.6102879999999997}",0
+previous24,tg-voice-orchestra,MultiCode,wf_1bc3d5be-20b,3.657051,77,1,7,154,7873271,500563,32292,0,"{""claude-sonnet-5-5"": 1.8410236, ""claude-opus-5-5"": 1.8160275999999997}",0
+previous24,study-ai-table,Claude-Code-Game-Master,wf_865e649e-228,3.083027,62,1,7,124,5462071,513826,40472,0,"{""claude-sonnet-5-5"": 2.4355734999999994, ""claude-opus-5-5"": 0.6474532}",0
+previous24,disk-guard-review,Orchestra (ops),wf_d7a1355c-d76,3.056612,50,1,4,100,4908410,344814,44737,0,"{""claude-opus-5-5"": 2.143628, ""claude-sonnet-5-5"": 0.912984}",0
+previous24,ai-table-hub-master-deploy,Claude-Code-Game-Master,wf_f19658c5-649,2.758106,79,1,4,158,7440002,428248,19917,0,"{""claude-sonnet-5-5"": 2.7581063999999995}",0
+previous24,ai-table-ui-v52-v53-r3,Claude-Code-Game-Master,wf_8d5d87fd-2b0,2.525438,54,1,3,108,6228085,397050,28698,0,"{""claude-sonnet-5-5"": 2.525438}",0
+previous24,ai-table-hub-master-finish,Claude-Code-Game-Master,wf_1014d0c6-f57,2.26451,44,1,2,88,4839444,451918,16665,0,"{""claude-sonnet-5-5"": 2.2645097999999995}",0
+previous24,yama-rework-v6j,MultiCode,wf_5f18617f-960,2.131065,48,1,3,96,5782452,324633,16280,0,"{""claude-sonnet-5-5"": 2.1310648999999997}",0
+previous24,rules-apply-and-capabilities,MultiCode,wf_e380f10f-c08,2.108683,40,1,3,80,4549175,226812,10659,0,"{""claude-opus-5-5"": 1.8508056, ""claude-sonnet-5-5"": 0.2578779}",0
+previous24,dashboard-full-texts,MultiCode,wf_2ea972f8-eb8,1.937418,42,1,1,84,5816149,256504,13276,0,"{""claude-sonnet-5-5"": 1.9374177999999997}",0
+previous24,ad-creative-skills,MultiCode,wf_5c45a145-e20,1.773933,28,1,5,56,2307201,346673,16799,0,"{""claude-sonnet-5-5"": 1.1569464, ""claude-opus-5-5"": 0.6169868000000001}",0
+previous24,gplay-publish-skill,MultiCode,wf_aa2c4ab8-d4e,1.758109,34,1,2,68,4176123,208872,7458,0,"{""claude-opus-5-5"": 1.3779688000000005, ""claude-sonnet-5-5"": 0.3801398}",0
+previous24,table-concept-finish,Claude-Code-Game-Master,wf_ae51009c-b25,1.56799,48,1,1,96,5442541,144132,11896,0,"{""claude-sonnet-5-5"": 1.5679902}",0
+previous24,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_699eaf3a-1c4,1.377225,33,1,1,66,4408275,130103,17018,0,"{""claude-sonnet-5-5"": 1.3772245}",0
+previous24,rules-to-global,MultiCode,wf_49e3312a-00d,1.342931,23,1,3,46,2232802,207489,16956,0,"{""claude-sonnet-5-5"": 0.8029199999999999, ""claude-opus-5-5"": 0.5400114000000001}",0
+previous24,heavy-relax-hook,MultiCode,wf_1023b60c-d83,0.911888,18,1,2,36,1601822,145480,6920,0,"{""claude-sonnet-5-5"": 0.3459958, ""claude-opus-5-5"": 0.5658926000000001}",0
+previous24,caption-ai-table-shots,Claude-Code-Game-Master,wf_edfe5929-ca6,0.880045,12,1,6,24,732896,241891,12869,0,"{""claude-sonnet-5-5"": 0.8800447}",0
+previous24,ai-table-hub-master-polish,Claude-Code-Game-Master,wf_502e2f81-3f0,0.877028,32,1,4,64,2841287,177948,6818,0,"{""claude-sonnet-5-5"": 0.8662695999999999, ""claude-haiku-5-5"": 0.01075829}",0
+previous24,ai-table-hub-master-finish,Claude-Code-Game-Master,wf_10cdf7f9-a13,0.68489,18,1,1,36,1679727,109989,7390,0,"{""claude-sonnet-5-5"": 0.6848899}",0
+previous24,workflow-dashboard,MultiCode,wf_e5adb86d-259,0.426419,9,1,1,18,805412,44629,2106,0,"{""claude-opus-5-5"": 0.4264194}",0
+previous24,tg-video-transcribe,MultiCode,wf_fdeffd65-7f9,0.27643,8,1,1,16,692853,43663,2867,0,"{""claude-sonnet-5-5"": 0.2764301}",0
+previous24,ext-worker-test,MultiCode,wf_d1224678-ed1,0.035416,5,2,2,26896,225053,108884,1280,209,"{""claude-haiku-5-5"": 0.01637241, ""grok-4.7-build"": 0.0190434}",0
+previous24,watch-sol-v52-v53,Claude-Code-Game-Master,wf_509712db-e0d,0.019634,2,1,1,4,0,156084,246,0,"{""claude-haiku-5-5"": 0.019633899999999996}",0
+since_ban,polus-feel-1,POLUS,wf_c22d6929-688,153.454227,2091,1,42,4182,405340002,26122155,730810,0,"{""claude-sonnet-5-5"": 153.4418252000002, ""claude-haiku-5-5"": 0.012401335}",0
+since_ban,model-bench,MultiCode,wf_74bfbf22-b3f,74.753972,1168,55,109,5992428,111635650,5829172,1177715,483349,"{""claude-haiku-5-5"": 1.1818299300000004, ""claude-sonnet-5-5"": 7.2877427999999975, ""gpt-6.1-sol"": 2.1183388, ""gpt-6-astra"": 52.632974000000004, ""gpt-6.1-terra"": 0.0, ""gpt-6-luna"": 0.0614965, ""gpt-6-sol"": 0.5256704, ""gpt-5.6-sol"": 1.8438416, ""gpt-5.6-terra"": 0.4228972, ""gpt-5.6-luna"": 0.06032272000000001, ""grok-4.7-build"": 3.12915668, ""grok-4.7-build-fast"": 1.67960952, ""grok-4.6-build"": 0.511683, ""grok-4.5-build"": 0.22730496, ""gemini-4-argon"": 0.6055053999999999, ""claude-sonnet-5-5-medium"": 1.4280198000000002, ""gemini-3.8-flash"": 1.037578875, ""gpt-oss-120b-medium"": 0.0}",40
+since_ban,yama-rework-v6j,MultiCode,wf_dd67c946-7c1,65.544826,533,1,3,1066,238691835,5884475,309314,0,"{""claude-sonnet-5-5"": 65.5448265}",0
+since_ban,yama-v6k-argon,MultiCode,wf_8b5e7d85-ece,51.010024,468,1,3,936,119685285,10219538,152225,0,"{""claude-sonnet-5-5"": 51.010023999999966}",0
+since_ban,yama-rework-v6j,MultiCode,wf_befd2c28-47c,30.586041,365,1,5,730,55290979,7228182,145593,0,"{""claude-sonnet-5-5"": 30.58604080000003}",0
+since_ban,polus-matter-w2,POLUS,wf_bcd402d2-7da,19.043442,256,2,4,94934,60269946,2485786,142222,88727,"{""claude-haiku-5-5"": 0.054877249999999995, ""gpt-6.1-sol"": 11.560466199999999, ""claude-sonnet-5-5"": 7.428098399999998}",0
+since_ban,yama-rework-v6j,MultiCode,wf_07658ec7-8af,17.201797,245,1,4,490,38617833,3563168,56933,0,"{""claude-sonnet-5-5"": 17.20179659999999}",0
+since_ban,yama-rework-v6j,MultiCode,wf_1ac0dc3a-35d,15.560638,217,1,2,434,43319850,2426612,82927,0,"{""claude-sonnet-5-5"": 15.560637999999994}",0
+since_ban,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_93489d2b-54c,12.625692,180,1,4,360,29066708,2502972,55420,0,"{""claude-sonnet-5-5"": 12.625691600000007}",0
+since_ban,ai-table-copy-port-pilot,Claude-Code-Game-Master,wf_b36cd614-79d,12.306584,187,1,6,374,34991132,1860412,65658,0,"{""claude-sonnet-5-5"": 12.3065844}",0
+since_ban,argon-yama,MultiCode,wf_0ab2e65f-cb7,11.480119,206,5,9,1617483,27890494,1429801,307103,107949,"{""claude-haiku-5-5"": 0.22482428000000007, ""claude-sonnet-5-5"": 6.783144500000001, ""gemini-4-argon"": 4.472149800000001, ""antigravity-unknown"": 0.0}",4
+since_ban,argon-blueprint-check,MultiCode,wf_cd854dc7-5aa,10.128411,183,1,4,366,35387896,945940,68525,0,"{""claude-sonnet-5-5"": 10.1284112}",0
+since_ban,ai-table-ui-v52-v53,Claude-Code-Game-Master,wf_29f845f4-edb,9.411817,141,2,2,116345,36942009,345887,126037,95866,"{""claude-haiku-5-5"": 0.005497739999999999, ""gpt-6.1-sol"": 7.8585316, ""claude-sonnet-5-5"": 1.5477873}",0
+since_ban,yama-v6l-check,MultiCode,wf_0abba6c1-747,8.824266,174,1,5,348,27471886,1067617,66015,0,"{""claude-sonnet-5-5"": 8.8242657}",0
+since_ban,ai-table-gm-console-slide,Claude-Code-Game-Master,wf_2c0ba777-f9d,7.772511,76,1,2,152,13589023,1727545,73554,0,"{""claude-sonnet-5-5"": 7.7725111}",0
+since_ban,yama-rework-v6j,MultiCode,wf_35a77d7c-5fc,7.581978,168,1,4,336,25605590,884023,25013,0,"{""claude-sonnet-5-5"": 7.581977500000003}",0
+since_ban,yama-v6l-blueprint,MultiCode,wf_6aabd142-c40,7.180743,152,1,3,304,27575935,625395,10146,0,"{""claude-sonnet-5-5"": 7.1807425}",0
+since_ban,yama-v6l-theme,MultiCode,wf_57d042cc-7b6,4.566397,77,1,1,154,17373683,259197,44336,0,"{""claude-sonnet-5-5"": 4.5663971000000005}",0
+since_ban,ai-table-ui-tickets,Claude-Code-Game-Master,wf_726fdbb8-7e3,4.0913,99,1,5,198,16745096,437195,25043,0,"{""claude-haiku-5-5"": 0.06499215000000001, ""claude-sonnet-5-5"": 4.0263081}",0
+since_ban,table-concept-finish,Claude-Code-Game-Master,wf_f2afe87c-2a5,3.754806,65,1,1,130,16865081,77272,18835,0,"{""claude-sonnet-5-5"": 3.7548062000000004}",0
+since_ban,argon-trial-r2,MultiCode,wf_ef3008e0-441,3.290608,78,5,5,234579,7272786,677227,117952,55105,"{""claude-haiku-5-5"": 0.137596505, ""claude-sonnet-5-5"": 1.5208631999999995, ""gemini-4-argon"": 1.6321480999999995}",0
+since_ban,ai-table-human-gm-research,Claude-Code-Game-Master,wf_4721ed57-2f1,3.138462,65,1,4,130,8543411,487416,21098,0,"{""claude-sonnet-5-5"": 3.1384622}",0
+since_ban,ai-table-hub-master-deploy,Claude-Code-Game-Master,wf_f19658c5-649,2.758106,79,1,4,158,7440002,428248,19917,0,"{""claude-sonnet-5-5"": 2.7581063999999995}",0
+since_ban,ai-table-ui-qa,Claude-Code-Game-Master,wf_02f84c4b-902,2.613967,57,1,2,114,5747265,1129363,17582,0,"{""claude-haiku-5-5"": 0.104757875, ""claude-sonnet-5-5"": 2.509209400000001}",0
+since_ban,ai-table-ui-v52-v53-r3,Claude-Code-Game-Master,wf_8d5d87fd-2b0,2.525438,54,1,3,108,6228085,397050,28698,0,"{""claude-sonnet-5-5"": 2.525438}",0
+since_ban,ai-table-ui-qa,Claude-Code-Game-Master,wf_5221dad2-b8a,2.126661,45,1,2,90,3992990,809131,9553,0,"{""claude-haiku-5-5"": 0.04160393, ""claude-sonnet-5-5"": 2.0850569}",0
+since_ban,argon-trial,MultiCode,wf_bd112252-de6,1.932402,30,1,10,60,2430344,728476,11868,0,"{""claude-sonnet-5-5"": 1.9064203000000002, ""claude-haiku-5-5"": 0.025981925000000003}",0
+since_ban,ai-table-human-gm-qa,Claude-Code-Game-Master,wf_7f4c535c-a29,1.884783,46,1,3,92,4260326,728792,4591,0,"{""claude-sonnet-5-5"": 1.8251585000000004, ""claude-haiku-5-5"": 0.059624474999999996}",0
+since_ban,table-concept-finish,Claude-Code-Game-Master,wf_ae51009c-b25,1.56799,48,1,1,96,5442541,144132,11896,0,"{""claude-sonnet-5-5"": 1.5679902}",0
+since_ban,ai-table-human-gm-qa,Claude-Code-Game-Master,wf_b6f4bc00-bf1,1.378469,39,1,2,78,4050004,401549,8663,0,"{""claude-sonnet-5-5"": 1.3509857, ""claude-haiku-5-5"": 0.02748368}",0
+since_ban,ai-table-ui-qa,Claude-Code-Game-Master,wf_e3f3b266-667,1.254896,37,1,2,74,3649393,303222,9984,0,"{""claude-haiku-5-5"": 0.017527685, ""claude-sonnet-5-5"": 1.2373679}",0
+since_ban,argon-trial-r2,MultiCode,wf_5a946f7e-b97,0.902468,21,1,5,42,2351898,306558,17249,0,"{""claude-haiku-5-5"": 0.026677924999999998, ""claude-sonnet-5-5"": 0.8757901}",0
+since_ban,ai-table-hub-master-polish,Claude-Code-Game-Master,wf_502e2f81-3f0,0.877028,32,1,4,64,2841287,177948,6818,0,"{""claude-sonnet-5-5"": 0.8662695999999999, ""claude-haiku-5-5"": 0.01075829}",0
+since_ban,ai-table-touch-lab,Claude-Code-Game-Master,wf_0829cbdc-25e,0.821296,20,1,1,40,2545603,109414,3856,0,"{""claude-sonnet-5-5"": 0.8212955999999999}",0
+since_ban,ai-table-hub-master-finish,Claude-Code-Game-Master,wf_1014d0c6-f57,0.799344,5,1,1,10,475583,275087,1649,0,"{""claude-sonnet-5-5"": 0.7993441}",0
+since_ban,yama-v6k-argon,MultiCode,wf_9d32ea49-7da,0.599462,9,1,3,18,697418,182929,262,0,"{""claude-sonnet-5-5"": 0.5994621000000001}",0
+since_ban,wait-argon-gm-slide,Claude-Code-Game-Master,wf_9d3345cf-faf,0.032985,4,1,1,8,81831,248867,2116,0,"{""claude-haiku-5-5"": 0.032985485}",0
+since_ban,watch-sol-v52-v53,Claude-Code-Game-Master,wf_509712db-e0d,0.019634,2,1,1,4,0,156084,246,0,"{""claude-haiku-5-5"": 0.019633899999999996}",0
+since_ban,ai-table-ui-qa,Claude-Code-Game-Master,wf_d7e03dec-c8b,0.00983,1,1,1,2,0,77888,188,0,"{""claude-haiku-5-5"": 0.009830199999999999}",0
+since_ban,ai-table-ui-check,Claude-Code-Game-Master,wf_e12011d9-0cb,0.003165,1,1,1,2,58125,19769,224,0,"{""claude-haiku-5-5"": 0.0031645749999999998}",0
