@@ -82,7 +82,7 @@ composer.addPass(new ShaderPass({
       if (any(isnan(c)) || any(isinf(c))) c = vec4(0.0, 0.0, 0.0, 1.0);
       gl_FragColor = vec4(min(c.rgb, vec3(48.0)), c.a); }`,
 }));
-const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.6, 0.55, 0.92);
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.45, 0.35, 1.05);
 composer.addPass(bloom);
 composer.addPass(new OutputPass());
 const smaa = new SMAAPass(innerWidth * renderer.getPixelRatio(), innerHeight * renderer.getPixelRatio());
@@ -98,6 +98,20 @@ function loadHDR(key, url) {
     res();
   }, undefined, () => res()));
 }
+
+// ночной фон — тёмный градиент: у HDRI ночи светлый горизонт и луна, в окнах это давало молочную дымку
+function nightSky() {
+  const c = document.createElement('canvas');
+  c.width = 4; c.height = 256;
+  const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 0, 256);
+  gr.addColorStop(0, '#02040a'); gr.addColorStop(0.47, '#0b1424'); gr.addColorStop(0.5, '#121a2a'); gr.addColorStop(1, '#050608');
+  g.fillStyle = gr; g.fillRect(0, 0, 4, 256);
+  const t = new THREE.CanvasTexture(c);
+  t.mapping = THREE.EquirectangularReflectionMapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+const nightBg = nightSky();
 
 // ---------------------------------------------------------------- материалы
 const GLASS = /^(glass|glass_rail|glass_smoke|g_glass_tint|g_acrylic)/;
@@ -126,7 +140,7 @@ const allMats = new Set();
 const PLANT_MAT = /(leaves|leaf_|bark|trunk|branches|fern|grass_ornamental|palm|rachis|stem_green|island_tree|searsia|pachira|strelitzia)/;
 const NO_COLLIDE = /^(CEIL_|WIN_glass|WIN_leaves|WIN_handles|DOOR_leaves|DOOR_handles|KIT_handles|WARD_handles|INT_switches|EXT_soffit|EXT_wall_lights|SITE_carport_dl|SITE_road|SITE_neighbor|SITE_pool_lamps|SITE_wall_lamps|SITE_step_led|BATH_led|STAIR_led|MAJ_led|WARD_led|TV_console_led|BR2_arch_led|MB_pendants|ROOF_slab|EXT_coping)/;
 // излучение: [день, ночь] — абсолютная яркость в просмотрщике
-const EM = { screen: [1.0, 1.35], neon: [2.2, 5.5], led: [1.1, 3.2], dl: [1.4, 6.5], pool: [0.4, 4.5] };
+const EM = { screen: [1.0, 1.35], neon: [2.2, 5.0], led: [1.1, 3.0], dl: [1.4, 4.0], pool: [0.4, 4.0] };
 function emCat(m) {
   const n = m.name || '';
   if (m.emissiveMap) return 'screen';
@@ -195,13 +209,15 @@ function setupNightLights(rooms) {
     const [x0, y0, x1, y1] = r.rect, w = x1 - x0, d = y1 - y0, area = w * d;
     if (area < 9 && !/bath/.test(r.code)) return;
     if (isMobile && area < 20) return;
-    const z = r.level === 'GF' ? (r.code === 'family' ? 5.2 : 3.35) : 7.05;
-    const cd = 4 + area * 0.12, dist = Math.max(w, d) * 0.9 + 3;
+    // на высоте 2 м над полом: у потолка точечный свет даёт пересвеченное пятно
+    const z = r.level === 'GF' ? (r.code === 'family' ? 3.6 : 2.6) : 6.5;
+    // яркость: пол ~1, потолок над лампой ниже порога свечения (иначе засвет и дымка)
+    const cd = 2.5 + area * 0.05, dist = Math.max(w, d) * 0.9 + 3;
     const n = Math.max(w, d) > 8.5 && !isMobile ? 2 : 1;
     for (let i = 0; i < n; i++) {
       const t = n === 1 ? 0.5 : (i ? 0.72 : 0.28);
       const cx = w >= d ? x0 + w * t : (x0 + x1) / 2, cy = w >= d ? (y0 + y1) / 2 : y0 + d * t;
-      addLight(nightLights, cx, cy, z, warm, cd / n * 1.25, dist);
+      addLight(nightLights, cx, cy, z, warm, cd / n, dist);
     }
   });
   // бассейн, фасады, сад
@@ -211,7 +227,7 @@ function setupNightLights(rooms) {
   // неон геймерского варианта
   [[6.55, -3.6, 6.7, 0x00e5ff, 14], [22.6, 5.4, 2.0, 0xff2bd6, 10], [18.6, 5.5, 2.4, 0xb44cff, 8], [14.9, 2.0, 2.6, 0xff2bd6, 7],
    [10.9, 1.8, 5.6, 0x8a2be2, 7], [2.5, 9.8, 5.4, 0x00e5ff, 6], [5.2, -0.15, 0.9, 0x00e5ff, 6], [22.0, 2.9, 4.7, 0x8a2be2, 5]]
-    .slice(0, isMobile ? 3 : 8).forEach(([x, y, z, c, cd]) => addLight(gamingLights, x, y, z, c, cd, 7));
+    .slice(0, isMobile ? 3 : 8).forEach(([x, y, z, c, cd]) => addLight(gamingLights, x, y, z, c, cd * 0.7, 7));
 }
 
 // ---------------------------------------------------------------- загрузка
@@ -256,16 +272,16 @@ function apply() {
   gamingLights.visible = night && gaming.visible;
   nightLights.visible = night;
   const E = night ? env.night : env.day;
-  if (E) { scene.environment = E.env; scene.background = E.bg; }
+  if (E) { scene.environment = E.env; scene.background = night ? nightBg : E.bg; }
   scene.environmentIntensity = night ? 0.035 : 1.0;
-  scene.backgroundIntensity = night ? 0.35 : 1.0;
+  scene.backgroundIntensity = 1.0;
   sun.visible = !night;
   hemi.intensity = night ? 0.04 : 0.3;
-  renderer.toneMappingExposure = night ? 1.1 : 1.0;
+  renderer.toneMappingExposure = night ? 1.35 : 1.0;
   emissives.forEach((m) => { m.emissiveIntensity = EM[m.userData.cat][night ? 1 : 0]; });
   bloom.enabled = night;
-  bloom.strength = 0.7;
-  bloom.threshold = 0.85;
+  bloom.strength = 0.45;
+  bloom.threshold = 1.05;
   // срез этажа: локальные плоскости — срезаются и тени; стены двусторонние, чтобы срез выглядел сплошным
   const on = state.cut !== 'all';
   cutPlane.constant = state.cut === 'gf' ? 3.80 : 7.45;
@@ -496,6 +512,7 @@ const api = {
     apply();
     return api.frames;
   },
+  show(re, vis) { let n = 0; scene.traverse((o) => { if (o.isMesh && new RegExp(re).test(o.name)) { o.visible = vis; n++; } }); return n; },
   info() { return { calls: renderer.info.render.calls, tris: renderer.info.render.triangles, geoms: renderer.info.memory.geometries, tex: renderer.info.memory.textures, colliders: colliders.length }; },
 };
 window.__villa = api;
