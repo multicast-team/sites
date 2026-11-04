@@ -1,0 +1,346 @@
+[
+ {
+  "file": "ext_front_empty_day.webp",
+  "title": "Уличный фасад · без мебели · день",
+  "cam": "ext_front",
+  "variant": "empty",
+  "time": "day",
+  "kb": 68
+ },
+ {
+  "file": "ext_front_ne_empty_day.webp",
+  "title": "Уличный фасад с северо-востока · без мебели · день",
+  "cam": "ext_front_ne",
+  "variant": "empty",
+  "time": "day",
+  "kb": 78
+ },
+ {
+  "file": "ext_rear_pool_empty_day.webp",
+  "title": "Садовый фасад и бассейн · без мебели · день",
+  "cam": "ext_rear_pool",
+  "variant": "empty",
+  "time": "day",
+  "kb": 59
+ },
+ {
+  "file": "ext_rear_corner_empty_day.webp",
+  "title": "Бассейн и терраса · без мебели · день",
+  "cam": "ext_rear_corner",
+  "variant": "empty",
+  "time": "day",
+  "kb": 74
+ },
+ {
+  "file": "ext_rear_lawn_empty_day.webp",
+  "title": "Сад и газон · без мебели · день",
+  "cam": "ext_rear_lawn",
+  "variant": "empty",
+  "time": "day",
+  "kb": 153
+ },
+ {
+  "file": "ext_garden_empty_day.webp",
+  "title": "Сад вдоль крыла · без мебели · день",
+  "cam": "ext_garden",
+  "variant": "empty",
+  "time": "day",
+  "kb": 128
+ },
+ {
+  "file": "aerial_se_empty_day.webp",
+  "title": "Вид сверху · без мебели · день",
+  "cam": "aerial_se",
+  "variant": "empty",
+  "time": "day",
+  "kb": 108
+ },
+ {
+  "file": "int_family_empty_day.webp",
+  "title": "Двусветная гостиная · без мебели · день",
+  "cam": "int_family",
+  "variant": "empty",
+  "time": "day",
+  "kb": 49
+ },
+ {
+  "file": "int_family_glass_empty_day.webp",
+  "title": "Гостиная и витраж 7 м · без мебели · день",
+  "cam": "int_family_glass",
+  "variant": "empty",
+  "time": "day",
+  "kb": 51
+ },
+ {
+  "file": "int_family_dining_empty_day.webp",
+  "title": "Гостиная и столовая · без мебели · день",
+  "cam": "int_family_dining",
+  "variant": "empty",
+  "time": "day",
+  "kb": 31
+ },
+ {
+  "file": "int_foyer_empty_day.webp",
+  "title": "Входной холл · без мебели · день",
+  "cam": "int_foyer",
+  "variant": "empty",
+  "time": "day",
+  "kb": 44
+ },
+ {
+  "file": "int_stair_empty_day.webp",
+  "title": "Лестница и клумба · без мебели · день",
+  "cam": "int_stair",
+  "variant": "empty",
+  "time": "day",
+  "kb": 50
+ },
+ {
+  "file": "int_majlis_empty_day.webp",
+  "title": "Маджлис · без мебели · день",
+  "cam": "int_majlis",
+  "variant": "empty",
+  "time": "day",
+  "kb": 49
+ },
+ {
+  "file": "int_kitchen_empty_day.webp",
+  "title": "Кухня · без мебели · день",
+  "cam": "int_kitchen",
+  "variant": "empty",
+  "time": "day",
+  "kb": 29
+ },
+ {
+  "file": "int_master_empty_day.webp",
+  "title": "Главная спальня · без мебели · день",
+  "cam": "int_master",
+  "variant": "empty",
+  "time": "day",
+  "kb": 46
+ },
+ {
+  "file": "int_mbath_empty_day.webp",
+  "title": "Главная ванная · без мебели · день",
+  "cam": "int_mbath",
+  "variant": "empty",
+  "time": "day",
+  "kb": 45
+ },
+ {
+  "file": "int_br2_empty_day.webp",
+  "title": "Спальня 2 · без мебели · день",
+  "cam": "int_br2",
+  "variant": "empty",
+  "time": "day",
+  "kb": 37
+ },
+ {
+  "file": "int_gallery_empty_day.webp",
+  "title": "Галерея 2 этажа · без мебели · день",
+  "cam": "int_gallery",
+  "variant": "empty",
+  "time": "day",
+  "kb": 48
+ },
+ {
+  "file": "ext_rear_pool_empty_night.webp",
+  "title": "Садовый фасад и бассейн · без мебели · ночь",
+  "cam": "ext_rear_pool",
+  "variant": "empty",
+  "time": "night",
+  "kb": 50
+ },
+ {
+  "file": "ext_rear_corner_empty_night.webp",
+  "title": "Бассейн и терраса · без мебели · ночь",
+  "cam": "ext_rear_corner",
+  "variant": "empty",
+  "time": "night",
+  "kb": 59
+ },
+ {
+  "file": "ext_rear_corner_gaming_day.webp",
+  "title": "Бассейн и терраса · геймерский · день",
+  "cam": "ext_rear_corner",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 86
+ },
+ {
+  "file": "int_family_gaming_day.webp",
+  "title": "Двусветная гостиная · геймерский · день",
+  "cam": "int_family",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 70
+ },
+ {
+  "file": "int_family_dining_gaming_day.webp",
+  "title": "Гостиная и столовая · геймерский · день",
+  "cam": "int_family_dining",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 62
+ },
+ {
+  "file": "int_foyer_gaming_day.webp",
+  "title": "Входной холл · геймерский · день",
+  "cam": "int_foyer",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 52
+ },
+ {
+  "file": "int_kitchen_gaming_day.webp",
+  "title": "Кухня · геймерский · день",
+  "cam": "int_kitchen",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 35
+ },
+ {
+  "file": "int_master_gaming_day.webp",
+  "title": "Главная спальня · геймерский · день",
+  "cam": "int_master",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 48
+ },
+ {
+  "file": "int_gallery_gaming_day.webp",
+  "title": "Галерея 2 этажа · геймерский · день",
+  "cam": "int_gallery",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 70
+ },
+ {
+  "file": "int_arcades_gaming_day.webp",
+  "title": "Маджлис: аркадные автоматы · геймерский · день",
+  "cam": "int_arcades",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 77
+ },
+ {
+  "file": "int_pool_table_gaming_day.webp",
+  "title": "Маджлис: бильярд · геймерский · день",
+  "cam": "int_pool_table",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 87
+ },
+ {
+  "file": "int_simrig_gaming_day.webp",
+  "title": "Маджлис: автосимулятор · геймерский · день",
+  "cam": "int_simrig",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 83
+ },
+ {
+  "file": "int_dining_gaming_day.webp",
+  "title": "Столовая · геймерский · день",
+  "cam": "int_dining",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 58
+ },
+ {
+  "file": "int_streamer_gaming_day.webp",
+  "title": "Спальня 2: стример · геймерский · день",
+  "cam": "int_streamer",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 56
+ },
+ {
+  "file": "int_br3_gaming_day.webp",
+  "title": "Спальня 3: киберспорт · геймерский · день",
+  "cam": "int_br3",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 49
+ },
+ {
+  "file": "int_br4_gaming_day.webp",
+  "title": "Спальня 4: VR · геймерский · день",
+  "cam": "int_br4",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 58
+ },
+ {
+  "file": "int_br5_gaming_day.webp",
+  "title": "Спальня 5: ретро · геймерский · день",
+  "cam": "int_br5",
+  "variant": "gaming",
+  "time": "day",
+  "kb": 22
+ },
+ {
+  "file": "ext_rear_pool_gaming_night.webp",
+  "title": "Садовый фасад и бассейн · геймерский · ночь",
+  "cam": "ext_rear_pool",
+  "variant": "gaming",
+  "time": "night",
+  "kb": 54
+ },
+ {
+  "file": "ext_rear_corner_gaming_night.webp",
+  "title": "Бассейн и терраса · геймерский · ночь",
+  "cam": "ext_rear_corner",
+  "variant": "gaming",
+  "time": "night",
+  "kb": 68
+ },
+ {
+  "file": "int_family_gaming_night.webp",
+  "title": "Двусветная гостиная · геймерский · ночь",
+  "cam": "int_family",
+  "variant": "gaming",
+  "time": "night",
+  "kb": 53
+ },
+ {
+  "file": "int_family_dining_gaming_night.webp",
+  "title": "Гостиная и столовая · геймерский · ночь",
+  "cam": "int_family_dining",
+  "variant": "gaming",
+  "time": "night",
+  "kb": 54
+ },
+ {
+  "file": "int_master_gaming_night.webp",
+  "title": "Главная спальня · геймерский · ночь",
+  "cam": "int_master",
+  "variant": "gaming",
+  "time": "night",
+  "kb": 24
+ },
+ {
+  "file": "int_arcades_gaming_night.webp",
+  "title": "Маджлис: аркадные автоматы · геймерский · ночь",
+  "cam": "int_arcades",
+  "variant": "gaming",
+  "time": "night",
+  "kb": 53
+ },
+ {
+  "file": "int_streamer_gaming_night.webp",
+  "title": "Спальня 2: стример · геймерский · ночь",
+  "cam": "int_streamer",
+  "variant": "gaming",
+  "time": "night",
+  "kb": 47
+ },
+ {
+  "file": "int_br3_gaming_night.webp",
+  "title": "Спальня 3: киберспорт · геймерский · ночь",
+  "cam": "int_br3",
+  "variant": "gaming",
+  "time": "night",
+  "kb": 29
+ }
+]
