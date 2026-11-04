@@ -920,7 +920,7 @@
     ['historical', 'Архив']
   ];
   const standalone = rawProperties.length === 1 && !!document.querySelector('base');
-  const state = { status: '', view: 'grid' };
+  const state = { status: '', view: 'grid', onlyNew: false };
   let visibleList = properties;
   let currentDetail = null;
   let pushedHash = false;
@@ -1039,6 +1039,7 @@
 
   function badges(property, withType = false) {
     const group = el('div', 'badges');
+    if (property.isNew === true) group.append(el('span', 'badge new-badge', 'Новое'));
     group.append(el('span', `badge status-${property.status}`, statusText(property)));
     if ((withType && property.type !== 'unknown') || property.type === 'townhouse' || property.type === 'linked') group.append(el('span', 'badge type-badge', types[property.type]));
     return group;
@@ -1833,6 +1834,7 @@
     const withComments = $('with-comments').checked;
 
     return properties.filter((property) => {
+      if (state.onlyNew && property.isNew !== true) return false;
       if (!query.every((word) => property.search.includes(word))) return false;
       if (area && (property.area || '∅') !== area) return false;
       if (agent && (property.agent || '∅') !== agent) return false;
@@ -2792,6 +2794,7 @@
       const node = $(id);
       if (node && node.value) count++;
     }
+    if (state.onlyNew) count++;
     if ($('with-comments').checked) count++;
     if ($('sort').value !== 'source') count++;
     return count;
@@ -2829,6 +2832,13 @@
       quickTop.setAttribute('aria-label', `Только ТОП: ${topCount} объектов`);
       $('quick-top-count').textContent = String(topCount);
     }
+    const quickNew = $('quick-new');
+    if (quickNew) {
+      const newCount = properties.filter((p) => p.isNew === true).length;
+      quickNew.setAttribute('aria-pressed', String(state.onlyNew));
+      quickNew.setAttribute('aria-label', `Только новые: ${newCount} объектов во всей подборке`);
+      $('quick-new-count').textContent = String(newCount);
+    }
     const waterCount = properties.filter((p) => p.waterView === 'yes').length;
     const dhCount = properties.filter((p) => p.doubleHeight === 'yes').length;
     const items = [
@@ -2851,6 +2861,7 @@
     const params = new URLSearchParams();
     if ($('search').value.trim()) params.set('q', $('search').value.trim());
     if (state.status) params.set('status', state.status);
+    if (state.onlyNew) params.set('new', '1');
     for (const id of FILTER_SELECT_IDS) {
       if ($(id) && $(id).value) params.set(id, $(id).value);
     }
@@ -2873,6 +2884,7 @@
       const value = params.get(id);
       if (node && value && [...node.options].some((option) => option.value === value)) node.value = value;
     }
+    state.onlyNew = params.get('new') === '1';
     $('with-comments').checked = params.get('comments') === '1';
     state.view = ['list', 'map'].includes(params.get('view')) ? params.get('view') : 'grid';
   }
@@ -2926,6 +2938,7 @@
 
   function resetFilters() {
     $('filters').reset();
+    state.onlyNew = false;
     state.status = '';
     if ($('status')) $('status').value = '';
     render();
@@ -2947,6 +2960,10 @@
   $('search').addEventListener('input', render);
   if ($('quick-top')) $('quick-top').addEventListener('click', () => {
     $('filter-top').value = $('filter-top').value === 'yes' ? '' : 'yes';
+    render();
+  });
+  if ($('quick-new')) $('quick-new').addEventListener('click', () => {
+    state.onlyNew = !state.onlyNew;
     render();
   });
   [...FILTER_SELECT_IDS, 'sort', 'with-comments'].forEach((id) => {

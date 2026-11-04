@@ -1,6 +1,2572 @@
 window.VILLA_CATALOG = {
-  "updatedAt": "2026-11-04T13:40:05.219159+00:00",
+  "updatedAt": "2026-11-04T14:33:28.192853+00:00",
   "properties": [
+    {
+      "id": "arthur_nas_20261104_a6b943ee",
+      "title": "Nad Al Sheba 3 · 6BR · бассейн и лифт",
+      "area": "Nad Al Sheba 3",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 970000,
+      "priceLabel": "970 000 AED / год",
+      "priceNote": "Цена из объявления Property Finder, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 6,
+      "bathrooms": 7,
+      "plotM2": 1183,
+      "buaM2": 808,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_a6b943ee-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p001.webp",
+          "caption": "PDF Артура · страница 1 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p002.webp",
+          "caption": "PDF Артура · страница 2 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p003.webp",
+          "caption": "PDF Артура · страница 3 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p004.webp",
+          "caption": "PDF Артура · страница 4 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p005.webp",
+          "caption": "PDF Артура · страница 5 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p006.webp",
+          "caption": "PDF Артура · страница 6 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p007.webp",
+          "caption": "PDF Артура · страница 7 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p008.webp",
+          "caption": "PDF Артура · страница 8 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p009.webp",
+          "caption": "PDF Артура · страница 9 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p010.webp",
+          "caption": "PDF Артура · страница 10 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p011.webp",
+          "caption": "PDF Артура · страница 11 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p012.webp",
+          "caption": "PDF Артура · страница 12 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p013.webp",
+          "caption": "PDF Артура · страница 13 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p014.webp",
+          "caption": "PDF Артура · страница 14 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p015.webp",
+          "caption": "PDF Артура · страница 15 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p016.webp",
+          "caption": "PDF Артура · страница 16 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p017.webp",
+          "caption": "PDF Артура · страница 17 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p018.webp",
+          "caption": "PDF Артура · страница 18 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p019.webp",
+          "caption": "PDF Артура · страница 19 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p020.webp",
+          "caption": "PDF Артура · страница 20 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p021.webp",
+          "caption": "PDF Артура · страница 21 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p022.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p022.webp",
+          "caption": "PDF Артура · страница 22 из 23"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_a6b943ee-p023.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_a6b943ee-p023.webp",
+          "caption": "PDF Артура · страница 23 из 23"
+        }
+      ],
+      "videos": [],
+      "description": "Шесть спален, бассейн, лифт, сад, отдельные комнаты для персонала и водителя. Две спальни на первом уровне и четыре наверху; внутренняя и внешняя кухни.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 23 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-nad-al-sheba-nad-al-sheba-3-nad-al-sheba-villas-167005035.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.155603408813477,55.38325881958008",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 3 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "NAS3970KEV6113YH8GKQ0NTYT8J0PBATJG",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_a6b943ee.pdf",
+          "label": "PDF · 23 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_a6b943ee.html",
+      "projectType": "Nad Al Sheba 3",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "private",
+      "poolLabel": "Свой бассейн · по материалам",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_f121a34f",
+      "title": "Nad Al Sheba 4 · 5BR · большой участок",
+      "area": "Nad Al Sheba 4",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 650000,
+      "priceLabel": "650 000 AED / год",
+      "priceNote": "Цена из объявления Property Finder, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 5,
+      "bathrooms": 6,
+      "plotM2": 1394,
+      "buaM2": 604,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_f121a34f-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p001.webp",
+          "caption": "PDF Артура · страница 1 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p002.webp",
+          "caption": "PDF Артура · страница 2 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p003.webp",
+          "caption": "PDF Артура · страница 3 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p004.webp",
+          "caption": "PDF Артура · страница 4 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p005.webp",
+          "caption": "PDF Артура · страница 5 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p006.webp",
+          "caption": "PDF Артура · страница 6 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p007.webp",
+          "caption": "PDF Артура · страница 7 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p008.webp",
+          "caption": "PDF Артура · страница 8 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p009.webp",
+          "caption": "PDF Артура · страница 9 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p010.webp",
+          "caption": "PDF Артура · страница 10 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p011.webp",
+          "caption": "PDF Артура · страница 11 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p012.webp",
+          "caption": "PDF Артура · страница 12 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p013.webp",
+          "caption": "PDF Артура · страница 13 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p014.webp",
+          "caption": "PDF Артура · страница 14 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p015.webp",
+          "caption": "PDF Артура · страница 15 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p016.webp",
+          "caption": "PDF Артура · страница 16 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p017.webp",
+          "caption": "PDF Артура · страница 17 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p018.webp",
+          "caption": "PDF Артура · страница 18 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p019.webp",
+          "caption": "PDF Артура · страница 19 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p020.webp",
+          "caption": "PDF Артура · страница 20 из 21"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_f121a34f-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_f121a34f-p021.webp",
+          "caption": "PDF Артура · страница 21 из 21"
+        }
+      ],
+      "videos": [],
+      "description": "Новая вилла с пятью спальнями с санузлами, отдельным маджлисом, двумя кухнями, семейной гостиной наверху и садом.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 21 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности.",
+        "В подписи Артура 649 000 AED, в текущем объявлении — 650 000 AED в год."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-nad-al-sheba-nad-al-sheba-4-165603322.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.13574981689453,55.36689758300781",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 4 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "NAS4650KWSP3SF74DMNJVX11QHWTWJW0RG",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_f121a34f.pdf",
+          "label": "PDF · 21 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_f121a34f.html",
+      "projectType": "Nad Al Sheba 4",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "unknown",
+      "poolLabel": "Бассейн не подтверждён",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_37d676e0",
+      "title": "Nad Al Sheba 1 · 5BR · бассейн, лифт и зарядка авто",
+      "area": "Nad Al Sheba 1",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 950000,
+      "priceLabel": "950 000 AED / год",
+      "priceNote": "Цена из объявления Property Finder, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 5,
+      "bathrooms": 6,
+      "plotM2": null,
+      "buaM2": null,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_37d676e0-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p001.webp",
+          "caption": "PDF Артура · страница 1 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p002.webp",
+          "caption": "PDF Артура · страница 2 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p003.webp",
+          "caption": "PDF Артура · страница 3 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p004.webp",
+          "caption": "PDF Артура · страница 4 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p005.webp",
+          "caption": "PDF Артура · страница 5 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p006.webp",
+          "caption": "PDF Артура · страница 6 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p007.webp",
+          "caption": "PDF Артура · страница 7 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p008.webp",
+          "caption": "PDF Артура · страница 8 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p009.webp",
+          "caption": "PDF Артура · страница 9 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p010.webp",
+          "caption": "PDF Артура · страница 10 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p011.webp",
+          "caption": "PDF Артура · страница 11 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p012.webp",
+          "caption": "PDF Артура · страница 12 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p013.webp",
+          "caption": "PDF Артура · страница 13 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p014.webp",
+          "caption": "PDF Артура · страница 14 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p015.webp",
+          "caption": "PDF Артура · страница 15 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p016.webp",
+          "caption": "PDF Артура · страница 16 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p017.webp",
+          "caption": "PDF Артура · страница 17 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p018.webp",
+          "caption": "PDF Артура · страница 18 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p019.webp",
+          "caption": "PDF Артура · страница 19 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p020.webp",
+          "caption": "PDF Артура · страница 20 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p021.webp",
+          "caption": "PDF Артура · страница 21 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p022.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p022.webp",
+          "caption": "PDF Артура · страница 22 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p023.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p023.webp",
+          "caption": "PDF Артура · страница 23 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p024.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p024.webp",
+          "caption": "PDF Артура · страница 24 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p025.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p025.webp",
+          "caption": "PDF Артура · страница 25 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p026.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p026.webp",
+          "caption": "PDF Артура · страница 26 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p027.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p027.webp",
+          "caption": "PDF Артура · страница 27 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p028.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p028.webp",
+          "caption": "PDF Артура · страница 28 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p029.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p029.webp",
+          "caption": "PDF Артура · страница 29 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p030.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p030.webp",
+          "caption": "PDF Артура · страница 30 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p031.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p031.webp",
+          "caption": "PDF Артура · страница 31 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p032.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p032.webp",
+          "caption": "PDF Артура · страница 32 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p033.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p033.webp",
+          "caption": "PDF Артура · страница 33 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p034.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p034.webp",
+          "caption": "PDF Артура · страница 34 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p035.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p035.webp",
+          "caption": "PDF Артура · страница 35 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p036.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p036.webp",
+          "caption": "PDF Артура · страница 36 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p037.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p037.webp",
+          "caption": "PDF Артура · страница 37 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p038.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p038.webp",
+          "caption": "PDF Артура · страница 38 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p039.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p039.webp",
+          "caption": "PDF Артура · страница 39 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p040.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p040.webp",
+          "caption": "PDF Артура · страница 40 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p041.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p041.webp",
+          "caption": "PDF Артура · страница 41 из 42"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_37d676e0-p042.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_37d676e0-p042.webp",
+          "caption": "PDF Артура · страница 42 из 42"
+        }
+      ],
+      "videos": [],
+      "description": "Пять спален, бассейн, лифт, гардеробная, сад, комнаты для персонала и водителя, зарядка электромобиля.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 42 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-nad-al-sheba-nad-al-sheba-1-nad-al-sheba-gardens-nad-al-sheba-gardens-1-166545788.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.13529396057129,55.31736373901367",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 1 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "NAS1950K3T0BM4HWNSAVYCXCBM0NEV91MW",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_37d676e0.pdf",
+          "label": "PDF · 42 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_37d676e0.html",
+      "projectType": "Nad Al Sheba 1",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "private",
+      "poolLabel": "Свой бассейн · по материалам",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_e94119ef",
+      "title": "Nad Al Sheba 1 · 5BR · умный дом и infinity-бассейн",
+      "area": "Nad Al Sheba 1",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 700000,
+      "priceLabel": "700 000 AED / год",
+      "priceNote": "Цена из объявления Property Finder, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 5,
+      "bathrooms": 6,
+      "plotM2": null,
+      "buaM2": null,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_e94119ef-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p001.webp",
+          "caption": "PDF Артура · страница 1 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p002.webp",
+          "caption": "PDF Артура · страница 2 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p003.webp",
+          "caption": "PDF Артура · страница 3 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p004.webp",
+          "caption": "PDF Артура · страница 4 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p005.webp",
+          "caption": "PDF Артура · страница 5 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p006.webp",
+          "caption": "PDF Артура · страница 6 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p007.webp",
+          "caption": "PDF Артура · страница 7 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p008.webp",
+          "caption": "PDF Артура · страница 8 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p009.webp",
+          "caption": "PDF Артура · страница 9 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p010.webp",
+          "caption": "PDF Артура · страница 10 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p011.webp",
+          "caption": "PDF Артура · страница 11 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p012.webp",
+          "caption": "PDF Артура · страница 12 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p013.webp",
+          "caption": "PDF Артура · страница 13 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p014.webp",
+          "caption": "PDF Артура · страница 14 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p015.webp",
+          "caption": "PDF Артура · страница 15 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p016.webp",
+          "caption": "PDF Артура · страница 16 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p017.webp",
+          "caption": "PDF Артура · страница 17 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p018.webp",
+          "caption": "PDF Артура · страница 18 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p019.webp",
+          "caption": "PDF Артура · страница 19 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p020.webp",
+          "caption": "PDF Артура · страница 20 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p021.webp",
+          "caption": "PDF Артура · страница 21 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p022.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p022.webp",
+          "caption": "PDF Артура · страница 22 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p023.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p023.webp",
+          "caption": "PDF Артура · страница 23 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p024.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p024.webp",
+          "caption": "PDF Артура · страница 24 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p025.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p025.webp",
+          "caption": "PDF Артура · страница 25 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p026.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p026.webp",
+          "caption": "PDF Артура · страница 26 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p027.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p027.webp",
+          "caption": "PDF Артура · страница 27 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p028.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p028.webp",
+          "caption": "PDF Артура · страница 28 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p029.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p029.webp",
+          "caption": "PDF Артура · страница 29 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p030.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p030.webp",
+          "caption": "PDF Артура · страница 30 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e94119ef-p031.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e94119ef-p031.webp",
+          "caption": "PDF Артура · страница 31 из 31"
+        }
+      ],
+      "videos": [],
+      "description": "Умный дом с пятью спальнями, infinity-бассейном и водопадом, спортзалом на крыше, лифтом и мраморной лестницей. Дверь высотой 4,3 м указана в PDF; это не высота потолка.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 31 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-nad-al-sheba-nad-al-sheba-1-nad-al-sheba-gardens-nad-al-sheba-gardens-3-165500596.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.13237953186035,55.310794830322266",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 1 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "NAS1600KSRGXCHJN6YM6CCR43REW4K8C7M",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_e94119ef.pdf",
+          "label": "PDF · 31 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_e94119ef.html",
+      "projectType": "Nad Al Sheba 1",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "private",
+      "poolLabel": "Свой бассейн · по материалам",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_75315156",
+      "title": "Nad Al Sheba 4 · 5BR · бассейн и терраса на крыше",
+      "area": "Nad Al Sheba 4",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 850000,
+      "priceLabel": "850 000 AED / год",
+      "priceNote": "Цена из объявления Property Finder, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 5,
+      "bathrooms": 6,
+      "plotM2": null,
+      "buaM2": null,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_75315156-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p001.webp",
+          "caption": "PDF Артура · страница 1 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p002.webp",
+          "caption": "PDF Артура · страница 2 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p003.webp",
+          "caption": "PDF Артура · страница 3 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p004.webp",
+          "caption": "PDF Артура · страница 4 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p005.webp",
+          "caption": "PDF Артура · страница 5 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p006.webp",
+          "caption": "PDF Артура · страница 6 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p007.webp",
+          "caption": "PDF Артура · страница 7 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p008.webp",
+          "caption": "PDF Артура · страница 8 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p009.webp",
+          "caption": "PDF Артура · страница 9 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p010.webp",
+          "caption": "PDF Артура · страница 10 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p011.webp",
+          "caption": "PDF Артура · страница 11 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p012.webp",
+          "caption": "PDF Артура · страница 12 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p013.webp",
+          "caption": "PDF Артура · страница 13 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p014.webp",
+          "caption": "PDF Артура · страница 14 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p015.webp",
+          "caption": "PDF Артура · страница 15 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p016.webp",
+          "caption": "PDF Артура · страница 16 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p017.webp",
+          "caption": "PDF Артура · страница 17 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p018.webp",
+          "caption": "PDF Артура · страница 18 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p019.webp",
+          "caption": "PDF Артура · страница 19 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p020.webp",
+          "caption": "PDF Артура · страница 20 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p021.webp",
+          "caption": "PDF Артура · страница 21 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p022.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p022.webp",
+          "caption": "PDF Артура · страница 22 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p023.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p023.webp",
+          "caption": "PDF Артура · страница 23 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p024.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p024.webp",
+          "caption": "PDF Артура · страница 24 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p025.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p025.webp",
+          "caption": "PDF Артура · страница 25 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p026.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p026.webp",
+          "caption": "PDF Артура · страница 26 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p027.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p027.webp",
+          "caption": "PDF Артура · страница 27 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p028.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p028.webp",
+          "caption": "PDF Артура · страница 28 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p029.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p029.webp",
+          "caption": "PDF Артура · страница 29 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p030.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p030.webp",
+          "caption": "PDF Артура · страница 30 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p031.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p031.webp",
+          "caption": "PDF Артура · страница 31 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p032.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p032.webp",
+          "caption": "PDF Артура · страница 32 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p033.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p033.webp",
+          "caption": "PDF Артура · страница 33 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p034.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p034.webp",
+          "caption": "PDF Артура · страница 34 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p035.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p035.webp",
+          "caption": "PDF Артура · страница 35 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p036.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p036.webp",
+          "caption": "PDF Артура · страница 36 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p037.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p037.webp",
+          "caption": "PDF Артура · страница 37 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p038.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p038.webp",
+          "caption": "PDF Артура · страница 38 из 39"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_75315156-p039.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_75315156-p039.webp",
+          "caption": "PDF Артура · страница 39 из 39"
+        }
+      ],
+      "videos": [],
+      "description": "Пять спален с санузлами, несколько гостиных, отдельный маджлис, бассейн, сад и зона отдыха на крыше.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 39 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности.",
+        "В имени PDF указано 900K; в текущем объявлении — 850 000 AED в год."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-nad-al-sheba-nad-al-sheba-4-165620305.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.13574981689453,55.36689758300781",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 4 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "NAS4850KTG6TX97V2N3S7Y6G3W12EFQZAW",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_75315156.pdf",
+          "label": "PDF · 39 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_75315156.html",
+      "projectType": "Nad Al Sheba 4",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "private",
+      "poolLabel": "Свой бассейн · по материалам",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_0fc4cf73",
+      "title": "Nad Al Sheba 3 · 5BR · бассейн и сад",
+      "area": "Nad Al Sheba 3",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 650000,
+      "priceLabel": "650 000 AED / год",
+      "priceNote": "Цена из объявления Property Finder, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 5,
+      "bathrooms": 6,
+      "plotM2": null,
+      "buaM2": null,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_0fc4cf73-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p001.webp",
+          "caption": "PDF Артура · страница 1 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p002.webp",
+          "caption": "PDF Артура · страница 2 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p003.webp",
+          "caption": "PDF Артура · страница 3 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p004.webp",
+          "caption": "PDF Артура · страница 4 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p005.webp",
+          "caption": "PDF Артура · страница 5 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p006.webp",
+          "caption": "PDF Артура · страница 6 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p007.webp",
+          "caption": "PDF Артура · страница 7 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p008.webp",
+          "caption": "PDF Артура · страница 8 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p009.webp",
+          "caption": "PDF Артура · страница 9 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p010.webp",
+          "caption": "PDF Артура · страница 10 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p011.webp",
+          "caption": "PDF Артура · страница 11 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p012.webp",
+          "caption": "PDF Артура · страница 12 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p013.webp",
+          "caption": "PDF Артура · страница 13 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p014.webp",
+          "caption": "PDF Артура · страница 14 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p015.webp",
+          "caption": "PDF Артура · страница 15 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p016.webp",
+          "caption": "PDF Артура · страница 16 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p017.webp",
+          "caption": "PDF Артура · страница 17 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p018.webp",
+          "caption": "PDF Артура · страница 18 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p019.webp",
+          "caption": "PDF Артура · страница 19 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p020.webp",
+          "caption": "PDF Артура · страница 20 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p021.webp",
+          "caption": "PDF Артура · страница 21 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p022.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p022.webp",
+          "caption": "PDF Артура · страница 22 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p023.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p023.webp",
+          "caption": "PDF Артура · страница 23 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p024.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p024.webp",
+          "caption": "PDF Артура · страница 24 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p025.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p025.webp",
+          "caption": "PDF Артура · страница 25 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p026.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p026.webp",
+          "caption": "PDF Артура · страница 26 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p027.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p027.webp",
+          "caption": "PDF Артура · страница 27 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p028.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p028.webp",
+          "caption": "PDF Артура · страница 28 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_0fc4cf73-p029.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_0fc4cf73-p029.webp",
+          "caption": "PDF Артура · страница 29 из 29"
+        }
+      ],
+      "videos": [],
+      "description": "Новая вилла с пятью спальнями, закрытой кухней, бассейном, частным садом, зоной барбекю и комнатой для персонала.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 29 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности.",
+        "В имени PDF указано 700K; в текущем объявлении — 650 000 AED в год."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-nad-al-sheba-nad-al-sheba-3-nad-al-sheba-villas-167004586.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.155603408813477,55.38325881958008",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 3 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "NAS3650K1WESXMAP1TYM17K1W029JET69R",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_0fc4cf73.pdf",
+          "label": "PDF · 29 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_0fc4cf73.html",
+      "projectType": "Nad Al Sheba 3",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "private",
+      "poolLabel": "Свой бассейн · по материалам",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_38e9cc59",
+      "title": "Nad Al Sheba 4 · 5BR · два входа и две кухни",
+      "area": "Nad Al Sheba 4",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": null,
+      "priceLabel": "Цена не подтверждена",
+      "priceNote": "Цена в PDF не указана; подтверждённое объявление не найдено.",
+      "bedrooms": 5,
+      "bathrooms": null,
+      "plotM2": null,
+      "buaM2": null,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_38e9cc59-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p001.webp",
+          "caption": "PDF Артура · страница 1 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p002.webp",
+          "caption": "PDF Артура · страница 2 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p003.webp",
+          "caption": "PDF Артура · страница 3 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p004.webp",
+          "caption": "PDF Артура · страница 4 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p005.webp",
+          "caption": "PDF Артура · страница 5 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p006.webp",
+          "caption": "PDF Артура · страница 6 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p007.webp",
+          "caption": "PDF Артура · страница 7 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p008.webp",
+          "caption": "PDF Артура · страница 8 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p009.webp",
+          "caption": "PDF Артура · страница 9 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p010.webp",
+          "caption": "PDF Артура · страница 10 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p011.webp",
+          "caption": "PDF Артура · страница 11 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p012.webp",
+          "caption": "PDF Артура · страница 12 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p013.webp",
+          "caption": "PDF Артура · страница 13 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p014.webp",
+          "caption": "PDF Артура · страница 14 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p015.webp",
+          "caption": "PDF Артура · страница 15 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p016.webp",
+          "caption": "PDF Артура · страница 16 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p017.webp",
+          "caption": "PDF Артура · страница 17 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p018.webp",
+          "caption": "PDF Артура · страница 18 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p019.webp",
+          "caption": "PDF Артура · страница 19 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p020.webp",
+          "caption": "PDF Артура · страница 20 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p021.webp",
+          "caption": "PDF Артура · страница 21 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p022.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p022.webp",
+          "caption": "PDF Артура · страница 22 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p023.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p023.webp",
+          "caption": "PDF Артура · страница 23 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p024.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p024.webp",
+          "caption": "PDF Артура · страница 24 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p025.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p025.webp",
+          "caption": "PDF Артура · страница 25 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p026.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p026.webp",
+          "caption": "PDF Артура · страница 26 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p027.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p027.webp",
+          "caption": "PDF Артура · страница 27 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p028.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p028.webp",
+          "caption": "PDF Артура · страница 28 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p029.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p029.webp",
+          "caption": "PDF Артура · страница 29 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p030.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p030.webp",
+          "caption": "PDF Артура · страница 30 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p031.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p031.webp",
+          "caption": "PDF Артура · страница 31 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p032.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p032.webp",
+          "caption": "PDF Артура · страница 32 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p033.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p033.webp",
+          "caption": "PDF Артура · страница 33 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p034.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p034.webp",
+          "caption": "PDF Артура · страница 34 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p035.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p035.webp",
+          "caption": "PDF Артура · страница 35 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p036.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p036.webp",
+          "caption": "PDF Артура · страница 36 из 37"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_38e9cc59-p037.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_38e9cc59-p037.webp",
+          "caption": "PDF Артура · страница 37 из 37"
+        }
+      ],
+      "videos": [],
+      "description": "Пять спален, маджлис, внутренняя и внешняя кухни, два входа, бассейн, сад, комнаты для персонала и постирочная.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 37 страниц PDF.",
+        "Параметры взяты из PDF."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности.",
+        "Публичное объявление с подтверждённым совпадением фотографий пока не найдено; цена неизвестна."
+      ],
+      "listingUrl": "",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Nad%20Al%20Sheba%204%2C%20Dubai",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 4 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF Артура; публичный источник пока не подтверждён.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_38e9cc59.pdf",
+          "label": "PDF · 37 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_38e9cc59.html",
+      "projectType": "Nad Al Sheba 4",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "private",
+      "poolLabel": "Свой бассейн · по материалам",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_00365f5c",
+      "title": "Nad Al Sheba 4 · 6BR · большой сад и service block",
+      "area": "Nad Al Sheba 4",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 1200000,
+      "priceLabel": "1 200 000 AED / год",
+      "priceNote": "Цена из объявления Property Finder, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 6,
+      "bathrooms": 7,
+      "plotM2": null,
+      "buaM2": null,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_00365f5c-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p001.webp",
+          "caption": "PDF Артура · страница 1 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p002.webp",
+          "caption": "PDF Артура · страница 2 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p003.webp",
+          "caption": "PDF Артура · страница 3 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p004.webp",
+          "caption": "PDF Артура · страница 4 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p005.webp",
+          "caption": "PDF Артура · страница 5 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p006.webp",
+          "caption": "PDF Артура · страница 6 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p007.webp",
+          "caption": "PDF Артура · страница 7 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p008.webp",
+          "caption": "PDF Артура · страница 8 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p009.webp",
+          "caption": "PDF Артура · страница 9 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p010.webp",
+          "caption": "PDF Артура · страница 10 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p011.webp",
+          "caption": "PDF Артура · страница 11 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p012.webp",
+          "caption": "PDF Артура · страница 12 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p013.webp",
+          "caption": "PDF Артура · страница 13 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p014.webp",
+          "caption": "PDF Артура · страница 14 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p015.webp",
+          "caption": "PDF Артура · страница 15 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p016.webp",
+          "caption": "PDF Артура · страница 16 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p017.webp",
+          "caption": "PDF Артура · страница 17 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p018.webp",
+          "caption": "PDF Артура · страница 18 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p019.webp",
+          "caption": "PDF Артура · страница 19 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p020.webp",
+          "caption": "PDF Артура · страница 20 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p021.webp",
+          "caption": "PDF Артура · страница 21 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p022.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p022.webp",
+          "caption": "PDF Артура · страница 22 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p023.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p023.webp",
+          "caption": "PDF Артура · страница 23 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p024.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p024.webp",
+          "caption": "PDF Артура · страница 24 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p025.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p025.webp",
+          "caption": "PDF Артура · страница 25 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p026.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p026.webp",
+          "caption": "PDF Артура · страница 26 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p027.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p027.webp",
+          "caption": "PDF Артура · страница 27 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p028.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p028.webp",
+          "caption": "PDF Артура · страница 28 из 29"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_00365f5c-p029.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_00365f5c-p029.webp",
+          "caption": "PDF Артура · страница 29 из 29"
+        }
+      ],
+      "videos": [],
+      "description": "Шесть спален, большой сад, отдельный маджлис, две кухни и служебный блок с комнатами для персонала и водителя.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 29 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности.",
+        "В PDF указаны 6 спален, в объявлении с теми же фотографиями — 5. Бассейн заявлен в объявлении, но отсутствует в списке характеристик PDF. Цена относится к этому объявлению и требует уточнения по точному дому."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-nad-al-sheba-nad-al-sheba-4-168369183.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.13574981689453,55.36689758300781",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 4 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "Vero-R-3025",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_00365f5c.pdf",
+          "label": "PDF · 29 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_00365f5c.html",
+      "projectType": "Nad Al Sheba 4",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "unknown",
+      "poolLabel": "Бассейн не подтверждён",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_14fd0f77",
+      "title": "Nad Al Sheba 3 · 5BR · рядом с Repton",
+      "area": "Nad Al Sheba 3",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 450000,
+      "priceLabel": "450 000 AED / год",
+      "priceNote": "Цена из архивного объявления Bayut, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 5,
+      "bathrooms": 6,
+      "plotM2": null,
+      "buaM2": null,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_14fd0f77-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p001.webp",
+          "caption": "PDF Артура · страница 1 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p002.webp",
+          "caption": "PDF Артура · страница 2 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p003.webp",
+          "caption": "PDF Артура · страница 3 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p004.webp",
+          "caption": "PDF Артура · страница 4 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p005.webp",
+          "caption": "PDF Артура · страница 5 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p006.webp",
+          "caption": "PDF Артура · страница 6 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p007.webp",
+          "caption": "PDF Артура · страница 7 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p008.webp",
+          "caption": "PDF Артура · страница 8 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p009.webp",
+          "caption": "PDF Артура · страница 9 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p010.webp",
+          "caption": "PDF Артура · страница 10 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p011.webp",
+          "caption": "PDF Артура · страница 11 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p012.webp",
+          "caption": "PDF Артура · страница 12 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p013.webp",
+          "caption": "PDF Артура · страница 13 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p014.webp",
+          "caption": "PDF Артура · страница 14 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p015.webp",
+          "caption": "PDF Артура · страница 15 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p016.webp",
+          "caption": "PDF Артура · страница 16 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p017.webp",
+          "caption": "PDF Артура · страница 17 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p018.webp",
+          "caption": "PDF Артура · страница 18 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p019.webp",
+          "caption": "PDF Артура · страница 19 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p020.webp",
+          "caption": "PDF Артура · страница 20 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p021.webp",
+          "caption": "PDF Артура · страница 21 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p022.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p022.webp",
+          "caption": "PDF Артура · страница 22 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p023.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p023.webp",
+          "caption": "PDF Артура · страница 23 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p024.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p024.webp",
+          "caption": "PDF Артура · страница 24 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p025.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p025.webp",
+          "caption": "PDF Артура · страница 25 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p026.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p026.webp",
+          "caption": "PDF Артура · страница 26 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_14fd0f77-p027.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_14fd0f77-p027.webp",
+          "caption": "PDF Артура · страница 27 из 27"
+        }
+      ],
+      "videos": [],
+      "description": "Пять спален, отдельный маджлис, комнаты для персонала и водителя, внешняя кухня и крытая парковка на 3–4 машины. Готовность к заселению заявлена в PDF.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 27 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности.",
+        "Объявление помечено площадкой как недоступное; цена приведена для ориентира. Свежая доступность не подтверждена."
+      ],
+      "listingUrl": "https://www.bayut.com/property/details-16764533.html",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Nad%20Al%20Sheba%203%2C%20Dubai",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 3 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "Bayut - NAS3450K11127-fLbljG",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_14fd0f77.pdf",
+          "label": "PDF · 27 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_14fd0f77.html",
+      "projectType": "Nad Al Sheba 3",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "unknown",
+      "poolLabel": "Бассейн не подтверждён",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_e1cf1773",
+      "title": "Nad Al Sheba 4 · 5BR · бассейн, сад и комнаты персонала",
+      "area": "Nad Al Sheba 4",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 499000,
+      "priceLabel": "499 000 AED / год",
+      "priceNote": "Цена из объявления Property Finder, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 5,
+      "bathrooms": 6,
+      "plotM2": 1433,
+      "buaM2": 604,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_e1cf1773-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p001.webp",
+          "caption": "PDF Артура · страница 1 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p002.webp",
+          "caption": "PDF Артура · страница 2 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p003.webp",
+          "caption": "PDF Артура · страница 3 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p004.webp",
+          "caption": "PDF Артура · страница 4 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p005.webp",
+          "caption": "PDF Артура · страница 5 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p006.webp",
+          "caption": "PDF Артура · страница 6 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p007.webp",
+          "caption": "PDF Артура · страница 7 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p008.webp",
+          "caption": "PDF Артура · страница 8 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p009.webp",
+          "caption": "PDF Артура · страница 9 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p010.webp",
+          "caption": "PDF Артура · страница 10 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p011.webp",
+          "caption": "PDF Артура · страница 11 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p012.webp",
+          "caption": "PDF Артура · страница 12 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p013.webp",
+          "caption": "PDF Артура · страница 13 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p014.webp",
+          "caption": "PDF Артура · страница 14 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p015.webp",
+          "caption": "PDF Артура · страница 15 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p016.webp",
+          "caption": "PDF Артура · страница 16 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p017.webp",
+          "caption": "PDF Артура · страница 17 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p018.webp",
+          "caption": "PDF Артура · страница 18 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p019.webp",
+          "caption": "PDF Артура · страница 19 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p020.webp",
+          "caption": "PDF Артура · страница 20 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p021.webp",
+          "caption": "PDF Артура · страница 21 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p022.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p022.webp",
+          "caption": "PDF Артура · страница 22 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p023.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p023.webp",
+          "caption": "PDF Артура · страница 23 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p024.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p024.webp",
+          "caption": "PDF Артура · страница 24 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p025.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p025.webp",
+          "caption": "PDF Артура · страница 25 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p026.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p026.webp",
+          "caption": "PDF Артура · страница 26 из 27"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_e1cf1773-p027.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_e1cf1773-p027.webp",
+          "caption": "PDF Артура · страница 27 из 27"
+        }
+      ],
+      "videos": [],
+      "description": "Пять спален с санузлами, бассейн, большой сад, оборудованная кухня, комнаты для персонала и водителя.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 27 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-nad-al-sheba-nad-al-sheba-4-166544336.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.13574981689453,55.36689758300781",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 4 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "NAS4549KB2QKZFJHJFV352DG5MRFZ2J5WR",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_e1cf1773.pdf",
+          "label": "PDF · 27 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_e1cf1773.html",
+      "projectType": "Nad Al Sheba 4",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "private",
+      "poolLabel": "Свой бассейн · по материалам",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_bde97c0d",
+      "title": "Nad Al Sheba 3 · 7BR · современная вилла с садом",
+      "area": "Nad Al Sheba 3",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 599000,
+      "priceLabel": "599 000 AED / год",
+      "priceNote": "Цена из объявления Property Finder, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 7,
+      "bathrooms": null,
+      "plotM2": null,
+      "buaM2": null,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_bde97c0d-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p001.webp",
+          "caption": "PDF Артура · страница 1 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p002.webp",
+          "caption": "PDF Артура · страница 2 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p003.webp",
+          "caption": "PDF Артура · страница 3 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p004.webp",
+          "caption": "PDF Артура · страница 4 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p005.webp",
+          "caption": "PDF Артура · страница 5 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p006.webp",
+          "caption": "PDF Артура · страница 6 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p007.webp",
+          "caption": "PDF Артура · страница 7 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p008.webp",
+          "caption": "PDF Артура · страница 8 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p009.webp",
+          "caption": "PDF Артура · страница 9 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p010.webp",
+          "caption": "PDF Артура · страница 10 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p011.webp",
+          "caption": "PDF Артура · страница 11 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p012.webp",
+          "caption": "PDF Артура · страница 12 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p013.webp",
+          "caption": "PDF Артура · страница 13 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p014.webp",
+          "caption": "PDF Артура · страница 14 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p015.webp",
+          "caption": "PDF Артура · страница 15 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p016.webp",
+          "caption": "PDF Артура · страница 16 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p017.webp",
+          "caption": "PDF Артура · страница 17 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p018.webp",
+          "caption": "PDF Артура · страница 18 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p019.webp",
+          "caption": "PDF Артура · страница 19 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p020.webp",
+          "caption": "PDF Артура · страница 20 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p021.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p021.webp",
+          "caption": "PDF Артура · страница 21 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p022.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p022.webp",
+          "caption": "PDF Артура · страница 22 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p023.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p023.webp",
+          "caption": "PDF Артура · страница 23 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p024.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p024.webp",
+          "caption": "PDF Артура · страница 24 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p025.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p025.webp",
+          "caption": "PDF Артура · страница 25 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p026.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p026.webp",
+          "caption": "PDF Артура · страница 26 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p027.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p027.webp",
+          "caption": "PDF Артура · страница 27 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p028.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p028.webp",
+          "caption": "PDF Артура · страница 28 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p029.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p029.webp",
+          "caption": "PDF Артура · страница 29 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p030.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p030.webp",
+          "caption": "PDF Артура · страница 30 из 31"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_bde97c0d-p031.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_bde97c0d-p031.webp",
+          "caption": "PDF Артура · страница 31 из 31"
+        }
+      ],
+      "videos": [],
+      "description": "Семь спален с санузлами, несколько гостиных, столовая, закрытая кухня, кладовая и наружная парковка.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 31 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности."
+      ],
+      "listingUrl": "https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-nad-al-sheba-nad-al-sheba-3-nad-al-sheba-villas-159177614.html",
+      "mapUrl": "https://maps.google.com/maps?q=25.155603408813477,55.38325881958008",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 3 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "NAS3599KQENJXMP708CQ2GS06G68M05X4W",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_bde97c0d.pdf",
+          "label": "PDF · 31 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_bde97c0d.html",
+      "projectType": "Nad Al Sheba 3",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "unknown",
+      "poolLabel": "Бассейн не подтверждён",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
+    {
+      "id": "arthur_nas_20261104_9c929c8e",
+      "title": "Nad Al Sheba 4 · 6BR · бассейн, лифт и две гостиные",
+      "area": "Nad Al Sheba 4",
+      "agent": "Артур · материалы PDF",
+      "agentPhone": "",
+      "price": 1200000,
+      "priceLabel": "1 200 000 AED / год",
+      "priceNote": "Цена из объявления Bayut, проверено 04.11.2026. Доступность и условия у агента не подтверждены.",
+      "bedrooms": 6,
+      "bathrooms": 7,
+      "plotM2": null,
+      "buaM2": null,
+      "ceiling": "Не измерено",
+      "status": "review",
+      "statusLabel": "На рассмотрении",
+      "type": "villa",
+      "cover": "gallery/arthur_nas_20261104_9c929c8e-p001.webp",
+      "images": [
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p001.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p001.webp",
+          "caption": "PDF Артура · страница 1 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p002.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p002.webp",
+          "caption": "PDF Артура · страница 2 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p003.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p003.webp",
+          "caption": "PDF Артура · страница 3 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p004.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p004.webp",
+          "caption": "PDF Артура · страница 4 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p005.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p005.webp",
+          "caption": "PDF Артура · страница 5 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p006.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p006.webp",
+          "caption": "PDF Артура · страница 6 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p007.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p007.webp",
+          "caption": "PDF Артура · страница 7 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p008.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p008.webp",
+          "caption": "PDF Артура · страница 8 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p009.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p009.webp",
+          "caption": "PDF Артура · страница 9 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p010.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p010.webp",
+          "caption": "PDF Артура · страница 10 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p011.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p011.webp",
+          "caption": "PDF Артура · страница 11 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p012.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p012.webp",
+          "caption": "PDF Артура · страница 12 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p013.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p013.webp",
+          "caption": "PDF Артура · страница 13 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p014.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p014.webp",
+          "caption": "PDF Артура · страница 14 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p015.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p015.webp",
+          "caption": "PDF Артура · страница 15 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p016.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p016.webp",
+          "caption": "PDF Артура · страница 16 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p017.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p017.webp",
+          "caption": "PDF Артура · страница 17 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p018.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p018.webp",
+          "caption": "PDF Артура · страница 18 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p019.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p019.webp",
+          "caption": "PDF Артура · страница 19 из 20"
+        },
+        {
+          "src": "gallery/arthur_nas_20261104_9c929c8e-p020.webp",
+          "thumb": "gallery/thumb-arthur_nas_20261104_9c929c8e-p020.webp",
+          "caption": "PDF Артура · страница 20 из 20"
+        }
+      ],
+      "videos": [],
+      "description": "Новая вилла с шестью спальнями, бассейном, лифтом, двумя гостиными, двумя кухнями, служебным блоком и садом.",
+      "facts": [
+        "Предложение Артура от 04.11.2026; 20 страниц PDF.",
+        "Параметры дома взяты из PDF; фотографии сопоставлены с источником."
+      ],
+      "caveats": [
+        "Точный адрес дома не подтверждён; карта показывает район или точку локации из объявления.",
+        "Нет свежего подтверждения об отсутствии стройки рядом и о доступности."
+      ],
+      "listingUrl": "https://www.bayut.com/property/details-16324455.html",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Nad%20Al%20Sheba%204%2C%20Dubai",
+      "mapPrecision": "area",
+      "locationLabel": "Nad Al Sheba 4 · точный адрес не подтверждён",
+      "missing": [
+        "Точная точка дома",
+        "Свежая доступность"
+      ],
+      "requestState": "",
+      "ref": "Bayut - NAS41200K11127-tngx7K",
+      "possibleDuplicateIds": [],
+      "sourceNote": "PDF и публичное объявление, сопоставленное по фотографиям; проверка 04.11.2026.",
+      "documents": [
+        {
+          "href": "materials/arthur_nas_20261104_9c929c8e.pdf",
+          "label": "PDF · 20 страниц"
+        }
+      ],
+      "detailPage": "properties/arthur_nas_20261104_9c929c8e.html",
+      "projectType": "Nad Al Sheba 4",
+      "ceilingHeightM": null,
+      "ceilingMaxM": null,
+      "ceilingEstimateNote": "Высота потолков не измерена.",
+      "doubleHeight": "unknown",
+      "doubleHeightLabel": "Второй свет не подтверждён",
+      "waterView": "unknown",
+      "waterViewLabel": "Вид на воду не подтверждён",
+      "pool": "private",
+      "poolLabel": "Свой бассейн · по материалам",
+      "viewedDefault": false,
+      "rentDefault": false,
+      "isNew": true,
+      "addedAt": "2026-11-04",
+      "newBatch": "arthur-pdf-20261104"
+    },
     {
       "id": "samantha_ji_gardenhall500",
       "title": "Garden Hall · 500 000",

@@ -156,6 +156,7 @@ h2 { font: normal 21px/1.2 var(--serif); letter-spacing: -.02em; margin: 0; }
 .status-review { color: #5b4510; background: #f6e3b0; }
 .status-rejected { color: #fff; background: #a85a41; }
 .status-unavailable, .status-historical { color: #4e524b; background: #e4e3dc; }
+.badge.new-badge { background: #087f5b; color: #fff; border-color: #065f46; padding: 3px 10px; font-size: 12px; font-weight: 800; box-shadow: 0 2px 6px #065f4633; }
 .type-badge { color: var(--muted); background: var(--surface); border-color: var(--line-strong); }
 
 /* Переключатели Смотрели / Снимаем */
@@ -629,6 +630,11 @@ dialog::backdrop { background: #1c221ca8; backdrop-filter: blur(4px); }
 .quick-top-filter:focus-visible { outline: 3px solid #dca84680; outline-offset: 2px; }
 .quick-top-count { padding: 1px 6px; border-radius: 999px; background: #8b570e20; font-size: 12px; }
 .quick-top-filter[aria-pressed="true"] .quick-top-count { background: #ffffff2b; }
+.quick-new-filter { background: #e0f8ec; border-color: #087f5b; color: #065f46; }
+.quick-new-filter:hover { background: #bef0d7; }
+.quick-new-filter[aria-pressed="true"] { background: #087f5b; border-color: #065f46; color: #fff; }
+.quick-new-filter:focus-visible { outline-color: #087f5b80; }
+.quick-new-filter .quick-top-count { background: #087f5b20; }
 
 /* Спутниковые снимки в карточке */
 .sat-shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 10px 0 4px; }
