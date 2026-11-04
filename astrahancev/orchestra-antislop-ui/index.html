@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Orchestra Anti-Slop UI Lab</title>
+<title>Orchestra Anti-Slop Super Interactive UI Lab</title>
 <style>
   :root {
     --bg: #0b0c0e;
@@ -23,77 +23,89 @@
     --sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--sans); -webkit-font-smoothing: antialiased; }
-  body { background: var(--bg); color: var(--text); font-size: 12px; height: 100vh; min-height: 640px; display: flex; flex-direction: column; overflow: hidden; user-select: none; }
+  html, body { background: transparent; color: var(--text); font-size: 12px; user-select: none; }
+  .app-shell {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    height: 820px; display: flex; flex-direction: column; overflow: hidden; position: relative;
+  }
   .mono { font-family: var(--mono); font-size: 11px; }
   button {
     font-family: var(--sans); font-size: 11.5px; color: var(--text); background: var(--panel2);
-    border: 1px solid var(--border); border-radius: 5px; padding: 4px 8px; cursor: pointer; transition: 0.1s;
-    display: inline-flex; align-items: center; gap: 5px;
+    border: 1px solid var(--border); border-radius: 5px; padding: 4px 8px; cursor: pointer; transition: 0.12s;
+    display: inline-flex; align-items: center; gap: 5px; white-space: nowrap;
   }
   button:hover { background: var(--panel3); border-color: var(--border-hi); }
-  button.active { background: #222733; border-color: #4d9cff; color: #fff; font-weight: 600; }
+  button:active { transform: translateY(1px); }
+  button.active { background: #1e2636; border-color: #4d9cff; color: #fff; font-weight: 600; }
   .badge {
     font-family: var(--mono); font-size: 10px; padding: 1px 5px; border-radius: 4px;
-    border: 1px solid var(--border); background: var(--bg); color: var(--muted);
+    border: 1px solid var(--border); background: var(--bg); color: var(--muted); display: inline-flex; align-items: center; gap: 4px;
   }
-  .badge.green { color: var(--green); border-color: rgba(43,212,125,0.3); background: rgba(43,212,125,0.07); }
-  .badge.amber { color: var(--amber); border-color: rgba(245,166,35,0.3); background: rgba(245,166,35,0.07); }
-  .badge.blue { color: var(--blue); border-color: rgba(77,156,255,0.3); background: rgba(77,156,255,0.07); }
+  .badge.green { color: var(--green); border-color: rgba(43,212,125,0.3); background: rgba(43,212,125,0.08); }
+  .badge.amber { color: var(--amber); border-color: rgba(245,166,35,0.3); background: rgba(245,166,35,0.08); }
+  .badge.blue { color: var(--blue); border-color: rgba(77,156,255,0.3); background: rgba(77,156,255,0.08); }
+  .badge.red { color: var(--red); border-color: rgba(242,85,85,0.3); background: rgba(242,85,85,0.08); }
 
+  /* LAB BAR */
   .lab-bar {
     min-height: 40px; background: #070809; border-bottom: 1px solid var(--border); padding: 4px 10px;
-    display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap;
+    display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; z-index: 40;
   }
   .lab-group { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-  .lab-label { font-family: var(--mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.04em; margin-right: 4px; font-weight: 700; }
+  .lab-label { font-family: var(--mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.04em; margin-right: 2px; font-weight: 700; }
 
+  /* TOP HEADER */
   .top-header {
     height: 38px; background: var(--panel); border-bottom: 1px solid var(--border); padding: 0 10px;
-    display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 30;
+    display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 35; gap: 8px;
   }
-  .crumb-bar { display: flex; align-items: center; gap: 4px; }
+  .crumb-bar { display: flex; align-items: center; gap: 4px; overflow-x: auto; }
   .crumb {
     padding: 3px 7px; border-radius: 4px; border: 1px solid transparent; cursor: pointer;
-    display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; transition: 0.1s;
   }
-  .crumb:hover, .crumb.active { background: var(--panel2); border-color: var(--border); }
+  .crumb:hover { background: var(--panel2); border-color: var(--border); }
+  .crumb.active { background: #1a202c; border-color: var(--border-hi); color: #fff; }
   .sep { color: var(--dim); font-family: var(--mono); }
 
-  .telemetry-strip { display: flex; align-items: center; gap: 6px; }
+  .telemetry-strip { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
   .t-item {
     display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 4px;
-    background: var(--bg); border: 1px solid var(--border); cursor: pointer; font-family: var(--mono); font-size: 11px;
+    background: var(--bg); border: 1px solid var(--border); cursor: pointer; font-family: var(--mono); font-size: 11px; transition: 0.1s;
   }
   .t-item:hover { border-color: var(--border-hi); background: var(--panel2); }
-  .mini-meter { width: 42px; height: 4px; background: #1e222a; border-radius: 2px; overflow: hidden; display: inline-block; }
-  .mini-meter > span { display: block; height: 100%; }
+  .mini-meter { width: 38px; height: 4px; background: #1e222a; border-radius: 2px; overflow: hidden; display: inline-block; }
+  .mini-meter > span { display: block; height: 100%; transition: width 0.25s; }
 
+  /* WORKSPACE GRID FOR 4 CONCEPTS */
   .workspace { flex: 1; display: grid; overflow: hidden; position: relative; }
-  body.c1 .workspace { grid-template-columns: 270px 1fr; }
+  body.c1 .workspace { grid-template-columns: 260px 1fr; }
   body.c1 .right-Inspector, body.c1 .bottom-dock, body.c1 .icon-rail, body.c1 .roster-table { display: none; }
 
-  body.c2 .workspace { grid-template-columns: 42px 330px 1fr; }
+  body.c2 .workspace { grid-template-columns: 40px 295px 1fr; }
   body.c2 .right-Inspector, body.c2 .bottom-dock, body.c2 .tree-view { display: none; }
 
-  body.c3 .workspace { grid-template-columns: 240px 1fr; grid-template-rows: 1fr 150px; }
+  body.c3 .workspace { grid-template-columns: 235px 1fr; grid-template-rows: 1fr 150px; }
   body.c3 .right-Inspector, body.c3 .icon-rail, body.c3 .roster-table { display: none; }
-  body.c3 .bottom-dock { grid-column: 1 / -1; display: grid; grid-template-columns: 1.2fr 1fr 1fr; border-top: 1px solid var(--border); background: var(--panel); }
+  body.c3 .bottom-dock { grid-column: 1 / -1; display: grid; grid-template-columns: 1.25fr 1fr 1fr; border-top: 1px solid var(--border); background: var(--panel); }
 
-  body.c4 .workspace { grid-template-columns: 235px 1fr 280px; }
+  body.c4 .workspace { grid-template-columns: 230px 1fr 265px; }
   body.c4 .bottom-dock, body.c4 .icon-rail, body.c4 .roster-table { display: none; }
 
+  /* ICON RAIL */
   .icon-rail {
     background: #08090b; border-right: 1px solid var(--border); display: flex; flex-direction: column;
     align-items: center; padding: 8px 0; gap: 6px;
   }
   .rail-btn { width: 28px; height: 28px; justify-content: center; padding: 0; font-size: 13px; }
 
+  /* LEFT PANE */
   .left-pane {
     background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden;
   }
   .pane-header {
-    height: 32px; padding: 0 10px; border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--muted); font-weight: 600;
+    height: 32px; padding: 0 8px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; font-size: 10.5px; color: var(--muted); font-weight: 600;
   }
   .tree-list { flex: 1; overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 2px; }
   .proj-group { margin-bottom: 6px; }
@@ -103,233 +115,211 @@
   }
   .proj-title:hover { background: var(--panel2); color: var(--text); }
   .thread-row {
-    display: flex; flex-direction: column; gap: 3px; padding: 6px 8px; margin-left: 8px;
-    border-left: 1px solid var(--border); border-radius: 0 5px 5px 0; cursor: pointer;
+    display: flex; flex-direction: column; gap: 3px; padding: 6px 8px; margin-left: 6px;
+    border-left: 2px solid var(--border); border-radius: 0 5px 5px 0; cursor: pointer; transition: 0.1s;
   }
   .thread-row:hover { background: var(--panel2); }
-  .thread-row.active { background: #1a1e26; border-left: 2px solid var(--blue); }
+  .thread-row.active { background: #1a202c; border-left: 2px solid var(--blue); }
   .thread-top { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
 
-  /* Табличный ростер для Концепта 2 */
-  .roster-table { flex: 1; overflow-y: auto; padding: 6px; }
+  /* DENSE TABLE */
+  .roster-table { flex: 1; overflow-y: auto; padding: 4px; }
   table.dense { width: 100%; border-collapse: collapse; font-size: 11px; }
   table.dense th { text-align: left; color: var(--dim); font-family: var(--mono); font-size: 9.5px; padding: 4px 6px; border-bottom: 1px solid var(--border); }
-  table.dense td { padding: 6px 6px; border-bottom: 1px solid rgba(35,39,48,0.6); }
+  table.dense td { padding: 6px 5px; border-bottom: 1px solid rgba(35,39,48,0.6); }
   table.dense tr:hover td { background: var(--panel2); cursor: pointer; }
+  table.dense tr.active td { background: #1a202c; }
 
+  /* CENTER CHAT PANE */
   .center-pane { display: flex; flex-direction: column; background: var(--bg); overflow: hidden; position: relative; }
   .chat-subheader {
-    height: 32px; padding: 0 14px; border-bottom: 1px solid var(--border); background: rgba(17,19,23,0.6);
-    display: flex; align-items: center; justify-content: space-between; font-size: 11px;
+    height: 34px; padding: 0 12px; border-bottom: 1px solid var(--border); background: rgba(17,19,23,0.75);
+    display: flex; align-items: center; justify-content: space-between; font-size: 11px; gap: 6px;
   }
-  .chat-scroll { flex: 1; overflow-y: auto; padding: 14px 18px; display: flex; flex-direction: column; gap: 12px; }
+  .chat-scroll { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
   
   .tool-step-group {
     border: 1px solid var(--border); background: var(--panel); border-radius: 6px; padding: 6px 10px;
-    display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: var(--muted);
+    display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; color: var(--muted); cursor: pointer;
   }
+  .tool-step-header { display: flex; align-items: center; gap: 8px; width: 100%; }
+  .tool-step-details {
+    display: none; border-top: 1px solid var(--border); padding-top: 6px; font-family: var(--mono);
+    font-size: 10.5px; color: var(--text); line-height: 1.5; background: #0c0e12; padding: 6px 8px; border-radius: 4px;
+  }
+  .tool-step-group.expanded .tool-step-details { display: block; }
+
   .msg-user {
-    align-self: flex-end; background: #191d26; border: 1px solid #2b3140; border-radius: 6px;
-    padding: 8px 12px; max-width: 80%; line-height: 1.45;
+    align-self: flex-end; background: #192130; border: 1px solid #2b3954; border-radius: 6px;
+    padding: 8px 12px; max-width: 82%; line-height: 1.45; color: #fff;
   }
   .msg-ai {
     background: var(--panel); border: 1px solid var(--border); border-radius: 6px;
     padding: 10px 14px; line-height: 1.5; display: flex; flex-direction: column; gap: 8px;
+  }
+  .msg-alert {
+    border-color: rgba(245,166,35,0.45) !important; background: rgba(245,166,35,0.05) !important;
   }
   .artifact-row {
     display: flex; align-items: center; justify-content: space-between; gap: 8px;
     background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 5px 8px;
   }
 
-  .composer-outer { padding: 8px 14px 10px; background: var(--bg); border-top: 1px solid var(--border); }
+  /* COMPOSER */
+  .composer-outer { padding: 8px 12px 10px; background: var(--bg); border-top: 1px solid var(--border); }
   .composer-box {
     background: var(--panel); border: 1px solid var(--border-hi); border-radius: 7px;
-    display: flex; flex-direction: column; overflow: hidden;
+    display: flex; flex-direction: column; overflow: hidden; transition: border-color 0.15s;
+  }
+  .composer-box:focus-within { border-color: var(--blue); }
+  .attachment-chips { display: flex; gap: 6px; padding: 6px 10px 0; flex-wrap: wrap; }
+  .att-chip {
+    background: var(--panel2); border: 1px solid var(--border-hi); border-radius: 4px; padding: 2px 7px;
+    font-family: var(--mono); font-size: 10.5px; display: inline-flex; align-items: center; gap: 5px;
   }
   .composer-input {
     width: 100%; background: transparent; border: none; outline: none; color: var(--text);
-    padding: 9px 12px; font-size: 12.5px; resize: none; height: 42px;
+    padding: 8px 12px; font-size: 12.5px; resize: none; height: 42px; user-select: text;
   }
   .composer-footer {
-    min-height: 32px; background: #0e1014; border-top: 1px solid var(--border); padding: 4px 8px;
+    min-height: 32px; background: #0d0f13; border-top: 1px solid var(--border); padding: 4px 8px;
     display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap;
   }
   .composer-left, .composer-right { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 
+  /* RIGHT INSPECTOR & BOTTOM DOCK */
   .right-Inspector {
     background: var(--panel); border-left: 1px solid var(--border); padding: 8px;
     display: flex; flex-direction: column; gap: 8px; overflow-y: auto;
   }
   .ins-box { background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 8px; }
-
   .bottom-dock { display: none; }
   .dock-cell { padding: 8px 10px; border-right: 1px solid var(--border); overflow-y: auto; }
 
+  /* MENUS & POPOVERS */
   .menu-overlay {
-    display: none; position: absolute; z-index: 50; background: var(--panel);
-    border: 1px solid var(--border-hi); border-radius: 6px; box-shadow: 0 14px 34px rgba(0,0,0,0.85);
+    display: none; position: absolute; z-index: 60; background: var(--panel);
+    border: 1px solid var(--border-hi); border-radius: 6px; box-shadow: 0 16px 40px rgba(0,0,0,0.88);
   }
   .menu-overlay.open { display: block; }
 
-  #menu-bento { top: 6px; right: 10px; width: 580px; max-width: 95vw; padding: 10px; }
+  #menu-bento { top: 6px; right: 10px; width: 575px; max-width: 96%; padding: 10px; }
   .bento-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 8px; }
   .bento-card { background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
-  .bento-title { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; display: flex; justify-content: space-between; }
+  .bento-title { font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
 
-  #menu-t3-model { bottom: 48px; left: 16px; width: 330px; padding: 6px; }
+  #menu-t3-model { bottom: 50px; left: 14px; width: 340px; padding: 6px; }
   .m-row {
     display: flex; align-items: center; justify-content: space-between; padding: 6px 8px;
-    border-radius: 4px; cursor: pointer; font-size: 11.5px;
+    border-radius: 4px; cursor: pointer; font-size: 11.5px; transition: 0.1s;
   }
   .m-row:hover { background: var(--panel2); }
+  .m-row.selected { background: #1c2433; border: 1px solid rgba(77,156,255,0.4); }
 
-  #menu-drawer { top: 0; right: 0; bottom: 0; width: 350px; border-radius: 0; border-top: none; border-bottom: none; padding: 12px; }
-  #menu-cmd { top: 30px; left: 50%; transform: translateX(-50%); width: 460px; max-width: 92vw; padding: 8px; }
+  #menu-drawer { top: 0; right: 0; bottom: 0; width: 375px; max-width: 92%; border-radius: 0; border-top: none; border-bottom: none; padding: 12px; display: none; flex-direction: column; }
+  #menu-drawer.open { display: flex; }
+  #menu-cmd { top: 24px; left: 50%; transform: translateX(-50%); width: 480px; max-width: 94%; padding: 8px; }
+
+  /* TOAST NOTIFICATION */
+  .toast-wrap {
+    position: absolute; bottom: 56px; right: 16px; z-index: 90; display: flex; flex-direction: column; gap: 6px; pointer-events: none;
+  }
+  .toast {
+    background: #161b24; border: 1px solid var(--blue); color: #fff; padding: 6px 12px; border-radius: 5px;
+    font-size: 11.5px; font-family: var(--mono); box-shadow: 0 8px 20px rgba(0,0,0,0.65);
+    display: flex; align-items: center; gap: 8px; animation: fadeIn 0.15s ease-out;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* INTERACTIVE SVG TOOLTIP */
+  .svg-tip {
+    font-family: var(--mono); font-size: 10px; color: var(--amber); min-height: 14px;
+  }
 </style>
 </head>
 <body class="c1">
+<div class="app-shell">
 
-<!-- ПЕРЕКЛЮЧАТЕЛЬ 4 ЛЕЙАУТОВ И 4 ТИПОВ МЕНЮ -->
+<!-- 1. LAB SWITCHER BAR -->
 <div class="lab-bar">
-  <div class="lab-group">
-    <span class="lab-label">Лейаут:</span>
-    <button class="active" id="btn-c1" onclick="setConcept('c1', this)">1. T3 Code Дерево + Композер</button>
-    <button id="btn-c2" onclick="setConcept('c2', this)">2. Linear Таблица + Рейл</button>
-    <button id="btn-c3" onclick="setConcept('c3', this)">3. Zed Чат + Нижний Док квот</button>
-    <button id="btn-c4" onclick="setConcept('c4', this)">4. Сплит-инспектор (3 кол.)</button>
+  <div class="lab-group" id="layoutBtns">
+    <span class="lab-label">Лейаут (1-4):</span>
+    <button class="active" onclick="setConcept('c1', this)">1. T3 Дерево + Композер</button>
+    <button onclick="setConcept('c2', this)">2. Linear Таблица + Рейл</button>
+    <button onclick="setConcept('c3', this)">3. Zed Чат + Док квот</button>
+    <button onclick="setConcept('c4', this)">4. Сплит 3 колонки</button>
   </div>
-  <div class="lab-group">
-    <span class="lab-label">Менюшки:</span>
-    <button class="active" id="btn-mb" onclick="openMenu('menu-bento', this)">А. Bento-пульт 2×2</button>
-    <button id="btn-mt" onclick="openMenu('menu-t3-model', this)">Б. T3 Поповер модели (снизу)</button>
-    <button id="btn-md" onclick="openMenu('menu-drawer', this)">В. Боковой Дровер</button>
-    <button id="btn-mc" onclick="openMenu('menu-cmd', this)">Г. ⌘K Палитра</button>
+  <div class="lab-group" id="menuBtns">
+    <span class="lab-label">Менюшки (А-Г):</span>
+    <button onclick="openMenu('menu-bento', this)">А. Bento-пульт 2×2</button>
+    <button onclick="openMenu('menu-t3-model', this)">Б. T3 Поповер модели</button>
+    <button onclick="openMenu('menu-drawer', this)">В. Боковой Дровер</button>
+    <button onclick="openMenu('menu-cmd', this)">Г. ⌘K Палитра</button>
   </div>
 </div>
 
-<!-- ВЕРХНИЙ ПЛОСКИЙ ХЕДЕР (38px) -->
+<!-- 2. TOP HEADER -->
 <div class="top-header">
-  <div class="crumb-bar">
-    <span class="crumb" onclick="openMenu('menu-cmd')"><b>🎼 Orchestra</b></span>
+  <div class="crumb-bar" id="projectCrumbs">
+    <span class="crumb" onclick="openMenu('menu-cmd')" title="Открыть палитру команд (⌘K)"><b>◆ Orchestra</b></span>
     <span class="sep">/</span>
-    <span class="crumb active">
-      <span style="color:var(--green)">●</span> <b>main</b> <span class="badge">3 воркера</span> ▾
+    <span class="crumb active" data-proj="main" onclick="selectProject('main', this)">
+      <span style="color:var(--green)">●</span> <b>main</b> <span class="badge" id="crumb-count-main">3</span>
     </span>
-    <span class="crumb">
-      <span style="color:var(--blue)">●</span> seedon <span class="badge blue">V-607</span>
+    <span class="crumb" data-proj="seedon" onclick="selectProject('seedon', this)">
+      <span style="color:var(--blue)">●</span> <b>seedon</b> <span class="badge blue">V-607</span>
     </span>
-    <span class="crumb">
-      <span style="color:var(--amber)">●</span> dostup
+    <span class="crumb" data-proj="dostup" onclick="selectProject('dostup', this)">
+      <span style="color:var(--amber)">●</span> <b>dostup</b> <span class="badge">2</span>
     </span>
-    <button style="padding:2px 6px;" title="Новый оркестратор / Скрытые (2)">+ / 👁 2</button>
+    <button style="padding:2px 7px;" onclick="spawnNewOrchestrator()" title="Создать новый проект / оркестратор">+ Оркестратор</button>
   </div>
 
   <div class="telemetry-strip">
-    <div class="t-item" onclick="openMenu('menu-bento')">
+    <div class="t-item" onclick="openMenu('menu-bento')" title="Клик — открыть Bento-пульт квот и графиков">
       <span>CODEX 5H</span>
-      <span class="mini-meter"><span style="width:38%;background:var(--green)"></span></span>
-      <span style="color:var(--green)">38%</span>
+      <span class="mini-meter"><span id="top-meter-bar" style="width:38%;background:var(--green)"></span></span>
+      <span id="top-meter-val" style="color:var(--green)">38%</span>
       <span style="color:var(--dim)">|</span>
       <span>7D 69%</span>
       <span style="color:var(--dim)">|</span>
       <span>GEMINI 8%</span>
     </div>
-    <div class="t-item" onclick="openMenu('menu-bento')" style="border-color:rgba(43,212,125,0.35);">
-      <span style="color:var(--green)">● ДОПУСК: ВКЛ</span>
+    <div class="t-item" id="gate-pill" onclick="openMenu('menu-bento')" style="border-color:rgba(43,212,125,0.35);">
+      <span id="gate-pill-text" style="color:var(--green)">● ДОПУСК: ВКЛ</span>
       <span style="color:var(--muted)">▾</span>
     </div>
-    <button class="mono" onclick="openMenu('menu-drawer')">🗂 Профили · 📊 $1.84</button>
-    <button class="mono" onclick="openMenu('menu-cmd')">⌘K</button>
+    <button class="mono" onclick="openDrawerTab('profiles')" title="Открыть профили и аналитику расхода">▤ Профили · <span id="top-cost">$1.84</span></button>
+    <button class="mono" id="lang-btn" onclick="toggleLang()">RU</button>
+    <button class="mono" onclick="openMenu('menu-cmd')" title="Быстрые команды (⌘K)">⌘K</button>
   </div>
 </div>
 
-<!-- РАБОЧАЯ ЗОНА -->
+<!-- 3. MAIN WORKSPACE -->
 <div class="workspace" onclick="closeMenus()">
 
   <!-- Икон-рейл (Концепт 2) -->
   <div class="icon-rail" onclick="event.stopPropagation()">
-    <button class="rail-btn active" title="Агенты и треды">🌿</button>
-    <button class="rail-btn" title="Задачи проекта">☑️</button>
-    <button class="rail-btn" title="Фоновые джобы">⚡</button>
-    <button class="rail-btn" title="Файлы папки">📂</button>
-    <button class="rail-btn" style="margin-top:auto" onclick="openMenu('menu-bento')" title="Квоты">📊</button>
+    <button class="rail-btn active" onclick="setLeftFilter('all', this)" title="Все агенты и задачи">⎇</button>
+    <button class="rail-btn" onclick="setLeftFilter('tasks', this)" title="Только задачи">✓</button>
+    <button class="rail-btn" onclick="setLeftFilter('jobs', this)" title="Фоновые джобы">⚡</button>
+    <button class="rail-btn" onclick="openDrawerTab('files')" title="Файлы проекта">▤</button>
+    <button class="rail-btn" style="margin-top:auto" onclick="openMenu('menu-bento')" title="Bento-пульт квот">▥</button>
   </div>
 
   <!-- Левая панель -->
   <div class="left-pane" onclick="event.stopPropagation()">
     <div class="pane-header">
-      <span>ПРОЕКТЫ, АГЕНТЫ И ЗАДАЧИ</span>
-      <div style="display:flex;gap:3px;">
-        <button style="padding:1px 5px;font-size:10px;" class="active">Все</button>
-        <button style="padding:1px 5px;font-size:10px;">Задачи (5)</button>
-        <button style="padding:1px 5px;font-size:10px;">Фон (3)</button>
+      <span id="left-pane-title">ПРОЕКТЫ, АГЕНТЫ И ЗАДАЧИ</span>
+      <div style="display:flex;gap:3px;" id="leftFilterBtns">
+        <button style="padding:1px 5px;font-size:10px;" class="active" onclick="setLeftFilter('all', this)">Все</button>
+        <button style="padding:1px 5px;font-size:10px;" onclick="setLeftFilter('tasks', this)">Задачи</button>
+        <button style="padding:1px 5px;font-size:10px;" onclick="setLeftFilter('jobs', this)">Фон (<span id="bg-count-badge">3</span>)</button>
       </div>
     </div>
 
     <!-- Дерево (Концепты 1, 3, 4) -->
-    <div class="tree-list tree-view">
-      <div class="proj-group">
-        <div class="proj-title">
-          <span>▼ <b>main</b> (orchestra)</span>
-          <span class="mono" style="color:var(--muted)">$0.42</span>
-        </div>
-        <div class="thread-row active">
-          <div class="thread-top">
-            <span>👑 <b>Orchestra-orchestrator</b></span>
-            <span class="badge green">IDLE</span>
-          </div>
-          <div class="thread-top mono" style="color:var(--muted);font-size:10px;">
-            <span>gpt-6.1-sol · ctx 31%</span>
-            <span>cache 94%</span>
-          </div>
-        </div>
-        <div class="thread-row">
-          <div class="thread-top">
-            <span>⚙️ <b>sol-hub-sync</b></span>
-            <span class="badge blue">HUB · 4/5</span>
-          </div>
-          <div class="mini-meter" style="width:100%"><span style="width:80%;background:var(--blue)"></span></div>
-        </div>
-      </div>
-
-      <div class="proj-group">
-        <div class="proj-title">
-          <span>▼ <b>seedon</b> (seedon-kb)</span>
-          <span class="mono" style="color:var(--muted)">$0.19</span>
-        </div>
-        <div class="thread-row">
-          <div class="thread-top">
-            <span>👑 <b>seedon-orchestrator</b></span>
-            <span class="badge green">IDLE</span>
-          </div>
-          <div class="thread-top mono" style="color:var(--muted);font-size:10px;">
-            <span>gpt-6.1-terra · ctx 42%</span>
-            <span>V-607</span>
-          </div>
-        </div>
-        <div class="thread-row">
-          <div class="thread-top">
-            <span>🔍 <b>festival-argon</b></span>
-            <span class="badge amber">RUN · V-607</span>
-          </div>
-          <div class="thread-top mono" style="color:var(--muted);font-size:10px;">
-            <span>hub-gemini-4-argon</span>
-            <span>КП и продукты</span>
-          </div>
-          <div class="mini-meter" style="width:100%"><span style="width:65%;background:var(--amber)"></span></div>
-        </div>
-      </div>
-
-      <div class="proj-group" style="margin-top:4px;border-top:1px solid var(--border);padding-top:6px;">
-        <div class="proj-title"><span>⚡ <b>ФОНОВЫЕ ДЖОБЫ И ЗАДАЧИ</b></span><span class="badge">3 акт.</span></div>
-        <div class="thread-row">
-          <div class="thread-top"><span>🖥 Сторож команды</span><span class="mono" style="color:var(--green)">75% [✕]</span></div>
-        </div>
-        <div class="thread-row">
-          <div class="thread-top"><span>☑️ V-1279 CI фикс пуша</span><span class="badge green">PUSHED</span></div>
-        </div>
-      </div>
-    </div>
+    <div class="tree-list tree-view" id="treeContainer"></div>
 
     <!-- Табличный ростер (Концепт 2) -->
     <div class="roster-table">
@@ -337,15 +327,7 @@
         <thead>
           <tr><th>АГЕНТ / ЗАДАЧА</th><th>МОДЕЛЬ</th><th>CTX</th><th>СТАТУС</th></tr>
         </thead>
-        <tbody>
-          <tr><td>👑 <b>Orchestra-orch</b></td><td class="mono">sol</td><td class="mono">31%</td><td><span class="badge green">IDLE</span></td></tr>
-          <tr><td>⚙️ sol-hub-sync</td><td class="mono">hubsol</td><td class="mono">62%</td><td><span class="badge blue">RUN</span></td></tr>
-          <tr><td>👑 <b>seedon-orch</b></td><td class="mono">terra</td><td class="mono">42%</td><td><span class="badge green">IDLE</span></td></tr>
-          <tr><td>🔍 festival-argon</td><td class="mono">hubargon</td><td class="mono">38%</td><td><span class="badge amber">V-607</span></td></tr>
-          <tr><td>⚙️ fast-checker</td><td class="mono">hubluna</td><td class="mono">28%</td><td><span class="badge">WAIT</span></td></tr>
-          <tr><td>☑️ V-1279 CI fix</td><td class="mono">main</td><td class="mono">—</td><td><span class="badge green">DONE</span></td></tr>
-          <tr><td>🖥 Сторож команды</td><td class="mono">bg-job</td><td class="mono">75%</td><td><span class="badge green">2m</span></td></tr>
-        </tbody>
+        <tbody id="rosterTbody"></tbody>
       </table>
     </div>
   </div>
@@ -353,80 +335,49 @@
   <!-- Центральная колонка: Чат + T3 Комбайн-композер -->
   <div class="center-pane">
     <div class="chat-subheader">
-      <div style="display:flex;align-items:center;gap:6px;">
-        <b>👑 Orchestra-orchestrator</b>
-        <span class="badge">🌿 main · 6e2e0525d</span>
-        <span class="badge green">CI: 16/16 PASSED</span>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+        <b id="active-agent-title">◆ Orchestra-orchestrator</b>
+        <span class="badge" id="active-agent-branch">⎇ main · 6e2e0525d</span>
+        <span class="badge green" id="active-agent-status">IDLE</span>
+        <span class="badge blue" id="active-agent-tg" onclick="cycleTgTopic()" style="cursor:pointer;" title="Клик — сменить Telegram-топик">⌖ TG: #general</span>
       </div>
-      <div style="display:flex;align-items:center;gap:4px;">
-        <button style="padding:2px 6px;font-size:10.5px;">▲ +100</button>
-        <button style="padding:2px 6px;font-size:10.5px;" class="active">Все</button>
-        <button style="padding:2px 6px;font-size:10.5px;">Только ИИ</button>
-        <button style="padding:2px 6px;font-size:10.5px;">🔔 1 ↑↓</button>
-        <button style="padding:2px 6px;font-size:10.5px;">🏁 3 ↑↓</button>
-        <button style="padding:2px 6px;font-size:10.5px;">Я 5 ↑↓</button>
-      </div>
-    </div>
-
-    <div class="chat-scroll">
-      <div class="msg-user">
-        Сделай антислоп как в T3 Code: без круглой фиолетовой попсы, с чёткими рамками 1px, моноширинными цифрами и разными вариантами менюшек.
-      </div>
-
-      <div class="tool-step-group">
-        <span style="color:var(--green)">✓</span>
-        <span class="mono">4 шага выполнено</span>
-        <span>·</span>
-        <span>Очищен коммит, влит V-1279, проверен test_hub_download_v1064.py (16 passed), запушен в origin/main</span>
-        <span style="margin-left:auto;color:var(--blue);cursor:pointer;">Развернуть ▾</span>
-      </div>
-
-      <div class="msg-ai">
-        <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px;">
-          <span><b>Orchestra-orchestrator</b> · gpt-6.1-sol</span>
-          <span class="mono">18:54 · $0.03</span>
-        </div>
-        <div>
-          Собрал <b>инженерный антислоп-интерфейс в духе T3 Code / Linear / Zed</b>:
-          все <b>действия текущего агента</b> (`Модель ▾`, `Контекст 50%`, `🗜 Сжать`, `📜 Промпт`, `🤖 Сабагенты`, `♻️ CLI`) встроены прямо в <b>нижнюю планку поля ввода</b> (как в T3 Code), а квоты и графики открываются в плотном <b>Bento-пульте 2×2</b> по клику на верхний статус-бар.
-        </div>
-        <div class="artifact-row">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span class="badge blue">GIT</span>
-            <span><b>6e2e0525d</b> · origin/main синхронизирован с VPS и GitHub</span>
-          </div>
-          <div style="display:flex;gap:4px;">
-            <button style="padding:2px 7px;font-size:10.5px;">🔗 Открыть</button>
-            <button style="padding:2px 7px;font-size:10.5px;">📥 Скачать</button>
-          </div>
-        </div>
+      <div style="display:flex;align-items:center;gap:4px;" id="chatFilterBtns">
+        <button style="padding:2px 6px;font-size:10.5px;" onclick="loadHistoryChunk()">▲ +100</button>
+        <button style="padding:2px 6px;font-size:10.5px;" class="active" onclick="setChatFilter('all', this)">Все</button>
+        <button style="padding:2px 6px;font-size:10.5px;" onclick="setChatFilter('ai', this)">Только ИИ</button>
+        <button style="padding:2px 6px;font-size:10.5px;" onclick="jumpToMsg('alert')" title="Прыгнуть к алерту">! 1 ↑↓</button>
+        <button style="padding:2px 6px;font-size:10.5px;" onclick="jumpToMsg('step')" title="Прыгнуть к шагу выполнения">✓ 3 ↑↓</button>
+        <button style="padding:2px 6px;font-size:10.5px;" onclick="jumpToMsg('user')" title="Прыгнуть к сообщениям пользователя">Я ↑↓</button>
       </div>
     </div>
+
+    <div class="chat-scroll" id="chatScroll"></div>
 
     <!-- НИЖНИЙ КОМПОЗЕР В СТИЛЕ T3 CODE -->
     <div class="composer-outer" onclick="event.stopPropagation()">
       <div class="composer-box">
-        <textarea class="composer-input" placeholder="Написать задачу или команду оркестратору… (Enter — отправить, Shift+Enter — новая строка)"></textarea>
+        <div class="attachment-chips" id="attChips"></div>
+        <textarea class="composer-input" id="composerInput" placeholder="Написать задачу или команду агенту… (Enter — отправить в живой чат, Shift+Enter — новая строка)" onkeydown="handleComposerKey(event)"></textarea>
         <div class="composer-footer">
           <div class="composer-left">
-            <button class="mono" onclick="openMenu('menu-t3-model')" style="border-color:var(--border-hi);color:#fff;">
+            <button class="mono" id="composer-model-btn" onclick="openMenu('menu-t3-model')" style="border-color:var(--border-hi);color:#fff;" title="Выбрать модель или Hub-маршрут">
               ⚡ gpt-6.1-sol ▾
             </button>
-            <button class="mono" title="Контекст и кеш (клик — сжать)">
-              ctx 50% · <span style="color:var(--green)">cache 94%</span> · 🗜 Сжать
+            <button class="mono" id="composer-ctx-btn" onclick="compactContext()" title="Клик — сжать контекст текущего агента (Compact)">
+              ctx <span id="ctx-pct">50%</span> · <span style="color:var(--green)">cache 94%</span> · ⊟ Сжать
             </button>
-            <button onclick="openMenu('menu-drawer')">📜 Промпт</button>
-            <button onclick="openMenu('menu-drawer')">🤖 Сабагенты (5)</button>
-            <button>♻️ CLI</button>
-            <button>🧹 Очистить</button>
-            <button>📂 Папка</button>
+            <button onclick="openDrawerTab('prompt')" title="Открыть и отредактировать системный промпт агента">≡ Промпт</button>
+            <button onclick="openDrawerTab('subagents')" title="Управление сабагентами и делегированием">▸ Сабагенты (<span id="subagent-count">5</span>)</button>
+            <button onclick="restartCliSession()" title="Перезапустить CLI-сессию текущего агента">⚙ CLI</button>
+            <button onclick="clearChatSession()" title="Очистить сообщения текущей сессии">⌫ Очистить</button>
+            <button onclick="openDrawerTab('files')" title="Сменить рабочую папку или worktree">▤ Папка</button>
           </div>
           <div class="composer-right">
-            <button title="Прикрепить файл">📎</button>
-            <button title="Голосовой ввод Deepgram Nova-3">🎙 Голос</button>
-            <button class="mono">After turn ▾</button>
-            <button style="border-color:rgba(242,85,85,0.4);color:var(--red);">■ Stop</button>
-            <button class="active">Send ↵</button>
+            <button onclick="attachMockFile()" title="Прикрепить лог / скриншот / файл">+</button>
+            <button id="voiceBtn" onclick="toggleVoiceInput()" title="Голосовой ввод Deepgram Nova-3">● Голос</button>
+            <button class="mono" id="deliveryModeBtn" onclick="cycleDeliveryMode()" title="Режим доставки сообщения (After turn / Steer / Queue)">After turn ▾</button>
+            <button id="stopAgentBtn" onclick="stopActiveAgent()" style="border-color:rgba(242,85,85,0.4);color:var(--red);">■ Stop</button>
+            <button class="active" onclick="sendChatMessage()">Send ↵</button>
           </div>
         </div>
       </div>
@@ -436,20 +387,21 @@
   <!-- Правый инспектор (Концепт 4) -->
   <div class="right-Inspector" onclick="event.stopPropagation()">
     <div class="ins-box">
-      <div class="bento-title"><span>ЛИНИЯ ДОПУСКА И КВОТЫ</span><span style="color:var(--green)">ВКЛ</span></div>
+      <div class="bento-title"><span>ПРАВИЛО ДОПУСКА</span><span id="ins-gate-status" style="color:var(--green)">ВКЛ</span></div>
       <div style="margin-top:6px;display:flex;gap:4px;">
-        <button style="flex:1;justify-content:center;color:var(--amber);">Снять на 1ч</button>
-        <button style="flex:1;justify-content:center;">До даты</button>
+        <button style="flex:1;justify-content:center;color:var(--amber);" onclick="toggleGate1h()">◈ На 1ч</button>
+        <button style="flex:1;justify-content:center;" onclick="toggleGateUntil()">До даты</button>
       </div>
     </div>
     <div class="ins-box">
-      <div class="bento-title"><span>ЛЕНТА КВОТ (±3.5 СУТ)</span><span style="color:var(--red)">95%</span></div>
-      <svg viewBox="0 0 220 54" width="100%" height="50" style="margin-top:4px;">
+      <div class="bento-title"><span>ЛЕНТА КВОТ (±3.5 СУТ)</span><span style="color:var(--red)">СТОП 95%</span></div>
+      <svg viewBox="0 0 220 54" width="100%" height="50" style="margin-top:4px;cursor:crosshair;" onmousemove="scrubChart(event, 'insChartTip')">
         <line x1="0" y1="6" x2="220" y2="6" stroke="#f25555" stroke-dasharray="2,2"/>
         <line x1="110" y1="0" x2="110" y2="54" stroke="#4d9cff"/>
         <polyline fill="none" stroke="#f5a623" stroke-width="1.6" points="0,46 40,40 80,32 110,24 160,16 220,10"/>
         <polyline fill="none" stroke="#2bd47d" stroke-width="1.6" points="0,50 50,46 110,40 170,34 220,29"/>
       </svg>
+      <div class="svg-tip" id="insChartTip">Наведи курсор: СЕЙЧАС · 5h 38.4% · 7d 69.1%</div>
     </div>
     <div class="ins-box">
       <div class="bento-title"><span>КВОТЫ ПУЛОВ (0–100%)</span><span>∞</span></div>
@@ -459,84 +411,93 @@
         <circle cx="130" cy="22" r="3.5" fill="#4d9cff"/><text x="138" y="25" fill="#e6e8ec" font-size="8.5">Argon 43%</text>
       </svg>
     </div>
+    <div class="ins-box">
+      <div class="bento-title"><span>ФОНОВЫЕ ДЖОБЫ</span><span id="ins-job-count">3 акт.</span></div>
+      <div id="insJobsList" style="margin-top:6px;display:flex;flex-direction:column;gap:4px;font-size:11px;"></div>
+    </div>
   </div>
 
   <!-- Нижний горизонтальный док (Концепт 3) -->
   <div class="bottom-dock" onclick="event.stopPropagation()">
     <div class="dock-cell">
-      <div class="bento-title"><span>ЛЕНТА КВОТ (±3.5 СУТ КРСК) + ДОПУСК</span><span style="color:var(--green)">ДОПУСК ВКЛ [Снять 1ч]</span></div>
-      <svg viewBox="0 0 320 65" width="100%" height="62" style="margin-top:4px;">
+      <div class="bento-title">
+        <span>ЛЕНТА КВОТ (±3.5 СУТ КРСК) + ДОПУСК</span>
+        <button style="padding:1px 6px;font-size:10px;color:var(--amber);" onclick="toggleGate1h()">◈ Снять допуск на 1ч</button>
+      </div>
+      <svg viewBox="0 0 320 60" width="100%" height="56" style="margin-top:4px;cursor:crosshair;" onmousemove="scrubChart(event, 'dockChartTip')">
         <line x1="0" y1="8" x2="320" y2="8" stroke="#f25555" stroke-dasharray="3,3"/>
-        <line x1="160" y1="0" x2="160" y2="65" stroke="#4d9cff"/>
-        <polyline fill="none" stroke="#f5a623" stroke-width="1.8" points="0,55 60,48 110,38 160,26 230,18 320,12"/>
-        <polyline fill="none" stroke="#2bd47d" stroke-width="1.8" points="0,60 80,54 160,46 240,39 320,32"/>
+        <line x1="160" y1="0" x2="160" y2="60" stroke="#4d9cff"/>
+        <polyline fill="none" stroke="#f5a623" stroke-width="1.8" points="0,52 60,45 110,36 160,25 230,17 320,11"/>
+        <polyline fill="none" stroke="#2bd47d" stroke-width="1.8" points="0,56 80,50 160,42 240,35 320,28"/>
       </svg>
+      <div class="svg-tip" id="dockChartTip">Наведи курсор на график: СЕЙЧАС (КРСК) · 5h 38.4% · 7d 69.1%</div>
     </div>
     <div class="dock-cell">
       <div class="bento-title"><span>КВОТЫ ПУЛОВ (0–100%)</span><span>ОРКЕСТРАТОР ∞</span></div>
-      <svg viewBox="0 0 240 65" width="100%" height="62" style="margin-top:4px;">
-        <line x1="0" y1="60" x2="240" y2="8" stroke="#343a46" stroke-width="1.5"/>
-        <circle cx="65" cy="46" r="4" fill="#2bd47d"/><text x="73" y="49" fill="#e6e8ec" font-size="9">Sol 38%</text>
-        <circle cx="135" cy="30" r="4" fill="#4d9cff"/><text x="143" y="33" fill="#e6e8ec" font-size="9">Argon 43%</text>
+      <svg viewBox="0 0 240 60" width="100%" height="56" style="margin-top:4px;">
+        <line x1="0" y1="55" x2="240" y2="8" stroke="#343a46" stroke-width="1.5"/>
+        <circle cx="65" cy="42" r="4" fill="#2bd47d"/><text x="73" y="45" fill="#e6e8ec" font-size="9">Sol 38%</text>
+        <circle cx="135" cy="28" r="4" fill="#4d9cff"/><text x="143" y="31" fill="#e6e8ec" font-size="9">Argon 43%</text>
       </svg>
     </div>
     <div class="dock-cell" style="border-right:none;">
-      <div class="bento-title"><span>ФОНОВЫЕ ДЖОБЫ (3)</span><span>ПО АГЕНТАМ | ЛЕНТА</span></div>
-      <div style="margin-top:6px;display:flex;flex-direction:column;gap:5px;font-size:11px;">
-        <div style="display:flex;justify-content:space-between;"><span>🖥 Сторож команды</span><span class="mono" style="color:var(--green)">75% · 2м [✕]</span></div>
-        <div style="display:flex;justify-content:space-between;"><span>🔍 festival-argon (V-607)</span><span class="mono" style="color:var(--amber)">65% · 4м [✕]</span></div>
-      </div>
+      <div class="bento-title"><span>ФОНОВЫЕ ДЖОБЫ</span><button style="padding:1px 6px;font-size:10px;" onclick="addMockBgJob()">+ Запустить тест</button></div>
+      <div id="dockJobsList" style="margin-top:6px;display:flex;flex-direction:column;gap:4px;font-size:11px;"></div>
     </div>
   </div>
 
   <!-- МЕНЮ А: Bento Mega-Menu 2x2 -->
-  <div class="menu-overlay open" id="menu-bento" onclick="event.stopPropagation()">
+  <div class="menu-overlay" id="menu-bento" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <span class="mono" style="font-size:10.5px;color:var(--amber);font-weight:700;">ПУЛЬТ ОРКЕСТРЫ · BENTO 2×2 (НАВЕДИ НА ГРАФИК ИЛИ ПЕРЕКЛЮЧИ ДОПУСК)</span>
+      <button style="padding:2px 6px;" onclick="closeMenus()">✕</button>
+    </div>
     <div class="bento-grid">
       <div class="bento-card">
         <div class="bento-title"><span>1. ЛЕНТА КВОТ (±3.5 СУТОК · КРСК)</span><span style="color:var(--red)">СТОП 95%</span></div>
-        <svg viewBox="0 0 260 64" width="100%" height="60">
+        <svg viewBox="0 0 260 64" width="100%" height="60" style="cursor:crosshair;" onmousemove="scrubChart(event, 'bentoChartTip')">
           <line x1="0" y1="7" x2="260" y2="7" stroke="#f25555" stroke-dasharray="3,3"/>
           <line x1="130" y1="0" x2="130" y2="64" stroke="#4d9cff"/>
           <polyline fill="none" stroke="#f5a623" stroke-width="1.8" points="0,54 50,47 95,36 130,25 190,17 260,11"/>
           <polyline fill="none" stroke="#2bd47d" stroke-width="1.8" points="0,58 65,52 130,44 200,37 260,30"/>
           <text x="134" y="14" fill="#4d9cff" font-size="8" font-family="monospace">СЕЙЧАС</text>
         </svg>
-        <div class="mono" style="font-size:10px;color:var(--muted);">Codex 5h: 38.4% (🎯+2.4) · 7d: 69.1% · Spark: 18% · Gemini: 8.2%</div>
+        <div class="svg-tip" id="bentoChartTip">Codex 5h: 38.4% (+2.4) · 7d: 69.1% · Spark: 18% · Gemini: 8.2%</div>
       </div>
 
       <div class="bento-card">
-        <div class="bento-title"><span>2. КВОТЫ ПУЛОВ (0–100%) И ПРАВИЛО ДОПУСКА</span><span style="color:var(--green)">ВКЛ</span></div>
-        <svg viewBox="0 0 240 50" width="100%" height="46">
-          <line x1="0" y1="46" x2="240" y2="6" stroke="#343a46" stroke-width="1.4"/>
-          <circle cx="55" cy="36" r="3.5" fill="#2bd47d"/><text x="62" y="39" fill="#e6e8ec" font-size="8.5">Sol</text>
-          <circle cx="115" cy="26" r="3.5" fill="#4d9cff"/><text x="122" y="29" fill="#e6e8ec" font-size="8.5">Argon</text>
-          <circle cx="170" cy="17" r="3.5" fill="#f5a623"/><text x="177" y="20" fill="#e6e8ec" font-size="8.5">Spark</text>
+        <div class="bento-title"><span>2. КВОТЫ ПУЛОВ И ПРАВИЛО ДОПУСКА</span><span id="bento-gate-badge" style="color:var(--green)">ДОПУСК ВКЛ</span></div>
+        <svg viewBox="0 0 240 48" width="100%" height="44">
+          <line x1="0" y1="44" x2="240" y2="6" stroke="#343a46" stroke-width="1.4"/>
+          <circle cx="55" cy="34" r="3.5" fill="#2bd47d"/><text x="62" y="37" fill="#e6e8ec" font-size="8.5">Sol 38%</text>
+          <circle cx="115" cy="25" r="3.5" fill="#4d9cff"/><text x="122" y="28" fill="#e6e8ec" font-size="8.5">Argon 43%</text>
+          <circle cx="170" cy="16" r="3.5" fill="#f5a623"/><text x="177" y="19" fill="#e6e8ec" font-size="8.5">Spark 18%</text>
         </svg>
-        <div style="display:flex;gap:4px;align-items:center;">
-          <button style="color:var(--amber);border-color:rgba(245,166,35,0.4);">🔓 Снять на 1 час</button>
-          <input type="text" value="05.11 18:00" class="mono" style="background:var(--panel);border:1px solid var(--border);color:var(--text);padding:3px 5px;border-radius:4px;width:82px;font-size:10px;"/>
-          <button>Снять до даты</button>
+        <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">
+          <button id="btn-gate-1h" style="color:var(--amber);border-color:rgba(245,166,35,0.4);" onclick="toggleGate1h()">◈ Снять на 1 час</button>
+          <input type="text" id="gateDateInput" value="05.11 18:00" class="mono" style="background:var(--panel);border:1px solid var(--border);color:var(--text);padding:3px 5px;border-radius:4px;width:80px;font-size:10px;"/>
+          <button onclick="toggleGateUntil()">Снять до даты</button>
         </div>
       </div>
 
       <div class="bento-card">
-        <div class="bento-title"><span>3. МАРШРУТЫ HUB И ЛОКАЛЬНЫЕ ПУЛЫ</span><span>4 HUB ACTIVE</span></div>
+        <div class="bento-title"><span>3. МАРШРУТЫ HUB (КЛИК — НАЗНАЧИТЬ АГЕНТУ)</span><span>4 ACTIVE</span></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;" class="mono">
-          <div class="badge green">hubsol · high · OK</div>
-          <div class="badge blue">hubargon · high · OK</div>
-          <div class="badge green">hubsonnet · med · OK</div>
-          <div class="badge green">hubluna · high · OK</div>
+          <button class="badge green" style="justify-content:space-between;padding:4px 6px;" onclick="selectModel('hubsol')"><span>hubsol · high</span><span>OK</span></button>
+          <button class="badge blue" style="justify-content:space-between;padding:4px 6px;" onclick="selectModel('hubargon')"><span>hubargon · high</span><span>OK</span></button>
+          <button class="badge green" style="justify-content:space-between;padding:4px 6px;" onclick="selectModel('hubsonnet')"><span>hubsonnet · med</span><span>OK</span></button>
+          <button class="badge green" style="justify-content:space-between;padding:4px 6px;" onclick="selectModel('hubluna')"><span>hubluna · high</span><span>OK</span></button>
         </div>
       </div>
 
       <div class="bento-card">
-        <div class="bento-title"><span>4. СИСТЕМНЫЕ ОПЕРАЦИИ</span><span>🟢 PROXY OK</span></div>
+        <div class="bento-title"><span>4. СИСТЕМНЫЕ ОПЕРАЦИИ</span><span style="color:var(--green)">● PROXY OK</span></div>
         <div style="display:flex;flex-wrap:wrap;gap:4px;">
-          <button>🗂 Профили</button>
-          <button>📊 Аналитика ($1.84)</button>
-          <button>👤 Клиент</button>
-          <button>RU/EN</button>
-          <button style="color:var(--amber);">↻ Рестарт Orchestra</button>
+          <button onclick="openDrawerTab('profiles')">▤ Профили</button>
+          <button onclick="openDrawerTab('analytics')">▥ Аналитика ($1.84)</button>
+          <button onclick="openDrawerTab('client')">▸ Клиент</button>
+          <button onclick="toggleLang()">RU/EN</button>
+          <button style="color:var(--amber);" onclick="restartOrchestraService()">↻ Рестарт Orchestra</button>
         </div>
       </div>
     </div>
@@ -544,70 +505,784 @@
 
   <!-- МЕНЮ Б: T3 Code Model Popover -->
   <div class="menu-overlay" id="menu-t3-model" onclick="event.stopPropagation()">
-    <div class="bento-title" style="padding:4px 6px;"><span>ВЫБОР МОДЕЛИ И МАРШРУТА (В КОМПОЗЕРЕ)</span><span>T3 POPOVER</span></div>
-    <div class="m-row" style="background:var(--panel2);"><span>⚡ <b>gpt-6.1-sol</b> (Local Codex)</span><span class="badge green">ТЕКУЩАЯ · 258K</span></div>
-    <div class="m-row"><span>🧠 <b>gpt-6.1-terra</b> (Local Orchestrator)</span><span class="badge">258K</span></div>
-    <div class="m-row"><span>🚀 <b>hubsol</b> (Hub GPT-6.1 Sol · high)</span><span class="badge blue">HUB</span></div>
-    <div class="m-row"><span>🔍 <b>hubargon</b> (Hub Gemini 4 Argon · high)</span><span class="badge blue">HUB</span></div>
-    <div class="m-row"><span>🎼 <b>hubsonnet</b> (Hub Sonnet 5.5 · med)</span><span class="badge blue">HUB</span></div>
-    <div class="m-row"><span>⚙️ <b>hubluna</b> (Hub GPT-6 Luna · high)</span><span class="badge blue">HUB</span></div>
+    <div class="bento-title" style="padding:4px 6px;margin-bottom:4px;">
+      <span>ВЫБОР МОДЕЛИ И МАРШРУТА (В КОМПОЗЕРЕ)</span>
+      <button style="padding:1px 5px;" onclick="closeMenus()">✕</button>
+    </div>
+    <div id="modelPopoverList"></div>
   </div>
 
   <!-- МЕНЮ В: Боковой Slide-over Drawer -->
   <div class="menu-overlay" id="menu-drawer" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px;">
-      <b>БОКОВОЙ ДРОВЕР АГЕНТА И СИСТЕМЫ</b>
+      <b id="drawerTitle">БОКОВОЙ ДРОВЕР АГЕНТА И СИСТЕМЫ</b>
       <button onclick="closeMenus()">✕</button>
     </div>
-    <div style="display:flex;gap:4px;margin-bottom:8px;">
-      <button class="active">📜 Промпт</button>
-      <button>🤖 Сабагенты (5)</button>
-      <button>🗂 Профили</button>
-      <button>📊 Расход</button>
+    <div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap;" id="drawerTabBtns">
+      <button class="active" data-dtab="prompt" onclick="openDrawerTab('prompt')">≡ Промпт</button>
+      <button data-dtab="subagents" onclick="openDrawerTab('subagents')">▸ Сабагенты</button>
+      <button data-dtab="profiles" onclick="openDrawerTab('profiles')">▤ Профили</button>
+      <button data-dtab="analytics" onclick="openDrawerTab('analytics')">▥ Расход</button>
+      <button data-dtab="files" onclick="openDrawerTab('files')">▤ Папка</button>
     </div>
-    <div class="ins-box mono" style="font-size:10.5px;line-height:1.45;color:var(--muted);">
-      Role: orchestrator (default pipeline)<br/>
-      Scope: /workspace/orchestra<br/>
-      Branch: main @ 6e2e0525d<br/>
-      Hub policy: CompanyData & KB AUTHORIZED (hubargon, hubsol, hubsonnet, hubluna)<br/><br/>
-      [Редактировать кастомный оверлей промпта…]
-    </div>
+    <div id="drawerBody" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;"></div>
   </div>
 
   <!-- МЕНЮ Г: ⌘K Палитра команд -->
   <div class="menu-overlay" id="menu-cmd" onclick="event.stopPropagation()">
-    <input type="text" value="" placeholder="Введите команду, имя агента или задачу (⌘K)…" style="width:100%;background:var(--bg);border:1px solid var(--border-hi);color:#fff;padding:6px 10px;border-radius:4px;font-size:12px;margin-bottom:6px;outline:none;" />
-    <div class="m-row"><span>🔓 Снять правило допуска на 1 час</span><span class="mono" style="color:var(--muted)">Gate · 1h</span></div>
-    <div class="m-row"><span>🗜 Сжать контекст текущего агента (50% → ~18%)</span><span class="mono" style="color:var(--muted)">Compact</span></div>
-    <div class="m-row"><span>🔍 Перейти к воркеру: <b>festival-argon (V-607)</b></span><span class="mono" style="color:var(--amber)">RUNNING</span></div>
-    <div class="m-row"><span>➕ Создать нового оркестратора / Сменить папку</span><span class="mono" style="color:var(--muted)">Project</span></div>
-    <div class="m-row"><span>📌 Переключить TG Topic у выбранного агента</span><span class="mono" style="color:var(--muted)">TG Bridge</span></div>
+    <div style="display:flex;gap:6px;margin-bottom:6px;">
+      <input type="text" id="cmdSearchInput" value="" placeholder="Введите команду, имя агента или задачу (⌘K)…" oninput="renderCmdList(this.value)" style="flex:1;background:var(--bg);border:1px solid var(--border-hi);color:#fff;padding:6px 10px;border-radius:4px;font-size:12px;outline:none;user-select:text;" />
+      <button onclick="closeMenus()">ESC</button>
+    </div>
+    <div id="cmdListContainer" style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;"></div>
   </div>
 
 </div>
 
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+</div>
+
 <script>
-  function setConcept(c, btn) {
-    document.body.className = c;
-    if (btn) {
-      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-    closeMenus();
+  // --- LIVE STATE ---
+  const state = {
+    concept: 'c1',
+    projectFilter: 'all', // 'all' or 'main', 'seedon', 'dostup'
+    leftTab: 'all',       // 'all', 'tasks', 'jobs'
+    chatFilter: 'all',    // 'all', 'ai'
+    activeAgentId: 'orch-main',
+    gateBypass: false,
+    gateUntil: '',
+    deliveryModeIdx: 0,
+    deliveryModes: ['After turn ▾', 'Steer now ▾', 'Queue next ▾'],
+    recordingVoice: false,
+    lang: 'RU',
+    attachments: [],
+    agents: [
+      {
+        id: 'orch-main', proj: 'main', repo: 'orchestra', name: 'Orchestra-orchestrator', role: 'orchestrator',
+        model: 'gpt-6.1-sol', ctx: 50, cache: 94, status: 'IDLE', statusColor: 'green', branch: 'main · 6e2e0525d',
+        tgTopic: '#general', cost: '$0.42',
+        prompt: 'Role: orchestrator (default pipeline)\nScope: /workspace/orchestra\nBranch: main @ 6e2e0525d\nHub policy: CompanyData & KB AUTHORIZED (hubargon, hubsol, hubsonnet, hubluna)',
+        messages: [
+          { type: 'user', text: 'Сделай антислоп как в T3 Code: без круглой фиолетовой попсы, с чёткими рамками 1px, моноширинными цифрами и разными вариантами менюшек.' },
+          {
+            type: 'step', title: '4 шага выполнено · Очищен коммит, влит V-1279, проверен test_hub_download_v1064.py (16 passed), запушен в origin/main',
+            details: '$ python3 scripts/secret_scan.py --pre-push\n[OK] 0 secrets detected across 4 commits\n$ pytest tests/test_hub_download_v1064.py -q\n16 passed in 1.12s\n$ git push origin main\nTo https://github.com/DrSeedon/orchestra.git\n   83ef73361..6e2e0525d  main -> main'
+          },
+          {
+            type: 'ai', author: 'Orchestra-orchestrator', model: 'gpt-6.1-sol', time: '18:54 · $0.03',
+            text: 'Собрал <b>инженерный антислоп-интерфейс в духе T3 Code / Linear / Zed</b>: все <b>действия текущего агента</b> (<code>Модель ▾</code>, <code>ctx 50%</code>, <code>⊟ Сжать</code>, <code>≡ Промпт</code>, <code>▸ Сабагенты</code>, <code>⚙ CLI</code>) встроены прямо в <b>нижнюю планку поля ввода</b>, а квоты и графики открываются в плотном <b>Bento-пульте 2×2</b> по клику на верхний статус-бар.',
+            artifact: { tag: 'GIT', title: '6e2e0525d · origin/main синхронизирован с VPS и GitHub' }
+          }
+        ]
+      },
+      {
+        id: 'sol-hub-sync', proj: 'main', repo: 'orchestra', name: 'sol-hub-sync', role: 'worker',
+        model: 'hubsol', ctx: 62, cache: 88, status: 'HUB · 4/5', statusColor: 'blue', branch: 'task/hub-sync',
+        tgTopic: '#hub-workers', cost: '$0.18',
+        prompt: 'Worker: sol-hub-sync\nTarget: Verify hub pool routing & antigravity quota windows.',
+        messages: [
+          { type: 'user', text: 'Проверь синхронизацию пулов hubsol и hubargon после снятия ограничений.' },
+          { type: 'step', title: '3 шага выполнено · Проверен _usable() в app/hub_pool.py', details: 'antigravity pool: Gemini 5h=8%, Weekly=43% -> USABLE=True (ignored 3p-weekly=100%)' },
+          { type: 'ai', author: 'sol-hub-sync', model: 'hubsol', time: '18:56 · $0.02', text: 'Маршрутизация <code>hubargon</code> и <code>hubsol</code> активна, ложная блокировка по окну <code>3p-weekly</code> устранена.' }
+        ]
+      },
+      {
+        id: 'seedon-orch', proj: 'seedon', repo: 'seedon-kb', name: 'seedon-orchestrator', role: 'orchestrator',
+        model: 'gpt-6.1-terra', ctx: 42, cache: 91, status: 'IDLE', statusColor: 'green', branch: 'main · V-607',
+        tgTopic: '#seedon', cost: '$0.19',
+        prompt: 'Role: seedon-orchestrator\nKB Index & COMPANY-DATA.md: FULL ACCESS GRANTED by Director.',
+        messages: [
+          { type: 'user', text: 'Директор подтвердил: передача любых задач, КБ-индекса и внутренних данных компании (включая Seedon и COMPANY-DATA.md) на hubargon, hubsol, hubsonnet и hubluna полностью разрешена. Продолжай задачу V-607 и запускай hubargon.' },
+          { type: 'alert', text: '⚡ Правило rule-ed06cca886 снято. Запущен воркер festival-argon (hub-gemini-4-argon) по задаче V-607.' },
+          { type: 'ai', author: 'seedon-orchestrator', model: 'gpt-6.1-terra', time: '18:58 · $0.04', text: 'Задача <b>V-607</b> передана на <code>festival-argon</code> с полным КБ-индексом Seedon. Воркер сейчас собирает встречное КП и продуктовую матрицу.' }
+        ]
+      },
+      {
+        id: 'festival-argon', proj: 'seedon', repo: 'seedon-kb', name: 'festival-argon', role: 'worker',
+        model: 'hubargon', ctx: 38, cache: 95, status: 'RUN · V-607', statusColor: 'amber', branch: 'task/V-607-kp',
+        tgTopic: '#seedon-v607', cost: '$0.09',
+        prompt: 'Worker: festival-argon (hub-gemini-4-argon)\nTask: V-607 Prepare commercial counter-proposal & product line summary.',
+        messages: [
+          { type: 'user', text: 'Подготовь встречное коммерческое предложение по V-607 с учётом актуальной линейки продуктов из COMPANY-DATA.md.' },
+          { type: 'step', title: '2 шага выполнено · Чтение COMPANY-DATA.md и расчёт маржинальности', details: 'Read /home/kesha/projects/seedon/COMPANY-DATA.md (412 lines)\n Read products/pricing_2026.yaml' },
+          { type: 'ai', author: 'festival-argon', model: 'hubargon', time: '19:01 · $0.01', text: 'Формирую таблицу комплектаций и условий поставки по задаче <b>V-607</b>. Готовность ~65%.' }
+        ]
+      },
+      {
+        id: 'dostup-orch', proj: 'dostup', repo: 'dostup-ro', name: 'dostup-orchestrator', role: 'orchestrator',
+        model: 'hubluna', ctx: 28, cache: 96, status: 'IDLE', statusColor: 'green', branch: 'main · e41a90c',
+        tgTopic: '#dostup', cost: '$0.14',
+        prompt: 'Role: dostup-orchestrator\nScope: /workspace/dostup-ro',
+        messages: [
+          { type: 'user', text: 'Проверь статус кампаний и синхронизацию метрик.' },
+          { type: 'ai', author: 'dostup-orchestrator', model: 'hubluna', time: '18:40 · $0.01', text: 'Все пайплайны <b>dostup</b> зелёные, нагрузка в норме.' }
+        ]
+      }
+    ],
+    bgJobs: [
+      { id: 'job-1', name: 'Сторож команды (team-watchdog)', pct: 75, time: '2м', color: 'green' },
+      { id: 'job-2', name: 'festival-argon (V-607 КП)', pct: 65, time: '4м', color: 'amber' },
+      { id: 'job-3', name: 'V-1279 CI проверка пуша', pct: 100, time: 'DONE', color: 'green' }
+    ],
+    subagents: [
+      { id: 'sub-1', name: 'festival-argon', model: 'hubargon', task: 'V-607 Встречное КП Seedon', status: 'RUNNING' },
+      { id: 'sub-2', name: 'sol-hub-sync', model: 'hubsol', task: 'Синхронизация пулов и квот', status: 'RUNNING' },
+      { id: 'sub-3', name: 'ci-verifier', model: 'hubluna', task: 'Проверка тест-сьюта V-1279', status: 'DONE' }
+    ],
+    models: [
+      { id: 'gpt-6.1-sol', label: 'gpt-6.1-sol (Local Codex)', tag: '258K · LOCAL' },
+      { id: 'gpt-6.1-terra', label: 'gpt-6.1-terra (Local Orchestrator)', tag: '258K · LOCAL' },
+      { id: 'hubsol', label: 'hubsol (Hub GPT-6.1 Sol · high)', tag: 'HUB · OK' },
+      { id: 'hubargon', label: 'hubargon (Hub Gemini 4 Argon · high)', tag: 'HUB · OK' },
+      { id: 'hubsonnet', label: 'hubsonnet (Hub Sonnet 5.5 · med)', tag: 'HUB · OK' },
+      { id: 'hubluna', label: 'hubluna (Hub GPT-6 Luna · high)', tag: 'HUB · OK' }
+    ]
+  };
+
+  function toast(msg) {
+    const wrap = document.getElementById('toastWrap');
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.innerHTML = `<span style="color:var(--green)">●</span><span>${msg}</span>`;
+    wrap.appendChild(el);
+    setTimeout(() => { el.remove(); }, 2600);
   }
+
+  function getActiveAgent() {
+    return state.agents.find(a => a.id === state.activeAgentId) || state.agents[0];
+  }
+
+  // --- RENDER ALL ---
+  function renderAll() {
+    renderLeftPane();
+    renderCenterChat();
+    renderBgJobs();
+    renderModelPopover();
+    renderCmdList('');
+  }
+
+  function renderLeftPane() {
+    const tree = document.getElementById('treeContainer');
+    const tbody = document.getElementById('rosterTbody');
+    document.getElementById('bg-count-badge').textContent = state.bgJobs.length;
+
+    const filteredAgents = state.agents.filter(a => {
+      if (state.projectFilter !== 'all' && a.proj !== state.projectFilter) return false;
+      if (state.leftTab === 'tasks' && a.role === 'orchestrator') return false;
+      return true;
+    });
+
+    // Group by proj for Tree
+    let treeHtml = '';
+    if (state.leftTab !== 'jobs') {
+      const projs = ['main', 'seedon', 'dostup'];
+      projs.forEach(p => {
+        const list = filteredAgents.filter(a => a.proj === p);
+        if (!list.length) return;
+        const repoName = list[0].repo;
+        treeHtml += `<div class="proj-group">
+          <div class="proj-title" onclick="selectProject('${p}')">
+            <span>▼ <b>${p}</b> (${repoName})</span>
+            <span class="mono" style="color:var(--muted)">${list.length} аг.</span>
+          </div>`;
+        list.forEach(a => {
+          const isAct = a.id === state.activeAgentId ? 'active' : '';
+          const icon = a.role === 'orchestrator' ? '◆' : '⚙';
+          treeHtml += `<div class="thread-row ${isAct}" onclick="selectAgent('${a.id}')">
+            <div class="thread-top">
+              <span>${icon} <b>${a.name}</b></span>
+              <span class="badge ${a.statusColor}">${a.status}</span>
+            </div>
+            <div class="thread-top mono" style="color:var(--muted);font-size:10px;">
+              <span>${a.model} · ctx ${a.ctx}%</span>
+              <span>cache ${a.cache}%</span>
+            </div>
+          </div>`;
+        });
+        treeHtml += `</div>`;
+      });
+    }
+
+    // Background jobs block in tree
+    if (state.leftTab === 'all' || state.leftTab === 'jobs') {
+      treeHtml += `<div class="proj-group" style="margin-top:4px;border-top:1px solid var(--border);padding-top:6px;">
+        <div class="proj-title">
+          <span>⚡ <b>ФОНОВЫЕ ДЖОБЫ</b></span>
+          <button style="padding:0 5px;font-size:9.5px;" onclick="addMockBgJob()">+ Тест</button>
+        </div>`;
+      state.bgJobs.forEach(j => {
+        treeHtml += `<div class="thread-row" style="margin-left:4px;">
+          <div class="thread-top">
+            <span>▸ ${j.name}</span>
+            <span class="mono" style="color:var(--${j.color});cursor:pointer;" onclick="killBgJob('${j.id}')" title="Остановить джобу">${j.pct}% [${j.time}] ✕</span>
+          </div>
+          <div class="mini-meter" style="width:100%"><span style="width:${j.pct}%;background:var(--${j.color})"></span></div>
+        </div>`;
+      });
+      treeHtml += `</div>`;
+    }
+    tree.innerHTML = treeHtml;
+
+    // Dense table for Concept 2
+    let rowsHtml = '';
+    filteredAgents.forEach(a => {
+      const isAct = a.id === state.activeAgentId ? 'active' : '';
+      rowsHtml += `<tr class="${isAct}" onclick="selectAgent('${a.id}')">
+        <td><b>${a.name}</b></td>
+        <td class="mono">${a.model}</td>
+        <td class="mono">${a.ctx}%</td>
+        <td><span class="badge ${a.statusColor}">${a.status}</span></td>
+      </tr>`;
+    });
+    tbody.innerHTML = rowsHtml;
+  }
+
+  function renderCenterChat() {
+    const ag = getActiveAgent();
+    document.getElementById('active-agent-title').textContent = (ag.role === 'orchestrator' ? '◆ ' : '⚙ ') + ag.name;
+    document.getElementById('active-agent-branch').textContent = '⎇ ' + ag.branch;
+    const stEl = document.getElementById('active-agent-status');
+    stEl.textContent = ag.status;
+    stEl.className = 'badge ' + ag.statusColor;
+    document.getElementById('active-agent-tg').textContent = '⌖ TG: ' + ag.tgTopic;
+
+    document.getElementById('composer-model-btn').innerHTML = `⚡ ${ag.model} ▾`;
+    document.getElementById('ctx-pct').textContent = ag.ctx + '%';
+    document.getElementById('subagent-count').textContent = state.subagents.length;
+
+    const scroll = document.getElementById('chatScroll');
+    let html = '';
+    ag.messages.forEach((m, idx) => {
+      if (state.chatFilter === 'ai' && m.type === 'user') return;
+      if (m.type === 'user') {
+        html += `<div class="msg-user" data-mtype="user">${m.text}</div>`;
+      } else if (m.type === 'step') {
+        html += `<div class="tool-step-group" data-mtype="step" onclick="this.classList.toggle('expanded')">
+          <div class="tool-step-header">
+            <span style="color:var(--green)">✓</span>
+            <span class="mono" style="color:var(--text)">${m.title}</span>
+            <span style="margin-left:auto;color:var(--blue);font-size:10.5px;">Лог шага ▾</span>
+          </div>
+          <pre class="tool-step-details">${m.details || 'Выполнено успешно (exit code 0)'}</pre>
+        </div>`;
+      } else if (m.type === 'alert') {
+        html += `<div class="msg-ai msg-alert" data-mtype="alert">
+          <div style="display:flex;justify-content:space-between;color:var(--amber);font-size:11px;font-weight:600;">
+            <span>! СИСТЕМНОЕ УВЕДОМЛЕНИЕ ОРКЕСТРЫ</span>
+            <span class="mono">LIVE</span>
+          </div>
+          <div>${m.text}</div>
+        </div>`;
+      } else {
+        html += `<div class="msg-ai" data-mtype="ai">
+          <div style="display:flex;justify-content:space-between;color:var(--muted);font-size:11px;">
+            <span><b>${m.author}</b> · ${m.model}</span>
+            <span class="mono">${m.time}</span>
+          </div>
+          <div>${m.text}</div>
+          ${m.artifact ? `<div class="artifact-row">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="badge blue">${m.artifact.tag}</span>
+              <span><b>${m.artifact.title}</b></span>
+            </div>
+            <div style="display:flex;gap:4px;">
+              <button style="padding:2px 7px;font-size:10.5px;" onclick="toast('Открыт дифф коммита 6e2e0525d')">↗ Открыть</button>
+              <button style="padding:2px 7px;font-size:10.5px;" onclick="toast('Артефакт скачан в проект')">↓ Скачать</button>
+            </div>
+          </div>` : ''}
+        </div>`;
+      }
+    });
+    scroll.innerHTML = html;
+    scroll.scrollTop = scroll.scrollHeight;
+  }
+
+  function renderBgJobs() {
+    const html = state.bgJobs.map(j => `
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span>▸ ${j.name}</span>
+        <span class="mono" style="color:var(--${j.color});cursor:pointer;" onclick="killBgJob('${j.id}')">${j.pct}% · ${j.time} [✕]</span>
+      </div>
+    `).join('');
+    const dock = document.getElementById('dockJobsList');
+    const ins = document.getElementById('insJobsList');
+    if (dock) dock.innerHTML = html;
+    if (ins) ins.innerHTML = html;
+    const cnt = document.getElementById('ins-job-count');
+    if (cnt) cnt.textContent = state.bgJobs.length + ' акт.';
+  }
+
+  function renderModelPopover() {
+    const ag = getActiveAgent();
+    const box = document.getElementById('modelPopoverList');
+    box.innerHTML = state.models.map(m => {
+      const sel = m.id === ag.model ? 'selected' : '';
+      return `<div class="m-row ${sel}" onclick="selectModel('${m.id}')">
+        <span>⚡ <b>${m.label}</b></span>
+        <span class="badge ${m.id === ag.model ? 'green' : 'blue'}">${m.id === ag.model ? 'ТЕКУЩАЯ' : m.tag}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // --- INTERACTIVE ACTIONS ---
+  function setConcept(c, btn) {
+    state.concept = c;
+    document.body.className = c;
+    document.querySelectorAll('#layoutBtns button').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    closeMenus();
+    toast('Включён лейаут: ' + btn.textContent);
+  }
+
   function openMenu(id, btn) {
     const el = document.getElementById(id);
     const wasOpen = el.classList.contains('open');
     closeMenus();
-    if (!wasOpen) el.classList.add('open');
-    if (btn && btn.parentElement) {
-      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-      if (!wasOpen) btn.classList.add('active');
+    if (!wasOpen) {
+      el.classList.add('open');
+      if (btn) btn.classList.add('active');
+      if (id === 'menu-cmd') {
+        setTimeout(() => document.getElementById('cmdSearchInput').focus(), 40);
+      }
+      if (id === 'menu-drawer') {
+        openDrawerTab('prompt');
+      }
     }
   }
+
   function closeMenus() {
     document.querySelectorAll('.menu-overlay').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('#menuBtns button').forEach(b => b.classList.remove('active'));
   }
+
+  function selectProject(proj, crumbEl) {
+    state.projectFilter = (state.projectFilter === proj) ? 'all' : proj;
+    document.querySelectorAll('#projectCrumbs .crumb[data-proj]').forEach(c => {
+      c.classList.toggle('active', state.projectFilter === 'all' ? c.dataset.proj === proj : c.dataset.proj === state.projectFilter);
+    });
+    const firstAg = state.agents.find(a => a.proj === proj);
+    if (firstAg) state.activeAgentId = firstAg.id;
+    renderAll();
+    toast(state.projectFilter === 'all' ? 'Показаны все проекты' : `Фильтр проекта: ${proj}`);
+  }
+
+  function selectAgent(id) {
+    state.activeAgentId = id;
+    renderAll();
+    const ag = getActiveAgent();
+    toast(`Выбран агент: ${ag.name} (${ag.model})`);
+  }
+
+  function setLeftFilter(tab, btn) {
+    state.leftTab = tab;
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    renderLeftPane();
+  }
+
+  function setChatFilter(filter, btn) {
+    state.chatFilter = filter;
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    renderCenterChat();
+  }
+
+  function selectModel(modelId) {
+    const ag = getActiveAgent();
+    ag.model = modelId;
+    ag.messages.push({
+      type: 'step',
+      title: `Маршрут переключён на ${modelId}`,
+      details: `Agent ${ag.name} model updated -> ${modelId} (live session preserved)`
+    });
+    closeMenus();
+    renderAll();
+    toast(`${ag.name} переведён на ${modelId}`);
+  }
+
+  function compactContext() {
+    const ag = getActiveAgent();
+    const oldCtx = ag.ctx;
+    ag.ctx = Math.max(14, Math.round(ag.ctx * 0.36));
+    ag.messages.push({
+      type: 'step',
+      title: `Контекст сжат: ${oldCtx}% → ${ag.ctx}% (сохранено 100% ключевых фактов)`,
+      details: `Compacted trajectory for ${ag.name}: freed ${oldCtx - ag.ctx}% context window.`
+    });
+    renderAll();
+    toast(`Контекст сжат: ${oldCtx}% → ${ag.ctx}%`);
+  }
+
+  function sendChatMessage() {
+    const input = document.getElementById('composerInput');
+    const txt = input.value.trim();
+    if (!txt && !state.attachments.length) {
+      toast('Введите сообщение или прикрепите файл');
+      return;
+    }
+    const ag = getActiveAgent();
+    const attText = state.attachments.length ? ` [Прикреплено: ${state.attachments.join(', ')}]` : '';
+    ag.messages.push({ type: 'user', text: (txt || 'Отправлен файл') + attText });
+    input.value = '';
+    state.attachments = [];
+    renderAttachments();
+    ag.status = 'RUNNING';
+    ag.statusColor = 'amber';
+    renderAll();
+
+    setTimeout(() => {
+      ag.messages.push({
+        type: 'step',
+        title: `2 шага выполнено · Обработка запроса на ${ag.model}`,
+        details: `Executed live action on ${ag.branch} via ${ag.model} (${state.deliveryModes[state.deliveryModeIdx].replace(' ▾','')})`
+      });
+      ag.messages.push({
+        type: 'ai',
+        author: ag.name,
+        model: ag.model,
+        time: 'Сейчас · $0.01',
+        text: `Выполнено на маршруте <code>${ag.model}</code>: «${txt || 'Анализ вложений'}». Все изменения синхронизированы.`
+      });
+      ag.status = 'IDLE';
+      ag.statusColor = 'green';
+      ag.ctx = Math.min(95, ag.ctx + 3);
+      renderAll();
+    }, 450);
+  }
+
+  function handleComposerKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendChatMessage();
+    }
+  }
+
+  function attachMockFile() {
+    const files = ['screenshot_ui.png', 'hub_pool_diff.patch', 'COMPANY-DATA.md', 'ci_log_v1279.txt'];
+    const pick = files[state.attachments.length % files.length];
+    state.attachments.push(pick);
+    renderAttachments();
+    toast(`Прикреплён файл: ${pick}`);
+  }
+
+  function renderAttachments() {
+    const box = document.getElementById('attChips');
+    box.innerHTML = state.attachments.map((f, i) => `
+      <span class="att-chip">▤ ${f} <span style="cursor:pointer;color:var(--red);" onclick="removeAttachment(${i})">✕</span></span>
+    `).join('');
+  }
+
+  function removeAttachment(idx) {
+    state.attachments.splice(idx, 1);
+    renderAttachments();
+  }
+
+  function toggleVoiceInput() {
+    state.recordingVoice = !state.recordingVoice;
+    const btn = document.getElementById('voiceBtn');
+    const inp = document.getElementById('composerInput');
+    if (state.recordingVoice) {
+      btn.style.borderColor = 'var(--red)';
+      btn.style.color = 'var(--red)';
+      btn.textContent = '● Запись (Nova-3)…';
+      toast('Запись голоса Deepgram Nova-3 включена');
+      setTimeout(() => {
+        if (state.recordingVoice) {
+          inp.value = (inp.value ? inp.value + ' ' : '') + 'Проверь статус воркера festival-argon по задаче V-607 и покажи квоты.';
+          toggleVoiceInput();
+        }
+      }, 1400);
+    } else {
+      btn.style.borderColor = '';
+      btn.style.color = '';
+      btn.textContent = '● Голос';
+      toast('Голос распознан в поле ввода');
+    }
+  }
+
+  function cycleDeliveryMode() {
+    state.deliveryModeIdx = (state.deliveryModeIdx + 1) % state.deliveryModes.length;
+    const mode = state.deliveryModes[state.deliveryModeIdx];
+    document.getElementById('deliveryModeBtn').textContent = mode;
+    toast('Режим отправки: ' + mode.replace(' ▾', ''));
+  }
+
+  function stopActiveAgent() {
+    const ag = getActiveAgent();
+    ag.status = 'STOPPED';
+    ag.statusColor = 'red';
+    ag.messages.push({
+      type: 'alert',
+      text: `■ Выполнение агента <b>${ag.name}</b> остановлено пользователем.`
+    });
+    renderAll();
+    toast(`Агент ${ag.name} остановлен`);
+  }
+
+  function restartCliSession() {
+    const ag = getActiveAgent();
+    ag.messages.push({
+      type: 'step',
+      title: `Перезапуск CLI-процесса (${ag.model})`,
+      details: `SIGTERM -> respawned ${ag.name} worker process (PID ${Math.floor(40000 + Math.random()*50000)})`
+    });
+    ag.status = 'IDLE';
+    ag.statusColor = 'green';
+    renderAll();
+    toast(`CLI-сессия ${ag.name} перезапущена`);
+  }
+
+  function clearChatSession() {
+    const ag = getActiveAgent();
+    ag.messages = [{
+      type: 'ai', author: ag.name, model: ag.model, time: 'Сейчас',
+      text: 'История чата очищена. Готов к новой задаче.'
+    }];
+    ag.ctx = 12;
+    renderAll();
+    toast('Чат очищен, контекст сброшен до 12%');
+  }
+
+  function toggleGate1h() {
+    state.gateBypass = !state.gateBypass;
+    updateGateUI(state.gateBypass ? 'СНЯТ НА 1Ч' : 'ВКЛ');
+    toast(state.gateBypass ? 'Правило допуска снято на 1 час' : 'Правило допуска снова ВКЛ');
+  }
+
+  function toggleGateUntil() {
+    const val = document.getElementById('gateDateInput').value || '05.11 18:00';
+    state.gateBypass = true;
+    updateGateUI('ДО ' + val);
+    toast('Правило допуска снято до ' + val);
+  }
+
+  function updateGateUI(label) {
+    const pill = document.getElementById('gate-pill-text');
+    const bento = document.getElementById('bento-gate-badge');
+    const ins = document.getElementById('ins-gate-status');
+    const color = state.gateBypass ? 'var(--amber)' : 'var(--green)';
+    pill.style.color = color;
+    pill.textContent = '● ДОПУСК: ' + label;
+    if (bento) { bento.style.color = color; bento.textContent = 'ДОПУСК: ' + label; }
+    if (ins) { ins.style.color = color; ins.textContent = label; }
+  }
+
+  function scrubChart(e, tipId) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const rel = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const dayOffset = ((rel - 0.5) * 7).toFixed(1);
+    const c5h = Math.round(15 + rel * 58);
+    const c7d = Math.round(45 + rel * 44);
+    const sign = dayOffset >= 0 ? '+' : '';
+    const el = document.getElementById(tipId);
+    if (el) {
+      el.textContent = `Точка: ${sign}${dayOffset} сут КРСК · Codex 5h: ${c5h}% · 7d: ${c7d}% · Стоп-линия: 95%`;
+    }
+  }
+
+  function killBgJob(id) {
+    state.bgJobs = state.bgJobs.filter(j => j.id !== id);
+    renderAll();
+    toast('Фоновая джоба остановлена');
+  }
+
+  function addMockBgJob() {
+    const id = 'job-' + Math.floor(Math.random() * 9000 + 1000);
+    state.bgJobs.push({ id, name: `hub-worker-${id.slice(-3)} (тест)`, pct: 35, time: '1м', color: 'blue' });
+    renderAll();
+    toast('Запущена новая фоновая джоба');
+  }
+
+  function spawnNewOrchestrator() {
+    const num = state.agents.length + 1;
+    const id = 'orch-' + num;
+    state.agents.push({
+      id, proj: 'main', repo: 'orchestra', name: `feature-orch-${num}`, role: 'orchestrator',
+      model: 'hubsol', ctx: 15, cache: 98, status: 'IDLE', statusColor: 'green', branch: `feat/ui-v${num}`,
+      tgTopic: `#feat-${num}`, cost: '$0.00',
+      prompt: `Role: feature-orchestrator #${num}`,
+      messages: [{ type: 'ai', author: `feature-orch-${num}`, model: 'hubsol', time: 'Сейчас', text: `Новый оркестратор <b>feature-orch-${num}</b> создан и готов к работе.` }]
+    });
+    state.activeAgentId = id;
+    renderAll();
+    toast(`Создан оркестратор feature-orch-${num}`);
+  }
+
+  function cycleTgTopic() {
+    const ag = getActiveAgent();
+    const topics = ['#general', '#seedon-v607', '#hub-alerts', '#deploy-ci', 'выкл'];
+    const idx = (topics.indexOf(ag.tgTopic) + 1) % topics.length;
+    ag.tgTopic = topics[idx];
+    renderCenterChat();
+    toast(`TG-топик агента ${ag.name}: ${ag.tgTopic}`);
+  }
+
+  function loadHistoryChunk() {
+    const ag = getActiveAgent();
+    ag.messages.unshift({
+      type: 'step',
+      title: 'Загружено +100 ранних событий из архива сессии',
+      details: 'Loaded 100 historical turns from .orchestra/sessions/' + ag.id + '.jsonl'
+    });
+    renderCenterChat();
+    toast('Подгружено +100 сообщений истории');
+  }
+
+  function jumpToMsg(mtype) {
+    const scroll = document.getElementById('chatScroll');
+    const target = scroll.querySelector(`[data-mtype="${mtype}"]`);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.style.outline = '1px solid var(--blue)';
+      setTimeout(() => { target.style.outline = ''; }, 900);
+      toast('Переход к сообщению: ' + mtype);
+    } else {
+      toast('В текущем чате нет элементов типа ' + mtype);
+    }
+  }
+
+  function toggleLang() {
+    state.lang = state.lang === 'RU' ? 'EN' : 'RU';
+    document.getElementById('lang-btn').textContent = state.lang;
+    document.getElementById('left-pane-title').textContent = state.lang === 'RU' ? 'ПРОЕКТЫ, АГЕНТЫ И ЗАДАЧИ' : 'PROJECTS, AGENTS & TASKS';
+    toast('Язык интерфейса: ' + state.lang);
+  }
+
+  function restartOrchestraService() {
+    closeMenus();
+    toast('↻ Выполняется systemctl restart orchestra на VPS… (ОК)');
+  }
+
+  // --- SIDE DRAWER TABS ---
+  function openDrawerTab(tab) {
+    const drawer = document.getElementById('menu-drawer');
+    closeMenus();
+    drawer.classList.add('open');
+    document.querySelectorAll('#drawerTabBtns button').forEach(b => {
+      b.classList.toggle('active', b.dataset.dtab === tab);
+    });
+    const ag = getActiveAgent();
+    const body = document.getElementById('drawerBody');
+
+    if (tab === 'prompt') {
+      body.innerHTML = `
+        <div class="mono" style="font-size:10.5px;color:var(--muted);">Системный промпт и оверлей агента <b>${ag.name}</b>:</div>
+        <textarea id="drawerPromptArea" class="mono" style="width:100%;height:180px;background:var(--bg);border:1px solid var(--border-hi);color:var(--text);padding:8px;border-radius:5px;font-size:11px;line-height:1.45;user-select:text;">${ag.prompt}</textarea>
+        <div style="display:flex;gap:6px;">
+          <button class="active" onclick="saveAgentPrompt()">✓ Сохранить промпт</button>
+          <button onclick="toast('Сброшено к дефолтному шаблону роли')">Сбросить</button>
+        </div>
+      `;
+    } else if (tab === 'subagents') {
+      body.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="mono" style="color:var(--muted);">Активные сабагенты и воркеры (${state.subagents.length})</span>
+          <button onclick="spawnSubagentFromDrawer()">+ Делегировать задачу</button>
+        </div>
+        ${state.subagents.map(s => `
+          <div class="ins-box" style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <b>${s.name}</b> <span class="badge blue">${s.model}</span>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px;">${s.task}</div>
+            </div>
+            <span class="badge ${s.status === 'RUNNING' ? 'amber' : 'green'}">${s.status}</span>
+          </div>
+        `).join('')}
+      `;
+    } else if (tab === 'profiles') {
+      body.innerHTML = `
+        <div class="mono" style="color:var(--muted);">Квоты пулов и аккаунтов:</div>
+        <div class="ins-box"><b>OpenAI Codex Pool (main + fallback)</b><div class="mono" style="color:var(--green);margin-top:4px;">5h: 38.4% · 7d: 69.1% · Spark: 18% [АКТИВЕН]</div></div>
+        <div class="ins-box"><b>Antigravity Gemini 4 Argon</b><div class="mono" style="color:var(--blue);margin-top:4px;">Gemini 5h: 8.2% · Weekly: 43.0% [Игнор 3p-weekly: OK]</div></div>
+        <div class="ins-box"><b>T3 Hub Remote Workers</b><div class="mono" style="color:var(--green);margin-top:4px;">hubsol, hubargon, hubsonnet, hubluna — ONLINE</div></div>
+      `;
+    } else if (tab === 'analytics') {
+      body.innerHTML = `
+        <div class="mono" style="color:var(--muted);">Расход за сутки по проектам ($1.84):</div>
+        <div class="ins-box" style="display:flex;justify-content:space-between;"><span><b>main (orchestra)</b> · 142K tok</span><span class="mono" style="color:var(--green)">$0.92</span></div>
+        <div class="ins-box" style="display:flex;justify-content:space-between;"><span><b>seedon (V-607)</b> · 88K tok</span><span class="mono" style="color:var(--blue)">$0.58</span></div>
+        <div class="ins-box" style="display:flex;justify-content:space-between;"><span><b>dostup</b> · 49K tok</span><span class="mono" style="color:var(--amber)">$0.34</span></div>
+      `;
+    } else if (tab === 'files') {
+      body.innerHTML = `
+        <div class="mono" style="color:var(--muted);">Рабочая папка и git worktree:</div>
+        <div class="ins-box mono">/home/kesha/orchestra (${ag.branch})</div>
+        <button onclick="toast('Выполнен git fetch && git status: чисто')">⎇ Проверить git status</button>
+        <button onclick="toast('Создан изолированный git worktree')">+ Новый worktree под задачу</button>
+      `;
+    } else {
+      body.innerHTML = `
+        <div class="ins-box"><b>Настройки клиента и уведомлений</b><div style="margin-top:6px;color:var(--muted);">Звук завершения хода: ВКЛ · Push в браузер: ВКЛ · Auto-scroll: ВКЛ</div></div>
+      `;
+    }
+  }
+
+  function saveAgentPrompt() {
+    const ag = getActiveAgent();
+    const val = document.getElementById('drawerPromptArea').value;
+    ag.prompt = val;
+    toast(`Промпт агента ${ag.name} сохранён`);
+  }
+
+  function spawnSubagentFromDrawer() {
+    const id = 'sub-' + (state.subagents.length + 1);
+    state.subagents.unshift({
+      id, name: `argon-helper-${state.subagents.length + 1}`, model: 'hubargon',
+      task: 'Быстрый аудит UI/UX и проверка тестов', status: 'RUNNING'
+    });
+    openDrawerTab('subagents');
+    renderCenterChat();
+    toast('Запущен новый сабагент на hubargon');
+  }
+
+  // --- COMMAND PALETTE (⌘K) ---
+  function renderCmdList(query) {
+    const q = (query || '').toLowerCase();
+    const cmds = [
+      { label: '◈ Снять правило допуска на 1 час', tag: 'Gate · 1h', run: () => { toggleGate1h(); closeMenus(); } },
+      { label: '⊟ Сжать контекст текущего агента (Compact)', tag: 'Context', run: () => { compactContext(); closeMenus(); } },
+      { label: '⌕ Перейти к воркеру: festival-argon (V-607)', tag: 'Agent', run: () => { selectAgent('festival-argon'); closeMenus(); } },
+      { label: '◆ Перейти к оркестратору: seedon-orchestrator', tag: 'Agent', run: () => { selectAgent('seedon-orch'); closeMenus(); } },
+      { label: '⚡ Переключить модель на hubargon (Gemini 4 Argon)', tag: 'Model', run: () => { selectModel('hubargon'); } },
+      { label: '⚡ Переключить модель на gpt-6.1-sol (Local Codex)', tag: 'Model', run: () => { selectModel('gpt-6.1-sol'); } },
+      { label: '+ Создать нового оркестратора', tag: 'Project', run: () => { spawnNewOrchestrator(); closeMenus(); } },
+      { label: '↻ Перезапустить сервис Orchestra на VPS', tag: 'System', run: () => { restartOrchestraService(); } }
+    ];
+    const box = document.getElementById('cmdListContainer');
+    const filtered = cmds.filter(c => c.label.toLowerCase().includes(q) || c.tag.toLowerCase().includes(q));
+    box.innerHTML = filtered.map((c, idx) => `
+      <div class="m-row" onclick="runCmdIdx(${idx}, '${q.replace(/'/g, "\\'")}')">
+        <span>${c.label}</span>
+        <span class="mono" style="color:var(--muted)">${c.tag}</span>
+      </div>
+    `).join('');
+    window._lastFilteredCmds = filtered;
+  }
+
+  function runCmdIdx(idx) {
+    if (window._lastFilteredCmds && window._lastFilteredCmds[idx]) {
+      window._lastFilteredCmds[idx].run();
+    }
+  }
+
+  // Keyboard shortcut Cmd+K / Ctrl+K & Escape
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      openMenu('menu-cmd');
+    } else if (e.key === 'Escape') {
+      closeMenus();
+    }
+  });
+
+  renderAll();
 </script>
 </body>
 </html>
