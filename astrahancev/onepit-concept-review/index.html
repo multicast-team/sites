@@ -3,1281 +3,985 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Одна Яма — Арт-ревью и Сборка Целевого Концепта (Argon CEO)</title>
+  <title>Одна Яма (OnePit) — Разбор v3: Масштаб 9:16, Элементы на полу, Полные Прокачки и Antigravity vs GPT</title>
   <style>
     :root {
-      --bg: #0f0d1a;
-      --bg-card: #181528;
-      --bg-card-alt: #211d36;
-      --border: #322b4f;
-      --text: #f3f1fa;
-      --muted: #a69ec2;
+      --bg: #0b0d14;
+      --bg-card: #131724;
+      --bg-elevated: #191f30;
+      --bg-glass: rgba(25, 31, 48, 0.85);
+      --text: #f3f5fa;
+      --text-muted: #9aa4bf;
       --accent: #f59e0b;
-      --accent-hover: #fbbf24;
-      --green: #22c55e;
-      --green-bg: rgba(34, 197, 94, 0.14);
-      --red: #ef4444;
-      --red-bg: rgba(239, 68, 68, 0.14);
+      --accent-soft: rgba(245, 158, 11, 0.14);
+      --green: #10b981;
+      --green-soft: rgba(16, 185, 129, 0.14);
       --blue: #3b82f6;
-      --purple: #a855f7;
+      --blue-soft: rgba(59, 130, 246, 0.14);
+      --purple: #8b5cf6;
+      --purple-soft: rgba(139, 92, 246, 0.15);
+      --red: #ef4444;
+      --red-soft: rgba(239, 68, 68, 0.14);
+      --border: #262f47;
+      --radius: 16px;
     }
-    * { box-sizing: border-box; }
-    body {
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 0 0 120px 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.55;
-    }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    /* Top Sticky Header */
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(15, 13, 26, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 24px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .topbar-title {
-      font-weight: 800;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .badge-ceo {
-      background: linear-gradient(135deg, #f59e0b, #ea580c);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 800;
-      padding: 3px 9px;
-      border-radius: 999px;
-      letter-spacing: 0.4px;
-    }
-    .topbar-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-    .nav-links {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .nav-btn, .btn {
-      background: var(--bg-card-alt);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 7px 13px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .nav-btn:hover, .btn:hover {
-      border-color: var(--accent);
-      background: #2b2547;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      border-color: #22c55e;
-      color: #fff;
-      font-weight: 700;
-    }
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #16a34a, #15803d);
-    }
-    .btn-amber {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      border-color: #f59e0b;
-      color: #111;
-      font-weight: 800;
+      line-height: 1.6;
+      padding-bottom: 80px;
     }
 
     .container {
-      max-width: 1440px;
+      max-width: 1360px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 28px 20px;
     }
 
-    /* Hero Banner */
-    .hero-box {
-      background: linear-gradient(145deg, #1d1833 0%, #151224 100%);
-      border: 2px solid #4ade80;
-      border-radius: 18px;
-      padding: 24px;
-      margin-bottom: 32px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    header {
+      background: linear-gradient(135deg, #161b2e 0%, #0f1320 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
     }
-    .hero-box h1 {
-      margin: 0 0 10px 0;
-      font-size: 26px;
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 12px;
     }
-    .hero-box p {
-      margin: 6px 0;
-      color: #d5d0e8;
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
       font-size: 15px;
+      max-width: 960px;
     }
 
-    /* Section Headings */
-    .section-head {
-      margin: 44px 0 18px 0;
-      padding-bottom: 12px;
-      border-bottom: 2px solid var(--border);
+    .quick-nav {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 12px;
+      gap: 10px;
+      margin-top: 20px;
     }
-    .section-head h2 {
-      margin: 0;
-      font-size: 23px;
+
+    .quick-nav a {
+      color: var(--text);
+      text-decoration: none;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .quick-nav a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    .section-head p {
-      margin: 4px 0 0 0;
-      color: var(--muted);
-      font-size: 14px;
+
+    h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 18px 0 8px;
+      color: #fff;
     }
 
-    /* Grids */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
-      gap: 22px;
+    .section-lead {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 22px;
     }
+
+    /* Standard 9:16 phone frame display */
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 20px;
-    }
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 18px;
+      gap: 22px;
+      align-items: start;
     }
 
-    /* Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
     .card {
-      background: var(--bg-card);
+      background: var(--bg-elevated);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
+      border-radius: 14px;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      position: relative;
     }
+
     .card.winner {
       border: 2px solid var(--green);
-      box-shadow: 0 0 28px rgba(34, 197, 94, 0.16);
+      box-shadow: 0 0 28px rgba(16, 185, 129, 0.18);
     }
-    .card.runnerup {
+
+    .card.highlight {
       border: 2px solid var(--accent);
+      box-shadow: 0 0 28px rgba(245, 158, 11, 0.16);
     }
-    .card-header {
+
+    .phone-frame {
+      width: 100%;
+      max-width: 390px;
+      margin: 16px auto 0;
+      aspect-ratio: 9 / 16;
+      background: #07090e;
+      border-radius: 24px;
+      border: 3px solid #2d3753;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      cursor: zoom-in;
+    }
+
+    .phone-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .catalog-frame {
+      width: 100%;
+      max-width: 440px;
+      margin: 16px auto 0;
+      aspect-ratio: 9 / 16;
+      background: #07090e;
+      border-radius: 16px;
+      border: 2px solid #2d3753;
+      overflow: hidden;
+      cursor: zoom-in;
+    }
+
+    .catalog-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #141626;
+      display: block;
+    }
+
+    .card-body {
+      padding: 18px 20px 22px;
+    }
+
+    .badge-row {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
     }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge.green { background: var(--green-soft); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
+    .badge.amber { background: var(--accent-soft); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .badge.blue  { background: var(--blue-soft); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35); }
+    .badge.purple { background: var(--purple-soft); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.35); }
+    .badge.red   { background: var(--red-soft); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); }
+
     .card-title {
       font-size: 18px;
       font-weight: 800;
-      margin: 0;
+      margin-bottom: 8px;
     }
-    .card-sub {
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-    .score-pill {
-      font-size: 15px;
-      font-weight: 800;
-      padding: 5px 11px;
-      border-radius: 10px;
-      white-space: nowrap;
-    }
-    .score-high { background: var(--green-bg); color: #4ade80; border: 1px solid #22c55e; }
-    .score-mid { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid #f59e0b; }
-    .score-low { background: var(--red-bg); color: #f87171; border: 1px solid #ef4444; }
 
-    /* Image Frame & 390px Phone Mode */
-    .img-wrap {
-      background: #090811;
+    .card-desc {
+      font-size: 14px;
+      color: #d2d8ea;
+    }
+
+    .card-desc ul {
+      padding-left: 18px;
+      margin-top: 8px;
+    }
+
+    .card-desc li {
+      margin-bottom: 6px;
+    }
+
+    /* Callout boxes & Tables */
+    .callout {
+      background: var(--bg-elevated);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 14.5px;
+    }
+
+    .callout.green {
+      border-left-color: var(--green);
+      background: rgba(16, 185, 129, 0.07);
+    }
+
+    .callout.blue {
+      border-left-color: var(--blue);
+      background: rgba(59, 130, 246, 0.07);
+    }
+
+    .callout.purple {
+      border-left-color: var(--purple);
+      background: rgba(139, 92, 246, 0.07);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 14px;
+      background: var(--bg-elevated);
       border-radius: 12px;
-      padding: 8px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: 1px solid #25203b;
-      position: relative;
       overflow: hidden;
     }
-    .img-wrap img {
-      width: 100%;
-      max-height: 640px;
-      object-fit: contain;
-      border-radius: 8px;
-      cursor: zoom-in;
-      transition: width 0.25s ease, max-height 0.25s ease;
-    }
-    body.phone-mode .img-wrap img.portrait-shot {
-      width: 270px;
-      max-width: 100%;
-      border: 6px solid #2e2947;
-      border-radius: 26px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-    }
-    .zoom-hint {
-      position: absolute;
-      bottom: 14px;
-      right: 14px;
-      background: rgba(15, 13, 26, 0.82);
-      color: #ddd;
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 6px;
-      pointer-events: none;
-      border: 1px solid var(--border);
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
     }
 
-    /* Pros & Cons Lists */
-    .metrics-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      font-size: 12px;
-    }
-    .metric-chip {
-      background: var(--bg-card-alt);
-      border: 1px solid var(--border);
-      padding: 3px 8px;
-      border-radius: 6px;
-      color: #d5d0e8;
-    }
-    .pros-cons {
-      font-size: 13.5px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .pros-box {
-      background: rgba(34, 197, 94, 0.08);
-      border-left: 3px solid var(--green);
-      padding: 8px 11px;
-      border-radius: 0 8px 8px 0;
-    }
-    .cons-box {
-      background: rgba(239, 68, 68, 0.08);
-      border-left: 3px solid var(--red);
-      padding: 8px 11px;
-      border-radius: 0 8px 8px 0;
-    }
-    .pros-box strong { color: #4ade80; }
-    .cons-box strong { color: #f87171; }
-    .pros-box ul, .cons-box ul {
-      margin: 4px 0 0 0;
-      padding-left: 18px;
-    }
-    .pros-box li, .cons-box li { margin-bottom: 3px; }
-
-    /* Per-card feedback widget */
-    .feedback-widget {
-      margin-top: auto;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .vote-row {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .vote-btn {
-      flex: 1;
-      background: var(--bg-card-alt);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 6px 8px;
-      border-radius: 7px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s;
-    }
-    .vote-btn:hover { border-color: var(--accent); color: var(--text); }
-    .vote-btn.active-like { background: var(--green-bg); border-color: var(--green); color: #4ade80; }
-    .vote-btn.active-fav { background: rgba(245, 158, 11, 0.22); border-color: var(--accent); color: #fbbf24; }
-    .vote-btn.active-dislike { background: var(--red-bg); border-color: var(--red); color: #f87171; }
-
-    .comment-input {
-      width: 100%;
-      min-height: 58px;
-      background: #100e1c;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      padding: 8px 10px;
-      font-size: 13px;
-      font-family: inherit;
-      resize: vertical;
-    }
-    .comment-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
-    }
-
-    /* Element Builder Table */
-    .builder-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-      gap: 16px;
-    }
-    .builder-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-    }
-    .builder-card h4 {
-      margin: 0 0 8px 0;
-      font-size: 15px;
+    th {
+      background: rgba(255, 255, 255, 0.04);
       color: var(--accent);
-    }
-    .radio-option {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      padding: 6px 8px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-    .radio-option:hover { background: var(--bg-card-alt); }
-    .radio-option input { margin-top: 3px; accent-color: var(--accent); }
-
-    /* Master Textarea Panel */
-    .master-feedback {
-      background: linear-gradient(145deg, #1f1a36, #161326);
-      border: 2px solid var(--accent);
-      border-radius: 16px;
-      padding: 22px;
-      margin-top: 36px;
-    }
-    .master-feedback h3 {
-      margin: 0 0 8px 0;
-      font-size: 20px;
-    }
-    .master-textarea {
-      width: 100%;
-      min-height: 130px;
-      background: #0d0b17;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      padding: 12px;
-      font-size: 14px;
-      font-family: inherit;
-      resize: vertical;
-      margin-bottom: 12px;
-    }
-    .preview-output {
-      background: #0a0812;
-      border: 1px solid #2b2547;
-      border-radius: 10px;
-      padding: 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-weight: 700;
       font-size: 12.5px;
-      color: #cbd5e1;
-      white-space: pre-wrap;
-      max-height: 280px;
-      overflow-y: auto;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Plain textarea section */
+    .plain-notes-box {
+      background: #0e121d;
+      border: 2px solid var(--accent);
+      border-radius: 14px;
+      padding: 22px;
       margin-top: 12px;
     }
 
-    /* Sticky Bottom Bar */
-    .bottom-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(20, 17, 36, 0.96);
-      backdrop-filter: blur(12px);
-      border-top: 2px solid var(--accent);
-      padding: 12px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .status-toast {
-      color: #4ade80;
-      font-weight: 700;
-      font-size: 14px;
-      display: none;
+    .plain-notes-box textarea {
+      width: 100%;
+      min-height: 220px;
+      background: #141929;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.55;
+      resize: vertical;
+      margin-top: 12px;
     }
 
-    /* Lightbox Modal */
+    .plain-notes-box textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .btn-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #090b10;
+      font-weight: 800;
+      font-size: 14px;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 20px;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.15s ease;
+    }
+
+    .btn:hover {
+      opacity: 0.92;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .copy-status {
+      font-size: 13px;
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    /* Lightbox modal */
     .lightbox {
-      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(5, 4, 10, 0.92);
-      z-index: 999;
-      justify-content: center;
+      background: rgba(5, 7, 12, 0.92);
+      display: none;
       align-items: center;
-      padding: 20px;
+      justify-content: center;
+      z-index: 9999;
+      padding: 24px;
       cursor: zoom-out;
     }
-    .lightbox.open { display: flex; }
+
+    .lightbox.open {
+      display: flex;
+    }
+
     .lightbox img {
-      max-width: 96vw;
+      max-width: 95vw;
       max-height: 94vh;
-      object-fit: contain;
-      border-radius: 10px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    details {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin-top: 14px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
-
-  <!-- Top Sticky Bar -->
-  <div class="topbar">
-    <div class="topbar-title">
-      <span>🦆 «Одна Яма» — Визуальный Разбор и Целевой Концепт</span>
-      <span class="badge-ceo">Argon CEO · Вторым глазом</span>
-    </div>
-    <div class="topbar-controls">
-      <div class="nav-links">
-        <a class="nav-btn" href="#final-target">🏆 Финальный Концепт</a>
-        <a class="nav-btn" href="#pipeline">🔬 Как собирали (Итерации 1→2)</a>
-        <a class="nav-btn" href="#all-concepts">🎨 Все 8 концептов (n05–n12)</a>
-        <a class="nav-btn" href="#feedback-zone">✍️ Твой Текстовик</a>
-      </div>
-      <button class="btn btn-amber" id="togglePhoneBtn" onclick="togglePhoneMode()">
-        📱 Включить размер телефона (390 px)
-      </button>
-    </div>
-  </div>
-
   <div class="container">
-
-    <!-- Executive Summary & Final Target -->
-    <div class="hero-box" id="final-target">
-      <h1>🏆 Итог работы Argon CEO: Собрана и утверждена целевая картинка игры (Итерация 2 — APPROVE)</h1>
-      <p>
-        Максим, я внимательно отсмотрел все 8 исходных концептов Codex (<code>n05</code>–<code>n12</code>), разметил зелёными и красными рамками лучшие решения и косяки каждого варианта, и <strong>сам провёл сборку целевого концепта через Codex <code>imagegen</code> в 2 итерации до полного APPROVE</strong>.
+    <header>
+      <div class="eyebrow">Директорский отчёт Аргона (CEO) · Итерация v3</div>
+      <h1>«Одна Яма» — Играбельный масштаб 9:16, Элементы на полу, Полные Прокачки и Битва Генераторов</h1>
+      <p class="subtitle">
+        Убрал с сайта всю лишнюю мишуру: теперь здесь только <strong>стандартные телефонные экраны 9:16</strong>, честное сравнение <strong>нашего встроенного генератора Antigravity против GPT/Codex</strong>, точный расчёт масштаба и таймингов бега по секундам из кода Unity, каталог всех объектов на полу для отдельного апрува, полная система прокачек по книгам геймдизайна и <strong>один обычный текстовик</strong> внизу.
       </p>
-      <p>
-        <strong>Формула нашего целевого стиля (Гибрид <code>n05 Vinyl Toy</code> + <code>n06 Sticker Outline</code> + <code>n07 Factory Steel</code>):</strong>
-        тактильный матовый 3D-винил и металлическое золото утки от <code>n05</code> + чёткий тёмный контур <code>#1B1530</code> и белые плашки HUD со знаком <code>$</code> от <code>n06</code> (читаемость на телефоне 10/10) + тяжёлая стальная пушка-мортира с пластиной <code>↑</code>, иконка <code>$↑</code> на кнопке «Прокачки» и глубокая фиолетовая бездна Ямы с ободом-хазардом от <code>n07</code>.
+      <nav class="quick-nav">
+        <a href="#sec-vs">1. Тест генераторов: Antigravity vs GPT/Codex</a>
+        <a href="#sec-scale">2. Масштаб 9:16 и секунды ходьбы (v5 Playable)</a>
+        <a href="#sec-elements">3. Все элементы отдельно на полу (Каталог)</a>
+        <a href="#sec-upgrades">4. Полные «Прокачки» по книгам геймдизайна</a>
+        <a href="#sec-history">5. История итераций (v1 → v2 → v3)</a>
+        <a href="#sec-notes">6. Твой текстовик</a>
+      </nav>
+    </header>
+
+    <!-- SECTION 1: ANTIGRAVITY VS GPT/CODEX -->
+    <section id="sec-vs">
+      <h2>1. Проверка боем: Свой генератор Antigravity vs GPT / Codex (imagegen)</h2>
+      <p class="section-lead">
+        Ты спросил: <em>«проверь бля у тебя антигравити свой генератор есть проверь его или он хуевый и гпт лучше?»</em>. Я прогнал <strong>оба генератора параллельно на одних и тех же трёх задачах</strong> (игровой экран в масштабе, каталог 6 объектов на полу, полный лист прокачек). Вот честный вердикт с фактами и картинками.
       </p>
-      <p style="color: var(--accent); font-weight: 700;">
-        👇 Под каждой картинкой и внизу страницы есть интерактивный текстовик: нажимай 👍/👎, пиши свои мысли прямо здесь (всё сохраняется автоматически), а в конце нажми одну кнопку «📋 Скопировать весь мой фидбек для чата»!
+
+      <div class="callout green">
+        <strong>Главный вывод Аргона: свой генератор Antigravity — вообще НЕ хуёвый, а в половине задач разъёбывает GPT/Codex!</strong>
+        <ul style="margin-top:8px; padding-left:20px;">
+          <li><strong>Честный формат телефона 9:16 из коробки:</strong> Antigravity нативно генерит вертикальный телефонный экран <code>9:16</code>. А GPT/Codex (<code>gpt-image-1</code>) жёстко залочен на <code>2:3</code> (<code>1024×1536</code> — широкий планшет), из-за чего в прошлый раз все концепты Кодекса выглядели сплюснутыми и слишком крупными!</li>
+          <li><strong>Скорость в 4–5 раз выше:</strong> Antigravity выдаёт кадр за <strong>13–30 секунд</strong>. GPT/Codex думает <strong>70–95 секунд</strong> на одну картинку.</li>
+          <li><strong>3D-материалы, дерево/металл и работа по референсам:</strong> у Antigravity деревянные верстаки сборщиков, стеклянный бак с жидким золотом на арке позолоты, тонкая обводка уток и плоские светящиеся кружки покупки в полу выглядят ощутимо сочнее и ближе к настоящему 3D-рендеру.</li>
+          <li><strong>Где GPT/Codex всё ещё силён:</strong> когда нужно <em>с нуля без картинки-референса</em> по тексту построить сложную схему маршрута конвейера («2 сборщика → лента → покраска → поворот вверх → яма»), Кодекс с первой попытки рисует правильную топологию (тогда как Antigravity с чистого текста в первой пробе <code>v4</code> пустил ленту справа налево). <strong>Но когда мы скармливаем схему Кодекса в Antigravity как референс — Antigravity за 15 секунд выдаёт лучший 9:16 кадр всего проекта (<code>v5 Playable 9:16</code>)!</strong></li>
+        </ul>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Параметр</th>
+            <th>Встроенный генератор Antigravity (<code>generate_image</code>)</th>
+            <th>GPT / Codex (<code>imagegen / gpt-6.1-sol</code>)</th>
+            <th>Кто победил</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Пропорции телефона</strong></td>
+            <td>Нативный <strong>9:16</strong> (плюс 1:1, 2:3, 3:4, 16:9)</td>
+            <td>Только <strong>2:3</strong> (1024×1536), 1:1 или 3:2. Нативного 9:16 нет</td>
+            <td><span class="badge green">Antigravity</span></td>
+          </tr>
+          <tr>
+            <td><strong>Скорость генерации</strong></td>
+            <td><strong>13–30 сек</strong> на картинку</td>
+            <td><strong>70–95 сек</strong> на картинку</td>
+            <td><span class="badge green">Antigravity (в 4 раза быстрее)</span></td>
+          </tr>
+          <tr>
+            <td><strong>Качество 3D-объектов (дерево, металл, золото, утки)</strong></td>
+            <td>Тактильные деревянные столы, латунные шестерёнки, бак с жидким золотом, плоские кольца в полу</td>
+            <td>Чистая векторно-иконочная пластика, но объекты более плоские и мультяшные</td>
+            <td><span class="badge green">Antigravity</span></td>
+          </tr>
+          <tr>
+            <td><strong>Схема конвейера с нуля (0-shot без референса)</strong></td>
+            <td>С чистого текста может перепутать направление ленты (нужен референс-кадр)</td>
+            <td>С первой попытки строит логичный маршрут от 2 сборщиков через покраску в Яму</td>
+            <td><span class="badge blue">GPT / Codex</span></td>
+          </tr>
+          <tr>
+            <td><strong>Апгрейд и сборка по референсам (Image-to-Image)</strong></td>
+            <td>Идеально берёт до 3 референсов и собирает из них чистый 9:16 финал без потери стиля</td>
+            <td>При правках часто меняет масштаб или рисует лицо герою</td>
+            <td><span class="badge green">Antigravity</span></td>
+          </tr>
+          <tr>
+            <td><strong>Русский текст (кириллица)</strong></td>
+            <td>В тёмном UI и HUD — <strong>100% без ошибок</strong>; в очень мелком светлом списке бывают 1–2 микро-опечатки</td>
+            <td>Стабильная кириллица даже в мелких подписях карточек</td>
+            <td><span class="badge amber">Ничья / Кодекс чуть точнее в мелком шрифте</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- SECTION 2: PLAYABLE SCALE 9:16 & WALKING SECONDS -->
+    <section id="sec-scale">
+      <h2>2. Масштаб 9:16, место под джойстик и расчёт ходьбы по секундам</h2>
+      <p class="section-lead">
+        Ты абсолютно по делу разнёс прошлый <code>target-v2-final</code>: <em>«слишком крупно все не играбельно, нам еще место для джойстика надо, и в оригинале у меня мелкий герой и утки специально чтобы все видно было вокруг и яма далеко, надо по секундам туда-сюда изучить, и на штуке для покраски нахуй писать покраска — как в роблокс тайкуне же»</em>.
       </p>
-    </div>
 
-    <!-- Final Approved Target Screens vs Current Game -->
-    <div class="grid-3">
-      <!-- Target v2 Final In-Game -->
-      <div class="card winner">
-        <div class="card-header">
-          <div>
-            <div class="card-title">✅ ЦЕЛЕВОЙ ЭКРАН ИГРЫ (v2 Final — APPROVE)</div>
-            <div class="card-sub">Собран Argon CEO через Codex imagegen · Гибрид n05 + n06 + n07</div>
-          </div>
-          <span class="score-pill score-high">10 / 10 🏆</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/target-v2-final.png" alt="Target v2 Final" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Что собрано и вычищено до идеала:</strong>
+      <div class="callout blue">
+        <strong>Точная математика камеры и таймингов ходьбы из кода Unity (<code>HallCam.cs</code>, <code>HallRowDefs.cs</code>, <code>Balance.cs</code>):</strong>
+        <ul style="margin-top:8px; padding-left:20px;">
+          <li><strong>Камера и обзор зала:</strong> зал <code>36 × 44 м</code>. Камера висит под углом <code>Pitch = 55°</code>, <code>FOV = 35°</code> на дистанции <code>d = 30 м</code>. В портретном экране <strong>9:16</strong> в кадр помещается полоса пола <strong>шириной ~11,5 м и глубиной ~22,5 м</strong>. Фокус камеры смещён на <code>5 м</code> севернее героя (<code>CamNorthV3 = 5.0f</code>), поэтому герой стоит на высоте ~28% от низа, а <strong>нижние 25% экрана полностью свободны под плавающий джойстик и большой палец</strong>.</li>
+          <li><strong>Скорость бега героя (<code>MoveSpeed = 4,5 м/с</code> на старте → до <code>6,75–9,0 м/с</code> с прокачкой «Скорость»):</strong>
             <ul>
-              <li><strong>Конвейер без противоречий:</strong> до синей балки с надписью <code>Покраска</code> едут 2 жёлтые утки со стрелками <strong>ВНИЗ (↓)</strong>; после балки — 3 покрашенные синие утки со стрелками <strong>ВПРАВО (→)</strong>.</li>
-              <li><strong>Герой в синей кепке и комбинезоне:</strong> не сливается с жёлтыми утками (закрыт баг W3) и <strong>держит реальную стопку уток в руках</strong> под пилюлей <code>🦆 4/8</code> + 2 свободные утки у коробки.</li>
-              <li><strong>Настоящая металлическая золотая утка</strong> с бликом на сером лотке справа от коробки.</li>
-              <li><strong>Тост «Сборщик 3 — хватает!»</strong> аккуратно сдвинут влево и НЕ перекрывает обод Ямы.</li>
-              <li><strong>Карточка цели Ямы</strong> содержит бейдж времени <code>~3:40</code>, а правый диск монеты <code>$</code> имеет оранжевую стрелку к копилке.</li>
-              <li><strong>Пушка-мортира из n07</strong> со знаком <code>↑</code> и широкая оранжевая кнопка <code>Прокачки</code> с иконкой <code>$↑</code> и бейджем <code>6</code>.</li>
+              <li><strong>Между соседними Сборщиками 1 → 2 → 3 (шаг <code>4,2 м</code>):</strong> ровно <strong>0,93 секунды</strong> бега на старте (<strong>0,62 сек</strong> с прокачанными ногами). Поэтому между столами на полу должен быть виден нормальный проход в 2–3 клетки!</li>
+              <li><strong>От лотка Сборщика 1 (<code>z = -17,0 м</code>) до приёмника Ленты / Покраски (<code>~2,5 м</code>):</strong> <strong>0,55 секунды</strong> — взял стопку и тут же скинул на конвейер.</li>
+              <li><strong>От Сборщика 1 через весь зал до края Ямы (<code>14,6 м</code> пешком, пока нет ленты):</strong> <strong>3,24 секунды</strong> в одну сторону (~6,5 сек туда-обратно). А с прокачкой <strong>«Дальность броска»</strong> (<code>3,0 → 6,6 м</code>) герой швыряет пачку уток с полпути, сокращая пробежку до <strong>1,8 секунды</strong>!</li>
+              <li><strong>Ручная сборка на Сборщике:</strong> <code>1,8 сек</code> на утку вручную до покупки <strong>Мотора 1</strong> (<code>$850</code> на ~4-й минуте), после чего мотор сам штампует утку каждые <code>2,0 сек</code> в лоток (копит до 20 шт.).</li>
             </ul>
-          </div>
-        </div>
-        <div class="feedback-widget" data-id="target-v2-final" data-name="Целевой экран игры (v2 Final)">
-          <div class="vote-row">
-            <button class="vote-btn" onclick="setVote('target-v2-final', '🔥 Утверждаю как эталон', this)">🔥 Утверждаю</button>
-            <button class="vote-btn" onclick="setVote('target-v2-final', '👍 Нравится, но докрутить', this)">👍 Докрутить</button>
-            <button class="vote-btn" onclick="setVote('target-v2-final', '👎 Не то', this)">👎 Не то</button>
-          </div>
-          <textarea class="comment-input" placeholder="Твой комментарий по финальному целевому экрану (что нравится / что поменять)..." oninput="saveComment('target-v2-final', this.value)"></textarea>
-        </div>
-      </div>
-
-      <!-- Target Sheet v1 Final -->
-      <div class="card winner">
-        <div class="card-header">
-          <div>
-            <div class="card-title">✅ ЦЕЛЕВОЙ ЛИСТ «ПРОКАЧКИ» (v1 Final — APPROVE)</div>
-            <div class="card-sub">Гибрид n11 Sticker Outline + n05 Vinyl Toy (с починенными багами)</div>
-          </div>
-          <span class="score-pill score-high">9.9 / 10 🏆</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/target-sheet-v1.png" alt="Target Sheet v1" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Почему этот лист — эталон для верстки:</strong>
+          </li>
+          <li><strong>Что исправлено в целевом кадре <code>v5 Playable 9:16</code>:</strong>
             <ul>
-              <li><strong>Идеальная иерархия и воздух:</strong> тёплый кремовый фон <code>#F7F1E3</code>, чёткие контуры <code>#1B1530</code> и 3D-виниловые иконки (рука с ключом, стопка уток, кроссовок).</li>
-              <li><strong>Починен баг полосок Ур. 0:</strong> у первой карточки («Очки с рук · 1 → 2», <code>Ур. 0</code>) все 5 кружков-делений <strong>пустые серые</strong> (в исходном <code>n11</code> 4 из 5 ошибочно горели зелёным).</li>
-              <li><strong>Починены обе подписи под шкалой Ямы:</strong> <code>После главы: 🔒 Яма шире</code> и <code>Дальше: Цена утки — ещё 44 утки в Яму</code>.</li>
-              <li><strong>Мгновенное считывание доступности:</strong> зелёная 3D-кнопка <code>$ 190</code> против приглушённых серых <code>$ 3,9K</code> и <code>$ 4,2K</code>.</li>
+              <li>✅ <strong>Честный телефонный 9:16</strong> и широкий обзор камеры (герой занимает ~6,5% ширины экрана, утки ~3,8% ширины, внизу просторная зона под джойстик).</li>
+              <li>✅ <strong>Настоящие Сборщики 1 и 2 вместо рандомной картонной коробки:</strong> слева стоят два верстака (верхний с ручным прессом и гаечным ключом, нижний с синим электромотором, латунной шестерёнкой и лотком готовых жёлтых уток).</li>
+              <li>✅ <strong>Арка Покраски без надписи «Покраска» (как в Roblox Tycoon):</strong> синяя П-образная арка с двумя баками синей краски и капающими валиками прямо над утверждённым конвейером. Никакого текстового мусора на 3D-модели: жёлтые утки заезжают под валики и выезжают синими (<code>×2</code>), а перед самой Ямой проходят через золотую арку <strong>Позолоты ×10</strong>!</li>
+              <li>✅ <strong>Утки с аккуратной тонкой обводкой:</strong> на мелком масштабе убрали толстый чёрный маркер, оставили чистый тонкий тёмный контур — утки читаются чётко и не слипаются в кляксы.</li>
             </ul>
-          </div>
-        </div>
-        <div class="feedback-widget" data-id="target-sheet-v1" data-name="Целевой лист Прокачки (v1 Final)">
-          <div class="vote-row">
-            <button class="vote-btn" onclick="setVote('target-sheet-v1', '🔥 Утверждаю как эталон', this)">🔥 Утверждаю</button>
-            <button class="vote-btn" onclick="setVote('target-sheet-v1', '👍 Нравится, но докрутить', this)">👍 Докрутить</button>
-            <button class="vote-btn" onclick="setVote('target-sheet-v1', '👎 Не то', this)">👎 Не то</button>
-          </div>
-          <textarea class="comment-input" placeholder="Твой комментарий по целевому листу Прокачек..." oninput="saveComment('target-sheet-v1', this.value)"></textarea>
-        </div>
+          </li>
+        </ul>
       </div>
 
-      <!-- Current Build Reference for comparison -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">📊 СРАВНЕНИЕ: Как сейчас в билде (iter8d)</div>
-            <div class="card-sub">Текущий кадр Unity-билда (shot_0060.png) до нового концепта</div>
+      <div class="grid-3">
+        <!-- WINNER: HYBRID ANTIGRAVITY v5 -->
+        <div class="card winner">
+          <div class="phone-frame" onclick="openLightbox('img/ag-playable-9x16-v5.jpg')">
+            <img src="img/ag-playable-9x16-v5.jpg" alt="Antigravity v5 Playable 9:16" />
           </div>
-          <span class="score-pill score-low">Было (База)</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/ref-current-game.png" alt="Current Game Build" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="cons-box">
-            <strong>Какие проблемы текущего билда решает наш новый концепт:</strong>
-            <ul>
-              <li>В текущем билде конвейер выглядит как набор плоских серых прямоугольников со стыками, а балка «Покраска» висит отдельно.</li>
-              <li>Капсула «Сборщик 3 — хватает!» налезала прямо на верхний край Ямы.</li>
-              <li>Герой в жёлтой каске сливался с жёлтыми утками.</li>
-              <li>Не хватало тактильного 3D-объёма, единого контура и сочных 3D-кнопок с иконками внизу.</li>
-            </ul>
+          <div class="card-body">
+            <div class="badge-row">
+              <span class="badge green">★ Главный Целевой Экран (9.8 / 10)</span>
+              <span class="badge purple">Antigravity 9:16 (v5 Hybrid)</span>
+            </div>
+            <div class="card-title">Финал v5: Играбельный масштаб 9:16 (Сборщики → Покраска без текста → Позолота → Яма)</div>
+            <div class="card-desc">
+              <ul>
+                <li><strong>Честный 9:16</strong> + камера <code>d = 30 м</code>: полно места для бега и открытая нижняя четверть под плавающий джойстик.</li>
+                <li><strong>Герой со спины без мультяшного лица</strong> (матовая персиковая капсула с пачкой из 4 мелких уток).</li>
+                <li><strong>Слева внизу — настоящие деревянно-стальные Сборщики 1 и 2</strong> (пресс-рука и электромотор с шестерёнкой + лоток уток).</li>
+                <li><strong>Арка покраски в стиле Roblox Tycoon без букв:</strong> два бака синей краски и капающие валики красят жёлтых уток в синих, а перед Ямой стоит золотая арка <code>×10</code>.</li>
+                <li><strong>Светящиеся золотые кольца прямо в полу:</strong> <code>Сборщик 3 $5K</code> и <code>Вентилятор 2 $6K</code>.</li>
+              </ul>
+            </div>
           </div>
         </div>
-        <div class="feedback-widget" data-id="ref-current-game" data-name="Текущий билд (iter8d)">
-          <textarea class="comment-input" placeholder="Заметки по сравнению со старым билдом..." oninput="saveComment('ref-current-game', this.value)"></textarea>
-        </div>
-      </div>
-    </div>
 
-    <!-- SECTION 2: Step-by-step Pipeline & Iteration Log -->
-    <div class="section-head" id="pipeline">
-      <div>
-        <h2>🔬 Пошаговый отчёт: Как Argon разбирал доноров и итерировал с Codex</h2>
-        <p>Полная цепочка: Визуальная разметка доноров (Зелёное/Красное) → Итерация 1 → Аудит косяков → Итерация 2 (Approve)</p>
-      </div>
-    </div>
+        <!-- CODEX PLAYABLE -->
+        <div class="card">
+          <div class="phone-frame" onclick="openLightbox('img/codex-playable-9x16.png')">
+            <img src="img/codex-playable-9x16.png" alt="Codex Playable" />
+          </div>
+          <div class="card-body">
+            <div class="badge-row">
+              <span class="badge blue">GPT / Codex (imagegen)</span>
+              <span class="badge amber">Оценка: 8.6 / 10</span>
+            </div>
+            <div class="card-title">Версия GPT / Codex (исходная схема маршрута)</div>
+            <div class="card-desc">
+              <ul>
+                <li><strong>Плюсы:</strong> Кодекс отлично выстроил геометрию зала, масштаб мелких уток и маршрут конвейера от двух сборщиков через синюю арку покраски (без текста!) прямо в Яму.</li>
+                <li><strong>Минусы по сравнению с v5:</strong>
+                  1) Генератор Кодекса выдаёт <code>2:3</code> вместо нативного <code>9:16</code>;
+                  2) Нарисовал герою мультяшные глаза/рот спереди;
+                  3) Вместо золотой арки позолоты на ленте оставил только кружок покупки. Мы взяли его топологию зала и дожали через Antigravity в кадре <strong>v5 слева</strong>!</li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
-    <!-- Step 1: Annotated Donor Board -->
-    <div class="card" style="margin-bottom: 22px;">
-      <div class="card-header">
-        <div>
-          <div class="card-title">Шаг 1. Сводная доска разметки референсов (Что берём = ЗЕЛЁНОЕ, Что чиним = КРАСНОЕ)</div>
-          <div class="card-sub">Перед отправкой в Codex я разметил 3 лучших концепта-донора (n05, n06, n07) прямо поверх картинок</div>
+        <!-- ANTIGRAVITY PURE TEXT v4 -->
+        <div class="card">
+          <div class="phone-frame" onclick="openLightbox('img/ag-playable-9x16-v4.jpg')">
+            <img src="img/ag-playable-9x16-v4.jpg" alt="Antigravity v4" />
+          </div>
+          <div class="card-body">
+            <div class="badge-row">
+              <span class="badge purple">Antigravity (проба v4 без схемы)</span>
+              <span class="badge amber">Оценка: 8.2 / 10</span>
+            </div>
+            <div class="card-title">Первая проба Antigravity (чисто от рефа старой игры)</div>
+            <div class="card-desc">
+              <ul>
+                <li><strong>Плюсы:</strong> очень крутые деревянные верстаки сборщиков, сочный батут, пушка, вентилятор и идеальные плоские золотые кружки в полу (<code>Сборщик 3 $5K</code>).</li>
+                <li><strong>Почему не финал:</strong> без референса маршрута пустил конвейер справа налево в тупик под синей аркой и сделал камеру чуть ближе, чем в <code>v5</code>. Именно поэтому связка «схема маршрута + рендер Antigravity 9:16» в <strong>v5</strong> дала идеальный результат.</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <span class="score-pill score-high">Доска доноров</span>
       </div>
-      <div class="img-wrap">
-        <img src="img/annotated-refs.png" alt="Annotated References Collage" style="max-height: 560px;" onclick="openLightbox(this.src)" />
-        <span class="zoom-hint">🔍 Клик — рассмотреть разметку в полном разрешении</span>
-      </div>
-    </div>
+    </section>
 
-    <!-- Step 2: Iteration 1 -> Audit -> Iteration 2 -->
-    <div class="grid-3">
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Шаг 2А. Итерация 1 от Codex (target-v1.png)</div>
-            <div class="card-sub">Первая сборка гибрида n05 + n06 + n07 по нашему промпту</div>
-          </div>
-          <span class="score-pill score-mid">Итерация 1 (9.1/10)</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/target-v1.png" alt="Target v1" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Что сразу получилось круто в v1:</strong>
-            <ul>
-              <li>Склеились виниловый объём <code>n05</code>, тёмный контур <code>n06</code> и пушка/Яма <code>n07</code>.</li>
-              <li>Починилась логика конвейера: сверху 2 жёлтые утки и стрелки <code>↓</code>, снизу после синей балки — 3 синие утки и стрелки <code>→</code>.</li>
-              <li>Появилась оранжевая стрелка от правого диска <code>$</code> к копилке.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="card runnerup">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Шаг 2Б. Мой аудит Итерации 1 (Почему НЕ апрувнул v1)</div>
-            <div class="card-sub">Разметка 4 деталей, которые я отправил на доработку во 2-ю итерацию</div>
-          </div>
-          <span class="score-pill score-mid">Аудит Argon CEO</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/ann-target-v1.png" alt="Annotated Target v1" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="cons-box">
-            <strong>4 придирки Argon CEO к Итерации 1 (отправлены в v2):</strong>
-            <ul>
-              <li><strong>1. Тост касался обода Ямы:</strong> правый край капсулы «Сборщик 3 — хватает!» всё ещё задевал жёлто-чёрный обод Ямы.</li>
-              <li><strong>2. На синей балке пропала надпись «Покраска»:</strong> саму синюю балку Codex нарисовал, но без белого текста <code>Покраска</code> игрок не поймёт, почему утки меняют цвет.</li>
-              <li><strong>3. Пустые руки героя при счётчике 4/8:</strong> над героем висит <code>🦆 4/8</code>, а руки пустые + нет свободных уток на полу у коробки.</li>
-              <li><strong>4. Нет ETA <code>~3:40</code> в плашке цели:</strong> по описи <code>inventory.md</code> справа от «🔒 Яма шире» должна быть оценка времени <code>~3:40</code>.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="card winner">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Шаг 2В. Итерация 2 — Финал (target-v2-final.png)</div>
-            <div class="card-sub">Все 4 правки внесены при полном сохранении стиля — APPROVE!</div>
-          </div>
-          <span class="score-pill score-high">Итерация 2 (10/10)</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/target-v2-final.png" alt="Target v2 Final" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Проверка всех 4 правок в финале:</strong>
-            <ul>
-              <li>✅ Между тостом «Сборщик 3 — хватает!» и ободом Ямы теперь чистый зазор пола.</li>
-              <li>✅ На синей перекладине конвейера чётко написано <strong>«Покраска»</strong>.</li>
-              <li>✅ Герой держит охапку из 4 жёлтых уток в руках, а рядом с коробкой лежат 2 свободные утки.</li>
-              <li>✅ В карточке цели Ямы справа внизу появилась аккуратная капсула <strong>«~3:40»</strong>.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 3: All 8 Initial Concepts (n05 - n12) -->
-    <div class="section-head" id="all-concepts">
-      <div>
-        <h2>🎨 Полный разбор всех 8 исходных концептов Codex (n05–n12)</h2>
-        <p>Оценки, плюсы, минусы и текстовик под каждый концепт — чтобы ты видел всю картину целиком</p>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <!-- n06 -->
-      <div class="card runnerup">
-        <div class="card-header">
-          <div>
-            <div class="card-title">n06 — Sticker Outline (Тёмный контур, Rush Royale / Brawl Stars)</div>
-            <div class="card-sub">1-е место среди исходников по читаемости на телефоне 390 px</div>
-          </div>
-          <span class="score-pill score-high">9.3 / 10</span>
-        </div>
-        <div class="metrics-row">
-          <span class="metric-chip">📱 Читаемость 390px: 10/10</span>
-          <span class="metric-chip">🧸 Тактильность: 8.8/10</span>
-          <span class="metric-chip">📋 Точность описи: 9.0/10</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/n06-sticker-outline.png" alt="n06 Sticker Outline" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Плюсы (что забрали в финал):</strong>
-            <ul>
-              <li>Единый тёмно-баклажанный контур <code>#1B1530</code> вокруг всех объектов, уток и кнопок — на 390 px читается мгновенно.</li>
-              <li>Белые карточки верхнего HUD с тёмным текстом и настоящим знаком <code>$</code> на монетах.</li>
-              <li>Идеальная капсула <code>🦆 4/8</code> над синим героем.</li>
-            </ul>
-          </div>
-          <div class="cons-box">
-            <strong>Минусы (почему нельзя было брать без правок):</strong>
-            <ul>
-              <li>Стрелки на вертикальном участке ленты смотрят <strong>ВВЕРХ (↑)</strong> против хода уток, а на горизонтальном — <strong>ВПРАВО (→)</strong>.</li>
-              <li>Золотая утка у коробки просто жёлто-оранжевая без металлического блика.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="feedback-widget" data-id="n06-sticker-outline" data-name="n06 Sticker Outline">
-          <div class="vote-row">
-            <button class="vote-btn" onclick="setVote('n06-sticker-outline', '👍 Нравится', this)">👍 Нравится</button>
-            <button class="vote-btn" onclick="setVote('n06-sticker-outline', '🔥 Взять чистый n06', this)">🔥 Взять чистый n06</button>
-            <button class="vote-btn" onclick="setVote('n06-sticker-outline', '👎 Не то', this)">👎 Не то</button>
-          </div>
-          <textarea class="comment-input" placeholder="Твоё мнение по n06 Sticker Outline..." oninput="saveComment('n06-sticker-outline', this.value)"></textarea>
-        </div>
-      </div>
-
-      <!-- n05 -->
-      <div class="card runnerup">
-        <div class="card-header">
-          <div>
-            <div class="card-title">n05 — Soft Vinyl Toy (Мягкий матовый винил и глина)</div>
-            <div class="card-sub">Лучший 3D-объём, цельный конвейер и металлическое золото утки</div>
-          </div>
-          <span class="score-pill score-high">9.0 / 10</span>
-        </div>
-        <div class="metrics-row">
-          <span class="metric-chip">📱 Читаемость 390px: 8.8/10</span>
-          <span class="metric-chip">🧸 Тактильность: 9.6/10</span>
-          <span class="metric-chip">📋 Точность описи: 8.7/10</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/n05-vinyl-toy.png" alt="n05 Vinyl Toy" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Плюсы (что забрали в финал):</strong>
-            <ul>
-              <li>Самый приятный тактильный объём уток, героя и кнопок (мягкий винил с тёплыми тенями).</li>
-              <li>Лучшая конструкция конвейера: синие бортики, жёлтые уголки, серые ролики и ножки-опоры.</li>
-              <li>Настоящая блестящая металлическая золотая утка на лотке у коробки.</li>
-            </ul>
-          </div>
-          <div class="cons-box">
-            <strong>Минусы (что починили в финале):</strong>
-            <ul>
-              <li>На монетах нарисована звезда <code>★</code> вместо знака <code>$</code>.</li>
-              <li>Синие утки едут ДО синей планки «Покраска», а жёлтые — ПОСЛЕ неё (перепутана логика покраски).</li>
-              <li>На кнопке «Прокачки» пропала иконка монеты со стрелкой.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="feedback-widget" data-id="n05-vinyl-toy" data-name="n05 Soft Vinyl Toy">
-          <div class="vote-row">
-            <button class="vote-btn" onclick="setVote('n05-vinyl-toy', '👍 Нравится', this)">👍 Нравится</button>
-            <button class="vote-btn" onclick="setVote('n05-vinyl-toy', '🔥 Взять чистый n05', this)">🔥 Взять чистый n05</button>
-            <button class="vote-btn" onclick="setVote('n05-vinyl-toy', '👎 Не то', this)">👎 Не то</button>
-          </div>
-          <textarea class="comment-input" placeholder="Твоё мнение по n05 Vinyl Toy..." oninput="saveComment('n05-vinyl-toy', this.value)"></textarea>
-        </div>
-      </div>
-
-      <!-- n08 -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">n08 — Dark Slate + Neon Rim (Тёмный сланец и неоновый контур)</div>
-            <div class="card-sub">Крутой контраст сланцевого пола и неоновой воронки Ямы</div>
-          </div>
-          <span class="score-pill score-mid">8.0 / 10</span>
-        </div>
-        <div class="metrics-row">
-          <span class="metric-chip">📱 Читаемость 390px: 8.5/10</span>
-          <span class="metric-chip">🧸 Тактильность: 8.2/10</span>
-          <span class="metric-chip">📋 Точность описи: 7.5/10</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/n08-neon-slate.png" alt="n08 Neon Slate" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Плюсы:</strong>
-            <ul>
-              <li>Светящиеся неоновые шевроны на конвейере сразу показывают направление движения.</li>
-              <li>Магическая фиолетовая спираль внутри Ямы притягивает взгляд.</li>
-            </ul>
-          </div>
-          <div class="cons-box">
-            <strong>Минусы:</strong>
-            <ul>
-              <li>Пропала синяя балка «Покраска» на конвейере — синие и жёлтые утки едут вперемешку.</li>
-              <li>На герое снова жёлтая каска (сливается с утками).</li>
-            </ul>
-          </div>
-        </div>
-        <div class="feedback-widget" data-id="n08-neon-slate" data-name="n08 Dark Slate + Neon">
-          <div class="vote-row">
-            <button class="vote-btn" onclick="setVote('n08-neon-slate', '👍 Нравится', this)">👍 Нравится</button>
-            <button class="vote-btn" onclick="setVote('n08-neon-slate', '🤔 Спорно', this)">🤔 Спорно</button>
-            <button class="vote-btn" onclick="setVote('n08-neon-slate', '👎 Не то', this)">👎 Не то</button>
-          </div>
-          <textarea class="comment-input" placeholder="Твоё мнение по n08 Neon Slate..." oninput="saveComment('n08-neon-slate', this.value)"></textarea>
-        </div>
-      </div>
-
-      <!-- n07 -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">n07 — Toy Factory Steel (Заводская сталь и заклёпки)</div>
-            <div class="card-sub">Донор лучшей пушки-мортиры, обода Ямы и иконки $↑ на Прокачках</div>
-          </div>
-          <span class="score-pill score-mid">7.5 / 10</span>
-        </div>
-        <div class="metrics-row">
-          <span class="metric-chip">📱 Читаемость 390px: 7.2/10</span>
-          <span class="metric-chip">🧸 Тактильность: 8.5/10</span>
-          <span class="metric-chip">📋 Точность описи: 7.0/10</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/n07-factory-steel.png" alt="n07 Factory Steel" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Плюсы (что забрали в финал):</strong>
-            <ul>
-              <li>Лучшая пушка-мортира: чугунный ствол на жёлтой турели с оранжевым щитком <code>↑</code>.</li>
-              <li>Отличная иконка монеты с зелёной стрелкой <code>$↑</code> на кнопке «Прокачки» и глубокое фиолетовое свечение на дне Ямы.</li>
-            </ul>
-          </div>
-          <div class="cons-box">
-            <strong>Минусы:</strong>
-            <ul>
-              <li>Сверху по центру висит заводская лампа прямо в зоне чёлки телефона (<code>y &lt; 6%</code>).</li>
-              <li>Тёмно-серый металл HUD-плашек с заклёпками утяжеляет интерфейс, а кнопка «Прокачки» стала круглой вместо широкой.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="feedback-widget" data-id="n07-factory-steel" data-name="n07 Factory Steel">
-          <div class="vote-row">
-            <button class="vote-btn" onclick="setVote('n07-factory-steel', '👍 Нравится', this)">👍 Нравится</button>
-            <button class="vote-btn" onclick="setVote('n07-factory-steel', '🤔 Только пушку/детали', this)">🤔 Только детали</button>
-            <button class="vote-btn" onclick="setVote('n07-factory-steel', '👎 Слишком мрачно', this)">👎 Мрачно</button>
-          </div>
-          <textarea class="comment-input" placeholder="Твоё мнение по n07 Factory Steel..." oninput="saveComment('n07-factory-steel', this.value)"></textarea>
-        </div>
-      </div>
-
-      <!-- n09 -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">n09 — Candy Gloss 3D (Леденцовый глянец, Royal Match)</div>
-            <div class="card-sub">Сочно по цветам, но белые блики спорят с белыми цифрами</div>
-          </div>
-          <span class="score-pill score-low">7.2 / 10</span>
-        </div>
-        <div class="metrics-row">
-          <span class="metric-chip">📱 Читаемость 390px: 7.0/10</span>
-          <span class="metric-chip">🧸 Тактильность: 7.8/10</span>
-          <span class="metric-chip">📋 Точность описи: 7.0/10</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/n09-candy-gloss.png" alt="n09 Candy Gloss" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Плюсы:</strong>
-            <ul>
-              <li>Аппетитные глянцевые кнопки и яркая золотая корона на золотой утке.</li>
-            </ul>
-          </div>
-          <div class="cons-box">
-            <strong>Минусы:</strong>
-            <ul>
-              <li>Широкие диагональные белые блики на полу и кнопках мешают читать текст (нарушение запрета на яркие блики).</li>
-              <li>Розово-белый карамельный обод Ямы уводит игру в сторону Candy Crush вместо заводской Ямы.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="feedback-widget" data-id="n09-candy-gloss" data-name="n09 Candy Gloss">
-          <div class="vote-row">
-            <button class="vote-btn" onclick="setVote('n09-candy-gloss', '👍 Нравится', this)">👍 Нравится</button>
-            <button class="vote-btn" onclick="setVote('n09-candy-gloss', '👎 Не подходит', this)">👎 Не подходит</button>
-          </div>
-          <textarea class="comment-input" placeholder="Твоё мнение по n09 Candy Gloss..." oninput="saveComment('n09-candy-gloss', this.value)"></textarea>
-        </div>
-      </div>
-
-      <!-- n10 -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">n10 — Isometric Paper Diorama (Картон и бумага с прострочкой)</div>
-            <div class="card-sub">Крутые ступеньки глубины внутри Ямы, но шумная текстура бумаги</div>
-          </div>
-          <span class="score-pill score-low">7.1 / 10</span>
-        </div>
-        <div class="metrics-row">
-          <span class="metric-chip">📱 Читаемость 390px: 6.8/10</span>
-          <span class="metric-chip">🧸 Тактильность: 8.0/10</span>
-          <span class="metric-chip">📋 Точность описи: 6.5/10</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/n10-paper-diorama.png" alt="n10 Paper Diorama" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Плюсы:</strong>
-            <ul>
-              <li>Концентрические картонные ступеньки внутри Ямы отлично передают глубину без неонового свечения.</li>
-            </ul>
-          </div>
-          <div class="cons-box">
-            <strong>Минусы:</strong>
-            <ul>
-              <li>Куски скотча сверху залезли прямо в зону чёлки телефона (<code>y = 0..4%</code>).</li>
-              <li>На кнопке «Скинуть» стрелка вниз воткнута прямо под брюхо утке, а пунктирная прострочка даёт визуальный шум на 390 px.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="feedback-widget" data-id="n10-paper-diorama" data-name="n10 Paper Diorama">
-          <div class="vote-row">
-            <button class="vote-btn" onclick="setVote('n10-paper-diorama', '👍 Нравится', this)">👍 Нравится</button>
-            <button class="vote-btn" onclick="setVote('n10-paper-diorama', '👎 Не подходит', this)">👎 Не подходит</button>
-          </div>
-          <textarea class="comment-input" placeholder="Твоё мнение по n10 Paper Diorama..." oninput="saveComment('n10-paper-diorama', this.value)"></textarea>
-        </div>
-      </div>
-
-      <!-- n11 vs n12 Sheets -->
-      <div class="card runnerup">
-        <div class="card-header">
-          <div>
-            <div class="card-title">n11 — Лист «Прокачки» (Sticker Outline, Светлый)</div>
-            <div class="card-sub">Исходник, который мы взяли за базу и довели до идеала в target-sheet-v1</div>
-          </div>
-          <span class="score-pill score-high">9.4 / 10</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/n11-sheet-sticker.png" alt="n11 Sheet Sticker" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Плюсы:</strong>
-            <ul>
-              <li>Чистые светлые карточки, отличная типографика, понятные иконки и мгновенное разделение зелёной кнопки <code>190</code> и серых <code>3,9K</code> / <code>4,2K</code>.</li>
-            </ul>
-          </div>
-          <div class="cons-box">
-            <strong>Что мы починили в финальном <code>target-sheet-v1</code>:</strong>
-            <ul>
-              <li>В <code>n11</code> при <code>Ур. 0</code> почему-то горели 4 зелёных кружка из 5 — в финале сделали все 5 серыми.</li>
-              <li>Добавили вторую строку под прогрессом Ямы: <code>Дальше: Цена утки — ещё 44 утки в Яму</code>.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="feedback-widget" data-id="n11-sheet-sticker" data-name="n11 Лист Прокачки (Светлый)">
-          <div class="vote-row">
-            <button class="vote-btn" onclick="setVote('n11-sheet-sticker', '👍 Светлый лист лучше', this)">👍 Светлый лучше</button>
-            <button class="vote-btn" onclick="setVote('n11-sheet-sticker', '👎 Не то', this)">👎 Не то</button>
-          </div>
-          <textarea class="comment-input" placeholder="Твоё мнение по светлому листу Прокачек (n11)..." oninput="saveComment('n11-sheet-sticker', this.value)"></textarea>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">n12 — Лист «Прокачки» (Dark Slate + Neon, Тёмный)</div>
-            <div class="card-sub">Красивый киберпанк, но 15+ светящихся рамок создают визуальный шум</div>
-          </div>
-          <span class="score-pill score-mid">7.6 / 10</span>
-        </div>
-        <div class="img-wrap">
-          <img class="portrait-shot" src="img/n12-sheet-neon.png" alt="n12 Sheet Neon" onclick="openLightbox(this.src)" />
-          <span class="zoom-hint">🔍 Клик — во весь экран</span>
-        </div>
-        <div class="pros-cons">
-          <div class="pros-box">
-            <strong>Плюсы:</strong>
-            <ul>
-              <li>В отличие от <code>n11</code>, здесь у <code>Ур. 0</code> честно нарисованы 5 пустых серых кружков.</li>
-            </ul>
-          </div>
-          <div class="cons-box">
-            <strong>Минусы:</strong>
-            <ul>
-              <li>Каждая карточка, вкладка, иконка и кнопка обведена собственной неоновой трубкой — на экране 390 px получается больше 15 светящихся контуров, глаза устают.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="feedback-widget" data-id="n12-sheet-neon" data-name="n12 Лист Прокачки (Тёмный неон)">
-          <div class="vote-row">
-            <button class="vote-btn" onclick="setVote('n12-sheet-neon', '👍 Тёмный неон круче', this)">👍 Тёмный круче</button>
-            <button class="vote-btn" onclick="setVote('n12-sheet-neon', '👎 Слишком шумно', this)">👎 Слишком шумно</button>
-          </div>
-          <textarea class="comment-input" placeholder="Твоё мнение по тёмному неоновому листу (n12)..." oninput="saveComment('n12-sheet-neon', this.value)"></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 4: Interactive Element Picker & Master Textbox -->
-    <div class="section-head" id="feedback-zone">
-      <div>
-        <h2>✍️ Конструктор решений и Текстовик Максима</h2>
-        <p>По умолчанию выбрана сборка Argon CEO. Можешь переключить любой пункт или просто написать текстом внизу — и скопировать одной кнопкой!</p>
-      </div>
-    </div>
-
-    <div class="builder-grid">
-      <div class="builder-card">
-        <h4>1. Базовый стиль сцены</h4>
-        <label class="radio-option"><input type="radio" name="pick_style" value="Гибрид Argon (n05 винил + n06 тёмный контур #1B1530)" checked onchange="updateSummary()"> <span><strong>Гибрид Argon (Рекомендую):</strong> объём n05 + контур n06</span></label>
-        <label class="radio-option"><input type="radio" name="pick_style" value="Чистый n06 Sticker Outline" onchange="updateSummary()"> <span>Чистый <strong>n06 Sticker Outline</strong></span></label>
-        <label class="radio-option"><input type="radio" name="pick_style" value="Чистый n05 Soft Vinyl Toy (без тёмного контура)" onchange="updateSummary()"> <span>Чистый <strong>n05 Vinyl Toy</strong> (без контура)</span></label>
-        <label class="radio-option"><input type="radio" name="pick_style" value="n08 Dark Slate + Neon" onchange="updateSummary()"> <span><strong>n08 Dark Slate + Neon</strong></span></label>
-      </div>
-
-      <div class="builder-card">
-        <h4>2. Яма (главный объект)</h4>
-        <label class="radio-option"><input type="radio" name="pick_pit" value="Гибрид (жёлто-чёрный обод-хазард + клёпаное кольцо + фиолетовая глубина на дне)" checked onchange="updateSummary()"> <span><strong>Гибрид v2 Final:</strong> обод-хазард + стальное кольцо + фиолетовая бездна</span></label>
-        <label class="radio-option"><input type="radio" name="pick_pit" value="Каменный портал из n06 без жёлто-чёрных полос" onchange="updateSummary()"> <span>Каменный портал из <strong>n06</strong> (без жёлто-чёрных полос)</span></label>
-        <label class="radio-option"><input type="radio" name="pick_pit" value="Ступенчатая воронка из n10 без свечения" onchange="updateSummary()"> <span>Ступенчатая воронка из <strong>n10</strong> (без свечения)</span></label>
-      </div>
-
-      <div class="builder-card">
-        <h4>3. Конвейер и Покраска</h4>
-        <label class="radio-option"><input type="radio" name="pick_belt" value="Цельная синяя лента с роликами + планка Покраска + жёлтые стрелки по ходу (↓ затем →)" checked onchange="updateSummary()"> <span><strong>Цельная лента v2 Final:</strong> синие бортики + балка «Покраска» + стрелки по ходу</span></label>
-        <label class="radio-option"><input type="radio" name="pick_belt" value="Неоновые шевроны из n08" onchange="updateSummary()"> <span>Неоновые светящиеся шевроны из <strong>n08</strong></span></label>
-      </div>
-
-      <div class="builder-card">
-        <h4>4. Лист «Прокачки» и HUD</h4>
-        <label class="radio-option"><input type="radio" name="pick_sheet" value="Светлый кремовый лист (target-sheet-v1 / n11) + белые плашки HUD" checked onchange="updateSummary()"> <span><strong>Светлый лист (target-sheet-v1 / n11):</strong> кремовый фон + белые карточки</span></label>
-        <label class="radio-option"><input type="radio" name="pick_sheet" value="Тёмный неоновый лист (n12)" onchange="updateSummary()"> <span><strong>Тёмный неоновый лист (n12)</strong></span></label>
-        <label class="radio-option"><input type="radio" name="pick_sheet" value="Убрать кружки-деления уровней совсем (по п.3 next-batch-maxim)" onchange="updateSummary()"> <span>Светлый лист, но <strong>убрать кружки делений уровня</strong> (оставить только «Ур. N»)</span></label>
-      </div>
-    </div>
-
-    <!-- Master Textbox -->
-    <div class="master-feedback">
-      <h3>📝 Главный текстовик Максима (пиши сюда любые мысли и правки в свободной форме)</h3>
-      <p style="color: var(--muted); font-size: 13.5px; margin-top: 0;">
-        Всё, что ты напишешь здесь или в карточках выше, автоматически собирается в готовое сообщение ниже. Нажми «Скопировать» и просто вставь мне в чат (или в Telegram-бот)!
+    <!-- SECTION 3: SEPARATE FLOOR ELEMENTS CATALOG -->
+    <section id="sec-elements">
+      <h2>3. Все элементы игры отдельно на полу (Каталог 3D-объектов для апрува)</h2>
+      <p class="section-lead">
+        Ты написал: <em>«что за коробка тоже не понятно, надо начало — сборщики эти и все такое генерить было, а не коробку эту рандомную, отдельно все элементы мб на полу и отдельно их апрувить»</em>. Сделал отдельную витрину всех 6 ключевых 3D-модулей Главы I прямо на тёмно-синем полу — и через <strong>Antigravity</strong>, и через <strong>GPT/Codex</strong>.
       </p>
-      <textarea id="globalComment" class="master-textarea" placeholder="Например: Финальный экран target-v2-final кайф, апрув! Только давай в листе прокачек уберём кружки уровней вообще, как я просил в пачке правок..." oninput="saveGlobalComment(this.value)"></textarea>
 
-      <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
-        <button class="btn btn-primary" onclick="copyAllFeedback()">📋 Скопировать всё моё мнение (для отправки в чат)</button>
-        <button class="btn" onclick="downloadFeedback()">💾 Скачать как .md файл</button>
-        <button class="btn" onclick="clearFeedback()" style="margin-left: auto; color: #f87171;">🗑 Очистить черновик</button>
+      <div class="grid-2">
+        <!-- ANTIGRAVITY CATALOG -->
+        <div class="card winner">
+          <div class="catalog-frame" onclick="openLightbox('img/ag-elements-catalog-9x16.jpg')">
+            <img src="img/ag-elements-catalog-9x16.jpg" alt="Antigravity 3D Elements Catalog" />
+          </div>
+          <div class="card-body">
+            <div class="badge-row">
+              <span class="badge green">★ Победитель по 3D-ассетам (9.6 / 10)</span>
+              <span class="badge purple">Antigravity 9:16</span>
+            </div>
+            <div class="card-title">Каталог объектов на полу — версия Antigravity</div>
+            <div class="card-desc">
+              Посмотри на детализацию каждого из 6 модулей (можно апрувить по номерам 1–6):
+              <ul>
+                <li><strong>1. Сборщики (ручной и моторный):</strong> слева деревянно-стальной верстак с рычажным прессом и гаечным ключом; справа — верстак с установленным электромотором, вращающейся латунной шестерёнкой и выдвижным лотком, полным мелких уток (до 20 шт.).</li>
+                <li><strong>2. Конвейер + Арка Покраски (без текста!):</strong> утверждённая роликовая лента с шевронами, над ней синяя П-образная арка с баками краски по бокам и двумя капающими синими валиками. Жёлтая утка заходит — синяя выходит.</li>
+                <li><strong>3. Арка Позолоты (×10) и Батут (×1,5):</strong> золотая арка со стеклянным баком жидкого золота и светящимися спиралями на крыше + круглая неоново-розовая пружинная подушка батута.</li>
+                <li><strong>4. Пушка и Вентилятор:</strong> массивная чугунная мортира с латунным дулом на станине + бирюзовый напольный вентилятор с потоком ветра.</li>
+                <li><strong>5. Утки 4 грейдов с нормальной тонкой обводкой:</strong> <code>×1</code> жёлтая, <code>×2</code> синяя, <code>×5</code> фиолетовая, <code>×10</code> золотая — чистый тонкий контур без жирной мазни.</li>
+                <li><strong>6. Кружок покупки в полу и Копилка:</strong> плоское светящееся золотое кольцо <code>$3K</code> прямо в плитке пола + золотая утка-копилка на постаменте с монетками.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- CODEX CATALOG -->
+        <div class="card">
+          <div class="catalog-frame" onclick="openLightbox('img/codex-elements-floor.png')">
+            <img src="img/codex-elements-floor.png" alt="Codex 3D Elements Catalog" />
+          </div>
+          <div class="card-body">
+            <div class="badge-row">
+              <span class="badge blue">GPT / Codex (imagegen)</span>
+              <span class="badge amber">Оценка: 8.8 / 10</span>
+            </div>
+            <div class="card-title">Каталог объектов на полу — версия GPT / Codex</div>
+            <div class="card-desc">
+              <ul>
+                <li><strong>Плюсы:</strong> аккуратная нумерация <code>1..6</code> с подписями, очень чистый жёлтый робо-манипулятор на Сборщике 1 и две колбы синей/золотой краски сверху на арках Покраски и Позолоты.</li>
+                <li><strong>Сравнение с Antigravity:</strong> у Antigravity слева верстаки более уютные (с деревянной столешницей и глубоким лотком на 10–20 уток), а арка позолоты отличается по форме от покраски (спирали + большой бак сбоку), чтобы игрок не путал два одинаковых силуэта.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: FULL UPGRADES ARCHITECTURE & GAMEDESIGN BOOKS -->
+    <section id="sec-upgrades">
+      <h2>4. Полная архитектура «Прокачек» по коду игры и книгам геймдизайна</h2>
+      <p class="section-lead">
+        Ты написал: <em>«смотри а у нас же много прокачек там посмотри — разные производства, и про прокачки ямы забыли, изучи все там и надо мне полный со всем этим, или как-то разделить. После главы замок "яма шире" не понял — не читаемое что это значит, нахуя это мне. И дальше "цена утки" хз не понятно, переделать надо чтобы понятно по геймдизайну было, книги по геймдизайну все прочитай тоже и роди чето»</em>.
+      </p>
+
+      <div class="callout purple">
+        <strong>Почему раньше вылезли «После главы: 🔒 Яма шире» и «Дальше: Цена утки — ещё 44 утки в Яму» и почему это грубые ошибки UX:</strong>
+        <ol style="margin-top:8px; padding-left:20px;">
+          <li style="margin-bottom:10px;">
+            <strong>Разбор косяка «🔒 Яма шире» (код <code>ChapterLine.cs</code>, строка 193):</strong><br/>
+            В коде у Ямы в Главе I есть 8 подуровней (<code>Ур. 1 → 8</code>, радиус растёт с <code>1,40 м</code> до <code>3,50 м</code>). На тех уровнях, где не открывается новый станок, код возвращал техническую заглушку <code>"wider" → "Яма шире"</code>, а генератор вообще прилепил её к плашке «После главы»!<br/>
+            <strong>По книгам геймдизайна:</strong>
+            <ul>
+              <li><strong>Дон Норман (<em>«Дизайн привычных вещей»</em>, п. 148) и Селия Ходент (<em>«Мозг игрока / The Gamer's Brain»</em>):</strong> игрок мыслит <em>выгодой и действием</em>, а не геометрией коллайдера в движке. Фраза «Яма шире» заставляет мозг спрашивать: <em>«И чё мне с того, что дырка стала шире?»</em>.</li>
+              <li><strong>Ян Шрайбер и Бренда Ромеро (<em>«Game Balance»</em>, правило ГБ66 / p2-21):</strong> <em>«Никто не стремится к цели, если не видит конкретной экономической награды (множителя дохода или нового станка)»</em>.</li>
+              <li><strong>Джесси Шелл (<em>«Искусство геймдизайна»</em>, Линза Целей #26):</strong> у игрока одновременно должны быть видны <strong>ближайшая тактическая награда</strong> (следующий станок) и <strong>большая цель главы</strong> (переход в новую эру).</li>
+            </ul>
+            <strong>Как мы это решили:</strong> убрали фразу «Яма шире» навсегда. Вместо неё в шапке под полоской прогресса поставили <strong>наглядную дорожку из 4 карточек-наград (Milestone Track)</strong>:<br/>
+            <code>[Ур.4 Сборщик 4 ✓] → [Ур.5 🎨 Покраска ×2] → [Ур.6 🟪 Утка ×5] → [Финал: ⚽ Глава II Мячи]</code>.<br/>
+            А на промежуточных уровнях, где растёт сама воронка, пишем понятную геймплейную выгоду: <strong>«Воронка шире (+захват залпов пушки и ветра)»</strong>!
+          </li>
+          <li>
+            <strong>Разбор косяка «Дальше: Цена утки — ещё 44 утки в Яму» (код <code>HallUpgSheet.cs</code>, строка 1767 <code>NextLockV3()</code>):</strong><br/>
+            Код брал название следующей закрытой по квоте прокачки (<code>«Цена утки»</code>) и лепил его в шапку листа рядом с основным прогрессом Ямы.<br/>
+            <strong>По книгам геймдизайна:</strong>
+            <ul>
+              <li><strong>Тайнан Сильвестр (<em>«Designing Games»</em>, Сл14 — чистота сигнала):</strong> нельзя в одной шапке смешивать <em>два разных счётчика уток</em> (прогресс уровня Ямы <code>190/300</code> и квоту разблокировки отдельной строки <code>44 утки</code>) — они спорят друг с другом.</li>
+              <li><strong>Семантическая ловушка:</strong> «Цена утки» по-русски звучит как <em>«сколько стоит купить утку в магазине»</em>, а не <em>«сколько денег платит Яма за сданную утку»</em>.</li>
+              <li><strong>Дон Норман (Принцип пространственной близости / Spatial Mapping):</strong> условие открытия кнопки должно висеть <strong>на самой этой заблокированной кнопке</strong>, а не в шапке за 10 см от неё!</li>
+            </ul>
+            <strong>Как мы это решили:</strong>
+            1) Переименовали «Цену утки» в кристально понятное <strong>«Доход за утку»</strong> с абсолютными числами по Шрайберу/Ромеро: <code>Базовая выплата Ямы: $20 → $22 за утку</code>;
+            2) Вычистили мусорную строку «Дальше: ...» из шапки;
+            3) Условие квоты поставили прямо на правую кнопку закрытой строки с глаголом действия: <strong><code>🔒 Сдай ещё 44 🦆 в Яму</code></strong>!
+          </li>
+        </ol>
       </div>
 
-      <div class="preview-output" id="summaryPreview"></div>
-    </div>
+      <h3>Полная карта всех прокачек игры (как разделены 36 прокачек по 4 вкладкам без перегруза)</h3>
+      <p class="section-lead" style="margin-bottom:12px;">
+        Я поднял весь код прокачек (<code>HallOffers.cs</code>, <code>RoomUpgrades.cs</code>, <code>HallUpgrades.cs</code>). По правилу <strong>Селии Ходент (<code>hodent-04/08</code>)</strong> и <strong>Скотта Роджерса (<em>«Level Up!»</em>)</strong>, рабочая память игрока на телефоне легко переваривает <strong>4 сегментированные вкладки</strong> (3 активные категории в Главе I + 1 тизер следующей главы с замком):
+      </p>
 
+      <table>
+        <thead>
+          <tr>
+            <th>Вкладка в листе «Прокачки»</th>
+            <th>Что внутри (все строки из кода игры)</th>
+            <th>Как подаётся по геймдизайну (Шрайбер / Ходент / Норман)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. <code>[ Игрок ]</code></strong><br/><span style="color:var(--text-muted); font-size:12.5px;">Личный цикл, бег, бросок и защита от гремлинов</span></td>
+            <td>
+              • <strong>Руки (Сборка вручную):</strong> <code>1,8 → 1,6 сек</code> (10 ур.)<br/>
+              • <strong>Стопка в руках:</strong> <code>8 → 9 уток</code> за ходку (10 ур.)<br/>
+              • <strong>Скорость шага:</strong> <code>4,5 → 5,0 м/с</code> (+10%/ур., 10 ур.)<br/>
+              • <strong>Дальность броска:</strong> <code>3,0 → 4,2 м</code> (4 ур., кидать с полпути)<br/>
+              • <em>Блок «Отпор гремлинам» (появляется после 1-го гремлина):</em> <strong>Дальность отпугивания</strong> (<code>1,5 → 2,2 м</code>), <strong>Пауза между гремлинами</strong> (<code>×1 → ×1,3</code>), <strong>Меньше гремлинов</strong>.
+            </td>
+            <td>
+              Главная вкладка первых 5 минут игры, пока игрок собирает и носит уток руками. Гремлинские строки скрыты до первого появления вредителя (никакого спойлера и шума на старте).
+            </td>
+          </tr>
+          <tr>
+            <td><strong>2. <code>[ Цех и Лента ]</code></strong><br/><span style="color:var(--text-muted); font-size:12.5px;">Станки, конвейер, пушка и постройки в зале</span></td>
+            <td>
+              • <strong>Моторы сборщиков:</strong> авто-сборка на столах <code>2,0 → 1,8 сек</code> (10 ур.)<br/>
+              • <strong>Скорость ленты:</strong> быстрее везёт уток к Яме <code>1,0 → 2,35 м/с</code> (5 ур.)<br/>
+              • <strong>Ветка пушки:</strong> доля потока в пушку <code>1/3 → 1/2</code> (3 ур.)<br/>
+              • <strong>Высокие бортики:</strong> утки не слетают на поворотах (1 ур.)<br/>
+              • <strong>Калибровка пушки:</strong> кучность залпа в Яму <code>±45° → ±35°</code> (10 ур.)<br/>
+              • <strong>Копилка:</strong> офлайн-запас <code>2 → 4 → 8 → 12 ч</code> (3 ур.)<br/>
+              • <strong>Рабочий стол (Слой 1 → 5):</strong> поднимает потолок уровней цеха.<br/>
+              • <em>Карточка-подсказка «Следующий кружок в зале»:</em> <code>Сборщики 2–4</code>, <code>Моторы 1–4</code>, <code>Ленты 1–4</code>, <code>Покраска ×2</code>, <code>Батут ×1,5</code>, <code>Позолота ×10</code>, <code>Пушка</code>, <code>Вентиляторы 1–4</code>.
+            </td>
+            <td>
+              Все кружки класса Б (скорость уже построенной ленты, бортики, ветка пушки) покупаются <strong>прямо здесь кнопкой</strong>, чтобы не захламлять пол зала мелкими кружками поверх конвейера! А крупные постройки класса А покупаются на полу через золотые кружки.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>3. <code>[ Яма и Доход ]</code></strong><br/><span style="color:var(--accent); font-size:12.5px;">★ Главная вкладка денег, комбо и ценности уток</span></td>
+            <td>
+              • <strong>Плашка-схема ценности уток (<code>DuckScheme</code>):</strong><br/>
+              <code>🐤 Обычная $20 (×1)</code> · <code>🟦 Синяя $40 (×2)</code> · <code>🟪 Фиолет $100 (×5)</code> · <code>🟨 Золотая $200 (×10)</code><br/>
+              • <strong>Доход за утку (<code>pit_value</code>):</strong> базовая выплата Ямы <code>$20 → $22 за утку</code> (+10%/ур., до 30 ур. в Гл. I)<br/>
+              • <strong>Бонус комбо-серии (<code>combo</code>):</strong> доплата за серию сдачи без пауз <code>+25% → +30%</code> (до +45%)<br/>
+              • <strong>Окно комбо (<code>combo_time</code>):</strong> серия держится дольше <code>1,6 → 1,8 сек</code><br/>
+              • <strong>Ключ эволюции → Глава II:</strong> финальная кнопка перехода на 8-м уровне Ямы.
+            </td>
+            <td>
+              <strong>То, чего не хватало в прошлых концептах!</strong> Когда игрок качает «Доход за утку» с <code>$20</code> до <code>$22</code>, плашка-схема сверху <em>мгновенно пересчитывает</em> все 4 иконки (<code>$22 / $44 / $110 / $220</code>) — чистый дофамин по <strong>Game Balance (ГБ66)</strong>!
+            </td>
+          </tr>
+          <tr>
+            <td><strong>4. <code>[ 🔒 Гл. II: Мячи ]</code></strong><br/><span style="color:var(--text-muted); font-size:12.5px;">Параллельное производство Главы II (и Гл. III далее)</span></td>
+            <td>
+              • <strong>В Главе II (Мячи):</strong> <code>Сборка мячей</code> (12 ур.), <code>Мячи на ленту 1–4</code> (переключает Сборщики 4 и 3 на чередование <code>[С4] 🦆 ⚽ 🦆 ⚽</code>), <code>Бамперы 1–3</code>, <code>Дорожки 1–3</code>.<br/>
+              • <strong>В Главе III (Железо — появляется только после открытия Гл. II):</strong> <code>Штамповка</code> (10 ур.), <code>Скорость крана</code> (5 ур.), <code>Автокран</code> (5 ур.), <code>Запас металла</code> (5 ур.), <code>Прессы 1–3</code>.
+            </td>
+            <td>
+              По правилу <strong>Библии п. 13 (Один ближайший замок)</strong> в Главе I показываем только один закрытый таб <code>🔒 Гл. II: Мячи</code> как магнит-интригу. Таб <code>🔒 Гл. III: Железо</code> появляется только тогда, когда игрок перешёл в Главу II.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="grid-3" style="margin-top:22px;">
+        <!-- CODEX FULL UPGRADES (LIGHT STICKER) -->
+        <div class="card winner">
+          <div class="phone-frame" onclick="openLightbox('img/codex-upgrades-full.png')">
+            <img src="img/codex-upgrades-full.png" alt="Codex Full Upgrades Sheet" />
+          </div>
+          <div class="card-body">
+            <div class="badge-row">
+              <span class="badge green">★ Лучшая читаемость и карточки вех (9.6 / 10)</span>
+              <span class="badge blue">GPT / Codex (Светлый стиль n11)</span>
+            </div>
+            <div class="card-title">Полный лист «Прокачки» (Светлый стиль с карточками вех)</div>
+            <div class="card-desc">
+              <ul>
+                <li><strong>Шапка с 4 карточками-вехами вместо «Яма шире»:</strong> <code>[Ур.4 Сборщик 4 ✓] → [Ур.5 🎨 Покраска ×2] → [Ур.6 🟪 Утка ×5] → [Финал: ⚽ Глава II Мячи]</code>.</li>
+                <li><strong>4 вкладки:</strong> <code>Игрок</code>, <code>Цех и Лента</code>, активная <code>Яма и Доход</code>, <code>🔒 Гл. II: Мячи</code>.</li>
+                <li><strong>Схема ценности уток прямо над списком:</strong> <code>Обычная $20 (×1) | Синяя $40 (×2) | Фиолет $100 (×5) | Золотая $200 (×10)</code>.</li>
+                <li><strong>Понятные строки по геймдизайну:</strong> «Доход за утку ($20 → $22)», «Бонус комбо-серии (+25% → +30%)», «Окно комбо (1,6 → 1,8 сек)», а условие квоты стоит прямо на нижней кнопке: <strong><code>🔒 Сдай ещё 44 🦆 в Яму</code></strong>.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ANTIGRAVITY DARK UPGRADES 9:16 -->
+        <div class="card highlight">
+          <div class="phone-frame" onclick="openLightbox('img/ag-upgrades-dark-9x16.jpg')">
+            <img src="img/ag-upgrades-dark-9x16.jpg" alt="Antigravity Dark Full Upgrades 9:16" />
+          </div>
+          <div class="card-body">
+            <div class="badge-row">
+              <span class="badge amber">★ Идеальный нативный 9:16 + Тёмная тема (9.4 / 10)</span>
+              <span class="badge purple">Antigravity 9:16</span>
+            </div>
+            <div class="card-title">Полный лист «Прокачки» (Тёмный графит в нативном 9:16)</div>
+            <div class="card-desc">
+              <ul>
+                <li><strong>100% безупречная кириллица от Antigravity</strong> в честном разрешении <code>9:16</code>.</li>
+                <li>Крутая деталь во вкладках: под названиями табов <code>Игрок</code> и <code>Цех и Лента</code> показаны <strong>мини-иконки содержимого</strong> (<code>✋ 📚 🚶 ☄️</code> и <code>⚙️ 📦 🏭</code>), так что игрок ещё до нажатия понимает, где искать ноги/руки, а где — моторы и конвейер!</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ANTIGRAVITY STICKER 9:16 -->
+        <div class="card">
+          <div class="phone-frame" onclick="openLightbox('img/ag-upgrades-sticker-9x16.jpg')">
+            <img src="img/ag-upgrades-sticker-9x16.jpg" alt="Antigravity Sticker 9:16" />
+          </div>
+          <div class="card-body">
+            <div class="badge-row">
+              <span class="badge purple">Antigravity 9:16 (адаптация светлого листа)</span>
+              <span class="badge blue">Оценка: 9.1 / 10</span>
+            </div>
+            <div class="card-title">Светлый лист в пропорциях 9:16 (с видом зала сверху)</div>
+            <div class="card-desc">
+              <ul>
+                <li>Показывает, как светлый лавандовый лист из первой карточки садится в высокий экран <code>9:16</code> вместе с видом широкого зала сверху.</li>
+                <li>В вёрстке самой игры (Unity UI) шрифт рендерится движком, поэтому мы возьмём чистую верстку карточек вех из левого рефа и посадим её в этот 9:16 каркас.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: STEP-BY-STEP ITERATION LOG -->
+    <section id="sec-history">
+      <h2>5. Пошаговая история итераций (от первых 8 скетчей до v5 Playable 9:16)</h2>
+      <p class="section-lead">
+        Краткая хронология того, как мы отсеяли брак и собрали целевой вид игры.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Этап</th>
+            <th>Что было сделано</th>
+            <th>Что пошло в утиль / что забрали в финал</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Шаг 1. Исходные 8 скетчей (<code>n05–n12</code>)</strong></td>
+            <td>6 вариантов зала (<code>n05</code> Винил, <code>n06</code> Стикер с жирной обводкой, <code>n07</code> Индустриальный цех, <code>n08</code> Неон, <code>n09</code> Леденец, <code>n10</code> Бумага) + 2 листа прокачек (<code>n11</code>, <code>n12</code>).</td>
+            <td>
+              • Забрали <strong>роликовый конвейер с шевронами</strong> из <code>n07</code> и <strong>светлую вёрстку листа</strong> из <code>n11</code>.<br/>
+              • Отбросили кислотный пол <code>n06</code>, мыльный розовый <code>n09</code> и бумажный <code>n10</code>.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Шаг 2. Первая сборка Кодексом (<code>target-v1</code> → <code>target-v2-final</code>)</strong></td>
+            <td>Собрали гибрид матового винила и стального конвейера, убрали лицо герою и почистили HUD.</td>
+            <td>
+              • <strong>Твой фидбек вскрыл главную проблему:</strong> Кодекс генерил в пропорциях <code>2:3</code> и приблизил камеру вплотную — герой и утки стали гигантскими, бегать негде, под джойстик места нет, на арке покраски зачем-то написано слово «Покраска», а вместо сборщиков стояла рандомная картонная коробка.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Шаг 3. Аудит кода Unity + книг геймдизайна + тест Antigravity vs Codex (Текущий релиз v3/v5)</strong></td>
+            <td>
+              1) Подняли из кода реальную камеру (<code>d = 30 м</code>, <code>55°</code>) и тайминги бега (<code>4,5 м/с</code>: <code>0,93 с</code> между сборщиками, <code>3,2 с</code> до Ямы);<br/>
+              2) Отрендерили <strong>отдельный каталог всех 6 объектов на полу</strong>;<br/>
+              3) Собрали <strong>играбельный экран 9:16 (<code>v5</code>)</strong> со Сборщиками 1–2, аркой Покраски без текста, аркой Позолоты и местом под джойстик;<br/>
+              4) Перепроектировали <strong>полный лист «Прокачки»</strong> с вкладкой «Яма и Доход», дорожкой наград вместо «Яма шире» и понятным «Доходом за утку».
+            </td>
+            <td>
+              • Проверили встроенный генератор <strong>Antigravity</strong> против <strong>GPT/Codex</strong>: Antigravity победил по нативному 9:16, скорости (15 сек против 80 сек) и сочности 3D-объектов на полу, а гибрид <code>v5 Playable 9:16</code> стал новым эталоном сцены.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <details>
+        <summary>Показать архив прошлых картинок (n05–n12 и старый target-v2-final для сравнения масштаба)</summary>
+        <div class="grid-3" style="margin-top:16px;">
+          <div class="card">
+            <div class="phone-frame" onclick="openLightbox('img/ref-current-game.png')">
+              <img src="img/ref-current-game.png" alt="Текущий билд Unity" />
+            </div>
+            <div class="card-body">
+              <div class="badge-row"><span class="badge amber">Референс масштаба из текущего билда</span></div>
+              <div class="card-title">Текущий билд в Unity (реальная камера d=30м)</div>
+              <div class="card-desc">Именно отсюда мы взяли честный простор зала и мелкий размер героя/уток, но заменили серые заглушки и картонную коробку на новые 3D-сборщики и конвейер.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="phone-frame" onclick="openLightbox('img/target-v2-final.png')">
+              <img src="img/target-v2-final.png" alt="Старый target-v2-final" />
+            </div>
+            <div class="card-body">
+              <div class="badge-row"><span class="badge red">Старый v2 Final (Слишком крупно, 2:3)</span></div>
+              <div class="card-title">Прошлый target-v2-final (для сравнения)</div>
+              <div class="card-desc">Видно, насколько в v2 всё было переразмерено: нет места под джойстик, на арке написано «Покраска», а слева стояла картонная коробка вместо сборщиков.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="phone-frame" onclick="openLightbox('img/target-sheet-v1.png')">
+              <img src="img/target-sheet-v1.png" alt="Старый target-sheet-v1" />
+            </div>
+            <div class="card-body">
+              <div class="badge-row"><span class="badge red">Старый лист v1 (С «Яма шире» и без вкладки Ямы)</span></div>
+              <div class="card-title">Прошлый target-sheet-v1 (для сравнения)</div>
+              <div class="card-desc">Здесь были непонятные «После главы: 🔒 Яма шире» и «Дальше: Цена утки — ещё 44 утки в Яму», и отсутствовала вкладка прокачек самой Ямы.</div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <!-- SECTION 6: ONE PLAIN TEXTAREA -->
+    <section id="sec-notes">
+      <h2>6. Твой текстовик (пиши в свободной форме — скопируй и скинь мне)</h2>
+      <p class="section-lead">
+        Никаких лишних кнопок и конструкторов — просто обычный текстовик. Всё, что пишешь, автоматически сохраняется в браузере.
+      </p>
+
+      <div class="plain-notes-box">
+        <label for="maxim-notes" style="font-weight:700; font-size:15px; color:var(--accent);">
+          Твой фидбек по масштабу 9:16 (v5), объектам на полу (1–6), полному листу Прокачек и генераторам:
+        </label>
+        <textarea id="maxim-notes" placeholder="Пиши сюда всё что думаешь в свободной форме..."></textarea>
+        <div class="btn-row">
+          <button class="btn" onclick="copyNotes()">Скопировать текст</button>
+          <span id="copy-status" class="copy-status"></span>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <!-- Sticky Bottom Action Bar -->
-  <div class="bottom-bar">
-    <div>
-      <strong>Готовая сводка твоего мнения:</strong>
-      <span style="color: var(--muted); font-size: 13px; margin-left: 8px;">Автосохранение включено в браузере</span>
-      <span class="status-toast" id="copyToast">✅ Скопировано в буфер! Просто вставь в чат.</span>
-    </div>
-    <div style="display: flex; gap: 10px;">
-      <button class="btn btn-amber" onclick="document.getElementById('feedback-zone').scrollIntoView({behavior:'smooth'})">✍️ Перейти к текстовику</button>
-      <button class="btn btn-primary" onclick="copyAllFeedback()">📋 Скопировать весь фидбек</button>
-    </div>
-  </div>
-
-  <!-- Lightbox Modal -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <img id="lightboxImg" src="" alt="Full view" />
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="Full view" />
   </div>
 
   <script>
-    const STORAGE_KEY = 'onepit_maxim_concept_feedback_v2';
-    let state = {
-      votes: {},
-      comments: {},
-      globalComment: ''
-    };
+    const STORAGE_KEY = 'onepit_maxim_plain_notes_v3';
+    const textarea = document.getElementById('maxim-notes');
+    const statusEl = document.getElementById('copy-status');
 
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) state = Object.assign(state, JSON.parse(raw));
-      } catch (e) {}
-
-      // Restore UI
-      document.querySelectorAll('.feedback-widget').forEach(w => {
-        const id = w.dataset.id;
-        const ta = w.querySelector('textarea');
-        if (ta && state.comments[id]) ta.value = state.comments[id];
-        if (state.votes[id]) {
-          w.querySelectorAll('.vote-btn').forEach(btn => {
-            if (btn.textContent.trim() === state.votes[id].label) {
-              btn.classList.add(state.votes[id].cls);
-            }
-          });
-        }
-      });
-      const g = document.getElementById('globalComment');
-      if (g && state.globalComment) g.value = state.globalComment;
-      updateSummary();
+    // Load saved text
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      textarea.value = saved;
     }
 
-    function persist() {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
-      updateSummary();
-    }
+    textarea.addEventListener('input', () => {
+      localStorage.setItem(STORAGE_KEY, textarea.value);
+      statusEl.textContent = 'Сохранено в черновик';
+      setTimeout(() => {
+        if (statusEl.textContent === 'Сохранено в черновик') statusEl.textContent = '';
+      }, 1500);
+    });
 
-    function setVote(id, val, btnEl) {
-      const parent = btnEl.closest('.vote-row');
-      parent.querySelectorAll('.vote-btn').forEach(b => {
-        b.classList.remove('active-like', 'active-fav', 'active-dislike');
-      });
-      let cls = 'active-like';
-      if (val.includes('🔥')) cls = 'active-fav';
-      if (val.includes('👎')) cls = 'active-dislike';
-      btnEl.classList.add(cls);
-      state.votes[id] = { val, label: btnEl.textContent.trim(), cls };
-      persist();
-    }
-
-    function saveComment(id, text) {
-      state.comments[id] = text;
-      persist();
-    }
-
-    function saveGlobalComment(text) {
-      state.globalComment = text;
-      persist();
-    }
-
-    function getRadioVal(name) {
-      const el = document.querySelector(`input[name="${name}"]:checked`);
-      return el ? el.value : '';
-    }
-
-    function buildSummaryText() {
-      const lines = [];
-      lines.push('# Решение и фидбек Максима по концепту «Одна Яма»');
-      lines.push('');
-      lines.push('## 1. Выбранная сборка элементов:');
-      lines.push(`- **Базовый стиль:** ${getRadioVal('pick_style')}`);
-      lines.push(`- **Яма:** ${getRadioVal('pick_pit')}`);
-      lines.push(`- **Конвейер и Покраска:** ${getRadioVal('pick_belt')}`);
-      lines.push(`- **Лист «Прокачки» и HUD:** ${getRadioVal('pick_sheet')}`);
-      lines.push('');
-
-      const cardEntries = [];
-      document.querySelectorAll('.feedback-widget').forEach(w => {
-        const id = w.dataset.id;
-        const name = w.dataset.name;
-        const vote = state.votes[id] ? state.votes[id].val : '';
-        const comm = (state.comments[id] || '').trim();
-        if (vote || comm) {
-          cardEntries.push(`- **${name}** (${id}): ${vote ? `[${vote}] ` : ''}${comm}`);
-        }
-      });
-
-      if (cardEntries.length > 0) {
-        lines.push('## 2. Оценки и комментарии по карточкам:');
-        lines.push(...cardEntries);
-        lines.push('');
+    function copyNotes() {
+      const text = textarea.value.trim();
+      if (!text) {
+        statusEl.textContent = 'Текстовик пока пустой!';
+        return;
       }
-
-      if ((state.globalComment || '').trim()) {
-        lines.push('## 3. Общий комментарий Максима:');
-        lines.push(state.globalComment.trim());
-        lines.push('');
-      }
-
-      return lines.join('\n');
-    }
-
-    function updateSummary() {
-      const preview = document.getElementById('summaryPreview');
-      if (preview) preview.textContent = buildSummaryText();
-    }
-
-    function copyAllFeedback() {
-      const text = buildSummaryText();
       navigator.clipboard.writeText(text).then(() => {
-        const t = document.getElementById('copyToast');
-        t.style.display = 'inline';
-        setTimeout(() => { t.style.display = 'none'; }, 4000);
+        statusEl.textContent = '✓ Скопировано в буфер! Можешь вставлять в чат или ТГ.';
       });
-    }
-
-    function downloadFeedback() {
-      const text = buildSummaryText();
-      const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'maxim-onepit-concept-feedback.md';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function clearFeedback() {
-      if (!confirm('Очистить все введённые комментарии и оценки?')) return;
-      state = { votes: {}, comments: {}, globalComment: '' };
-      localStorage.removeItem(STORAGE_KEY);
-      document.querySelectorAll('.comment-input, #globalComment').forEach(el => el.value = '');
-      document.querySelectorAll('.vote-btn').forEach(b => b.classList.remove('active-like', 'active-fav', 'active-dislike'));
-      updateSummary();
-    }
-
-    function togglePhoneMode() {
-      document.body.classList.toggle('phone-mode');
-      const btn = document.getElementById('togglePhoneBtn');
-      if (document.body.classList.contains('phone-mode')) {
-        btn.textContent = '🖼 Вернуть крупный размер картинок';
-      } else {
-        btn.textContent = '📱 Включить размер телефона (390 px)';
-      }
     }
 
     function openLightbox(src) {
-      document.getElementById('lightboxImg').src = src;
-      document.getElementById('lightbox').classList.add('open');
+      const lb = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      img.src = src;
+      lb.classList.add('open');
     }
 
     function closeLightbox() {
       document.getElementById('lightbox').classList.remove('open');
     }
 
-    window.addEventListener('DOMContentLoaded', loadState);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
   </script>
 </body>
 </html>
