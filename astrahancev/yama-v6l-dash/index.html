@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Одна Яма v6l — Live Telemetry, RPM & AdROAS Dashboard</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <style>
+    :root {
+      --bg-root: #0d1320;
+      --bg-panel: #151e30;
+      --bg-card: #192338;
+      --bg-card-alt: #1e2a42;
+      --border: #2a3958;
+      --text: #eef3ff;
+      --muted: #8ea0c4;
+      --accent: #38bdf8;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --purple: #a855f7;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-root);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      overflow: hidden;
+    }
+    .app-shell {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    /* Left column: Game + Dev Bar */
+    .game-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background: #090d16;
+      border-right: 1px solid var(--border);
+      padding: 8px 12px;
+      height: 100vh;
+      min-width: 380px;
+    }
+    .dev-toolbar {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      z-index: 20;
+    }
+    .dev-btn {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .dev-btn:hover { background: var(--bg-card-alt); border-color: var(--accent); }
+    .dev-btn.active {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: var(--green);
+      color: #86efac;
+    }
+    .dev-btn.warn {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #fca5a5;
+    }
+    .game-stage {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      overflow: hidden;
+      margin: 4px 0;
+    }
+    #unity-container {
+      position: relative !important;
+      left: auto !important;
+      top: auto !important;
+      transform: none !important;
+    }
+    #unity-fullscreen-container {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.65), 0 0 0 1px var(--border);
+    }
+    #unity-footer { display: none; }
+    .fps-pill-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 30;
+      background: rgba(13, 19, 32, 0.86);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      pointer-events: none;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .game-footer-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+      padding-top: 4px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Right column: Telemetry Dashboard */
+    .dash-col {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 14px 18px;
+      gap: 12px;
+    }
+    .dash-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+    .dash-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dash-title h1 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge.green { background: rgba(34, 197, 94, 0.16); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
+    .badge.amber { background: rgba(245, 158, 11, 0.16); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge.blue { background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+    .badge.red { background: rgba(239, 68, 68, 0.16); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+    /* KPI Top Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 10px;
+    }
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .kpi-label {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .kpi-val {
+      font-size: 22px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+    }
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Middle 2-Column Section */
+    .mid-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 12px;
+    }
+    .panel-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .panel-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 7px;
+    }
+    .Anton-cycle-bar {
+      width: 100%;
+      height: 10px;
+      background: #0d1320;
+      border-radius: 99px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .Anton-cycle-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #22c55e, #4ade80);
+      transition: width 0.2s linear;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      padding: 3px 0;
+      border-bottom: 1px dashed rgba(42, 57, 88, 0.5);
+    }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-row .k { color: var(--muted); }
+    .stat-row .v { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* Source Breakdown Bars */
+    .src-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .src-chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 7px;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .src-chip .sname { color: var(--muted); }
+    .src-chip .sval { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* Tables & Log Stream */
+    .table-wrap {
+      max-height: 165px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #0e1525;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+    }
+    th, td {
+      padding: 5px 8px;
+      text-align: left;
+      border-bottom: 1px solid rgba(42, 57, 88, 0.45);
+    }
+    th {
+      background: var(--bg-card);
+      color: var(--muted);
+      position: sticky;
+      top: 0;
+      font-weight: 600;
+    }
+    .log-box {
+      height: 185px;
+      overflow-y: auto;
+      background: #090e18;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .log-line { margin-bottom: 2px; word-break: break-all; }
+    .log-line.rv { color: #4ade80; }
+    .log-line.buy { color: #38bdf8; }
+    .log-line.inc { color: #fbbf24; }
+    .log-line.jam { color: #f87171; }
+    .log-line.pit { color: #c084fc; }
+
+    @media (max-width: 960px) {
+      html, body { overflow: auto; }
+      .app-shell { grid-template-columns: 1fr; height: auto; overflow: visible; }
+      .game-col { height: 85vh; }
+      .dash-col { height: auto; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- LEFT: PLAYABLE UNITY WEBGL + PLAYTEST TOOLBAR -->
+    <div class="game-col">
+      <div class="dev-toolbar">
+        <button class="dev-btn" id="btn-preset-anton" onclick="applyPreset('anton')" title="Формула Антона Чумаченко: старт с 60с, 10с показ / 20с пауза, награда = 5 минут RPM">⚡ Антон RV (60с · 5м RPM)</button>
+        <button class="dev-btn" id="btn-preset-giftnow" onclick="applyPreset('giftnow')" title="Спавн коробки Rewarded сразу на 3-й секунде">🎁 Тест RV (3с)</button>
+        <button class="dev-btn" id="btn-preset-mid1" onclick="applyPreset('mid1')" title="Прыжок +30 мин (Пушка + Лента + Сборщик 2)">⏩ +30м Цех</button>
+        <button class="dev-btn" id="btn-preset-ch2" onclick="applyPreset('ch2')" title="Прыжок +1 час: Глава II (Мячи и Спортзал)">🏀 +1ч Гл.II</button>
+        <button class="dev-btn" id="btn-preset-ch3" onclick="applyPreset('ch3')" title="Прыжок +2 часа: Глава III (Железо и Пресс)">⚙️ +2ч Гл.III</button>
+        <button class="dev-btn" id="btn-preset-def" onclick="applyPreset('def')" title="Старый режим: только дефицит, 3 мин дохода">Дефолт (3м)</button>
+        <button class="dev-btn warn" onclick="wipeSaveAndReload()" title="Очистить сохранения IndexedDB и начать чистую сессию">🗑 Сброс сейва</button>
+      </div>
+
+      <div class="game-stage">
+        <div class="fps-pill-overlay">
+          <span id="overlay-fps" style="color:#4ade80;">60 FPS</span>
+          <span style="color:#64748b;">|</span>
+          <span id="overlay-ms" style="color:#94a3b8;">16.7 ms</span>
+          <span style="color:#64748b;">|</span>
+          <span id="overlay-rpm" style="color:#fbbf24;">RPM: $0/м</span>
+        </div>
+
+        <div id="unity-container" class="unity-desktop">
+          <div id="unity-fullscreen-container">
+            <canvas id="unity-canvas" width="540" height="960" tabindex="-1"></canvas>
+            <div id="unity-loading-container">
+              <div id="unity-loading-bar">
+                <div id="unity-logo"></div>
+                <div id="unity-progress-bar-empty">
+                  <div id="unity-progress-bar-full"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="unity-warning"></div>
+          <div id="unity-footer">
+            <div id="unity-fullscreen-button"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-footer-bar">
+        <span id="active-flags-label">Флаги: -pittRvAnton 1</span>
+        <button class="dev-btn" onclick="if(window.unityInstance) window.unityInstance.SetFullscreen(1);">⛶ Полный экран</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: LIVE TELEMETRY, RPM & ADROAS DASHBOARD -->
+    <div class="dash-col">
+      <div class="dash-header">
+        <div class="dash-title">
+          <h1>Одна Яма · Live Telemetry & AdROAS Studio</h1>
+          <span class="badge green" id="formula-badge">Формула Антона: ВКЛ (5 мин RPM)</span>
+          <span class="badge blue" id="chapter-badge">Глава I · Ступень 1</span>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="dev-btn" onclick="exportTelemetryJson()">⬇ Скачать JSON-отчёт</button>
+          <button class="dev-btn" onclick="exportRawLogs()">⬇ Скачать [PITT].log</button>
+        </div>
+      </div>
+
+      <!-- TOP 6 KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label"><span>Playtime / Часы зала</span><span>⏱</span></div>
+          <div class="kpi-val" id="kpi-playtime">00:00</div>
+          <div class="kpi-sub" id="kpi-playtime-sub">Чистое: 00:00 · Реклама: 0с</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label"><span>Симулятор RPM ($/мин)</span><span>📈</span></div>
+          <div class="kpi-val" id="kpi-rpm" style="color:#fbbf24;">$0 / мин</div>
+          <div class="kpi-sub" id="kpi-money-sub">Баланс: $0 · Всего: $0</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label"><span>Награда за Ролик (5×RPM)</span><span>🎬</span></div>
+          <div class="kpi-val" id="kpi-rv-usd" style="color:#4ade80;">+$150</div>
+          <div class="kpi-sub" id="kpi-rv-cycle">Ожидание 60-й сек зала...</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label"><span>Rewarded Воронка</span><span>🎯</span></div>
+          <div class="kpi-val" id="kpi-rv-counts">0 / 0</div>
+          <div class="kpi-sub" id="kpi-rv-rate">Показов: 0 · Принято: 0% · Ожид: 0.0</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label"><span>FPS & Перфа (A13 Gate)</span><span>⚡</span></div>
+          <div class="kpi-val" id="kpi-fps" style="color:#4ade80;">60 FPS</div>
+          <div class="kpi-sub" id="kpi-fps-sub">1% Low: 58 · Avg: 16.6 ms (Норма ≥30)</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label"><span>Узкое место / Цель</span><span>🧭</span></div>
+          <div class="kpi-val" id="kpi-target" style="font-size:17px; color:#38bdf8;">Старт зала</div>
+          <div class="kpi-sub" id="kpi-target-sub">Дефицит: $0 (0с) · Заторов: 0</div>
+        </div>
+      </div>
+
+      <!-- MIDDLE PANELS: ANTON FORMULA & APPLOVIN ADROAS SIMULATOR + INCOME SOURCES -->
+      <div class="mid-grid">
+        <!-- Panel 1: Anton Chumachenko & Slava Krivsunov Monetization Benchmarks -->
+        <div class="panel-card">
+          <div class="panel-title">
+            <span>Монетизация и Метрики (Слава & Антон · AppLovin AdROAS)</span>
+            <span class="badge green" id="rv-status-pill">Только Rewarded · 0 Интеров</span>
+          </div>
+
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:4px;">
+              <span id="cycle-label">Цикл оффера Антона (с 60-й сек: 10с показ / 20с перерыв)</span>
+              <span id="cycle-timer">--</span>
+            </div>
+            <div class="Anton-cycle-bar">
+              <div class="Anton-cycle-fill" id="cycle-fill"></div>
+            </div>
+          </div>
+
+          <div class="stat-row">
+            <span class="k">Ожидаемая вместимость ревардов (Playtime / 7 мин):</span>
+            <span class="v" id="sim-expected-rv">0.0 роликов (факт: 0)</span>
+          </div>
+          <div class="stat-row">
+            <span class="k">Reward Show / сессия (сравн. с Crab Beach 0.22):</span>
+            <span class="v" id="sim-reward-show" style="color:#4ade80;">0.00</span>
+          </div>
+          <div class="stat-row">
+            <span class="k">Прогноз удержания R1 (база 30% → с агрессивным RV -5 п.п.):</span>
+            <span class="v" id="sim-r1">25.0% (Плейтайм -30% от чистого)</span>
+          </div>
+          <div class="stat-row">
+            <span class="k">Симуляция Ad Revenue за сессию (при eCPM $20 / $35):</span>
+            <span class="v" id="sim-ad-rev">$0.000 / $0.000</span>
+          </div>
+          <div class="stat-row">
+            <span class="k">Прогноз D0 / D7 AdROAS в AppLovin (при CPI $0.45):</span>
+            <span class="v" id="sim-adroas">D0: 0% · D7: 0%</span>
+          </div>
+        </div>
+
+        <!-- Panel 2: RPM Income Breakdown & Conveyor QA -->
+        <div class="panel-card">
+          <div class="panel-title">
+            <span>Источники дохода зала (RPM Симулятор · 12 каналов)</span>
+            <span id="total-earned-badge" style="font-size:11px; color:var(--amber);">Всего: $0</span>
+          </div>
+          <div class="src-grid" id="income-sources-grid">
+            <div class="src-chip"><span class="sname">Герой (руки)</span><span class="sval" id="src-hero">$0</span></div>
+            <div class="src-chip"><span class="sname">Лента (Belt)</span><span class="sval" id="src-belt">$0</span></div>
+            <div class="src-chip"><span class="sname">Пушка (Cannon)</span><span class="sval" id="src-cannon">$0</span></div>
+            <div class="src-chip"><span class="sname">Комбо</span><span class="sval" id="src-combo">$0</span></div>
+            <div class="src-chip"><span class="sname">Заказы</span><span class="sval" id="src-orders">$0</span></div>
+            <div class="src-chip"><span class="sname" style="color:#4ade80;">Ролики (Gift)</span><span class="sval" id="src-gift" style="color:#4ade80;">$0</span></div>
+            <div class="src-chip"><span class="sname">Коробки</span><span class="sval" id="src-crates">$0</span></div>
+            <div class="src-chip"><span class="sname">Копилка (Away)</span><span class="sval" id="src-away">$0</span></div>
+            <div class="src-chip"><span class="sname">Вентиляторы</span><span class="sval" id="src-fans">$0</span></div>
+            <div class="src-chip"><span class="sname">Спортзал (Гл.II)</span><span class="sval" id="src-gym">$0</span></div>
+            <div class="src-chip"><span class="sname">Турбо ×2</span><span class="sval" id="src-turbo">$0</span></div>
+            <div class="src-chip"><span class="sname">Прочее</span><span class="sval" id="src-other">$0</span></div>
+          </div>
+          <div class="stat-row" style="margin-top:4px;">
+            <span class="k">Тел в сцене / На руках / Бросков / Заторов ленты:</span>
+            <span class="v" id="scene-bodies-stat">0 тел · стек 0 · бросков 0 · заторов 0</span>
+          </div>
+          <div class="stat-row">
+            <span class="k">Срочные заказы / Коробки-сюрпризы:</span>
+            <span class="v" id="orders-crates-stat">Заказов: 0/0 · Коробок: 0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM PANELS: PURCHASES & RV EVENTS TABLE + LIVE [PITT] STREAM -->
+      <div class="mid-grid">
+        <div class="panel-card">
+          <div class="panel-title">
+            <span>Журнал покупок, ступеней Ямы и Rewarded-событий</span>
+            <span style="font-size:11px; color:var(--muted);" id="buys-count-label">Событий: 0</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Время</th>
+                  <th>Тип</th>
+                  <th>Объект / Оффер</th>
+                  <th>Цена / Награда</th>
+                  <th>RPM до / Детали</th>
+                </tr>
+              </thead>
+              <tbody id="events-tbody">
+                <tr><td colspan="5" style="color:var(--muted); text-align:center;">Начни играть — все покупки, ступени и офферы появятся здесь в реальном времени...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-title">
+            <span>Поток телеметрии <code>[PITT] [onepit]</code></span>
+            <div style="display:flex; gap:4px;">
+              <button class="dev-btn active" id="flt-all" onclick="setFilter('all')">Все</button>
+              <button class="dev-btn" id="flt-rv" onclick="setFilter('rv')">RV / Реклама</button>
+              <button class="dev-btn" id="flt-buy" onclick="setFilter('buy')">Покупки</button>
+              <button class="dev-btn" id="flt-inc" onclick="setFilter('inc')">RPM / KPI</button>
+            </div>
+          </div>
+          <div class="log-box" id="pitt-log-box"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. PRESETS & CLI FLAGS FOR UNITY WEBGL (OnePit QaZones & HallGift)
+    // =========================================================================
+    const PRESETS = {
+      anton:   ["-pittRvAnton", "1"],
+      giftnow: ["-pittRvAnton", "1", "-pittOpGiftNow"],
+      mid1:    ["-pittRvAnton", "1", "-pittOpHallT", "1800", "-pittOpBuy", "bench2,motor1,pedal", "-pittOpStage", "2"],
+      ch2:     ["-pittRvAnton", "1", "-pittOpChapter", "2", "-pittOpHallT", "3600"],
+      ch3:     ["-pittRvAnton", "1", "-pittOpChapter", "3", "-pittOpHallT", "7200"],
+      def:     []
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const activePresetKey = urlParams.get("preset") || "anton";
+    const unityArgs = PRESETS[activePresetKey] ? [...PRESETS[activePresetKey]] : [...PRESETS.anton];
+    const isAntonActive = unityArgs.includes("-pittRvAnton");
+
+    document.querySelectorAll(".dev-toolbar .dev-btn").forEach(b => b.classList.remove("active"));
+    const activeBtn = document.getElementById("btn-preset-" + activePresetKey);
+    if (activeBtn) activeBtn.classList.add("active");
+    document.getElementById("active-flags-label").textContent =
+      "Флаги запуска: " + (unityArgs.length ? unityArgs.join(" ") : "(дефолт без флагов)");
+    const fBadge = document.getElementById("formula-badge");
+    if (isAntonActive) {
+      fBadge.textContent = "Формула Антона: ВКЛ (60с · 10/20с · 5м RPM)";
+      fBadge.className = "badge green";
+    } else {
+      fBadge.textContent = "Режим Дефицита (3м RPM)";
+      fBadge.className = "badge amber";
+    }
+
+    function applyPreset(key) {
+      const u = new URL(window.location.href);
+      u.searchParams.set("preset", key);
+      window.location.href = u.toString();
+    }
+
+    function wipeSaveAndReload() {
+      if (!confirm("Сбросить сохранения IndexedDB (/idbfs) и перезапустить сессию?")) return;
+      try {
+        if (window.indexedDB && indexedDB.databases) {
+          indexedDB.databases().then(dbs => {
+            dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+            setTimeout(() => window.location.reload(), 300);
+          });
+        } else {
+          indexedDB.deleteDatabase("/idbfs");
+          setTimeout(() => window.location.reload(), 300);
+        }
+      } catch (e) {
+        window.location.reload();
+      }
+    }
+
+    // =========================================================================
+    // 2. TELEMETRY STATE & [PITT] [onepit] CONSOLE PARSER
+    // =========================================================================
+    const state = {
+      preset: activePresetKey,
+      antonFormula: isAntonActive,
+      sessionStartMs: performance.now(),
+      hallTime: 0,
+      chapter: 1,
+      pitStage: 1,
+      money: 0,
+      rpm: 0,
+      totalEarned: 0,
+      availCount: 0,
+      targetId: "-",
+      gapUsd: 0,
+      gapSec: 0,
+      rvOffers: 0,
+      rvTaps: 0,
+      rvClaims: 0,
+      rvLater: 0,
+      rvUsdTotal: 0,
+      lastOfferAt: -1,
+      jams: 0,
+      jamActive: false,
+      ordersTotal: 0,
+      ordersWon: 0,
+      cratesOpened: 0,
+      productsInScene: 0,
+      heroStack: 0,
+      throwsCount: 0,
+      sources: {
+        hero: 0, belt: 0, cannon: 0, combo: 0, orders: 0, gift: 0,
+        crates: 0, away: 0, fans: 0, gym: 0, turbo: 0, other: 0
+      },
+      events: [],
+      rawLogs: [],
+      logFilter: "all",
+      fpsNow: 60,
+      fpsAvg: 60,
+      fps1Low: 60,
+      frameMs: 16.7
+    };
+
+    function parseKv(str) {
+      const out = {};
+      const parts = str.trim().split(/\s+/);
+      for (const p of parts) {
+        const eq = p.indexOf("=");
+        if (eq > 0) {
+          out[p.slice(0, eq)] = p.slice(eq + 1);
+        }
+      }
+      return out;
+    }
+
+    function fmtMoney(v) {
+      const n = Number(v) || 0;
+      if (n >= 1e6) return "$" + (n / 1e6).toFixed(2) + "M";
+      if (n >= 1e4) return "$" + (n / 1e3).toFixed(1) + "K";
+      return "$" + Math.round(n).toLocaleString("ru-RU");
+    }
+
+    function fmtTime(sec) {
+      const s = Math.max(0, Math.floor(sec || 0));
+      const m = Math.floor(s / 60);
+      const r = s % 60;
+      return String(m).padStart(2, "0") + ":" + String(r).padStart(2, "0");
+    }
+
+    function pushTableEvent(timeSec, type, badgeCls, name, val, details) {
+      state.events.unshift({ timeSec, type, badgeCls, name, val, details });
+      if (state.events.length > 120) state.events.pop();
+      renderEventsTable();
+    }
+
+    function renderEventsTable() {
+      const tbody = document.getElementById("events-tbody");
+      document.getElementById("buys-count-label").textContent = "Событий: " + state.events.length;
+      if (!state.events.length) return;
+      tbody.innerHTML = state.events.slice(0, 40).map(e => `
+        <tr>
+          <td>${fmtTime(e.timeSec)}</td>
+          <td><span class="badge ${e.badgeCls}" style="font-size:10px;padding:1px 6px;">${e.type}</span></td>
+          <td style="font-weight:700;">${e.name}</td>
+          <td style="font-weight:700; color:${e.badgeCls === 'green' ? '#4ade80' : '#eef3ff'};">${e.val}</td>
+          <td style="color:var(--muted);">${e.details}</td>
+        </tr>
+      `).join("");
+    }
+
+    function setFilter(flt) {
+      state.logFilter = flt;
+      ["all", "rv", "buy", "inc"].forEach(k => {
+        const el = document.getElementById("flt-" + k);
+        if (el) el.classList.toggle("active", k === flt);
+      });
+      renderLogStream();
+    }
+
+    function renderLogStream() {
+      const box = document.getElementById("pitt-log-box");
+      const filtered = state.rawLogs.filter(item => {
+        if (state.logFilter === "all") return true;
+        return item.cat === state.logFilter;
+      });
+      box.innerHTML = filtered.slice(-80).map(item =>
+        `<div class="log-line ${item.cat}">[${fmtTime(item.t)}] ${item.text.replace(/</g, "&lt;")}</div>`
+      ).join("");
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function handlePittLine(line) {
+      const idx = line.indexOf("[PITT] [onepit]");
+      if (idx < 0) return;
+      const body = line.slice(idx + "[PITT] [onepit]".length).trim();
+      const kv = parseKv(body);
+      if (kv.t !== undefined && !isNaN(parseFloat(kv.t))) {
+        state.hallTime = Math.max(state.hallTime, parseFloat(kv.t));
+      }
+      if (kv.ch !== undefined && !isNaN(parseInt(kv.ch))) {
+        state.chapter = parseInt(kv.ch);
+      }
+
+      let cat = "other";
+      if (body.startsWith("avail ")) {
+        cat = "inc";
+        if (kv.money !== undefined) state.money = parseFloat(kv.money) || 0;
+        if (kv.inc !== undefined) state.rpm = parseFloat(kv.inc) || 0;
+        if (kv.n !== undefined) state.availCount = parseInt(kv.n) || 0;
+      } else if (body.startsWith("income ")) {
+        cat = "inc";
+        for (const k of Object.keys(state.sources)) {
+          if (kv[k] && kv[k] !== "-") {
+            const v = parseFloat(kv[k]) || 0;
+            state.sources[k] += v;
+            state.totalEarned += v;
+          }
+        }
+      } else if (body.startsWith("kpi ")) {
+        cat = "inc";
+        if (kv.money !== undefined) state.money = parseFloat(kv.money) || 0;
+        if (kv.products !== undefined) state.productsInScene = parseInt(kv.products) || 0;
+        if (kv.stack !== undefined) state.heroStack = parseInt(kv.stack) || 0;
+        if (kv.throws !== undefined) state.throwsCount = parseInt(kv.throws) || 0;
+      } else if (body.startsWith("buy ")) {
+        cat = "buy";
+        const price = parseFloat(kv.price) || 0;
+        const incBefore = parseFloat(kv.inc_before) || state.rpm;
+        if (kv.money !== undefined) state.money = parseFloat(kv.money) || 0;
+        pushTableEvent(
+          state.hallTime,
+          "ПОКУПКА",
+          "blue",
+          kv.id || "item",
+          fmtMoney(price),
+          `RPM до: ${fmtMoney(incBefore)}/м · Копил: ${kv.heavy_s || "-"}с (${kv.src || "floor"})`
+        );
+      } else if (body.startsWith("buy_gain ")) {
+        cat = "buy";
+        pushTableEvent(
+          state.hallTime,
+          "ПРИРОСТ RPM",
+          "amber",
+          kv.id || "item",
+          (kv.gain_pct && kv.gain_pct !== "-" ? "+" + kv.gain_pct + "%" : "—"),
+          `RPM: ${fmtMoney(kv.inc_before || 0)} → ${fmtMoney(kv.inc_after || 0)}/м`
+        );
+      } else if (body.startsWith("rv_offer ") || body.startsWith("rv spawn ") || body.startsWith("rv offer ")) {
+        cat = "rv";
+        if (body.startsWith("rv_offer ")) {
+          state.rvOffers++;
+          state.lastOfferAt = state.hallTime;
+          if (kv.target) state.targetId = kv.target;
+          if (kv.gap_usd) state.gapUsd = parseFloat(kv.gap_usd) || 0;
+          if (kv.gap_s) state.gapSec = parseFloat(kv.gap_s) || 0;
+          const rUsd = kv.reward_usd && kv.reward_usd !== "-" ? parseFloat(kv.reward_usd) : (state.rpm * (state.antonFormula ? 5 : 3));
+          pushTableEvent(
+            state.hallTime,
+            "RV ОФФЕР",
+            "green",
+            `${kv.kind || "gift"} (${kv.f || (state.antonFormula ? "anton" : "def")})`,
+            "+" + fmtMoney(rUsd),
+            `Цель: ${kv.target || "-"} (не хватает ${fmtMoney(state.gapUsd)} / ${state.gapSec}с)`
+          );
+        }
+      } else if (body.startsWith("rv_tap ") || body.startsWith("rv tap ")) {
+        cat = "rv";
+        if (body.startsWith("rv_tap ")) state.rvTaps++;
+      } else if (body.startsWith("rv_claim ") || body.startsWith("hall rv claim ")) {
+        cat = "rv";
+        if (body.startsWith("rv_claim ")) {
+          state.rvClaims++;
+          const u = kv.usd && kv.usd !== "-" ? parseFloat(kv.usd) : 0;
+          state.rvUsdTotal += u;
+          pushTableEvent(
+            state.hallTime,
+            "RV ПРОСМОТР",
+            "green",
+            kv.kind || "gift",
+            "+" + fmtMoney(u),
+            `Категория: ${kv.cat || "deficit"} · Всего RV: ${state.rvClaims}`
+          );
+        }
+      } else if (body.startsWith("pit_step ") || body.startsWith("line ")) {
+        cat = "pit";
+        if (kv.n) state.pitStage = parseInt(kv.n) || state.pitStage;
+        if (kv.step && kv.step.startsWith("lv")) state.pitStage = parseInt(kv.step.slice(2)) || state.pitStage;
+        pushTableEvent(
+          state.hallTime,
+          "ЯМА УРОВЕНЬ",
+          "amber",
+          `Глава ${state.chapter} · Ур. ${state.pitStage}`,
+          kv.need || kv.done || "OK",
+          `Время ступени: ${kv.dur || "-"}с`
+        );
+      } else if (body.startsWith("jam ")) {
+        cat = "jam";
+        if (kv.ev === "start") {
+          state.jams++;
+          state.jamActive = true;
+          pushTableEvent(state.hallTime, "ЗАТОР ЛЕНТЫ", "red", `Участок ${kv.seg || 1}`, "Старт", `Фикс: ${kv.fix || "none"}`);
+        } else if (kv.ev === "end") {
+          state.jamActive = false;
+        }
+      } else if (body.startsWith("order ")) {
+        cat = "inc";
+        state.ordersTotal++;
+        if (kv.win === "1") state.ordersWon++;
+        pushTableEvent(
+          state.hallTime,
+          "СРОЧНЫЙ ЗАКАЗ",
+          kv.win === "1" ? "green" : "red",
+          kv.win === "1" ? "Выполнен" : "Провален",
+          "+" + fmtMoney(kv.reward_usd || 0),
+          `Сдано: ${kv.got || 0}/${kv.need || 0}`
+        );
+      } else if (body.startsWith("crate ")) {
+        cat = "inc";
+        state.cratesOpened++;
+      } else if (body.startsWith("need ")) {
+        cat = "jam";
+        if (kv.relieve && kv.relieve !== "-") state.targetId = kv.relieve;
+      }
+
+      state.rawLogs.push({ t: state.hallTime, cat, text: body });
+      if (state.rawLogs.length > 600) state.rawLogs.shift();
+      renderLogStream();
+      updateDashboardUi();
+    }
+
+    // Hook console.log / info / warn so we never miss a Unity Debug.Log
+    const origLog = console.log.bind(console);
+    console.log = function(...args) {
+      origLog(...args);
+      try {
+        const msg = args.map(a => typeof a === "string" ? a : JSON.stringify(a)).join(" ");
+        if (msg.includes("[PITT]")) handlePittLine(msg);
+      } catch (e) {}
+    };
+
+    // =========================================================================
+    // 3. FPS & FRAME-TIME PROFILER + 1Hz DASHBOARD REFRESH
+    // =========================================================================
+    const frameTimes = [];
+    let lastRaf = performance.now();
+    function rafLoop(now) {
+      const dt = now - lastRaf;
+      lastRaf = now;
+      if (dt > 0 && dt < 500) {
+        frameTimes.push(dt);
+        if (frameTimes.length > 180) frameTimes.shift();
+      }
+      requestAnimationFrame(rafLoop);
+    }
+    requestAnimationFrame(rafLoop);
+
+    function updateDashboardUi() {
+      const wallSec = (performance.now() - state.sessionStartMs) / 1000;
+      const playSec = Math.max(state.hallTime, wallSec);
+      const adSec = state.rvClaims * 25; // ~25s per rewarded ad watch
+      const netSec = Math.max(0, playSec - adSec);
+
+      // FPS stats
+      if (frameTimes.length > 10) {
+        const avgMs = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
+        const sorted = [...frameTimes].sort((a, b) => b - a);
+        const low1Ms = sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * 0.05))];
+        state.frameMs = avgMs;
+        state.fpsAvg = Math.min(120, Math.round(1000 / avgMs));
+        state.fps1Low = Math.min(120, Math.round(1000 / low1Ms));
+      }
+
+      const fpsColor = state.fpsAvg >= 45 ? "#4ade80" : state.fpsAvg >= 30 ? "#fbbf24" : "#f87171";
+      document.getElementById("overlay-fps").textContent = state.fpsAvg + " FPS";
+      document.getElementById("overlay-fps").style.color = fpsColor;
+      document.getElementById("overlay-ms").textContent = state.frameMs.toFixed(1) + " ms";
+      document.getElementById("overlay-rpm").textContent = "RPM: " + fmtMoney(state.rpm) + "/м";
+
+      document.getElementById("kpi-fps").textContent = state.fpsAvg + " FPS";
+      document.getElementById("kpi-fps").style.color = fpsColor;
+      document.getElementById("kpi-fps-sub").textContent =
+        `1% Low: ${state.fps1Low} · ${state.frameMs.toFixed(1)} ms (${state.fpsAvg >= 30 ? "Galaxy A13 OK" : "Просадка <30!"})`;
+
+      document.getElementById("chapter-badge").textContent =
+        `Глава ${state.chapter} · Ступень ${state.pitStage}`;
+
+      // Playtime
+      document.getElementById("kpi-playtime").textContent = fmtTime(playSec);
+      document.getElementById("kpi-playtime-sub").textContent =
+        `Чистое: ${fmtTime(netSec)} · Реклама: ${adSec}с`;
+
+      // RPM & Balance
+      document.getElementById("kpi-rpm").textContent = fmtMoney(state.rpm) + " / мин";
+      const totalAll = Math.max(state.totalEarned, state.money);
+      document.getElementById("kpi-money-sub").textContent =
+        `Кошелёк: ${fmtMoney(state.money)} · Покупок дост: ${state.availCount}`;
+      document.getElementById("total-earned-badge").textContent =
+        `Заработано за сессию: ${fmtMoney(totalAll)}`;
+
+      // Next Rewarded Offer Value (5x RPM for Anton, 3x for Default, floor $150)
+      const mult = state.antonFormula ? 5 : 3;
+      const nextOfferUsd = Math.max(150, Math.round(state.rpm * mult));
+      document.getElementById("kpi-rv-usd").textContent = "+" + fmtMoney(nextOfferUsd);
+
+      // Anton 10s show / 20s pause cycle visualizer after 60s
+      const cycleFill = document.getElementById("cycle-fill");
+      const cycleTimer = document.getElementById("cycle-timer");
+      if (playSec < 60) {
+        const left = Math.ceil(60 - playSec);
+        document.getElementById("kpi-rv-cycle").textContent = `Старт офферов через ${left}с (правило 1-й мин)`;
+        cycleTimer.textContent = `Старт через ${left}с`;
+        cycleFill.style.width = Math.round((playSec / 60) * 100) + "%";
+        cycleFill.style.background = "#38bdf8";
+      } else {
+        const mod = (playSec - 60) % 30;
+        if (mod < 10) {
+          const rem = (10 - mod).toFixed(1);
+          document.getElementById("kpi-rv-cycle").textContent = `🟢 ОФФЕР АКТИВЕН (${rem}с из 10с)`;
+          cycleTimer.textContent = `ПОКАЗ ОФФЕРА: ${rem}с`;
+          cycleFill.style.width = Math.round(((10 - mod) / 10) * 100) + "%";
+          cycleFill.style.background = "linear-gradient(90deg, #22c55e, #4ade80)";
+        } else {
+          const rem = (30 - mod).toFixed(1);
+          document.getElementById("kpi-rv-cycle").textContent = `⏸ Пауза 20с (след. показ через ${rem}с)`;
+          cycleTimer.textContent = `ПАУЗА: ${rem}с`;
+          cycleFill.style.width = Math.round(((mod - 10) / 20) * 100) + "%";
+          cycleFill.style.background = "#64748b";
+        }
+      }
+
+      // Rewarded Funnel & Anton capacity (Playtime_min / 7)
+      const playMin = playSec / 60;
+      const expectedRv = (playMin / 7).toFixed(2);
+      const acceptRate = state.rvOffers > 0 ? Math.round((state.rvClaims / state.rvOffers) * 100) : 0;
+      document.getElementById("kpi-rv-counts").textContent = `${state.rvClaims} / ${state.rvOffers}`;
+      document.getElementById("kpi-rv-rate").textContent =
+        `Принято: ${acceptRate}% · Вместимость Антона: ${expectedRv}`;
+
+      document.getElementById("sim-expected-rv").textContent =
+        `${expectedRv} роликов (факт просмотрено: ${state.rvClaims})`;
+      document.getElementById("sim-reward-show").textContent =
+        `${state.rvClaims.toFixed(2)} (Crab Beach: 0.22 · Цель: 3.0–5.0)`;
+
+      const rev20 = (state.rvClaims * 0.020).toFixed(3);
+      const rev35 = (state.rvClaims * 0.035).toFixed(3);
+      document.getElementById("sim-ad-rev").textContent = `$${rev20} (eCPM $20) / $${rev35} (eCPM $35)`;
+      const d0Roas = Math.round(((state.rvClaims * 0.025) / 0.45) * 100);
+      const d7Roas = Math.round(d0Roas * 2.4);
+      document.getElementById("sim-adroas").textContent = `D0: ${d0Roas}% · D7 прогноз: ${d7Roas}%`;
+
+      // Bottleneck / Target
+      document.getElementById("kpi-target").textContent =
+        state.jamActive ? "⚠️ ЗАТОР ЛЕНТЫ" : (state.targetId !== "-" ? state.targetId : "Свободный фарм");
+      document.getElementById("kpi-target").style.color = state.jamActive ? "#f87171" : "#38bdf8";
+      document.getElementById("kpi-target-sub").textContent =
+        `Дефицит: ${fmtMoney(state.gapUsd)} (${state.gapSec}с) · Заторов: ${state.jams}`;
+
+      // Sources
+      for (const k of Object.keys(state.sources)) {
+        const el = document.getElementById("src-" + k);
+        if (el) el.textContent = fmtMoney(state.sources[k]);
+      }
+      document.getElementById("scene-bodies-stat").textContent =
+        `${state.productsInScene} тел · стек ${state.heroStack} · бросков ${state.throwsCount} · заторов ${state.jams}`;
+      document.getElementById("orders-crates-stat").textContent =
+        `Заказов: ${state.ordersWon}/${state.ordersTotal} · Коробок открыто: ${state.cratesOpened}`;
+    }
+
+    setInterval(updateDashboardUi, 1000);
+
+    function exportTelemetryJson() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `yama-v6l-telemetry-${new Date().toISOString().slice(0,19).replace(/:/g,"-")}.json`;
+      a.click();
+    }
+
+    function exportRawLogs() {
+      const txt = state.rawLogs.map(l => `[${l.t.toFixed(1)}] [PITT] [onepit] ${l.text}`).join("\n");
+      const blob = new Blob([txt], { type: "text/plain" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `yama-v6l-pitt-${new Date().toISOString().slice(0,19).replace(/:/g,"-")}.log`;
+      a.click();
+    }
+
+    // =========================================================================
+    // 4. BOOTSTRAP UNITY WEBGL INSTANCE
+    // =========================================================================
+    let canvas = document.querySelector("#unity-canvas");
+    let fullscreenContainer = document.querySelector("#unity-fullscreen-container");
+    let stageEl = document.querySelector(".game-stage");
+
+    function unityShowBanner(msg, type) {
+      var warningBanner = document.querySelector("#unity-warning");
+      var div = document.createElement("div");
+      div.innerHTML = msg;
+      warningBanner.appendChild(div);
+      if (type == "error") div.style = "background: #ef4444; color: #fff; padding: 8px; border-radius:6px;";
+      else {
+        if (type == "warning") div.style = "background: #f59e0b; color: #000; padding: 8px; border-radius:6px;";
+        setTimeout(() => { if (div.parentNode) warningBanner.removeChild(div); }, 5000);
+      }
+    }
+
+    function fitPortraitInStage() {
+      const availH = Math.max(360, stageEl.clientHeight - 8);
+      const availW = Math.max(240, stageEl.clientWidth - 8);
+      const h = Math.floor(Math.min(availH, availW * 16 / 9));
+      const w = Math.floor(h * 9 / 16);
+      fullscreenContainer.style.width = w + "px";
+      fullscreenContainer.style.height = h + "px";
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+    }
+    fitPortraitInStage();
+    window.addEventListener("resize", fitPortraitInStage);
+
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/out.loader.js";
+    var config = {
+      arguments: unityArgs,
+      dataUrl: buildUrl + "/out.data.unityweb",
+      frameworkUrl: buildUrl + "/out.framework.js.unityweb",
+      codeUrl: buildUrl + "/out.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      fullscreenElementID: "unity-fullscreen-container",
+      companyName: "DuckPit",
+      productName: "DuckPit",
+      productVersion: "0.1.0",
+      showBanner: unityShowBanner,
+      webglContextAttributes: { powerPreference: "high-performance", antialias: false },
+      devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+      autoSyncPersistentDataPath: true
+    };
+
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      const loadingContainer = document.querySelector("#unity-loading-container");
+      const progressBarFull = document.querySelector("#unity-progress-bar-full");
+      createUnityInstance(canvas, config, (progress) => {
+        if (progress < 1) {
+          loadingContainer.style.display = "block";
+          progressBarFull.style.width = (100 * progress) + "%";
+        } else {
+          loadingContainer.style.display = "none";
+        }
+      }).then((unityInstance) => {
+        window.unityInstance = unityInstance;
+      }).catch((message) => {
+        console.error(message);
+      });
+    };
+    document.body.appendChild(script);
+  </script>
+</body>
+</html>
