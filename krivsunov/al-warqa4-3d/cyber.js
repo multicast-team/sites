@@ -805,11 +805,12 @@ export function build(kit, opts = {}) {
   vanityGlow('z', -LZ, -1, 1.2, 2.6, F1, N.cyan);
 
   // ----- у бассейна: четыре шезлонга и два зонта, полотенца на шезлонгах -----
+  // за террасой, по бокам от ступеней; купола не заходят за заднюю ограду (z = -16,35)
   at(0.03);
-  for (const x of [-1.3, -0.2, 4.3, 5.4]) lounger(x, -14.7, 0);
-  umbrella(-0.75, -15.1, 1.2); // купол не заходит за заднюю ограду (z = -16,35)
-  umbrella(4.85, -15.1, 1.2);
-  for (const x of [-0.2, 4.3]) rbox(0.5, 0.03, 0.7, 0.012, x, 0.43, -14.15, CX.towel);
+  for (const x of [-6.4, -5.3, 5.3, 6.4]) lounger(x, -15.3, 0);
+  umbrella(-7.0, -15.1, 1.2);
+  umbrella(7.0, -15.1, 1.2);
+  for (const x of [-5.3, 5.3]) rbox(0.5, 0.03, 0.7, 0.012, x, 0.43, -14.75, CX.towel);
   at(F0);
 
   // ----- снаружи: неон по борту бассейна, номер дома (видно вечером) -----
@@ -818,7 +819,11 @@ export function build(kit, opts = {}) {
   const houseNo = neonMat(0x00e5ff, 0);
   night.push({ mat: houseNo, on: 5 });
   {
-    box(-4.4, 9.4, 0.065, 0.075, -7.86, -7.82, poolNeon); // вдоль ближнего к дому борта бассейна
+    { // неон по наружной дуге бортика бассейна
+      const { PA, PB, PZ, TER } = kit.pool, pts = [];
+      for (let i = 0; i <= 64; i++) { const t = (i / 64) * Math.PI; pts.push([(PA + 0.3) * Math.cos(t), TER + 0.03, PZ - (PB + 0.3) * Math.sin(t)]); }
+      tube(pts, 0.012, poolNeon, 128);
+    }
     box(-3.25, -2.55, 0.25, 0.85, 16.67, 16.69, C.plastic);
     night.push({ mat: neonText('4', -2.9, 0.55, 16.7, 0.5, 0.5, 0, 0x00e5ff, { intensity: 0 }), on: 5 });
     box(-3.25, -2.55, 0.24, 0.25, 16.67, 16.7, houseNo);

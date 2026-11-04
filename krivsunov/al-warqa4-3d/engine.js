@@ -25,17 +25,18 @@ export const QUALITY = {
 
 export const TIMES = {
   // mean — средняя яркость неба, к которой приводится HDRI (ночные снимки Poly Haven нормализованы по экспозиции)
-  day: { label: 'День', hdr: 'env/kloofendal_43d_clear_puresky_1k.hdr', exposure: 1.0, mean: 0, bg: 1.0, sun: 3.4, sunColor: 0xfff0dc, hemi: 0.45, bloom: [0.18, 0.35, 1.4], night: 0, neon: 0.15, fog: 0xd9e4ec },
-  dusk: { label: 'Закат', hdr: 'env/qwantani_dusk_2_puresky_1k.hdr', exposure: 1.15, mean: 0.22, bg: 1.0, sun: 1.2, sunColor: 0xff9c63, hemi: 0.15, bloom: [0.4, 0.45, 0.95], night: 0.75, neon: 0.7, fog: 0x7d6a80 },
-  night: { label: 'Ночь', hdr: 'env/qwantani_night_puresky_1k.hdr', exposure: 1.1, mean: 0.012, bg: 1.4, sun: 0.1, sunColor: 0xa6b8ff, hemi: 0.03, bloom: [0.65, 0.5, 0.65], night: 1, neon: 1, fog: 0x080b16 }
+  day: { label: 'День', hdr: 'env/kloofendal_43d_clear_puresky_1k.hdr', exposure: 1.0, indoor: 1.45, mean: 0, bg: 1.0, sun: 3.4, sunColor: 0xfff0dc, hemi: 0.6, bloom: [0.18, 0.35, 1.4], night: 0, neon: 0.15, fog: 0xd9e4ec },
+  dusk: { label: 'Закат', hdr: 'env/qwantani_dusk_2_puresky_1k.hdr', exposure: 1.15, indoor: 1.2, mean: 0.22, bg: 1.0, sun: 1.2, sunColor: 0xff9c63, hemi: 0.15, bloom: [0.4, 0.45, 0.95], night: 0.75, neon: 0.7, fog: 0x7d6a80 },
+  night: { label: 'Ночь', hdr: 'env/qwantani_night_puresky_1k.hdr', exposure: 1.1, indoor: 1.0, mean: 0.012, bg: 1.4, sun: 0.1, sunColor: 0xa6b8ff, hemi: 0.03, bloom: [0.65, 0.5, 0.65], night: 1, neon: 1, fog: 0x080b16 }
 };
 
+// полы и плитка санузлов — свои ровные текстуры керамогранита (villa.js, tiles()), как на фото, без рисунка мрамора
 const TEXTURES = ['plaster', 'concrete_white', 'travertine', 'pavers', 'deck', 'asphalt', 'sand', 'grass', 'pool', 'gravel', 'bark', 'metal_black',
-  'bath_stone', 'wall_paint', 'oak', 'walnut', 'leather_black', 'leather_tufted', 'carpet_dark', 'metal_brushed', 'diamond', 'concrete_dark',
-  'plastic_black', 'fabric_grey', 'wood_dark', 'floor_cream', 'floor_taupe'];
+  'wall_paint', 'oak', 'walnut', 'leather_black', 'leather_tufted', 'carpet_dark', 'metal_brushed', 'diamond', 'concrete_dark',
+  'plastic_black', 'fabric_grey', 'wood_dark'];
 // HD-набор (max/assets_pc.py --hd): тот же раскрой, большее разрешение
-const HD_TEXTURES = ['plaster', 'concrete_white', 'travertine', 'pavers', 'deck', 'asphalt', 'sand', 'grass', 'pool', 'bath_stone',
-  'wall_paint', 'concrete_dark', 'floor_cream', 'floor_taupe'];
+const HD_TEXTURES = ['plaster', 'concrete_white', 'travertine', 'pavers', 'deck', 'asphalt', 'sand', 'grass', 'pool',
+  'wall_paint', 'concrete_dark'];
 
 // Маршрут пролёта: сплайн через точки камеры и сплайн через точки взгляда с тем же параметром.
 function makeTour(stops) {
@@ -192,7 +193,7 @@ export async function createEngine(container, opts) {
   // ---------- сцена ----------
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
-  const hemi = new THREE.HemisphereLight(0xdfe9f3, 0xc9a77c, 0.4);
+  const hemi = new THREE.HemisphereLight(0xdfe9f3, 0xd6ae76, 0.4); // снизу — тёплый отсвет песка и плитки, как в тенях на фото
   scene.add(hemi);
   const sun = new THREE.DirectionalLight(0xfff0dc, 3.4);
   sun.castShadow = true;
@@ -244,6 +245,7 @@ export async function createEngine(container, opts) {
   collectGlow(villa.root);
   if (cyber) collectGlow(cyber.group);
   function captureProbes() {
+    villa.setViewer?.(true, TIMES[state.time].night); // зонды стоят в доме: стекло — как изнутри
     const saved = [...glowMats].map((m) => [m, m.emissiveIntensity]);
     for (const [m, v] of saved) m.emissiveIntensity = v * 0.3;
     for (const [key, pos] of Object.entries(villa.probes)) {
@@ -257,6 +259,7 @@ export async function createEngine(container, opts) {
       probes[key] = env;
     }
     for (const [m, v] of saved) m.emissiveIntensity = v;
+    villa.setViewer?.(viewer.inside, TIMES[state.time].night);
     for (const m of roomMaterials) {
       const env = probes[m.userData.room] || probes.gf;
       if (env && m.envMap !== env.texture) { m.envMap = env.texture; m.needsUpdate = true; }
@@ -285,12 +288,19 @@ export async function createEngine(container, opts) {
     return null;
   };
   const OPEN = new Set(['foyer', 'rear', 'mezz', 'living', 'dining']);
+  const viewer = { inside: false, night: -1 }; // камера в доме: стекло прозрачнее, экспозиция выше (глаз привыкает за ~0,5 с)
   let poolTimer = 0;
   let currentRoom = null;
   function assignPool(force = false) {
     const cam = camera.position;
     const r = roomOf(cam);
     if (r !== currentRoom) { currentRoom = r; onRoom(r ? r.name : ''); }
+    const inside = !!r, nightLevel0 = TIMES[state.time].night;
+    if (inside !== viewer.inside || nightLevel0 !== viewer.night) {
+      viewer.inside = inside;
+      viewer.night = nightLevel0;
+      villa.setViewer?.(inside, nightLevel0);
+    }
     const nightLevel = TIMES[state.time].night;
     const active = allEmitters().filter((e) => {
       if (e.set === 'cyber') return state.furniture;
@@ -579,6 +589,8 @@ export async function createEngine(container, opts) {
   let running = true, last = performance.now(), clock = 0, frames = 0;
   function render(dt) {
     clock += dt;
+    const T = TIMES[state.time], want = T.exposure * (viewer.inside ? T.indoor : 1);
+    renderer.toneMappingExposure += (want - renderer.toneMappingExposure) * (dt > 0 ? Math.min(1, dt * 2.5) : 1);
     for (const fn of anims) fn(clock, dt, camera);
     for (const door of doors) {
       const r = door.obj.rotation;

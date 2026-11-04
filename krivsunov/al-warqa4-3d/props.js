@@ -49,7 +49,7 @@ export const PROPS = [
   { id: 'gaming_console', at: [8.6, F1 + 0.76, 4.4], ry: -PI / 2 },
   { id: 'potted_plant_04', at: [8.6, F1 + 0.76, 2.3], ry: 0 },
   { id: 'book_encyclopedia_set_01', at: [11.28, F1 + 0.76, 3.95], ry: PI / 2 },
-  { id: 'modern_arm_chair_01', at: [12.95, F1, 4.7], ry: -PI * 0.8, col: 'box' },
+  { id: 'modern_arm_chair_01', at: [12.15, F1, 3.95], ry: -PI / 2 - 0.3, col: 'box' }, // у окна в лоджию
   // ----- спальни 3 и 4 -----
   { id: 'potted_plant_02', at: [-10.2, F1, -1.9], ry: 1.1, col: 'box' },
   { id: 'potted_plant_01', at: [-10.2, F1, 4.95], ry: 0.6, col: 'box' },
@@ -57,10 +57,10 @@ export const PROPS = [
   { id: 'quiver_tree_01', at: [-8.6, 0.065, -14.6], ry: 0.7, col: 'trunk' },
   { id: 'quiver_tree_02', at: [13.7, 0.065, -9.8], ry: 2.2, col: 'trunk' },
   { id: 'cheiridopsis_succulent', at: [-10.4, 0.065, -11.3], ry: 0 },
-  { id: 'othonna_cerarioides', at: [-6.9, 0.065, -15.6], ry: 0.4, s: 0.8 },
+  { id: 'othonna_cerarioides', at: [-12.2, 0.065, -15.4], ry: 0.4, s: 0.8 },
   { id: 'leipoldtia_schultzei', at: [11.8, 0.065, -11.0], ry: 1.2 },
   { id: 'crystalline_iceplant', at: [15.6, 0.065, -11.0], ry: 0.3 },
-  { id: 'outdoor_table_chair_set_01', at: [-6.6, 0.03, -9.4], ry: PI / 2, col: 'box' },
+  { id: 'outdoor_table_chair_set_01', at: [-8.4, 0.75, -9.6], ry: PI / 2, col: 'box' }, // на террасе у бассейна
   // ----- боковые проходы: живая изгородь и деревья -----
   { id: 'shrub_02', at: [-15.6, 0.03, -3.0], ry: PI / 2, s: 0.8 },
   { id: 'quiver_tree_01', at: [-13.8, 0.03, 2.4], ry: 2.5, s: 0.85, col: 'trunk' },
