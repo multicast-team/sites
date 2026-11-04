@@ -1,0 +1,278 @@
+[
+ {
+  "file": "ext_carport_cyber_day.webp",
+  "title": "Навес для машин · киберпанк · день",
+  "var": "cyber",
+  "time": "day"
+ },
+ {
+  "file": "int_arcades_cyber_day.webp",
+  "title": "Аркадные автоматы · киберпанк · день",
+  "var": "cyber",
+  "time": "day"
+ },
+ {
+  "file": "int_br2_cyber_day.webp",
+  "title": "Спальня 2 · киберпанк · день",
+  "var": "cyber",
+  "time": "day"
+ },
+ {
+  "file": "int_br3_desks_cyber_day.webp",
+  "title": "Спальня 3 — рабочие места · киберпанк · день",
+  "var": "cyber",
+  "time": "day"
+ },
+ {
+  "file": "int_dining_cyber_day.webp",
+  "title": "Столовая · киберпанк · день",
+  "var": "cyber",
+  "time": "day"
+ },
+ {
+  "file": "int_family_cyber_day.webp",
+  "title": "Двусветная гостиная · киберпанк · день",
+  "var": "cyber",
+  "time": "day"
+ },
+ {
+  "file": "int_family_dining_cyber_day.webp",
+  "title": "Гостиная и столовая · киберпанк · день",
+  "var": "cyber",
+  "time": "day"
+ },
+ {
+  "file": "int_foyer_cyber_day.webp",
+  "title": "Входной холл · киберпанк · день",
+  "var": "cyber",
+  "time": "day"
+ },
+ {
+  "file": "int_majlis_n_cyber_day.webp",
+  "title": "Маджлис — игровой зал · киберпанк · день",
+  "var": "cyber",
+  "time": "day"
+ },
+ {
+  "file": "int_master_cyber_day.webp",
+  "title": "Главная спальня · киберпанк · день",
+  "var": "cyber",
+  "time": "day"
+ },
+ {
+  "file": "ext_carport_cyber_night.webp",
+  "title": "Навес для машин · киберпанк · ночь",
+  "var": "cyber",
+  "time": "night"
+ },
+ {
+  "file": "ext_rear_corner_cyber_night.webp",
+  "title": "Задний фасад · киберпанк · ночь",
+  "var": "cyber",
+  "time": "night"
+ },
+ {
+  "file": "ext_rear_pool_cyber_night.webp",
+  "title": "Бассейн и сад · киберпанк · ночь",
+  "var": "cyber",
+  "time": "night"
+ },
+ {
+  "file": "int_arcades_cyber_night.webp",
+  "title": "Аркадные автоматы · киберпанк · ночь",
+  "var": "cyber",
+  "time": "night"
+ },
+ {
+  "file": "int_br2_cyber_night.webp",
+  "title": "Спальня 2 · киберпанк · ночь",
+  "var": "cyber",
+  "time": "night"
+ },
+ {
+  "file": "int_family_cyber_night.webp",
+  "title": "Двусветная гостиная · киберпанк · ночь",
+  "var": "cyber",
+  "time": "night"
+ },
+ {
+  "file": "int_majlis_n_cyber_night.webp",
+  "title": "Маджлис — игровой зал · киберпанк · ночь",
+  "var": "cyber",
+  "time": "night"
+ },
+ {
+  "file": "int_master_cyber_night.webp",
+  "title": "Главная спальня · киберпанк · ночь",
+  "var": "cyber",
+  "time": "night"
+ },
+ {
+  "file": "int_family_cyber_party.webp",
+  "title": "Двусветная гостиная · киберпанк · вечеринка",
+  "var": "cyber",
+  "time": "party"
+ },
+ {
+  "file": "int_majlis_n_cyber_party.webp",
+  "title": "Маджлис — игровой зал · киберпанк · вечеринка",
+  "var": "cyber",
+  "time": "party"
+ },
+ {
+  "file": "ext_carport_gaming_day.webp",
+  "title": "Навес для машин · геймерский · день",
+  "var": "gaming",
+  "time": "day"
+ },
+ {
+  "file": "int_arcades_gaming_day.webp",
+  "title": "Аркадные автоматы · геймерский · день",
+  "var": "gaming",
+  "time": "day"
+ },
+ {
+  "file": "int_br3_desks_gaming_day.webp",
+  "title": "Спальня 3 — рабочие места · геймерский · день",
+  "var": "gaming",
+  "time": "day"
+ },
+ {
+  "file": "int_family_dining_gaming_day.webp",
+  "title": "Гостиная и столовая · геймерский · день",
+  "var": "gaming",
+  "time": "day"
+ },
+ {
+  "file": "int_family_gaming_day.webp",
+  "title": "Двусветная гостиная · геймерский · день",
+  "var": "gaming",
+  "time": "day"
+ },
+ {
+  "file": "int_kitchen_island_gaming_day.webp",
+  "title": "Кухонный остров · геймерский · день",
+  "var": "gaming",
+  "time": "day"
+ },
+ {
+  "file": "int_master_gaming_day.webp",
+  "title": "Главная спальня · геймерский · день",
+  "var": "gaming",
+  "time": "day"
+ },
+ {
+  "file": "int_pool_table_gaming_day.webp",
+  "title": "Бильярд и аэрохоккей · геймерский · день",
+  "var": "gaming",
+  "time": "day"
+ },
+ {
+  "file": "int_simrig_gaming_day.webp",
+  "title": "Автосимулятор · геймерский · день",
+  "var": "gaming",
+  "time": "day"
+ },
+ {
+  "file": "int_streamer_gaming_day.webp",
+  "title": "Комната стримера · геймерский · день",
+  "var": "gaming",
+  "time": "day"
+ },
+ {
+  "file": "ext_rear_pool_gaming_night.webp",
+  "title": "Бассейн и сад · геймерский · ночь",
+  "var": "gaming",
+  "time": "night"
+ },
+ {
+  "file": "int_arcades_gaming_night.webp",
+  "title": "Аркадные автоматы · геймерский · ночь",
+  "var": "gaming",
+  "time": "night"
+ },
+ {
+  "file": "int_family_gaming_night.webp",
+  "title": "Двусветная гостиная · геймерский · ночь",
+  "var": "gaming",
+  "time": "night"
+ },
+ {
+  "file": "int_majlis_n_gaming_night.webp",
+  "title": "Маджлис — игровой зал · геймерский · ночь",
+  "var": "gaming",
+  "time": "night"
+ },
+ {
+  "file": "int_streamer_gaming_night.webp",
+  "title": "Комната стримера · геймерский · ночь",
+  "var": "gaming",
+  "time": "night"
+ },
+ {
+  "file": "aerial_se_empty_day.webp",
+  "title": "Вид сверху · без мебели · день",
+  "var": "empty",
+  "time": "day"
+ },
+ {
+  "file": "ext_front_empty_day.webp",
+  "title": "Фасад со стороны улицы · без мебели · день",
+  "var": "empty",
+  "time": "day"
+ },
+ {
+  "file": "ext_rear_corner_empty_day.webp",
+  "title": "Задний фасад · без мебели · день",
+  "var": "empty",
+  "time": "day"
+ },
+ {
+  "file": "ext_rear_pool_empty_day.webp",
+  "title": "Бассейн и сад · без мебели · день",
+  "var": "empty",
+  "time": "day"
+ },
+ {
+  "file": "int_family_empty_day.webp",
+  "title": "Двусветная гостиная · без мебели · день",
+  "var": "empty",
+  "time": "day"
+ },
+ {
+  "file": "int_foyer_empty_day.webp",
+  "title": "Входной холл · без мебели · день",
+  "var": "empty",
+  "time": "day"
+ },
+ {
+  "file": "int_gallery_empty_day.webp",
+  "title": "Галерея второго этажа · без мебели · день",
+  "var": "empty",
+  "time": "day"
+ },
+ {
+  "file": "int_kitchen_empty_day.webp",
+  "title": "Кухня · без мебели · день",
+  "var": "empty",
+  "time": "day"
+ },
+ {
+  "file": "int_master_empty_day.webp",
+  "title": "Главная спальня · без мебели · день",
+  "var": "empty",
+  "time": "day"
+ },
+ {
+  "file": "ext_rear_pool_empty_night.webp",
+  "title": "Бассейн и сад · без мебели · ночь",
+  "var": "empty",
+  "time": "night"
+ },
+ {
+  "file": "int_family_empty_night.webp",
+  "title": "Двусветная гостиная · без мебели · ночь",
+  "var": "empty",
+  "time": "night"
+ }
+]

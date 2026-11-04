@@ -1,0 +1,274 @@
+{
+"set": "night_empty",
+"k": 0.005,
+"objects": {
+"BATH_ceramic": {
+"L": 7.61126,
+"res": 256
+},
+"BATH_frames": {
+"L": 7.91779,
+"res": 192
+},
+"BATH_niche_wood": {
+"L": 14.26872,
+"res": 128
+},
+"BATH_tiles": {
+"L": 9.48665,
+"res": 960
+},
+"BATH_towel_ladder": {
+"L": 7.50097,
+"res": 128
+},
+"BATH_vanity_stone": {
+"L": 7.57993,
+"res": 256
+},
+"BR2_arch": {
+"L": 9.98068,
+"res": 192
+},
+"CEIL_FF": {
+"L": 8.22611,
+"res": 1088
+},
+"CEIL_GF": {
+"L": 9.17968,
+"res": 1024
+},
+"CEIL_ac_slots": {
+"L": 6.37385,
+"res": 192
+},
+"CEIL_pockets": {
+"L": 13.39888,
+"res": 384
+},
+"CEIL_void_fascia": {
+"L": 6.49988,
+"res": 320
+},
+"DOOR_casings": {
+"L": 7.06385,
+"res": 256
+},
+"EXT_balcony_deck": {
+"L": 5.38613,
+"res": 512
+},
+"EXT_balcony_slabs": {
+"L": 6.57413,
+"res": 512
+},
+"EXT_black_panel": {
+"L": 5.7293,
+"res": 320
+},
+"EXT_box_frame": {
+"L": 4.25849,
+"res": 256
+},
+"EXT_coping": {
+"L": 3.5141,
+"res": 512
+},
+"EXT_louvres_N": {
+"L": 3.52408,
+"res": 448
+},
+"EXT_louvres_S": {
+"L": 7.33581,
+"res": 320
+},
+"EXT_louvres_S2": {
+"L": 3.24269,
+"res": 384
+},
+"EXT_overhangs": {
+"L": 7.62666,
+"res": 576
+},
+"EXT_plinth": {
+"L": 5.1936,
+"res": 448
+},
+"EXT_portal": {
+"L": 5.95501,
+"res": 320
+},
+"EXT_walls": {
+"L": 6.53296,
+"res": 1216
+},
+"FF_floor": {
+"L": 6.53449,
+"res": 960
+},
+"GF_floor": {
+"L": 12.09951,
+"res": 1088
+},
+"INT_skirting": {
+"L": 7.54792,
+"res": 384
+},
+"INT_walls": {
+"L": 7.03965,
+"res": 1664
+},
+"KIT_backsplash": {
+"L": 8.54179,
+"res": 192
+},
+"KIT_cabinets": {
+"L": 7.73584,
+"res": 512
+},
+"KIT_glass": {
+"L": 6.6085,
+"res": 128
+},
+"KIT_tops": {
+"L": 8.92179,
+"res": 320
+},
+"MAJ_panels": {
+"L": 10.90553,
+"res": 384
+},
+"MB_oak_wall": {
+"L": 5.83797,
+"res": 448
+},
+"MB_tv_niche": {
+"L": 5.97429,
+"res": 128
+},
+"MB_tv_wall": {
+"L": 5.61856,
+"res": 256
+},
+"PLANTER_curb": {
+"L": 5.91992,
+"res": 128
+},
+"PLANTER_pebbles": {
+"L": 5.47592,
+"res": 256
+},
+"RAIL_metal": {
+"L": 6.14717,
+"res": 320
+},
+"SITE_beds": {
+"L": 3.93378,
+"res": 256
+},
+"SITE_carport_cols": {
+"L": 4.2325,
+"res": 128
+},
+"SITE_carport_roof": {
+"L": 8.47444,
+"res": 256
+},
+"SITE_coping": {
+"L": 6.76958,
+"res": 128
+},
+"SITE_deck": {
+"L": 7.12993,
+"res": 320
+},
+"SITE_deck_steps": {
+"L": 2.74057,
+"res": 128
+},
+"SITE_front_plinth": {
+"L": 10.03755,
+"res": 320
+},
+"SITE_lawn": {
+"L": 3.93378,
+"res": 576
+},
+"SITE_parking": {
+"L": 5.97978,
+"res": 320
+},
+"SITE_pebble_edge": {
+"L": 2.86887,
+"res": 128
+},
+"SITE_planter_front": {
+"L": 7.99138,
+"res": 128
+},
+"SITE_planter_soil": {
+"L": 4.75102,
+"res": 128
+},
+"SITE_pool_basin": {
+"L": 10.83694,
+"res": 256
+},
+"SITE_pool_steps": {
+"L": 8.6999,
+"res": 192
+},
+"SITE_service_path": {
+"L": 3.89879,
+"res": 256
+},
+"SITE_wall_coping": {
+"L": 4.16061,
+"res": 192
+},
+"SITE_walls": {
+"L": 5.00246,
+"res": 704
+},
+"SLATS_screen": {
+"L": 7.36967,
+"res": 384
+},
+"STAIR_body": {
+"L": 3.44633,
+"res": 384
+},
+"STAIR_treads": {
+"L": 12.20258,
+"res": 320
+},
+"TV_console": {
+"L": 13.57027,
+"res": 192
+},
+"TV_nero_panels": {
+"L": 11.7671,
+"res": 192
+},
+"TV_shelf_unit": {
+"L": 9.65827,
+"res": 256
+},
+"TV_white_panels": {
+"L": 11.88503,
+"res": 256
+},
+"WARD_carcass": {
+"L": 11.70228,
+"res": 1024
+},
+"WIN_frames": {
+"L": 9.06019,
+"res": 576
+},
+"WIN_leaves": {
+"L": 4.55444,
+"res": 192
+}
+}
+}

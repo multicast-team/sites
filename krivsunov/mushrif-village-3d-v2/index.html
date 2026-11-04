@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mushrif Village · 3D-макет виллы 5BR · v2</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2311151c'/%3E%3Cpath d='M14 44V26l18-12 18 12v18H38V32H26v12z' fill='%2300e5ff'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#0e1117;--panel:rgba(16,20,28,.8);--line:rgba(255,255,255,.12);--txt:#eef2f7;--mut:#9aa6b8;--acc:#00d8ff;--acc2:#ff2bd6;--r:14px}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font:14px/1.4 Inter,"Segoe UI",Roboto,Arial,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
+a{color:var(--acc)}
+#c{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.glass{background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:var(--r)}
+#top{position:fixed;left:14px;top:14px;padding:12px 16px;max-width:min(600px,calc(100vw - 28px))}
+#top h1{margin:0;font-size:18px;font-weight:700;letter-spacing:.2px}
+#top p{margin:3px 0 0;color:var(--mut);font-size:12.5px}
+#top b{color:var(--acc)}
+#bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom));display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:8px;max-width:calc(100vw - 20px);z-index:5}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button,.btn{appearance:none;border:0;background:transparent;color:var(--txt);padding:8px 12px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on,.btn.on{background:linear-gradient(135deg,rgba(0,216,255,.28),rgba(255,43,214,.22));color:#fff}
+.seg button.dis{opacity:.35;cursor:not-allowed}
+.btn{border:1px solid var(--line);border-radius:10px}
+.btn:hover,.seg button:hover{background:rgba(255,255,255,.08)}
+#rooms,#smart{position:fixed;right:14px;top:14px;width:268px;max-height:calc(100vh - 120px);overflow:auto;padding:10px;display:none;z-index:7}
+#smart{width:330px}
+#rooms h3,#smart h3{margin:4px 6px 8px;font-size:13px;color:var(--mut);font-weight:600}
+#rooms button{display:flex;justify-content:space-between;width:100%;text-align:left;border:0;background:transparent;color:var(--txt);padding:7px 8px;border-radius:8px;font:inherit;font-size:13px;cursor:pointer}
+#rooms button:hover{background:rgba(255,255,255,.08)}#rooms button span{color:var(--mut)}
+.srow{display:grid;grid-template-columns:1fr auto auto;gap:6px;align-items:center;padding:7px 6px;border-bottom:1px solid var(--line)}
+.srow .sl{font-size:13px}.srow em{display:block;font-style:normal;color:var(--mut);font-size:11.5px}
+.srow button,#smart .all button{appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt);border-radius:8px;padding:6px 9px;font:inherit;font-size:12px;cursor:pointer}
+.srow button:hover,#smart .all button:hover{background:rgba(0,216,255,.18)}
+#smart .all{display:flex;gap:6px;padding:8px 6px 4px}
+#smart p{color:var(--mut);font-size:11.5px;margin:8px 6px 2px}
+#hint{position:fixed;left:50%;top:14px;transform:translateX(-50%);padding:8px 14px;font-size:12.5px;color:var(--mut);display:none;max-width:90vw;text-align:center;z-index:6}
+#tip{position:fixed;padding:6px 10px;font-size:12.5px;display:none;pointer-events:none;z-index:8;transform:translateX(0);white-space:nowrap}
+#ltoast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));padding:7px 14px;font-size:12.5px;color:var(--mut);display:none;z-index:6}
+#tourcap{position:fixed;left:50%;transform:translateX(-50%);top:18px;padding:9px 18px;font-size:16px;font-weight:600;display:none;z-index:6}
+#photobar{position:fixed;right:14px;top:14px;display:none;gap:8px;padding:8px;z-index:9}
+#load{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:radial-gradient(circle at 50% 40%,#18202c,#0b0e13);z-index:20;transition:opacity .6s}
+#load .ring{width:58px;height:58px;border-radius:50%;border:3px solid rgba(255,255,255,.1);border-top-color:var(--acc);animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+#load .t{color:var(--mut);font-size:13px}#load .pb{width:240px;height:4px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}#load .pb i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.modal{position:fixed;inset:0;background:rgba(5,7,10,.72);display:none;z-index:15;align-items:center;justify-content:center;padding:18px}
+.modal .box{max-width:min(1200px,96vw);max-height:92vh;overflow:auto;padding:16px 18px;position:relative}
+.modal .x{position:absolute;right:10px;top:8px;font-size:22px;background:none;border:0;color:var(--txt);cursor:pointer}
+.modal h2{margin:2px 0 12px;font-size:17px}
+#plans img{width:100%;max-width:560px;background:#f7f5f0;border-radius:10px}
+#plans .pp{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+#gal .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+#gal .grid img{width:100%;border-radius:10px;cursor:zoom-in;display:block;aspect-ratio:16/9;object-fit:cover;background:#1a1f28}
+#gal .grid figure{margin:0}#gal figcaption{font-size:12px;color:var(--mut);margin-top:4px}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;z-index:30;align-items:center;justify-content:center}
+#lb img{max-width:96vw;max-height:92vh;border-radius:8px}
+#info .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+#info table{border-collapse:collapse;width:100%;font-size:13px}#info td{padding:5px 6px;border-bottom:1px solid var(--line)}#info td:first-child{color:var(--mut)}
+#info p,#info li{color:#cfd6e2;font-size:13px}#info ul{padding-left:18px;max-height:260px;overflow:auto}
+#qual .qq{display:flex;gap:8px;flex-wrap:wrap}#qual p{color:var(--mut);font-size:13px}
+#joy{position:fixed;left:24px;bottom:110px;width:120px;height:120px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.05);display:none;touch-action:none;z-index:6}
+#joy i{position:absolute;left:40px;top:40px;width:40px;height:40px;border-radius:50%;background:rgba(0,216,255,.5)}
+#cross{position:fixed;left:50%;top:50%;width:6px;height:6px;margin:-3px;border-radius:50%;background:rgba(255,255,255,.75);display:none;pointer-events:none;box-shadow:0 0 0 2px rgba(0,0,0,.25)}
+@media (max-width:720px){#top{left:8px;top:8px;padding:8px 11px;max-width:calc(100vw - 16px)}#top h1{font-size:14.5px}#top p{font-size:11px}#bar{left:8px;right:8px;transform:none;max-width:none;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:6px;gap:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}#bar::-webkit-scrollbar{display:none}.seg{flex:0 0 auto}.btn{flex:0 0 auto}.seg button,.btn{padding:8px 10px;font-size:12.5px}#rooms,#smart{left:8px;right:8px;width:auto;top:auto;bottom:calc(70px + env(safe-area-inset-bottom));max-height:48vh}#hint{top:auto;bottom:calc(76px + env(safe-area-inset-bottom))}#joy{left:18px;bottom:calc(84px + env(safe-area-inset-bottom))}#ltoast{bottom:calc(70px + env(safe-area-inset-bottom))}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="load"><div class="ring"></div><div class="pb"><i id="pbar"></i></div><div class="t" id="ltxt">Загружаю модель виллы…</div></div>
+<div id="top" class="glass"><h1>Mushrif Village · вилла 5BR + maid · v2</h1><p><b>450 000 AED/год</b> · участок 1 105 м² · дом ≈ 654 м² · свет запечён в Cycles, мебель — детальные модели</p></div>
+<div id="hint" class="glass"></div>
+<div id="tip" class="glass"></div>
+<div id="ltoast" class="glass"></div>
+<div id="tourcap" class="glass"></div>
+<div id="rooms" class="glass"><h3>Комнаты — нажмите, чтобы перейти</h3><div id="rlist"></div></div>
+<div id="smart" class="glass"><h3>Умный дом</h3><div id="slist"></div>
+  <div class="all"><button id="sAllOpen">Открыть все двери и ворота</button><button id="sAllClose">Закрыть все</button></div>
+  <p>Клик по двери, шторе или воротам — открыть или закрыть. В прогулке — наведите прицел и нажмите E.</p></div>
+<div id="bar" class="glass">
+  <div class="seg" id="sVar"><button data-v="empty" class="on">Без мебели</button><button data-v="gaming">Геймерский</button><button data-v="cyber">Киберпанк</button></div>
+  <div class="seg" id="sTime"><button data-v="day" class="on">День</button><button data-v="night">Ночь</button><button data-v="party">Вечеринка</button></div>
+  <div class="seg" id="sCut"><button data-v="all" class="on">Весь дом</button><button data-v="gf">1 этаж</button><button data-v="ff">2 этаж</button></div>
+  <div class="seg" id="sMode"><button data-v="orbit" class="on">Обзор</button><button data-v="walk">Прогулка</button><button data-v="tour">Экскурсия</button></div>
+  <button class="btn" id="bSmart">Умный дом</button>
+  <button class="btn" id="bRooms">Комнаты</button>
+  <button class="btn" id="bPhoto">Фото RTX</button>
+  <button class="btn" id="bPlans">Планы</button>
+  <button class="btn" id="bGal">Рендеры</button>
+  <button class="btn" id="bQual">Качество</button>
+  <button class="btn" id="bInfo">О модели</button>
+</div>
+<div id="joy"><i></i></div><div id="cross"></div>
+<div class="modal" id="plans"><div class="box glass"><button class="x">×</button><h2>Поэтажные планы (восстановлены по фото)</h2><div class="pp"><img src="plans/gf.svg" alt="1 этаж"><img src="plans/ff.svg" alt="2 этаж"></div></div></div>
+<div class="modal" id="gal"><div class="box glass"><button class="x">×</button><h2>Фотореалистичные рендеры (Cycles)</h2><div class="grid" id="ggrid"></div></div></div>
+<div class="modal" id="qual"><div class="box glass"><button class="x">×</button><h2>Качество графики</h2>
+  <div class="qq"><button class="btn" data-q="ultra">Ультра</button><button class="btn" data-q="high">Высокое</button><button class="btn" data-q="medium">Среднее</button></div>
+  <p>Ультра — полное разрешение экрана, тени 4096, AO высокого качества, 12 ламп для мебели. Высокое — по умолчанию на компьютере. Среднее — для телефонов и слабой графики: тени 2048, AO в половинном разрешении, вода без преломления.</p></div></div>
+<div class="modal" id="info"><div class="box glass"><button class="x">×</button><h2>О модели</h2><div class="cols">
+<div><table id="itab"></table></div>
+<div><p><b>Что это.</b> Подробный 3D-макет виллы из объявления Property Finder 152855778 (Mushrif Village, Mirdif). Планировка восстановлена по 30 фото объявления: фасады, бассейн вдоль дома, двусветная гостиная с галереей, мраморная лестница, маджлис, кухня, спальни, ванные и гардеробные.</p>
+<p><b>Графика v2.</b> Свет дома запечён в Cycles (Blender 5.2) отдельно для дня, ночи и вечеринки каждого варианта: отражённый свет, мягкие тени, свечение ламп и неона. Поверх — солнце с тенями в реальном времени, отражения из зондов комнат, ambient occlusion N8AO, свечение и тонмаппинг AgX. Кнопка «Фото RTX» включает трассировку лучей прямо в браузере.</p>
+<p><b>Варианты.</b> «Без мебели» — дом таким, каким его сдают. «Геймерский» — аркадные автоматы, бильярд, аэрохоккей, автосимулятор, комнаты стримера и киберспорта, VR. «Киберпанк» — неон и японские вывески, голограммы, серверные стойки, капсула, байк в стиле «Акиры», аэрокар и дроны.</p>
+<p><b>Умный дом.</b> Двери, раздвижные двери, ворота, шторы и тюль открываются кнопками панели или кликом по ним.</p>
+<p><b>Управление.</b> Обзор: левая кнопка или палец — вращать, колесо или щипок — масштаб, правая кнопка — сдвиг. Прогулка: WASD, мышь, Shift — бег, E — открыть дверь; на телефоне — джойстик и свайп.</p>
+<p style="color:var(--mut);font-size:12px">Текстуры, небо и часть моделей — Poly Haven (CC0). Геометрия дома и часть декора сделаны кодом. Модели мебели и декора — авторы ниже (Sketchfab, лицензии CC BY и др.):</p>
+<ul id="credits"></ul></div>
+</div></div></div>
+<div id="lb"><img alt=""></div>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
