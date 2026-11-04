@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POLUS — выбери интерфейс и материалы</title>
+<style>
+  :root { --bg:#14161a; --card:#1d2026; --fg:#eceff3; --mut:#9aa3ae; --acc:#3ddc84; --amb:#f5b942; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width:1100px; margin:0 auto; padding:20px 14px 60px; }
+  h1 { font-size:24px; margin:0 0 6px; }
+  h2 { font-size:20px; margin:34px 0 10px; }
+  p.lead { color:var(--mut); margin:0 0 14px; }
+  .how { background:var(--card); border-left:4px solid var(--acc); padding:12px 14px; border-radius:8px; }
+  .grid { display:grid; gap:16px; grid-template-columns:1fr; }
+  @media (min-width:900px) { .grid.two { grid-template-columns:1fr 1fr; } .grid.three { grid-template-columns:1fr 1fr 1fr; } }
+  .card { background:var(--card); border-radius:10px; overflow:hidden; }
+  .card img { width:100%; display:block; cursor:zoom-in; }
+  .card .t { padding:10px 14px 14px; }
+  .card h3 { margin:0 0 4px; font-size:19px; }
+  .card h3 b { color:var(--acc); margin-right:6px; }
+  .row { color:var(--mut); font-size:15px; margin-top:4px; }
+  .row span { color:var(--fg); }
+  ol.dec li { margin:0 0 10px; }
+  .rec { color:var(--acc); font-weight:600; }
+  footer { color:var(--mut); font-size:13px; margin-top:30px; }
+  dialog { padding:0; border:0; background:#000; max-width:98vw; max-height:96vh; }
+  dialog img { max-width:98vw; max-height:96vh; display:block; }
+  dialog::backdrop { background:rgba(0,0,0,.85); }
+</style>
+</head>
+<body>
+<main>
+  <h1>POLUS — выбери стиль</h1>
+  <p class="lead">Концепты нарисованы в Codex по списку «что на экране должно быть видно и чего не должно» (задача 63). Сцена у всех одна (цифры 1–7 под инструментами Codex не нарисовал ни в одном — это мелочь, в игре они будут): топор у сосны, активен зелёный камень дровосека, красным показаны вход и выход удара. Нажми на картинку, чтобы открыть её крупно.</p>
+  <div class="how">Как ответить: <b>буква интерфейса</b> (А, Б, В, Г) или «смесь: что откуда»; по материалам — что нравится и что поменять; по вопросам внизу — номера, где не согласен, или «остальное по рекомендации».</div>
+
+  <h2>1. Интерфейс с камнями экспертизы</h2>
+  <div class="grid two">
+    <div class="card"><img src="A_cuff.webp" alt="А — браслет"><div class="t">
+      <h3><b>А</b>Браслет</h3>
+      <div>Почти без интерфейса: камни в оправах на кожаном браслете левой руки, разрез ствола висит в воздухе, без рамок.</div>
+      <div class="row">Сделать: <span>3–4 дня + 4 дня на элементы</span></div>
+      <div class="row">Риск: <span>самый мелкий на экране — камни должны читаться с телефона</span></div>
+      <div class="row">Второй глаз (Gemini Flash): <span>6/10 — разрез висит в воздухе ни к чему не привязан, браслет без руки</span></div>
+    </div></div>
+    <div class="card"><img src="B_rail.webp" alt="Б — рейка"><div class="t">
+      <h3><b>Б</b>Рейка с гнёздами</h3>
+      <div>Классический чистый игровой интерфейс: камни в бронзовой рейке слева, у активного выезжает стеклянная карточка с разрезом.</div>
+      <div class="row">Сделать: <span>1 день + 3–4 дня на элементы</span></div>
+      <div class="row">Риск: <span>больше всех похож на обычный HUD, меньше всего «камней бесконечности»</span></div>
+      <div class="row">Второй глаз (Gemini Flash): <span>9/10 — самый ясный, читается с телефона</span></div>
+    </div></div>
+    <div class="card"><img src="C_tablets.webp" alt="В — таблички"><div class="t">
+      <h3><b>В</b>Каменные таблички</h3>
+      <div>Всё из тёсаного камня с самоцветами: перемычка с камнями сверху слева, высокая табличка с разрезом справа.</div>
+      <div class="row">Сделать: <span>1 день + 5–6 дней на элементы (их больше всех)</span></div>
+      <div class="row">Риск: <span>самый тяжёлый на вид, больше всего закрывает мир</span></div>
+      <div class="row">Второй глаз (Gemini Flash): <span>8/10 — ясный, но тяжёлые плиты по краям</span></div>
+    </div></div>
+    <div class="card"><img src="D_palm.webp" alt="Г — ладонь"><div class="t">
+      <h3><b>Г</b>Камень на ладони</h3>
+      <div>Интерфейс — твоя левая рука: светящийся камень над ладонью, над ним голограмма разреза, остальные камни висят на ремешке.</div>
+      <div class="row">Сделать: <span>5–7 дней (нужна левая рука в кадре и привязка голограммы)</span></div>
+      <div class="row">Риск: <span>занимает левый низ кадра; сейчас при хвате двумя руками левая рука держит топор</span></div>
+      <div class="row">Второй глаз (Gemini Flash): <span>5/10 — рука с голограммой закрывает четверть кадра, камни на ремешке на телефоне не различить</span></div>
+    </div></div>
+  </div>
+
+  <h2>2. Материалы — эталон вида для HD-текстур</h2>
+  <p class="lead">По выбранному виду Codex нарисует 31 бесшовную текстуру, а скрипт выведет из них рельеф (карты нормалей). В игре форма останется low-poly, с этой поверхностью.</p>
+  <div class="grid three">
+    <div class="card"><img src="concept-granite.webp" alt="гранит"><div class="t"><h3>Гранит</h3></div></div>
+    <div class="card"><img src="concept-ice.webp" alt="лёд"><div class="t"><h3>Лёд</h3></div></div>
+    <div class="card"><img src="concept-glass.webp" alt="стекло"><div class="t"><h3>Стекло</h3></div></div>
+    <div class="card"><img src="concept-quartz.webp" alt="кварц"><div class="t"><h3>Кварц (молочный)</h3></div></div>
+    <div class="card"><img src="concept-diamond.webp" alt="алмаз"><div class="t"><h3>Алмаз</h3></div></div>
+    <div class="card"><img src="concept-gravel.webp" alt="сыпучие"><div class="t"><h3>Сыпучие: гравий, песок, земля, глина</h3></div></div>
+  </div>
+
+  <h2>3. Что ещё решить (рекомендация — как написано)</h2>
+  <ol class="dec">
+    <li><b>Земля без вокселей:</b> слоистая карта высот, слои рисуются по пикселю. Получаются чёткие полосатые стенки ям и пласты угля, которые выходят на склоне. Туннелей и пещер в MVP нет, яма до 4–6 м, твёрдый камень лопатой не берётся. Это 11–17 дней; воксели заняли бы 20–60 дней с риском лагов в браузере. <span class="rec">Рекомендую.</span></li>
+    <li><b>Закон материи:</b>
+      <ul>
+        <li>Подарками считаются: стартовый набор, склад полигона с табличкой «только здесь», рост ягод и травы. Дым и пар уходят в воздух.</li>
+        <li>Металл пока берётся с полигона, руда и плавка — позже.</li>
+        <li>Гниение считается по массе: щепа превращается в гумус меньшей массы, а не литр в литр.</li>
+        <li>6 кнопок смены материала головки в панели предмета убираю — их заменит крафт.</li>
+      </ul>
+      <span class="rec">Рекомендую.</span></li>
+    <li><b>Износ по физике:</b> медная или железная кирка о гранит тупится за 3–10 ударов (сейчас за 66), стальной топор — примерно за 30 сосен, головка может треснуть. Числа прошлой волны поменяются. <span class="rec">Рекомендую.</span></li>
+    <li><b>Крафт:</b> сначала меню в инвентаре, его дизайн тоже через концепт; позже — крафт прямо в мире. <span class="rec">Рекомендую.</span></li>
+    <li><b>Камни:</b> в MVP всегда при тебе: 5 камней (дровосек, каменщик, землекоп, материаловед, строитель) и пустое гнездо кузнеца. Покачивание дерева и подсказки видны всем и без камня. <span class="rec">Рекомендую.</span></li>
+    <li><b>Кнопки полигона — в мир, все:</b> питомник деревьев, образцы камня, песочные часы, рычаги у рядов, стойка инструментов. Это 8–9 дней; вариант попроще — один пульт за 3 дня. <span class="rec">Рекомендую все.</span></li>
+    <li><b>Текстуры:</b> экономный бюджет — +19 МБ, сборка около 71 из 95 МБ. Текстуры в двух форматах, чтобы работали и на телефоне. Настоящее преломление — только у камня в руке. <span class="rec">Рекомендую.</span></li>
+    <li><b>Порядок работ:</b> вид земли (сейчас, вместе с починкой багов) → слоистая земля → закон материи, износ, крафт → камни интерфейса → текстуры → листы (W3). Телефон — цель: текст крупнее. Лимит 300 отрисовок держим, дальние станции полигона гасим. <span class="rec">Рекомендую.</span></li>
+  </ol>
+  <footer>Задача 63, 04.11.2026. Подробности: .orchestra/tasks/63/ (ui, terrain, matter, looks, critic.md).</footer>
+</main>
+<dialog id="z"><img id="zi" alt=""></dialog>
+<script>
+  const z = document.getElementById('z'), zi = document.getElementById('zi');
+  document.querySelectorAll('.card img').forEach(i => i.addEventListener('click', () => { zi.src = i.src; z.showModal(); }));
+  z.addEventListener('click', () => z.close());
+</script>
+</body>
+</html>
