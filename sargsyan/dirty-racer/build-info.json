@@ -1,34 +1,34 @@
 {
-  "release": "dev-panel-2026-11-03-v1",
-  "built_at_utc": "2026-11-03T14:35:14.202355+00:00",
+  "release": "leagues-2026-11-05-v1",
+  "built_at_utc": "2026-11-04T22:09:45.457667+00:00",
   "cheats_enabled": true,
   "changes": [
-    "Visible Dev button and editable amount: Add / Set cash and carbon, validated before changing the wallet",
-    "Foreground race and income speeds: pause, x1,x2,x5,x10,x20,x50,x100,x200; UI and timed offers use real time",
-    "Quick cheats for races/features/crew, skip stage, league advance, boosts and offline simulation; reset asks for confirmation",
-    "Speed resets to x1 on reload or Reset progress; granted wallet/progression changes persist normally",
-    "Includes current firstbuy5s and sponsor-minute changes; start cash70, first Speed75"
+    "Race view is the main screen: team power, rival tracker, next-rival goal, recommended upgrade bar, Nitro once per lap",
+    "Fresh game starts Dirt Rally; features and the HUD open one by one; merch paid after every race; pace applies at once",
+    "Races window: power (blue), team, league with Advance, season, points and rank per race type; opens after the 2nd rally",
+    "League ladder: 10 leagues with income x1..x300,000, trophies per win x(L+1), career XP and rival power; Advance with the season ticket",
+    "Rivals re-fitted per league: a promoted team starts near the back (P8-P10); seasons of 6 races; rules version 3"
   ],
   "files": [
     {
-      "path": "Build/4ecb80772ec225a942bce4159603171d.wasm.unityweb",
-      "bytes": 11892180,
-      "sha256": "1a4c9aaaa3d657e3bb67dbe6461a6daa713691059a6f943d8ecc7dd4fcaff446"
+      "path": "Build/044f0dea23c8a8b7790e957a3f8c6ec2.data.unityweb",
+      "bytes": 15231585,
+      "sha256": "bfb22ce66a0093cabfbc50015ec6640c2358b5b10a2f2d187869a5083fcfcd21"
     },
     {
-      "path": "Build/ab0e82c9e4c3fe17483edba06b388478.loader.js",
-      "bytes": 48779,
-      "sha256": "44a1138f0632884732a1168212c100d8c409d8b5e755a79f9124e066ac5bb715"
-    },
-    {
-      "path": "Build/c2d0769a4858c8760f94ed702535963c.data.unityweb",
-      "bytes": 15224593,
-      "sha256": "fafefd1764df262209fffd6cb4e547a374acb44ee738c85656f9079781ba7de7"
+      "path": "Build/551a43aa2136a00d6ccbf3c6cc80f811.wasm.unityweb",
+      "bytes": 11911814,
+      "sha256": "589913b133c6424feff5e87d0bffbb41640da2d72a8161768e6a0ec77bc667db"
     },
     {
       "path": "Build/c393ef226495e725ceccbcd36f860e50.framework.js.unityweb",
       "bytes": 77286,
-      "sha256": "87297e45ef41e494c2f873d005c66908af15323b0fcbda67d4cc8d66240f9635"
+      "sha256": "c9dca140485b4f1a357680d204f5eeda8a2b8ca8ff5704716517e9a7a2132e4b"
+    },
+    {
+      "path": "Build/d5573c899831ea696c210e69fa8fe3a9.loader.js",
+      "bytes": 48779,
+      "sha256": "075437611229cd27e531f45efda1e5fe5634f18e0bcaafb18b9717641830b5d6"
     },
     {
       "path": "TemplateData/loading.jpg",
@@ -38,7 +38,7 @@
     {
       "path": "index.html",
       "bytes": 11522,
-      "sha256": "5310ff6bb0cb32c6e2e5ed86f38f1bea5c3e4ed5b5cecf9b56eea167c5ba36c2"
+      "sha256": "3983fdec94da2335b969022e4b693047e64bd663a9d99b656df3d376603a15c2"
     }
   ]
 }
