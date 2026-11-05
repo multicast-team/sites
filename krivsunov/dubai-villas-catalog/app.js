@@ -1926,6 +1926,7 @@
   const BUDGET_AED = 587600;
   const VOTE_PREFIX = 'vote:';
   const SEEN_SLOT = 'dubai-villas.seen.v1';
+  const SEEN_RESET_SLOT = 'dubai-villas.seen-reset.v1';
   const COMPARE_SLOT = 'dubai-villas.compare.v1';
   const ORIGIN_SLOT = 'dubai-villas.origin.v1';
   const ORIGIN_TIMES_SLOT = 'dubai-villas.origin-times.v1';
@@ -2180,6 +2181,18 @@
       seenMap = {};
       for (const p of properties) seenMap[p.id] = changeSignature(p);
       try { localStorage.setItem(SEEN_SLOT, JSON.stringify(seenMap)); } catch {}
+    }
+    // Разовый сброс «Нового» по просьбе владельца: всё, кроме newReset.keep, считается просмотренным.
+    const reset = object(catalog.newReset) ? catalog.newReset : null;
+    let resetDone = '';
+    try { resetDone = localStorage.getItem(SEEN_RESET_SLOT) || ''; } catch {}
+    if (reset && text(reset.id) && resetDone !== text(reset.id)) {
+      const keep = new Set(strings(reset.keep));
+      for (const p of properties) {
+        if (keep.has(p.id)) delete seenMap[p.id];
+        else seenMap[p.id] = changeSignature(p);
+      }
+      try { localStorage.setItem(SEEN_SLOT, JSON.stringify(seenMap)); localStorage.setItem(SEEN_RESET_SLOT, text(reset.id)); } catch {}
     }
     for (const p of properties) {
       if (!own(seenMap, p.id)) { p.change = 'new'; continue; }
