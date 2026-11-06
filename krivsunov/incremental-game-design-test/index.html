@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f5ed">
+  <meta name="description" content="Тестовое задание для геймдизайнера инкрементальных игр: шесть вопросов по трём играм и собственный айдлер на 60 минут с Claude Opus 5.5.">
+  <meta property="og:title" content="Геймдизайнер инкрементальных игр · Тестовое задание">
+  <meta property="og:description" content="3 игры. 6 вопросов. 1 собственный прототип. От понимания математики — к часу интересной прогрессии.">
+  <meta property="og:type" content="website">
+  <title>Геймдизайнер инкрементальных игр — тестовое задание</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#assignment">Перейти к заданию</a>
+  <svg class="symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6m0-6-9 9M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 6-6 6 6 6m8-12 6 6-6 6M14 3l-4 18"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 3v17h17M8 14l4-5 4 3 5-7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 17H3V9h18v8h-3M6 14h12v7H6z"/></symbol>
+  </defs></svg>
+  <header class="header wrap">
+    <a class="brand" href="#top" aria-label="В начало страницы"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>ГЕЙМДИЗАЙН<span class="brand-sub">инкрементальные игры</span></span></a>
+    <nav aria-label="Разделы задания"><a href="#assignment">Анализ</a><a href="#prototype">Прототип</a><a href="#delivery">Что сдать</a></nav>
+    <a class="header-download" href="assignment.md" download="Тестовое-задание-геймдизайнер.md"><svg class="icon"><use href="#i-download"/></svg><span>Скачать</span></a>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> ТЕСТОВОЕ ЗАДАНИЕ</p>
+        <h1 id="page-title">Большие числа.<br><span>Сильные решения.</span></h1>
+        <p class="hero-description">Геймдизайнер инкрементальных игр</p>
+        <p class="hero-note">Разберите математику трёх игр и создайте собственный айдлер с часом интересной прогрессии.</p>
+        <p class="print-only">Срок — 3 календарных дня. Показывайте расчёты, указывайте источники и допущения.</p>
+        <a class="button button-dark" href="#assignment">Перейти к заданию <svg class="icon"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="hero-art" aria-label="От анализа математики к собственному прототипу">
+        <div class="art-top"><span>ПРОГРЕССИЯ</span><span class="art-tag">×1 → ×∞</span></div>
+        <div class="art-title">Математика,<br>которая увлекает.</div>
+        <div class="growth-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="art-bottom"><div class="art-icons"><img src="assets/incremancer-icon.png" alt="" width="42" height="42"><img src="assets/goblins-icon.webp" alt="" width="42" height="42"><img src="assets/butcher-icon.webp" alt="" width="42" height="42"></div><span>Разберите. Придумайте. Проверьте.</span></div>
+      </div>
+    </section>
+
+    <div class="metrics" aria-label="Объём и срок задания">
+      <div><strong>03</strong><span>игры для анализа</span></div>
+      <div><strong>06</strong><span>вопросов по математике</span></div>
+      <div><strong>60 <small>мин</small></strong><span>геймплея в прототипе</span></div>
+      <div><strong>03 <small>дня</small></strong><span>на выполнение</span></div>
+    </div>
+
+    <section id="assignment" class="analysis-section" aria-labelledby="analysis-title">
+      <div class="section-heading"><div><p class="eyebrow">ЧАСТИ 01 — 03</p><h2 id="analysis-title">Понять чужую математику</h2></div><span class="section-aside">По два вопроса на игру</span></div>
+      <p class="section-intro">Показывайте расчёты, указывайте источники и допущения. Можно использовать таблицы и скрипты.</p>
+
+      <article id="incremancer" class="game-card">
+        <div class="game-visual incremancer-visual">
+          <button class="shot-main" type="button" data-image="assets/incremancer-screen.webp" data-caption="Incremancer — браузерная версия игры" aria-label="Увеличить скриншот Incremancer"><img src="assets/incremancer-screen.webp" alt="Игровое поле и интерфейс Incremancer" width="1000" height="650" loading="lazy"><span class="zoom-tag"><svg class="icon"><use href="#i-plus"/></svg> Скриншот</span></button>
+          <span class="image-source">Браузерная версия · James Gittins</span>
+        </div>
+        <div class="game-content">
+          <div class="game-heading"><img class="game-icon" src="assets/incremancer-icon.png" alt="Иконка Incremancer" width="54" height="54"><div><span class="game-part">01 / АНАЛИЗ</span><h3>Incremancer</h3></div><span class="genre">Престиж</span></div>
+          <ol class="questions">
+            <li><h4>Сложность и прогрессия</h4><p>Как растут HP противников и сила игрока? Покажите на числовом примере, где возникает замедление прогресса и какими улучшениями игрок его преодолевает.</p></li>
+            <li><h4>Престиж</h4><p>Как он влияет на скорость следующего прохождения? Сравните прямой множитель урона и множитель получения ресурсов: какой сильнее влияет на прогрессию и почему?</p></li>
+          </ol>
+          <div class="resource-links"><a href="https://incremancer.gti.nz/" target="_blank" rel="noopener noreferrer">Играть в браузере <svg class="icon"><use href="#i-external"/></svg></a><a href="https://github.com/jamesmgittins/incremancer" target="_blank" rel="noopener noreferrer">Исходный код <svg class="icon"><use href="#i-code"/></svg></a></div>
+        </div>
+      </article>
+
+      <article id="goblins" class="game-card">
+        <div class="game-visual goblins-visual">
+          <button class="shot-main" type="button" data-image="assets/goblins-5.webp" data-caption="Gold and Goblins — скриншот из Google Play" aria-label="Увеличить изображение Gold and Goblins"><img src="assets/goblins-5.webp" alt="Гоблины и шахта в Gold and Goblins" width="800" height="1422" loading="lazy"><span class="zoom-tag"><svg class="icon"><use href="#i-plus"/></svg> Скриншот</span></button>
+          <div class="shot-thumbs"><button type="button" data-image="assets/goblins-6.webp" data-caption="Gold and Goblins — карты улучшений, Google Play" aria-label="Открыть карты улучшений Gold and Goblins"><img src="assets/goblins-6.webp" alt="Карты улучшений Gold and Goblins" width="80" height="48" loading="lazy"></button><button type="button" data-image="assets/goblins-7.webp" data-caption="Gold and Goblins — изображение из Google Play" aria-label="Открыть третье изображение Gold and Goblins"><img src="assets/goblins-7.webp" alt="Прогрессия в Gold and Goblins" width="80" height="48" loading="lazy"></button><span>Материалы Google Play</span></div>
+        </div>
+        <div class="game-content">
+          <div class="game-heading"><img class="game-icon" src="assets/goblins-icon.webp" alt="Иконка Gold and Goblins" width="54" height="54"><div><span class="game-part">02 / АНАЛИЗ</span><h3>Gold and Goblins</h3></div><span class="genre">Мерж</span></div>
+          <ol class="questions">
+            <li><h4>Мерж и слоты</h4><p>Когда выгоднее объединить двух гоблинов, а когда — оставить работать параллельно? Подтвердите расчётом и объясните влияние лимита слотов.</p></li>
+            <li><h4>Производство и вехи</h4><p>Сравните окупаемость обычного улучшения и улучшения на вехе множителя дохода. Как такая система формирует периоды накопления и ускорения?</p></li>
+          </ol>
+          <div class="resource-links"><a href="https://play.google.com/store/apps/details?id=com.redcell.goldandgoblins" target="_blank" rel="noopener noreferrer">Google Play <svg class="icon"><use href="#i-external"/></svg></a><a href="https://apps.apple.com/app/id1529762599" target="_blank" rel="noopener noreferrer">App Store <svg class="icon"><use href="#i-external"/></svg></a><a href="https://appquantum.helpshift.com/hc/en/7-gold-and-goblins/" target="_blank" rel="noopener noreferrer">Справка <svg class="icon"><use href="#i-external"/></svg></a></div>
+        </div>
+      </article>
+
+      <article id="butcher" class="game-card">
+        <div class="game-visual butcher-visual">
+          <button class="shot-main" type="button" data-image="assets/butcher-gameplay.webp" data-caption="Butcher Hero — игровой скриншот из Steam" aria-label="Увеличить скриншот Butcher Hero"><img src="assets/butcher-gameplay.webp" alt="Игровая сцена Butcher Hero" width="1000" height="563" loading="lazy"><span class="zoom-tag"><svg class="icon"><use href="#i-plus"/></svg> Скриншот</span></button>
+          <div class="shot-thumbs"><button type="button" data-image="assets/butcher-2.webp" data-caption="Butcher Hero — промоматериал из Google Play" aria-label="Открыть изображение Butcher Hero с крюком"><img src="assets/butcher-2.webp" alt="Герой с крюком" width="80" height="48" loading="lazy"></button><button type="button" data-image="assets/butcher-3.webp" data-caption="Butcher Hero — промоматериал из Google Play" aria-label="Открыть изображение оружия Butcher Hero"><img src="assets/butcher-3.webp" alt="Оружие Butcher Hero" width="80" height="48" loading="lazy"></button><span>Steam и Google Play</span></div>
+        </div>
+        <div class="game-content">
+          <div class="game-heading"><img class="game-icon" src="assets/butcher-icon.webp" alt="Иконка Butcher Hero" width="54" height="54"><div><span class="game-part">03 / АНАЛИЗ</span><h3>Butcher Hero</h3></div><span class="genre">Idle RPG</span></div>
+          <ol class="questions">
+            <li><h4>Боевые характеристики</h4><p>Сравните ценность увеличения HP, защиты и урона для скорости фарма и выживаемости. Приведите числовой пример и объясните, как выбор зависит от противника.</p></li>
+            <li><h4>Стоимость прогресса</h4><p>Переведите награды магазина и рекламы в минуты обычного фарма. Сравните их выгодность и предложите одно изменение с обоснованием.</p></li>
+          </ol>
+          <div class="resource-links"><a href="https://play.google.com/store/apps/details?id=com.multicastgames.butcher" target="_blank" rel="noopener noreferrer">Google Play <svg class="icon"><use href="#i-external"/></svg></a><a href="https://apps.apple.com/app/id6757722046" target="_blank" rel="noopener noreferrer">App Store <svg class="icon"><use href="#i-external"/></svg></a><a href="https://store.steampowered.com/app/4744010/" target="_blank" rel="noopener noreferrer">Steam <svg class="icon"><use href="#i-external"/></svg></a></div>
+        </div>
+      </article>
+      <aside class="data-note"><svg class="icon"><use href="#i-chart"/></svg><p>Формулы и выдержки из баланса предоставляются отдельно. Если точных данных нет, используйте явно обозначенную модель. Ссылки и изображения выше помогают познакомиться с играми.</p></aside>
+    </section>
+
+    <section id="prototype" class="prototype" aria-labelledby="prototype-title">
+      <div class="prototype-top"><p class="eyebrow">ЧАСТЬ 04 / ПРАКТИКА</p><span class="ai-badge"><span aria-hidden="true">✳</span> Claude Opus 5.5</span></div>
+      <div class="prototype-heading"><div><h2 id="prototype-title">Теперь — ваша игра.</h2><p>Придумайте и реализуйте браузерный инкрементальный айдлер с помощью Claude Opus 5.5.</p></div><div class="duration"><strong>60</strong><span>минут геймплея</span></div></div>
+      <div class="requirements">
+        <div><span class="req-icon"><svg class="icon"><use href="#i-clock"/></svg></span><h3>Завершённая прогрессия</h3><p>От старта до финальной цели — <strong>50–70 минут</strong>. Автоматический доход, растущие цены и выбор между улучшениями.</p></div>
+        <div><span class="req-icon"><svg class="icon"><use href="#i-chart"/></svg></span><h3>Новые возможности</h3><p>Открытия по ходу игры и хотя бы одна смена прогрессии: престиж, новая зона или собственный вариант.</p></div>
+        <div><span class="req-icon"><svg class="icon"><use href="#i-code"/></svg></span><h3>Удобная проверка</h3><p>Сохранение, оффлайн-доход с ограничением, сброс и ускорение времени. Основные параметры баланса — в одном конфиге.</p></div>
+      </div>
+      <a class="claude-link" href="https://claude.ai/" target="_blank" rel="noopener noreferrer">Открыть Claude <svg class="icon"><use href="#i-external"/></svg></a>
+    </section>
+
+    <section id="delivery" class="delivery" aria-labelledby="delivery-title">
+      <div class="delivery-intro"><p class="eyebrow">ФИНИШНАЯ ПРЯМАЯ</p><h2 id="delivery-title">Что сдать</h2><p>Простая графика подходит.<br>Важнее — работающая система.</p><a class="text-link" href="assignment.md" download="Тестовое-задание-геймдизайнер.md">Скачать текст задания <svg class="icon"><use href="#i-download"/></svg></a></div>
+      <ol class="deliverables">
+        <li><span class="check-icon"><svg class="icon"><use href="#i-check"/></svg></span><div><h3>Игру и инструкцию запуска</h3><p>Архив или репозиторий с рабочим прототипом.</p></div></li>
+        <li><span class="check-icon"><svg class="icon"><use href="#i-check"/></svg></span><div><h3>Описание механик и математики</h3><p>Формулы, конфиг баланса и ключевые решения.</p></div></li>
+        <li><span class="check-icon"><svg class="icon"><use href="#i-check"/></svg></span><div><h3>Таблицу пейсинга</h3><p>Целевые и фактические тайминги основных вех.</p></div></li>
+        <li><span class="check-icon"><svg class="icon"><use href="#i-check"/></svg></span><div><h3>Симуляцию и плейтест</h3><p>Результаты проверки прогрессии. Отметьте использование ускорения.</p></div></li>
+        <li><span class="check-icon"><svg class="icon"><use href="#i-check"/></svg></span><div><h3>Примеры работы с Claude</h3><p>Постановка задачи, найденная проблема и её исправление.</p></div></li>
+      </ol>
+    </section>
+    <aside class="evaluation"><span class="evaluation-label">ЧТО ОЦЕНИВАЕМ</span><p>Математику. Темп. Интерес решений.<br><strong>Понятность игры и проверку результата.</strong></p><span class="evaluation-note">Визуальная полировка<br>необязательна.</span></aside>
+  </main>
+  <footer class="footer wrap"><span>Тестовое задание · Геймдизайн инкрементальных игр</span><div><button id="print-button" type="button"><svg class="icon"><use href="#i-print"/></svg> Версия для печати</button><a href="#top">Наверх ↑</a></div><p>Изображения и названия игр принадлежат их правообладателям. Источники: сайт Incremancer, Google Play и Steam; ссылки указаны в карточках.</p></footer>
+
+  <dialog id="image-dialog" aria-labelledby="dialog-caption"><button class="dialog-close" type="button" aria-label="Закрыть изображение"><svg class="icon"><use href="#i-close"/></svg></button><img id="dialog-image" alt=""><p id="dialog-caption"></p></dialog>
+</body>
+</html>
