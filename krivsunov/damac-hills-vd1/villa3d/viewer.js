@@ -210,6 +210,7 @@ export function mount(container, build, options = {}) {
     }
     exposureTarget = currentExposureBase();
     shadowDirty = true;
+    if (ptOn && pt) pt.relight();
   }
   let exposureNight = 1;
 
@@ -263,7 +264,8 @@ export function mount(container, build, options = {}) {
   function modelTick(dt, time) {
     if (typeof model.update !== 'function') return;
     let ctx;
-    if (walker && walker.active) ctx = { mode: 'walk', observer: feet.copy(walker.pos) };
+    if (ptOn) ctx = { mode: 'pt', observer: null };
+    else if (walker && walker.active) ctx = { mode: 'walk', observer: feet.copy(walker.pos) };
     else if (tourState !== 'idle') ctx = { mode: 'tour', observer: feet.copy(camera.position).add(new THREE.Vector3(0, -1.6, 0)) };
     else ctx = { mode: planView ? 'plan' : 'orbit', observer: null };
     if (model.update(dt, time, ctx)) shadowDirty = true;
@@ -436,6 +438,7 @@ export function mount(container, build, options = {}) {
     orbitMode();
     setClip(view.clip);
     planView = Number.isFinite(view.clip);
+    if (planView && ptOn) setPathTracing(false);
     const from = { pos: camera.position.clone(), target: controls.target.clone() };
     const to = { pos: new THREE.Vector3(...view.pos), target: new THREE.Vector3(...view.target) };
     if (instant) {
@@ -507,8 +510,55 @@ export function mount(container, build, options = {}) {
     look(yaw, pitch = 0) { walker.yaw = yaw; walker.pitch = pitch; walker.update(0); draw(); }
   };
 
+  // ---------- режим «как в Cycles»: трассировка путей (vd1_pt.js и библиотеки грузятся по требованию) ----------
+  let pt = null, ptOn = false, ptBusy = false, ptNote = 0;
+  const ptCam = new THREE.Matrix4(), ptProj = new THREE.Matrix4();
+  const ptNotify = (state, extra = {}) => { if (typeof options.onPathTracing === 'function') options.onPathTracing({ state, samples: pt ? pt.samples : 0, ...extra }); };
+  const ptSources = () => ({ root: model.root, extra: [ground], camera, sun, points: nightLights, env: envScene, background: makeSky(sunDir, false), envIntensity: scene.environmentIntensity });
+  const ptScale = () => { const w = renderer.getDrawingBufferSize(new THREE.Vector2()).x; return Math.min(1, 2200 / Math.max(1, w)); };
+  async function setPathTracing(on) {
+    on = !!on;
+    if (ptBusy) return ptOn;
+    if (!on) { if (ptOn) { ptOn = false; modelTick(0, 0); ptNotify('off'); } return false; }
+    if (ptOn || quality !== 'high' || !webgl2) return ptOn;
+    ptBusy = true;
+    ptNotify('loading');
+    try {
+      if (!pt) {
+        const lib = await import('./vd1_pt.js?v=vd1-pt-20261106');
+        pt = lib.createPathTracer(renderer, { rasterize: () => draw(), getSources: ptSources, getRaster: () => ({ scene, camera }) });
+      }
+      ptOn = true;
+      modelTick(10, 0);                                   // двери открыты, пока идёт трассировка
+      await new Promise((r) => setTimeout(r, 40));
+      const info = pt.build();
+      pt.renderScale = ptScale();
+      camera.updateMatrixWorld();
+      ptCam.copy(camera.matrixWorld); ptProj.copy(camera.projectionMatrix);
+      pt.setCamera(camera);
+      ptNotify('ready', info);
+    } catch (error) {
+      ptOn = false;
+      console.error(error);
+      ptNotify('error', { error: String((error && error.message) || error) });
+    }
+    ptBusy = false;
+    return ptOn;
+  }
+  function ptFrame(now) {
+    camera.updateMatrixWorld();
+    if (!ptCam.equals(camera.matrixWorld) || !ptProj.equals(camera.projectionMatrix)) {
+      ptCam.copy(camera.matrixWorld); ptProj.copy(camera.projectionMatrix);
+      pt.updateCamera();
+    }
+    if (shadowDirty) { renderer.shadowMap.needsUpdate = true; shadowDirty = false; }
+    pt.renderSample();
+    if (now - ptNote > 400) { ptNote = now; ptNotify('render'); }
+  }
+
   function setQuality(q) {
     quality = q === 'low' ? 'low' : 'high';
+    if (quality === 'low' && ptOn) setPathTracing(false);
     renderer.setPixelRatio(dprFor(quality));
     setShadowSize(quality);
     if (typeof model.setQuality === 'function') model.setQuality(quality);
@@ -527,6 +577,7 @@ export function mount(container, build, options = {}) {
       composer.setPixelRatio(renderer.getPixelRatio());
       composer.setSize(w, h);
     }
+    if (pt) pt.renderScale = ptScale();
   }
   const observer = new ResizeObserver(resize);
   observer.observe(container);
@@ -583,7 +634,7 @@ export function mount(container, build, options = {}) {
     modelTick(dt, (now - clock0) / 1000);
     const e = renderer.toneMappingExposure;
     if (Math.abs(e - exposureTarget) > 1e-3) renderer.toneMappingExposure = e + (exposureTarget - e) * Math.min(1, dt * 2.5);
-    draw();
+    if (ptOn && pt && pt.built) ptFrame(now); else draw();
     for (const cb of frameHooks) cb(dt);
     frames += 1;
     requestAnimationFrame(frame);
@@ -635,9 +686,14 @@ export function mount(container, build, options = {}) {
     },
     get walkState() { return walker && walker.active ? { x: walker.pos.x, y: walker.pos.y, z: walker.pos.z, yaw: walker.yaw, room } : null; },
     get viewName() { return currentView; },
-    snapshot(type = 'image/jpeg', q = 0.92) { draw(); return renderer.domElement.toDataURL(type, q); },
+    snapshot(type = 'image/jpeg', q = 0.92) {
+      if (ptOn && pt && pt.samples > 0) pt.present(); else draw();
+      return renderer.domElement.toDataURL(type, q);
+    },
+    setPathTracing,
+    get pathTracing() { return { on: ptOn, busy: ptBusy, samples: pt ? pt.samples : 0 }; },
     get frames() { return frames; },
-    debug: { renderer, scene, camera, controls, get composer() { return composer; }, get gtao() { return gtao; }, draw, model },
+    debug: { renderer, scene, camera, controls, get composer() { return composer; }, get gtao() { return gtao; }, draw, model, get pt() { return pt; }, modelTick },
     dispose() {
       running = false;
       if (walker) walker.dispose();

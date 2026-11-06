@@ -126,7 +126,7 @@ async function open3d(then) {
     const [lib, model] = await Promise.all([import(`./villa3d/viewer.js?v=${REL}`), import(`./villa3d/damac_hills_samantha_1558.js?v=${REL}`)]);
     status.textContent = 'Собираю дом, участок и гольф…';
     await new Promise((r) => setTimeout(r, 30));
-    viewer = lib.mount(stage, model.build, { onTour: onTour, onWalk: onWalk, buildOptions: { images: IMAGES } });
+    viewer = lib.mount(stage, model.build, { onTour: onTour, onWalk: onWalk, onPathTracing: onPathTracing, buildOptions: { images: IMAGES } });
     buildUI(viewer);
     window.__vd1 = viewer;   // для проверок
     act(then);
@@ -170,7 +170,15 @@ function buildUI(v) {
   const fsBtn = el('button', 'tool', '⛶');
   fsBtn.title = 'На весь экран';
   qBtn.title = 'Качество графики';
-  tools.append(tseg, measureBtn, snapBtn, qBtn, fsBtn);
+  // трассировка лучей: стоите — кадр дособирается до качества рендера Cycles (только компьютер)
+  const ptBtn = el('button', 'tool', '🌟 Как в Cycles');
+  ptBtn.title = 'Трассировка лучей прямо в браузере: остановитесь — за несколько секунд кадр дособирается до качества рендера Cycles';
+  ptBtn.hidden = matchMedia('(pointer: coarse)').matches;
+  tools.append(tseg, measureBtn, snapBtn, ptBtn, qBtn, fsBtn);
+  ptBtn.addEventListener('click', () => {
+    if (v.quality !== 'high') { v.setQuality('high'); qBtn.textContent = '✨ Высокое'; }
+    v.setPathTracing(!v.pathTracing.on);
+  });
   qBtn.addEventListener('click', () => { v.setQuality(v.quality === 'high' ? 'low' : 'high'); qBtn.textContent = v.quality === 'high' ? '✨ Высокое' : '⚡ Быстрое'; });
   fsBtn.addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen(); else stage.requestFullscreen && stage.requestFullscreen(); });
   snapBtn.addEventListener('click', () => {
@@ -204,7 +212,7 @@ function buildUI(v) {
   const labels = el('div', 'labels');
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('class', 'measure-svg');
   stage.append(views, tools, bottom, roomTag, help, mini, miniCap, labels, svg);
-  ui = { seg, tourBtn, tourInfo, tourText, tourFill, walkBtn, spawn, exitBtn, roomTag, help, mini, miniCap, labels, measureBtn, svg };
+  ui = { seg, tourBtn, tourInfo, tourText, tourFill, walkBtn, spawn, exitBtn, roomTag, help, mini, miniCap, labels, measureBtn, svg, ptBtn };
 
   function markView(id) { for (const b of seg.children) b.classList.toggle('on', b.dataset.view === id); renderRoomLabels(id); }
   ui.markView = markView;
@@ -310,6 +318,15 @@ function buildUI(v) {
     const y = insideHouse ? (w.y > 2.5 ? 4.0 : 0.3) : 0.03;
     v.teleport(x, y, z);
   });
+}
+
+function onPathTracing(info) {
+  const b = ui && ui.ptBtn;
+  if (!b) return;
+  if (info.state === 'loading') { b.textContent = '⏳ Готовлю трассировку…'; b.classList.add('on'); }
+  else if (info.state === 'ready' || info.state === 'render') { b.textContent = info.samples > 0 ? `🌟 Cycles · ${info.samples} пр.` : '🌟 Cycles · остановитесь'; b.classList.add('on'); }
+  else if (info.state === 'error') { b.textContent = '🌟 Как в Cycles'; b.classList.remove('on'); b.title = 'Трассировка недоступна: ' + (info.error || ''); }
+  else { b.textContent = '🌟 Как в Cycles'; b.classList.remove('on'); }
 }
 
 function onTour(info) {

@@ -1442,6 +1442,7 @@ export function build(THREE, opts = {}) {
     for (const d of doors) {
       let want = 0;
       if (ctx.mode === 'plan') { want = d.kind === 'hinge' ? 1 : 0; if (d.p === 0) d.sign = d.plan; }
+      else if (ctx.mode === 'pt') { want = 1; if (d.p === 0) d.sign = d.plan; }     // трассировка: сцена неподвижна, двери открыты
       else if (ctx.observer) {
         const o = ctx.observer;
         const dx = o.x - d.center[0], dz = o.z - d.center[2];
