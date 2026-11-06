@@ -699,3 +699,5 @@ dialog::backdrop { background: #1c221ca8; backdrop-filter: blur(4px); }
   .model3d-bar { padding: 8px 8px 2px; }
   .model3d-note { padding: 6px 8px 0; }
 }
+.model3d-dialog .model3d-site { margin-left: auto; white-space: nowrap; font-size: 13px; }
+@media (max-width: 640px) { .model3d-dialog .model3d-site { font-size: 12px; padding: 6px 10px; } }

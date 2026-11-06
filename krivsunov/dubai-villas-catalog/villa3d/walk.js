@@ -1,6 +1,7 @@
 // Прогулка от первого лица. Компьютер: мышь (захват указателя; без него — тянуть мышью), WASD или стрелки, Shift — бег.
 // Телефон: джойстик слева, обзор пальцем справа. Столкновения: круг игрока против коробок и многоугольников,
 // пол — по «поверхностям» модели: ступени до 0,45 м перешагиваются, выше — препятствие.
+// phys.dynamic — подвижные препятствия (закрытые двери), их список модель меняет на ходу.
 import * as THREE from 'three';
 
 const RADIUS = 0.28, EYE = 1.62, BODY = 1.78, STEP = 0.45, KNEE = 0.12, WALK = 2.0, RUN = 4.4, GRAVITY = 9.8;
@@ -173,7 +174,7 @@ export class Walker {
     const phys = this.getPhys();
     for (let iter = 0; iter < 4; iter++) {
       let moved = false;
-      for (const c of phys.colliders) {
+      for (const c of phys.dynamic ? phys.colliders.concat(phys.dynamic) : phys.colliders) {
         if (c[4] <= feet + KNEE || c[1] >= feet + BODY) continue;
         if (p.x < c[0] - RADIUS || p.x > c[3] + RADIUS || p.z < c[2] - RADIUS || p.z > c[5] + RADIUS) continue;
         const nx = clamp(p.x, c[0], c[3]), nz = clamp(p.z, c[2], c[5]);

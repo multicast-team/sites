@@ -885,7 +885,8 @@
         poster: /^villa3d\/[a-z0-9_-]+\.webp$/i.test(text(item.model3d.poster)) ? text(item.model3d.poster) : '',
         note: text(item.model3d.note),
         interior: !!item.model3d.interior,
-        walk: !!item.model3d.walk
+        walk: !!item.model3d.walk,
+        site: safeUrl(text(item.model3d.site))
       } : null,
       cover,
       images: pictures,
@@ -1421,7 +1422,10 @@
     const close = el('button', 'close-button', '✕');
     close.type = 'button';
     close.setAttribute('aria-label', 'Закрыть');
-    top.append(heading, close);
+    if (property.model3d.site) { // отдельный сайт виллы: 360° тур, рендеры, инструменты 3D
+      const site = externalLink('🌐 Сайт виллы: 360° тур и рендеры', property.model3d.site, 'button button-quiet model3d-site');
+      top.append(heading, site, close);
+    } else top.append(heading, close);
     const stage = el('div', 'model3d-stage');
     const status = el('p', 'model3d-status', 'Загружаю 3D-модель…');
     stage.append(status);
@@ -1961,7 +1965,7 @@
   // ===== Данные из открытых источников (enrich.js): критерии, рынок, карта, дорога, голоса, сравнение, просмотры =====
   const enrich = object(window.VILLA_ENRICH) ? window.VILLA_ENRICH : {};
   const enrichProps = object(enrich.properties) ? enrich.properties : {};
-  const CATEGORY_LABELS = { living: 'Зал', facade: 'Фасад', kitchen: 'Кухня', bedroom: 'Спальни', bathroom: 'Ванные', garden: 'Сад', pool: 'Бассейн', view: 'Вид', plan: 'Планы', other: 'Другое' };
+  const CATEGORY_LABELS = { living: 'Зал', facade: 'Фасад', kitchen: 'Кухня', bedroom: 'Спальни', bathroom: 'Ванные', garden: 'Сад', pool: 'Бассейн', view: 'Вид', plan: 'Планы', render: 'Рендеры', other: 'Другое' };
   const CRITERIA = [
     ['detached', 'Отдельная'], ['doubleHeight', '2-й свет'], ['view', 'Вид'], ['ceiling', 'Потолки 2,6+'],
     ['noNeighborView', 'Не в соседа'], ['noConstruction', 'Без стройки'], ['plot', 'Участок'], ['condition', 'Новая/ремонт']
