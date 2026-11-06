@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="release" content="vd1-site-20261106">
+<title>Вилла VD-1 у гольф-поля · DAMAC Hills — 3D-модель, рендеры, планы</title>
+<meta name="description" content="DAMAC Hills, тип VD-1 «Golf View 1»: 5 спален, комнаты прислуги и водителя, 8 санузлов, дом ≈485 м². Подробная 3D-модель с прогулкой от первого лица, фотореалистичные рендеры, планы этажей, фото и видео.">
+<meta name="theme-color" content="#0e1013">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1013'/%3E%3Cpath d='M12 44V26l20-12 20 12v18H38V32H26v12z' fill='%23d2b277'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css?v=vd1-site-20261106">
+<script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/"}}</script>
+</head>
+<body>
+<header class="top" id="top">
+  <a class="brand" href="#hero"><b>VD-1</b> · DAMAC Hills</a>
+  <nav class="nav">
+    <a href="#model">3D-модель</a>
+    <a href="#tour360">360° тур</a>
+    <a href="#renders">Рендеры</a>
+    <a href="#media">Фото и видео</a>
+    <a href="#plans">Планы</a>
+    <a href="#about">О доме</a>
+  </nav>
+  <a class="back" href="https://sites.aimulticast.org/krivsunov/dubai-villas-catalog/properties/damac_hills_samantha_1558.html">← В каталог</a>
+</header>
+
+<section class="hero" id="hero">
+  <img class="day" src="renders/hero_golf-1920.webp" srcset="renders/hero_golf-1280.webp 1280w, renders/hero_golf-1920.webp 1920w, renders/hero_golf-2560.webp 2560w" sizes="100vw" alt="Вилла VD-1 с гольф-поля, фотореалистичный рендер">
+  <img class="dusk" src="renders/hero_golf_dusk-1920.webp" srcset="renders/hero_golf_dusk-1280.webp 1280w, renders/hero_golf_dusk-1920.webp 1920w, renders/hero_golf_dusk-2560.webp 2560w" sizes="100vw" alt="Вилла VD-1 вечером, рендер" loading="lazy">
+  <div class="hero-text">
+    <p class="eyebrow">DAMAC Hills · Дубай · тип VD-1 «Golf View 1»</p>
+    <h1>Вилла у гольф-поля</h1>
+    <p class="lead">Отдельный дом в первой линии к полю: витражи в пол на гольф, второй свет у входа и над лестницей, балкон спальни хозяина с видом на акации, пальмы и озеро.</p>
+    <ul class="chips">
+      <li>5 спален</li><li>+ прислуга и водитель</li><li>8 санузлов</li><li>дом ≈ 485 м²</li><li>участок ≈ 650 м²</li><li>навес на 2 машины</li>
+    </ul>
+    <div class="cta">
+      <a class="btn primary" href="#model" data-open3d="walk">🚶 Прогулка по дому</a>
+      <a class="btn" href="#model" data-open3d="tour">▶ Пролёт</a>
+      <a class="btn" href="#renders">Рендеры</a>
+    </div>
+  </div>
+  <div class="daynight seg" role="group" aria-label="Время суток на обложке">
+    <button class="on" data-hero="day">День</button><button data-hero="dusk">Вечер</button>
+  </div>
+</section>
+
+<section class="block" id="model">
+  <h2>3D-модель дома</h2>
+  <p class="sub">Оба этажа со всеми комнатами, кухней, санузлами и лестницей; двор, ограды, гольф с деревьями и соседние дома того же типа. Фотоскан-материалы, мягкие тени и затенение в углах; двери на петлях и раздвижные открываются, когда к ним подходишь.</p>
+  <div class="model-wrap">
+    <div class="stage" id="stage">
+      <img class="poster" src="renders/aerial-1920.webp" alt="" loading="lazy">
+      <div class="poster-cta"><button class="btn primary" id="open3d">Открыть 3D-модель</button></div>
+    </div>
+  </div>
+  <div class="model-notes">
+    <div><b>Компьютер.</b> Вращать — мышью, приближать — колесом, сдвигать — правой кнопкой. Прогулка: мышь — взгляд, W A S D — шаги, Shift — быстрее, Esc — выйти.</div>
+    <div><b>Телефон.</b> Вращать и приближать — пальцами. Прогулка: слева джойстик, правым пальцем смотреть по сторонам.</div>
+    <div><b>Инструменты.</b> Время суток меняет солнце и тени; «Рулетка» меряет расстояния двумя щелчками; на плане этажа видны подписи комнат; мини-карта при прогулке — щёлкните по ней, чтобы перейти.</div>
+  </div>
+</section>
+
+<section class="block" id="tour360">
+  <h2>360° тур по комнатам</h2>
+  <p class="sub">Панорамы из Blender Cycles в каждой ключевой точке дома: смотрите во все стороны, переходите по меткам в соседние комнаты.</p>
+  <div class="model-wrap"><div class="pano" id="pano"><div class="pano-hint">Тяните, чтобы осмотреться · колесо — ближе · метки — переход</div></div></div>
+  <div class="pano-rooms" id="pano-rooms"></div>
+</section>
+
+<section class="block" id="renders">
+  <h2>Фотореалистичные рендеры</h2>
+  <p class="sub">Та же модель в Blender Cycles: физическое небо (HDRI Poly Haven, откалибровано в люксах), солнце как в 3D-модели, фотоскан-текстуры, настоящая сухая трава рафа. Мебели нет — дом сдаётся пустым, как на видео.</p>
+  <div class="tabs seg" id="render-tabs"><button class="on" data-f="all">Все</button><button data-f="ext">Снаружи</button><button data-f="int">Внутри</button><button data-f="dusk">Вечер</button></div>
+  <div class="grid wide" id="render-grid"></div>
+</section>
+
+<section class="block" id="media">
+  <h2>Фото и видео риэлтора</h2>
+  <p class="sub">Материалы, присланные агентом 01.11.2026 (Samantha Cross): фото фасада и гостиной, кадры трёх видео с балкона и из комнат.</p>
+  <div class="grid" id="photo-grid"></div>
+  <div class="videos" id="video-grid"></div>
+</section>
+
+<section class="block" id="plans">
+  <h2>Планы этажей</h2>
+  <p class="sub">Тип VD-1: поэтажные планы Bayut (Brookfield и The Turf, тот же план) и официальный план DAMAC «Villas at AKOYA». По ним модель построена в масштабе.</p>
+  <div class="cols">
+    <div class="grid" id="plan-grid"></div>
+    <div class="plan-rooms">
+      <h3>1-й этаж</h3>
+      <ul>
+        <li>Гостиная и столовая с витражом в пол на гольф, колонна, угловое остекление к югу</li>
+        <li>Малая гостиная с эркером к входной дорожке</li>
+        <li>Закрытая кухня с окном над мойкой и выходом во двор</li>
+        <li>Входной холл и лестница во второй свет</li>
+        <li>Гостевая спальня с санузлом, санузел и умывальная у входа</li>
+        <li>Кладовая, комнаты прислуги и водителя с санузлами</li>
+        <li>Навес на 2 машины</li>
+      </ul>
+      <h3>2-й этаж</h3>
+      <ul>
+        <li>Спальня хозяина с гардеробной, ванной и балконом к гольфу</li>
+        <li>Спальня 2 с санузлом</li>
+        <li>Малая гостиная и галерея между вторыми светами</li>
+        <li>Спальни 3 и 4 с санузлами и балконами к улице</li>
+      </ul>
+      <p class="caveat">Размеры сняты с планов в масштабе (3 см на пиксель, сверено по площади, машине и дверям): дом 26,8 × 10,4 м, этаж 3,7 м. Погрешность планировки ±0,2–0,3 м.</p>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="about">
+  <h2>О доме</h2>
+  <div class="facts">
+    <div class="fact"><b>5 + 2</b><span>спален + прислуга и водитель</span></div>
+    <div class="fact"><b>8</b><span>санузлов по плану</span></div>
+    <div class="fact"><b>≈ 485 м²</b><span>площадь дома (≈ 5 225 sqft)</span></div>
+    <div class="fact"><b>≈ 650 м²</b><span>участок (640–690 м²)</span></div>
+    <div class="fact"><b>3,7 м</b><span>этаж; второй свет ≈ 7 м</span></div>
+    <div class="fact"><b>450–535</b><span>тыс. AED/год — аренда VD-1 сейчас</span></div>
+  </div>
+  <div class="cols">
+    <div>
+      <p>Тип DAMAC VD-1 «Golf View 1» строился в кластерах Brookfield, Silver Springs, Whitefield, The Field и The Turf. Дом стоит фасадом с витражами к полю: перед гостиной — бетонная терраса, двор без озеленения, за низкой оградой с решёткой — раф с сухой травой, акации и пальмы, дальше фервей, озеро и прожекторы поля.</p>
+      <p>Модель и рендеры повторяют дом по планам и материалам с фото: бежевая штукатурка, тёмная рама второго этажа, пилон в рваном камне, бронзовое стекло в чёрных рамах, стеклянные ограждения на точечных креплениях, полированный керамогранит в комнатах.</p>
+      <p class="caveat">Тип дома определён по фасаду, планировке и интерьеру на видео — агент его не подтверждала, номер дома неизвестен. Соседние дома показаны тем же типом, дальний ряд вилл и деревья — упрощённо. Цена не подтверждена.</p>
+    </div>
+    <div>
+      <h3>Источники</h3>
+      <ul class="sources">
+        <li><a href="https://www.bayut.com/floorplans/details-52110.html" target="_blank" rel="noopener">Bayut: планы VD1, Brookfield</a></li>
+        <li><a href="https://www.bayut.com/floorplans/details-20482.html" target="_blank" rel="noopener">Bayut: планы D-1, The Turf</a></li>
+        <li><a href="https://s5f1debf5f772543f.jimcontent.com/download/version/1412958864/module/10491060223/name/_Jewels-VILLAS-AT-AKOYA.pdf" target="_blank" rel="noopener">Брошюра DAMAC «Villas at AKOYA», стр. 47</a></li>
+        <li><a href="https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-damac-hills-whitefield-162320538.html" target="_blank" rel="noopener">Property Finder: Whitefield VD1</a></li>
+      </ul>
+      <p class="caveat">Текстуры и небо — Poly Haven (CC0). 3D — three.js, рендеры — Blender Cycles.</p>
+    </div>
+  </div>
+</section>
+
+<footer>Вилла VD-1 · DAMAC Hills · материалы для просмотра, ноябрь 2026 · <a href="https://sites.aimulticast.org/krivsunov/dubai-villas-catalog/properties/damac_hills_samantha_1558.html">карточка в каталоге вилл</a></footer>
+
+<dialog class="lb" id="lb">
+  <div class="lb-img"><img alt=""></div>
+  <div class="lb-cap"></div>
+  <a class="btn lb-dl" download>⬇ Скачать</a>
+  <button class="lb-x" aria-label="Закрыть">✕</button>
+  <button class="lb-prev" aria-label="Назад">‹</button>
+  <button class="lb-next" aria-label="Вперёд">›</button>
+</dialog>
+<script type="module" src="app.js?v=vd1-site-20261106"></script>
+</body>
+</html>

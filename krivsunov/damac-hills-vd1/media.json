@@ -1,0 +1,89 @@
+[
+ {
+  "kind": "photos",
+  "src": "photos/damac_hills_samantha_1558-2c7b85bf4e3dac.webp",
+  "thumb": "photos/thumb-damac_hills_samantha_1558-2c7b85bf4e3dac.webp",
+  "caption": "Кадр из видео риэлтора"
+ },
+ {
+  "kind": "photos",
+  "src": "photos/damac_hills_samantha_1558-1eda8f8f46b859.webp",
+  "thumb": "photos/thumb-damac_hills_samantha_1558-1eda8f8f46b859.webp",
+  "caption": "Кадр из видео риэлтора"
+ },
+ {
+  "kind": "photos",
+  "src": "photos/damac_hills_samantha_1558-bf3e048510e181.webp",
+  "thumb": "photos/thumb-damac_hills_samantha_1558-bf3e048510e181.webp",
+  "caption": "Кадр из видео риэлтора"
+ },
+ {
+  "kind": "photos",
+  "src": "photos/damac_hills_samantha_1558-e0b87fc3cad45f.webp",
+  "thumb": "photos/thumb-damac_hills_samantha_1558-e0b87fc3cad45f.webp",
+  "caption": "Фото риэлтора"
+ },
+ {
+  "kind": "photos",
+  "src": "photos/damac_hills_samantha_1558-d6077ce0395950.webp",
+  "thumb": "photos/thumb-damac_hills_samantha_1558-d6077ce0395950.webp",
+  "caption": "Фото риэлтора"
+ },
+ {
+  "kind": "photos",
+  "src": "photos/damac_hills_samantha_1558-94423717d95a29.webp",
+  "thumb": "photos/thumb-damac_hills_samantha_1558-94423717d95a29.webp",
+  "caption": "Кадр из видео риэлтора"
+ },
+ {
+  "kind": "photos",
+  "src": "photos/damac_hills_samantha_1558-44ce51210ba2f6.webp",
+  "thumb": "photos/thumb-damac_hills_samantha_1558-44ce51210ba2f6.webp",
+  "caption": "Кадр из видео риэлтора"
+ },
+ {
+  "kind": "plans",
+  "src": "plans/damac_hills_samantha_1558-35b73b4773f7c1.webp",
+  "thumb": "plans/thumb-damac_hills_samantha_1558-35b73b4773f7c1.webp",
+  "caption": "План 1-го этажа VD-1 (Bayut, Brookfield): навес на 2 машины, комнаты водителя и прислуги, кладовая, гостевая спальня, санузел и умывальная у входа, кухня, гостиная и столовая к гольфу"
+ },
+ {
+  "kind": "plans",
+  "src": "plans/damac_hills_samantha_1558-ca304c88ae1518.webp",
+  "thumb": "plans/thumb-damac_hills_samantha_1558-ca304c88ae1518.webp",
+  "caption": "План 2-го этажа VD-1 (Bayut): спальня хозяина с гардеробной, ванной и балконом к гольфу, спальня 2, малая гостиная, спальни 3 и 4 с балконами к улице"
+ },
+ {
+  "kind": "plans",
+  "src": "plans/damac_hills_samantha_1558-f08a52e4413c2d.webp",
+  "thumb": "plans/thumb-damac_hills_samantha_1558-f08a52e4413c2d.webp",
+  "caption": "1-й этаж VD-1 в 3D (Bayut)"
+ },
+ {
+  "kind": "plans",
+  "src": "plans/damac_hills_samantha_1558-a77b13f4e5352c.webp",
+  "thumb": "plans/thumb-damac_hills_samantha_1558-a77b13f4e5352c.webp",
+  "caption": "2-й этаж VD-1 в 3D (Bayut)"
+ },
+ {
+  "kind": "plans",
+  "src": "plans/damac_hills_samantha_1558-2b49350682a906.webp",
+  "thumb": "plans/thumb-damac_hills_samantha_1558-2b49350682a906.webp",
+  "caption": "Официальный план DAMAC «Villas at AKOYA», тип VD-1: 1-й и 2-й этаж (стр. 47)"
+ },
+ {
+  "kind": "video",
+  "src": "videos/damac_hills_samantha_1558-33e04a50ac4b37.mp4",
+  "caption": "Видео риэлтора"
+ },
+ {
+  "kind": "video",
+  "src": "videos/damac_hills_samantha_1558-74eff2965cbbf0.mp4",
+  "caption": "Видео риэлтора"
+ },
+ {
+  "kind": "video",
+  "src": "videos/damac_hills_samantha_1558-85cd693b824b67.mp4",
+  "caption": "Видео риэлтора"
+ }
+]
