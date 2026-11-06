@@ -345,7 +345,7 @@ const START_YAW = { p_terrace: -Math.PI / 2, p_living: Math.PI / 2, p_dining: Ma
 fetch(`panos.json?v=${REL}`).then((r) => r.json()).then((panos) => {
   const box = $('#pano');
   const byId = Object.fromEntries(panos.map((p) => [p.id, p]));
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });   // кадр можно сохранить
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
   box.prepend(renderer.domElement);
