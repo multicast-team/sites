@@ -884,7 +884,8 @@
         module: text(item.model3d.module),
         poster: /^villa3d\/[a-z0-9_-]+\.webp$/i.test(text(item.model3d.poster)) ? text(item.model3d.poster) : '',
         note: text(item.model3d.note),
-        interior: !!item.model3d.interior
+        interior: !!item.model3d.interior,
+        walk: !!item.model3d.walk
       } : null,
       cover,
       images: pictures,
@@ -1390,7 +1391,7 @@
   }
 
   // --- 3D-модель виллы: three.js и модуль модели грузятся только по кнопке ---
-  const MODEL3D_VIEWS = { start: 'Общий вид', street: 'С улицы', back: 'Сзади', pool: 'У бассейна', top: 'Сверху' };
+  const MODEL3D_VIEWS = { start: 'Общий вид', street: 'С улицы', back: 'Сзади', pool: 'У бассейна', golf: 'С гольфа', top: 'Сверху', gf: 'План 1-го этажа', ff: 'План 2-го этажа' };
 
   function model3dButton(property, className = '') {
     const button = el('button', `sat-big-button model3d-button ${className}`.trim());
@@ -1403,7 +1404,7 @@
       button.append(img);
     } else button.classList.add('is-empty');
     const textBox = el('span', 'sat-big-text');
-    textBox.append(el('span', 'sat-big-label', '🧊 3D-МОДЕЛЬ'), el('span', 'sat-big-sub', property.model3d.interior ? 'дом, участок и пролёт по комнатам' : 'дом и участок — покрутить'));
+    textBox.append(el('span', 'sat-big-label', '🧊 3D-МОДЕЛЬ'), el('span', 'sat-big-sub', property.model3d.walk ? 'дом, участок, пролёт и прогулка от 1-го лица' : property.model3d.interior ? 'дом, участок и пролёт по комнатам' : 'дом и участок — покрутить'));
     button.append(textBox);
     button.addEventListener('click', (event) => { event.stopPropagation(); openModel3d(property, button); });
     return button;
@@ -1430,6 +1431,7 @@
     let viewer = null;
     let tourButton = null;
     let tourStop = null;
+    let walkUI = null;
     const tourLabel = el('div', 'model3d-tour-label');
     const tourText = el('span', 'model3d-tour-text');
     const tourBar = el('span', 'model3d-tour-progress');
@@ -1438,6 +1440,21 @@
     tourLabel.append(tourText, tourBar);
     tourLabel.hidden = true;
     tourLabel.setAttribute('aria-live', 'polite');
+    function updateWalk(info) { // прогулка от первого лица: кнопки, подпись комнаты, подсказка по управлению
+      if (!walkUI) return;
+      const on = !!info.active;
+      dialog.classList.toggle('is-walking', on);
+      walkUI.button.textContent = on ? '✕ Выйти из прогулки' : '🚶 Прогулка от 1-го лица';
+      walkUI.button.setAttribute('aria-pressed', String(on));
+      walkUI.exit.hidden = !on;
+      walkUI.help.hidden = !on;
+      walkUI.help.textContent = info.coarse ? 'Левым пальцем — идти (джойстик), правым — смотреть по сторонам'
+        : info.locked ? 'Мышь — смотреть · W A S D или стрелки — идти · Shift — быстрее · Esc — выйти'
+          : 'Нажмите на модель, чтобы смотреть мышью · W A S D или стрелки — идти · Esc — выйти';
+      tourLabel.hidden = !on;
+      tourBar.hidden = on;
+      if (on) tourText.textContent = info.room || '';
+    }
     function updateTour(info) { // состояние пролёта по дому: кнопки, подпись комнаты, полоска хода
       if (!tourButton) return;
       tourButton.textContent = info.state === 'playing' ? '⏸ Пауза' : info.state === 'paused' ? '▶ Продолжить' : '▶ Пролёт по дому';
@@ -1449,6 +1466,9 @@
     }
     close.addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('cancel', (event) => { // Esc во время прогулки выводит из неё, окно остаётся
+      if (viewer && viewer.walk && viewer.walk.active) { event.preventDefault(); viewer.walk.stop(); }
+    });
     dialog.addEventListener('close', () => {
       if (viewer) viewer.dispose();
       viewer = null;
@@ -1471,12 +1491,36 @@
       bar.append(online);
       return;
     }
-    Promise.all([import('./villa3d/viewer.js'), import(`./${property.model3d.module}`)]).then(([lib, model]) => {
+    const release = (document.querySelector('meta[name="catalog-release"]') || {}).content || ''; // свежие модули после выкладки
+    const v = release ? `?v=${encodeURIComponent(release)}` : '';
+    Promise.all([import(`./villa3d/viewer.js${v}`), import(`./${property.model3d.module}${v}`)]).then(([lib, model]) => {
       if (!dialog.open) return;
       status.remove();
-      viewer = lib.mount(stage, model.build, { onTour: updateTour });
+      viewer = lib.mount(stage, model.build, { onTour: updateTour, onWalk: updateWalk });
+      if (viewer.tour || viewer.walk) stage.append(tourLabel);
+      if (viewer.walk) {
+        const box = el('div', 'model3d-walk');
+        const button = el('button', 'button model3d-tour-button', '🚶 Прогулка от 1-го лица');
+        button.type = 'button';
+        button.setAttribute('aria-pressed', 'false');
+        const spawn = el('select', 'model3d-spawn');
+        spawn.setAttribute('aria-label', 'Откуда начать прогулку');
+        for (const s of viewer.walk.spawns) { const o = el('option', '', s.label); o.value = s.name; spawn.append(o); }
+        button.addEventListener('click', () => (viewer.walk.active ? viewer.walk.stop() : viewer.walk.start(spawn.value)));
+        spawn.addEventListener('change', () => { if (viewer.walk.active) viewer.walk.start(spawn.value); });
+        box.append(button, spawn);
+        bar.append(box);
+        const exit = el('button', 'model3d-walk-exit', '✕ Выйти');
+        exit.type = 'button';
+        exit.hidden = true;
+        exit.addEventListener('click', () => viewer.walk.stop());
+        const help = el('p', 'model3d-walk-help', '');
+        help.hidden = true;
+        stage.append(exit, help);
+        walkUI = { button, exit, help };
+        hint.textContent += ' Прогулка: компьютер — мышь и W A S D (Shift — быстрее), телефон — джойстик слева и взгляд пальцем справа; по лестнице поднимаетесь сами.';
+      }
       if (viewer.tour) {
-        stage.append(tourLabel);
         tourButton = el('button', 'button model3d-tour-button', '▶ Пролёт по дому');
         tourButton.type = 'button';
         tourButton.setAttribute('aria-pressed', 'false');

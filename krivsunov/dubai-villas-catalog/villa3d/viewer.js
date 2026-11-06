@@ -1,7 +1,10 @@
-// Просмотр 3D-модели виллы: небо, солнце с тенями, вращение мышью/пальцем, готовые ракурсы и пролёт по дому.
-// mount(container, build, { onTour }) — build(THREE) возвращает { root, views, tour?, doors? }.
+// Просмотр 3D-модели виллы: небо, солнце с тенями, вращение мышью/пальцем, готовые ракурсы, пролёт и прогулка по дому.
+// mount(container, build, { onTour, onWalk }) — build(THREE) возвращает { root, views, tour?, doors?, phys?, spawns?, rooms?, inside? }.
+// views: { имя: { pos, target, clip? } } — clip режет модель по высоте (поэтажный план сверху).
+// phys + spawns включают прогулку от первого лица (walk.js): столкновения со стенами, ступени, подписи комнат.
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Walker } from './walk.js?v=vd1-3d-20261106';
 
 const SKY_TOP = new THREE.Color(0x5f93cc);
 const SKY_HORIZON = new THREE.Color(0xe4ebef);
@@ -149,14 +152,22 @@ export function mount(container, build, options = {}) {
   const roomTarget = pmrem.fromScene(roomScene, 0.03);
 
   const model = build(THREE);
+  // разрез по высоте для поэтажных планов: плоскость только у материалов модели, небо и земля остаются целыми
+  const clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 1e6);
+  renderer.localClippingEnabled = true;
   model.root.traverse((node) => {
     if (node.isMesh) {
       node.castShadow = !node.userData.noCast;
       node.receiveShadow = true;
-      for (const material of [].concat(node.material)) if (material.userData.room) material.envMap = roomTarget.texture;
+      for (const material of [].concat(node.material)) {
+        if (material.userData.room) material.envMap = roomTarget.texture;
+        material.clippingPlanes = [clipPlane];
+        material.clipShadows = true;
+      }
     }
   });
   scene.add(model.root);
+  const setClip = (y) => { clipPlane.constant = Number.isFinite(y) ? y : 1e6; };
 
   const ORBIT_FOV = 40, TOUR_FOV = 58;
   const camera = new THREE.PerspectiveCamera(ORBIT_FOV, 1, 0.3, 1500);
@@ -173,7 +184,18 @@ export function mount(container, build, options = {}) {
 
   // ---------- пролёт ----------
   const route = Array.isArray(model.tour) && model.tour.length > 1 ? makeTour(model.tour) : null;
-  const doors = (model.doors || []).map((obj) => ({ obj, open: obj.userData.openAngle || 0, target: 0 }));
+  // двери: распашные поворачиваются на openAngle, раздвижные (userData.slide = [dx, dz]) сдвигаются
+  const doors = (model.doors || []).map((obj) => ({ obj, open: obj.userData.slide ? 1 : (obj.userData.openAngle || 0), target: 0, k: 0, base: obj.position.clone() }));
+  function moveDoor(door, dt) {
+    if (door.obj.userData.slide) {
+      if (door.k !== door.target) door.k = dt === Infinity ? door.target : door.k + Math.sign(door.target - door.k) * Math.min(Math.abs(door.target - door.k), dt * 1.1);
+      const [sx, sz] = door.obj.userData.slide;
+      door.obj.position.set(door.base.x + sx * door.k, door.base.y, door.base.z + sz * door.k);
+    } else {
+      const r = door.obj.rotation;
+      if (r.y !== door.target) r.y = dt === Infinity ? door.target : r.y + Math.sign(door.target - r.y) * Math.min(Math.abs(door.target - r.y), dt * 1.6);
+    }
+  }
   let tourState = 'idle';
   let tourTime = 0;
   let tourLabel = '';
@@ -182,7 +204,7 @@ export function mount(container, build, options = {}) {
   const notify = () => {
     if (typeof options.onTour === 'function') options.onTour({ state: tourState, label: tourLabel, progress: route ? tourTime / route.duration : 0, time: tourTime, duration: route ? route.duration : 0 });
   };
-  const inside = (p) => Math.abs(p.x) < 13.5 && Math.abs(p.z) < 8.2 && p.y < 10;
+  const inside = typeof model.inside === 'function' ? model.inside : (p) => Math.abs(p.x) < 13.5 && Math.abs(p.z) < 8.2 && p.y < 10;
   function setNear(value, fov = camera.fov) {
     if (camera.near !== value || camera.fov !== fov) { camera.near = value; camera.fov = fov; camera.updateProjectionMatrix(); }
   }
@@ -210,6 +232,8 @@ export function mount(container, build, options = {}) {
     get time() { return tourTime; },
     start() {
       tween = null;
+      if (walker && walker.active) walker.stop();
+      setClip(null);
       controls.autoRotate = false;
       controls.enabled = false;
       tourTime = 0;
@@ -241,7 +265,8 @@ export function mount(container, build, options = {}) {
     },
     seek(time) { // для проверок: поставить момент пролёта и нарисовать кадр
       tourTime = Math.min(route.duration, Math.max(0, time));
-      for (const door of doors) { door.target = door.open; door.obj.rotation.y = door.open; }
+      setClip(null);
+      for (const door of doors) { door.target = door.open; moveDoor(door, Infinity); }
       applyTour();
       renderer.render(scene, camera);
       return tourLabel;
@@ -253,8 +278,10 @@ export function mount(container, build, options = {}) {
   function setView(name, instant) {
     const view = views[name] || views.start;
     if (!view) return;
+    if (walker && walker.active) { walkView = false; walker.stop(); }
     if (tour && tourState !== 'idle') { tourState = 'idle'; tourLabel = ''; for (const door of doors) door.target = 0; notify(); }
     orbitMode();
+    setClip(view.clip);
     const from = { pos: camera.position.clone(), target: controls.target.clone() };
     const to = { pos: new THREE.Vector3(...view.pos), target: new THREE.Vector3(...view.target) };
     if (instant) {
@@ -265,6 +292,60 @@ export function mount(container, build, options = {}) {
     }
     tween = { from, to, start: performance.now(), duration: 900 };
   }
+
+  // ---------- прогулка от первого лица ----------
+  const spawns = model.spawns && typeof model.spawns === 'object' ? model.spawns : null;
+  const rooms = Array.isArray(model.rooms) ? model.rooms : [];
+  let walkView = true;   // по выходу из прогулки вернуться к общему виду (кроме перехода на другой ракурс)
+  let room = '';
+  const roomAt = (p) => {
+    for (const r of rooms) {
+      const [x0, x1, y0, y1, z0, z1] = r.box;
+      if (p.x >= x0 && p.x <= x1 && p.z >= z0 && p.z <= z1 && p.y >= y0 - 0.6 && p.y < y1) return r.name; // p — ступни
+    }
+    return '';
+  };
+  const walkNotify = (info) => { if (typeof options.onWalk === 'function') options.onWalk({ ...info, room }); };
+  const walker = model.phys && spawns ? new Walker(camera, renderer.domElement, () => model.phys, {
+    onChange(info) {
+      if (info.active) {
+        tween = null;
+        controls.enabled = false;
+        controls.autoRotate = false;
+        setClip(null);
+        setNear(0.05, 70);
+        for (const door of doors) door.target = door.open;
+      } else {
+        for (const door of doors) door.target = 0;
+        room = '';
+        if (walkView) setView('start'); else walkView = true;
+      }
+      walkNotify(info);
+    }
+  }) : null;
+  const walk = walker && {
+    spawns: Object.entries(spawns).map(([name, s]) => ({ name, label: s.label || name })),
+    get active() { return walker.active; },
+    get locked() { return walker.locked; },
+    start(name) {
+      const spawn = spawns[name] || Object.values(spawns)[0];
+      if (tour && tourState !== 'idle') { tourState = 'idle'; tourLabel = ''; notify(); }
+      walker.start(spawn);
+      room = roomAt(walker.pos);
+      walkNotify({ active: true, locked: walker.locked, coarse: walker.coarse });
+    },
+    stop() { walker.stop(); },
+    relock() { walker.relock(); },
+    // для проверок: пройти по нажатым клавишам заданное время и вернуть место
+    step(keys, seconds, dt = 1 / 30) {
+      walker.keys = new Set(keys);
+      for (let t = 0; t < seconds; t += dt) walker.update(dt);
+      walker.keys.clear();
+      renderer.render(scene, camera);
+      return { x: walker.pos.x, y: walker.pos.y, z: walker.pos.z, room: roomAt(walker.pos) };
+    },
+    look(yaw, pitch = 0) { walker.yaw = yaw; walker.pitch = pitch; walker.update(0); renderer.render(scene, camera); }
+  };
 
   function resize() {
     const w = Math.max(1, container.clientWidth);
@@ -285,11 +366,12 @@ export function mount(container, build, options = {}) {
     if (!running) return;
     const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
     last = now;
-    for (const door of doors) {
-      const r = door.obj.rotation;
-      if (r.y !== door.target) r.y += Math.sign(door.target - r.y) * Math.min(Math.abs(door.target - r.y), dt * 1.6);
-    }
-    if (tourState === 'playing') {
+    for (const door of doors) moveDoor(door, dt);
+    if (walker && walker.active) {
+      walker.update(dt);
+      const r = roomAt(walker.pos);
+      if (r !== room) { room = r; walkNotify({ active: true, locked: walker.locked, coarse: walker.coarse }); }
+    } else if (tourState === 'playing') {
       tourTime += dt;
       if (tourTime >= route.duration) {
         tourTime = route.duration;
@@ -326,8 +408,10 @@ export function mount(container, build, options = {}) {
     setView,
     views: Object.keys(views),
     tour,
+    walk,
     setAutoRotate(on) {
       if (on && tour) tour.stop();
+      if (on && walker && walker.active) walker.stop();
       controls.autoRotate = !!on;
     },
     get autoRotate() { return controls.autoRotate; },
@@ -336,6 +420,7 @@ export function mount(container, build, options = {}) {
     debug: { renderer, scene, camera, controls },
     dispose() {
       running = false;
+      if (walker) walker.dispose();
       observer.disconnect();
       controls.dispose();
       scene.traverse((node) => {

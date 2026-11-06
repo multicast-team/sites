@@ -684,6 +684,15 @@ dialog::backdrop { background: #1c221ca8; backdrop-filter: blur(4px); }
 .model3d-tour-progress { display: block; width: 180px; max-width: 100%; height: 3px; margin-top: 6px; border-radius: 2px; background: #ffffff40; overflow: hidden; }
 .model3d-tour-progress > span { display: block; width: 0; height: 100%; background: #f5c26b; }
 .model3d-note { margin: 0; padding: 6px 16px 0; }
+/* прогулка от первого лица: выбор точки старта, джойстик на телефоне, выход и подсказка поверх сцены */
+.model3d-walk { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.model3d-spawn { min-height: 38px; padding: 6px 10px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--ink); font: inherit; }
+.model3d-walk-exit { position: absolute; right: 12px; top: 12px; z-index: 3; padding: 9px 13px; border: 0; border-radius: 10px; background: #10241ad9; color: #fff; font-family: inherit; font-size: 14px; font-weight: 700; line-height: 1; cursor: pointer; }
+.model3d-walk-help { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 2; margin: 0; padding: 7px 11px; border-radius: 9px; background: #10241ab8; color: #fff; font-size: 13px; line-height: 1.3; text-align: center; pointer-events: none; }
+.walk-stick { position: absolute; z-index: 2; width: 120px; height: 120px; left: 24px; bottom: 90px; border: 2px solid #ffffff8c; border-radius: 50%; background: #10241a40; opacity: .6; pointer-events: none; }
+.walk-stick.is-on { opacity: 1; }
+.walk-stick > span { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: #f5c26bd0; box-shadow: 0 0 12px #0004; }
+.model3d-dialog.is-walking .model3d-stage { position: fixed; inset: 0; z-index: 10; height: auto; margin: 0; border-radius: 0; }
 .model3d-dialog > .model3d-note:last-child { padding-bottom: 16px; }
 @media (max-width: 720px) {
   .model3d-stage { height: 60dvh; margin: 0 8px; }
