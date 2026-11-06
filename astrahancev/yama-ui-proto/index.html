@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Одна Яма — Интерактивный HTML/UI Toolkit Прототип (v6o)</title>
+<style>
+  :root {
+    /* Брендбук: Цвета UI и 3D-мира (High-Contrast White Floor + Clean Arcade UI) */
+    --bg-page: #0f1420;
+    --floor-tile-a: #f3f1fa;
+    --floor-tile-b: #e7e3f4;
+    --floor-seam: #cfc8e6;
+    --zone-stripe: #ffcf26;
+    --hud-surface: #1b2438;
+    --hud-surface-2: #24304a;
+    --hud-border: #4a6394;
+    --sheet-bg: #f4f2fb;
+    --card-bg: #ffffff;
+    --card-border: #d5d0e8;
+    --text-dark: #1e2436;
+    --text-muted: #7b849b;
+    --stat-old: #8a94a6;
+    --stat-new: #16a34a;
+    --stat-new-bg: #dcfce7;
+    --btn-green-top: #2ecc71;
+    --btn-green-bot: #1e9e52;
+    --btn-orange-top: #ffaa2b;
+    --btn-orange-bot: #e07b12;
+    --btn-locked: #d8d4e8;
+    --btn-locked-text: #5b6278;
+    --accent-gold: #ffc82c;
+    --accent-cyan: #22d3ee;
+    --danger: #ef4444;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-page);
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  /* Верхняя панель управления прототипом (переключатель экранов и состояний) */
+  .proto-toolbar {
+    width: 100%;
+    max-width: 980px;
+    background: #161e2e;
+    border-bottom: 1px solid #2d3b56;
+    padding: 10px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+  }
+
+  .proto-toolbar-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .proto-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: 4px;
+  }
+
+  .proto-btn {
+    background: #25324c;
+    color: #e2e8f0;
+    border: 1px solid #3b4f75;
+    border-radius: 8px;
+    padding: 6px 11px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .proto-btn:hover {
+    background: #314263;
+  }
+
+  .proto-btn.active {
+    background: #f59e0b;
+    color: #111827;
+    border-color: #fbbf24;
+  }
+
+  .proto-workspace {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 16px;
+    width: 100%;
+    max-width: 1240px;
+  }
+
+  /* Рамка экрана телефона (390x844 — стандарт мобильного вьюпорта, привязанный к safe-area) */
+  .phone-frame {
+    width: 390px;
+    height: 844px;
+    background: var(--floor-tile-a);
+    border-radius: 34px;
+    border: 6px solid #28334a;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .phone-frame.compact-height {
+    height: 700px;
+  }
+
+  /* ================= 3D ЗАЛ: БЕЛЫЙ ПОЛ С ПОЛОСКАМИ ================= */
+  .hall-viewport {
+    position: absolute;
+    inset: 0;
+    /* Белая/светлая контрастная плитка 1x1м как в лучших кадрах v6j */
+    background-color: var(--floor-tile-a);
+    background-image:
+      linear-gradient(to right, var(--floor-seam) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--floor-seam) 1px, transparent 1px),
+      linear-gradient(45deg, var(--floor-tile-b) 25%, transparent 25%, transparent 75%, var(--floor-tile-b) 75%, var(--floor-tile-b)),
+      linear-gradient(45deg, var(--floor-tile-b) 25%, transparent 25%, transparent 75%, var(--floor-tile-b) 75%, var(--floor-tile-b));
+    background-size: 38px 38px, 38px 38px, 76px 76px, 76px 76px;
+    background-position: 0 0, 0 0, 0 0, 19px 19px;
+    overflow: hidden;
+  }
+
+  /* Полосатый чёрно-жёлтый бортик безопасности по краям зала */
+  .hall-safety-border-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 12px;
+    background: repeating-linear-gradient(
+      -45deg,
+      #fbbf24,
+      #fbbf24 12px,
+      #1e293b 12px,
+      #1e293b 24px
+    );
+    border-top: 2px solid #0f172a;
+    z-index: 4;
+  }
+
+  /* Табло общего заработка наверху + место спавна обычных коробок (БЕЗ ЛИФТА!) */
+  .world-earnings-board {
+    position: absolute;
+    top: 76px;
+    left: 14px;
+    background: #1e293b;
+    border: 2px solid #475569;
+    border-radius: 10px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #f8fafc;
+    box-shadow: 0 4px 0 rgba(15, 23, 42, 0.35);
+    z-index: 2;
+  }
+  .world-earnings-board span {
+    color: #fbbf24;
+  }
+
+  /* Обычная коробка-сюрприз (спавнится сама наверху у табло, БЕЗ лифта!) */
+  .world-surprise-box {
+    position: absolute;
+    top: 112px;
+    left: 28px;
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(135deg, #a855f7, #7e22ce);
+    border: 2.5px solid #f3e8ff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 14px rgba(126, 34, 206, 0.35);
+    cursor: pointer;
+    z-index: 3;
+    animation: floatBox 2s ease-in-out infinite;
+  }
+  .world-surprise-box::after {
+    content: "СЮРПРИЗ";
+    position: absolute;
+    bottom: -16px;
+    background: #581c87;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  @keyframes floatBox {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  /* Дом Шпули (кота) — строго СЛЕВА У СТЕНЫ, не мельтешит в центре */
+  .world-spool-house {
+    position: absolute;
+    top: 250px;
+    left: 6px;
+    width: 58px;
+    height: 64px;
+    background: #fffbeb;
+    border: 2.5px solid #d97706;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 0 rgba(217, 119, 6, 0.25);
+    z-index: 2;
+  }
+  .world-spool-house .house-roof {
+    font-size: 22px;
+    line-height: 1;
+  }
+  .world-spool-house .house-tag {
+    font-size: 9px;
+    font-weight: 800;
+    color: #92400e;
+    text-align: center;
+    line-height: 1.1;
+    margin-top: 2px;
+  }
+
+  /* ================= ЯМА И ЕЁ ЧИСТЫЙ UI (БЕЗ НАЛОЖЕНИЙ) ================= */
+  .world-pit-container {
+    position: absolute;
+    top: 120px;
+    right: 26px;
+    width: 170px;
+    height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  .world-pit-hole {
+    width: 146px;
+    height: 146px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #3b0764 0%, #581c87 42%, #7e22ce 68%, #1e1b4b 100%);
+    border: 6px dashed #facc15;
+    box-shadow:
+      0 0 0 5px #334155,
+      inset 0 0 28px #c084fc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.12s ease;
+  }
+  .world-pit-hole:active {
+    transform: scale(1.06);
+  }
+
+  /* Плашка КОМБО с полоской затухания — закреплена СЛЕВА-СВЕРХУ от Ямы в своей зоне */
+  .pit-combo-widget {
+    position: absolute;
+    top: -18px;
+    left: -26px;
+    background: #1e293b;
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 5px 10px;
+    min-width: 126px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    z-index: 5;
+  }
+  .pit-combo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 900;
+    color: #fbbf24;
+  }
+  .pit-combo-Sub {
+    font-size: 10px;
+    color: #fef08a;
+    font-weight: 700;
+  }
+  .pit-combo-decay-track {
+    width: 100%;
+    height: 6px;
+    background: #0f172a;
+    border-radius: 99px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .pit-combo-decay-fill {
+    height: 100%;
+    width: 78%;
+    background: linear-gradient(90deg, #ef4444, #f59e0b, #fde047);
+    border-radius: 99px;
+    transition: width 0.1s linear;
+  }
+
+  /* Зона всплытия цен уток (+$40) — строго СПРАВА-СНИЗУ Ямы, НИКОГДА не перекрывает комбо */
+  .pit-price-popups {
+    position: absolute;
+    bottom: 8px;
+    right: -8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    pointer-events: none;
+    z-index: 6;
+  }
+  .price-pop {
+    background: rgba(22, 163, 74, 0.95);
+    color: #fff;
+    font-weight: 900;
+    font-size: 13px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    border: 1.5px solid #bbf7d0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  .price-pop.blue {
+    background: rgba(37, 99, 235, 0.95);
+    border-color: #bfdbfe;
+  }
+
+  /* ================= КОНВЕЙЕР: 3 ПОКУПКИ ВСЁ БЛИЖЕ К ЯМЕ ================= */
+  .conveyor-track-zone {
+    position: absolute;
+    left: 158px;
+    top: 260px;
+    width: 44px;
+    height: 290px;
+    z-index: 2;
+  }
+
+  /* Пунктирный призрак будущих участков ленты */
+  .conveyor-ghost {
+    position: absolute;
+    inset: 0;
+    border: 2px dashed #94a3b8;
+    border-radius: 8px;
+    background: rgba(148, 163, 184, 0.12);
+  }
+
+  /* Построенная часть ленты (растёт снизу вверх за 3 покупки: 33% -> 66% -> 100%) */
+  .conveyor-built {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 34%;
+    background: repeating-linear-gradient(
+      to top,
+      #334155,
+      #334155 14px,
+      #475569 14px,
+      #475569 20px
+    );
+    border-left: 4px solid #2563eb;
+    border-right: 4px solid #2563eb;
+    border-top: 4px solid #fbbf24;
+    border-radius: 4px;
+    transition: height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 6px 0;
+  }
+
+  .belt-duck {
+    font-size: 16px;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+  }
+
+  /* Кружок покупки следующего участка ленты (прямо у конца текущего участка!) */
+  .floor-buy-circle {
+    position: absolute;
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 4;
+    transition: transform 0.15s ease, bottom 0.3s ease;
+  }
+  .floor-buy-circle:hover {
+    transform: scale(1.04);
+  }
+  .floor-buy-circle.affordable {
+    background: rgba(34, 197, 94, 0.22);
+    border: 3.5px solid #16a34a;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.85);
+  }
+  .floor-buy-circle.locked {
+    background: rgba(100, 116, 139, 0.22);
+    border: 3.5px solid #64748b;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.7);
+  }
+  .floor-circle-icon {
+    font-size: 20px;
+    line-height: 1;
+  }
+  .floor-circle-tag {
+    position: absolute;
+    bottom: -24px;
+    background: #1e293b;
+    border: 2px solid #475569;
+    border-radius: 9px;
+    padding: 3px 8px;
+    text-align: center;
+    white-space: nowrap;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  }
+  .floor-buy-circle.affordable .floor-circle-tag {
+    background: #14532d;
+    border-color: #22c55e;
+  }
+  .floor-tag-title {
+    font-size: 10px;
+    font-weight: 800;
+    color: #e2e8f0;
+    display: block;
+    line-height: 1.1;
+  }
+  .floor-tag-price {
+    font-size: 12px;
+    font-weight: 900;
+    color: #fff;
+  }
+  .floor-buy-circle.affordable .floor-tag-price {
+    color: #4ade80;
+  }
+  .floor-tag-status {
+    font-size: 9px;
+    font-weight: 800;
+    color: #94a3b8;
+    display: block;
+  }
+  .floor-buy-circle.affordable .floor-tag-status {
+    color: #bbf7d0;
+  }
+
+  /* Коробка Rewarded рекламы — СТРОГО между сборщиком и Ямой (рядом с игроком) */
+  .world-rewarded-box {
+    position: absolute;
+    top: 390px;
+    left: 62px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border: 2.5px solid #fef3c7;
+    border-radius: 14px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 6px 14px rgba(217, 119, 6, 0.35);
+    cursor: pointer;
+    z-index: 4;
+  }
+  .world-rewarded-box .rv-icon {
+    font-size: 20px;
+  }
+  .world-rewarded-box .rv-text {
+    font-size: 10px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.15;
+  }
+  .world-rewarded-box .rv-badge {
+    background: #16a34a;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 9px;
+    display: inline-block;
+    margin-top: 2px;
+  }
+
+  /* ================= ЗОНА 1: СБОРЩИК 1 + СПРАВА МОТОР (НЕ КАСАЮТСЯ!) ================= */
+  .zone1-frame {
+    position: absolute;
+    bottom: 34px;
+    left: 44px;
+    width: 266px;
+    height: 230px;
+    border: 3.5px solid var(--zone-stripe);
+    border-radius: 12px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Сам станок Сборщика 1 */
+  .workbench-1 {
+    position: absolute;
+    bottom: 168px;
+    left: 118px;
+    width: 84px;
+    height: 54px;
+    background: #94a3b8;
+    border: 3px solid #334155;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 0 #475569;
+    z-index: 3;
+  }
+  .workbench-arm {
+    background: #facc15;
+    border: 2px solid #1e293b;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+  .workbench-motor-mesh {
+    position: absolute;
+    right: -18px;
+    top: 8px;
+    width: 20px;
+    height: 34px;
+    background: #2563eb;
+    border: 2px solid #1e3a8a;
+    border-radius: 4px;
+    display: none;
+  }
+  .workbench-motor-mesh.installed {
+    display: block;
+  }
+
+  /* Чистый сплошной кружок заполнения Сборщика 1 (с авто-таймером мотора и ручным бустом) */
+  .collector-circle-wrap {
+    position: absolute;
+    bottom: 62px;
+    left: 112px;
+    width: 96px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 4;
+  }
+  .collector-ring-svg {
+    position: absolute;
+    inset: 0;
+    width: 96px;
+    height: 96px;
+    transform: rotate(-90deg);
+  }
+  .collector-ring-bg {
+    fill: rgba(250, 204, 21, 0.18);
+    stroke: #e2e8f0;
+    stroke-width: 8;
+  }
+  .collector-ring-fill {
+    fill: none;
+    stroke: #facc15;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 251;
+    stroke-dashoffset: 60;
+    transition: stroke 0.2s ease;
+  }
+  .collector-circle-inner {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    pointer-events: none;
+  }
+  .collector-duck-icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+  .collector-timer-pill {
+    margin-top: 3px;
+    background: #0f172a;
+    color: #facc15;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 2px 7px;
+    border-radius: 99px;
+    border: 1.5px solid #facc15;
+  }
+  .collector-circle-wrap.manual-boost .collector-ring-fill {
+    stroke: #22c55e;
+  }
+  .collector-circle-wrap.manual-boost .collector-timer-pill {
+    background: #14532d;
+    color: #4ade80;
+    border-color: #22c55e;
+  }
+
+  /* Герой в круге (когда включён ручной буст) */
+  .player-avatar {
+    position: absolute;
+    top: -12px;
+    right: -6px;
+    background: #facc15;
+    border: 2px solid #0f172a;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  }
+
+  /* ================= ВЕРХНИЙ HUD (БЕЗ ПУСТОТЫ СВЕРХУ) ================= */
+  .top-hud-bar {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    z-index: 10;
+  }
+
+  .hud-money-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hud-money-pill {
+    background: var(--hud-surface);
+    border: 2px solid var(--hud-border);
+    border-radius: 99px;
+    padding: 5px 12px 5px 7px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 0 rgba(15, 23, 42, 0.45);
+  }
+  .coin-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fde047, #eab308 70%, #ca8a04);
+    border: 1.5px solid #fef08a;
+    color: #713f12;
+    font-weight: 900;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .money-val {
+    font-size: 17px;
+    font-weight: 900;
+    color: #fff;
+  }
+
+  .hud-rpm-pill {
+    background: rgba(27, 36, 56, 0.9);
+    border: 1.5px solid #4a6394;
+    border-radius: 99px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #fbbf24;
+    align-self: flex-start;
+  }
+
+  /* Карточка цели Ямы по центру */
+  .hud-goal-card {
+    flex: 1;
+    background: var(--hud-surface);
+    border: 2px solid var(--hud-border);
+    border-radius: 16px;
+    padding: 6px 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(15, 23, 42, 0.45);
+    transition: transform 0.12s ease;
+  }
+  .hud-goal-card:active {
+    transform: scale(0.98);
+  }
+  .hud-goal-left {
+    flex: 1;
+    min-width: 0;
+  }
+  .hud-goal-title {
+    font-size: 10px;
+    font-weight: 900;
+    color: #cbd5e1;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .hud-goal-bar-wrap {
+    margin-top: 4px;
+    height: 16px;
+    background: #0f172a;
+    border: 1.5px solid #334155;
+    border-radius: 99px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hud-goal-bar-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 45%;
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    border-radius: 99px;
+  }
+  .hud-goal-bar-text {
+    position: relative;
+    z-index: 2;
+    font-size: 10px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  }
+  .hud-goal-unlock {
+    border-left: 1.5px solid #334155;
+    padding-left: 7px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .hud-goal-unlock-lbl {
+    font-size: 8px;
+    font-weight: 800;
+    color: #94a3b8;
+  }
+  .hud-goal-unlock-name {
+    font-size: 9px;
+    font-weight: 900;
+    color: #fde047;
+    white-space: nowrap;
+  }
+
+  .hud-gear-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--hud-surface);
+    border: 2px solid var(--hud-border);
+    color: #e2e8f0;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(15, 23, 42, 0.45);
+    flex-shrink: 0;
+  }
+
+  /* ================= ПРАВАЯ КОМПАКТНАЯ КНОПКА «ПРОКАЧКИ» (КАК РАНЬШЕ!) ================= */
+  .right-upgrades-btn {
+    position: absolute;
+    bottom: 22px;
+    right: 12px;
+    width: 68px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    z-index: 12;
+    transition: transform 0.12s ease;
+  }
+  .right-upgrades-btn:active {
+    transform: scale(0.95);
+  }
+  .right-upg-square {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, var(--btn-orange-top), var(--btn-orange-bot));
+    border: 2.5px solid #3b2106;
+    box-shadow: 0 4px 0 #3b2106;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .right-upg-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ef4444;
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .right-upg-label {
+    margin-top: -6px;
+    background: #1e293b;
+    border: 1.5px solid #475569;
+    border-radius: 99px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 900;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Таймер плейтайма в левом нижнем углу */
+  .playtime-pill {
+    position: absolute;
+    bottom: 18px;
+    left: 10px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1.5px solid #334155;
+    border-radius: 99px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #e2e8f0;
+    z-index: 10;
+  }
+
+  /* ================= ОКНО 2: ЛИСТ «ПРОКАЧКИ» (СКРОЛЛ, БЕЗ МУСОРА СВЕРХУ, СЕРОЕ -> ЗЕЛЁНОЕ) ================= */
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    z-index: 20;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .modal-backdrop.open {
+    display: flex;
+  }
+
+  .upg-sheet {
+    width: 100%;
+    height: 76%;
+    background: var(--sheet-bg);
+    border-top-left-radius: 26px;
+    border-top-right-radius: 26px;
+    border-top: 3px solid #334155;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.45);
+  }
+
+  .upg-sheet-header {
+    padding: 12px 14px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #eae6f7;
+    border-bottom: 1px solid #d5d0e8;
+    flex-shrink: 0;
+  }
+  .upg-sheet-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--text-dark);
+  }
+  .upg-sheet-Right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .upg-sheet-coin {
+    background: #fff;
+    border: 2px solid #cbd5e1;
+    border-radius: 99px;
+    padding: 3px 10px 3px 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--text-dark);
+  }
+  .close-circle-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    border: 2px solid #475569;
+    color: #1e293b;
+    font-size: 16px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* Вкладки категорий прокачек */
+  .upg-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #eae6f7;
+    flex-shrink: 0;
+  }
+  .upg-tab {
+    flex: 1;
+    padding: 7px 6px;
+    border-radius: 12px;
+    background: #d8d2ec;
+    border: 2px solid #94a3b8;
+    color: #334155;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+  }
+  .upg-tab.active {
+    background: #fbbf24;
+    border-color: #78350f;
+    color: #1e293b;
+    box-shadow: 0 2px 0 #78350f;
+  }
+
+  /* НАСТОЯЩИЙ ВЕРТИКАЛЬНЫЙ СКРОЛЛ (никаких стрелок < 1-4 | 5-7 > внизу!) */
+  .upg-scroll-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .upg-scroll-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  .upg-scroll-list::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+    border-radius: 99px;
+  }
+
+  .upg-card {
+    background: var(--card-bg);
+    border: 2px solid #94a3b8;
+    border-radius: 16px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 3px 0 #cbd5e1;
+    flex-shrink: 0;
+  }
+
+  /* Единый стиль брендбук-иконок */
+  .upg-icon-box {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    border: 2px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .upg-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .upg-name-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .upg-name {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--text-dark);
+  }
+  .upg-lvl {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-muted);
+  }
+  .upg-desc {
+    font-size: 11px;
+    font-weight: 700;
+    color: #475569;
+    margin-top: 1px;
+  }
+
+  /* ФОРМУЛА ЦИФР МАКСИМА: СЕРОЕ БЫЛО -> ЗЕЛЁНОЕ СТАЛО (+ПРИРОСТ) */
+  .upg-stat-diff {
+    margin-top: 3px;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .stat-old {
+    color: var(--stat-old);
+    font-weight: 700;
+  }
+  .stat-arrow {
+    color: var(--stat-new);
+    font-weight: 900;
+  }
+  .stat-new {
+    color: var(--stat-new);
+    background: var(--stat-new-bg);
+    padding: 1px 6px;
+    border-radius: 6px;
+    font-weight: 900;
+  }
+
+  .upg-dots {
+    display: flex;
+    gap: 3px;
+    margin-top: 5px;
+  }
+  .upg-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #cbd5e1;
+  }
+  .upg-dot.filled {
+    background: #22c55e;
+  }
+
+  .upg-buy-btn {
+    width: 108px;
+    min-height: 46px;
+    border-radius: 12px;
+    border: 2px solid #14532d;
+    background: linear-gradient(180deg, var(--btn-green-top), var(--btn-green-bot));
+    box-shadow: 0 3px 0 #14532d;
+    color: #fff;
+    font-weight: 900;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 4px 8px;
+    text-align: center;
+  }
+  .upg-buy-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #14532d;
+  }
+  .upg-buy-btn.locked {
+    background: var(--btn-locked);
+    border-color: #94a3b8;
+    box-shadow: none;
+    color: var(--btn-locked-text);
+    font-size: 10px;
+    line-height: 1.15;
+    cursor: not-allowed;
+  }
+
+  /* ================= ОКНО 3: ДЕРЕВО УРОВНЕЙ ЯМЫ (В РАМКАХ ЭКРАНА + СКРОЛЛ + СТРЕЛКИ ВВЕРХ ↑) ================= */
+  .tree-modal-card {
+    margin: auto 12px;
+    max-height: 84%;
+    background: #161f33;
+    border: 2.5px solid #4a6394;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.75);
+  }
+
+  .tree-header {
+    padding: 12px 14px 8px;
+    text-align: center;
+    background: #1d2842;
+    border-bottom: 1px solid #334155;
+    flex-shrink: 0;
+  }
+  .tree-title {
+    font-size: 17px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 0.03em;
+  }
+  .tree-subtitle {
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+
+  /* Скролл внутри дерева уровней Ямы — никогда не обрезается сверху или снизу */
+  .tree-scroll-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .tree-scroll-body::-webkit-scrollbar {
+    width: 6px;
+  }
+  .tree-scroll-body::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 99px;
+  }
+
+  .tree-node {
+    width: 100%;
+    background: #1e293b;
+    border: 2px solid #475569;
+    border-radius: 14px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .tree-node.done {
+    background: #132a20;
+    border-color: #22c55e;
+  }
+  .tree-node.current {
+    background: #172b44;
+    border: 2.5px solid #38bdf8;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
+  }
+  .tree-node-icon {
+    font-size: 24px;
+    width: 36px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .tree-node-info {
+    flex: 1;
+  }
+  .tree-node-lvl {
+    font-size: 13px;
+    font-weight: 900;
+    color: #fff;
+  }
+  .tree-node-reward {
+    font-size: 11px;
+    font-weight: 700;
+    color: #cbd5e1;
+  }
+  .tree-node.current .tree-node-reward {
+    color: #7dd3fc;
+  }
+
+  /* СТРЕЛКА МЕЖДУ УРОВНЯМИ СТРОГО ВВЕРХ ↑ (потому что уровни идут снизу вверх 1 -> 2 -> 3!) */
+  .tree-arrow-up {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #334155;
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .tree-arrow-up.done {
+    background: #f59e0b;
+    color: #0f172a;
+  }
+
+  .tree-footer {
+    padding: 10px 14px;
+    background: #1d2842;
+    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .tree-ok-btn {
+    background: #475569;
+    border: 2px solid #64748b;
+    color: #fff;
+    font-weight: 900;
+    font-size: 13px;
+    padding: 8px 34px;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  /* ================= ПРАВАЯ КОЛОНКА: БРЕНДБУК И UI TOOLKIT ДОКАЗАТЕЛЬСТВО ================= */
+  .spec-panel {
+    flex: 1;
+    min-width: 340px;
+    max-width: 720px;
+    background: #161e2e;
+    border: 1px solid #2d3b56;
+    border-radius: 20px;
+    padding: 18px 20px;
+  }
+
+  .spec-panel h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    color: #fbbf24;
+  }
+
+  .spec-panel h3 {
+    margin: 16px 0 8px;
+    font-size: 14px;
+    color: #38bdf8;
+  }
+
+  .checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 8px;
+  }
+
+  .check-item {
+    background: #1e293b;
+    border-left: 3.5px solid #22c55e;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: #e2e8f0;
+  }
+  .check-item strong {
+    color: #fff;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .code-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .code-box {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 11px;
+    color: #cbd5e1;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code-box-title {
+    font-family: sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fbbf24;
+    margin-bottom: 6px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Панель управления интерактивным прототипом -->
+<div class="proto-toolbar">
+  <div class="proto-toolbar-group">
+    <span class="proto-label">Экран:</span>
+    <button class="proto-btn active" id="btnViewHall" onclick="setScreen('hall')">1. Боевой Зал + HUD</button>
+    <button class="proto-btn" id="btnViewUpg" onclick="setScreen('upg')">2. Лист «Прокачки» (Скролл)</button>
+    <button class="proto-btn" id="btnViewTree" onclick="setScreen('tree')">3. Дерево Ямы (Скролл + ↑)</button>
+  </div>
+  <div class="proto-toolbar-group">
+    <span class="proto-label">Тест механик:</span>
+    <button class="proto-btn" id="btnToggleMotor" onclick="toggleMotor()">Мотор 1: ВЫКЛ</button>
+    <button class="proto-btn" id="btnTogglePlayer" onclick="togglePlayerInCircle()">Игрок в круге: НЕТ</button>
+    <button class="proto-btn" id="btnStepBelt" onclick="stepBelt()">Лента: Шаг 0/3</button>
+    <button class="proto-btn" onclick="addCoins(500)">+$500</button>
+    <button class="proto-btn" id="btnToggleHeight" onclick="toggleCompactPhone()">Экран: 390×844</button>
+  </div>
+</div>
+
+<div class="proto-workspace">
+  <!-- ИНТЕРАКТИВНЫЙ ЭКРАН ИГРЫ -->
+  <div class="phone-frame" id="phoneFrame">
+    <div class="hall-viewport">
+
+      <!-- ВЕРХНИЙ HUD: прижат к верху, никакой пустой фиолетовой полосы! -->
+      <div class="top-hud-bar">
+        <div class="hud-money-col">
+          <div class="hud-money-pill">
+            <div class="coin-badge">$</div>
+            <div class="money-val" id="hudMoneyVal">480</div>
+          </div>
+          <div class="hud-rpm-pill">⚡ <span id="hudRpmVal">367</span>/мин</div>
+        </div>
+
+        <div class="hud-goal-card" onclick="setScreen('tree')" title="Нажми, чтобы открыть Дерево уровней Ямы">
+          <div class="hud-goal-left">
+            <div class="hud-goal-title">ЯМЕ НУЖНО · УР. 3 → 4</div>
+            <div class="hud-goal-bar-wrap">
+              <div class="hud-goal-bar-fill" id="goalBarFill" style="width: 38%;"></div>
+              <div class="hud-goal-bar-text" id="goalBarText">🦆 21 / 54</div>
+            </div>
+          </div>
+          <div class="hud-goal-unlock">
+            <span class="hud-goal-unlock-lbl">Откроется:</span>
+            <span style="font-size:16px; line-height:1.1;">🦾</span>
+            <span class="hud-goal-unlock-name">Авто-сборщик 4</span>
+          </div>
+        </div>
+
+        <button class="hud-gear-btn" onclick="alert('Окно Настроек (Звук, Вибрация)')">⚙️</button>
+      </div>
+
+      <!-- Табло общего заработка наверху + Обычная коробка-сюрприз (БЕЗ ЛИФТА!) -->
+      <div class="world-earnings-board">
+        Всего заработано: <span id="totalEarnedVal">$2,45K</span>
+      </div>
+      <div class="world-surprise-box" onclick="collectSurpriseBox()" id="surpriseBox" title="Обычная коробка спавнится сама наверху без лифта">
+        <span style="font-size:22px;">📦</span>
+      </div>
+
+      <!-- ДОМ ШПУЛИ — строго слева возле стены, не мельтешит в центре -->
+      <div class="world-spool-house" title="Дом шпули стоит слева у стены">
+        <div class="house-roof">🏠🧶</div>
+        <div class="house-tag">Дом<br/>Шпули</div>
+      </div>
+
+      <!-- ЯМА + КОМБО С ПОЛОСКОЙ ЗАТУХАНИЯ + ОТДЕЛЬНАЯ ЗОНА ЦЕНЫ УТОК -->
+      <div class="world-pit-container">
+        <div class="pit-combo-widget">
+          <div class="pit-combo-header">
+            <span id="comboTitle">КОМБО ×4</span>
+            <span class="pit-combo-Sub">+30% цена</span>
+          </div>
+          <div class="pit-combo-decay-track">
+            <div class="pit-combo-decay-fill" id="comboDecayBar"></div>
+          </div>
+        </div>
+
+        <div class="world-pit-hole" onclick="throwDuckToPit()" title="Нажми, чтобы кинуть утку в Яму">
+          <div style="text-align:center;">
+            <div style="font-size:24px;">🌀🦆</div>
+            <div style="font-size:10px; font-weight:900; color:#e9d5ff;">ТАП — БРОСОК</div>
+          </div>
+        </div>
+
+        <div class="pit-price-popups" id="pitPopups">
+          <div class="price-pop blue">+$56 (×2)</div>
+          <div class="price-pop">+$28</div>
+        </div>
+      </div>
+
+      <!-- КОНВЕЙЕР: 3 ПОКУПКИ ВСЁ БЛИЖЕ И БЛИЖЕ К ЯМЕ -->
+      <div class="conveyor-track-zone">
+        <div class="conveyor-ghost"></div>
+        <div class="conveyor-built" id="conveyorBuilt" style="height: 0%;">
+          <span class="belt-duck">🦆</span>
+          <span class="belt-duck">🦆</span>
+        </div>
+      </div>
+
+      <!-- Кружок покупки следующего участка ленты (1/3 -> 2/3 -> 3/3) -->
+      <div class="floor-buy-circle affordable" id="beltBuyCircle" style="left: 214px; bottom: 255px;" onclick="stepBelt()">
+        <div class="floor-circle-icon">🛤️</div>
+        <div class="floor-circle-tag">
+          <span class="floor-tag-title" id="beltCircleTitle">Лента к Яме (1/3)</span>
+          <span class="floor-tag-price" id="beltCirclePrice">$320</span>
+          <span class="floor-tag-status" id="beltCircleStatus">Хватает!</span>
+        </div>
+      </div>
+
+      <!-- Коробка Rewarded рекламы — СТРОГО между сборщиком и Ямой (рядом с игроком) -->
+      <div class="world-rewarded-box" onclick="claimRewardedBox()">
+        <span class="rv-icon">🎁</span>
+        <div class="rv-text">
+          Коробка уток<br/>
+          <span class="rv-badge">▶ ЗА РОЛИК</span>
+        </div>
+      </div>
+
+      <!-- ЗОНА 1: СБОРЩИК 1 + СПРАВА КРУЖОК МОТОРА (НЕ КАСАЮТСЯ ДРУГ ДРУГА, СЛЕВА НЕТ МУСОРА!) -->
+      <div class="zone1-frame"></div>
+
+      <div class="workbench-1">
+        <div class="workbench-arm">🦆 Станок 1</div>
+        <div class="workbench-motor-mesh" id="motorMesh" title="3D-мотор на станке"></div>
+      </div>
+
+      <!-- Чистый кружок заполнения Сборщика 1 -->
+      <div class="collector-circle-wrap" id="collectorCircle" onclick="togglePlayerInCircle()" title="Нажми, чтобы поставить/убрать героя в круг">
+        <svg class="collector-ring-svg" viewBox="0 0 96 96">
+          <circle class="collector-ring-bg" cx="48" cy="48" r="40"></circle>
+          <circle class="collector-ring-fill" id="collectorRingFill" cx="48" cy="48" r="40"></circle>
+        </svg>
+        <div class="collector-circle-inner">
+          <div class="collector-duck-icon">🦆</div>
+          <div class="collector-timer-pill" id="collectorTimerText">Встань: 1,5с</div>
+        </div>
+        <div class="player-avatar" id="playerAvatar" style="display:none;">👷</div>
+      </div>
+
+      <!-- Кружок покупки МОТОРА — СТРОГО СПРАВА от Сборщика 1, НЕ КАСАЕТСЯ кружка сборщика! -->
+      <div class="floor-buy-circle affordable" id="motorBuyCircle" style="left: 224px; bottom: 72px;" onclick="toggleMotor()">
+        <div class="floor-circle-icon">⚡⚙️</div>
+        <div class="floor-circle-tag">
+          <span class="floor-tag-title" id="motorCircleTitle">Мотор 1 (Авто)</span>
+          <span class="floor-tag-price" id="motorCirclePrice">$470</span>
+          <span class="floor-tag-status" id="motorCircleStatus">Хватает!</span>
+        </div>
+      </div>
+
+      <!-- КОМПАКТНАЯ КНОПКА «ПРОКАЧКИ» СПРАВА ВНИЗУ (как было раньше, не на весь экран!) -->
+      <div class="right-upgrades-btn" onclick="setScreen('upg')">
+        <div class="right-upg-square">
+          <span style="font-size:28px;">🪙⬆️</span>
+          <div class="right-upg-badge" id="upgBadgeCount">3</div>
+        </div>
+        <div class="right-upg-label">Прокачки</div>
+      </div>
+
+      <div class="playtime-pill">⏱ 04:12</div>
+      <div class="hall-safety-border-bottom"></div>
+
+      <!-- МОДАЛЬНОЕ ОКНО 2: ЛИСТ «ПРОКАЧКИ» (БЕЗ БЛОКА ЯМЫ СВЕРХУ, С НАСТОЯЩИМ СКРОЛЛОМ И ЦВЕТАМИ СТАТОВ) -->
+      <div class="modal-backdrop" id="modalUpg">
+        <div class="upg-sheet">
+          <div class="upg-sheet-header">
+            <div class="upg-sheet-title">
+              <span>⬆️</span>
+              <span>Прокачки</span>
+            </div>
+            <div class="upg-sheet-Right">
+              <div class="upg-sheet-coin">
+                <div class="coin-badge" style="width:20px;height:20px;font-size:12px;">$</div>
+                <span id="sheetMoneyVal">480</span>
+              </div>
+              <button class="close-circle-btn" onclick="setScreen('hall')">✕</button>
+            </div>
+          </div>
+
+          <div class="upg-tabs">
+            <div class="upg-tab active" id="tabPlayer" onclick="switchUpgTab('player')">🏃 Игрок</div>
+            <div class="upg-tab" id="tabDucks" onclick="switchUpgTab('ducks')">🦆 Утки и Цена</div>
+            <div class="upg-tab" id="tabHall" onclick="switchUpgTab('hall')">⚙️ Цех и Лента</div>
+          </div>
+
+          <!-- ВЕРТИКАЛЬНЫЙ СКРОЛЛ СПИСКА ПРОКАЧЕК (мышкой или пальцем) -->
+          <div class="upg-scroll-list" id="upgScrollList"></div>
+        </div>
+      </div>
+
+      <!-- МОДАЛЬНОЕ ОКНО 3: ДЕРЕВО УРОВНЕЙ ЯМЫ (СКРОЛЛ ВНУТРИ ЭКРАНА + СТРЕЛКИ СТРОГО ВВЕРХ ↑) -->
+      <div class="modal-backdrop" id="modalTree" style="justify-content:center;">
+        <div class="tree-modal-card">
+          <div class="tree-header">
+            <div class="tree-title">ДЕРЕВО УРОВНЕЙ ЯМЫ</div>
+            <div class="tree-subtitle">Уровни Ямы · Глава I (снизу вверх ↑)</div>
+          </div>
+
+          <div class="tree-scroll-body" id="treeScrollBody">
+            <div class="tree-node">
+              <div class="tree-node-icon">🔑</div>
+              <div class="tree-node-info">
+                <div class="tree-node-lvl">Эволюция</div>
+                <div class="tree-node-reward">Купи ключ · Глава II</div>
+              </div>
+              <span>🔒</span>
+            </div>
+            <div class="tree-arrow-up">↑</div>
+
+            <div class="tree-node">
+              <div class="tree-node-icon">🕳️</div>
+              <div class="tree-node-info">
+                <div class="tree-node-lvl">Ур. 8</div>
+                <div class="tree-node-reward">Яма шире + бонус цены</div>
+              </div>
+              <span>🔒</span>
+            </div>
+            <div class="tree-arrow-up">↑</div>
+
+            <div class="tree-node">
+              <div class="tree-node-icon">🟣</div>
+              <div class="tree-node-info">
+                <div class="tree-node-lvl">Ур. 7</div>
+                <div class="tree-node-reward">Фиолетовая утка ×5</div>
+              </div>
+              <span>🔒</span>
+            </div>
+            <div class="tree-arrow-up">↑</div>
+
+            <div class="tree-node">
+              <div class="tree-node-icon">🛤️</div>
+              <div class="tree-node-info">
+                <div class="tree-node-lvl">Ур. 6</div>
+                <div class="tree-node-reward">Участок ленты 3 (до Ямы)</div>
+              </div>
+              <span>🔒</span>
+            </div>
+            <div class="tree-arrow-up">↑</div>
+
+            <div class="tree-node">
+              <div class="tree-node-icon">🎨</div>
+              <div class="tree-node-info">
+                <div class="tree-node-lvl">Ур. 5</div>
+                <div class="tree-node-reward">Покраска уток ×2</div>
+              </div>
+              <span>🔒</span>
+            </div>
+            <div class="tree-arrow-up">↑</div>
+
+            <div class="tree-node current" id="currentTreeNode">
+              <div class="tree-node-icon">🦾</div>
+              <div class="tree-node-info">
+                <div class="tree-node-lvl">Ур. 4 · Текущая цель (21 / 54 🦆)</div>
+                <div class="tree-node-reward">Откроется: Авто-сборщик 4</div>
+              </div>
+              <span>⏳</span>
+            </div>
+            <div class="tree-arrow-up done">↑</div>
+
+            <div class="tree-node done">
+              <div class="tree-node-icon">🦾</div>
+              <div class="tree-node-info">
+                <div class="tree-node-lvl">Ур. 3</div>
+                <div class="tree-node-reward">Авто-сборщик 3</div>
+              </div>
+              <span>✅</span>
+            </div>
+            <div class="tree-arrow-up done">↑</div>
+
+            <div class="tree-node done">
+              <div class="tree-node-icon">🕳️</div>
+              <div class="tree-node-info">
+                <div class="tree-node-lvl">Ур. 2</div>
+                <div class="tree-node-reward">Яма шире</div>
+              </div>
+              <span>✅</span>
+            </div>
+            <div class="tree-arrow-up done">↑</div>
+
+            <div class="tree-node done">
+              <div class="tree-node-icon">🦆</div>
+              <div class="tree-node-info">
+                <div class="tree-node-lvl">Ур. 1</div>
+                <div class="tree-node-reward">Начало главы</div>
+              </div>
+              <span>✅</span>
+            </div>
+          </div>
+
+          <div class="tree-footer">
+            <button class="tree-ok-btn" onclick="setScreen('hall')">ПОНЯТНО</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ПРАВАЯ ПАНЕЛЬ: СВОДКА ИСПРАВЛЕНИЙ И ПЕРЕХОД НА UNITY UI TOOLKIT (UXML + USS) -->
+  <div class="spec-panel">
+    <h2>Что исправлено в этом HTML-прототипе (и переносится 1:1 в игру)</h2>
+    <div class="checklist-grid">
+      <div class="check-item">
+        <strong>1. Прокачки: без мусора сверху + настоящий скролл</strong>
+        Убран верхний блок с прогрессом Ямы и кривыми стрелками вниз. Убраны кнопки страниц <code>&lt; 1-4 | 5-7 &gt;</code> — теперь обычный вертикальный скролл.
+      </div>
+      <div class="check-item">
+        <strong>2. Цифры апгрейдов: Серое → Зелёное</strong>
+        Старое значение — серым (<code>1,80с</code>), стрелка и новое значение с приростом — ярким зелёным (<code>→ 1,64с (-0,16с)</code>).
+      </div>
+      <div class="check-item">
+        <strong>3. Дерево уровней Ямы: в рамках экрана + стрелки ↑</strong>
+        Окно привязано к высоте экрана со скроллом внутри (не вылезает наверх/вниз). Все стрелки между уровнями смотрят строго вверх <code>↑</code>.
+      </div>
+      <div class="check-item">
+        <strong>4. Сборщик 1 + Мотор справа + Авто-кружок с таймером</strong>
+        Кружок Мотора <code>$470</code> стоит справа и не касается кружка сборщика. С мотором кружок сам заполняется по таймеру (<code>1,8с</code>), а когда встаёт игрок — включается быстрая ручная скорость (<code>1,5с</code>).
+      </div>
+      <div class="check-item">
+        <strong>5. Конвейер: 3 покупки всё ближе к Яме</strong>
+        Нажми кнопку «Лента: Шаг 0/3 → 1/3 → 2/3 → 3/3»: лента строится в 3 этапа всё ближе к Яме, а не с первого раза до конца.
+      </div>
+      <div class="check-item">
+        <strong>6. Лифты удалены, Дом шпули у левой стены, Белый пол</strong>
+        Лифты лутбоксов удалены навсегда (коробки спавнятся сами у табло сверху, ревард — между сборщиком и Ямой). Белый контрастный пол с полосками и правая кнопка «Прокачки» возвращены.
+      </div>
+    </div>
+
+    <h3>Как устроен UI в Unity сейчас и как переводим на UI Toolkit (UXML + USS)</h3>
+    <p style="font-size:12px; line-height:1.45; color:#cbd5e1; margin: 4px 0 8px;">
+      Сейчас в проекте UI написан кодом на старом <code>uGUI</code> (<code>RectTransform</code> в C# без CSS-вёрстки), поэтому агенты ошибались с вылетами за экран и стрелками. В нашей версии <strong>Unity 6000.6.0f1</strong> уже встроен модуль <code>com.unity.modules.uielements</code> (<strong>UI Toolkit</strong>) — это прямой аналог HTML (<code>.uxml</code>) и CSS Flexbox (<code>.uss</code>):
+    </p>
+    <div class="code-compare">
+      <div class="code-box"><div class="code-box-title">1. Одобренный тобой HTML / CSS</div>&lt;div class="upg-card"&gt;
+  &lt;div class="upg-info"&gt;
+    &lt;span class="upg-name"&gt;Руки&lt;/span&gt;
+    &lt;div class="upg-stat-diff"&gt;
+      &lt;span class="stat-old"&gt;1,80с&lt;/span&gt;
+      &lt;span class="stat-new"&gt;→ 1,64с (-0,16с)&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;button class="upg-buy-btn"&gt;$190&lt;/button&gt;
+&lt;/div&gt;</div>
+      <div class="code-box"><div class="code-box-title">2. Прямой перенос 1:1 в Unity UXML / USS</div>&lt;ui:VisualElement class="upg-card"&gt;
+  &lt;ui:VisualElement class="upg-info"&gt;
+    &lt;ui:Label class="upg-name" text="Руки" /&gt;
+    &lt;ui:VisualElement class="upg-stat-diff"&gt;
+      &lt;ui:Label class="stat-old" text="1,80с" /&gt;
+      &lt;ui:Label class="stat-new" text="→ 1,64с (-0,16с)" /&gt;
+    &lt;/ui:VisualElement&gt;
+  &lt;/ui:VisualElement&gt;
+  &lt;ui:Button class="upg-buy-btn" text="$190" /&gt;
+&lt;/ui:VisualElement&gt;</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let state = {
+    coins: 480,
+    motorBought: false,
+    playerInCircle: false,
+    beltStep: 0, // 0, 1, 2, 3
+    collectorProgress: 0.2,
+    comboDecay: 0.82,
+    comboMult: 4,
+    activeTab: 'player',
+    upgrades: {
+      player: [
+        { id: 'hands', icon: '🧤', name: 'Руки', lvl: 0, maxLvl: 5, desc: 'Сборка вручную быстрее', oldVal: '1,80с', newVal: '1,64с (-0,16с)', price: 190, req: null },
+        { id: 'stack', icon: '📦', name: 'Стопка', lvl: 0, maxLvl: 8, desc: 'Уток в руках героя', oldVal: '8 шт.', newVal: '9 шт. (+1)', price: 240, req: 'hands' },
+        { id: 'speed', icon: '👟', name: 'Скорость', lvl: 0, maxLvl: 6, desc: 'Скорость бега героя', oldVal: '6,0 м/с', newVal: '6,6 м/с (+0,6)', price: 310, req: null },
+        { id: 'throw', icon: '🎯', name: 'Кинуть в Яму', lvl: 1, maxLvl: 5, desc: 'Дальность броска в Яму', oldVal: '4,2 м', newVal: '5,4 м (+1,2 м)', price: 420, req: null },
+        { id: 'magnet', icon: '🧲', name: 'Подбор с пола', lvl: 0, maxLvl: 4, desc: 'Радиус захвата уток', oldVal: '1,5 м', newVal: '2,0 м (+0,5 м)', price: 550, req: null }
+      ],
+      ducks: [
+        { id: 'val', icon: '🦆', name: 'Цена утки', lvl: 2, maxLvl: 10, desc: 'Базовый доход за утку', oldVal: '$20', newVal: '$28 (+$8)', price: 260, req: null },
+        { id: 'combo', icon: '🔥', name: 'Удержание комбо', lvl: 1, maxLvl: 5, desc: 'Время до затухания комбо', oldVal: '3,5с', newVal: '4,5с (+1,0с)', price: 390, req: null },
+        { id: 'paint', icon: '🎨', name: 'Покраска ×2', lvl: 0, maxLvl: 1, desc: 'Красит уток на ленте в ×2', oldVal: '×1 цена', newVal: '×2 цена (+100%)', price: 1200, req: 'Ур. Ямы 5' }
+      ],
+      hall: [
+        { id: 'motor1', icon: '⚡', name: 'Мотор Сборщика 1', lvl: 0, maxLvl: 1, desc: 'Сам собирает уток по таймеру', oldVal: 'Вручную', newVal: 'Авто 1,80с', price: 470, req: null },
+        { id: 'belt1', icon: '🛤️', name: 'Лента к Яме (Участок 1/3)', lvl: 0, maxLvl: 3, desc: 'Строит конвейер ближе к Яме (3 шага)', oldVal: '0/3 длины', newVal: '1/3 длины (+33%)', price: 320, req: null },
+        { id: 'auto2', icon: '🦾', name: 'Авто-сборщик 2', lvl: 0, maxLvl: 1, desc: 'Готовый станок с мотором и веткой', oldVal: '1 станок', newVal: '2 станка (+100%)', price: 850, req: null }
+      ]
+    }
+  };
+
+  function setScreen(scr) {
+    document.getElementById('btnViewHall').classList.toggle('active', scr === 'hall');
+    document.getElementById('btnViewUpg').classList.toggle('active', scr === 'upg');
+    document.getElementById('btnViewTree').classList.toggle('active', scr === 'tree');
+
+    document.getElementById('modalUpg').classList.toggle('open', scr === 'upg');
+    document.getElementById('modalTree').classList.toggle('open', scr === 'tree');
+    if (scr === 'upg') renderUpgrades();
+    if (scr === 'tree') {
+      setTimeout(() => {
+        const cur = document.getElementById('currentTreeNode');
+        if (cur) cur.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 60);
+    }
+  }
+
+  function switchUpgTab(tab) {
+    state.activeTab = tab;
+    document.getElementById('tabPlayer').classList.toggle('active', tab === 'player');
+    document.getElementById('tabDucks').classList.toggle('active', tab === 'ducks');
+    document.getElementById('tabHall').classList.toggle('active', tab === 'hall');
+    renderUpgrades();
+  }
+
+  function renderUpgrades() {
+    const list = document.getElementById('upgScrollList');
+    const items = state.upgrades[state.activeTab] || [];
+    list.innerHTML = items.map(u => {
+      const reqLocked = u.req && u.req === 'hands' && state.upgrades.player[0].lvl === 0;
+      const pitLocked = u.req && u.req.startsWith('Ур.');
+      const canAfford = !reqLocked && !pitLocked && state.coins >= u.price && u.lvl < u.maxLvl;
+      let dotsHtml = '';
+      for (let i = 0; i < u.maxLvl; i++) {
+        dotsHtml += `<span class="upg-dot ${i < u.lvl ? 'filled' : ''}"></span>`;
+      }
+      let btnContent = '';
+      if (u.lvl >= u.maxLvl) {
+        btnContent = `<button class="upg-buy-btn locked">МАКС.</button>`;
+      } else if (reqLocked) {
+        btnContent = `<button class="upg-buy-btn locked">🔒 Сначала «Руки»</button>`;
+      } else if (pitLocked) {
+        btnContent = `<button class="upg-buy-btn locked">🔒 Нужен ${u.req}</button>`;
+      } else if (!canAfford) {
+        btnContent = `<button class="upg-buy-btn locked">Не хватает<br/>🪙 $${u.price}</button>`;
+      } else {
+        btnContent = `<button class="upg-buy-btn" onclick="buyUpgrade('${state.activeTab}', '${u.id}')"><span class="coin-badge" style="width:18px;height:18px;font-size:11px;">$</span> ${u.price}</button>`;
+      }
+
+      return `
+        <div class="upg-card">
+          <div class="upg-icon-box"><span style="font-size:24px;">${u.icon}</span></div>
+          <div class="upg-info">
+            <div class="upg-name-row">
+              <span class="upg-name">${u.name}</span>
+              <span class="upg-lvl">Ур. ${u.lvl}/${u.maxLvl}</span>
+            </div>
+            <div class="upg-desc">${u.desc}</div>
+            <div class="upg-stat-diff">
+              <span class="stat-old">${u.oldVal}</span>
+              <span class="stat-arrow">→</span>
+              <span class="stat-new">${u.newVal}</span>
+            </div>
+            <div class="upg-dots">${dotsHtml}</div>
+          </div>
+          ${btnContent}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function buyUpgrade(tab, id) {
+    const item = state.upgrades[tab].find(x => x.id === id);
+    if (!item || state.coins < item.price || item.lvl >= item.maxLvl) return;
+    state.coins -= item.price;
+    item.lvl++;
+    item.price = Math.round(item.price * 1.45);
+    if (id === 'motor1') {
+      state.motorBought = true;
+    }
+    if (id === 'belt1') {
+      state.beltStep = Math.min(3, state.beltStep + 1);
+    }
+    syncHud();
+    renderUpgrades();
+  }
+
+  function toggleMotor() {
+    state.motorBought = !state.motorBought;
+    document.getElementById('btnToggleMotor').textContent = `Мотор 1: ${state.motorBought ? 'ВКЛ (1,8с)' : 'ВЫКЛ'}`;
+    document.getElementById('btnToggleMotor').classList.toggle('active', state.motorBought);
+    document.getElementById('motorMesh').classList.toggle('installed', state.motorBought);
+    document.getElementById('motorBuyCircle').style.display = state.motorBought ? 'none' : 'flex';
+    syncHud();
+  }
+
+  function togglePlayerInCircle() {
+    state.playerInCircle = !state.playerInCircle;
+    document.getElementById('btnTogglePlayer').textContent = `Игрок в круге: ${state.playerInCircle ? 'ДА (Буст 1,5с)' : 'НЕТ'}`;
+    document.getElementById('btnTogglePlayer').classList.toggle('active', state.playerInCircle);
+    document.getElementById('playerAvatar').style.display = state.playerInCircle ? 'flex' : 'none';
+    document.getElementById('collectorCircle').classList.toggle('manual-boost', state.playerInCircle);
+  }
+
+  function stepBelt() {
+    state.beltStep = (state.beltStep + 1) % 4;
+    const heights = ['0%', '33%', '66%', '100%'];
+    document.getElementById('conveyorBuilt').style.height = heights[state.beltStep];
+    document.getElementById('btnStepBelt').textContent = `Лента: Шаг ${state.beltStep}/3`;
+    document.getElementById('btnStepBelt').classList.toggle('active', state.beltStep > 0);
+
+    const beltCircle = document.getElementById('beltBuyCircle');
+    if (state.beltStep >= 3) {
+      beltCircle.style.display = 'none';
+    } else {
+      beltCircle.style.display = 'flex';
+      const nextStep = state.beltStep + 1;
+      const prices = [320, 650, 1100];
+      const bottoms = ['255px', '335px', '415px'];
+      beltCircle.style.bottom = bottoms[state.beltStep];
+      document.getElementById('beltCircleTitle').textContent = `Лента к Яме (${nextStep}/3)`;
+      document.getElementById('beltCirclePrice').textContent = `$${prices[state.beltStep]}`;
+    }
+    syncHud();
+  }
+
+  function addCoins(amount) {
+    state.coins += amount;
+    syncHud();
+    if (document.getElementById('modalUpg').classList.contains('open')) {
+      renderUpgrades();
+    }
+  }
+
+  function throwDuckToPit() {
+    state.coins += 28;
+    state.comboDecay = 1.0;
+    state.comboMult = Math.min(10, state.comboMult + 1);
+    document.getElementById('comboTitle').textContent = `КОМБО ×${state.comboMult}`;
+    syncHud();
+  }
+
+  function collectSurpriseBox() {
+    state.coins += 120;
+    const box = document.getElementById('surpriseBox');
+    box.style.transform = 'scale(0.8)';
+    setTimeout(() => { box.style.transform = ''; }, 150);
+    syncHud();
+  }
+
+  function claimRewardedBox() {
+    state.coins += 350;
+    syncHud();
+  }
+
+  function toggleCompactPhone() {
+    const frame = document.getElementById('phoneFrame');
+    frame.classList.toggle('compact-height');
+    const isCompact = frame.classList.contains('compact-height');
+    document.getElementById('btnToggleHeight').textContent = isCompact ? 'Экран: 390×700 (Компакт)' : 'Экран: 390×844';
+  }
+
+  function syncHud() {
+    document.getElementById('hudMoneyVal').textContent = state.coins;
+    document.getElementById('sheetMoneyVal').textContent = state.coins;
+
+    // Обновляем статус кружков покупки на полу (хватает или нет!)
+    const motorCircle = document.getElementById('motorBuyCircle');
+    const motorAff = state.coins >= 470;
+    motorCircle.classList.toggle('affordable', motorAff);
+    motorCircle.classList.toggle('locked', !motorAff);
+    document.getElementById('motorCircleStatus').textContent = motorAff ? 'Хватает!' : `Ещё $${470 - state.coins}`;
+
+    const beltPrices = [320, 650, 1100];
+    const bPrice = beltPrices[state.beltStep] || 320;
+    const beltCircle = document.getElementById('beltBuyCircle');
+    const beltAff = state.coins >= bPrice;
+    beltCircle.classList.toggle('affordable', beltAff);
+    beltCircle.classList.toggle('locked', !beltAff);
+    document.getElementById('beltCircleStatus').textContent = beltAff ? 'Хватает!' : `Ещё $${bPrice - state.coins}`;
+  }
+
+  // Живой цикл анимации кружка сборщика (мотор + ручной буст) и полоски затухания комбо
+  setInterval(() => {
+    const ring = document.getElementById('collectorRingFill');
+    const timerTxt = document.getElementById('collectorTimerText');
+    const circumference = 251;
+
+    if (state.playerInCircle) {
+      // Игрок встал в круг: скорость как у ручного (1.5с за цикл)
+      state.collectorProgress += 0.05 / 1.5;
+      if (state.collectorProgress >= 1) state.collectorProgress = 0;
+      const leftSec = Math.max(0.1, (1 - state.collectorProgress) * 1.5).toFixed(1).replace('.', ',');
+      timerTxt.textContent = `Ручной: ${leftSec}с`;
+    } else if (state.motorBought) {
+      // Работает мотор сам по себе (1.8с за цикл)
+      state.collectorProgress += 0.05 / 1.8;
+      if (state.collectorProgress >= 1) state.collectorProgress = 0;
+      const leftSec = Math.max(0.1, (1 - state.collectorProgress) * 1.8).toFixed(1).replace('.', ',');
+      timerTxt.textContent = `Мотор: ${leftSec}с`;
+    } else {
+      timerTxt.textContent = 'Встань: 1,5с';
+    }
+
+    const offset = circumference * (1 - state.collectorProgress);
+    ring.style.strokeDashoffset = offset.toFixed(1);
+
+    // Затухание комбо
+    state.comboDecay = Math.max(0.15, state.comboDecay - 0.008);
+    document.getElementById('comboDecayBar').style.width = `${Math.round(state.comboDecay * 100)}%`;
+  }, 50);
+
+  // По умолчанию включим мотор через 1 секунду, чтобы Максим сразу увидел живой авто-кружок с таймером
+  toggleMotor();
+  syncHud();
+</script>
+</body>
+</html>
