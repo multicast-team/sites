@@ -116,14 +116,14 @@
   }
   .card-title { font-size: 0.82em; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
 
-  .risk-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); gap: 12px; }
+  .risk-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); gap: 8px; }
   /* Force consistent row heights for the 3 stacked-row cards (Trust Score
      bottom row + Properties + Security), so rows visually align with each
      other across cards. The tallest natural row (those with .tag spans) is
      ~40px content + 20px padding = ~44px; pin all rows there. */
   #propsContent .risk-row,
   #securityContent .risk-row,
-  #claudeRegionSupportRow.risk-row { height: 46px; box-sizing: border-box; }
+  #claudeRegionSupportRow.risk-row { min-height: 46px; height: auto; box-sizing: border-box; }
 
   
   .trust-score-card .trust-score-filler,
@@ -135,14 +135,14 @@
     .trust-score-card .trust-score-spacer { display: block; height: 46px; flex-shrink: 0; }
     #claudeRegionSupportRow { margin-top: 0; }
   }
-  .risk-label { flex-shrink: 0; }
-  .risk-value { text-align: right; min-width: 0; }
+  .risk-label { min-width: 0; flex: 1 1 auto; padding-right: 12px; word-break: normal; overflow-wrap: break-word; }
+  .risk-value { text-align: right; min-width: 0; flex: 0 1 auto; }
   .dev-long { font-size: 0.78em; word-break: break-all; line-height: 1.4; max-width: 60%; }
   .risk-row:last-child { border-bottom: none; }
   .risk-label { color: var(--text-soft); font-size: 0.92em; }
   .risk-value { font-weight: 600; font-size: 0.92em; }
 
-  .tag { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.82em; font-weight: 600; }
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.82em; font-weight: 600; white-space: nowrap; flex-shrink: 0; word-break: normal; overflow-wrap: normal; }
   .tag-safe { background: #d1fae5; color: #065f46; }
   .tag-safe-dark { background: #a7f3d0; color: #064e3b; }
 

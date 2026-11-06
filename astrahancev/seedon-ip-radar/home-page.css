@@ -339,7 +339,7 @@
   }
   
   .split-ip-grid:empty::before {
-    content: "Определение выходных IP IP…";
+    content: "Определение выходных IP…";
     grid-column: 1 / -1;
     color: var(--text-muted); font-size: 0.88em;
     padding: 8px 0;

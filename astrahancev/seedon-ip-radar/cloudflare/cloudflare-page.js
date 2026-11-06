@@ -330,6 +330,12 @@ async function rcRun() {
 }
 function rcReset() { document.getElementById('rcState').innerHTML = tag('Ожидание запуска', 'tag-neutral'); document.getElementById('rcScore').textContent = '—'; document.getElementById('rcTime').textContent = '—'; verdict('rcVerdict', 'wait', 'Ожидание запуска', 'Нажмите«Начать проверку»затем через Google Фоновая оценка. '); document.querySelectorAll('#rcScale tr').forEach(tr => tr.classList.remove('on')); }
 (async function captchaInit() {
+  const isForeignHost = !/ip\.net\.coffee|ping0\.cc/i.test(location.hostname);
+  if (isForeignHost) {
+    const g = document.getElementById('tsGrid');
+    if (g) g.style.display = 'none';
+    return;
+  }
   try {
     const cfg = await (await fetch('https://ip.net.coffee/api/captcha/config', { signal: AbortSignal.timeout(6000) })).json();
     TS.ni.key = (cfg.turnstile || {})['non-interactive'] || '';
@@ -338,7 +344,7 @@ function rcReset() { document.getElementById('rcState').innerHTML = tag('Ожи�
   } catch (e) {}
   if (TS.ni.key || TS.mg.key) {
     const s = document.createElement('script'); s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=__cfTsReady'; s.async = true; s.defer = true;
-    s.onerror = () => { ['ni', 'mg'].forEach(k => { document.getElementById(TS[k].box).innerHTML = '<span style="font-size:0.85em;color:#c62828">Не удалось загрузить Turnstile Скрипт (challenges.cloudflare.com Заблокировано)</span>'; tsOnError(k, 'load'); }); };
+    s.onerror = () => { ['ni', 'mg'].forEach(k => { document.getElementById(TS[k].box).innerHTML = '<span style="font-size:0.85em;color:#c62828">Не удалось загрузить скрипт Turnstile</span>'; tsOnError(k, 'load'); }); };
     document.head.appendChild(s);
   } else {
     document.getElementById('tsGrid').style.display = 'none';

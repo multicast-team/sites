@@ -8,7 +8,7 @@ const pingTargets = [
   {name:'VK',icon:window.radarURL('favicon.svg'),url:'https://vk.com/favicon.ico',tag:'Россия'},
   {name:'Mail.ru',icon:window.radarURL('favicon.svg'),url:'https://mail.ru/favicon.ico',tag:'Россия'},
   {name:'GitHub',icon:'https://ip.net.coffee/favicons/github.webp',url:'https://github.com/generate_204',tag:'Международный'},
-  {name:'Cloudflare',icon:'https://ip.net.coffee/favicons/cloudflare.webp',url:'https://1.1.1.1/cdn-cgi/trace',tag:'Международный'},
+  {name:'Cloudflare',icon:'https://ip.net.coffee/favicons/cloudflare.webp',url:'https://challenges.cloudflare.com/cdn-cgi/trace',tag:'Международный'},
   {name:'YouTube',icon:'https://ip.net.coffee/favicons/youtube.webp',url:'https://www.youtube.com/generate_204',tag:'Международный'}
 ];
 
@@ -176,7 +176,7 @@ const tests = [
   { name: 'godaddy.com',       type: 'international', extra: ['tools'], method: 'cftrace', domain: 'godaddy.com' },
   { name: 'producthunt.com',   type: 'international', extra: ['tools'], method: 'cftrace', domain: 'producthunt.com' },
 
-  { name: 'cloudflare.com', type: 'international', extra: ['speed'], method: 'cftrace', domain: 'www.cloudflare.com' },
+  { name: 'cloudflare.com', type: 'international', extra: ['speed'], method: 'cftrace', domain: 'challenges.cloudflare.com', fallbackDomain: 'www.cloudflare.com' },
 
   { name: 'cloudflare cdnjs',  type: 'international', extra: ['static'], method: 'cftrace', domain: 'cdnjs.cloudflare.com' },
   { name: 'npm registry',    type: 'international', extra: ['static'], method: 'cftrace', domain: 'registry.npmjs.org' },
@@ -634,7 +634,7 @@ function runWithLimit(items, limit, worker) {
 async function runAll() {
   const MAX_RETRIES = 2;
   // First pass: run all concurrently
-  await runWithLimit(tests, 12, i => runTest(i));
+  await runWithLimit(tests, 5, i => runTest(i));
 
   // Retry failed ones, up to MAX_RETRIES times
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
@@ -644,7 +644,7 @@ async function runAll() {
     if (failedIndices.length === 0) break;
     // Wait a bit before retrying
     await new Promise(r => setTimeout(r, 2000 * attempt));
-    await runWithLimit(failedIndices, 12, idx => runTest(failedIndices[idx]));
+    await runWithLimit(failedIndices, 5, idx => runTest(failedIndices[idx]));
   }
 }
 

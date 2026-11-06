@@ -332,13 +332,13 @@
   <div class="feature-cards" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px">
     <div class="feature-card" style="flex:1;min-width:200px;padding:14px 18px;border: 1px solid var(--border-strong);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);text-align:center">
       <div class="feature-icon" style="font-size:1.2em">🔍</div>
-      <div style="font-weight:600;font-size:0.88em;margin-top:4px"><span class="feat-title-full">STUN Проверка несколькими узлами</span><span class="feat-title-short">STUN Проверка</span></div>
-      <div class="feature-desc" style="color: var(--text-soft);font-size:0.78em"><span class="copy-full">Обращение к нескольким STUN серверам с отправкой UDP Запрос, для сравнения результатов</span><span class="copy-short">Несколько серверов мира STUN Сравнение ответов серверов</span></div>
+      <div style="font-weight:600;font-size:0.88em;margin-top:4px"><span class="feat-title-full">Опрос нескольких STUN-серверов</span><span class="feat-title-short">Проверка STUN</span></div>
+      <div class="feature-desc" style="color: var(--text-soft);font-size:0.78em"><span class="copy-full">Отправка UDP-запросов к глобальным STUN-узлам (Google, Cloudflare) и сверка кандидатов</span><span class="copy-short">Сравнение ответов глобальных STUN-серверов</span></div>
     </div>
     <div class="feature-card" style="flex:1;min-width:200px;padding:14px 18px;border: 1px solid var(--border-strong);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);text-align:center">
       <div class="feature-icon" style="font-size:1.2em">🛡️</div>
-      <div style="font-weight:600;font-size:0.88em;margin-top:4px"><span class="feat-title-full">UDP Проверка маршрутизации</span><span class="feat-title-short">UDP Проверка</span></div>
-      <div class="feature-desc" style="color: var(--text-soft);font-size:0.78em"><span class="copy-full">Проверьте, перехватывает ли клиент UDP Трафик, Проверка ожидаемой маршрутизации</span><span class="copy-short">Проверить перехват UDP Трафик, Проверить правила</span></div>
+      <div style="font-weight:600;font-size:0.88em;margin-top:4px"><span class="feat-title-full">Контроль UDP-маршрутизации</span><span class="feat-title-short">Проверка UDP</span></div>
+      <div class="feature-desc" style="color: var(--text-soft);font-size:0.78em"><span class="copy-full">Проверка перехвата или блокировки прямого UDP-трафика вашим браузером и прокси-клиентом</span><span class="copy-short">Контроль перехвата UDP-трафика и правил</span></div>
     </div>
   </div>
 
@@ -346,7 +346,7 @@
     <button class="test-btn" id="testBtn" onclick="runTest()" style="margin:0">Начать проверку</button>
     <span id="rtcStatus" style="font-size:0.9em;color: var(--text-muted)">Ожидание проверки</span>
   </div>
-  <div style="text-align:center;margin-bottom:24px;color: var(--text-muted);font-size:0.88em">Нажмите кнопку выше, Проверить сейчас WebRTC Есть ли утечка
+  <div style="text-align:center;margin-bottom:24px;color: var(--text-muted);font-size:0.88em">Проверка запускается автоматически при открытии страницы (можно повторить кнопкой выше)
   </div>
 
   <div class="status-bar" id="statusBar"></div>
@@ -370,110 +370,57 @@
     <h2 style="font-size:1.2em;font-weight:700;margin-bottom:16px;color: var(--text)">📖 Полезные материалы</h2>
     <div class="article-grid">
     <details class="article-fold">
-      <summary>WebRTC Как возникает утечка?</summary>
+      <summary>Как возникает утечка WebRTC?</summary>
       <div class="article-body">
-        <p>WebRTC (Web Real-Time Communication)Технология, встроенная в браузер, Позволяет совершать видеозвонки без дополнительных плагинов, а также общаться голосом и передавать файлы. Это удобно?</p>
-        <p>Но нужно учитывать: <strong>WebRTC При установлении соединения, использует STUN сервер получает внешний сетевой адрес IP. </strong>При этом используется UDP Протокол, а многие прокси поддерживают только TCP Трафик. В результате — Даже когда обычный веб-трафик проходит через прокси, WebRTC другой протокол может раскрыть фактический IP адрес. </p>
-        <p>Кроме того, На веб-странице JavaScript проверка может выполняться без отдельного уведомления WebRTC, и не требует отдельного окна разрешения. </p>
+        <p><strong>WebRTC (Web Real-Time Communication)</strong> — технология, встроенная в браузер для голосовых и видеозвонков без плагинов.</p>
+        <p>При установке прямого P2P-соединения браузер отправляет <strong>UDP-запрос к STUN-серверу</strong>, чтобы узнать ваш внешний IP-адрес. Поскольку обычные HTTP-прокси пропускают только TCP-трафик, UDP-запрос может уйти напрямую через провайдера и раскрыть ваш реальный IP.</p>
       </div>
     </details>
 
     <details class="article-fold">
-      <summary>Что проверяет инструмент?</summary>
+      <summary>Что проверяет этот инструмент?</summary>
       <div class="article-body">
-        <p>Инструмент обращается к нескольким STUN Сервер (Google, Cloudflare и др.)Отправляет UDP Запрос, Собирает возвращённые IP Адрес, чтобы показать: </p>
+        <p>Страница отправляет запросы к нескольким STUN-серверам (Google, Cloudflare) и сверяет полученные кандидаты с вашим основным выходным IP:</p>
         <ul>
-          <li><strong>Обрабатывает ли прокси UDP Трафик</strong> — Если STUN Если возвращён адрес прокси IP, это означает UDP используется ожидаемый прокси-маршрут</li>
-          <li><strong>Наличие IP Утечка</strong> — Если STUN Возвращён адрес вашего оператора IP, это означает UDP Трафик обошёл прокси</li>
-          <li><strong>Работают ли правила маршрутизации</strong> — Разные STUN серверы могут использовать разные выходные адреса, Сравните это с ожидаемыми правилами маршрутизации</li>
-          <li><strong>IPv6 Есть ли утечка</strong> — Некоторые прокси обслуживают только IPv4, IPv6 Трафик может раскрыть. Результат показывает все найденные IPv6 Адрес</li>
+          <li><strong>Проксирование UDP</strong> — если STUN возвращает адрес вашего прокси, значит UDP идёт через туннель.</li>
+          <li><strong>Утечка реального IP</strong> — если STUN возвращает IP домашнего провайдера при включённом прокси, значит UDP обходит туннель.</li>
+          <li><strong>Блокировка не проксируемого UDP</strong> — если список кандидатов пуст, значит браузер или файрвол надёжно блокирует прямые UDP-пакеты.</li>
         </ul>
-        <p>Простыми словами: <strong>Нажмите кнопку, чтобы узнать UDP какой маршрут использует трафик. </strong></p>
       </div>
     </details>
 
     <details class="article-fold">
-      <summary>STUN и UDP Что это?</summary>
+      <summary>Что такое STUN и UDP?</summary>
       <div class="article-body">
-        <p><strong>UDP</strong> (User Datagram Protocol)Один из базовых транспортных протоколов интернета. и TCP Разные, UDP Позволяет отправлять пакеты без предварительного соединения, Снижает накладные расходы, но не гарантирует доставку. Видеозвонки, Онлайн-игры, и голосовые звонки чувствительны к задержке, и часто используют UDP. </p>
-        <p><strong>STUN</strong> (Session Traversal Utilities for NAT)Протокол помогает"определить внешний IP"адрес. Устройство часто находится за маршрутизатором (NAT), и не знает своего публичного IP какой адрес используется. STUN Сервер работает так: Вы отправляете UDP пакет, и получаете ответ"с адресом, который видит сервер IP Да X.X.X.X". </p>
-        <p>WebRTC использует STUN для прямого соединения устройств. Проблема в том, что: <strong>этот UDP пакет не обязательно идёт через прокси. </strong>Многие прокси обслуживают только TCP Трафик, UDP и пакет уходит через локальную сеть, Тогда фактический IP адрес виден STUN серверу. </p>
+        <p><strong>UDP (User Datagram Protocol)</strong> — быстрый транспортный протокол без предварительного рукопожатия, используемый в звонках, стриминге и онлайн-играх.</p>
+        <p><strong>STUN (Session Traversal Utilities for NAT)</strong> — служебный протокол, позволяющий устройству за роутером (NAT) узнать свой публичный IP-адрес и порт.</p>
       </div>
     </details>
 
     <details class="article-fold">
-      <summary>Как определить утечку?</summary>
+      <summary>Как интерпретировать результат?</summary>
       <div class="article-body">
-        <p>Сравните: выходной адрес прокси IP и WebRTC с обнаруженным IP. </p>
         <ul>
-          <li>Если адреса<strong>совпадают</strong> (или WebRTC или протокол отключён и адрес не получен IP) → Безопасность, утечка не обнаружена</li>
-          <li>Если WebRTC Если получен<strong>другой IP</strong>, и этот IP адрес принадлежит вашему оператору IP → обнаружена утечка</li>
+          <li><strong>Безопасно (утечек нет):</strong> адрес WebRTC совпадает с выходным IP прокси, либо WebRTC отключён / не возвращает публичных кандидатов.</li>
+          <li><strong>Обнаружена утечка:</strong> WebRTC возвращает дополнительный публичный IP вашего локального интернет-провайдера.</li>
         </ul>
-        <p>Страница автоматически сравнивает адреса, Ручное сравнение не требуется. </p>
       </div>
     </details>
 
     <details class="article-fold">
-      <summary>Если обнаружена утечка, Как исправить?</summary>
+      <summary>Как защититься от утечки WebRTC?</summary>
       <div class="article-body">
-        <p><strong>Firefox: </strong>Введите в адресной строке <code>about:config</code>, Найдите <code>media.peerconnection.enabled</code>, Двойным нажатием установите <code>false</code>. Это полностью отключит WebRTC. </p>
-        <p><strong>Chrome / Edge: </strong>В браузере нет обычного переключателя отключения WebRTC соответствующая настройка. Можно использовать uBlock Origin Расширение, в"Настройки → Конфиденциальность"Отметьте"Блокировать WebRTC Раскрытие локального IP Адрес". </p>
-        <p><strong>Brave: </strong>Откройте настройки → Конфиденциальность и безопасность → WebRTC IP Политика обработки, Выбрать"Отключить вне прокси UDP". </p>
-        <p><strong>Safari: </strong>По умолчанию для WebRTC действуют ограничения, что снижает риск утечки. Дополнительные настройки доступны в"Разработка"меню ограничений WebRTC Функции. </p>
-        <p><strong>Расширенная настройка: UDP Маршрутизация</strong></p>
-        <p>Описанные выше способы"действуют на весь протокол" — полностью отключают WebRTC, или ограничивают его. Если протокол нужен для WebRTC (например Google Meet, Discord Голосовая связь), полное отключение может нарушить работу. </p>
-        <p>Другой вариант: <strong>В клиенте прокси для UDP задайте отдельный маршрут трафика. </strong>Проверьте поддержку правил для UDP соответствующего протокола, Можно направить STUN трафик серверов (например Google и Cloudflare для STUN Адрес)через выбранный выход, сохранив работу другого UDP Трафик (например игр, локальной сети). Это позволяет WebRTC защитить фактический IP, и не отключать протокол для всех приложений. </p>
-        <p>После изменения, повторите тест на этой странице, и проверьте результат. </p>
+        <p><strong>Opera / Chrome / Brave:</strong> установите политику WebRTC в режим <code>disable_non_proxied_udp</code> («Отключить не проксируемый UDP») или включите защиту WebRTC в uBlock Origin.</p>
+        <p><strong>Firefox:</strong> в <code>about:config</code> установите <code>media.peerconnection.ice.proxy_only_if_behind_proxy = true</code> и <code>media.peerconnection.ice.default_address_only = true</code> (или <code>media.peerconnection.enabled = false</code>).</p>
+        <p><strong>Клиент прокси (Clash / Mihomo / Sing-box):</strong> добавьте правило блокировки прямого UDP или направьте STUN через прокси/TUN.</p>
       </div>
     </details>
 
     <details class="article-fold">
-      <summary>Несколько выходных адресов IP?не обязательно означают WebRTC Утечка</summary>
+      <summary>Почему режим системного прокси и TUN дают разный результат?</summary>
       <div class="article-body">
-        <p>Порядок проверки. Если обнаружено несколько разных публичных IP, это<strong>не обязательно</strong>Да WebRTC Утечка. </p>
-        <p>Некоторые пользователи настраивают раздельные маршруты (например прямое подключение к российским ресурсам, и прокси для международных), другой STUN Разные серверы могут попадать под разные правила. Например: </p>
-        <ul>
-          <li>Google для STUN Сервер → через прокси → показан выходной адрес прокси IP (например в Японии)</li>
-          <li>Cloudflare для STUN Сервер → используется другой маршрут прокси → показан другой выход IP (например в Гонконге)</li>
-        </ul>
-        <p>В таком случае несколько разных IP Да<strong>это нормально</strong>, поскольку правила направляют трафик через разные узлы. Сравните: результат с вашими правилами, Проверьте эти IP регионы: соответствуют ли они ожиданиям. </p>
-        <p><strong>Особое внимание требуется: </strong></p>
-        <p>если прокси включён, Но WebRTC а найденные публичные IP полностью относятся к<strong>вашему локальному оператору IP</strong> (например при проверке из России, все адреса принадлежат российскому оператору IP), Это может означать WebRTC полный обход прокси, и пакет уходит через локальную сеть. если для этого трафика ожидался другой маршрут. </p>
-        <p>Простой способ проверки: Посмотрите геолокацию результата. Если она совпадает с вашим местоположением, а трафик должен идти через прокси, проверьте настройки — Используйте описанные выше"Если обнаружена утечка, Как исправить?"способы. </p>
-      </div>
-    </details>
-
-    <details class="article-fold">
-      <summary>Помимо WebRTC, DNS утечка тоже важна</summary>
-      <div class="article-body">
-        <p>Проверка только одного протокола WebRTC Утечка, не исключает утечки через другой: <strong>Утечки DNS</strong>. </p>
-        <p>При каждом обращении к сайту, браузер сначала запрашивает DNS преобразование домена в IP Адрес. Если этот DNS запрос идёт вне прокси, и отправляется DNS вашего оператора DNS Сервер, оператор может видеть запрошенные домены. </p>
-        <p>Также: DNS в отличие от утечки WebRTC не всегда определяется простым сравнением адресов. Для проверки нужен отдельный инструмент DNS показывающий путь DNS-запроса. </p>
-        <p>Разница между двумя утечками: </p>
-        <ul>
-          <li><strong>WebRTC Утечка</strong> → и раскрыть фактический IP Адрес (сайт видит ваш сетевой адрес)</li>
-          <li><strong>Утечки DNS</strong> → раскрываются запрошенные домены (оператор видит, какие домены запрашивались)</li>
-        </ul>
-        <p>Проверьте оба протокола. WebRTC Текущий тест выполнен здесь, DNS Проверка другой утечки доступна на странице <a href="../dns/index.html" style="color:#1d4ed8">DNS Проверка утечек</a> Страница, 5 с до результата, Проверьте ваш DNS на нежелательное раскрытие данных. </p>
-      </div>
-    </details>
-
-    <details class="article-fold">
-      <summary>Почему режим системного прокси и TUN режим дают разные результаты</summary>
-      <div class="article-body">
-        <p>Иногда наблюдается такое различие: <strong>системный прокси показывает"Утечка не обнаружена", Переключить на TUN а другой режим показывает утечку</strong>. Причина может быть в доступности протокола, Два режима по-разному обрабатывают трафик. </p>
-
-        <p><strong>Режим системного прокси (HTTP/SOCKS5)</strong>: Браузер отправляет запросы через системный прокси, Но выбранный прокси может поддерживать только TCP Трафик. WebRTC для STUN использует протокол UDP, который не проходит через HTTP/SOCKS Прокси. В результате STUN Запрос не может быть отправлен, и страница показывает"Утечка не обнаружена". </p>
-
-        <p><strong>TUN Режим (Глобальный/Виртуальный адаптер)</strong>: TUN Создаёт виртуальный адаптер для перехвата трафика, Включая TCP и UDP. Это означает STUN для UDP запрос может быть отправлен. Если узел не поддерживает UDP Перенаправление, или UDP может использоваться другой выход, либо правила не охватывают STUN Адрес сервера, это приводит к UDP Выходной IP и TCP Выходной IP Не совпадает, и может определяться как возможная утечка. </p>
-
-        <table style="width:100%;border-collapse:collapse;margin:14px 0;font-size:0.9em">
-          <tr style="background: var(--bg-soft)"><th style="padding:8px 12px;text-align:left;border: 1px solid var(--border)">Режим</th><th style="padding:8px 12px;text-align:left;border: 1px solid var(--border)">STUN UDP</th><th style="padding:8px 12px;text-align:left;border: 1px solid var(--border)">Результат проверки</th></tr>
-          <tr><td style="padding:8px 12px;border: 1px solid var(--border)">Режим системного прокси</td><td style="padding:8px 12px;border: 1px solid var(--border)">Не удаётся отправить</td><td style="padding:8px 12px;border: 1px solid var(--border)">"Утечка не обнаружена" (Это может означать блокировку протокола)</td></tr>
-          <tr><td style="padding:8px 12px;border: 1px solid var(--border)">TUN Режим</td><td style="padding:8px 12px;border: 1px solid var(--border)">Запрос отправляется</td><td style="padding:8px 12px;border: 1px solid var(--border)">Показывает фактический UDP выходной маршрут</td></tr>
-        </table>
-
-        <p><strong>Вывод: </strong>В режиме прокси"Утечка не обнаружена"отсутствие адреса не гарантирует отсутствие риска, Возможно, только UDP протокол заблокирован. Для проверки WebRTC утечек, используйте TUN соответствующий режим теста. Если TUN Если в режиме обнаружена утечка, проверьте ваш UDP выход отличается от TCP Не совпадает, Проверьте настройки узла UDP перенаправления и правил. </p>
+        <p><strong>Системный прокси (HTTP/SOCKS5):</strong> браузер видит активный прокси и при политике <code>disable_non_proxied_udp</code> не отправляет прямые UDP-пакеты к STUN-серверам — поэтому статус отображается как «Отключено / Утечек не обнаружено».</p>
+        <p><strong>Режим TUN (виртуальный сетевой адаптер):</strong> перехватывает весь трафик системы на сетевом уровне (и TCP, и UDP), поэтому STUN-запрос проходит через VPN-туннель и возвращает выходной IP вашего VPN-сервера.</p>
       </div>
     </details>
     </div>
@@ -510,7 +457,7 @@ let cfIP = '';
 // Get Cloudflare exit IP on load
 (async () => {
   try {
-    const r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(5000) });
+    let r; try { r = await fetch('https://claude.ai/cdn-cgi/trace', { signal: AbortSignal.timeout(4000) }); if (!r.ok) throw 1; } catch { r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(4000) }); }
     const txt = await r.text();
     const m = txt.match(/ip=([^\n]+)/);
     if (m) {
@@ -529,6 +476,7 @@ let cfIP = '';
   } catch {
     document.getElementById('cfIP').textContent = 'Не удалось получить';
   }
+  runTest();
 })();
 
 let testing = false;
@@ -595,7 +543,7 @@ async function runTest() {
 
   if (ipArr.length === 0) {
     document.getElementById('rtcStatus').innerHTML = '<span class="tag tag-safe">Отключено</span>';
-    verdictArea.innerHTML = '<div class="verdict verdict-safe">✓ WebRTC Отключён либо адрес не раскрыт, утечка не обнаружена</div><div style="color: var(--text-muted);font-size:0.82em;margin-top:8px;line-height:1.5">Если сейчас используется"Режим системного прокси", UDP возможно, запрос не может быть отправлен, Рекомендуется проверять в"TUN Режим"для получения фактического результата. Если это другой режим"Режим системного прокси"это примечание не относится к нему. </div>';
+    verdictArea.innerHTML = '<div class="verdict verdict-safe">✓ WebRTC отключён либо публичный UDP-адрес не раскрыт — утечек не обнаружено</div><div style="color: var(--text-muted);font-size:0.82em;margin-top:8px;line-height:1.5">В режиме системного прокси (HTTP/SOCKS5) браузер блокирует не проксируемый UDP (STUN), поэтому утечка реального IP через WebRTC исключена. Для проверки прохождения UDP через виртуальный сетевой адаптер используйте режим TUN.</div>';
     statusBar.textContent = '';
     testing = false;
     btn.disabled = false;
@@ -622,12 +570,13 @@ async function runTest() {
   // If multiple different public STUN IPs exist → possible leak (one might be real IP)
   const stunPublicIPs = results.filter(r => r.type.includes('Публичный')).map(r => r.ip);
   const uniqueStunIPs = [...new Set(stunPublicIPs)];
-  const hasMultiplePublic = uniqueStunIPs.length > 1;
+  const hasLeak = results.some(r => r.leaked);
+  const hasMultiplePublic = uniqueStunIPs.length > 1 || hasLeak;
 
   if (hasMultiplePublic) {
-    verdictArea.innerHTML = '<div class="verdict verdict-warn">⚠️ Обнаружено WebRTC Возможна утечка!<br>Обнаружены разные публичные выходные адреса IP, Если вы настроили разные маршруты, сравните выходные адреса с правилами IP Информация</div>';
+    verdictArea.innerHTML = '<div class="verdict verdict-warn">⚠️ Обнаружена возможная утечка WebRTC!<br>Найдены разные публичные IP-адреса. Если у вас настроена раздельная маршрутизация, сверьте адреса с правилами вашего прокси.</div>';
   } else {
-    verdictArea.innerHTML = '<div class="verdict verdict-safe">✓ Отлично!Не обнаружено WebRTC Утечка</div>';
+    verdictArea.innerHTML = '<div class="verdict verdict-safe">✓ Отлично! Утечек WebRTC не обнаружено</div>';
   }
 
   tbody.innerHTML = results.map((r, i) => {
@@ -635,8 +584,8 @@ async function runTest() {
     const geoStr = r.geo ? [r.geo.country, r.geo.city].filter(Boolean).join(' ') : '';
     let matchTag;
     if (r.type.includes('Публичный')) {
-      matchTag = hasMultiplePublic
-        ? '<span class="tag tag-warn">Требует внимания</span>'
+      matchTag = (r.leaked || hasMultiplePublic)
+        ? '<span class="tag tag-warn">Утечка (обход прокси)</span>'
         : '<span class="tag tag-safe">Корректно</span>';
     } else {
       matchTag = '<span class="tag tag-neutral">Локальный</span>';

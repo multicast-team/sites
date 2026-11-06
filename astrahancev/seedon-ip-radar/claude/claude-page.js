@@ -72,7 +72,13 @@ function flagImg(cc) {
 // ===== Fetch Cloudflare IP via trace =====
 async function fetchCfIP() {
   try {
-    const r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(5000) });
+    let r;
+    try {
+      r = await fetch('https://challenges.cloudflare.com/cdn-cgi/trace', { signal: AbortSignal.timeout(4000) });
+      if (!r.ok) throw new Error('status');
+    } catch {
+      r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(4000) });
+    }
     const txt = await r.text();
     const m = txt.match(/ip=([^\n]+)/);
     if (m) state.ip = m[1].trim();
@@ -352,7 +358,7 @@ async function detectDNSLeak() {
   }</span></div>`;
 
   if (showIP) {
-    rows += `<div class="risk-row"><span class="risk-label">DNS Выходной IP</span><span class="risk-value" style="font-size:0.85em">${flagImg(showIP.cc)} <span class="ip-mask-target">${showIP.ip}</span> ${showIP.leaked ? '<span class="tag tag-warn" style="font-size:0.8em">Китай DNS</span>' : ''}</span></div>`;
+    rows += `<div class="risk-row"><span class="risk-label">DNS Выходной IP</span><span class="risk-value" style="font-size:0.85em">${flagImg(showIP.cc)} <span class="ip-mask-target">${showIP.ip}</span> ${showIP.leaked ? '<span class="tag tag-warn" style="font-size:0.8em">РФ DNS</span>' : ''}</span></div>`;
     if (showIP.isp) rows += `<div class="risk-row pc-only"><span class="risk-label">Провайдер</span><span class="risk-value" style="font-size:0.85em;font-weight:400;color: var(--text-muted)">${showIP.isp}</span></div>`;
   }
   el.innerHTML = rows;

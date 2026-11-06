@@ -149,8 +149,7 @@ async function startPing() {
     // Rate limited?
     if (data.error) {
       NODES.forEach((_, i) => {
-        document.getElementById(`status-${i}`).innerHTML = `<span class="ping-err">${data.error}</span>`;
-        document.getElementById(`min-${i}`).textContent = '--';
+        document.getElementById(`min-${i}`).innerHTML = `<span class="ping-err">${data.error}</span>`;
         document.getElementById(`avg-${i}`).textContent = '--';
         document.getElementById(`max-${i}`).textContent = '--';
       });
@@ -197,9 +196,11 @@ async function startPing() {
 
   } catch (e) {
     NODES.forEach((_, i) => {
-      const st = document.getElementById(`status-${i}`);
-      if (st.querySelector('.loading-bar')) {
-        st.innerHTML = '<span class="ping-err">Запрос не удался</span>';
+      const st = document.getElementById(`min-${i}`);
+      if (st && st.querySelector('.loading-bar')) {
+        st.innerHTML = '<span class="ping-err">Тайм-аут</span>';
+        document.getElementById(`avg-${i}`).textContent = '--';
+        document.getElementById(`max-${i}`).textContent = '--';
       }
     });
   } finally {
@@ -210,11 +211,11 @@ async function startPing() {
     const note = document.getElementById('ping-cache-note');
     const txt = document.getElementById('ping-note-text');
     if (note && txt && document.querySelector('#resultsBody .ping-val.ping-ok, #resultsBody .ping-val.ping-med, #resultsBody .ping-val.ping-slow, #resultsBody .ping-val.ping-bad')) {
-      const d = new Date(Date.now() + (8 * 60 + new Date().getTimezoneOffset()) * 60000);
+      const d = new Date();
       const p = n => String(n).padStart(2, '0');
-      txt.textContent = 'Выше показаны ' + host + ' Результат последней проверки ('
+      txt.textContent = 'Результат последней проверки для ' + host + ' ('
         + d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' '
-        + p(d.getHours()) + ':' + p(d.getMinutes()) + ', Время UTC+8), ';
+        + p(d.getHours()) + ':' + p(d.getMinutes()) + ')';
       note.style.display = '';
     }
   }
@@ -246,12 +247,31 @@ async function init() {
     if (pf.results) NODES.forEach((n, i) => { if (pf.results[n.id]) updateRow(i, pf.results[n.id]); });
     return;
   }
+  const qIp = new URLSearchParams(location.search).get('ip') || new URLSearchParams(location.search).get('host');
+  if (qIp) {
+    document.getElementById('hostInput').value = qIp.trim();
+    startPing();
+    return;
+  }
+  const traceUrls = ['https://challenges.cloudflare.com/cdn-cgi/trace', 'https://ip.net.coffee/cdn-cgi/trace', 'https://1.1.1.1/cdn-cgi/trace'];
+  for (const u of traceUrls) {
+    try {
+      const r = await fetch(u, { signal: AbortSignal.timeout(4000), cache: 'no-store' });
+      if (!r.ok) continue;
+      const txt = await r.text();
+      const m = txt.match(/ip=([^\n]+)/);
+      if (m && m[1].trim()) {
+        document.getElementById('hostInput').value = m[1].trim();
+        startPing();
+        return;
+      }
+    } catch {}
+  }
   try {
-    const r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(5000) });
-    const txt = await r.text();
-    const m = txt.match(/ip=([^\n]+)/);
-    if (m) {
-      document.getElementById('hostInput').value = m[1].trim();
+    const d = await window.radarDirectIP();
+    if (d && d.ip) {
+      document.getElementById('hostInput').value = d.ip;
+      startPing();
     }
   } catch {}
 }
