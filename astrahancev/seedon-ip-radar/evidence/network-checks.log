@@ -1,0 +1,14 @@
+PASS Portable root URL and IPv6 links
+PASS DIRECT primary: only Seedon is called
+PASS Yandex fallback accepts a JSON string, marks route unverified
+PASS ipify fallback is third and explicitly names VPN-dependent routing
+PASS All DIRECT sources fail without inventing an IP
+PASS Invalid source IP and IPv6 validation
+PASS Absolute legacy API URL, country and backend string translation
+PASS GeoIP HTTP failure falls back to ipwho.is in Russian
+PASS Claude official Statuspage fields are adapted
+PASS Claude offline fallback stays unknown, never healthy
+PASS OpenAI offline fallback resolves to gpt/status-fallback.json
+PASS Malformed official payload uses unknown fallback
+PASS Service aggregation preserves unavailable services
+Network adapter checks: 13 passed

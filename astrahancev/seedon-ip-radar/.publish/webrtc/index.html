@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+(function(){var m=document.cookie.match(/(?:^|; )seedon_ip_theme=([^;]*)/);var t=m?decodeURIComponent(m[1]):localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);})();
+</script>
+
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg?v=8">
+
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Проверка утечек WebRTC / UDP — Seedon IP Radar</title>
+<meta name="description" content="Сравнение выходных IP WebRTC и HTTP для проверки маршрутизации UDP.">
+<meta name="keywords" content="Сравнение выходных IP WebRTC и HTTP для проверки маршрутизации UDP.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://seedon.ru/ip/webrtc/">
+<meta property="og:title" content="Проверка утечек WebRTC / UDP — Seedon IP Radar">
+<meta property="og:description" content="Сравнение выходных IP WebRTC и HTTP для проверки маршрутизации UDP.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://seedon.ru/ip/webrtc/">
+<meta property="og:locale" content="ru_RU">
+<meta name="author" content="Seedon IP Radar">
+<meta name="generator" content="Seedon IP Radar Tools">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+
+<link rel="dns-prefetch" href="https://www.google-analytics.com">
+<meta property="og:site_name" content="Seedon IP Radar">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Проверка утечек WebRTC / UDP — Seedon IP Radar">
+<meta name="twitter:description" content="Сравнение выходных IP WebRTC и HTTP для проверки маршрутизации UDP.">
+
+<style>
+  :root {
+    --bg: #fff; --bg-soft: #f8f9fb; --bg-card: #fff; --bg-hover: #eef1f5;
+    --text: #1a1a1a; --text-soft: #57606a; --text-muted: #8b949e;
+    --border: #e1e4e8; --border-strong: #d8dce0;
+    --shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+  }
+  [data-theme="dark"] {
+    --bg: #0d1117; --bg-soft: #161b22; --bg-card: #161b22; --bg-hover: #21262d;
+    --text: #e6edf3; --text-soft: #c9d1d9; --text-muted: #8b949e;
+    --border: #30363d; --border-strong: #444c56;
+    --shadow: 0 1px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0d1117; --bg-soft: #161b22; --bg-card: #161b22; --bg-hover: #21262d;
+      --text: #e6edf3; --text-soft: #c9d1d9; --text-muted: #8b949e;
+      --border: #30363d; --border-strong: #444c56;
+      --shadow: 0 1px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+    }
+  }
+  .ts-wrap { position: relative; margin-left: auto; align-self: center; z-index: 100; margin-top: -6px; }
+  .ts-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border-strong); background: var(--bg-card); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; transition: background 0.15s, transform 0.15s; -webkit-tap-highlight-color: transparent; }
+  .ts-btn:hover { background: var(--bg-hover); }
+  .ts-btn:active { transform: scale(0.96); }
+  .ts-btn svg { width: 14px; height: 14px; stroke: currentColor; }
+  .ts-menu { position: absolute; top: 44px; right: 0; min-width: 148px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); padding: 4px; display: none; }
+  .ts-menu.open { display: block; }
+  .ts-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 12px; background: transparent; border: none; color: var(--text); font: inherit; font-size: 14px; border-radius: 6px; cursor: pointer; text-align: left; -webkit-tap-highlight-color: transparent; }
+  .ts-item:hover { background: var(--bg-hover); }
+  .ts-item svg { width: 16px; height: 16px; stroke: currentColor; flex-shrink: 0; }
+  .ts-item[aria-current="true"] { background: var(--bg-hover); font-weight: 500; }
+  @media (max-width: 480px) {
+    .ts-btn { width: 26px; height: 26px; }
+    .ts-btn svg { width: 13px; height: 13px; }
+  }
+  
+  
+  [data-theme="dark"] .main-table th { background: var(--bg-soft) !important; }
+  [data-theme="dark"] .result-table th { background: var(--bg-soft) !important; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .main-table th { background: var(--bg-soft) !important; }
+    :root:not([data-theme="light"]) .result-table th { background: var(--bg-soft) !important; }
+  }
+  body { background: var(--bg) !important; color: var(--text) !important; }
+  
+  [data-theme="dark"] code, [data-theme="dark"] .article-body code { background: #21262d; color: #e6edf3; }
+  [data-theme="dark"] a[style*="#1d4ed8"] { color: #58a6ff !important; }
+  [data-theme="dark"] .loading-bar { background-color: #21262d; }
+  [data-theme="dark"] .loading-bar::after { background: linear-gradient(90deg, transparent, #30363d, transparent); }
+  [data-theme="dark"] .spinner { border-color: #30363d; border-top-color: var(--text); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) code, :root:not([data-theme="light"]) .article-body code { background: #21262d; color: #e6edf3; }
+    :root:not([data-theme="light"]) a[style*="#1d4ed8"] { color: #58a6ff !important; }
+    :root:not([data-theme="light"]) .loading-bar { background-color: #21262d; }
+    :root:not([data-theme="light"]) .loading-bar::after { background: linear-gradient(90deg, transparent, #30363d, transparent); }
+    :root:not([data-theme="light"]) .spinner { border-color: #30363d; border-top-color: var(--text); }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { overflow-y: scroll; }
+  body { font-family: system-ui, sans-serif; background: var(--bg-card); color: var(--text); min-height: 100vh; line-height: 1.6; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; }
+
+  .nav { display: flex; gap: 20px; margin-bottom: 20px; font-size: 0.9em; flex-wrap: wrap; align-items: center; }
+  .nav a { color: var(--text-soft); text-decoration: none; padding-bottom: 4px; border-bottom: 2px solid transparent; -webkit-tap-highlight-color: transparent; outline: none; display: inline-block; line-height: 1.5; white-space: nowrap; flex-shrink: 0; }
+  .nav a:hover { color: var(--text); }
+  .nav a:focus, .nav a:active { outline: none; }
+  .nav a.active { color: var(--text); font-weight: 600; border-bottom: 2px solid var(--text); }
+  .nav .short { display: none; }
+  .nav .shortest { display: none; }
+  /* nav-ipcard-new-css */
+  .nav .pc-only-new { display: inline-flex; align-items: center; gap: 4px; }
+  .nav .nav-new {
+    font-size: 0.3em; font-weight: 700; padding: 1px 3px; border-radius: 3px;
+    background: linear-gradient(90deg,#ef4444,#f59e0b); color: #fff;
+    letter-spacing: 0.4px; text-transform: uppercase; line-height: 1.4;
+  }
+  @media (max-width: 580px) { .nav .pc-only-new { display: none; } }
+  @media (max-width: 580px) { .nav .full { display: none; } .nav .short { display: inline; } .nav { gap: 14px; } }
+  @media (max-width: 399px) {
+    .nav a[href="../claude/index.html"] .short { display: none; }
+    .nav a[href="../claude/index.html"] .shortest { display: inline; }
+    .nav { gap: 12px; }
+    .ts-btn { width: 24px; height: 24px; }
+    .ts-btn svg { width: 12px; height: 12px; }
+  }
+  @media (max-width: 339px) {
+    .nav { gap: 8px; font-size: 0.88em; }
+    .ts-btn { width: 22px; height: 22px; }
+    .ts-btn svg { width: 11px; height: 11px; }
+  }
+
+  h1 { font-size: 1.75em; font-weight: 700; margin-bottom: 8px; }
+  .desc { color: var(--text-soft); font-size: 0.9em; margin-bottom: 24px; line-height: 1.6; }
+  @media (max-width: 480px) { .desc { font-size: 0.82em; } }
+
+  .verdict {
+    text-align: center; padding: 20px; margin-bottom: 24px;
+    border-radius: 12px; font-size: 1.1em; font-weight: 600;
+  }
+  .verdict-safe { background: #d1fae5; color: #065f46; }
+  .verdict-warn { background: #fef3c7; color: #92400e; }
+  .verdict-danger { background: #fce4ec; color: #c62828; }
+
+  .result-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    border: 1px solid var(--border-strong); border-radius: 10px; overflow: hidden;
+    font-size: 0.9em;
+    box-shadow: var(--shadow);
+  }
+  .result-table th {
+    text-align: left; padding: 10px 16px;
+    background: linear-gradient(180deg, #f8f9fb 0%, #eef0f3 100%);
+    border-bottom: 1px solid var(--border-strong); font-weight: 600; font-size: 0.85em; color: var(--text-soft);
+  }
+  .result-table td {
+    padding: 10px 16px; border-bottom: 1px solid var(--border); vertical-align: middle;
+  }
+  .result-table tbody tr:nth-child(even) { background: var(--bg-soft); }
+  .result-table tr:last-child td { border-bottom: none; }
+
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.82em; font-weight: 600; }
+  .tag-safe { background: #d1fae5; color: #065f46; }
+  .tag-warn { background: #fef3c7; color: #92400e; }
+  .tag-danger { background: #fce4ec; color: #c62828; }
+  .tag-neutral { background: #e5e7eb; color: var(--text-soft); }
+  .tag-info { background: #dbeafe; color: #1d4ed8; }
+
+  .status-bar { text-align: center; margin-bottom: 24px; font-size: 0.95em; min-height: 28px; }
+
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid #ddd; border-top-color: var(--text); border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .test-btn {
+    display: block; margin: 0 auto 24px; padding: 12px 36px; border: none; border-radius: 8px;
+    background: var(--text); color: var(--bg); font-size: 1em; font-weight: 600; cursor: pointer;
+  }
+  .test-btn:hover { background: var(--text-soft); }
+  .test-btn:disabled { background: var(--text-muted); cursor: not-allowed; }
+
+  .info-cards {
+    display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px;
+  }
+  .info-card {
+    flex: 1; min-width: 200px; padding: 14px 18px;
+    border: 1px solid var(--border-strong); border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .info-card .label { font-size: 0.78em; color: var(--text-muted); margin-bottom: 4px; }
+  .info-card .value { font-weight: 600; font-size: 0.95em; }
+
+  .article-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+  @media (max-width: 700px) { .article-grid { grid-template-columns: 1fr; } }
+  .article-fold {
+    border: 1px solid var(--border-strong); border-radius: 10px; margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .article-fold summary {
+    padding: 14px 18px; cursor: pointer; font-weight: 600; font-size: 0.95em;
+    list-style: none; display: flex; justify-content: space-between; align-items: center;
+  }
+  .article-fold summary::-webkit-details-marker { display: none; }
+  .article-fold summary::after { content: '▸'; color: var(--text-muted); transition: transform 0.2s; }
+  .article-fold[open] summary::after { transform: rotate(90deg); }
+  .article-fold[open] summary { border-bottom: 1px solid var(--border); }
+  .article-body { padding: 16px 18px; font-size: 0.9em; line-height: 1.8; color: var(--text); }
+  .article-body p { margin-bottom: 12px; }
+  .article-body strong { color: var(--text); }
+  .article-body code { background: #f1f3f5; padding: 2px 6px; border-radius: 4px; font-size: 0.88em; }
+  .article-body ul { padding-left: 20px; margin-bottom: 12px; }
+  .article-body li { margin-bottom: 6px; }
+
+  footer { text-align: center; padding: 30px 0 20px; color: var(--text-muted); font-size: 0.82em; }
+  footer a { color: var(--text-muted); text-decoration: none; }
+
+  .copy-short { display: none; }
+  .feat-title-short { display: none; }
+  @media (max-width: 480px) {
+    .container { padding: 14px 12px; }
+    h1 { font-size: 1.4em; }
+    .result-table { font-size: 0.78em; }
+    .result-table th, .result-table td { padding: 7px 8px; }
+    .info-cards { flex-direction: column; }
+    .copy-full { display: none; }
+    .copy-short { display: inline; }
+    
+    .feature-cards { gap: 8px !important; flex-wrap: nowrap !important; }
+    .feature-card { min-width: 0 !important; padding: 10px 6px !important; flex: 1 1 0 !important; }
+    .feature-card .feature-icon { font-size: 1em !important; }
+    .feature-card .feature-desc { display: none; }
+    .feat-title-full { display: none; }
+    .feat-title-short { display: inline; }
+  }
+
+  
+  .nav-more{position:relative;display:inline-flex;align-items:center}.nav-more-trigger{cursor:pointer;display:inline-flex;align-items:center;gap:3px;color:var(--text-soft,#666);line-height:1.5;border-bottom:2px solid transparent;padding-bottom:4px;white-space:nowrap}.nav-more:hover .nav-more-trigger{color:var(--text,#1a1a1a)}.nav-more-arrow{transition:transform .15s}.nav-more:hover .nav-more-arrow{transform:rotate(180deg)}.nav-more-menu{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:2px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:9px;box-shadow:0 4px 16px rgba(0,0,0,0.12);padding:5px;min-width:120px;opacity:0;visibility:hidden;transition:opacity .15s;z-index:300}.nav-more:hover .nav-more-menu{opacity:1;visibility:visible}.nav-more-menu a{display:block;padding:8px 12px;border-radius:6px;border-bottom:none !important;white-space:nowrap;color:var(--text,#1a1a1a);font-size:0.95em}.nav-more-menu a:hover{background:var(--bg-hover,#eef1f5)}.nav-more-menu::before{content:"";position:absolute;left:-12px;right:-12px;top:-18px;height:18px}.nav-more-menu{transition:opacity .15s ease,visibility 0s linear .35s}.nav-more:hover .nav-more-menu{transition:opacity .15s ease,visibility 0s}
+  </style>
+
+<style data-h5nav>
+.nav-scroll{display:contents}
+.nav-h5-more,.nav-h5-grid{display:none}
+.nav a.active{font-weight:400;-webkit-text-stroke:0.45px currentColor}
+@media (max-width:580px){
+  .nav{flex-wrap:nowrap;align-items:center;line-height:1.5}
+  .nav-scroll{display:flex;flex:1 1 auto;min-width:0;align-items:center;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;padding-right:24px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent)}
+  .nav-scroll::-webkit-scrollbar{display:none}
+  .nav-scroll a{flex:0 0 auto}
+  .nav-scroll .pc-only-new{display:inline-flex !important}
+  .nav-scroll .nav-more{display:none !important}
+  .nav-h5-more{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;background:none;border:none;margin:0;padding:0 0 4px;border-bottom:2px solid transparent;font:inherit;color:var(--text-soft,#57606a);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .nav-h5-more svg{transition:transform .15s}
+  .nav-h5-more.open svg{transform:rotate(180deg)}
+  .nav-h5-grid.open{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 14px;padding:8px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:10px}
+  .nav-h5-grid a{font-size:0.82em;text-align:center;padding:8px 2px;border-radius:6px;background:var(--bg-soft,#f8f9fb);color:var(--text-soft,#57606a);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-h5-grid a.on{color:var(--text,#1a1a1a);font-weight:600;background:var(--bg-hover,#eef1f5)}
+  .ts-wrap{margin-top:0;position:relative;top:-3.3px}
+  .ts-wrap .ts-btn{width:24px;height:24px;box-sizing:border-box}
+  .ts-wrap .ts-btn svg{width:14px;height:14px}
+}
+@media (max-width:399px){
+  .nav-scroll a[href$="gpt/index.html"] .short{display:inline}
+}
+</style>
+<script src="../radar-translations.js"></script>
+<script src="../radar-common.js"></script>
+<link rel="stylesheet" href="../radar-ru.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Проверка утечек WebRTC / UDP — Seedon IP Radar", "url": "https://seedon.ru/ip/webrtc/", "description": "Сравнение выходных IP WebRTC и HTTP для проверки маршрутизации UDP.", "inLanguage": "ru-RU", "publisher": {"@type": "Organization", "name": "Seedon (ООО «Сидон»)", "url": "https://seedon.ru/"}}</script>
+</head>
+<body>
+
+
+<div class="container">
+  <nav class="nav"><div class="nav-scroll">
+    <a href="../index.html" title="Главная - Проверка IP IP и маршрутизации"><span class="full">Проверка IP</span><span class="short">Проверка</span></a>
+    <a href="../claude/index.html" title="Claude AI Проверка IP - IP Репутация IP"><span class="full">Claude</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
+    <a href="../ip/index.html" title="Проверка IP репутации - ASN / Проверка рисков"><span class="full">Рейтинг IP</span><span class="short">Оценка</span></a>
+    <a href="../gpt/index.html" title="ChatGPT · Codex Проверка IP рисков" class="pc-only-new"><span class="full">GPT</span><span class="short">GPT</span></a>
+    <a href="../link/index.html" title="Доступность сайтов мира" class="pc-only-new"><span class="full">Связность</span><span class="short">Доступность</span></a>
+    <a href="../dns/index.html" title="DNS Проверка утечек"><span class="full">Утечки DNS</span><span class="short">DNS</span></a>
+    <a href="./index.html" class="active" aria-current="page"><span class="full">WebRTC</span><span class="short">UDP</span></a>
+    <a href="../cloudflare/index.html" title="Cloudflare Подробная проверка" class="pc-only-new"><span class="full">Cloudflare</span><span class="short">CF</span></a>
+    <a href="../ping/index.html" title="Глобальный пинг Тест задержки" class="pc-only-new"><span class="full">Пинг</span><span class="short">Ping</span></a>
+    <a href="../status/index.html" title="Проверка доступности сервисов"><span class="full">Статусы</span><span class="short">Статус</span></a>
+    
+  </div><button class="nav-h5-more" type="button" aria-expanded="false" aria-controls="navH5Grid" onclick="var g=document.getElementById('navH5Grid');this.classList.toggle('open');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">Ещё <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button><div class="ts-wrap" id="ts-wrap">
+  <button class="ts-btn" id="ts-btn" aria-label="Выбрать тему" aria-haspopup="menu" aria-expanded="false">
+    <svg data-mode-icon="light" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    <svg data-mode-icon="dark" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg data-mode-icon="auto" viewBox="0 0 24 24" fill="none" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>
+  </button>
+  <div class="ts-menu" id="ts-menu" role="menu">
+    <button class="ts-item" data-mode="light" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>Светлая тема</button>
+    <button class="ts-item" data-mode="dark" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Тёмная тема</button>
+    <button class="ts-item" data-mode="auto" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>Как в системе</button>
+  </div>
+</div></nav>
+<div class="nav-h5-grid" id="navH5Grid">
+  <a href="../index.html">Проверка IP</a>
+  <a href="../claude/index.html">Claude</a>
+  <a href="../ip/index.html">Рейтинг IP</a>
+  <a href="../gpt/index.html">GPT</a>
+  <a href="../link/index.html">Доступность сети</a>
+  <a href="../dns/index.html">Утечки DNS</a>
+  <a href="./index.html" class="on">WebRTC</a>
+  <a href="../cloudflare/index.html">Cloudflare</a>
+  <a href="../ping/index.html">Глобальный пинг</a>
+  <a href="../status/index.html">Статус сервисов</a>
+  
+</div>
+<script data-h5nav-scroll>(function(){var s=document.querySelector(".nav-scroll");if(!s)return;var a=s.querySelector("a.active");if(!a)return;var sr=s.getBoundingClientRect();if(!sr.width||s.scrollWidth<=s.clientWidth)return;var ar=a.getBoundingClientRect();if(ar.right>sr.right-24){s.scrollLeft=s.scrollWidth;}})();</script>
+<script>
+(function(){
+  var btn=document.getElementById("ts-btn"),menu=document.getElementById("ts-menu"),html=document.documentElement;
+  function readCookie(){var m=document.cookie.match(/(?:^|; )seedon_ip_theme=([^;]*)/);return m?decodeURIComponent(m[1]):null;}
+  function writeCookie(v){var base="; path=/; max-age=31536000; samesite=lax";if(location.protocol==="https:")base+="; secure";document.cookie="seedon_ip_theme="+encodeURIComponent(v)+base;}
+  function clearCookie(){document.cookie="seedon_ip_theme=; path=/; max-age=0";}
+  function current(){return readCookie()||localStorage.getItem("theme")||"auto";}
+  function effective(){var c=current();if(c!=="auto")return c;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+  function paint(){var eff=effective(),c=current();btn.querySelectorAll("[data-mode-icon]").forEach(function(el){el.style.display=(el.dataset.modeIcon===c)?"block":"none";});menu.querySelectorAll(".ts-item").forEach(function(it){if(it.dataset.mode===c)it.setAttribute("aria-current","true");else it.removeAttribute("aria-current");});}
+  function setMode(m){if(m==="auto"){localStorage.removeItem("theme");clearCookie();html.removeAttribute("data-theme");}else{localStorage.setItem("theme",m);writeCookie(m);html.setAttribute("data-theme",m);}paint();}
+  btn.addEventListener("click",function(e){e.stopPropagation();var o=menu.classList.toggle("open");btn.setAttribute("aria-expanded",o);});
+  menu.querySelectorAll(".ts-item").forEach(function(it){it.addEventListener("click",function(){setMode(it.dataset.mode);menu.classList.remove("open");btn.setAttribute("aria-expanded","false");});});
+  document.addEventListener("click",function(e){if(menu.classList.contains("open")&&!e.target.closest("#ts-wrap")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&menu.classList.contains("open")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.focus();}});
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",paint);
+  function tsMoveNav(){var nav=document.querySelector('.nav'),wrap=document.getElementById('ts-wrap');if(nav&&wrap&&wrap.parentNode!==nav){nav.appendChild(wrap);}}if(document.readyState!=='loading')tsMoveNav();else document.addEventListener('DOMContentLoaded',tsMoveNav);
+  paint();
+})();
+</script>
+
+  <h1>Проверка WebRTC / UDP</h1>
+  <p class="desc">Сравните адреса, обнаруженные STUN-серверами, с ожидаемыми выходными IP. Несколько адресов могут соответствовать разным правилам маршрутизации.</p>
+
+  <div class="feature-cards" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px">
+    <div class="feature-card" style="flex:1;min-width:200px;padding:14px 18px;border: 1px solid var(--border-strong);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);text-align:center">
+      <div class="feature-icon" style="font-size:1.2em">🔍</div>
+      <div style="font-weight:600;font-size:0.88em;margin-top:4px"><span class="feat-title-full">STUN Проверка несколькими узлами</span><span class="feat-title-short">STUN Проверка</span></div>
+      <div class="feature-desc" style="color: var(--text-soft);font-size:0.78em"><span class="copy-full">Обращение к нескольким STUN серверам с отправкой UDP Запрос, для сравнения результатов</span><span class="copy-short">Несколько серверов мира STUN Сравнение ответов серверов</span></div>
+    </div>
+    <div class="feature-card" style="flex:1;min-width:200px;padding:14px 18px;border: 1px solid var(--border-strong);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);text-align:center">
+      <div class="feature-icon" style="font-size:1.2em">🛡️</div>
+      <div style="font-weight:600;font-size:0.88em;margin-top:4px"><span class="feat-title-full">UDP Проверка маршрутизации</span><span class="feat-title-short">UDP Проверка</span></div>
+      <div class="feature-desc" style="color: var(--text-soft);font-size:0.78em"><span class="copy-full">Проверьте, перехватывает ли клиент UDP Трафик, Проверка ожидаемой маршрутизации</span><span class="copy-short">Проверить перехват UDP Трафик, Проверить правила</span></div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:16px;align-items:center;justify-content:center;margin-bottom:24px">
+    <button class="test-btn" id="testBtn" onclick="runTest()" style="margin:0">Начать проверку</button>
+    <span id="rtcStatus" style="font-size:0.9em;color: var(--text-muted)">Ожидание проверки</span>
+  </div>
+  <div style="text-align:center;margin-bottom:24px;color: var(--text-muted);font-size:0.88em">Нажмите кнопку выше, Проверить сейчас WebRTC Есть ли утечка
+  </div>
+
+  <div class="status-bar" id="statusBar"></div>
+  <div id="verdictArea"></div>
+
+  <table class="result-table" id="resultTable" style="display:none">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>IP Адрес</th>
+        <th>Тип</th>
+        <th>Геолокация</th>
+        <th>Статус</th>
+      </tr>
+    </thead>
+    <tbody id="resultBody"></tbody>
+  </table>
+
+  
+  <div style="margin-top:36px">
+    <h2 style="font-size:1.2em;font-weight:700;margin-bottom:16px;color: var(--text)">📖 Полезные материалы</h2>
+    <div class="article-grid">
+    <details class="article-fold">
+      <summary>WebRTC Как возникает утечка?</summary>
+      <div class="article-body">
+        <p>WebRTC (Web Real-Time Communication)Технология, встроенная в браузер, Позволяет совершать видеозвонки без дополнительных плагинов, а также общаться голосом и передавать файлы. Это удобно?</p>
+        <p>Но нужно учитывать: <strong>WebRTC При установлении соединения, использует STUN сервер получает внешний сетевой адрес IP. </strong>При этом используется UDP Протокол, а многие прокси поддерживают только TCP Трафик. В результате — Даже когда обычный веб-трафик проходит через прокси, WebRTC другой протокол может раскрыть фактический IP адрес. </p>
+        <p>Кроме того, На веб-странице JavaScript проверка может выполняться без отдельного уведомления WebRTC, и не требует отдельного окна разрешения. </p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>Что проверяет инструмент?</summary>
+      <div class="article-body">
+        <p>Инструмент обращается к нескольким STUN Сервер (Google, Cloudflare и др.)Отправляет UDP Запрос, Собирает возвращённые IP Адрес, чтобы показать: </p>
+        <ul>
+          <li><strong>Обрабатывает ли прокси UDP Трафик</strong> — Если STUN Если возвращён адрес прокси IP, это означает UDP используется ожидаемый прокси-маршрут</li>
+          <li><strong>Наличие IP Утечка</strong> — Если STUN Возвращён адрес вашего оператора IP, это означает UDP Трафик обошёл прокси</li>
+          <li><strong>Работают ли правила маршрутизации</strong> — Разные STUN серверы могут использовать разные выходные адреса, Сравните это с ожидаемыми правилами маршрутизации</li>
+          <li><strong>IPv6 Есть ли утечка</strong> — Некоторые прокси обслуживают только IPv4, IPv6 Трафик может раскрыть. Результат показывает все найденные IPv6 Адрес</li>
+        </ul>
+        <p>Простыми словами: <strong>Нажмите кнопку, чтобы узнать UDP какой маршрут использует трафик. </strong></p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>STUN и UDP Что это?</summary>
+      <div class="article-body">
+        <p><strong>UDP</strong> (User Datagram Protocol)Один из базовых транспортных протоколов интернета. и TCP Разные, UDP Позволяет отправлять пакеты без предварительного соединения, Снижает накладные расходы, но не гарантирует доставку. Видеозвонки, Онлайн-игры, и голосовые звонки чувствительны к задержке, и часто используют UDP. </p>
+        <p><strong>STUN</strong> (Session Traversal Utilities for NAT)Протокол помогает"определить внешний IP"адрес. Устройство часто находится за маршрутизатором (NAT), и не знает своего публичного IP какой адрес используется. STUN Сервер работает так: Вы отправляете UDP пакет, и получаете ответ"с адресом, который видит сервер IP Да X.X.X.X". </p>
+        <p>WebRTC использует STUN для прямого соединения устройств. Проблема в том, что: <strong>этот UDP пакет не обязательно идёт через прокси. </strong>Многие прокси обслуживают только TCP Трафик, UDP и пакет уходит через локальную сеть, Тогда фактический IP адрес виден STUN серверу. </p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>Как определить утечку?</summary>
+      <div class="article-body">
+        <p>Сравните: выходной адрес прокси IP и WebRTC с обнаруженным IP. </p>
+        <ul>
+          <li>Если адреса<strong>совпадают</strong> (или WebRTC или протокол отключён и адрес не получен IP) → Безопасность, утечка не обнаружена</li>
+          <li>Если WebRTC Если получен<strong>другой IP</strong>, и этот IP адрес принадлежит вашему оператору IP → обнаружена утечка</li>
+        </ul>
+        <p>Страница автоматически сравнивает адреса, Ручное сравнение не требуется. </p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>Если обнаружена утечка, Как исправить?</summary>
+      <div class="article-body">
+        <p><strong>Firefox: </strong>Введите в адресной строке <code>about:config</code>, Найдите <code>media.peerconnection.enabled</code>, Двойным нажатием установите <code>false</code>. Это полностью отключит WebRTC. </p>
+        <p><strong>Chrome / Edge: </strong>В браузере нет обычного переключателя отключения WebRTC соответствующая настройка. Можно использовать uBlock Origin Расширение, в"Настройки → Конфиденциальность"Отметьте"Блокировать WebRTC Раскрытие локального IP Адрес". </p>
+        <p><strong>Brave: </strong>Откройте настройки → Конфиденциальность и безопасность → WebRTC IP Политика обработки, Выбрать"Отключить вне прокси UDP". </p>
+        <p><strong>Safari: </strong>По умолчанию для WebRTC действуют ограничения, что снижает риск утечки. Дополнительные настройки доступны в"Разработка"меню ограничений WebRTC Функции. </p>
+        <p><strong>Расширенная настройка: UDP Маршрутизация</strong></p>
+        <p>Описанные выше способы"действуют на весь протокол" — полностью отключают WebRTC, или ограничивают его. Если протокол нужен для WebRTC (например Google Meet, Discord Голосовая связь), полное отключение может нарушить работу. </p>
+        <p>Другой вариант: <strong>В клиенте прокси для UDP задайте отдельный маршрут трафика. </strong>Проверьте поддержку правил для UDP соответствующего протокола, Можно направить STUN трафик серверов (например Google и Cloudflare для STUN Адрес)через выбранный выход, сохранив работу другого UDP Трафик (например игр, локальной сети). Это позволяет WebRTC защитить фактический IP, и не отключать протокол для всех приложений. </p>
+        <p>После изменения, повторите тест на этой странице, и проверьте результат. </p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>Несколько выходных адресов IP?не обязательно означают WebRTC Утечка</summary>
+      <div class="article-body">
+        <p>Порядок проверки. Если обнаружено несколько разных публичных IP, это<strong>не обязательно</strong>Да WebRTC Утечка. </p>
+        <p>Некоторые пользователи настраивают раздельные маршруты (например прямое подключение к российским ресурсам, и прокси для международных), другой STUN Разные серверы могут попадать под разные правила. Например: </p>
+        <ul>
+          <li>Google для STUN Сервер → через прокси → показан выходной адрес прокси IP (например в Японии)</li>
+          <li>Cloudflare для STUN Сервер → используется другой маршрут прокси → показан другой выход IP (например в Гонконге)</li>
+        </ul>
+        <p>В таком случае несколько разных IP Да<strong>это нормально</strong>, поскольку правила направляют трафик через разные узлы. Сравните: результат с вашими правилами, Проверьте эти IP регионы: соответствуют ли они ожиданиям. </p>
+        <p><strong>Особое внимание требуется: </strong></p>
+        <p>если прокси включён, Но WebRTC а найденные публичные IP полностью относятся к<strong>вашему локальному оператору IP</strong> (например при проверке из России, все адреса принадлежат российскому оператору IP), Это может означать WebRTC полный обход прокси, и пакет уходит через локальную сеть. если для этого трафика ожидался другой маршрут. </p>
+        <p>Простой способ проверки: Посмотрите геолокацию результата. Если она совпадает с вашим местоположением, а трафик должен идти через прокси, проверьте настройки — Используйте описанные выше"Если обнаружена утечка, Как исправить?"способы. </p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>Помимо WebRTC, DNS утечка тоже важна</summary>
+      <div class="article-body">
+        <p>Проверка только одного протокола WebRTC Утечка, не исключает утечки через другой: <strong>Утечки DNS</strong>. </p>
+        <p>При каждом обращении к сайту, браузер сначала запрашивает DNS преобразование домена в IP Адрес. Если этот DNS запрос идёт вне прокси, и отправляется DNS вашего оператора DNS Сервер, оператор может видеть запрошенные домены. </p>
+        <p>Также: DNS в отличие от утечки WebRTC не всегда определяется простым сравнением адресов. Для проверки нужен отдельный инструмент DNS показывающий путь DNS-запроса. </p>
+        <p>Разница между двумя утечками: </p>
+        <ul>
+          <li><strong>WebRTC Утечка</strong> → и раскрыть фактический IP Адрес (сайт видит ваш сетевой адрес)</li>
+          <li><strong>Утечки DNS</strong> → раскрываются запрошенные домены (оператор видит, какие домены запрашивались)</li>
+        </ul>
+        <p>Проверьте оба протокола. WebRTC Текущий тест выполнен здесь, DNS Проверка другой утечки доступна на странице <a href="../dns/index.html" style="color:#1d4ed8">DNS Проверка утечек</a> Страница, 5 с до результата, Проверьте ваш DNS на нежелательное раскрытие данных. </p>
+      </div>
+    </details>
+
+    <details class="article-fold">
+      <summary>Почему режим системного прокси и TUN режим дают разные результаты</summary>
+      <div class="article-body">
+        <p>Иногда наблюдается такое различие: <strong>системный прокси показывает"Утечка не обнаружена", Переключить на TUN а другой режим показывает утечку</strong>. Причина может быть в доступности протокола, Два режима по-разному обрабатывают трафик. </p>
+
+        <p><strong>Режим системного прокси (HTTP/SOCKS5)</strong>: Браузер отправляет запросы через системный прокси, Но выбранный прокси может поддерживать только TCP Трафик. WebRTC для STUN использует протокол UDP, который не проходит через HTTP/SOCKS Прокси. В результате STUN Запрос не может быть отправлен, и страница показывает"Утечка не обнаружена". </p>
+
+        <p><strong>TUN Режим (Глобальный/Виртуальный адаптер)</strong>: TUN Создаёт виртуальный адаптер для перехвата трафика, Включая TCP и UDP. Это означает STUN для UDP запрос может быть отправлен. Если узел не поддерживает UDP Перенаправление, или UDP может использоваться другой выход, либо правила не охватывают STUN Адрес сервера, это приводит к UDP Выходной IP и TCP Выходной IP Не совпадает, и может определяться как возможная утечка. </p>
+
+        <table style="width:100%;border-collapse:collapse;margin:14px 0;font-size:0.9em">
+          <tr style="background: var(--bg-soft)"><th style="padding:8px 12px;text-align:left;border: 1px solid var(--border)">Режим</th><th style="padding:8px 12px;text-align:left;border: 1px solid var(--border)">STUN UDP</th><th style="padding:8px 12px;text-align:left;border: 1px solid var(--border)">Результат проверки</th></tr>
+          <tr><td style="padding:8px 12px;border: 1px solid var(--border)">Режим системного прокси</td><td style="padding:8px 12px;border: 1px solid var(--border)">Не удаётся отправить</td><td style="padding:8px 12px;border: 1px solid var(--border)">"Утечка не обнаружена" (Это может означать блокировку протокола)</td></tr>
+          <tr><td style="padding:8px 12px;border: 1px solid var(--border)">TUN Режим</td><td style="padding:8px 12px;border: 1px solid var(--border)">Запрос отправляется</td><td style="padding:8px 12px;border: 1px solid var(--border)">Показывает фактический UDP выходной маршрут</td></tr>
+        </table>
+
+        <p><strong>Вывод: </strong>В режиме прокси"Утечка не обнаружена"отсутствие адреса не гарантирует отсутствие риска, Возможно, только UDP протокол заблокирован. Для проверки WebRTC утечек, используйте TUN соответствующий режим теста. Если TUN Если в режиме обнаружена утечка, проверьте ваш UDP выход отличается от TCP Не совпадает, Проверьте настройки узла UDP перенаправления и правил. </p>
+      </div>
+    </details>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const grid = document.querySelector('.article-grid');
+  if (!grid) return;
+  const items = Array.from(grid.querySelectorAll('details.article-fold'));
+  items.forEach(function(el, i){
+    el.addEventListener('toggle', function(){
+      if (window.innerWidth <= 700) return;
+      const partner = (i % 2 === 0) ? items[i+1] : items[i-1];
+      if (partner && partner.open !== el.open) partner.open = el.open;
+    });
+  });
+})();
+</script>
+
+<footer style="text-align:center;padding:30px 12px;color:var(--text-muted,#8b949e);font-size:.82em">© 2026 <a href="https://seedon.ru/">Seedon (ООО «Сидон»)</a> · Seedon IP Radar</footer>
+
+<script>
+function flagImg(cc) {
+  if (!cc) return '';
+  const src = cc === 'cn' ? 'https://ip.net.coffee/favicons/cn.png' : cc.toLowerCase() === 'tw' ? 'https://ip.net.coffee/favicons/flags/tw.png' : `https://ip.net.coffee/favicons/flags/${cc.toLowerCase()}.png`;
+  const altTxt = cc.toLowerCase() === 'tw' ? 'Тайвань' : cc;
+  return `<img src="${src}" width="40" height="27" style="width:18px;height:auto;border-radius:2px;vertical-align:-2px" alt="${altTxt}" onerror="this.onerror=null;this.style.display='none'">`;
+}
+
+let cfIP = '';
+
+// Get Cloudflare exit IP on load
+(async () => {
+  try {
+    const r = await fetch('https://1.1.1.1/cdn-cgi/trace', { signal: AbortSignal.timeout(5000) });
+    const txt = await r.text();
+    const m = txt.match(/ip=([^\n]+)/);
+    if (m) {
+      cfIP = m[1].trim();
+      // Get geo
+      try {
+        const g = await fetch(`https://ip.net.coffee/api/geoip/${cfIP}`, { signal: AbortSignal.timeout(5000) });
+        if (g.ok) {
+          const geo = await g.json();
+          document.getElementById('cfIP').innerHTML = `${flagImg(geo.country_code)} ${cfIP}`;
+        } else {
+          document.getElementById('cfIP').textContent = cfIP;
+        }
+      } catch { document.getElementById('cfIP').textContent = cfIP; }
+    }
+  } catch {
+    document.getElementById('cfIP').textContent = 'Не удалось получить';
+  }
+})();
+
+let testing = false;
+
+async function runTest() {
+  if (testing) return;
+  testing = true;
+  const btn = document.getElementById('testBtn');
+  btn.disabled = true;
+  btn.textContent = 'Проверка...';
+
+  const statusBar = document.getElementById('statusBar');
+  const verdictArea = document.getElementById('verdictArea');
+  const table = document.getElementById('resultTable');
+  const tbody = document.getElementById('resultBody');
+
+  verdictArea.innerHTML = '';
+  tbody.innerHTML = '';
+  table.style.display = 'none';
+  statusBar.innerHTML = '<span class="spinner"></span>Проверка WebRTC IP...';
+
+  const ips = new Map(); // ip → type
+
+  try {
+    const pc = new RTCPeerConnection({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun.cloudflare.com:3478' },
+        { urls: 'stun:stun1.l.google.com:19302' },
+      ]
+    });
+    pc.createDataChannel('');
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+
+    await new Promise((resolve) => {
+      const timeout = setTimeout(() => { pc.close(); resolve(); }, 6000);
+      pc.onicecandidate = (e) => {
+        if (!e.candidate) { clearTimeout(timeout); pc.close(); resolve(); return; }
+        const c = e.candidate.candidate;
+        // Extract IPv4
+        const m4 = c.match(/([0-9]{1,3}\.){3}[0-9]{1,3}/);
+        if (m4) {
+          const ip = m4[0];
+          if (!ip.startsWith('0.') && !ip.startsWith('127.') && !ip.startsWith('10.') && !ip.startsWith('172.') && !ip.startsWith('192.168.') && !ip.startsWith('198.18.') && !ip.startsWith('198.19.') && !ip.startsWith('100.64.') && ip !== '0.0.0.0') {
+            const type = c.includes('srflx') ? 'Публичный (STUN)' : c.includes('relay') ? 'Ретранслятор (TURN)' : 'Локальный';
+            if (!ips.has(ip)) ips.set(ip, type);
+          }
+        }
+        // Extract IPv6
+        const m6 = c.match(/([a-f0-9]{1,4}:){2,7}[a-f0-9]{1,4}/i);
+        if (m6) {
+          const ip = m6[0];
+          if (!ip.startsWith('::1') && !ip.startsWith('fe80')) {
+            const type = c.includes('srflx') ? 'Публичный (STUN)' : 'Локальный IPv6';
+            if (!ips.has(ip)) ips.set(ip, type);
+          }
+        }
+      };
+    });
+  } catch {}
+
+  const ipArr = [...ips.entries()].slice(0, 5);
+
+  if (ipArr.length === 0) {
+    document.getElementById('rtcStatus').innerHTML = '<span class="tag tag-safe">Отключено</span>';
+    verdictArea.innerHTML = '<div class="verdict verdict-safe">✓ WebRTC Отключён либо адрес не раскрыт, утечка не обнаружена</div><div style="color: var(--text-muted);font-size:0.82em;margin-top:8px;line-height:1.5">Если сейчас используется"Режим системного прокси", UDP возможно, запрос не может быть отправлен, Рекомендуется проверять в"TUN Режим"для получения фактического результата. Если это другой режим"Режим системного прокси"это примечание не относится к нему. </div>';
+    statusBar.textContent = '';
+    testing = false;
+    btn.disabled = false;
+    btn.textContent = 'Повторить проверку';
+    return;
+  }
+
+  document.getElementById('rtcStatus').innerHTML = `<span class="tag tag-info">Включено</span> Обнаружено ${ipArr.length} шт. IP`;
+  statusBar.innerHTML = '<span class="spinner"></span>Определение геолокации...';
+
+  // Get geo for each IP and determine leak
+  const results = [];
+  for (const [ip, type] of ipArr) {
+    let geo = null;
+    try {
+      const r = await fetch(`https://ip.net.coffee/api/geoip/${ip}`, { signal: AbortSignal.timeout(5000) });
+      if (r.ok) geo = await r.json();
+    } catch {}
+    const leaked = cfIP && ip !== cfIP && type.includes('Публичный');
+    results.push({ ip, type, geo, leaked });
+  }
+
+  // Leak detection: compare STUN public IPs with each other
+  // If multiple different public STUN IPs exist → possible leak (one might be real IP)
+  const stunPublicIPs = results.filter(r => r.type.includes('Публичный')).map(r => r.ip);
+  const uniqueStunIPs = [...new Set(stunPublicIPs)];
+  const hasMultiplePublic = uniqueStunIPs.length > 1;
+
+  if (hasMultiplePublic) {
+    verdictArea.innerHTML = '<div class="verdict verdict-warn">⚠️ Обнаружено WebRTC Возможна утечка!<br>Обнаружены разные публичные выходные адреса IP, Если вы настроили разные маршруты, сравните выходные адреса с правилами IP Информация</div>';
+  } else {
+    verdictArea.innerHTML = '<div class="verdict verdict-safe">✓ Отлично!Не обнаружено WebRTC Утечка</div>';
+  }
+
+  tbody.innerHTML = results.map((r, i) => {
+    const cc = r.geo?.country_code || '';
+    const geoStr = r.geo ? [r.geo.country, r.geo.city].filter(Boolean).join(' ') : '';
+    let matchTag;
+    if (r.type.includes('Публичный')) {
+      matchTag = hasMultiplePublic
+        ? '<span class="tag tag-warn">Требует внимания</span>'
+        : '<span class="tag tag-safe">Корректно</span>';
+    } else {
+      matchTag = '<span class="tag tag-neutral">Локальный</span>';
+    }
+    return `<tr>
+      <td>${i + 1}</td>
+      <td style="font-weight:600">${r.ip}</td>
+      <td><span class="tag tag-info">${r.type}</span></td>
+      <td>${flagImg(cc)} ${geoStr}</td>
+      <td>${matchTag}</td>
+    </tr>`;
+  }).join('');
+
+  table.style.display = '';
+  statusBar.textContent = '';
+  testing = false;
+  btn.disabled = false;
+  btn.textContent = 'Повторить проверку';
+}
+</script>
+
+</body>
+</html>

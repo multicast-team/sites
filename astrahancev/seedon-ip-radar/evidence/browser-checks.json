@@ -1,0 +1,66 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "pages": {
+    "home": {
+      "direct_ip": true,
+      "portable_ip_links": true
+    },
+    "claude": {
+      "direct_ip": true,
+      "trust_score_loaded": true,
+      "official_status_loaded": true,
+      "chinese_text": false,
+      "horizontal_overflow": false
+    },
+    "gpt": {
+      "direct_ip": true,
+      "trust_score_loaded": true,
+      "official_status_loaded": true,
+      "chinese_text": false,
+      "horizontal_overflow": false,
+      "local_image_errors": 0
+    },
+    "ip?ip=1.1.1.1": {
+      "query_loaded": true,
+      "score": 41,
+      "chinese_text": false,
+      "horizontal_overflow": false
+    },
+    "cloudflare": {
+      "trace_loaded": true,
+      "chinese_text": false,
+      "horizontal_overflow": false,
+      "turnstile_domain_error": "110200; shown explicitly; requires own domain configuration"
+    },
+    "status": {
+      "cards": 31,
+      "unknown": 5,
+      "claude_official_status": true,
+      "openai_official_status": true,
+      "chinese_text": false,
+      "horizontal_overflow": false
+    },
+    "dns": {
+      "clicked": "Быстрый тест",
+      "completed": true,
+      "resolvers_found": 0,
+      "empty_result_is_neutral": true,
+      "button_reenabled": true,
+      "chinese_text": false,
+      "horizontal_overflow": false
+    },
+    "claude/site.html": {
+      "configuration_tabs": 4,
+      "json_tab_selected_by_click": true,
+      "chinese_text": false,
+      "horizontal_overflow": false
+    }
+  },
+  "not_run": [
+    "Full speed / traffic-intensive test",
+    "User network with Clash Verge DIRECT rules"
+  ]
+}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg?v=8">
+
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPv6 и Claude Code: проверка маршрутизации — Seedon IP Radar</title>
+<meta name="description" content="Когда IPv6 обходит прокси и как проверить обе версии IP.">
+<meta name="keywords" content="Когда IPv6 обходит прокси и как проверить обе версии IP.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://seedon.ru/ip/claude/ipv6.html">
+<meta property="og:title" content="Когда IPv6 обходит прокси и как проверить обе версии IP.">
+<meta property="og:description" content="Когда IPv6 обходит прокси и как проверить обе версии IP.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://seedon.ru/ip/claude/ipv6.html">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Seedon IP Radar">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Когда IPv6 обходит прокси и как проверить обе версии IP.">
+<meta name="twitter:description" content="Когда IPv6 обходит прокси и как проверить обе версии IP.">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { overflow-y: scroll; }
+  body { font-family: system-ui, sans-serif; background: #fff; color: #1a1a1a; min-height: 100vh; line-height: 1.8; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 24px 20px; }
+
+  .nav { display: flex; gap: 20px; margin-bottom: 20px; font-size: 0.9em; flex-wrap: wrap; }
+  .nav a { color: #666; text-decoration: none; padding-bottom: 4px; border-bottom: 2px solid transparent; }
+  .nav a:hover { color: #1a1a1a; }
+  .nav a.active { color: #1a1a1a; font-weight: 600; border-bottom: 2px solid #1a1a1a; }
+  .nav .short { display: none; }
+  /* nav-ipcard-new-css */
+  .nav .pc-only-new { display: inline-flex; align-items: center; gap: 4px; }
+  .nav .nav-new {
+    font-size: 0.3em; font-weight: 700; padding: 1px 3px; border-radius: 3px;
+    background: linear-gradient(90deg,#ef4444,#f59e0b); color: #fff;
+    letter-spacing: 0.4px; text-transform: uppercase; line-height: 1.4;
+  }
+  @media (max-width: 580px) { .nav .pc-only-new { display: none; } }
+  @media (max-width: 580px) { .nav .full { display: none; } .nav .short { display: inline; } .nav { gap: 14px; } }
+
+  .back-link { display: inline-block; margin-bottom: 20px; color: #1d4ed8; text-decoration: none; font-size: 0.9em; }
+  .back-link:hover { text-decoration: underline; }
+
+  h1 { font-size: 1.6em; font-weight: 700; margin-bottom: 16px; line-height: 1.4; }
+  h2 { font-size: 1.2em; font-weight: 700; margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 1px solid #eef0f3; }
+  h3 { font-size: 1.05em; font-weight: 600; margin: 20px 0 8px; }
+
+  .article { font-size: 0.95em; color: #333; }
+  .article p { margin-bottom: 14px; }
+  .article strong { color: #1a1a1a; }
+  .article code { background: #f1f3f5; padding: 2px 6px; border-radius: 4px; font-size: 0.88em; font-family: system-ui, sans-serif; }
+  .article ul, .article ol { padding-left: 22px; margin-bottom: 14px; }
+  .article li { margin-bottom: 8px; }
+  .article blockquote {
+    border-left: 3px solid #d8dce0; padding: 10px 16px; margin: 16px 0;
+    background: #f8f9fb; color: #57606a; font-size: 0.92em;
+  }
+
+  .highlight-box {
+    padding: 16px 20px; border-radius: 10px; margin: 16px 0;
+  }
+  .highlight-warn { background: #fef3c7; border: 1px solid #f0c040; }
+  .highlight-good { background: #d1fae5; border: 1px solid #6fcf7c; }
+  .highlight-info { background: #eff6ff; border: 1px solid #93c5fd; }
+
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 0.82em; font-weight: 600; }
+  .tag-warn { background: #fef3c7; color: #92400e; }
+  .tag-good { background: #d1fae5; color: #065f46; }
+
+  .versus { display: flex; gap: 16px; margin: 16px 0; }
+  .versus > div { flex: 1; padding: 14px; border-radius: 8px; font-size: 0.9em; }
+  .versus .bad { background: #fef3f2; border: 1px solid #fca5a5; }
+  .versus .good { background: #f0fdf4; border: 1px solid #86efac; }
+
+  footer { text-align: center; padding: 30px 0 20px; color: #8b949e; font-size: 0.82em; margin-top: 40px; border-top: 1px solid #eef0f3; }
+  footer a { color: #8b949e; text-decoration: none; }
+
+  @media (max-width: 480px) {
+    .container { padding: 14px 12px; }
+    h1 { font-size: 1.3em; }
+    .article { font-size: 0.88em; }
+    .article blockquote { padding: 8px 12px; font-size: 0.85em; }
+    .highlight-box { padding: 12px 14px; font-size: 0.88em; }
+    .versus { flex-direction: column; gap: 10px; }
+    .versus > div { padding: 10px; }
+    h2 { font-size: 1.1em; margin: 24px 0 10px; }
+    h3 { font-size: 0.95em; }
+    .back-link { font-size: 0.82em; }
+  }
+
+  
+  .nav-more{position:relative;display:inline-flex;align-items:center}.nav-more-trigger{cursor:pointer;display:inline-flex;align-items:center;gap:3px;color:var(--text-soft,#666);line-height:1.5;border-bottom:2px solid transparent;padding-bottom:4px;white-space:nowrap}.nav-more:hover .nav-more-trigger{color:var(--text,#1a1a1a)}.nav-more-arrow{transition:transform .15s}.nav-more:hover .nav-more-arrow{transform:rotate(180deg)}.nav-more-menu{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:2px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:9px;box-shadow:0 4px 16px rgba(0,0,0,0.12);padding:5px;min-width:120px;opacity:0;visibility:hidden;transition:opacity .15s;z-index:300}.nav-more:hover .nav-more-menu{opacity:1;visibility:visible}.nav-more-menu a{display:block;padding:8px 12px;border-radius:6px;border-bottom:none !important;white-space:nowrap;color:var(--text,#1a1a1a);font-size:0.95em}.nav-more-menu a:hover{background:var(--bg-hover,#eef1f5)}.nav-more-menu::before{content:"";position:absolute;left:-12px;right:-12px;top:-18px;height:18px}.nav-more-menu{transition:opacity .15s ease,visibility 0s linear .35s}.nav-more:hover .nav-more-menu{transition:opacity .15s ease,visibility 0s}
+  </style>
+
+<style data-h5nav>
+.nav-scroll{display:contents}
+.nav-h5-more,.nav-h5-grid{display:none}
+.nav a.active{font-weight:400;-webkit-text-stroke:0.45px currentColor}
+@media (max-width:580px){
+  .nav{flex-wrap:nowrap;align-items:center;line-height:1.5}
+  .nav-scroll{display:flex;flex:1 1 auto;min-width:0;align-items:center;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;padding-right:24px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent)}
+  .nav-scroll::-webkit-scrollbar{display:none}
+  .nav-scroll a{flex:0 0 auto}
+  .nav-scroll .pc-only-new{display:inline-flex !important}
+  .nav-scroll .nav-more{display:none !important}
+  .nav-h5-more{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;background:none;border:none;margin:0;padding:0 0 4px;border-bottom:2px solid transparent;font:inherit;color:var(--text-soft,#57606a);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .nav-h5-more svg{transition:transform .15s}
+  .nav-h5-more.open svg{transform:rotate(180deg)}
+  .nav-h5-grid.open{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 14px;padding:8px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:10px}
+  .nav-h5-grid a{font-size:0.82em;text-align:center;padding:8px 2px;border-radius:6px;background:var(--bg-soft,#f8f9fb);color:var(--text-soft,#57606a);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-h5-grid a.on{color:var(--text,#1a1a1a);font-weight:600;background:var(--bg-hover,#eef1f5)}
+  .ts-wrap{margin-top:0;position:relative;top:-3.3px}
+  .ts-wrap .ts-btn{width:24px;height:24px;box-sizing:border-box}
+  .ts-wrap .ts-btn svg{width:14px;height:14px}
+}
+@media (max-width:399px){
+  .nav-scroll a[href$="gpt/index.html"] .short{display:inline}
+}
+</style>
+<script src="../radar-translations.js"></script>
+<script src="../radar-common.js"></script>
+<link rel="stylesheet" href="../radar-ru.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "name": "IPv6 и Claude Code: проверка маршрутизации — Seedon IP Radar", "url": "https://seedon.ru/ip/claude/ipv6.html", "description": "Практическое руководство по проверке сети и окружения Claude от Seedon.", "inLanguage": "ru-RU", "publisher": {"@type": "Organization", "name": "Seedon (ООО «Сидон»)", "url": "https://seedon.ru/"}}</script>
+</head>
+<body>
+<div class="container">
+  <nav class="nav"><div class="nav-scroll">
+    <a href="../index.html"><span class="full">Проверка IP</span><span class="short">Проверка</span></a>
+    <a href="./index.html" class="active" aria-current="page"><span class="full">Claude</span><span class="short">Claude</span></a>
+    <a href="../ip/index.html"><span class="full">Рейтинг IP</span><span class="short">Оценка</span></a>
+    <a href="../gpt/index.html" title="ChatGPT · Codex Проверка IP рисков" class="pc-only-new"><span class="full">GPT</span><span class="short">GPT</span></a>
+    <a href="../link/index.html" title="Доступность сайтов мира" class="pc-only-new"><span class="full">Связность</span><span class="short">Доступность</span></a>
+    <a href="../dns/index.html"><span class="full">Утечки DNS</span><span class="short">DNS</span></a>
+    <a href="../webrtc/index.html"><span class="full">WebRTC</span><span class="short">UDP</span></a>
+    <a href="../cloudflare/index.html" title="Cloudflare Подробная проверка" class="pc-only-new"><span class="full">Cloudflare</span><span class="short">CF</span></a>
+    <a href="../ping/index.html" title="Глобальный пинг Тест задержки" class="pc-only-new"><span class="full">Пинг</span><span class="short">Ping</span></a>
+    <a href="../status/index.html"><span class="full">Статусы</span><span class="short">Статус</span></a>
+    
+  </div><button class="nav-h5-more" type="button" aria-expanded="false" aria-controls="navH5Grid" onclick="var g=document.getElementById('navH5Grid');this.classList.toggle('open');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">Ещё <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button></nav>
+<div class="nav-h5-grid" id="navH5Grid">
+  <a href="../index.html">Проверка IP</a>
+  <a href="./index.html" class="on">Claude</a>
+  <a href="../ip/index.html">Рейтинг IP</a>
+  <a href="../gpt/index.html">GPT</a>
+  <a href="../link/index.html">Доступность сети</a>
+  <a href="../dns/index.html">Утечки DNS</a>
+  <a href="../webrtc/index.html">WebRTC</a>
+  <a href="../cloudflare/index.html">Cloudflare</a>
+  <a href="../ping/index.html">Глобальный пинг</a>
+  <a href="../status/index.html">Статус сервисов</a>
+  
+</div>
+<script data-h5nav-scroll>(function(){var s=document.querySelector(".nav-scroll");if(!s)return;var a=s.querySelector("a.active");if(!a)return;var sr=s.getBoundingClientRect();if(!sr.width||s.scrollWidth<=s.clientWidth)return;var ar=a.getBoundingClientRect();if(ar.right>sr.right-24){s.scrollLeft=s.scrollWidth;}})();</script>
+
+<a href="./index.html" class="back-link">← Проверка Claude</a><h1>IPv6 и Claude Code: проверка маршрутизации</h1><p class="subtitle">Когда IPv6 обходит прокси и как проверить обе версии IP.</p><div class="toc"><div class="toc-title">Содержание</div><a href="#core">Почему возникает расхождение</a><a href="#home">Домашний IPv6</a><a href="#effects">Что проверить</a><a href="#disable">Временное отключение для диагностики</a><a href="#tradeoff">Ограничения отключения</a><a href="#verify">Контрольный тест</a></div><div class="article"><h2 id="core">Почему возникает расхождение</h2><p>IPv4 и IPv6 могут использовать разные маршруты. Если правила клиента охватывают только IPv4, запрос по IPv6 способен пройти напрямую. Сам протокол IPv6 не означает утечку или низкую репутацию IP.</p><h2 id="home">Домашний IPv6</h2><p>Публичный IPv6 домашней сети может отражать регион оператора. Если вы ожидаете выход через другой узел, сравните IPv6 с адресом этого узла. Не путайте публичный IPv6 с локальным адресом устройства.</p><h2 id="effects">Что проверить</h2><p>Проверьте выбор адресов A/AAAA, поддержку IPv6 в узле, маршруты виртуального адаптера, настройки DNS и правила приложения. Различия между первой и последующими загрузками могут быть связаны с выбором адреса, кэшированием или установлением соединений.</p><h2 id="disable">Временное отключение для диагностики</h2><p>Сохраните текущие настройки. Временно отключите IPv6 в сетевом клиенте или адаптере, повторите тест и сравните результат. Если проблема исчезла, настройте маршрутизацию IPv6 или осознанно оставьте ограничение.</p><h2 id="tradeoff">Ограничения отключения</h2><p>Могут перестать работать ресурсы, доступные только по IPv6. При исправной поддержке обеих версий лучше настроить оба маршрута. Проверяйте поведение после переключения Wi-Fi, мобильной сети и VPN.</p><h2 id="verify">Контрольный тест</h2><p>Повторите проверку Claude, DNS и WebRTC. Смотрите на фактические адреса и ожидаемые маршруты, а не только на зелёный или красный индикатор.</p><p><a href="./index.html">Проверка Claude</a> · <a href="../dns/index.html">DNS</a> · <a href="../webrtc/index.html">WebRTC</a> · <a href="./site.html">Правила маршрутизации</a></p></div></div>
+<footer style="text-align:center;padding:30px 12px;color:var(--text-muted,#8b949e);font-size:.82em">© 2026 <a href="https://seedon.ru/">Seedon (ООО «Сидон»)</a> · Seedon IP Radar</footer>
+</body>
+</html>

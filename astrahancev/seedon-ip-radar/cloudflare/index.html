@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>
+(function(){var m=document.cookie.match(/(?:^|; )seedon_ip_theme=([^;]*)/);var t=m?decodeURIComponent(m[1]):localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);})();
+</script>
+
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg?v=8">
+
+
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#cc785c">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#cc785c">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1f1e1d">
+<meta name="application-name" content="Cloudflare Проверка узлов">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cloudflare Проверка узлов">
+<meta name="format-detection" content="telephone=no">
+<title>Cloudflare: узлы, задержка и окружение — Seedon IP Radar</title>
+<meta name="description" content="Cloudflare trace, сравнение узлов и протоколов, скорость соединения и проверка браузера.">
+<meta name="keywords" content="Cloudflare trace, сравнение узлов и протоколов, скорость соединения и проверка браузера.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://seedon.ru/ip/cloudflare/">
+<meta property="og:title" content="Cloudflare: узлы, задержка и окружение — Seedon IP Radar">
+<meta property="og:description" content="Cloudflare trace, сравнение узлов и протоколов, скорость соединения и проверка браузера.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://seedon.ru/ip/cloudflare/">
+<meta property="og:locale" content="ru_RU">
+<meta name="author" content="Seedon IP Radar">
+<meta name="generator" content="Seedon IP Radar Tools">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+
+<link rel="dns-prefetch" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://speed.cloudflare.com" crossorigin>
+<meta property="og:site_name" content="Seedon IP Radar">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cloudflare: узлы, задержка и окружение — Seedon IP Radar">
+<meta name="twitter:description" content="Cloudflare trace, сравнение узлов и протоколов, скорость соединения и проверка браузера.">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="./cloudflare-page.css?v20260916d">
+
+
+
+<style data-h5nav>
+.nav-scroll{display:contents}
+.nav-h5-more,.nav-h5-grid{display:none}
+.nav a.active{font-weight:400;-webkit-text-stroke:0.45px currentColor}
+@media (max-width:580px){
+  .nav{flex-wrap:nowrap;align-items:center;line-height:1.5}
+  .nav-scroll{display:flex;flex:1 1 auto;min-width:0;align-items:center;gap:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;white-space:nowrap;padding-right:24px;-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 20px),transparent)}
+  .nav-scroll::-webkit-scrollbar{display:none}
+  .nav-scroll a{flex:0 0 auto}
+  .nav-scroll .pc-only-new{display:inline-flex !important}
+  .nav-scroll .nav-more{display:none !important}
+  .nav-h5-more{display:inline-flex;align-items:center;gap:3px;flex:0 0 auto;background:none;border:none;margin:0;padding:0 0 4px;border-bottom:2px solid transparent;font:inherit;color:var(--text-soft,#57606a);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .nav-h5-more svg{transition:transform .15s}
+  .nav-h5-more.open svg{transform:rotate(180deg)}
+  .nav-h5-grid.open{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 14px;padding:8px;background:var(--bg-card,#fff);border:1px solid var(--border,#e1e4e8);border-radius:10px}
+  .nav-h5-grid a{font-size:0.82em;text-align:center;padding:8px 2px;border-radius:6px;background:var(--bg-soft,#f8f9fb);color:var(--text-soft,#57606a);text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav-h5-grid a.on{color:var(--text,#1a1a1a);font-weight:600;background:var(--bg-hover,#eef1f5)}
+  .ts-wrap{margin-top:0;position:relative;top:-3.3px}
+  .ts-wrap .ts-btn{width:24px;height:24px;box-sizing:border-box}
+  .ts-wrap .ts-btn svg{width:14px;height:14px}
+}
+@media (max-width:399px){
+  .nav-scroll a[href$="gpt/index.html"] .short{display:inline}
+}
+</style>
+<script src="../radar-translations.js"></script>
+<script src="../radar-common.js"></script>
+<link rel="stylesheet" href="../radar-ru.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Cloudflare: узлы, задержка и окружение — Seedon IP Radar", "url": "https://seedon.ru/ip/cloudflare/", "description": "Cloudflare trace, сравнение узлов и протоколов, скорость соединения и проверка браузера.", "inLanguage": "ru-RU", "publisher": {"@type": "Organization", "name": "Seedon (ООО «Сидон»)", "url": "https://seedon.ru/"}}</script>
+</head>
+<body>
+
+
+<div class="container">
+  <nav class="nav"><div class="nav-scroll">
+    <a href="../index.html" title="Главная - Проверка IP IP и маршрутизации"><span class="full">Проверка IP</span><span class="short">Проверка</span></a>
+    <a href="../claude/index.html" title="Claude AI Проверка IP - IP Репутация IP"><span class="full">Claude</span><span class="short">Claude</span><span class="shortest">Claude</span></a>
+    <a href="../ip/index.html" title="Проверка IP репутации - ASN / Проверка рисков"><span class="full">Рейтинг IP</span><span class="short">Оценка</span></a>
+    <a href="../gpt/index.html" title="ChatGPT · Codex Проверка IP рисков" class="pc-only-new"><span class="full">GPT</span><span class="short">GPT</span></a>
+    <a href="../link/index.html" title="Доступность сайтов мира" class="pc-only-new"><span class="full">Связность</span><span class="short">Доступность</span></a>
+    <a href="../dns/index.html" title="DNS Проверка утечек"><span class="full">Утечки DNS</span><span class="short">DNS</span></a>
+    <a href="../webrtc/index.html" title="WebRTC Проверка IP утечек"><span class="full">WebRTC</span><span class="short">UDP</span></a>
+    <a href="./index.html" title="Cloudflare Подробная проверка" class="pc-only-new active" aria-current="page"><span class="full">Cloudflare</span><span class="short">CF</span></a>
+    <a href="../ping/index.html" title="Глобальный пинг Тест задержки" class="pc-only-new"><span class="full">Пинг</span><span class="short">Ping</span></a>
+    <a href="../status/index.html" title="Проверка доступности сервисов"><span class="full">Статусы</span><span class="short">Статус</span></a>
+  </div><button class="nav-h5-more" type="button" aria-expanded="false" aria-controls="navH5Grid" onclick="var g=document.getElementById('navH5Grid');this.classList.toggle('open');g.classList.toggle('open');this.setAttribute('aria-expanded',g.classList.contains('open'))">Ещё <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button><div class="ts-wrap" id="ts-wrap">
+  <button class="ts-btn" id="ts-btn" aria-label="Выбрать тему" aria-haspopup="menu" aria-expanded="false">
+    <svg data-mode-icon="light" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    <svg data-mode-icon="dark" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg data-mode-icon="auto" viewBox="0 0 24 24" fill="none" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>
+  </button>
+  <div class="ts-menu" id="ts-menu" role="menu">
+    <button class="ts-item" data-mode="light" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>Светлая тема</button>
+    <button class="ts-item" data-mode="dark" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Тёмная тема</button>
+    <button class="ts-item" data-mode="auto" role="menuitem"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3 A 9 9 0 0 0 12 21 Z" fill="currentColor" stroke="none"/></svg>Как в системе</button>
+  </div>
+</div></nav>
+<div class="nav-h5-grid" id="navH5Grid">
+  <a href="../index.html">Проверка IP</a>
+  <a href="../claude/index.html">Claude</a>
+  <a href="../ip/index.html">Рейтинг IP</a>
+  <a href="../gpt/index.html">GPT</a>
+  <a href="../link/index.html">Доступность сети</a>
+  <a href="../dns/index.html">Утечки DNS</a>
+  <a href="../webrtc/index.html">WebRTC</a>
+  <a href="./index.html" class="on">Cloudflare</a>
+  <a href="../ping/index.html">Глобальный пинг</a>
+  <a href="../status/index.html">Статус сервисов</a>
+  
+</div>
+<script data-h5nav-scroll>(function(){var s=document.querySelector(".nav-scroll");if(!s)return;var a=s.querySelector("a.active");if(!a)return;var sr=s.getBoundingClientRect();if(!sr.width||s.scrollWidth<=s.clientWidth)return;var ar=a.getBoundingClientRect();if(ar.right>sr.right-24){s.scrollLeft=s.scrollWidth;}})();</script>
+<script>
+(function(){
+  var btn=document.getElementById("ts-btn"),menu=document.getElementById("ts-menu"),html=document.documentElement;
+  function readCookie(){var m=document.cookie.match(/(?:^|; )seedon_ip_theme=([^;]*)/);return m?decodeURIComponent(m[1]):null;}
+  function writeCookie(v){var base="; path=/; max-age=31536000; samesite=lax";if(location.protocol==="https:")base+="; secure";document.cookie="seedon_ip_theme="+encodeURIComponent(v)+base;}
+  function clearCookie(){document.cookie="seedon_ip_theme=; path=/; max-age=0";}
+  function current(){return readCookie()||localStorage.getItem("theme")||"auto";}
+  function effective(){var c=current();if(c!=="auto")return c;return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
+  function paint(){var eff=effective(),c=current();btn.querySelectorAll("[data-mode-icon]").forEach(function(el){el.style.display=(el.dataset.modeIcon===c)?"block":"none";});menu.querySelectorAll(".ts-item").forEach(function(it){if(it.dataset.mode===c)it.setAttribute("aria-current","true");else it.removeAttribute("aria-current");});}
+  function setMode(m){if(m==="auto"){localStorage.removeItem("theme");clearCookie();html.removeAttribute("data-theme");}else{localStorage.setItem("theme",m);writeCookie(m);html.setAttribute("data-theme",m);}paint();}
+  btn.addEventListener("click",function(e){e.stopPropagation();var o=menu.classList.toggle("open");btn.setAttribute("aria-expanded",o);});
+  menu.querySelectorAll(".ts-item").forEach(function(it){it.addEventListener("click",function(){setMode(it.dataset.mode);menu.classList.remove("open");btn.setAttribute("aria-expanded","false");});});
+  document.addEventListener("click",function(e){if(menu.classList.contains("open")&&!e.target.closest("#ts-wrap")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");}});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&menu.classList.contains("open")){menu.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.focus();}});
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",paint);
+  function tsMoveNav(){var nav=document.querySelector('.nav'),wrap=document.getElementById('ts-wrap');if(nav&&wrap&&wrap.parentNode!==nav){nav.appendChild(wrap);}}if(document.readyState!=='loading')tsMoveNav();else document.addEventListener('DOMContentLoaded',tsMoveNav);
+  paint();
+})();
+</script>
+
+  <div class="cfp">
+  <h1>Cloudflare: узлы, задержка и окружение</h1>
+  <div class="ip-section-header">
+    <p class="desc">Выходной IP, пограничный узел, WARP и протоколы. Сравните задержку узлов разных тарифов и проверьте скорость соединения.</p>
+    <label class="ip-mask-toggle">
+      <span class="ip-mask-toggle-label">Скрыть IP</span>
+      <input type="checkbox" id="ipMaskToggle">
+      <span class="ip-mask-toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="ipv6-warn" id="ipv6Warn">⚠️ Текущий маршрут через IPv6 Доступ Cloudflare. IPv6 и IPv4 Могут использоваться разные пограничные узлы, Результаты ниже относятся к IPv6 текущему маршруту. </div>
+
+  
+  <div class="ip-dual">
+    <div class="ip-hero" id="heroIP">
+      <div class="label"><img src="https://ip.net.coffee/favicons/cloudflare.webp" alt="Cloudflare" style="width:16px;height:16px;vertical-align:-2px;margin-right:4px">Cloudflare Выходной IP</div>
+      <div class="ip-addr" id="ipAddr"><div class="loading-bar" style="width:180px;height:24px"></div></div>
+      <div class="ip-geo" id="ipGeo"><div class="loading-bar" style="width:220px"></div></div>
+    </div>
+    <div class="ip-hero" id="heroColo">
+      <div class="label">Выбранный Cloudflare Пограничный узел</div>
+      <div class="big" id="coloBig"><div class="loading-bar" style="width:160px;height:24px"></div></div>
+      <div class="sub" id="coloSub"><div class="loading-bar" style="width:200px"></div></div>
+    </div>
+    <div class="ip-hero" id="heroWarp">
+      <div class="label">WARP и протокол соединения</div>
+      <div class="big" id="warpBig"><div class="loading-bar" style="width:140px;height:24px"></div></div>
+      <div class="sub" id="protoSub"><div class="loading-bar" style="width:200px"></div></div>
+    </div>
+  </div>
+
+  
+  <div class="cfx-grid2" id="tsGrid">
+    <div class="cfx">
+      <div class="cfx-head">
+        <div><div class="t">Turnstile Автоматический режим<span class="mode-chip">Non-interactive</span></div><div class="s">Фоновая проверка, Не требует нажатия</div></div>
+        <button class="cf-btn" type="button" onclick="tsReset('ni')">Сбросить</button>
+      </div>
+      <div class="cfx-body">
+        <div class="ts-box" id="tsBoxNi"><span style="font-size:0.85em;color:var(--text-muted)">Загрузка Turnstile...</span></div>
+        <div class="kv">
+          <div class="risk-row"><span class="risk-label">Текущий статус</span><span class="risk-value" id="tsNiState"><span class="tag tag-neutral">Ожидание проверки</span></span></div>
+          <div class="risk-row"><span class="risk-label">Серверная проверка</span><span class="risk-value" id="tsNiServer">—</span></div>
+          <div class="risk-row"><span class="risk-label">Время ответа</span><span class="risk-value num" id="tsNiTime">—</span></div>
+        </div>
+        <div class="verdict wait" id="tsNiVerdict"><b>Ожидание результата</b>Здесь появится результат оценки окружения. </div>
+        <details class="tok"><summary>Метаданные ответа</summary><div class="tokv" id="tsNiToken">—</div></details>
+      </div>
+    </div>
+    <div class="cfx">
+      <div class="cfx-head">
+        <div><div class="t">Turnstile Управляемый режим<span class="mode-chip">Managed</span></div><div class="s">от Cloudflare Может потребоваться подтверждение нажатием</div></div>
+        <button class="cf-btn" type="button" onclick="tsReset('mg')">Сбросить</button>
+      </div>
+      <div class="cfx-body">
+        <div class="ts-box" id="tsBoxMg"><span style="font-size:0.85em;color:var(--text-muted)">Загрузка Turnstile...</span></div>
+        <div class="kv">
+          <div class="risk-row"><span class="risk-label">Текущий статус</span><span class="risk-value" id="tsMgState"><span class="tag tag-neutral">Ожидание проверки</span></span></div>
+          <div class="risk-row"><span class="risk-label">Серверная проверка</span><span class="risk-value" id="tsMgServer">—</span></div>
+          <div class="risk-row"><span class="risk-label">Время ответа</span><span class="risk-value num" id="tsMgTime">—</span></div>
+        </div>
+        <div class="verdict wait" id="tsMgVerdict"><b>Ожидание результата</b>Здесь появится результат оценки окружения. </div>
+        <details class="tok"><summary>Метаданные ответа</summary><div class="tokv" id="tsMgToken">—</div></details>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="cfx" style="margin-bottom:24px">
+    <div class="cfx-head">
+      <div><div class="t">Cloudflare Сравнение узлов и задержки разных тарифов</div><div class="s">Один маршрут до бесплатного тарифа, Корпоративный тариф, WARP, сети теста скорости и других Cloudflare Сеть, Показаны выбранные узлы и задержка</div></div>
+      <button class="cf-btn" type="button" id="btnCompare" onclick="runCompare()">Повторить тест</button>
+    </div>
+    <div class="cfx-body">
+      <div class="cf-table-wrap">
+        <table class="cf-table" id="compareTable">
+          <thead><tr><th>Сайт / Сеть</th><th>Уровень</th><th>Выбранный узел</th><th>Задержка</th><th>Протокол</th></tr></thead>
+          <tbody id="compareBody"></tbody>
+        </table>
+      </div>
+      <div class="cf-note" id="compareNote">Тестирование...</div>
+    </div>
+  </div>
+
+  
+  <div class="cfx" style="margin-bottom:24px">
+    <div class="cfx-head">
+      <div><div class="t">Cloudflare Тест скорости пограничного узла</div><div class="s">Прямые запросы из браузера speed.cloudflare.com Тест по уровням: Максимальный объём загрузки 300 MB, Максимальный объём отправки 50 MB, Тест завершится автоматически; Также считываются параметры узла TCP Время туда и обратно</div></div>
+      <button class="cf-btn primary" type="button" id="btnSpeed" onclick="runSpeed()">Начать тест скорости</button>
+    </div>
+    <div class="cfx-body">
+      <div class="speed-grid">
+        <div><div class="k">Загрузка</div><div class="v" id="spDown">—</div><div class="u">Mbps</div></div>
+        <div><div class="k">Отправка</div><div class="v" id="spUp">—</div><div class="u">Mbps</div></div>
+        <div><div class="k">Пограничный RTT</div><div class="v" id="spRtt">—</div><div class="u">ms · TCP Туда и обратно</div></div>
+      </div>
+      <div class="cf-note" id="speedNote">Нажмите«Начать тест скорости», Расход трафика до 350 MB Трафик (Чем выше скорость, тем больше расход, На линии 100 Мбит/с обычно 150 до 300 MB). Результат отражает соединение с ближайшим Cloudflare узлом, и не измеряет скорость до исходного сервера сайта; Учитывайте лимит мобильного трафика. </div>
+    </div>
+  </div>
+
+  
+  <div class="cfx" style="margin-bottom:24px">
+    <div class="cfx-head orange">
+      <div><div class="t">Cloudflare Оценка риска окружения</div><div class="s">Сводка Cloudflare Признаки соединения и данные нескольких источников IP Сведения, Оценка текущего выходного адреса в Cloudflare системах оценки риска</div></div>
+      <button class="cf-btn" type="button" id="btnRisk" onclick="loadRisk(true)" title="Повторить оценку">Обновить</button>
+    </div>
+    <div class="cfx-body">
+      <div class="risk-top">
+        <div><div class="k">Объект проверки · Выходной IP</div><div class="ipbig" id="riskIp"><div class="loading-bar" style="width:180px;height:24px"></div></div></div>
+        <div id="riskPill"><span class="risk-pill lv-mid"><span class="dot"></span>Индекс риска: Вычисление</span></div>
+      </div>
+      <div class="risk-cols">
+        <div>
+          <h4>Определение геолокации</h4>
+          <div class="geo-box" id="riskGeo"><div class="loading-bar" style="width:120px;height:22px"></div><div class="loading-bar" style="width:180px"></div></div>
+        </div>
+        <div>
+          <h4>Проверка рисковых сценариев</h4>
+          <div class="risk-list" id="riskList">
+            <div class="risk-row"><span class="risk-label">Публичный прокси (Open Proxy)</span><span class="risk-value"><span class="sig sig-na">Проверка</span></span></div>
+            <div class="risk-row"><span class="risk-label">Резидентский прокси (Residential Proxy)</span><span class="risk-value"><span class="sig sig-na">Проверка</span></span></div>
+            <div class="risk-row"><span class="risk-label">Корпоративный прокси (Corporate Proxy)</span><span class="risk-value"><span class="sig sig-na">Проверка</span></span></div>
+            <div class="risk-row"><span class="risk-label">VPN Выходной IP</span><span class="risk-value"><span class="sig sig-na">Проверка</span></span></div>
+            <div class="risk-row"><span class="risk-label">Tor Выходной IP</span><span class="risk-value"><span class="sig sig-na">Проверка</span></span></div>
+            <div class="risk-row"><span class="risk-label">Серверный (Hosting) / Облачный сервер IP</span><span class="risk-value"><span class="sig sig-na">Проверка</span></span></div>
+            <div class="risk-row"><span class="risk-label">История злоупотреблений (Спам / Атаки)</span><span class="risk-value"><span class="sig sig-na">Проверка</span></span></div>
+          </div>
+          <div class="risk-foot">Показаны только сигналы высокой уверенности, Обнаруженные признаки требуют внимания; Отсутствие признаков не гарантирует безопасность</div>
+        </div>
+      </div>
+      <div class="cf-note" id="riskNote"></div>
+    </div>
+  </div>
+
+  
+  <div class="cfx" id="rcCard" style="display:none;margin-bottom:24px">
+    <div class="cfx-head">
+      <div><div class="t">Google reCAPTCHA v3 Проверка браузера<span class="mode-chip">Дополнительный тест</span></div><div class="s">Фоновая оценка поведения, Назад 0.0 до 1.0 оценка доверия, Чем выше, тем меньше признаков автоматизации</div></div>
+      <div style="display:flex;gap:8px"><button class="cf-btn" type="button" onclick="rcReset()">Сбросить</button><button class="cf-btn primary" type="button" id="btnRc" onclick="rcRun()">Начать проверку</button></div>
+    </div>
+    <div class="cfx-body">
+      <div class="kv">
+        <div class="risk-row"><span class="risk-label">Состояние модуля</span><span class="risk-value" id="rcEngine"><span class="tag tag-neutral">Загрузка</span></span></div>
+        <div class="risk-row"><span class="risk-label">Текущий статус</span><span class="risk-value" id="rcState"><span class="tag tag-neutral">Ожидание запуска</span></span></div>
+        <div class="risk-row"><span class="risk-label">Оценка доверия (Score)</span><span class="risk-value num" id="rcScore">—</span></div>
+        <div class="risk-row"><span class="risk-label">Время ответа</span><span class="risk-value num" id="rcTime">—</span></div>
+      </div>
+      <div class="verdict wait" id="rcVerdict"><b>Ожидание запуска</b>Нажмите«Начать проверку»затем через Google Фоновая оценка. </div>
+      <table class="score-scale" id="rcScale">
+        <tr data-min="0.9"><td>0.9 ~ 1.0</td><td>⭐⭐⭐⭐⭐</td><td>Отлично, В браузере нет явных признаков риска</td></tr>
+        <tr data-min="0.7"><td>0.7 ~ 0.9</td><td>⭐⭐⭐⭐</td><td>Хорошо, Большинство сайтов должно работать</td></tr>
+        <tr data-min="0.5"><td>0.5 ~ 0.7</td><td>⭐⭐⭐</td><td>Средне, Обнаружены признаки риска</td></tr>
+        <tr data-min="0.3"><td>0.3 ~ 0.5</td><td>⭐⭐</td><td>Плохо, Возможны ограничения или капча</td></tr>
+        <tr data-min="0"><td>0.0 ~ 0.3</td><td>⭐</td><td>Очень плохо, трафик может определяться как аномальный</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-title">Cloudflare Данные соединения</div>
+      <div id="connContent"><div class="loading-bar" style="width:100%;height:120px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cloudflare Профиль сети</div>
+      <div id="profileContent"><div class="loading-bar" style="width:100%;height:120px"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px">
+        <span>История узлов<br><span style="font-size:0.7em;color: var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0">Хранится только в браузере, Локальное хранение истории</span></span>
+        <button class="cf-btn" type="button" onclick="clearColoHistory()">Очистить</button>
+      </div>
+      <div id="historyContent" style="font-size:0.9em;color: var(--text-muted)">Загрузка...</div>
+    </div>
+  </div>
+
+  
+  <div class="cf-section">
+    <h2>Cloudflare Что показывает проверка узлов</h2>
+    <p>Многие сайты используют Cloudflare. При обращении к такому сайту, запрос сначала поступает на пограничный узел, перед обращением к исходному серверу Cloudflare Ближайший<b>Пограничный узел</b> (Дата-центр, Cloudflare обозначается как colo), Узел обращается к исходному серверу сайта. Выбор узла, влияет на скорость открытия, стабильность видео, и определение региона пользователя. Страница обращается к Cloudflare для cdn-cgi/trace API с запросом, Полученный код узла, Выходной IP, WARP Статус, и версию протокола показывает в понятном виде. </p>
+    <h3>Как рассчитывается индекс риска</h3>
+    <p>Cloudflare Корпоративный тариф Bot Management Внутренняя оценка ботов не является общедоступной, Индекс на странице — сторонняя оценка: Для выходного адреса IP используются данные нескольких источников репутации, Учитываются публичные прокси, Резидентский прокси, Корпоративный прокси, VPN, Tor, Серверный (Hosting) IP, история злоупотреблений и другие признаки риска, а также WARP и др. Cloudflare Параметры соединения. Чем ниже значение, тем лучше; 60 и выше может означать Cloudflare повышенную вероятность капчи или ограничений. Подробности оценки, доступны на странице <a href="../ip/index.html" title="Проверка IP репутации">IP репутации IP</a>. </p>
+    <h3>Как читать результат проверки</h3>
+    <ul>
+      <li><b>Автоматически пройдена</b>: Turnstile Проверка завершилась без действий пользователя, это означает Cloudflare Браузер и сеть выглядят надёжно, Это ожидаемый результат. </li>
+      <li><b>Нажмите для проверки</b>: Управляемый режим показал«Подтвердите, что вы человек»поле подтверждения, Нажмите для подтверждения. Окружение в целом нормально, есть отдельные подозрительные признаки. </li>
+      <li><b>Проверка не пройдена</b>: Проверка не завершилась даже после нажатия, Возможны необычные параметры браузера, Признаки автоматизации или IP низкая репутация, На некоторых сайтах капча может появляться часто. </li>
+    </ul>
+    <h3>Три примера расхождений</h3>
+    <ul>
+      <li><b>Пользователь в Азии, Узел в США</b>: Бесплатный тариф Cloudflare При подключении из Китая, и части сетей Юго-Восточной Азии, может выбираться LAX, SJC удалённый узел, Задержка может увеличиться с десятков до сотен миллисекунд. В таблице сравнения«Этот сайт (Бесплатный тариф)»и«Корпоративный тариф»если две строки используют разные узлы, это один из возможных примеров. </li>
+      <li><b>Выходной IP Не совпадает с главной страницей</b>: Проверьте, не направляют ли правила Cloudflare этот трафик отдельным маршрутом. Вместе с<a href="../index.html" title="Проверка IP IP и маршрутизации">Тест маршрутизации на главной</a>поможет сравнить результат с ожиданиями. </li>
+      <li><b>WARP Отображается как включённый</b>: Выходной IP становится Cloudflare собственный адрес (AS13335). такого типа IP в <a href="../gpt/index.html" title="ChatGPT · Codex Проверка IP рисков">ChatGPT</a>, <a href="../claude/index.html" title="Claude AI Проверка IP">Claude</a> в некоторых системах оценки риска может иметь низкий рейтинг, возможны ограничения регистрации или входа. </li>
+    </ul>
+    <h3>Cloudflare Справочник кодов пограничных узлов</h3>
+    <p>Коды узлов основаны на трёхбуквенных кодах аэропортов. Азиатско-Тихоокеанский регион: <span id="coloChipsAsia"></span></p>
+    <p>Северная Америка и Европа: <span id="coloChipsWest"></span></p>
+    <p style="margin-top:8px">Cloudflare Глобальная сеть 135 стран и регионов, всего 342 дата-центров, На странице встроен справочник, для определения города по коду. </p>
+  </div>
+
+  <div class="cf-section">
+    <h2>Частые вопросы</h2>
+      <details class="cf-faq"><summary>Что такое Cloudflare Пограничный узел (colo)?</summary><p>Cloudflare По всему миру 135 стран и регионов, развёрнуто 342 дата-центров, Дата-центры обозначаются трёхбуквенными кодами (например HKG Гонконг, NRT Токио, SIN Сингапур, LAX Лос-Анджелес). При обращении к сайту с Cloudflare подключением к этой сети, запрос поступает на выбранный пограничный узел, а затем на исходный сервер. Страница читает Cloudflare для cdn-cgi/trace API, и показывает город и страну выбранного узла. </p></details>
+      <details class="cf-faq"><summary>Почему бесплатный и корпоративный тарифы используют Cloudflare разные узлы?</summary><p>Cloudflare Для разных тарифов могут действовать разные сетевые политики. Бесплатный тариф и Pro трафик соответствующего тарифа в части регионов (в частности из Китая, и части сетей Юго-Восточной Азии)могут направляться на более удалённые узлы, Например, на западное побережье США LAX, SJC; Корпоративный тариф и Cloudflare собственные сервисы (1.1.1.1, cloudflare.com, speed.cloudflare.com)могут использовать HKG, NRT, SIN ближайшие узлы. Таблица сопоставляет узлы и задержку разных тарифов на одном маршруте, Различия видны в сравнении. </p></details>
+      <details class="cf-faq"><summary>Cloudflare Выходной IP и обычный выходной IP IP В чём разница?</summary><p>Обычный выходной IP IP адрес, который видит сайт при соединении; Cloudflare Выходной IP адрес при обращении к Cloudflare подключением к этой сети, Cloudflare зафиксированный пограничным узлом. Если правила прокси направляют Cloudflare трафик отдельно, адреса могут различаться. Сравнение выходных IP на главной и этой странице IP помогает проверить правила. </p></details>
+      <details class="cf-faq"><summary>WARP Что это?В результатах warp=on и warp=plus что означает?</summary><p>WARP Да Cloudflare сервис зашифрованного туннеля, После включения трафик сначала поступает в Cloudflare сеть и затем выходит из неё. warp=off Не используется WARP; warp=on Используется бесплатная версия WARP; warp=plus обозначает WARP+ Платная версия. Включение WARP при, Выходной IP становится Cloudflare адресом сети (AS13335), Для таких адресов некоторые сайты IP используют более строгие проверки. </p></details>
+      <details class="cf-faq"><summary>Как оценить задержку?</summary><p>Для узла в том же городе или регионе, От браузера до Cloudflare пограничного узла задержка часто составляет 5 до 60 мс; До западного побережья США примерно 120 до 200 мс; более 300 мс может указывать на длинный маршрут или удалённый узел. Показано время фактического запроса браузера, Оно может быть выше сетевого RTT, Подходит для сравнительного анализа тарифов. </p></details>
+      <details class="cf-faq"><summary>HTTP/3 и TLS 1.3 Что делать, если протокол не включён?</summary><p>HTTP/3 На основе QUIC (UDP 443), Браузер может переключиться при повторном запросе к сайту на HTTP/3; Если постоянно показан HTTP/2, проверьте ограничения прокси и межсетевого экрана UDP 443. TLS 1.3 Современный стандарт, Современные браузеры поддерживают по умолчанию, Отображается TLS 1.2 Возможно, промежуточный прокси выполняет TLS понижение версии или анализ трафика. </p></details>
+      <details class="cf-faq"><summary>Turnstile Чем автоматическая проверка отличается от подтверждения?</summary><p>Turnstile Да Cloudflare Проверка браузера. Автоматический режим работает в фоне; В управляемом режиме Cloudflare учитывается отпечаток браузера, репутация сети и поведение при выборе способа проверки. Автоматическое прохождение означает Cloudflare высокое доверие к окружению; Подтверждение может требоваться при отдельных подозрительных признаках; Ошибка после подтверждения требует дополнительной диагностики, При обращении к Cloudflare сайту возможны повторные проверки и ограничения. На этой странице token токен передаётся API проверки для подтверждения результата, Отображается PASS Только подтверждённый результат считается завершённой проверкой. </p></details>
+      <details class="cf-faq"><summary>Сохраняется ли мой IP ??</summary><p>Нет. Проверки отправляются непосредственно из браузера к Cloudflare соответствующим API, История узлов хранится только в браузере, Сетевые проверки используют сторонние API. </p></details>
+  </div>
+
+  
+  <div style="margin-top:24px;padding:14px 18px;border: 1px solid var(--border-strong);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+    <div style="font-size:0.82em;color: var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">Связанные инструменты</div>
+    <div class="reading-grid">
+      <a href="../index.html" title="Проверка IP IP и маршрутизации">Проверка IP · Маршрутизация сайтов: Проверьте Cloudflare соответствует ли выходной IP ожидаемому маршруту</a>
+      <a href="../ip/index.html" title="Проверка IP репутации">Проверка IP репутации: Выходной IP Репутация, ASN и подробности рисков</a>
+      <a href="../ping/index.html" title="Глобальный пинг Тест задержки">Глобальный пинг Тест задержки: Из 20 узлов для измерения адреса IP Задержка</a>
+      <a href="../link/index.html" title="Доступность сайтов мира">Доступность сайтов мира: 48 популярных сайтов: проверка доступности</a>
+      <a href="../gpt/index.html" title="ChatGPT · Codex Проверка IP рисков">ChatGPT Проверка рисков: Cloudflare Выходной IP Репутация и оценка доверия</a>
+      <a href="../claude/index.html" title="Claude AI Проверка IP">Claude AI Проверка IP: Текущий выходной IP Проверка IP стабильности доступа Claude</a>
+    </div>
+  </div>
+  </div>
+
+</div>
+
+<footer style="text-align:center;padding:30px 12px;color:var(--text-muted,#8b949e);font-size:.82em">© 2026 <a href="https://seedon.ru/">Seedon (ООО «Сидон»)</a> · Seedon IP Radar</footer>
+
+<script src="./cloudflare-page.js?v20260916d"></script>
+</body>
+</html>
