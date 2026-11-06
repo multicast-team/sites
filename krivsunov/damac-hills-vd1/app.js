@@ -26,12 +26,12 @@ const RENDERS = [
   ['stair', 'Лестница с площадки у витража', 'int'], ['kitchen', 'Кухня', 'int'], ['master', 'Спальня хозяина: выход на балкон', 'int'], ['master_bath', 'Ванная хозяина', 'int'],
   ['hero_golf_dusk', 'Вид с гольфа вечером', 'dusk'], ['facade_yard_dusk', 'Фасад со двора вечером', 'dusk'], ['living_dusk', 'Гостиная вечером', 'dusk']
 ];
-const lbItems = { renders: RENDERS.map(([id, cap]) => ({ src: `renders/${id}-2560.webp`, cap, dl: `renders/${id}-2560.webp` })) };
+const lbItems = { renders: RENDERS.map(([id, cap]) => ({ src: `renders/${id}-2560.webp?v=${REL}`, cap, dl: `renders/${id}-2560.webp?v=${REL}` })) };
 const renderGrid = $('#render-grid');
 RENDERS.forEach(([id, cap, kind], i) => {
   const f = el('figure', 'card');
   f.dataset.kind = kind;
-  const img = el('img'); img.src = `renders/${id}-1280.webp`; img.loading = 'lazy'; img.alt = cap;
+  const img = el('img'); img.src = `renders/${id}-1280.webp?v=${REL}`; img.loading = 'lazy'; img.alt = cap;
   f.append(img, el('figcaption', null, cap));
   if (kind === 'dusk') f.append(el('span', 'badge', 'вечер'));
   f.addEventListener('click', () => openLb('renders', i));
@@ -356,7 +356,7 @@ fetch(`panos.json?v=${REL}`).then((r) => r.json()).then((panos) => {
   const loader = new THREE.TextureLoader();
   const cache = new Map();
   const tex = (id) => {
-    if (!cache.has(id)) cache.set(id, new Promise((res) => loader.load(`panos/${id}-4096.webp`, (t) => { t.mapping = THREE.EquirectangularReflectionMapping; t.colorSpace = THREE.SRGBColorSpace; res(t); }, undefined, () => res(null))));
+    if (!cache.has(id)) cache.set(id, new Promise((res) => loader.load(`panos/${id}-4096.webp?v=${REL}`, (t) => { t.mapping = THREE.EquirectangularReflectionMapping; t.colorSpace = THREE.SRGBColorSpace; res(t); }, undefined, () => res(null))));
     return cache.get(id);
   };
   let cur = null, yaw = 0, pitch = 0, fov = 75, hots = [];
@@ -386,7 +386,7 @@ fetch(`panos.json?v=${REL}`).then((r) => r.json()).then((panos) => {
   for (const p of panos) {
     const b = el('button');
     b.dataset.id = p.id;
-    const im = el('img'); im.src = `panos/${p.id}-thumb.webp`; im.loading = 'lazy'; im.alt = p.label;
+    const im = el('img'); im.src = `panos/${p.id}-thumb.webp?v=${REL}`; im.loading = 'lazy'; im.alt = p.label;
     b.append(im, el('span', null, p.label));
     b.addEventListener('click', () => go(p.id));
     $('#pano-rooms').append(b);

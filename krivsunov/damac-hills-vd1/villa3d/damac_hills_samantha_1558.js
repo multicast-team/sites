@@ -7,8 +7,8 @@
 // Y — вверх, метры. Ориентация совпадает с планом Bayut: пилон и балкон спальни хозяина слева, если смотреть с гольфа.
 // Детализация: профили окон со штапиками и подоконниками, плинтусы, выключатели и розетки, фурнитура дверей,
 // подробные кухня и санузлы; двери открываются сами, когда к ним подходишь (прогулка, пролёт), и закрываются за спиной.
-import { makeTextures } from './vd1_tex.js?v=vd1-pro-20261106';
-import { makePlants } from './vd1_plants.js?v=vd1-pro-20261106';
+import { makeTextures } from './vd1_tex.js?v=vd1-fix-20261106';
+import { makePlants } from './vd1_plants.js?v=vd1-fix-20261106';
 
 export const info = {
   title: 'DAMAC Hills · вилла VD-1 у гольф-поля',
@@ -37,9 +37,10 @@ export function build(THREE, opts = {}) {
     return m;
   }
   const phys = (o) => new THREE.MeshPhysicalMaterial(o);
-  // стекло фасада: бронзовое солнцезащитное — днём отражает небо, сквозь него видно комнаты (физическое пропускание);
-  // в облегчённом режиме — тёмное зеркальное
-  const glassHi = phys({ color: new THREE.Color(0.66, 0.6, 0.52), metalness: 0, roughness: 0.025, transmission: 1, thickness: 0, ior: 1.95, specularIntensity: 1, envMapIntensity: 1.25, side: THREE.DoubleSide });
+  // стекло фасада: бронзовое солнцезащитное в два прохода — тонировка умножением (вид сквозь стекло без искажений и
+  // «призраков» листвы) и отражение неба и солнца сложением (по Френелю); в облегчённом режиме — тёмное зеркальное
+  const glassHi = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.62, 0.58, 0.5), blending: THREE.MultiplyBlending, premultipliedAlpha: true, transparent: true, depthWrite: false, side: THREE.DoubleSide, toneMapped: false, fog: false });
+  const glassRefl = phys({ color: 0x000000, metalness: 0, roughness: 0.03, ior: 1.95, specularIntensity: 1, envMapIntensity: 1.25, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false });
   const glassLo = new THREE.MeshStandardMaterial({ color: 0x2c3237, metalness: 0.86, roughness: 0.05, envMapIntensity: 1.5, side: THREE.DoubleSide });
   const glassFar = new THREE.MeshStandardMaterial({ color: 0x262c31, metalness: 0.85, roughness: 0.06, envMapIntensity: 1.4 });
   const M = {
@@ -84,7 +85,7 @@ export function build(THREE, opts = {}) {
   M.poolWater.normalMap.repeat.set(1 / 2.5, 1 / 2.5);
   M.poolWater.normalScale.set(0.5, 0.5);
   for (const k of ['glass', 'railGlass', 'water', 'poolWater', 'lamp']) M[k].userData.noCast = true;
-  for (const m of [glassHi, glassLo, glassFar]) m.userData.noCast = true;
+  for (const m of [glassHi, glassRefl, glassLo, glassFar]) m.userData.noCast = true;
   // Интерьер: материалы с userData.room берут «комнатную» среду отражений просмотрщика
   const MI = {
     wall: pbr(T.paint),
@@ -121,7 +122,7 @@ export function build(THREE, opts = {}) {
   // имена материалов с префиксом (x_ — снаружи, i_ — интерьер): по ним Blender подставляет фотоскан-материалы
   const named = (o, pre) => { for (const [k, m] of Object.entries(o)) m.name = `${pre}${k}`; };
   named(M, 'x_'); named(MI, 'i_');
-  glassHi.name = 'x_glass'; glassLo.name = 'x_glass'; glassFar.name = 'x_glassFar';
+  glassHi.name = 'x_glass'; glassLo.name = 'x_glass'; glassFar.name = 'x_glassFar'; glassRefl.name = 'x_glassRefl';
 
   // ---------- физика прогулки ----------
   // colliders — коробки [x0,y0,z0,x1,y1,z1]; walkables — поверхности [x0,z0,x1,z1,высота]; dynamic — закрытые двери
@@ -143,6 +144,7 @@ export function build(THREE, opts = {}) {
     GB.geo(geo, mat);
   }
   // Пакет: детали одного материала сливаются в одну сетку; развёртка — по мировым координатам в метрах.
+  const solids = opts.audit ? [] : null;   // для аудита (audit.html): все коробки модели
   function makeBatch(tag, bo = {}) {
     const groups = new Map();
     const put = (geo, mat) => {
@@ -157,11 +159,13 @@ export function build(THREE, opts = {}) {
         if (x1 - x0 < 1e-4 || y1 - y0 < 1e-4 || z1 - z0 < 1e-4) return;
         const g = new THREE.BoxGeometry(x1 - x0, y1 - y0, z1 - z0);
         g.translate((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2);
+        if (solids && !mat.transparent) solids.push([x0, y0, z0, x1, y1, z1]);
         put(g, mat);
       },
       cyl(x, y0, z, r, h, mat, seg = 16, r2 = r) { const g = new THREE.CylinderGeometry(r2, r, h, seg); g.translate(x, y0 + h / 2, z); put(g, mat); },
       boxSplit(x0, x1, y0, y1, z0, z1, mat, innerMat, axis, sign) { // грань, смотрящая внутрь дома (axis, sign), — отделкой
         if (x1 - x0 < 1e-4 || y1 - y0 < 1e-4 || z1 - z0 < 1e-4) return;
+        if (solids) solids.push([x0, y0, z0, x1, y1, z1]);
         const g = new THREE.BoxGeometry(x1 - x0, y1 - y0, z1 - z0).toNonIndexed();
         g.translate((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2);
         const k = axis === 'x' ? 0 : 2, p = g.attributes.position.array, q = g.attributes.normal.array;
@@ -207,6 +211,7 @@ export function build(THREE, opts = {}) {
           const mesh = new THREE.Mesh(geo, mat);
           mesh.name = `${tag}_${mat.name || 'part'}`;
           if (mat.userData.noCast || bo.noCast) mesh.userData.noCast = true;
+          if (mat.transparent) mesh.userData.noAO = true;   // стекло не закрывает затенение того, что за ним
           if (parent) parent.add(mesh);
           out.push({ geo, mat, mesh });
         }
@@ -236,6 +241,13 @@ export function build(THREE, opts = {}) {
   const ROOF = C1_TOP + 0.35;  // верх плиты крыши
   const PARA = ROOF + 0.8;     // верх парапета и рамы
   const RISE = (F1 - F0) / 21;
+  // лестница по плану Bayut: оба марша от Z 1,10 до 3,57 (план 1-го этажа, пкс 337–419), площадка до витража;
+  // нижний марш (9 проступей) — у стены коридора, верхний (10 проступей) — над дверью кухни
+  const Z1 = 1.10, ZL = 3.57, T1 = (ZL - Z1) / 9, T2 = (ZL - Z1) / 10, ZT = ZL - 10 * T2;
+  const LAND = F0 + 10 * RISE;
+  const FX = [3.15, 4.26], SX = [0.87, 2.1];
+  const soffitAt = (z) => LAND - 0.25 + (F1 - 0.35 - (LAND - 0.25)) * Math.min(1, Math.max(0, (ZL - z) / (ZL - ZT))); // низ верхнего марша
+  const FW = F1 - 0.345;       // низ стен 2-го этажа на 5 мм выше низа плиты: их грани не совпадают с гранями плиты
   // 2-й этаж снят с плана Bayut и переведён в координаты 1-го этажа (zf — для координат Z плана 2-го этажа)
   const zf = (z) => -5.19 + (z + 5.07) * 1.0211;
   const XW = -13.0;            // витраж 1-го этажа к гольфу
@@ -268,7 +280,14 @@ export function build(THREE, opts = {}) {
           const b = along === 'x' ? [start, ua[i], uy[j], uy[j + 1], t0, t1] : [t0, t1, uy[j], uy[j + 1], start, ua[i]];
           if (inner) batch.boxSplit(...b, mat, inner[0], along === 'x' ? 'z' : 'x', inner[1]);
           else batch.box(...b, mat);
-          if (solid) col(b[0], b[1], b[2], b[3], b[4], b[5]);
+          if (solid) {
+            // полоса ниже пола: под дверными проёмами — порог, на который поднимаются со ступени, а не препятствие
+            const sills = uy[j + 1] <= F0 + 0.001 ? holes.filter((h) => h[2] <= F0 + 0.001 && h[1] > start && h[0] < ua[i]).sort((p, q) => p[0] - q[0]) : [];
+            const seg = (u0, u1) => { if (u1 - u0 > 1e-4) { if (along === 'x') col(u0, u1, b[2], b[3], b[4], b[5]); else col(b[0], b[1], b[2], b[3], u0, u1); } };
+            let s0 = start;
+            for (const h of sills) { seg(s0, h[0]); s0 = Math.max(s0, h[1]); }
+            seg(s0, ua[i]);
+          }
           if (skirt && uy[j] <= fy + 0.01 && uy[j + 1] >= fy + 0.1) {
             for (const s of skirt) {
               const tt = s > 0 ? [t1, t1 + 0.011] : [t0 - 0.011, t0];
@@ -333,10 +352,10 @@ export function build(THREE, opts = {}) {
     // отлив снаружи и подоконник внутри у окон, поднятых над полом
     const floorY = floorAtY(y0 + 0.01);
     if (y0 > floorY + 0.25) {
-      W(a0 - 0.03, a1 + 0.03, y0 - 0.035, y0, out * fd / 2, out * (fd / 2 + 0.07), M.frame);
+      W(a0 - 0.03, a1 + 0.03, y0 - 0.031, y0 + 0.004, out * fd / 2, out * (fd / 2 + 0.07), M.frame);
       if (opts.sill !== false) {
         const d0 = -out * fd / 2, d1 = -out * (fd / 2 + 0.16);
-        W(a0 - 0.04, a1 + 0.04, y0 - 0.03, y0, Math.min(d0, d1), Math.max(d0, d1), MI.stoneStair, ib);
+        W(a0 - 0.04, a1 + 0.04, y0 - 0.026, y0 + 0.004, Math.min(d0, d1), Math.max(d0, d1), MI.stoneStair, ib);
       }
     }
     if (open) {
@@ -423,7 +442,11 @@ export function build(THREE, opts = {}) {
     rail.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new V3(0, 1, 0), dir));
     rail.translate(x, (y0 + y1) / 2 + h, (z0 + z1) / 2);
     ib.geo(rail, MI.chrome);
-    col(x - 0.05, x + 0.05, Math.min(y0, y1), Math.max(y0, y1) + h, Math.min(z0, z1), Math.max(z0, z1));
+    const segs = Math.max(2, Math.round(Math.abs(z1 - z0) / 0.3));
+    for (let i = 0; i < segs; i++) {
+      const za = z0 + ((z1 - z0) * i) / segs, zb = z0 + ((z1 - z0) * (i + 1)) / segs, ya = y0 + ((y1 - y0) * i) / segs, yb = y0 + ((y1 - y0) * (i + 1)) / segs;
+      col(x - 0.05, x + 0.05, Math.min(ya, yb), Math.max(ya, yb) + h, Math.min(za, zb), Math.max(za, zb));
+    }
   }
 
   // ---------- двери на петлях ----------
@@ -775,13 +798,13 @@ export function build(THREE, opts = {}) {
   ground(rectXZ(15.9, PX1, PZ0, -1.1), 0.035, M.lawn);                      // газон у улицы
   ground(rectXZ(13.65, PX1, -1.1, 0.9), 0.034, M.pavers);
   // бетонная терраса у витража гостиной с подступенком у раздвижной двери (фото фасада)
-  PB.box(-15.0, XW, 0, 0.15, -4.59, ZS, M.concrete);
+  PB.box(-15.0, XW, 0, 0.15, -4.585, ZS, M.concrete);
   PB.box(-15.42, -15.0, 0, 0.075, -3.0, -1.5, M.concrete);
   walkOn(-15.0, XW, -4.59, ZS, 0.15);
   walkOn(-15.42, -15.0, -3.0, -1.5, 0.075);
   // задняя ограда к гольфу: низкая стенка, чёрная решётка с пиками, бежевые столбы с шапками (фото гостиной)
   PB.box(PX0 - 0.27, PX0, 0, 0.5, PZ0 - 0.27, PZ1 + 0.27, M.render);
-  PB.box(PX0 - 0.3, PX0 + 0.03, 0.5, 0.56, PZ0 - 0.27, PZ1 + 0.27, M.cap);
+  PB.box(PX0 - 0.3, PX0 + 0.03, 0.5, 0.56, PZ0 - 0.25, PZ1 + 0.25, M.cap);
   for (let z = PZ0; z <= PZ1 + 0.01; z += (PZ1 - PZ0) / 6) { PB.box(PX0 - 0.32, PX0 + 0.05, 0, 1.6, z - 0.18, z + 0.18, M.render); PB.box(PX0 - 0.35, PX0 + 0.08, 1.6, 1.66, z - 0.21, z + 0.21, M.cap); }
   PB.box(PX0 - 0.16, PX0 - 0.11, 1.42, 1.46, PZ0, PZ1, M.frame);
   PB.box(PX0 - 0.16, PX0 - 0.11, 0.62, 0.66, PZ0, PZ1, M.frame);
@@ -794,7 +817,7 @@ export function build(THREE, opts = {}) {
   for (const [z0, z1] of [[-8.43, PZ0], [PZ1, 8.52]]) {
     wall(PB, 'x', PX0 - 0.27, 13.8, 0, 2.0, z0, z1, [], M.render);
     PB.box(PX0 - 0.27, 13.8, 2.0, 2.06, z0 - 0.025, z1 + 0.025, M.cap);
-    for (let x = PX0 + 3; x < 13.5; x += 3.4) PB.box(x - 0.2, x + 0.2, 0, 2.06, z0 - 0.06, z1 + 0.06, M.render);
+    for (let x = PX0 + 3; x < 13.5; x += 3.4) { PB.box(x - 0.2, x + 0.2, 0, 2.12, z0 - 0.06, z1 + 0.06, M.render); PB.box(x - 0.23, x + 0.23, 2.12, 2.17, z0 - 0.09, z1 + 0.09, M.cap); }
     wall(PB, 'x', 13.8, PX1, 0, 1.0, z0, z1, [], M.render);
     PB.box(13.8, PX1, 1.0, 1.06, z0 - 0.025, z1 + 0.025, M.cap);
     PB.box(PX1 - 0.4, PX1, 0, 1.5, z0 - 0.08, z1 + 0.08, M.render);
@@ -823,7 +846,7 @@ export function build(THREE, opts = {}) {
   // ---------- соседи: тот же тип VD-1 (копии нашей оболочки), газоны, бассейн и пергола у северного соседа ----------
   function neighborYard(dz, pool) {
     ground(rectXZ(PX0, PX1, -8.16 + dz, 8.25 + dz), 0.02, M.lawn);
-    PB.box(-15.0, XW, 0, 0.15, -4.59 + dz, ZS + dz, M.concrete);
+    PB.box(-15.0, XW, 0, 0.15, -4.585 + dz, ZS + dz, M.concrete);
     wall(PB, 'x', PX0 - 0.27, PX1, 0, 2.0, (dz < 0 ? -8.43 : 8.25) + dz, (dz < 0 ? -8.16 : 8.52) + dz, [], M.render, null, false);
     PB.box(PX0 - 0.27, PX0, 0, 0.5, PZ0 + dz, PZ1 + dz, M.render);
     PB.box(PX0 - 0.16, PX0 - 0.11, 1.42, 1.46, PZ0 + dz, PZ1 + dz, M.frame);
@@ -854,21 +877,20 @@ export function build(THREE, opts = {}) {
   B.box(XW, 12.24, 0, F0, -4.59, ZS, M.render);
   B.box(-5.31, 0.15, 0, F0, ZN, -4.59, M.render);
   B.box(0.15, 12.24, 0, F0, ZN, -4.59, M.render);
-  B.box(12.24, 13.8, 0, F0, 0.9, ZS, M.render);
+  B.box(12.24, 13.795, 0, F0, 0.905, ZS - 0.005, M.render);
   // крыльцо: ступень с дорожки и пол под двухсветным порталом
   B.box(0.87, 4.35, 0, F0 - 0.15, ZN - 0.36, ZN, M.concrete);
   walkOn(0.87, 4.35, ZN - 0.36, ZN, F0 - 0.15);
   walkOn(0.87, 4.35, ZN, -2.36, F0);
-  ib.box(0.87, 4.35, F0 - 0.006, F0, ZN, -2.36, MI.bathFloor);
+  ib.box(0.87, 4.35, F0, F0 + 0.006, ZN, -2.36, MI.bathFloor);
   // плита 2-го этажа (снаружи — бежевая кромка с теневым швом)
-  const slab = (x0, x1, z0, z1) => { B.box(x0, x1, F1 - 0.35, F1, z0, z1, M.renderShade); };
+  const slab = (x0, x1, z0, z1) => { B.box(x0 + 0.005, x1 - 0.005, F1 - 0.35, F1, z0 + 0.005, z1 - 0.005, M.renderShade); }; // кромку, где есть стена, закрывает стена
   slab(XB, 0.87, ZN, ZS);
-  slab(0.87, 4.26, -0.62, 0.85);
   slab(4.26, XE1, ZN, ZS);
   slab(XE1, XEB, 0.9, ZS);
   slab(XE1, XEB, ZN, zf(-0.457));
   walkOn(XWF, 0.87, ZN, ZS, F1);
-  walkOn(0.87, 4.26, -0.62, 0.85, F1);
+  walkOn(0.87, 4.26, -0.62, ZT, F1);
   walkOn(4.26, XE1, ZN, ZS, F1);
   walkOn(XB, XWF, zf(-4.58), zf(0.614), F1);
   walkOn(XE1, XEB, ZN, zf(-0.602), F1);
@@ -879,7 +901,7 @@ export function build(THREE, opts = {}) {
   wall(B, 'x', XB, XEB, ROOF, PARA, ZS - 0.25, ZS, [], M.render, null, false);
   wall(B, 'z', ZN + 0.25, ZS - 0.25, ROOF, PARA, XB, XB + 0.25, [], M.render, null, false);
   wall(B, 'z', ZN + 0.25, ZS - 0.25, ROOF, PARA, XEB - 0.25, XEB, [], M.render, null, false);
-  B.box(XB - 0.03, XEB + 0.03, PARA, PARA + 0.05, ZN - 0.03, ZS + 0.03, M.cap);
+  for (const [x0, x1, z0, z1] of [[XB - 0.03, XEB + 0.03, ZN - 0.03, ZN + 0.28], [XB - 0.03, XEB + 0.03, ZS - 0.28, ZS + 0.03], [XB - 0.03, XB + 0.28, ZN + 0.28, ZS - 0.28], [XEB - 0.28, XEB + 0.03, ZN + 0.28, ZS - 0.28]]) B.box(x0, x1, PARA, PARA + 0.05, z0, z1, M.cap);
   B.box(XB + 0.25, XEB - 0.25, ROOF, ROOF + 0.02, ZN + 0.25, ZS - 0.25, M.concrete);        // гидроизоляция с бетонной стяжкой
   for (let i = 0; i < 5; i++) {
     const x0 = 3 + i * 1.3;
@@ -916,18 +938,19 @@ export function build(THREE, opts = {}) {
   glazing('z', -3.18, -0.69, 12.09, F0, CG, 2, [F0 + 2.45], 1);
   glazing('z', 0.39, 0.99, 12.09, F0 + 1.7, F0 + 2.6, 1, [], 1);
   // комната водителя у навеса: кирпичная облицовка снаружи
-  wall(B, 'x', 12.24, 13.8, F0 - 0.3, F1 - 0.35, 0.9, 1.2, [], M.render, IN(1), true, [1]);
+  wall(B, 'x', 12.24, 13.5, F0 - 0.3, F1 - 0.35, 0.9, 1.2, [], M.render, IN(1), true, [1]);
   wall(B, 'z', 0.9, ZS, F0 - 0.3, F1 - 0.35, 13.5, 13.8, [], M.brick, IN(-1), true, [-1]);
   // южная стена: столовая, кухня (дверь и окно над мойкой), лестничный витраж, кладовая, прислуга, водитель
   wall(B, 'x', -11.58, 0.87, F0 - 0.3, F1 - 0.35, 4.98, ZS, [[-4.23, -3.24, F0, F0 + 2.4], [-2.85, -0.3, F0 + 1.05, F0 + 2.55]], M.render, IN(-1), true, [-1]);
   glazing('x', -2.85, -0.3, 5.12, F0 + 1.05, F0 + 2.55, 2, [], 1, { sill: false });
-  wall(B, 'x', 4.26, 13.8, F0 - 0.3, F1 - 0.35, 4.98, ZS, [[6.81, 7.5, F0 + 0.9, F0 + 2.6], [12.36, 13.35, F0, F0 + 2.3]], M.render, IN(-1), true, [-1]);
+  wall(B, 'x', 4.26, 13.5, F0 - 0.3, F1 - 0.35, 4.98, ZS, [[6.81, 7.5, F0 + 0.9, F0 + 2.6], [12.36, 13.35, F0, F0 + 2.3]], M.render, IN(-1), true, [-1]);
   glazing('x', 6.81, 7.5, 5.12, F0 + 0.9, F0 + 2.6, 1, [], 1);
   hingedDoor('x', -4.23, -3.24, F0, 2.4, 4.98, ZS, -1, 0, { label: 'дверь кухни во двор' });
   hingedDoor('x', 12.36, 13.35, F0, 2.3, 4.98, ZS, -1, 1, { label: 'дверь водителя' });
+  for (const [a0, a1] of [[-4.23, -3.24], [12.36, 13.35]]) { PB.box(a0 - 0.15, a1 + 0.15, 0, 0.15, ZS, ZS + 0.4, M.concrete); walkOn(a0 - 0.15, a1 + 0.15, ZS, ZS + 0.4, 0.15); } // ступень 15 см
   // витраж гостиной к гольфу: две секции по сторонам колонны, фрамуга; угловое остекление к югу
   glazing('z', -4.02, ZS, XW, F0, CG, [-4.02, -2.84, -1.66, -0.48, 0.7, 1.84, 2.98, 4.12, 5.25], [F0 + 2.55], -1, { bar: 0.07, open: [-2.84, -1.66], doorTop: F0 + 2.55, label: 'раздвижная дверь на террасу' });
-  glazing('x', XW, -11.58, 5.12, F0, CG, 1, [F0 + 2.55], 1, { bar: 0.07 });
+  glazing('x', XW + 0.002, -11.58, 5.12, F0, CG, 1, [F0 + 2.55], 1, { bar: 0.07 });
   B.box(XW, -11.58, CG, F1 - 0.35, 4.98, ZS, M.render);
   B.box(XW - 0.15, XW + 0.15, CG, F1 - 0.35, -4.02, ZS, M.render);       // ригель над витражом
   { const c = new THREE.CylinderGeometry(0.19, 0.19, CG - F0, 32); c.translate(-12.72, (CG + F0) / 2, 0.7); ib.geo(c, MI.wall); col(-12.92, -12.52, F0, CG, 0.5, 0.9); ib.cyl(-12.72, F0, 0.7, 0.2, 0.1, MI.skirt, 32); }
@@ -965,16 +988,16 @@ export function build(THREE, opts = {}) {
 
   // ---------- дом: 2-й этаж, наружные стены ----------
   const RG = { batch: B, glass: M.railGlass, rail: M.frame };
-  wall(B, 'x', XB, 0.87, F1 - 0.35, C1_TOP, ZN, zf(-4.80), [], M.render, IN(1), true, [1]);
-  wall(B, 'x', 4.26, XE1, F1 - 0.35, C1_TOP, ZN, zf(-4.80), [], M.render, IN(1), true, [1]);
+  wall(B, 'x', XB, 0.87, FW, C1_TOP, ZN, zf(-4.80), [], M.render, IN(1), true, [1]);
+  wall(B, 'x', 4.26, XE1, FW, C1_TOP, ZN, zf(-4.80), [], M.render, IN(1), true, [1]);
   B.box(XB, -12.31, F1, C1_TOP, zf(-4.80), zf(-4.58), M.render);
   B.box(-12.93, -12.31, F1, C1_TOP, zf(-4.58), zf(-4.05), M.render);
   col(XB, -12.31, F1, C1_TOP, ZN, zf(-4.05));
-  wall(B, 'x', XWF - 0.17, 0.87, F1 - 0.35, C1_TOP, zf(4.83), ZS, [[-7.22, -6.55, F1 + 1.4, F1 + 2.6], [-3.21, -0.62, F1, C1]], M.render, IN(-1), true, [-1]);
+  wall(B, 'x', XWF - 0.17, 0.868, FW, C1_TOP, zf(4.83), ZS, [[-7.22, -6.55, F1 + 1.4, F1 + 2.6], [-3.21, -0.62, F1, C1]], M.render, IN(-1), true, [-1]);
   glazing('x', -7.22, -6.55, ZS - 0.12, F1 + 1.4, F1 + 2.6, 1, [], 1);
   glazing('x', -3.21, -0.62, ZS - 0.12, F1, C1, 2, [F1 + 2.45], 1);
   railing('x', -3.21, -0.62, ZS + 0.06, F1, RG);
-  wall(B, 'x', 4.26, XE1, F1 - 0.35, C1_TOP, zf(4.83), ZS, [], M.render, IN(-1), true, [-1]);
+  wall(B, 'x', 4.26, XE1, FW, C1_TOP, zf(4.83), ZS, [], M.render, IN(-1), true, [-1]);
   B.box(XB, XWF - 0.17, F1, C1_TOP, zf(4.83), ZS, M.render);
   col(XB, XWF - 0.17, F1, C1_TOP, zf(4.83), ZS);
   glazing('z', zf(-4.05), zf(0.614), XWF, F1, C1, 4, [F1 + 2.5], -1, { open: [zf(-4.05) + 2 * (zf(0.614) - zf(-4.05)) / 4, zf(-4.05) + 3 * (zf(0.614) - zf(-4.05)) / 4], doorTop: F1 + 2.5, label: 'дверь на балкон спальни хозяина' });
@@ -982,18 +1005,18 @@ export function build(THREE, opts = {}) {
   wall(B, 'z', zf(0.614), zf(0.78), F1, C1_TOP, XWF - 0.17, XWF + 0.12, [], M.render, IN(1));
   wall(B, 'z', zf(0.78), zf(4.83), C1, C1_TOP, XWF - 0.17, XWF + 0.12, [], M.render, IN(1), false);
   glazing('z', zf(0.78), zf(4.83), XWF, F1 + 0.05, C1, 2, [F1 + 1.6], -1);
-  B.box(XB, XB + 0.06, F1, F1 + 0.95, zf(0.78), zf(4.83), M.dark);
+  B.box(XB + 0.005, XB + 0.06, F1, F1 + 0.95, zf(0.78), zf(4.83), M.dark);
   col(XB, XWF - 0.17, F1, F1 + 1.1, zf(0.7), zf(4.83));
-  B.box(XB, XWF - 0.17, C1_TOP - 0.06, C1_TOP, ZN, ZS, M.dark);
-  B.box(XB, XWF - 0.17, F1, C1_TOP - 0.06, ZN, ZN + 0.02, M.dark);          // тёмные панели в глубине рамы
+  B.box(XB + 0.005, XWF - 0.17, C1_TOP - 0.06, C1_TOP, zf(-4.80), zf(4.83), M.dark);
+  B.box(XB + 0.005, XWF - 0.17, F1, C1_TOP - 0.06, zf(-4.80), zf(-4.80) + 0.02, M.dark); // тёмные панели в глубине рамы
   for (const z of [-2.4, 0.9, 3.6]) { const d = new THREE.CircleGeometry(0.07, 16); d.rotateX(Math.PI / 2); d.translate(-13.55, F1 - 0.353, z); HD.geo(d, M.lamp); HD.cyl(-13.55, F1 - 0.36, z, 0.09, 0.008, M.stainless, 18); }
   { const d = new THREE.CircleGeometry(0.08, 16); d.rotateX(Math.PI / 2); d.translate(-13.35, C1_TOP - 0.065, -2.0); HD.geo(d, M.lamp); }
   for (let z = zf(-4.05) + 0.06; z < zf(-3.15); z += 0.11) B.box(XWF - 0.26, XWF - 0.2, F1, C1, z - 0.025, z + 0.025, M.dark);
   railing('z', zf(-4.58), zf(0.614), XB + 0.08, F1, RG);
   railing('x', XB + 0.08, XWF - 0.17, zf(0.614), F1, RG);
   // восток (к улице): витражи спален 3 и 4 на балконы, стенка между балконами
-  wall(B, 'z', ZN, zf(1.141), F1 - 0.35, C1_TOP, 12.17, XE1, [[zf(-3.145), zf(-0.602), F1, C1]], M.render, IN(-1), true, [-1]);
-  wall(B, 'z', zf(1.141), ZS, F1 - 0.35, C1_TOP, 12.17, XE1, [[zf(1.141), zf(4.83), F1, C1]], M.render, IN(-1), true, [-1]);
+  wall(B, 'z', ZN, zf(1.141), FW, C1_TOP, 12.17, XE1, [[zf(-3.145), zf(-0.602), F1, C1]], M.render, IN(-1), true, [-1]);
+  wall(B, 'z', zf(1.141), ZS, FW, C1_TOP, 12.17, XE1, [[zf(1.141), zf(4.83), F1, C1]], M.render, IN(-1), true, [-1]);
   glazing('z', zf(-3.145), zf(-0.602), 12.33, F1, C1, 3, [F1 + 2.5], 1, { open: [zf(-3.145) + (zf(-0.602) - zf(-3.145)) / 3, zf(-3.145) + 2 * (zf(-0.602) - zf(-3.145)) / 3], doorTop: F1 + 2.5, label: 'дверь на балкон спальни 3' });
   glazing('z', zf(1.141), zf(4.83), 12.33, F1, C1, 4, [F1 + 2.5], 1, { open: [zf(1.141) + (zf(4.83) - zf(1.141)) / 4, zf(1.141) + 2 * (zf(4.83) - zf(1.141)) / 4], doorTop: F1 + 2.5, label: 'дверь на балкон спальни 4' });
   B.box(XE1, XEB, F1, C1_TOP, zf(-0.602), zf(-0.457), M.render);
@@ -1003,11 +1026,11 @@ export function build(THREE, opts = {}) {
   railing('x', XE1, XEB, ZN + 0.12, F1, RG);
   railing('x', XE1, XEB, zf(1.03), F1, RG);
   railing('x', XE1, XEB, ZS - 0.12, F1, RG);
-  B.box(XE1, XEB, C1_TOP - 0.06, C1_TOP, ZN, ZS, M.dark);
+  B.box(XE1, XEB - 0.005, C1_TOP - 0.06, C1_TOP, ZN + 0.005, ZS - 0.005, M.dark);
   for (const z of [-3.0, 3.0]) { const d = new THREE.CircleGeometry(0.07, 16); d.rotateX(Math.PI / 2); d.translate(13.2, C1_TOP - 0.065, z); HD.geo(d, M.lamp); }
   // стенки второго света над входом
-  wall(B, 'z', -2.36, -0.62, F1 - 0.35, C1_TOP, 0.36, 0.87, [], M.render, IN(-1));
-  wall(B, 'z', ZN, -0.62, F1 - 0.35, C1_TOP, 4.26, 4.6, [], M.render, IN(1));
+  wall(ib, 'z', -2.28, -0.62, FW, C1_TOP, 0.36, 0.87, [], MI.wall);
+  ib.box(4.26, 4.6, FW, F1, zf(-4.80), -0.62, MI.wall);                     // полоса перекрытия у восточной стенки
   B.box(0.87, 4.26, C1_TOP - 0.06, C1_TOP, ZN, -2.36, M.dark);
   // лестничный витраж на два этажа (южный фасад)
   glazing('x', 0.87, 4.26, 5.12, F0, C1_TOP, [0.87, 2.0, 3.13, 4.26], [F0 + 2.5, F1 - 0.2, F1 + 2.5], 1, { bar: 0.07 });
@@ -1035,9 +1058,11 @@ export function build(THREE, opts = {}) {
   walkOn(12.24, 13.8, 0.9, ZS, F0);
   // перегородки 1-го этажа (толщины и проёмы — по плану)
   partition('x', -5.28, 0.87, 0.84, 1.11, F0, CG_TOP);
-  partition('z', 1.11, 4.98, -5.28, -5.13, F0, CG_TOP, [[2.01, 3.0, -1, 0]]);
-  partition('z', 1.11, 4.98, 0.72, 0.87, F0, F1, [[1.38, 2.38, -1, 0]], 2.05);
-  partition('z', 1.02, 4.98, 4.26, 4.44, F0, F1);
+  partition('z', 1.11, 4.98, -5.28, -5.13, F0, CG_TOP, [[2.01, 3.0, 1, 0]]);
+  const KD = [1.86, 2.72], KDH = Math.min(2.05, Math.floor((soffitAt(KD[1] + 0.08) - F0 - 0.08) * 50) / 50); // дверь кухни к лестнице: под верхним маршем
+  partition('z', 1.11, 4.98, 0.72, 0.87, F0, F1, [[KD[0], KD[1], -1, 0]], KDH);
+  partition('z', 1.02, 4.98, 4.26, 4.44, F0, FW);
+  ib.box(4.26, 4.44, FW, F1, 1.02, zf(4.83), MI.wall);                       // полоса перекрытия — до южной стены 2-го этажа
   partition('x', 4.44, 5.22, 0.84, 0.99, F0, CG);
   partition('x', 4.44, 6.63, 2.85, 3.0, F0, CG, [[5.22, 6.18, -1, 1]]);
   partition('z', 3.0, 4.98, 6.54, 6.69, F0, CG);
@@ -1048,68 +1073,95 @@ export function build(THREE, opts = {}) {
   partition('z', 1.53, 4.98, 10.86, 11.07, F0, CG, [[3.9, 4.77, -1, 1, { lock: true }]]);
   partition('z', -4.56, 0.63, 6.54, 6.72, F0, CG, [[-0.36, 0.55, 1, 1]]);
   partition('x', 8.43, 11.94, -0.69, -0.42, F0, CG);
-  partition('z', -0.42, 1.38, 8.82, 8.97, F0, CG, [[0.0, 0.85, 1, 0, { lock: true }]]);
+  partition('z', -0.42, 1.38, 8.82, 8.97, F0, CG, [[-0.21, 0.6, 1, 0, { lock: true }]]);
   partition('x', 4.62, 6.54, -2.58, -2.43, F0, CG, [[5.4, 6.3, 1, 0, { lock: true }]]);
   partition('x', 4.62, 5.31, -0.75, -0.57, F0, CG);
-  partition('z', -0.6, 0.84, 4.35, 4.62, F0, CG, [[-0.57, 0.84, 0]], 2.6);       // проход холл — коридор
-  // кухня: длинный ряд у стены к гостиной — низ венге с фасадами 60 см, кварц, стеклянный фартук, белые глянцевые верхние шкафы
+  partition('z', -0.57, 0.84, 4.35, 4.62, F0, CG, [[-0.57, 0.84, 0]], 2.6);       // проход холл — коридор
+  // кухня по плану Bayut: ряд у северной стены от стены до стены (варочная панель, духовка, вытяжка), у окна — ряд
+  // с двойной мойкой, у западной стены — высокий шкаф с холодильником, в юго-западном углу — простенок у двери во двор
   {
     const w = onWall('x', 1.11, 1);
-    w.box(-4.95, 0.55, F0, F0 + 0.1, 0.06, 0.55, MI.slot);
-    w.box(-4.95, 0.55, F0 + 0.1, F0 + 0.87, 0, 0.6, MI.wenge, true);
-    for (let u = -4.95 + 0.6; u < 0.5; u += 0.6) w.box(u - 0.002, u + 0.002, F0 + 0.11, F0 + 0.86, 0.6, 0.603, MI.slot);
-    for (const y of [F0 + 0.62, F0 + 0.4]) w.box(-4.94, -3.75, y - 0.002, y + 0.002, 0.6, 0.603, MI.slot);
-    w.box(-4.95, 0.55, F0 + 0.87, F0 + 0.91, 0, 0.62, MI.counter);
-    w.box(-4.95, 0.55, F0 + 0.91, F0 + 1.5, 0, 0.012, MI.splash);
-    w.box(-4.95, 0.55, F0 + 1.5, F0 + 2.3, 0, 0.36, MI.gloss);
-    for (let u = -4.95 + 0.6; u < 0.5; u += 0.6) w.box(u - 0.002, u + 0.002, F0 + 1.52, F0 + 2.28, 0.36, 0.363, MI.slot);
-    w.box(-0.75, -0.15, F0 + 1.55, F0 + 2.25, 0.362, 0.37, MI.glass);
-    w.box(-1.35, -0.75, F0 + 1.55, F0 + 2.25, 0.362, 0.37, MI.glass);
-    w.box(-4.95, 0.55, F0 + 1.49, F0 + 1.5, 0.05, 0.08, MI.led);              // подсветка рабочей зоны
-    w.box(-3.6, -2.85, F0 + 0.91, F0 + 0.916, 0.06, 0.56, MI.blackGlass);    // индукционная панель
-    for (const [du, dv, r] of [[0.19, 0.15, 0.1], [0.56, 0.15, 0.1], [0.19, 0.41, 0.08], [0.56, 0.41, 0.12]]) placed(new THREE.TorusGeometry(r, 0.003, 4, 32).rotateX(Math.PI / 2), w, -3.6 + du, F0 + 0.918, 0.06 + dv, MI.trim);
-    w.box(-3.62, -2.83, F0 + 0.12, F0 + 0.72, 0.6, 0.612, MI.blackGlass);    // духовка: стеклянная дверца
-    w.box(-3.55, -2.9, F0 + 0.66, F0 + 0.68, 0.612, 0.64, MI.steel);
-    w.box(-3.62, -2.83, F0 + 0.72, F0 + 0.86, 0.6, 0.61, MI.steel);
-    w.box(-3.6, -2.85, F0 + 1.42, F0 + 1.5, 0, 0.5, MI.steel);               // вытяжка: козырёк и короб
-    w.box(-3.45, -3.0, F0 + 1.5, F0 + 2.3, 0, 0.3, MI.steel);
-    for (let u = -4.95; u < 0.5; u += 0.6) w.box(u + 0.08, u + 0.52, F0 + 0.73, F0 + 0.745, 0.6, 0.625, MI.steel);
-    for (let u = -4.95; u < 0.5; u += 0.6) w.box(u + 0.08, u + 0.52, F0 + 1.52, F0 + 1.53, 0.36, 0.38, MI.steel);
+    const mods = [-5.13, -4.53, -3.93, -3.63, -2.83, -2.23, -1.63, -1.03, -0.43, 0.17, 0.72];   // фасады; духовка −3,63…−2,83
+    const U0 = mods[0], U1 = mods[mods.length - 1], OV = [-3.63, -2.83], HC = (OV[0] + OV[1]) / 2;
+    w.box(U0, U1, F0, F0 + 0.1, 0.06, 0.55, MI.slot);
+    w.box(U0, U1, F0 + 0.1, F0 + 0.87, 0, 0.6, MI.wenge, true);
+    for (const u of mods.slice(1, -1)) w.box(u - 0.002, u + 0.002, F0 + 0.11, F0 + 0.86, 0.6, 0.603, MI.slot);
+    for (const y of [F0 + 0.62, F0 + 0.4]) w.box(U0 + 0.01, mods[2] - 0.01, y - 0.002, y + 0.002, 0.6, 0.603, MI.slot);   // ящики
+    w.box(U0, U1, F0 + 0.87, F0 + 0.91, 0, 0.62, MI.counter);
+    w.box(U0, U1, F0 + 0.91, F0 + 1.5, 0, 0.012, MI.splash);
+    for (const [a, b] of [[U0, OV[0]], [OV[1], U1]]) w.box(a, b, F0 + 1.5, F0 + 2.3, 0, 0.36, MI.gloss);   // верхние шкафы по сторонам вытяжки
+    for (const u of mods.slice(1, -1)) if (u < OV[0] - 0.01 || u > OV[1] + 0.01) w.box(u - 0.002, u + 0.002, F0 + 1.52, F0 + 2.28, 0.36, 0.363, MI.slot);
+    w.box(-1.63, -1.03, F0 + 1.55, F0 + 2.25, 0.362, 0.37, MI.glass);           // две стеклянные дверцы
+    w.box(-1.03, -0.43, F0 + 1.55, F0 + 2.25, 0.362, 0.37, MI.glass);
+    for (const [a, b] of [[U0 + 0.02, OV[0] - 0.02], [OV[1] + 0.02, U1 - 0.02]]) w.box(a, b, F0 + 1.49, F0 + 1.5, 0.05, 0.08, MI.led);   // подсветка рабочей зоны
+    w.box(HC - 0.4, HC + 0.4, F0 + 0.91, F0 + 0.916, 0.06, 0.56, MI.blackGlass);  // индукционная панель 80 см
+    for (const [du, dv, r] of [[-0.2, 0.15, 0.1], [0.2, 0.15, 0.1], [-0.2, 0.41, 0.08], [0.2, 0.41, 0.12]]) placed(new THREE.TorusGeometry(r, 0.003, 4, 32).rotateX(Math.PI / 2), w, HC + du, F0 + 0.918, 0.06 + dv, MI.trim);
+    w.box(OV[0] + 0.01, OV[1] - 0.01, F0 + 0.12, F0 + 0.72, 0.6, 0.612, MI.blackGlass);   // духовка: стеклянная дверца
+    w.box(OV[0] + 0.08, OV[1] - 0.08, F0 + 0.66, F0 + 0.68, 0.612, 0.64, MI.steel);
+    w.box(OV[0] + 0.01, OV[1] - 0.01, F0 + 0.72, F0 + 0.86, 0.6, 0.61, MI.steel);
+    w.box(OV[0], OV[1], F0 + 1.42, F0 + 1.5, 0, 0.5, MI.steel);                    // вытяжка: козырёк и короб до потолка
+    w.box(HC - 0.225, HC + 0.225, F0 + 1.5, CG - 0.002, 0, 0.3, MI.steel);
+    for (let k = 0; k < mods.length - 1; k++) {
+      const a = mods[k], b = mods[k + 1];
+      if (a !== OV[0]) w.box(a + 0.08, b - 0.08, F0 + 0.73, F0 + 0.745, 0.6, 0.625, MI.steel);        // ручки-планки
+      if (b <= OV[0] + 0.01 || a >= OV[1] - 0.01) w.box(a + 0.08, b - 0.08, F0 + 1.52, F0 + 1.53, 0.36, 0.38, MI.steel);
+    }
   }
-  { // ряд у окна: мойка под окном, колонна холодильника и духовых шкафов у стены столовой
+  { // ряд у окна: двойная мойка по центру окна, посудомойка за фасадом
     const w = onWall('x', 4.98, -1);
-    w.box(-3.15, 0.55, F0, F0 + 0.1, 0.06, 0.55, MI.slot);
-    w.box(-3.15, 0.55, F0 + 0.1, F0 + 0.87, 0, 0.6, MI.wenge, true);
-    for (let u = -3.15 + 0.6; u < 0.5; u += 0.6) w.box(u - 0.002, u + 0.002, F0 + 0.11, F0 + 0.86, 0.6, 0.603, MI.slot);
-    w.box(-3.15, 0.55, F0 + 0.87, F0 + 0.91, 0, 0.62, MI.counter);
-    w.box(-2.05, -1.25, F0 + 0.72, F0 + 0.905, 0.1, 0.5, MI.steel);           // мойка под столешницей
-    w.box(-2.02, -1.28, F0 + 0.905, F0 + 0.91, 0.13, 0.47, MI.slot);
-    placed(new THREE.CylinderGeometry(0.022, 0.026, 0.06, 16), w, -1.65, F0 + 0.91, 0.08, MI.chrome);
-    { const arc = new THREE.TorusGeometry(0.15, 0.012, 8, 24, Math.PI); arc.rotateY(Math.PI / 2); arc.translate(0, 0.32, 0.15); placed(arc, w, -1.65, F0 + 0.91, 0.08, MI.chrome); }
-    placed(new THREE.CylinderGeometry(0.014, 0.014, 0.32, 12), w, -1.65, F0 + 0.91, 0.08, MI.chrome);
-    for (let u = -3.15; u < 0.5; u += 0.6) w.box(u + 0.08, u + 0.52, F0 + 0.73, F0 + 0.745, 0.6, 0.625, MI.steel);
-    w.box(-5.13, -4.4, F0, F0 + 2.3, 0, 0.65, MI.wenge, true);                // колонна: холодильник и шкафы
-    w.box(-5.1, -4.43, F0 + 0.1, F0 + 1.95, 0.65, 0.66, MI.steel);
-    w.box(-4.5, -4.47, F0 + 0.8, F0 + 1.6, 0.66, 0.7, MI.steel);
-    w.box(-4.4, -3.15, F0, F0 + 2.3, 0, 0.62, MI.wenge, true);
-    w.box(-4.38, -3.17, F0 + 1.0, F0 + 1.55, 0.62, 0.632, MI.blackGlass);    // встроенные духовка и микроволновка
-    w.box(-4.38, -3.17, F0 + 1.56, F0 + 1.96, 0.62, 0.632, MI.blackGlass);
-    for (const y of [F0 + 1.5, F0 + 1.92]) w.box(-4.2, -3.35, y - 0.008, y + 0.008, 0.632, 0.66, MI.steel);
+    const mods = [-2.95, -2.35, -1.975, -1.175, -0.55, 0.05, 0.72];
+    const V0 = mods[0], V1 = mods[mods.length - 1], S0 = mods[2], S1 = mods[3], SC = (S0 + S1) / 2, BT = F0 + 0.7;
+    w.box(V0, V1, F0, F0 + 0.1, 0.06, 0.55, MI.slot);
+    w.box(V0, S0, F0 + 0.1, F0 + 0.87, 0, 0.6, MI.wenge);
+    w.box(S1, V1, F0 + 0.1, F0 + 0.87, 0, 0.6, MI.wenge);
+    w.box(S0, S1, F0 + 0.1, BT - 0.01, 0, 0.6, MI.wenge);                          // тумба под мойкой — ниже чаш
+    for (const [v0, v1] of [[0, 0.13], [0.47, 0.6]]) w.box(S0, S1, BT - 0.01, F0 + 0.87, v0, v1, MI.wenge);
+    col(V0, V1, F0, F0 + 0.91, 4.98 - 0.62, 4.98);
+    for (const u of mods.slice(1, -1)) w.box(u - 0.002, u + 0.002, F0 + 0.11, F0 + 0.86, 0.6, 0.603, MI.slot);
+    // столешница с вырезом, под ней две чаши из нержавейки с перегородкой и сливы
+    w.box(V0, S0, F0 + 0.87, F0 + 0.91, 0, 0.62, MI.counter);
+    w.box(S1, V1, F0 + 0.87, F0 + 0.91, 0, 0.62, MI.counter);
+    for (const [v0, v1] of [[0, 0.13], [0.47, 0.62]]) w.box(S0, S1, F0 + 0.87, F0 + 0.91, v0, v1, MI.counter);
+    w.box(S0, S1, BT - 0.01, BT, 0.13, 0.47, MI.steel);
+    for (const [a, b] of [[S0, S0 + 0.012], [SC - 0.02, SC + 0.02], [S1 - 0.012, S1]]) w.box(a, b, BT, F0 + 0.905, 0.13, 0.47, MI.steel);
+    for (const [v0, v1] of [[0.13, 0.142], [0.458, 0.47]]) w.box(S0 + 0.012, S1 - 0.012, BT, F0 + 0.905, v0, v1, MI.steel);
+    for (const u of [(S0 + SC) / 2, (SC + S1) / 2]) { const d = new THREE.CircleGeometry(0.035, 18); d.rotateX(-Math.PI / 2); placed(d, w, u, BT + 0.001, 0.3, MI.slot); }
+    placed(new THREE.CylinderGeometry(0.022, 0.026, 0.06, 16), w, SC, F0 + 0.91, 0.065, MI.chrome);   // смеситель
+    { const pipe = new THREE.CylinderGeometry(0.014, 0.014, 0.32, 12); pipe.translate(0, 0.16, 0); placed(pipe, w, SC, F0 + 0.91, 0.065, MI.chrome); }
+    { const arc = new THREE.TorusGeometry(0.15, 0.012, 8, 24, Math.PI); arc.rotateY(Math.PI / 2); arc.translate(0, 0.32, 0.15); placed(arc, w, SC, F0 + 0.91, 0.065, MI.chrome); }
+    for (let k = 0; k < mods.length - 1; k++) w.box(mods[k] + 0.08, mods[k + 1] - 0.08, F0 + 0.73, F0 + 0.745, 0.6, 0.625, MI.steel);
+  }
+  { // высокий шкаф у западной стены (план: Z 3,33…4,53): холодильник «side-by-side» из нержавейки и антресоль
+    const w = onWall('z', -5.13, 1);
+    const R0 = 3.33, R1 = 4.53, RC = (R0 + R1) / 2;
+    w.box(R0, R1, F0, F0 + 2.3, 0, 0.7, MI.wenge, true);
+    w.box(R0 + 0.1, R1 - 0.1, F0 + 0.05, F0 + 1.85, 0.7, 0.712, MI.steel);
+    w.box(RC - 0.003, RC + 0.003, F0 + 0.05, F0 + 1.85, 0.712, 0.714, MI.slot);
+    for (const u of [RC - 0.05, RC + 0.05]) {
+      w.box(u - 0.012, u + 0.012, F0 + 0.7, F0 + 1.5, 0.736, 0.756, MI.steel);   // ручки-скобы
+      for (const y of [F0 + 0.75, F0 + 1.45]) w.box(u - 0.008, u + 0.008, y - 0.008, y + 0.008, 0.712, 0.737, MI.steel);
+    }
+    w.box(R0 + 0.01, R1 - 0.01, F0 + 1.9, F0 + 1.904, 0.7, 0.703, MI.slot);        // шов антресоли
+    w.box(R0 + 0.15, R1 - 0.15, F0 + 2.18, F0 + 2.195, 0.7, 0.725, MI.steel);
+    // простенок в углу у двери во двор (на плане — сплошная стена) и плинтус по его открытым граням
+    ib.box(-5.13, -4.3, F0, CG, 4.53, 4.98, MI.wall); col(-5.13, -4.3, F0, CG, 4.53, 4.98);
+    ib.box(-4.3, -4.289, F0, F0 + 0.1, 4.53, 4.98, MI.skirt);
+    ib.box(-4.43, -4.289, F0, F0 + 0.1, 4.519, 4.53, MI.skirt);
   }
   // санузел у входа и умывальная с двумя раковинами (план), гостевой санузел, санузлы прислуги и водителя
-  toilet(onWall('z', 4.62, 1), -4.2, F0);
+  toilet(onWall('x', -4.86, 1), 5.35, F0);
   vanity(onWall('z', 4.62, 1), -3.6, -2.8, F0);
   vanity(onWall('z', 4.62, 1), -2.3, -0.9, F0, 2);
   for (const [x0, x1, z0, z1] of [[4.62, 6.54, -4.56, -2.58], [8.97, 11.94, -0.42, 1.38], [8.97, 10.86, 1.59, 3.18], [9.03, 10.92, 3.39, 4.98]]) ceiling(x0, x1, z0, z1, F0 + 2.7);
-  vanity(onWall('x', -0.42, 1), 9.2, 10.2, F0);
-  toilet(onWall('z', 11.94, -1), 0.8, F0);
-  shower(10.6, 11.94, -0.42, 0.6, F0, ['x', 10.6, 11.94, 0.6]);
-  vanity(onWall('z', 8.97, 1), 2.6, 3.1, F0);
-  toilet(onWall('x', 1.59, 1), 9.6, F0);
-  shower(9.9, 10.86, 2.2, 3.18, F0, ['z', 2.2, 3.18, 9.9]);
-  vanity(onWall('z', 9.03, 1), 3.6, 4.1, F0);
-  toilet(onWall('x', 4.98, -1), 9.7, F0);
-  shower(10.0, 10.92, 3.39, 4.2, F0, ['x', 10.0, 10.92, 4.2]);
+  vanity(onWall('x', 1.38, -1), 9.1, 10.8, F0);                              // гостевой: тумба у южной стены, унитаз у северной, душ во всю глубину
+  toilet(onWall('x', -0.42, 1), 10.47, F0);
+  shower(10.95, 11.94, -0.42, 1.38, F0, ['z', -0.42, 0.75, 10.95]);
+  vanity(onWall('x', 3.18, -1), 9.15, 9.85, F0);                             // прислуги: раковина у южной стены, унитаз у восточной, душ в углу
+  toilet(onWall('z', 10.86, -1), 2.72, F0);
+  shower(9.95, 10.86, 1.53, 2.3, F0, ['x', 9.95, 10.86, 2.3]);
+  toilet(onWall('x', 3.39, 1), 9.63, F0);                                    // водителя: унитаз и раковина у северной стены, душ в юго-западном углу
+  vanity(onWall('x', 3.39, 1), 10.05, 10.75, F0);
+  shower(8.97, 9.95, 4.3, 4.98, F0, ['x', 8.97, 9.95, 4.3]);
   // санузлы: стены в мраморной плитке до потолка (тонкий слой с теми же проёмами, что у стены)
   function tiles(along, at, n, a0, a1, y0, y1, holes = []) { const t0 = n > 0 ? at : at - 0.009, t1 = n > 0 ? at + 0.009 : at; wall(ib, along, a0, a1, y0, y1, t0, t1, holes, MI.bathWall, null, false); }
   tiles('z', 4.62, 1, -4.86, -2.58, F0 + 0.006, F0 + 2.7);
@@ -1117,7 +1169,7 @@ export function build(THREE, opts = {}) {
   tiles('z', 6.54, -1, -4.86, -2.58, F0 + 0.006, F0 + 2.7);
   tiles('x', -2.58, -1, 4.62, 6.54, F0 + 0.006, F0 + 2.7, [[5.4, 6.3, F0, F0 + 2.2]]);
   tiles('x', -0.42, 1, 8.97, 11.94, F0 + 0.006, F0 + 2.7);
-  tiles('z', 8.97, 1, -0.42, 1.38, F0 + 0.006, F0 + 2.7, [[0.0, 0.85, F0, F0 + 2.2]]);
+  tiles('z', 8.97, 1, -0.42, 1.38, F0 + 0.006, F0 + 2.7, [[-0.21, 0.6, F0, F0 + 2.2]]);
   tiles('z', 11.94, -1, -0.42, 1.38, F0 + 0.006, F0 + 2.7, [[0.39, 0.99, F0 + 1.7, F0 + 2.6]]);
   tiles('x', 1.38, -1, 8.97, 11.94, F0 + 0.006, F0 + 2.7);
   tiles('x', 1.53, 1, 8.97, 10.86, F0 + 0.006, F0 + 2.7);
@@ -1136,7 +1188,7 @@ export function build(THREE, opts = {}) {
   ceiling(-12.84, -5.31, -4.32, 4.98, CG, 0.55, CG_TOP - CG - 0.05);
   ceiling(-5.31, 0.72, -4.92, 0.84, CG, 0.5, CG_TOP - CG - 0.05);
   ceiling(-5.13, 0.72, 1.11, 4.98, CG);
-  ceiling(0.87, 4.35, -0.62, 0.85, CG);
+  ceiling(0.87, 4.35, -0.62, ZT, CG);
   ceiling(4.62, 6.54, -2.43, 3.0, F0 + 2.85);
   ceiling(6.72, 11.94, -4.56, -0.69, CG, 0.45, 0.22);
   ceiling(6.72, 8.82, -0.69, 1.38, F0 + 2.85);
@@ -1144,60 +1196,66 @@ export function build(THREE, opts = {}) {
   ceiling(11.07, 13.5, 1.53, 4.98, F0 + 2.85);
   ceiling(4.44, 6.54, 3.0, 4.98, F0 + 2.85);
   // розетки у телевизорной стены гостиной и в спальнях
-  for (const [along, a, y, t, s] of [['x', -9.0, F0 + 0.3, -4.32, 1], ['x', -8.6, F0 + 0.3, -4.32, 1], ['x', -9.0, F0 + 1.2, -4.32, 1], ['z', -2.0, F0 + 0.3, 11.94, -1], ['x', 8.5, F0 + 0.3, -4.56, 1], ['x', -2.0, F0 + 1.1, 1.11, 1], ['x', -1.0, F0 + 1.1, 1.11, 1]]) socket(along, a, y, t, s);
+  for (const [along, a, y, t, s] of [['x', -9.0, F0 + 0.3, -4.32, 1], ['x', -8.6, F0 + 0.3, -4.32, 1], ['x', -9.0, F0 + 1.2, -4.32, 1], ['z', -2.0, F0 + 0.3, 11.94, -1], ['x', 8.5, F0 + 0.3, -4.56, 1], ['x', -2.0, F0 + 1.1, 1.122, 1], ['x', -1.0, F0 + 1.1, 1.122, 1]]) socket(along, a, y, t, s);
 
   // ---------- лестница: П-образная, 21 подъём, светлый мрамор с бороздками, стекло и поручень из нержавейки ----------
-  const T1 = 0.28, T2 = 0.257, Z1 = 0.9, ZL = Z1 + 9 * T1;
-  const LAND = F0 + 10 * RISE;
-  const FX = [3.15, 4.26], SX = [0.87, 2.1];
   function stepBox(x0, x1, z0, z1, top) {
     ib.box(x0, x1, top - 0.03, top, z0 - 0.02, z1, MI.stoneStair);                 // проступь со свесом 2 см
     ib.box(x0, x1, top - RISE, top - 0.03, z0, z0 + 0.02, MI.stoneStair);
-    for (const k of [0.03, 0.055]) ib.box(x0 + 0.05, x1 - 0.05, top + 0.0005, top + 0.002, z0 + k, z0 + k + 0.008, MI.groove);
+    for (const k of [0.03, 0.055]) ib.box(x0 + 0.05, x1 - 0.05, top + 0.001, top + 0.0025, z0 + k, z0 + k + 0.008, MI.groove);
     walkOn(x0, x1, z0, z1, top);
   }
   for (let i = 1; i <= 9; i++) {
     const z0 = Z1 + (i - 1) * T1, top = F0 + i * RISE;
     stepBox(FX[0], FX[1], z0, z0 + T1, top);
-    ib.box(FX[0], FX[1], F0, top - RISE, z0, z0 + T1, MI.wall);
+    ib.box(FX[0], FX[1], F0, top - RISE, z0, z0 + T1, MI.wall);                    // тело марша
+    ib.box(FX[0], FX[1], top - RISE, top - 0.03, z0 + 0.02, z0 + T1, MI.wall);     // заполнение под проступью
   }
+  ib.box(FX[0], FX[1], LAND - RISE, LAND - 0.03, ZL - 0.02, ZL, MI.stoneStair);  // 10-й подступенок у площадки
   ib.box(SX[0], FX[1], LAND - 0.25, LAND - 0.03, ZL, 4.98, MI.wall);
-  ib.box(SX[0], FX[1], LAND - 0.03, LAND, ZL, 4.98, MI.stoneStair);
+  ib.box(SX[0], FX[0], LAND - 0.03, LAND, ZL, 4.98, MI.stoneStair);
+  ib.box(FX[0], FX[1], LAND - 0.03, LAND, ZL - 0.02, 4.98, MI.stoneStair);
   walkOn(SX[0], FX[1], ZL, 4.98, LAND);
   for (let j = 1; j <= 10; j++) {
     const z1 = ZL - (j - 1) * T2, top = LAND + j * RISE;
     ib.box(SX[0], SX[1], top - 0.03, top, z1 - T2, z1 + 0.02, MI.stoneStair);
     ib.box(SX[0], SX[1], top - RISE, top - 0.03, z1 - 0.02, z1, MI.stoneStair);
-    for (const k of [0.03, 0.055]) ib.box(SX[0] + 0.05, SX[1] - 0.05, top + 0.0005, top + 0.002, z1 - k - 0.008, z1 - k, MI.groove);
+    ib.box(SX[0], SX[1], top - RISE, top - 0.03, z1 - T2, z1 - 0.02, MI.wall);    // заполнение под проступью
+    for (const k of [0.03, 0.055]) ib.box(SX[0] + 0.05, SX[1] - 0.05, top + 0.001, top + 0.0025, z1 - k - 0.008, z1 - k, MI.groove);
     walkOn(SX[0], SX[1], z1 - T2, z1, top);
   }
+  // 21-й подъём: каменный подступенок и кромка у площадки 2-го этажа
+  ib.box(SX[0], SX[1], F1 - RISE, F1 - 0.03, ZT, ZT + 0.02, MI.stoneStair);
+  ib.box(SX[0], SX[1], F1 - 0.03, F1 + 0.003, ZT - 0.03, ZT + 0.04, MI.stoneStair);
   {
-    const zA = ZL, yA = LAND - 0.25, zB = ZL - 10 * T2, yB = F1 - 0.35;
-    const s = new THREE.Shape([new THREE.Vector2(zA, yA), new THREE.Vector2(zB, yB), new THREE.Vector2(zB, F1 - 0.03), new THREE.Vector2(zA, LAND + 0.2)]);
-    const g = new THREE.ExtrudeGeometry(s, { depth: SX[1] - SX[0], bevelEnabled: false });
+    // косоур верхнего марша: снизу — ровный потолок над дверью кухни, сверху — чуть ниже внутренних углов ступеней
+    const s2 = new THREE.Shape([new THREE.Vector2(ZL, LAND - 0.25), new THREE.Vector2(ZT, F1 - 0.35), new THREE.Vector2(ZT, F1 - RISE - 0.005), new THREE.Vector2(ZL, LAND - 0.005)]);
+    const g = new THREE.ExtrudeGeometry(s2, { depth: SX[1] - SX[0], bevelEnabled: false });
     g.rotateY(-Math.PI / 2);
     g.translate(SX[1], 0, 0);
     ib.geo(g, MI.wall);
+    const zHead = ZL - (F0 + 1.9 - (LAND - 0.25)) / (F1 - 0.35 - (LAND - 0.25)) * (ZL - ZT); // ниже 1,9 м над полом под маршем не пройти
+    col(SX[0], SX[1], F0, LAND - 0.25, zHead, ZL);
   }
   slopeRail(FX[0] + 0.03, Z1, F0, ZL, LAND - RISE);
-  slopeRail(SX[1] - 0.03, ZL, LAND, ZL - 10 * T2, F1 - RISE);
+  slopeRail(SX[1] - 0.03, ZL, LAND, ZT, F1 - RISE);
   railing('x', SX[1], FX[0], ZL + 0.04, LAND, { posts: true });
   railing('x', 0.87, 4.26, -0.6, F1, { posts: true });
-  railing('x', SX[1], 4.26, 0.86, F1, { posts: true });
+  railing('x', SX[1], 4.26, ZT + 0.01, F1, { posts: true });
   railing('z', 1.84, 4.6, 0.8, F1, { posts: true });
-  ib.box(0.87, 4.26, F1 - 0.35, F1, -0.62, 0.85, MI.ceiling);
-  ib.box(0.87, 4.26, F1 - 0.35, F1 - 0.34, -0.62, -0.6, MI.led);
+  ib.box(0.87, 4.26, F1 - 0.35, F1, -0.62, ZT, MI.ceiling);
+  ib.box(0.875, 4.255, F1 - 0.356, F1 - 0.35, -0.615, -0.595, MI.led);
 
   // ===================================================================================================================
   // ---------- интерьер 2-го этажа ----------
   const Z = zf;
   floorAt(XWF + 0.12, 0.87, ZN + 0.27, ZS - 0.3, F1);
-  floorAt(0.87, 4.26, -0.62, 0.85, F1);
+  floorAt(0.87, 4.26, -0.62, ZT, F1);
   floorAt(4.26, 12.17, ZN + 0.27, ZS - 0.3, F1);
   for (const [x0, x1, z0, z1] of [[-2.94, 0.36, Z(-4.76), Z(-0.77)], [-7.24, -4.35, Z(3.03), ZS - 0.3], [4.6, 6.6, Z(-4.56), Z(-2.0)], [4.74, 7.62, Z(0.996), Z(2.866)]]) floorAt(x0, x1, z0, z1, F1 + 0.004, MI.bathFloor);
-  ib.box(XB + 0.02, XWF - 0.17, F1 - 0.02, F1, Z(-4.58), Z(0.614), MI.bathFloor);
-  ib.box(XE1, XEB - 0.02, F1 - 0.02, F1, ZN + 0.02, Z(-0.602), MI.bathFloor);
-  ib.box(XE1, XEB - 0.02, F1 - 0.02, F1, Z(1.03), ZS - 0.02, MI.bathFloor);
+  ib.box(XB + 0.02, XWF - 0.17, F1, F1 + 0.008, Z(-4.58), Z(0.614), MI.bathFloor);
+  ib.box(XE1, XEB - 0.02, F1, F1 + 0.008, ZN + 0.02, Z(-0.602), MI.bathFloor);
+  ib.box(XE1, XEB - 0.02, F1, F1 + 0.008, Z(1.03), ZS - 0.02, MI.bathFloor);
   partition('x', XWF + 0.12, -4.4, Z(0.614), Z(0.778), F1, C1_TOP);
   partition('z', Z(-4.16), Z(-1.31), -6.48, -6.32, F1, C1_TOP);
   ib.box(-6.48, -5.4, F1, C1_TOP, ZN + 0.27, Z(-4.16), MI.wall); col(-6.48, -5.4, F1, C1_TOP, ZN, Z(-4.16));
@@ -1234,9 +1292,9 @@ export function build(THREE, opts = {}) {
   toilet(onWall('x', ZS - 0.3, -1), -5.9, F1);
   shower(-5.1, -4.35, Z(3.4), ZS - 0.3, F1, ['z', Z(3.4), ZS - 0.3, -5.1]);
   ib.box(0.57, 0.87, F1, C1_TOP, Z(0.687), Z(1.795), MI.wall); col(0.57, 0.87, F1, C1_TOP, Z(0.687), Z(1.795));
-  ib.box(0.57, 0.87, F1, C1_TOP, Z(4.501), ZS - 0.3, MI.wall); col(0.57, 0.87, F1, C1_TOP, Z(4.501), ZS);
+  ib.box(0.57, 0.87, F1, C1_TOP, Z(4.501), Z(4.83), MI.wall); col(0.57, 0.87, F1, C1_TOP, Z(4.501), ZS);
   partition('z', Z(-3.853), Z(-0.602), 4.26, 4.6, F1, C1_TOP);
-  ib.box(4.26, 5.06, F1, C1_TOP, ZN + 0.27, Z(-3.853), MI.wall); col(4.26, 5.06, F1, C1_TOP, ZN, Z(-3.853));
+  ib.box(4.26, 5.06, F1, C1_TOP, zf(-4.80), Z(-3.853), MI.wall); col(4.26, 5.06, F1, C1_TOP, ZN, Z(-3.853));
   partition('x', 4.6, 6.6, Z(-2.0), Z(-1.837), F1, C1_TOP, [[5.5, 6.41, -1, 1, { lock: true }]]);
   partition('z', ZN + 0.27, Z(-1.855), 6.6, 6.77, F1, C1_TOP);
   partition('x', 4.6, 12.17, Z(-0.766), Z(-0.602), F1, C1_TOP, [[4.74, 5.77, -1, 0]]);
@@ -1245,7 +1303,7 @@ export function build(THREE, opts = {}) {
   partition('z', Z(0.996), Z(3.084), 7.62, 7.85, F1, C1_TOP);
   partition('x', 4.74, 7.62, Z(2.866), Z(3.084), F1, C1_TOP, [[5.83, 6.75, 1, 0, { lock: true }]]);
   partition('z', Z(0.614), Z(3.193), 4.26, 4.74, F1, C1_TOP);
-  partition('z', Z(3.193), ZS - 0.3, 4.26, 4.49, F1, C1_TOP);
+  partition('z', Z(3.193), Z(4.83), 4.26, 4.49, F1, C1_TOP);
   wardrobe('z', Z(3.25), ZS - 0.35, 4.49, 1, F1, 0.6, 2.6);
   wardrobe('x', 4.78, 6.06, Z(0.996), -1, F1, 0.4, 2.4);
   shower(5.1, 6.5, Z(-4.56), Z(-3.85), F1, ['x', 5.1, 6.5, Z(-3.85)]);
@@ -1269,17 +1327,17 @@ export function build(THREE, opts = {}) {
   ceiling(-6.32, -3.1, ZN + 0.27, Z(-1.31), F1 + 2.75);
   ceiling(-6.48, -4.35, Z(-1.31), Z(0.614), F1 + 2.75);
   ceiling(-2.94, 0.36, ZN + 0.27, Z(-0.766), F1 + 2.7);
-  ceiling(XWF + 0.12, -4.35, Z(0.778), ZS - 0.3, C1, 0.45, R1 * 0.8);
-  ceiling(-7.24, -4.35, Z(3.03), ZS - 0.3, F1 + 2.7);
-  ceiling(-4.17, 0.57, Z(-0.602), ZS - 0.3, C1, 0.4, R1 * 0.8);
-  ceiling(0.87, 4.26, -0.62, 0.85, C1);
+  ceiling(XWF + 0.12, -4.35, Z(0.778), Z(4.83), C1, 0.45, R1 * 0.8);
+  ceiling(-7.24, -4.35, Z(3.03), Z(4.83), F1 + 2.7);
+  ceiling(-4.17, 0.57, Z(-0.602), Z(4.83), C1, 0.4, R1 * 0.8);
+  ceiling(0.87, 4.26, -0.62, ZT, C1);
   ceiling(4.6, 6.6, ZN + 0.27, Z(-2.0), F1 + 2.7);
   ceiling(6.77, 12.17, ZN + 0.27, Z(-0.766), C1, 0.45, R1 * 0.8);
   ceiling(4.6, 6.08, Z(-1.837), Z(0.614), F1 + 2.9);
-  ceiling(4.74, 12.17, Z(0.996), ZS - 0.3, C1, 0.45, R1 * 0.8);
+  ceiling(4.74, 12.17, Z(0.996), Z(4.83), C1, 0.45, R1 * 0.8);
   ceiling(4.74, 7.62, Z(0.996), Z(2.866), F1 + 2.7);
   ib.box(0.87, 4.26, C1_TOP - 0.04, C1_TOP, -2.36, -0.62, MI.ceiling);
-  ib.box(0.87, 4.26, C1_TOP - 0.04, C1_TOP, 0.85, 4.98, MI.ceiling);
+  ib.box(0.87, 4.26, C1_TOP - 0.04, C1_TOP, ZT, 4.98, MI.ceiling);
   for (const [x, z, y] of [[2.6, 0.1, C1], [-1.8, 0.0, C1], [5.3, -0.1, F1 + 2.9]]) grilleAC(x, z, y);
   for (const [x, z] of [[2.6, -1.5], [2.6, 2.9]]) { ib.cyl(x, C1_TOP - 0.1, z, 0.23, 0.06, MI.trim, 32); const d = new THREE.CircleGeometry(0.21, 32); d.rotateX(Math.PI / 2); d.translate(x, C1_TOP - 0.101, z); ib.geo(d, MI.downlight); }
   for (const [along, a, y, t, s] of [['x', -9.0, F1 + 0.3, Z(-4.80), 1], ['x', -8.4, F1 + 0.3, Z(-4.80), 1], ['x', 9.0, F1 + 0.3, Z(-4.80), 1], ['x', 9.0, F1 + 0.3, Z(4.83), -1], ['x', -9.0, F1 + 0.3, Z(4.83), -1]]) socket(along, a, y, t, s);
@@ -1319,7 +1377,17 @@ export function build(THREE, opts = {}) {
     inst(proxyParts, tAll);
     inst(detailParts, nearOnly);
   }
-  const extraMaterials = [glassHi, glassLo, glassFar];
+  // отражающий слой фасадного стекла: та же сетка поверх тонировки; окна рисуются после остального прозрачного
+  const reflMeshes = [];
+  for (const g of glassMeshes) {
+    g.renderOrder = 2; g.userData.noAO = true;
+    const r = new THREE.Mesh(g.geometry, glassRefl);
+    r.name = `${g.name}_refl`; r.renderOrder = 3; r.userData.noCast = true; r.userData.noAO = true;
+    r.position.copy(g.position); r.quaternion.copy(g.quaternion); r.scale.copy(g.scale);
+    g.parent.add(r);
+    reflMeshes.push(r);
+  }
+  const extraMaterials = [glassHi, glassRefl, glassLo, glassFar];
 
   // ---------- двери: с какой стороны есть место для открывания ----------
   const blocked = (x, z, y0, y1) => physData.colliders.some((c) => x > c[0] && x < c[3] && z > c[2] && z < c[5] && c[4] > y0 + 0.2 && c[1] < y1);
@@ -1401,8 +1469,8 @@ export function build(THREE, opts = {}) {
     { name: 'Гостиная и столовая · окна в пол на гольф', box: [XW, -5.31, F0, CG_TOP, -4.32, 4.98] },
     { name: 'Малая гостиная с эркером', box: [-5.31, 0.87, F0, CG_TOP, -4.92, 0.84] },
     { name: 'Кухня', box: [-5.13, 0.72, F0, CG_TOP, 1.11, 4.98] },
-    { name: 'Входной холл · второй свет', box: [0.87, 4.35, F0, F1, -2.36, 0.9] },
-    { name: 'Лестница · витраж на два этажа', box: [0.87, 4.26, F0, F1 + 0.5, 0.9, 4.98] },
+    { name: 'Входной холл · второй свет', box: [0.87, 4.35, F0, F1, -2.36, Z1] },
+    { name: 'Лестница · витраж на два этажа', box: [0.87, 4.26, F0, F1 + 0.5, Z1, 4.98] },
     { name: 'Санузел и умывальная', box: [4.62, 6.54, F0, CG, -4.56, -0.6] },
     { name: 'Коридор, шкафы, кладовая', box: [4.44, 6.6, F0, CG, -0.6, 4.98] },
     { name: 'Гостевая спальня с санузлом', box: [6.72, 11.94, F0, CG, -4.56, 1.38] },
@@ -1416,7 +1484,7 @@ export function build(THREE, opts = {}) {
     { name: 'Балкон спальни хозяина', box: [XB, XWF, F1, C1_TOP, ZN, Z(0.614)] },
     { name: 'Спальня 2 с санузлом', box: [XWF, -4.17, F1, C1_TOP, Z(0.778), ZS] },
     { name: 'Малая гостиная 2-го этажа', box: [-4.17, 0.87, F1, C1_TOP, Z(-0.602), ZS] },
-    { name: 'Галерея между вторыми светами', box: [0.87, 4.26, F1, C1_TOP, -0.62, 0.86] },
+    { name: 'Галерея между вторыми светами', box: [0.87, 4.26, F1, C1_TOP, -0.62, ZT + 0.01] },
     { name: 'Спальня 3 · балкон к улице', box: [4.6, XEB, F1, C1_TOP, ZN, Z(-0.602)] },
     { name: 'Спальня 4 · балкон к улице', box: [4.49, XEB, F1, C1_TOP, Z(-0.457), ZS] },
     { name: 'Навес для машин', box: [13.8, PX1, 0, 3.1, 0.9, PZ1] },
@@ -1454,14 +1522,14 @@ export function build(THREE, opts = {}) {
     { pos: [-7.0, E0, 2.6], look: [-4.0, 2.2, 2.5] },
     { pos: [-5.4, E0, 2.5], look: [-2.0, 2.3, 1.6] },
     { pos: [-3.2, E0, 2.6], look: [-2.0, 2.0, 1.3], label: 'Кухня' },
-    { pos: [-1.0, E0, 1.9], look: [2.0, 2.2, 1.9] },
-    { pos: [0.8, E0, 1.9], look: [3.0, 2.4, 1.0] },
+    { pos: [-1.0, E0, 2.29], look: [2.0, 2.2, 2.29] },
+    { pos: [0.8, E0, 2.29], look: [3.0, 2.4, 1.2] },
     { pos: [2.6, E0, 0.4], look: [3.7, 2.8, 3.0], label: 'Лестница к витражу' },
-    { pos: [3.7, st(1.5), 1.1], look: [3.7, st(6), 3.4], speed: 0.9 },
-    { pos: [3.7, st(8), 3.0], look: [3.0, st(10), 4.6], speed: 0.9 },
+    { pos: [3.7, st(1.5), 1.3], look: [3.7, st(6), 3.6], speed: 0.9 },
+    { pos: [3.7, st(8), 3.15], look: [3.0, st(10), 4.6], speed: 0.9 },
     { pos: [2.6, st(10), 4.3], look: [1.4, st(12), 3.0], speed: 0.9, label: 'Площадка у витража на два этажа' },
-    { pos: [1.5, st(11), 3.3], look: [1.5, st(16), 1.2], speed: 0.9 },
-    { pos: [1.5, st(18), 1.6], look: [1.5, E1, -0.6], speed: 0.9 },
+    { pos: [1.5, st(11), 3.45], look: [1.5, st(16), 1.4], speed: 0.9 },
+    { pos: [1.5, st(18), 1.72], look: [1.5, E1, -0.6], speed: 0.9 },
     { pos: [1.6, E1, 0.1], look: [3.0, 5.5, -2.4], label: 'Галерея между вторыми светами', hold: 1.0 },
     { pos: [0.0, E1, 0.0], look: [-3.0, E1, 0.0] },
     { pos: [-3.4, E1, 0.0], look: [-6.0, E1, -0.5], speed: 1.2 },
@@ -1506,14 +1574,16 @@ export function build(THREE, opts = {}) {
   const nightLights = rooms.filter((r) => r.box[3] <= C1_TOP + 0.1 && r.box[0] > XB - 0.5 && r.box[1] < 14 && r.box[4] > ZN - 0.5 && r.box[5] < ZS + 0.5)
     .map((r) => { const [x0, x1, y0, y1, z0, z1] = r.box; const a = (x1 - x0) * (z1 - z0); return [(x0 + x1) / 2, Math.min(y1, y0 + 3.2) - 0.35, (z0 + z1) / 2, Math.min(2.2, 0.5 + a / 25)]; });
   function setQuality(q) {
-    const g = q === 'low' ? glassLo : glassHi;
-    for (const m of glassMeshes) m.material = g;
+    const low = q === 'low';
+    for (const m of glassMeshes) m.material = low ? glassLo : glassHi;
+    for (const m of reflMeshes) m.visible = !low;
   }
   return {
     root, views, tour, phys: physData, spawns, rooms, inside, update, setQuality, extraMaterials, setLights, nightLights,
     sun: { azimuth: 145, elevation: 38 },
-    doorsAuto: doors.map((d) => ({ label: d.label, kind: d.kind, center: d.center })),
+    doorsAuto: doors.map((d) => ({ label: d.label, kind: d.kind, center: d.center, box: d.collider, n: d.n, along: d.along, ah: d.ah, tm: d.tm, W: d.W, dirA: d.dirA, y0: d.y0, sides: d.sides, plan: d.plan })),
     exportInfo: { grass: grassPoints, sun: { azimuth: 145, elevation: 38 } },
-    stats: { doors: doors.length }
+    stats: { doors: doors.length },
+    auditSolids: solids
   };
 }

@@ -1,10 +1,11 @@
 // Прогулка от первого лица. Компьютер: мышь (захват указателя; без него — тянуть мышью), WASD или стрелки, Shift — бег.
 // Телефон: джойстик слева, обзор пальцем справа. Столкновения: круг игрока против коробок и многоугольников,
-// пол — по «поверхностям» модели: ступени до 0,45 м перешагиваются, выше — препятствие.
+// пол — по «поверхностям» модели: ступени до 0,3 м перешагиваются, выше — препятствие.
+// Персонаж — взрослый 1,75 м: глаза на 1,62 м, плечи 0,5 м, шаг 1,4 м/с, бег 3,2 м/с; покачивание головы — с частотой шагов.
 // phys.dynamic — подвижные препятствия (закрытые двери), их список модель меняет на ходу.
 import * as THREE from 'three';
 
-const RADIUS = 0.28, EYE = 1.62, BODY = 1.78, STEP = 0.45, KNEE = 0.12, WALK = 2.0, RUN = 4.4, GRAVITY = 9.8;
+const RADIUS = 0.25, EYE = 1.62, BODY = 1.8, STEP = 0.3, KNEE = 0.12, WALK = 1.4, RUN = 3.2, GRAVITY = 9.8;
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 
 export class Walker {
@@ -248,9 +249,9 @@ export class Walker {
     }
     const want = p.y + EYE;
     this.camY = want > this.camY ? this.camY + (want - this.camY) * (1 - Math.exp(-dt * 12)) : want;
-    const moving = Math.min(1, Math.hypot(this.vel.x, this.vel.z) / WALK);
-    this.bob += dt * (3 + 5 * moving) * moving;
-    this.camera.position.set(p.x, this.camY + Math.sin(this.bob * 2) * 0.025 * moving, p.z);
+    const v = Math.hypot(this.vel.x, this.vel.z), moving = Math.min(1, v / WALK);
+    this.bob += dt * (3.4 + 1.7 * v) * moving;                  // ≈1,9 шага/с при ходьбе, ≈2,8 — при беге
+    this.camera.position.set(p.x, this.camY + Math.sin(this.bob * 2) * 0.02 * moving * Math.min(1.6, Math.max(1, v / WALK)), p.z);
     this.camera.rotation.set(this.pitch, this.yaw, 0, 'YXZ');
   }
 
