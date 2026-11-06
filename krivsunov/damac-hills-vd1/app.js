@@ -92,21 +92,26 @@ const T = 'tex/';
 const IMAGES = {
   render: { base: T + 'beige_wall_001', meters: 3.0, tint: [1.85, 2.1, 2.3] },
   renderWhite: { base: T + 'plastered_wall_04', meters: 3.2, tint: [2.8, 2.85, 2.8] },
-  stone: { base: T + 'stacked_stone_wall', meters: 1.2, tint: [1.9, 1.8, 2.0] },
-  brick: { base: T + 'brick_wall_006', meters: 3.0, tint: [0.85, 0.9, 1.0] },
-  concrete: { base: T + 'concrete_floor_02', meters: 2.0, tint: [1.85, 2.15, 3.0] },
-  gravel: { base: T + 'gravel_floor_02', meters: 2.0, tint: [0.74, 0.75, 0.78] },
-  pavers: { base: T + 'pavement_05', meters: 2.6, tint: [2.05, 2.5, 2.95] },
-  asphalt: { base: T + 'asphalt_01', meters: 2.08, tint: [0.75, 0.9, 1.15] },
-  sand: { base: T + 'sand_01', meters: 1.5, tint: [1.8, 1.9, 2.35] },
-  rough: { base: T + 'withered_grass', meters: 3.0, tint: [0.95, 0.95, 0.85] },
+  stone: { base: T + 'stacked_stone_wall', meters: 1.2, disp: 0.045, tint: [1.9, 1.8, 2.0] },
+  brick: { base: T + 'brick_wall_006', meters: 3.0, disp: 0.018, tint: [0.85, 0.9, 1.0] },
+  concrete: { base: T + 'concrete_floor_02', meters: 2.0, disp: 0.004, tint: [1.85, 2.15, 3.0] },
+  gravel: { base: T + 'gravel_floor_02', meters: 2.0, disp: 0.03, tint: [0.74, 0.75, 0.78] },
+  pavers: { base: T + 'pavement_05', meters: 2.6, disp: 0.012, tint: [2.05, 2.5, 2.95] },
+  asphalt: { base: T + 'asphalt_01', meters: 2.08, disp: 0.004, tint: [0.75, 0.9, 1.15] },
+  sand: { base: T + 'sand_01', meters: 1.5, disp: 0.012, tint: [1.8, 1.9, 2.35] },
+  rough: { base: T + 'withered_grass', meters: 3.0, disp: 0.03, tint: [0.95, 0.95, 0.85] },
   lawn: { base: T + 'leafy_grass', meters: 2.0, tint: [0.3, 0.5, 0.33] },
-  soil: { base: T + 'aerial_ground_rock', meters: 3.0 },
-  rust: { base: T + 'rust_coarse_01', meters: 2.2, tint: [1.6, 1.6, 1.8], normalScale: 0.5 },
+  soil: { base: T + 'aerial_ground_rock', meters: 3.0, disp: 0.04 },
+  rust: { base: T + 'rust_coarse_01', meters: 2.2, disp: 0.003, tint: [1.6, 1.6, 1.8], normalScale: 0.5 },
   wenge: { base: T + 'dark_wood', meters: 2.0, tint: [0.45, 1.2, 2.4] },
-  palmBark: { base: T + 'palm_tree_bark', meters: 1.3, tint: [0.8, 0.76, 0.72] }
+  palmBark: { base: T + 'palm_tree_bark', meters: 1.3, disp: 0.012, tint: [0.8, 0.76, 0.72] }
 };
-const SUNS = { morning: { azimuth: 40, elevation: 24, lights: 0 }, day: { azimuth: 145, elevation: 38, lights: 0 }, sunset: { azimuth: 160, elevation: 4, lights: 0.7 }, night: { azimuth: 168, elevation: -7, lights: 1 } };
+// небо рендеров Cycles для режима «как в Cycles» (Poly Haven, CC0): азимут и сила солнца в HDRI, делитель данных — hdri/hdri.json
+const HDRI = {
+  morning: { url: 'hdri/syferfontein_18d_clear_puresky-2048.hdr', sunAz: 35.87, sunEl: 18.36, sunY: 13.4203, skyY: 0.5744, scale: 32 },
+  day: { url: 'hdri/kloofendal_43d_clear_puresky-2048.hdr', sunAz: 36.15, sunEl: 42.9, sunY: 6.1884, skyY: 1.2561, scale: 8 }
+};
+const SUNS = { morning: { azimuth: 40, elevation: 18.4, lights: 0, hdri: HDRI.morning }, day: { azimuth: 145, elevation: 42.9, lights: 0, hdri: HDRI.day }, sunset: { azimuth: 160, elevation: 4, lights: 0.7 }, night: { azimuth: 168, elevation: -7, lights: 1 } };
 const VIEWS = [['start', 'Обзор'], ['golf', 'С гольфа'], ['street', 'С улицы'], ['back', 'Терраса'], ['top', 'Сверху'], ['gf', 'План 1 эт.'], ['ff', 'План 2 эт.']];
 const stage = $('#stage');
 let viewer = null, loading = false;
@@ -126,7 +131,7 @@ async function open3d(then) {
     const [lib, model] = await Promise.all([import(`./villa3d/viewer.js?v=${REL}`), import(`./villa3d/damac_hills_samantha_1558.js?v=${REL}`)]);
     status.textContent = 'Собираю дом, участок и гольф…';
     await new Promise((r) => setTimeout(r, 30));
-    viewer = lib.mount(stage, model.build, { onTour: onTour, onWalk: onWalk, onPathTracing: onPathTracing, buildOptions: { images: IMAGES } });
+    viewer = lib.mount(stage, model.build, { onTour: onTour, onWalk: onWalk, onPathTracing: onPathTracing, sun: SUNS.day, buildOptions: { images: IMAGES } });
     buildUI(viewer);
     window.__vd1 = viewer;   // для проверок
     act(then);

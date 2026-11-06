@@ -7,8 +7,8 @@
 // Y — вверх, метры. Ориентация совпадает с планом Bayut: пилон и балкон спальни хозяина слева, если смотреть с гольфа.
 // Детализация: профили окон со штапиками и подоконниками, плинтусы, выключатели и розетки, фурнитура дверей,
 // подробные кухня и санузлы; двери открываются сами, когда к ним подходишь (прогулка, пролёт), и закрываются за спиной.
-import { makeTextures } from './vd1_tex.js?v=vd1-fix-20261106';
-import { makePlants } from './vd1_plants.js?v=vd1-fix-20261106';
+import { makeTextures, parallax } from './vd1_tex.js?v=vd1-cy-20261106';
+import { makePlants } from './vd1_plants.js?v=vd1-cy-20261106';
 
 export const info = {
   title: 'DAMAC Hills · вилла VD-1 у гольф-поля',
@@ -33,7 +33,19 @@ export function build(THREE, opts = {}) {
       if (m.normalMap) m.normalScale.set(ns * (t.normalScale || 1), ns * (t.normalScale || 1));
       if (t.tint) m.color.multiply(new THREE.Color(...t.tint));   // фотоскан: альбедо подогнано под фото дома
       if (t.rough) m.roughness = t.rough;
+      if (t.heightMap && t.heightScale) parallax(THREE, m, t.heightMap, t.heightScale * t.map.repeat.y);
     }
+    return m;
+  }
+  // то же с физическими свойствами: лак, полировка, шлифовка металла
+  function pbrPhys(t, o = {}, ns = 1) {
+    const base = pbr(t, {}, ns);
+    const m = new THREE.MeshPhysicalMaterial({ roughness: 1, ...o });
+    for (const k of ['map', 'normalMap', 'roughnessMap']) m[k] = base[k];
+    m.normalScale.copy(base.normalScale);
+    if ('color' in o) m.color.multiply(base.color); else m.color.copy(base.color);   // base.color — множители альбедо фотоскана
+    if (!('roughness' in o)) m.roughness = base.roughness;
+    base.dispose();
     return m;
   }
   const phys = (o) => new THREE.MeshPhysicalMaterial(o);
@@ -49,6 +61,7 @@ export function build(THREE, opts = {}) {
     cap: pbr(T.concrete, { color: 0xf2ecdf }),
     dark: pbr(T.darkPanel),
     stone: pbr(T.stone, {}, 1.25),
+    stoneRelief: pbr(T.stone && { ...T.stone, heightMap: null }, {}, 0.9),   // пилон: рельеф геометрией, без параллакса
     brick: pbr(T.brick),
     glass: hi ? glassHi : glassLo,
     frame: pbr(T.powder, { metalness: 0.45 }),
@@ -69,7 +82,7 @@ export function build(THREE, opts = {}) {
     white: pbr(T.renderWhite),
     rust: pbr(T.rust, { metalness: 0.3 }, 0.35),
     steel: pbr(T.powder, { color: 0x45484b, metalness: 0.55 }),
-    stainless: pbr(T.brushed, { metalness: 1, color: 0xdde1e4 }),
+    stainless: pbrPhys(T.brushed, { metalness: 1, color: 0xdde1e4, anisotropy: 0.75 }),
     pole: pbr(T.brushed, { metalness: 0.7, color: 0x9ba1a6 }),
     neighbor: pbr(T.renderWhite),
     ac: pbr(T.brushed, { color: 0xe4e4df, metalness: 0.1 }),
@@ -90,19 +103,19 @@ export function build(THREE, opts = {}) {
   const MI = {
     wall: pbr(T.paint),
     ceiling: pbr(T.paint, { color: 0xf9f8f4, emissive: 0x23221f }),
-    floor: pbr(T.floor),
+    floor: pbrPhys(T.floor, { clearcoat: 0.45, clearcoatRoughness: 0.02 }),     // полированный мрамор (лак как у рендеров Cycles)
     skirt: pbr(T.floor),
-    kitchenFloor: pbr(T.kitchenFloor),
-    bathFloor: pbr(T.bath),
-    bathWall: pbr(T.bath),
-    stoneStair: pbr(T.stair),
+    kitchenFloor: pbrPhys(T.kitchenFloor, { clearcoat: 0.45, clearcoatRoughness: 0.02 }),
+    bathFloor: pbrPhys(T.bath, { clearcoat: 0.3, clearcoatRoughness: 0.02 }),
+    bathWall: pbrPhys(T.bath, { clearcoat: 0.3, clearcoatRoughness: 0.02 }),
+    stoneStair: pbrPhys(T.stair, { clearcoat: 0.45, clearcoatRoughness: 0.02 }),
     groove: new THREE.MeshStandardMaterial({ color: 0x8f7d62, roughness: 0.6 }),
-    wenge: pbr(T.wenge),
-    wengeV: pbr(T.wengeV || T.wenge),
+    wenge: pbrPhys(T.wenge, { clearcoat: 0.12, clearcoatRoughness: 0.35 }),     // шелковистый лак
+    wengeV: pbrPhys(T.wengeV || T.wenge, { clearcoat: 0.12, clearcoatRoughness: 0.35 }),
     gloss: phys({ color: 0xf6f6f3, roughness: 0.14, clearcoat: 0.7, clearcoatRoughness: 0.08 }),
-    counter: pbr(T.quartz),
+    counter: pbrPhys(T.quartz, { clearcoat: 0.5, clearcoatRoughness: 0.04 }),
     splash: phys({ color: 0xe2ece8, roughness: 0.03, metalness: 0, clearcoat: 1 }),
-    steel: pbr(T.brushed, { metalness: 1, color: 0xd2d6d9 }),
+    steel: pbrPhys(T.brushed, { metalness: 1, color: 0xd2d6d9, anisotropy: 0.75 }),   // шлифованная нержавейка
     porcelain: phys({ color: 0xf8f7f3, roughness: 0.08, clearcoat: 1, clearcoatRoughness: 0.04 }),
     chrome: new THREE.MeshStandardMaterial({ color: 0xe8eaec, metalness: 1, roughness: 0.07 }),
     mirror: new THREE.MeshStandardMaterial({ color: 0xdfe3e6, metalness: 1, roughness: 0.015 }),
@@ -123,6 +136,7 @@ export function build(THREE, opts = {}) {
   const named = (o, pre) => { for (const [k, m] of Object.entries(o)) m.name = `${pre}${k}`; };
   named(M, 'x_'); named(MI, 'i_');
   glassHi.name = 'x_glass'; glassLo.name = 'x_glass'; glassFar.name = 'x_glassFar'; glassRefl.name = 'x_glassRefl';
+  M.stoneRelief.name = 'x_stone';   // для Blender — тот же фотоскан камня
 
   // ---------- физика прогулки ----------
   // colliders — коробки [x0,y0,z0,x1,y1,z1]; walkables — поверхности [x0,z0,x1,z1,высота]; dynamic — закрытые двери
@@ -229,6 +243,69 @@ export function build(THREE, opts = {}) {
   const GB = makeBatch('ground', { noCast: true }); // земля, газоны, дорожки, вода — тени принимают, но не отбрасывают
   const glassMeshes = [];           // сетки со стеклом фасада — меняются при смене качества
   const B = HB;
+  // Рельеф геометрией (виден и в трассировке, и по силуэту): коробка — сетка с шагом step, вершины граней faces
+  // ([ось, знак]) уходят внутрь по карте высот фотоскана на её глубину (верх камня — плоскость коробки). Вершины у ребра
+  // сдвигаются по обеим граням, поэтому сетка без щелей. Без карты высот (быстрое качество, проверки) — обычная коробка.
+  function reliefBox(x0, x1, y0, y1, z0, z1, mat, t, faces, step = 0.015) {
+    if (solids) solids.push([x0, y0, z0, x1, y1, z1]);
+    const hm = t && t.heightMap;
+    if (!hm || !hm.userData.ready || typeof document === 'undefined') { PB.box(x0, x1, y0, y1, z0, z1, mat); return; }
+    const lo = [x0, y0, z0], hi = [x1, y1, z1];
+    const UV = [[2, 1], [0, 2], [0, 1]];   // развёртка как у пакетов: грань X → (z, y), Y → (x, z), Z → (x, y)
+    const n = [0, 1, 2].map((a) => Math.max(1, Math.round((hi[a] - lo[a]) / step)));
+    const coord = (a, i) => (i === n[a] ? hi[a] : lo[a] + ((hi[a] - lo[a]) * i) / n[a]);
+    const pos = [], uv = [], idx = [];
+    for (let a = 0; a < 3; a++) for (const s of [-1, 1]) {
+      const [ua, va] = UV[a], v0 = pos.length / 3, row = n[ua] + 1;
+      for (let j = 0; j <= n[va]; j++) for (let i = 0; i <= n[ua]; i++) {
+        const p = [0, 0, 0];
+        p[a] = s < 0 ? lo[a] : hi[a]; p[ua] = coord(ua, i); p[va] = coord(va, j);
+        pos.push(p[0], p[1], p[2]); uv.push(p[ua], p[va]);
+      }
+      const flip = ((ua + 1) % 3 === va ? 1 : -1) * s < 0;   // e_ua × e_va = ±e_a: треугольники — лицом наружу
+      for (let j = 0; j < n[va]; j++) for (let i = 0; i < n[ua]; i++) {
+        const q = v0 + j * row + i;
+        if (flip) idx.push(q, q + row + 1, q + 1, q, q + row, q + row + 1);
+        else idx.push(q, q + 1, q + row + 1, q, q + row + 1, q + row);
+      }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    geo.setIndex(idx);
+    geo.computeVertexNormals();
+    const mesh = add(new THREE.Mesh(geo, mat));
+    mesh.name = `relief_${mat.name || 'part'}`;
+    hm.userData.ready.then((tex) => {
+      if (!tex || !tex.image) return;
+      const R = 128, cv = document.createElement('canvas');   // ≈1 см на пиксель: сглаживание под шаг сетки
+      cv.width = cv.height = R;
+      const cx = cv.getContext('2d', { willReadFrequently: true });
+      cx.imageSmoothingQuality = 'high';
+      cx.drawImage(tex.image, 0, 0, R, R);
+      const px = cx.getImageData(0, 0, R, R).data;
+      const at = (i, j) => px[((((j % R) + R) % R) * R + (((i % R) + R) % R)) * 4] / 255;
+      const rx = tex.repeat.x, ry = tex.repeat.y;
+      const height = (u, v) => {   // билинейно, с повтором; строка 0 картинки — верх развёртки (flipY)
+        const fx = (((u * rx) % 1) + 1) % 1 * R - 0.5, fy = (1 - ((((v * ry) % 1) + 1) % 1)) * R - 0.5;
+        const ix = Math.floor(fx), iy = Math.floor(fy), tx = fx - ix, ty = fy - iy;
+        return (at(ix, iy) * (1 - tx) + at(ix + 1, iy) * tx) * (1 - ty) + (at(ix, iy + 1) * (1 - tx) + at(ix + 1, iy + 1) * tx) * ty;
+      };
+      const P = geo.attributes.position.array, d = t.heightScale, o = [0, 0, 0];
+      for (let k = 0; k < P.length; k += 3) {
+        o[0] = pos[k]; o[1] = pos[k + 1]; o[2] = pos[k + 2];
+        for (const [f, sf] of faces) {
+          const depth = (1 - height(o[UV[f][0]], o[UV[f][1]])) * d;
+          // на грани — внутрь на глубину рельефа; рядом с ней (соседняя грань у ребра) — не выступать за её поверхность
+          if (sf < 0) P[k + f] = Math.max(P[k + f], lo[f] + depth); else P[k + f] = Math.min(P[k + f], hi[f] - depth);
+        }
+      }
+      geo.attributes.position.needsUpdate = true;
+      geo.computeVertexNormals();
+      geo.computeBoundingSphere();
+      geo.computeBoundingBox();
+    });
+  }
 
   // ===================================================================================================================
   // ---------- уровни и размеры (метры) ----------
@@ -918,7 +995,8 @@ export function build(THREE, opts = {}) {
   const IN = (s) => [MI.wall, s];
   // северная стена гостиной и пилон у гольфа в камне со светильником-полусферой (фото фасада)
   wall(B, 'x', -12.84, -5.31, F0 - 0.3, F1 - 0.35, -4.59, -4.32, [], M.render, IN(1), true, [1]);
-  B.box(-14.04, -12.84, 0, F1 - 0.35, -4.59, -4.02, M.stone);
+  NB.box(-14.04, -12.84, 0, F1 - 0.35, -4.59, -4.02, M.stone);                 // у соседей — гладкий
+  reliefBox(-14.04, -12.84, 0, F1 - 0.35, -4.59, -4.02, M.stoneRelief, T.stone, [[0, -1], [2, -1], [2, 1]]);
   col(-14.04, -12.84, 0, F1, -4.59, -4.02);
   { const lan = new THREE.SphereGeometry(0.12, 18, 10, 0, Math.PI * 2, 0, Math.PI / 2); lan.rotateZ(Math.PI / 2); lan.scale(0.6, 1, 1); lan.translate(-14.04, 1.9, -4.3); HD.geo(lan, M.lamp); HD.box(-14.06, -14.04, 1.76, 2.04, -4.44, -4.16, M.stainless); }
   // эркер малой гостиной с витражом к входной дорожке
@@ -1574,16 +1652,20 @@ export function build(THREE, opts = {}) {
   }
   const nightLights = rooms.filter((r) => r.box[3] <= C1_TOP + 0.1 && r.box[0] > XB - 0.5 && r.box[1] < 14 && r.box[4] > ZN - 0.5 && r.box[5] < ZS + 0.5)
     .map((r) => { const [x0, x1, y0, y1, z0, z1] = r.box; const a = (x1 - x0) * (z1 - z0); return [(x0 + x1) / 2, Math.min(y1, y0 + 3.2) - 0.35, (z0 + z1) / 2, Math.min(2.2, 0.5 + a / 25)]; });
+  // рельеф по карте высот — только в высоком качестве
+  const pomMats = [];
+  root.traverse((o) => { if (o.isMesh) for (const mt of [].concat(o.material)) if (mt.userData.pom && !pomMats.includes(mt)) pomMats.push(mt); });
   function setQuality(q) {
     const low = q === 'low';
+    for (const mt of pomMats) { mt.userData.pom.on = low ? 0 : 1; if (mt.userData.pomUniforms) mt.userData.pomUniforms.pomOn.value = mt.userData.pom.on; }
     for (const m of glassMeshes) m.material = low ? glassLo : glassHi;
     for (const m of reflMeshes) m.visible = !low;
   }
   return {
     root, views, tour, phys: physData, spawns, rooms, inside, update, setQuality, extraMaterials, setLights, nightLights,
-    sun: { azimuth: 145, elevation: 38 },
+    sun: { azimuth: 145, elevation: 42.9 },
     doorsAuto: doors.map((d) => ({ label: d.label, kind: d.kind, center: d.center, box: d.collider, n: d.n, along: d.along, ah: d.ah, tm: d.tm, W: d.W, dirA: d.dirA, y0: d.y0, sides: d.sides, plan: d.plan })),
-    exportInfo: { grass: grassPoints, sun: { azimuth: 145, elevation: 38 } },
+    exportInfo: { grass: grassPoints, sun: { azimuth: 145, elevation: 42.9 } },
     stats: { doors: doors.length },
     auditSolids: solids
   };

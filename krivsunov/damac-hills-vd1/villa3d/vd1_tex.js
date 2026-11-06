@@ -446,14 +446,18 @@ export function makeTextures(THREE, opts = {}) {
     const loader = new THREE.TextureLoader();
     for (const [key, info] of Object.entries(opts.images)) {
       const load = (suffix, srgb) => {
-        const t = loader.load(`${info.base}_${suffix}.webp`);
+        let done;
+        const ready = new Promise((r) => { done = r; });
+        const t = loader.load(`${info.base}_${suffix}.webp`, () => done(t), undefined, () => done(null));
+        t.userData.ready = ready;   // для рельефа геометрией: пиксели карты высот нужны после загрузки
         t.wrapS = t.wrapT = THREE.RepeatWrapping;
         t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
         t.anisotropy = 8;
         t.repeat.set(1 / (info.mw || info.meters), 1 / info.meters);
         return t;
       };
-      const v = { key, map: load('col', true), normalMap: info.noNormal ? null : load('nrm', false), roughnessMap: info.noRough ? null : load('rgh', false), normalScale: info.normalScale || 1, image: true, tint: info.tint || null, rough: info.rough || null };
+      const v = { key, map: load('col', true), normalMap: info.noNormal ? null : load('nrm', false), roughnessMap: info.noRough ? null : load('rgh', false), normalScale: info.normalScale || 1, image: true, tint: info.tint || null, rough: info.rough || null,
+        heightMap: info.disp && opts.quality !== 'low' ? load('disp', false) : null, heightScale: info.disp || 0 };
       Object.defineProperty(T, key, { value: v, enumerable: true, configurable: true });
       if (key === 'wenge') { // полотна дверей: волокна вертикально — тот же снимок, повёрнутый на 90°
         const rot = (t) => { if (t) { t.center.set(0.5, 0.5); t.rotation = Math.PI / 2; } return t; };
@@ -463,4 +467,58 @@ export function makeTextures(THREE, opts = {}) {
     }
   }
   return { T, rnd, rr };
+}
+
+// Рельеф по карте высот (parallax occlusion mapping): камни, кирпич, мощение и гравий выглядят объёмными.
+// Касательный базис — из производных экрана; смещение применяется к цвету, нормалям и шероховатости.
+// depth — глубина рельефа в единицах развёртки текстуры (метры рельефа / метры на плитку текстуры).
+export function parallax(THREE, m, heightMap, depth) {
+  const prev = m.onBeforeCompile;
+  m.userData.pom = { depth, on: 1 };
+  m.customProgramCacheKey = () => 'pom';
+  m.onBeforeCompile = (shader, renderer) => {
+    if (prev) prev(shader, renderer);
+    shader.uniforms.pomMap = { value: heightMap };
+    shader.uniforms.pomDepth = { value: depth };
+    shader.uniforms.pomOn = { value: m.userData.pom.on };
+    m.userData.pomUniforms = shader.uniforms;
+    const sub = (chunk, name) => THREE.ShaderChunk[chunk].split(name).join(`(${name} + pomOff)`);
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <clipping_planes_pars_fragment>', `#include <clipping_planes_pars_fragment>
+uniform sampler2D pomMap; uniform float pomDepth; uniform float pomOn;
+vec2 pomOffset(vec2 uv) {
+  vec3 V = normalize(vViewPosition);
+  vec3 N = normalize(vNormal) * (gl_FrontFacing ? 1.0 : -1.0);
+  vec3 q0 = dFdx(-vViewPosition), q1 = dFdy(-vViewPosition);
+  vec2 st0 = dFdx(uv), st1 = dFdy(uv);
+  vec3 q1p = cross(q1, N), q0p = cross(N, q0);
+  vec3 Tg = q1p * st0.x + q0p * st1.x, Bg = q1p * st0.y + q0p * st1.y;
+  float det = max(dot(Tg, Tg), dot(Bg, Bg));
+  if (det <= 0.0) return vec2(0.0);
+  float sc = inversesqrt(det);
+  vec3 Vt = vec3(dot(V, Tg * sc), dot(V, Bg * sc), dot(V, N));
+  if (Vt.z <= 0.03) return vec2(0.0);
+  float layers = mix(32.0, 10.0, clamp(Vt.z, 0.0, 1.0));
+  float dl = 1.0 / layers;
+  vec2 dUV = Vt.xy / Vt.z * pomDepth / layers;
+  vec2 gx = dFdx(uv), gy = dFdy(uv);
+  vec2 cur = vec2(0.0);
+  float d = 0.0;
+  float h = 1.0 - textureGrad(pomMap, uv, gx, gy).r;
+  for (int i = 0; i < 32; i++) {
+    if (d >= h || float(i) >= layers) break;
+    cur -= dUV;
+    d += dl;
+    h = 1.0 - textureGrad(pomMap, uv + cur, gx, gy).r;
+  }
+  vec2 prv = cur + dUV;
+  float after = h - d;
+  float before = (1.0 - textureGrad(pomMap, uv + prv, gx, gy).r) - d + dl;
+  return mix(cur, prv, clamp(after / (after - before + 1e-5), 0.0, 1.0));
+}`)
+      .replace('#include <map_fragment>', 'vec2 pomOff = pomOn > 0.5 ? pomOffset(vMapUv) : vec2(0.0);\n' + sub('map_fragment', 'vMapUv'))
+      .replace('#include <roughnessmap_fragment>', sub('roughnessmap_fragment', 'vRoughnessMapUv'))
+      .replace('#include <normal_fragment_maps>', sub('normal_fragment_maps', 'vNormalMapUv'));
+  };
+  return m;
 }

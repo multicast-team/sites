@@ -75,14 +75,28 @@ void main() {
   }
   gl_FragColor = vec4(wsum > 1e-6 ? sum / wsum : c0.rgb, 1.0);
 }`;
+// тонмаппинг рендеров Cycles: AgX Blender с look «Medium High Contrast» — контраст 1,2 в лог-пространстве AgX вокруг 0,4
+// (pivot −0,2 у OCIO GradingPrimary), остальное — как AgXToneMapping three.js
 const FINAL_FS = `
 uniform sampler2D tIn; uniform sampler2D tColor; uniform sampler2D tAlbedo; uniform sampler2D tDepth;
-uniform float gain; uniform float opacity;
+uniform float gain; uniform float opacity; uniform float exposure;
 varying vec2 vUv;
+vec3 agxMHC(vec3 color) {
+  const mat3 SRGB_TO_REC2020 = mat3(vec3(0.6274, 0.0691, 0.0164), vec3(0.3293, 0.9195, 0.0880), vec3(0.0433, 0.0113, 0.8956));
+  const mat3 REC2020_TO_SRGB = mat3(vec3(1.6605, -0.1246, -0.0182), vec3(-0.5876, 1.1329, -0.1006), vec3(-0.0728, -0.0083, 1.1187));
+  const mat3 INSET = mat3(vec3(0.856627153315983, 0.137318972929847, 0.11189821299995), vec3(0.0951212405381588, 0.761241990602591, 0.0767994186031903), vec3(0.0482516061458583, 0.101439036467562, 0.811302368396859));
+  const mat3 OUTSET = mat3(vec3(1.1271005818144368, -0.1413297634984383, -0.14132976349843826), vec3(-0.11060664309660323, 1.157823702216272, -0.11060664309660294), vec3(-0.016493938717834573, -0.016493938717834257, 1.2519364065950405));
+  color = INSET * (SRGB_TO_REC2020 * color);
+  color = clamp((log2(max(color, 1e-10)) + 12.47393) / 16.499999, 0.0, 1.0);
+  color = clamp((color - 0.4) * 1.2 + 0.4, 0.0, 1.0);
+  vec3 x2 = color * color, x4 = x2 * x2;
+  color = 15.5 * x4 * x2 - 40.14 * x4 * color + 31.96 * x4 - 6.868 * x2 * color + 0.4298 * x2 + 0.1191 * color - 0.00232;
+  color = pow(max(vec3(0.0), OUTSET * color), vec3(2.2));
+  return clamp(REC2020_TO_SRGB * color, 0.0, 1.0);
+}
 void main() {
   vec3 c = texture2D(tDepth, vUv).x >= 0.99999 ? texture2D(tColor, vUv).rgb : texture2D(tIn, vUv).rgb * max(texture2D(tAlbedo, vUv).rgb, vec3(0.03));
-  gl_FragColor = vec4(c * gain, opacity);
-  #include <tonemapping_fragment>
+  gl_FragColor = vec4(agxMHC(c * gain * exposure), opacity);
   #include <colorspace_fragment>
   #include <premultiplied_alpha_fragment>
 }`;
@@ -98,8 +112,8 @@ export class Denoiser {
     const shader = (fs, uniforms, extra = {}) => new FullScreenQuad(new THREE.ShaderMaterial({ vertexShader: VS, fragmentShader: fs, uniforms, depthTest: false, depthWrite: false, ...extra }));
     this.demod = shader(DEMOD_FS, { tColor: { value: null }, tAlbedo: { value: null }, tDepth: { value: null } }, { toneMapped: false });
     this.atrous = shader(ATROUS_FS, { tIn: { value: null }, tNormal: { value: null }, tDepth: { value: null }, texel: { value: new THREE.Vector2() }, stepw: { value: 1 }, sigmaL: { value: 1 }, cNear: { value: 0.1 }, cFar: { value: 1000 } }, { toneMapped: false });
-    this.final = shader(FINAL_FS, { tIn: { value: null }, tColor: { value: null }, tAlbedo: { value: null }, tDepth: { value: null }, gain: { value: 1 }, opacity: { value: 1 } },
-      { transparent: true, premultipliedAlpha: renderer.getContextAttributes().premultipliedAlpha });
+    this.final = shader(FINAL_FS, { tIn: { value: null }, tColor: { value: null }, tAlbedo: { value: null }, tDepth: { value: null }, gain: { value: 1 }, opacity: { value: 1 }, exposure: { value: 1 } },
+      { transparent: true, toneMapped: false, premultipliedAlpha: renderer.getContextAttributes().premultipliedAlpha });
     this.alb = new Map();
     this.nrm = new Map();
     this.ready = false;
@@ -150,7 +164,7 @@ export class Denoiser {
     this.ready = true;
   }
 
-  // кадр трассировки → экран: демодуляция, à-trous, обратная модуляция и тонмаппинг с усилением gain
+  // кадр трассировки → экран: демодуляция, à-trous, обратная модуляция и тонмаппинг AgX с усилением gain
   present(colorTex, samples, gain, opacity, blending) {
     const r = this.r, og = r.getRenderTarget(), ogAuto = r.autoClear;
     const dTex = this.albedo.depthTexture, aTex = this.albedo.texture;
@@ -169,7 +183,7 @@ export class Denoiser {
     }
     const f = this.final.material;
     f.uniforms.tIn.value = src.texture; f.uniforms.tColor.value = colorTex; f.uniforms.tAlbedo.value = aTex; f.uniforms.tDepth.value = dTex;
-    f.uniforms.gain.value = gain; f.uniforms.opacity.value = opacity;
+    f.uniforms.gain.value = gain; f.uniforms.opacity.value = opacity; f.uniforms.exposure.value = r.toneMappingExposure;
     f.blending = blending;
     r.setRenderTarget(og);
     r.autoClear = false;

@@ -179,7 +179,7 @@ export function mount(container, build, options = {}) {
   let sunState = { azimuth: sunCfg.azimuth, elevation: sunCfg.elevation, lights: 0 };
   let nightLights = [];
   function setSun(cfg = {}) {
-    sunState = { ...sunState, ...cfg };
+    sunState = { ...sunState, hdri: null, ...cfg };   // hdri — небо рендеров Cycles для трассировки (утро и день)
     const a = THREE.MathUtils.degToRad(sunState.azimuth), e = THREE.MathUtils.degToRad(sunState.elevation);
     sunDir.set(Math.cos(e) * Math.cos(a), Math.sin(e), Math.cos(e) * Math.sin(a)).normalize();
     for (const m of [skyMesh, envSky]) m.material.uniforms.sunPosition.value.copy(sunDir);
@@ -514,7 +514,7 @@ export function mount(container, build, options = {}) {
   let pt = null, ptOn = false, ptBusy = false, ptNote = 0;
   const ptCam = new THREE.Matrix4(), ptProj = new THREE.Matrix4();
   const ptNotify = (state, extra = {}) => { if (typeof options.onPathTracing === 'function') options.onPathTracing({ state, samples: pt ? pt.samples : 0, ...extra }); };
-  const ptSources = () => ({ root: model.root, extra: [ground], camera, sun, points: nightLights, env: envScene, background: makeSky(sunDir, false), envIntensity: scene.environmentIntensity });
+  const ptSources = () => ({ root: model.root, extra: [ground], camera, sun, points: nightLights, env: envScene, background: () => makeSky(sunDir, false), envIntensity: scene.environmentIntensity, hdri: sunState.hdri, sunAz: sunState.azimuth });
   const ptScale = () => { const w = renderer.getDrawingBufferSize(new THREE.Vector2()).x; return Math.min(1, 2200 / Math.max(1, w)); };
   async function setPathTracing(on) {
     on = !!on;
@@ -525,13 +525,13 @@ export function mount(container, build, options = {}) {
     ptNotify('loading');
     try {
       if (!pt) {
-        const lib = await import('./vd1_pt.js?v=vd1-pt-20261106');
-        pt = lib.createPathTracer(renderer, { rasterize: () => draw(), getSources: ptSources, getRaster: () => ({ scene, camera }) });
+        const lib = await import('./vd1_pt.js?v=vd1-cy-20261106');
+        pt = lib.createPathTracer(renderer, { rasterize: () => draw(), getSources: ptSources, getRaster: () => ({ scene, camera }), inside: () => inside(camera.position) });
       }
       ptOn = true;
       modelTick(10, 0);                                   // двери открыты, пока идёт трассировка
       await new Promise((r) => setTimeout(r, 40));
-      const info = pt.build();
+      const info = await pt.build();
       pt.renderScale = ptScale();
       camera.updateMatrixWorld();
       ptCam.copy(camera.matrixWorld); ptProj.copy(camera.projectionMatrix);

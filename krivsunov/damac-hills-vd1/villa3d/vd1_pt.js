@@ -1,11 +1,13 @@
 // Режим «как в Cycles»: трассировка путей прямо в браузере (three-gpu-pathtracer 0.0.23 на WebGL2).
 // Сцена для трассировки собирается из модели один раз: стекло — с физическим пропусканием и прозрачное для лучей теней
-// (как в рендерах Cycles), копии соседей и трава раскрыты из InstancedMesh, небо и солнце — те же, что у просмотрщика.
+// (как в рендерах Cycles), копии соседей и трава раскрыты из InstancedMesh. Утром и днём небо и солнце — те же HDRI,
+// что у рендеров Cycles (src.hdri), повёрнутые к солнцу просмотрщика; вечером и ночью — небо и солнце просмотрщика.
 // Пока камера движется, виден обычный кадр; стоит — кадр дособирается проходами и плавно сменяет обычный.
 import * as THREE from 'three';
 import { WebGLPathTracer } from 'three-gpu-pathtracer';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
-import { Denoiser } from './vd1_denoise.js?v=vd1-pt-20261106';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { Denoiser } from './vd1_denoise.js?v=vd1-cy-20261106';
 
 // своя копия геометрии для трассировки (исходную генератор не трогает): цвет вершин — всегда RGBA,
 // индекс, касательные и недостающие атрибуты генератор добавляет сам
@@ -75,7 +77,13 @@ export function createPathTracer(renderer, opts) {
     depthTest: false, depthWrite: false
   }));
   const meterBuf = new Float32Array(64 * 36 * 4);
-  // логарифмическое среднее яркости кадра → множитель, приводящий его к средне-серому (0,18) после основной экспозиции
+  // Экспозиция как у рендеров Cycles: постоянная в доме и на улице (сверено по шести ракурсам рендеров сайта,
+  // разброс ±0,5 ступени — как у ручных EV тех рендеров), к яркости кадра подстраивается лишь на четверть
+  // (логарифмическое среднее кадра), не больше чем на ступень в любую сторону
+  const EXPO = { inside: [1.86, 2.43], outside: [0.47, 2.05] };   // [множитель, типичная «полная» подстройка]
+  // утром света меньше, чем днём: как фотограф, открываем экспозицию на отношение освещённости (днём — 1)
+  const E_DAY = 6.34;   // освещённость горизонтали от солнца и неба HDRI дня (kloofendal, 42,9°) в единицах сцены
+  let evScale = 1;
   function meter() {
     const og = renderer.getRenderTarget();
     meterQuad.material.uniforms.map.value = pt.target.texture;
@@ -88,8 +96,10 @@ export function createPathTracer(renderer, opts) {
     }
     if (!n) return;
     const avg = Math.exp(acc / n), base = renderer.toneMappingExposure || 1;
-    const want = Math.min(16, Math.max(1, 0.2 / (avg * base)));
-    if (!Number.isFinite(want)) return;
+    const full = 0.2 / (avg * base);
+    if (!Number.isFinite(full)) return;
+    const [g1, ref] = opts.inside && opts.inside() ? EXPO.inside : EXPO.outside, g0 = g1 * evScale;
+    const want = Math.min(g0 * 2, Math.max(g0 / 2, g0 * Math.pow(Math.max(full, 1e-3) / (ref * evScale), 0.25)));
     gain = firstMeter ? want : gain + (want - gain) * 0.6;
     if (firstMeter) gainShown = want;
     firstMeter = false;
@@ -105,7 +115,8 @@ export function createPathTracer(renderer, opts) {
 
   const scene = new THREE.Scene();
   const mats = new Map();
-  const glass = (tint) => { const m = new THREE.MeshPhysicalMaterial({ color: tint, metalness: 0, roughness: 0.015, transmission: 1, ior: 1.52, thickness: 0, side: THREE.DoubleSide }); m.castShadow = false; return m; };
+  // стекло: свет солнца и неба проходит в дом тонированным (прозрачные тени, как у стекла рендеров Cycles), без шума каустик
+  const glass = (tint) => new THREE.MeshPhysicalMaterial({ color: tint, metalness: 0, roughness: 0.015, transmission: 1, ior: 1.52, thickness: 0, side: THREE.DoubleSide });
   // материал для трассировки: стекло фасада и внутреннее — физическое, второй слой отражения не нужен
   function mapMaterial(mat, vertexColors) {
     const key = vertexColors ? `${mat.uuid}_vc` : mat.uuid;
@@ -113,40 +124,63 @@ export function createPathTracer(renderer, opts) {
     let out = mat;
     const name = mat.name || '';
     if (/Refl$/.test(name)) out = null;
-    else if (mat.isMeshBasicMaterial && mat.blending === THREE.MultiplyBlending) out = glass(mat.color.clone());
+    else if (mat.isMeshBasicMaterial && mat.blending === THREE.MultiplyBlending) out = glass(new THREE.Color(0.6, 0.52, 0.4));   // бронза: как два слоя стекла Cycles
     else if (mat.transparent && /glass/i.test(name)) out = glass(new THREE.Color(0.93, 0.97, 0.96));
     else if (!mat.isMeshStandardMaterial) out = null;
     if (out && vertexColors && !out.vertexColors) { out = out.clone(); out.vertexColors = true; }
     mats.set(key, out);
     return out;
   }
-  let lights = [];
-  function setLighting() {
-    const src = getSources();
+  let lights = [], envRTs = [], lightTok = 0;
+  const hdris = new Map();
+  const loadHdri = (url) => {
+    if (!hdris.has(url)) hdris.set(url, new RGBELoader().loadAsync(url).then((t) => { t.mapping = THREE.EquirectangularReflectionMapping; return t; }));
+    return hdris.get(url);
+  };
+  // небо: для освещения — без диска солнца (оно светит направленным светом), для фона — с диском
+  const cube = (obj, size) => {
+    const rt = new THREE.WebGLCubeRenderTarget(size, { type: THREE.HalfFloatType });
+    const cam = new THREE.CubeCamera(0.5, 3000, rt);
+    const tmp = new THREE.Scene(); tmp.add(obj); cam.update(renderer, tmp); tmp.remove(obj);
+    return rt;
+  };
+  // свет сцены трассировки; HDRI грузится один раз, из двух быстрых смен времени суток побеждает последняя
+  async function setLighting() {
+    const src = getSources(), tok = ++lightTok;
+    let hdr = null;
+    if (src.hdri) try { hdr = await loadHdri(src.hdri.url); } catch (e) { console.warn('HDRI не загрузился, небо просмотрщика', e); }
+    if (tok !== lightTok) return false;
     for (const l of lights) { scene.remove(l); if (l.target) scene.remove(l.target); }
     lights = [];
-    if (src.sun.intensity > 0) {
+    if (!hdr && src.sun.intensity > 0) {
       const s = new THREE.DirectionalLight(src.sun.color, src.sun.intensity);
       s.position.copy(src.sun.position); s.target.position.copy(src.sun.target.position);
       scene.add(s, s.target); lights.push(s);
     }
     for (const p of src.points) { const l = new THREE.PointLight(p.color, p.intensity, p.distance, p.decay); l.position.copy(p.position); scene.add(l); lights.push(l); }
-    // небо: для освещения — без диска солнца (оно светит направленным светом), для фона — с диском
-    const cube = (obj, size) => {
-      const rt = new THREE.WebGLCubeRenderTarget(size, { type: THREE.HalfFloatType });
-      const cam = new THREE.CubeCamera(0.5, 3000, rt);
-      const tmp = new THREE.Scene(); tmp.add(obj); cam.update(renderer, tmp); tmp.remove(obj);
-      return rt;
-    };
-    if (scene.environment) scene.environment.dispose();
-    if (scene.background) scene.background.dispose();
-    scene.environment = cube(src.env, 512).texture;
-    scene.background = cube(src.background, 512).texture;
-    scene.environmentIntensity = src.envIntensity;
-    scene.backgroundIntensity = 1;
+    for (const rt of envRTs) rt.dispose();
+    envRTs = [];
+    if (hdr) {
+      // солнце HDRI — туда же, где солнце просмотрщика (азимут от +X к +Z), и той же силы, что направленный свет растра
+      const h = src.hdri, c = src.sun.color, rot = THREE.MathUtils.degToRad(h.sunAz - src.sunAz);
+      const kReal = src.sun.intensity * (0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b) / h.sunY, k = (h.scale || 1) * kReal;
+      evScale = h.sunEl ? E_DAY / (kReal * (h.sunY * Math.sin(THREE.MathUtils.degToRad(h.sunEl)) + (h.skyY || 0))) : 1;
+      scene.environment = hdr; scene.background = hdr;
+      scene.environmentRotation.set(0, rot, 0); scene.backgroundRotation.set(0, rot, 0);
+      scene.environmentIntensity = k; scene.backgroundIntensity = k;
+    } else {
+      const sky = src.background();   // фон — небо просмотрщика с диском солнца; после снимка в куб оно не нужно
+      envRTs = [cube(src.env, 512), cube(sky, 512)];
+      sky.geometry.dispose(); sky.material.dispose();
+      scene.environment = envRTs[0].texture; scene.background = envRTs[1].texture;
+      scene.environmentRotation.set(0, 0, 0); scene.backgroundRotation.set(0, 0, 0);
+      scene.environmentIntensity = src.envIntensity; scene.backgroundIntensity = 1;
+      evScale = 1;   // вечер и ночь: экспозицию поднимает сам просмотрщик (toneMappingExposure)
+    }
+    return true;
   }
   let built = false;
-  function build() {
+  async function build() {
     const src = getSources();
     src.root.updateMatrixWorld(true);
     for (const c of [...scene.children]) if (c.isMesh) { scene.remove(c); c.geometry.dispose(); }
@@ -165,7 +199,7 @@ export function createPathTracer(renderer, opts) {
       const m = add(ptGeometry(o.geometry), pm);
       m.matrix.copy(o.matrixWorld); m.matrixWorld.copy(o.matrixWorld);
     });
-    setLighting();
+    await setLighting();
     pt.setScene(scene, src.camera);
     built = true;
     return { triangles: Math.round(tris), meshes: scene.children.filter((c) => c.isMesh).length, materials: mats.size };
@@ -175,7 +209,7 @@ export function createPathTracer(renderer, opts) {
     get samples() { return pt.samples; },
     build,
     // время суток: солнце, небо, свет в доме и яркость светильников
-    relight() { if (!built) return; setLighting(); pt.updateMaterials(); pt.updateEnvironment(); pt.updateLights(); },
+    async relight() { if (!built || !(await setLighting())) return; pt.updateMaterials(); pt.updateEnvironment(); pt.updateLights(); },
     setCamera(camera) { pt.setCamera(camera); needG = true; },
     updateCamera() { pt.updateCamera(); metered = -1; needG = true; },
     renderSample() { pt.renderSample(); },

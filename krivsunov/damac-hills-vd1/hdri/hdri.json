@@ -1,0 +1,50 @@
+{
+ "kloofendal_43d_clear_puresky_4k": {
+  "file": "kloofendal_43d_clear_puresky-2048.hdr",
+  "size": [
+   2048,
+   1024
+  ],
+  "sunAz": 36.15,
+  "sunEl": 42.9,
+  "sunRGB": [
+   6.5248,
+   6.1449,
+   5.6288
+  ],
+  "skyRGB": [
+   0.9532,
+   1.2845,
+   1.8671
+  ],
+  "sunY": 6.1884,
+  "skyY": 1.2561,
+  "bytes": 4788728,
+  "peak": 114560.0,
+  "scale": 8.0
+ },
+ "syferfontein_18d_clear_puresky_4k": {
+  "file": "syferfontein_18d_clear_puresky-2048.hdr",
+  "size": [
+   2048,
+   1024
+  ],
+  "sunAz": 35.87,
+  "sunEl": 18.36,
+  "sunRGB": [
+   15.406,
+   13.3491,
+   8.2783
+  ],
+  "skyRGB": [
+   0.3842,
+   0.5865,
+   1.0142
+  ],
+  "sunY": 13.4203,
+  "skyY": 0.5744,
+  "bytes": 4374034,
+  "peak": 262144.0,
+  "scale": 32.0
+ }
+}
