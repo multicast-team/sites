@@ -403,7 +403,7 @@ fetch(`panos.json?v=${REL}`).then((r) => r.json()).then((panos) => {
   box.addEventListener('wheel', (e) => { e.preventDefault(); fov = Math.max(35, Math.min(95, fov + e.deltaY * 0.04)); }, { passive: false });
   const v3 = new THREE.Vector3();
   let started = false;
-  function loop() {
+  function frame() {
     const w = box.clientWidth, h = box.clientHeight;
     if (renderer.domElement.width !== Math.round(w * renderer.getPixelRatio())) { renderer.setSize(w, h, false); }
     camera.aspect = w / h; camera.fov = fov; camera.updateProjectionMatrix();
@@ -415,8 +415,9 @@ fetch(`panos.json?v=${REL}`).then((r) => r.json()).then((panos) => {
       hsp.el.hidden = !vis;
       if (vis) { hsp.el.style.left = `${(v3.x * 0.5 + 0.5) * w}px`; hsp.el.style.top = `${(-v3.y * 0.5 + 0.5) * h}px`; }
     }
-    requestAnimationFrame(loop);
   }
+  function loop() { frame(); requestAnimationFrame(loop); }
+  window.__vd1pano = { frame, go, look(y, p) { yaw = y; pitch = p || 0; frame(); }, get canvas() { return renderer.domElement; } };   // для проверок
   const io = new IntersectionObserver((ents) => { if (!started && ents.some((x) => x.isIntersecting)) { started = true; go('p_living'); loop(); } });
   io.observe(box);
 }).catch(() => { $('#tour360').hidden = true; });
