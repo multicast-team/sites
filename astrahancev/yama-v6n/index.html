@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
+    <meta name="pitt-release" content="d016c15fc5d8">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>DuckPit — Одна Яма v6n</title>
@@ -62,12 +63,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/out.loader.js";
+      var loaderUrl = buildUrl + "/out.loader.js?v=d016c15fc5d8";
       var config = {
         arguments: ["-pittOnePit", "-pittSkipIntro"],
-        dataUrl: buildUrl + "/out.data.unityweb",
-        frameworkUrl: buildUrl + "/out.framework.js.unityweb",
-        codeUrl: buildUrl + "/out.wasm.unityweb",
+        dataUrl: buildUrl + "/out.data.unityweb?v=d016c15fc5d8",
+        frameworkUrl: buildUrl + "/out.framework.js.unityweb?v=d016c15fc5d8",
+        codeUrl: buildUrl + "/out.wasm.unityweb?v=d016c15fc5d8",
         streamingAssetsUrl: "StreamingAssets",
 
         // If you have a custom web site structure, or want to place multiple Unity build instances on the same page,
