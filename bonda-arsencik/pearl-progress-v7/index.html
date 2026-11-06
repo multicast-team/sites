@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pearl — Обзор пунктов 3, 4, 5 и варианты Репутации (пункт 6)</title>
+  <style>
+    :root {
+      --bg: #120d24;
+      --card: #1d1536;
+      --cream: #f5ebd8;
+      --cream-ink: #2c1d11;
+      --cream-soft: #6e553e;
+      --gold: #ffcf5c;
+      --gold-soft: #ffe7a3;
+      --green: #6be39b;
+      --red: #ff7a7a;
+      --violet-border: #433175;
+      --text: #f6f2ff;
+      --muted: #bfb3dc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top, #25194d 0%, var(--bg) 70%);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 28px 18px 64px;
+    }
+    .container {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      padding: 24px 20px 30px;
+      background: linear-gradient(180deg, rgba(55,37,105,0.7), rgba(29,21,54,0.9));
+      border: 2px solid var(--violet-border);
+      border-radius: 20px;
+      margin-bottom: 28px;
+      box-shadow: 0 14px 36px rgba(0,0,0,0.45);
+    }
+    .badge-top {
+      display: inline-block;
+      background: rgba(255, 207, 92, 0.16);
+      color: var(--gold);
+      border: 1px solid rgba(255, 207, 92, 0.45);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 32px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    header p {
+      color: var(--muted);
+      font-size: 17px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .nav-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .nav-pills a {
+      text-decoration: none;
+      color: var(--cream-ink);
+      background: var(--gold);
+      font-weight: 700;
+      padding: 9px 18px;
+      border-radius: 12px;
+      font-size: 15px;
+      transition: transform 0.15s ease;
+    }
+    .nav-pills a.secondary {
+      background: #2f2257;
+      color: var(--gold-soft);
+      border: 1px solid var(--violet-border);
+    }
+    .nav-pills a:hover {
+      transform: translateY(-2px);
+    }
+
+    section {
+      background: var(--card);
+      border: 2px solid var(--violet-border);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    }
+    .sec-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .sec-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+    .status-pill {
+      background: rgba(107, 227, 155, 0.16);
+      color: var(--green);
+      border: 1px solid rgba(107, 227, 155, 0.45);
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .status-pill.choice {
+      background: rgba(255, 207, 92, 0.18);
+      color: var(--gold);
+      border-color: rgba(255, 207, 92, 0.5);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+      gap: 20px;
+      margin-top: 16px;
+    }
+    .shot-card {
+      background: #140e28;
+      border: 1px solid var(--violet-border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .shot-card img {
+      width: 100%;
+      display: block;
+      border-bottom: 1px solid var(--violet-border);
+    }
+    .shot-caption {
+      padding: 14px 16px;
+    }
+    .shot-caption h3 {
+      font-size: 18px;
+      color: var(--gold-soft);
+      margin-bottom: 6px;
+    }
+    .shot-caption p {
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      background: #150f29;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 15px;
+    }
+    th {
+      background: #281c4c;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .old-val {
+      color: var(--red);
+      text-decoration: line-through;
+      font-weight: 600;
+    }
+    .new-val {
+      color: var(--green);
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+      margin-top: 18px;
+    }
+    .option-card {
+      background: var(--cream);
+      color: var(--cream-ink);
+      border-radius: 16px;
+      padding: 22px;
+      border: 3px solid #d4be98;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .option-card.recommended {
+      border-color: #d99316;
+      box-shadow: 0 0 0 3px rgba(255, 207, 92, 0.35);
+    }
+    .rec-tag {
+      display: inline-block;
+      align-self: flex-start;
+      background: #d99316;
+      color: #fff;
+      font-weight: 800;
+      font-size: 12px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .option-card h3 {
+      font-size: 20px;
+      color: #231409;
+    }
+    .option-how {
+      background: #eadbc3;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #362212;
+    }
+    .pros-cons {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 15px;
+    }
+    .pros-cons li.pro::before {
+      content: "✓ ";
+      color: #1f7a3e;
+      font-weight: 900;
+    }
+    .pros-cons li.con::before {
+      content: "• ";
+      color: #9c4221;
+      font-weight: 900;
+    }
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-top">Наглядная сводка · Без воды и тех. терминов</div>
+      <h1>Pearl: Пункты 3, 4, 5 (готово в игре) и выбор по Репутации (Пункт 6)</h1>
+      <p>Все изменения по пунктам 3, 4 и 5 уже внедрены и сняты прямо из живой игры. Внизу страницы — 3 простых варианта решения проблемы Репутации на выбор.</p>
+      <div class="nav-pills">
+        <a href="#item6">Перейти к выбору по Репутации (Пункт 6) ↓</a>
+        <a href="#item3" class="secondary">Пункт 3: Бонусы в шкафчике и процедуре</a>
+        <a href="#item4" class="secondary">Пункт 4: Ввод клиенток по одной</a>
+        <a href="#item5" class="secondary">Пункт 5: Новый баланс цен</a>
+      </div>
+    </header>
+
+    <!-- ПУНКТ 3 -->
+    <section id="item3">
+      <div class="sec-header">
+        <div class="sec-title">Пункт 3. Активные бонусы прямо в окне взлома и на процедуре</div>
+        <span class="status-pill">Готово в сборке</span>
+      </div>
+      <p style="color: var(--muted); font-size: 16px;">
+        Раньше игрок видел перки гостьи только на ресепшене. Теперь прямо в момент действия видно, какую выгоду дают изученные вещи и навыки спа:
+      </p>
+      <div class="grid-2">
+        <div class="shot-card">
+          <img src="03_v7_lockpick_active_bonuses.png" alt="Окно взлома шкафчика с бонусами" />
+          <div class="shot-caption">
+            <h3>1. Внутри окна взлома шкафчика</h3>
+            <p>Слева под карточкой предмета добавлена плашка <b>«Активные бонусы гостьи»</b>: сразу виден бонус к шансу взлома (<b>+10%</b>), наценка скупки вещей (<b>+15%</b>), шанс «Двойной находки» и какая вещь нужна гостье по личному заказу.</p>
+          </div>
+        </div>
+        <div class="shot-card">
+          <img src="04_v7_procedure_active_bonuses.png" alt="Экран процедуры с бонусами" />
+          <div class="shot-caption">
+            <h3>2. Сверху на экране самой процедуры</h3>
+            <p>Сразу под полоской уровня гостьи видна компактная плашка активных бонусов: <b>Чаевые гостьи (+$4)</b>, <b>Цена видео (+15%)</b>, статус <b>«Расслаблена: риск ниже»</b> и активный навык <b>x3 чаевые</b> + кнопка быстрого перехода в Справочник.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ПУНКТ 4 -->
+    <section id="item4">
+      <div class="sec-header">
+        <div class="sec-title">Пункт 4. Плавный ввод клиенток: старт с 1 гостьи (Меган)</div>
+        <span class="status-pill">Готово в сборке</span>
+      </div>
+      <p style="color: var(--muted); font-size: 16px;">
+        Вместо того чтобы вываливать на игрока всех 7 женщин в первый день, на <b>Смене 1</b> открыта <b>1 комната (Йога)</b> и приходит <b>1 гостья (Меган)</b>. Остальные 6 клиенток вводятся по очереди с карточкой знакомства:
+      </p>
+      <div class="grid-2">
+        <div class="shot-card">
+          <img src="01_v7_shift1_morning_megan.png" alt="Смена 1: знакомство с Меган" />
+          <div class="shot-caption">
+            <h3>Смена 1: Карточка первой гостьи (Меган)</h3>
+            <p>На утреннем экране сразу видно портрет Меган, её любимую комнату и подсказку, что сегодня в спа 1 клиентка и 1 комната.</p>
+          </div>
+        </div>
+        <div class="shot-card">
+          <img src="02_v7_shift1_reception_1client.png" alt="Ресепшен на Смене 1: 1 из 1 клиентка" />
+          <div class="shot-caption">
+            <h3>Ресепшен в 1-ю смену: 1/1 клиентка</h3>
+            <p>Никакой перегрузки: игрок спокойно знакомится с Меган, проверяет её шкафчик и проводит первую процедуру.</p>
+          </div>
+        </div>
+        <div class="shot-card">
+          <img src="07_v7_shift2_morning_collins.png" alt="Смена 2: новая гостья Миссис Коллинз" />
+          <div class="shot-caption">
+            <h3>Смена 2: Приходит новая гостья — Миссис Коллинз</h3>
+            <p>На 2-й смене карточка знакомства представляет Миссис Коллинз (открыто 2/7 гостей) и гарантирует её визит в этот день.</p>
+          </div>
+        </div>
+        <div class="shot-card">
+          <img src="06_v7_spa_info_roster_stages.png" alt="Справочник спа: расписание открытия 7 клиенток" />
+          <div class="shot-caption">
+            <h3>В Справочнике видно, когда откроется каждая из 7 гостей</h3>
+            <p>В левой колонке у каждой закрытой гостьи подписан точный этап её появления (Смена 3, Массаж 30 реп., Бассейн 60 реп., Сауна 90 реп.).</p>
+          </div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Очередь</th>
+            <th>Гостья</th>
+            <th>Когда появляется в спа</th>
+            <th>Любимая комната и особенность</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>1</b></td>
+            <td><b>Меган</b></td>
+            <td><span class="new-val">Смена 1 (Старт)</span></td>
+            <td>Йога · Первая гостья для спокойного старта</td>
+          </tr>
+          <tr>
+            <td><b>2</b></td>
+            <td><b>Миссис Коллинз</b></td>
+            <td><span class="new-val">Смена 2</span></td>
+            <td>Йога · Постоянная гостья с бонусами к чаевым</td>
+          </tr>
+          <tr>
+            <td><b>3</b></td>
+            <td><b>Миссис Митчелл</b></td>
+            <td><span class="new-val">Смена 3</span> (или покупка «3 клиентки»)</td>
+            <td>Йога · Ценные вещи в шкафчике</td>
+          </tr>
+          <tr>
+            <td><b>4</b></td>
+            <td><b>Мисс Грант</b></td>
+            <td><span class="new-val">Смена 4</span> (или 15 репутации)</td>
+            <td>Йога / Массаж · Дорогие записи со скрытых камер</td>
+          </tr>
+          <tr>
+            <td><b>5</b></td>
+            <td><b>Мисс Шоу</b></td>
+            <td><span class="new-val">Открытие Массажа (30 реп.)</span></td>
+            <td>Массаж · Фитнес-тренер, приходит ради массажного стола</td>
+          </tr>
+          <tr>
+            <td><b>6</b></td>
+            <td><b>Хлоя</b></td>
+            <td><span class="new-val">Открытие Бассейна (60 реп.)</span></td>
+            <td>Бассейн · Фотомодель, звезда съёмок у воды</td>
+          </tr>
+          <tr>
+            <td><b>7</b></td>
+            <td><b>Мисс Хейс</b></td>
+            <td><span class="new-val">Открытие Сауны (90 реп.)</span></td>
+            <td>Сауна · VIP-гостья для финальных этапов</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ПУНКТ 5 -->
+    <section id="item5">
+      <div class="sec-header">
+        <div class="sec-title">Пункт 5. Сглаженный баланс цен навыков (Было → Стало)</div>
+        <span class="status-pill">Готово в сборке</span>
+      </div>
+      <p style="color: var(--muted); font-size: 16px;">
+        <b>В чём был перекос:</b> 1-й ранг «Щедрых чаевых» стоил <b>$8</b>, а 2-й ранг прыгал сразу до <b>$240</b> (в 30 раз дороже!) и <b>$700</b> за 3-й ранг. Из-за этого игрок покупал 1-й ранг в первый день, а 2-й и 3-й ранги висели мёртвым грузом. Теперь ступени растут плавно и окупаются за 2–4 смены:
+      </p>
+
+      <div class="grid-2" style="align-items: start;">
+        <table>
+          <thead>
+            <tr>
+              <th>Навык / Улучшение</th>
+              <th>Было (Ранг I / II / III)</th>
+              <th>Стало (Ранг I / II / III)</th>
+              <th>Когда покупается</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Щедрые чаевые (x3)</b><br/><span style="color:var(--muted);font-size:13px;">Шанс 10% → 25% → 50%</span></td>
+              <td><span class="old-val">$8 / $240 / $700</span><br/><span style="color:var(--muted);font-size:12px;">Сумма: $948</span></td>
+              <td><span class="new-val">$8 / $35 / $90</span><br/><span style="color:var(--muted);font-size:12px;">Сумма: $133</span></td>
+              <td>Смена 1 → 3 → 7</td>
+            </tr>
+            <tr>
+              <td><b>Удвоение чаевых</b><br/><span style="color:var(--muted);font-size:13px;">До 1х → 2х → 3х удвоений</span></td>
+              <td><span class="old-val">$80 / $240 / $700</span><br/><span style="color:var(--muted);font-size:12px;">Сумма: $1 020</span></td>
+              <td><span class="new-val">$35 / $90 / $180</span><br/><span style="color:var(--muted);font-size:12px;">Сумма: $305</span></td>
+              <td>Смена 2 → 5 → 9</td>
+            </tr>
+            <tr>
+              <td><b>Двойная находка</b><br/><span style="color:var(--muted);font-size:13px;">Шанс 2-й вещи: 10% → 25% → 50%</span></td>
+              <td><span class="old-val">$80 / $240 / $700</span><br/><span style="color:var(--muted);font-size:12px;">Сумма: $1 020</span></td>
+              <td><span class="new-val">$40 / $100 / $200</span><br/><span style="color:var(--muted);font-size:12px;">Сумма: $340</span></td>
+              <td>Смена 3 → 6 → 10</td>
+            </tr>
+            <tr>
+              <td><b>Переупаковка вещей</b><br/><span style="color:var(--muted);font-size:13px;">Обмен предмета 1 → 2 → 3 раза/день</span></td>
+              <td><span class="old-val">$80 / $240 / $700</span></td>
+              <td><span class="new-val">$30 / $75 / $150</span></td>
+              <td>Смена 3 → 6 → 9</td>
+            </tr>
+            <tr>
+              <td><b>Удачная переупаковка</b><br/><span style="color:var(--muted);font-size:13px;">Повышение редкости +1% → 5% → 10%</span></td>
+              <td><span class="old-val">$80 / $240 / $700</span></td>
+              <td><span class="new-val">$45 / $110 / $220</span></td>
+              <td>Смена 4 → 7 → 11</td>
+            </tr>
+            <tr>
+              <td><b>Разгон барабанов (жетоны)</b><br/><span style="color:var(--muted);font-size:13px;">+1 / +2 / +3 вращения в день</span></td>
+              <td><span class="old-val">$80 / $240 / $700</span></td>
+              <td><span class="new-val">$45 / $110 / $220</span></td>
+              <td>Смена 4 → 7 → 11</td>
+            </tr>
+            <tr>
+              <td><b>Счастливая проводка</b><br/><span style="color:var(--muted);font-size:13px;">-5% / -10% / -15% красных жетонов</span></td>
+              <td><span class="old-val">$100 / $300 / $780</span></td>
+              <td><span class="new-val">$55 / $135 / $260</span></td>
+              <td>Смена 5 → 8 → 12</td>
+            </tr>
+            <tr>
+              <td><b>Навыки комнат (10 уровней)</b><br/><span style="color:var(--muted);font-size:13px;">Массаж, Бассейн, Сауна</span></td>
+              <td><span class="old-val">$60..$3 845 за шаг</span><br/><span style="color:var(--muted);font-size:12px;">Множитель ×1.50</span></td>
+              <td><span class="new-val">$40..$350 за шаг</span><br/><span style="color:var(--muted);font-size:12px;">Плавный шаг ×1.22</span></td>
+              <td>Равномерно по мере открытия комнат</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="shot-card">
+          <img src="05_v7_shop_balanced_ranks.png" alt="Магазин с новыми плавными ценами" />
+          <div class="shot-caption">
+            <h3>Живой экран магазина с новыми ценами</h3>
+            <p>После покупки «Щедрых чаевых I» за $8 следующий шаг («Щедрые чаевые II») стоит <b>$35</b> (а не $240), «Удвоение» — <b>$35</b> (а не $80). У игрока на каждой смене есть близкая, желанная покупка.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ПУНКТ 6 -->
+    <section id="item6">
+      <div class="sec-header">
+        <div class="sec-title">Пункт 6. Как решить конфликт Репутации — 3 варианта на выбор</div>
+        <span class="status-pill choice">Ждёт вашего решения</span>
+      </div>
+      <p style="color: var(--muted); font-size: 16px;">
+        <b>Суть проблемы сейчас:</b> Новые комнаты открываются при накоплении <b>30 / 60 / 90 репутации</b>, но в магазине за ту же самую репутацию продаются мелкие удобства (3 клиентки — 9 реп., 2-я отмычка — 12 реп., душ — 50 реп., компьютер — 40 реп.). Когда игрок тратит репутацию в магазине, его счётчик падает назад, и открытие Массажа, Бассейна и Сауны откладывается на много смен.
+      </p>
+
+      <div class="options-grid">
+        <!-- Вариант А -->
+        <div class="option-card recommended">
+          <span class="rec-tag">Рекомендуемый вариант · Самый понятный</span>
+          <h3>Вариант А. Комнаты открываются от «Общей репутации спа» (траты в магазине её не сбрасывают)</h3>
+          <div class="option-how">
+            <b>Как работает для игрока:</b><br/>
+            Каждая полученная звезда репутации навсегда идёт в шкалу <b>«Уровень престижа спа» (0 → 30 → 60 → 90)</b>, которая открывает Массаж, Бассейн и Сауну. А свободные очки репутации игрок спокойно тратит в магазине на отмычки, душ и клиенток, <b>не отодвигая открытие новой комнаты ни на секунду</b>.
+          </div>
+          <ul class="pros-cons">
+            <li class="pro">Игрок с удовольствием покупает улучшения за репутацию, не боясь «наказать себя» задержкой новой комнаты.</li>
+            <li class="pro">Массаж стабильно открывается к 4–5 смене, Бассейн — к 8-й, Сауна — к 11–12-й.</li>
+            <li class="pro">Никаких новых сложных правил: шкала открытия комнаты всегда только растёт вперёд.</li>
+            <li class="con">В шапке магазина показываются 2 понятных числа: «Баланс репутации: X» и «Престиж спа (для комнат): Y / 30».</li>
+          </ul>
+        </div>
+
+        <!-- Вариант Б -->
+        <div class="option-card">
+          <span class="rec-tag" style="background:#5c4399;">Вариант с 1 числом репутации</span>
+          <h3>Вариант Б. Репутация — только уровень спа (не тратится), а все покупки в магазине за доллары ($)</h3>
+          <div class="option-how">
+            <b>Как работает для игрока:</b><br/>
+            Репутация вообще не тратится как валюта — это просто градусник популярности спа (набрал 9 реп. — в магазин поступил апгрейд на 3 клиенток за <b>$25</b>; набрал 30 реп. — открылся Массаж; набрал 40 реп. — можно купить компьютер за <b>$60</b>).
+          </div>
+          <ul class="pros-cons">
+            <li class="pro">У игрока всего <b>одна валюта для покупок — доллары ($)</b>, а репутация — это просто уровень доступа.</li>
+            <li class="pro">Невозможно случайно потратить репутацию и застрять перед закрытой комнатой.</li>
+            <li class="con">Все покупки ложатся на долларовый кошелёк (придётся внимательно балансировать цены в $, чтобы их хватало и на комнаты, и на навыки).</li>
+          </ul>
+        </div>
+
+        <!-- Вариант В -->
+        <div class="option-card">
+          <span class="rec-tag" style="background:#6e553e;">Мягкая правка текущей схемы</span>
+          <h3>Вариант В. Оставить трату репутации, но снизить цены в 3 раза + «несгораемые пороги» 30 / 60 / 90</h3>
+          <div class="option-how">
+            <b>Как работает для игрока:</b><br/>
+            Репутация по-прежнему тратится в магазине, но мелкие улучшения дешевеют до <b>2–5 реп.</b> (вместо 12–50 реп.), а как только игрок взял планку 30 или 60 репутации — комната открывается сразу и порог фиксируется как несгораемый.
+          </div>
+          <ul class="pros-cons">
+            <li class="pro">Остаётся привычная одна цифра репутации без разделения.</li>
+            <li class="pro">Есть лёгкий выбор «купить мелкий бонус сейчас или подкопить 1 смену до Массажа».</li>
+            <li class="con">Неопытный игрок всё равно может скупить всё подряд в магазине и отложить открытие комнаты на 1–2 смены.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
