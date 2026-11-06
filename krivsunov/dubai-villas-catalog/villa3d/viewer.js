@@ -12,7 +12,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
 import { Sky } from 'three/addons/objects/Sky.js';
-import { Walker } from './walk.js?v=vd1-pro-20261106';
+import { Walker } from './walk.js?v=vd1-fix-20261106';
 
 const HAZE = new THREE.Color(0xc9d6e0);
 
@@ -470,7 +470,7 @@ export function mount(container, build, options = {}) {
         controls.enabled = false;
         controls.autoRotate = false;
         setClip(null);
-        setNear(0.05, 70);
+        setNear(0.05, 60);    // естественная перспектива глаза: 60° по вертикали
         for (const door of doors) door.target = door.open;
       } else {
         for (const door of doors) door.target = 0;
@@ -577,6 +577,8 @@ export function mount(container, build, options = {}) {
         if (t >= 1) tween = null;
       }
       controls.update();
+      // ближняя плоскость растёт с расстоянием облёта: точнее глубина, без мерцания граней издалека
+      if (controls.maxDistance > 1) setNear(THREE.MathUtils.clamp(camera.position.distanceTo(controls.target) * 0.012, 0.3, 1.5));
     }
     modelTick(dt, (now - clock0) / 1000);
     const e = renderer.toneMappingExposure;
