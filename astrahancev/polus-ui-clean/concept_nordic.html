@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POLUS — Чистый UI без визуального шума (5 концептов)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+  html, body {
+    width: 100%; height: 100%;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0d1014;
+    overflow-x: hidden;
+  }
+
+  /* Viewport stage (16:9 full screen) */
+  .stage {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    min-height: 720px;
+    background: url('bg_glade.jpg') center center / cover no-repeat;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Subtle atmospheric vignette */
+  .stage::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 45%, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.28) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Concept Switcher Top Floating Bar (for Maxim to switch live) */
+  .concept-switcher {
+    position: relative;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1760px;
+    width: calc(100% - 48px);
+    margin: 14px auto 0;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(14, 17, 22, 0.78);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #f1f5f9;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+  }
+  .sw-left {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; font-weight: 600; letter-spacing: -0.01em;
+  }
+  .sw-badge {
+    background: rgba(245, 158, 11, 0.18);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .sw-tabs {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .sw-tab {
+    border: 1px solid transparent;
+    background: transparent;
+    color: rgba(241, 245, 249, 0.72);
+    padding: 6px 13px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    font-family: inherit;
+  }
+  .sw-tab:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+  }
+  .sw-tab.active {
+    background: #f8fafc;
+    color: #0f172a;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+  .sw-mode {
+    display: flex; gap: 4px;
+    background: rgba(255,255,255,0.07);
+    padding: 3px;
+    border-radius: 999px;
+  }
+  .sw-mode button {
+    border: 0; background: transparent; color: rgba(255,255,255,0.7);
+    padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .sw-mode button.active {
+    background: rgba(245, 158, 11, 0.92); color: #0f172a;
+  }
+
+  /* ============================================================================
+     THEME VARIABLES (5 Radically Clean Styles — Zero Visual Noise)
+     ============================================================================ */
+  /* A: inZOI Frosted Light Glass */
+  .theme-light {
+    --panel-bg: rgba(246, 249, 253, 0.74);
+    --panel-blur: blur(26px) saturate(145%);
+    --panel-border: rgba(255, 255, 255, 0.65);
+    --panel-shadow: 0 20px 50px rgba(12, 18, 28, 0.18);
+    --card-bg: rgba(255, 255, 255, 0.62);
+    --card-hover: rgba(255, 255, 255, 0.88);
+    --card-active: rgba(255, 255, 255, 0.96);
+    --card-border: rgba(15, 23, 42, 0.08);
+    --text-main: #111827;
+    --text-sub: #4b5563;
+    --text-muted: #6b7280;
+    --accent: #e58e26;
+    --accent-soft: rgba(229, 142, 38, 0.14);
+    --accent-fg: #ffffff;
+    --track-bg: rgba(15, 23, 42, 0.11);
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+  }
+
+  /* B: Smoked Obsidian Dark Glass */
+  .theme-dark {
+    --panel-bg: rgba(16, 20, 27, 0.68);
+    --panel-blur: blur(26px) saturate(135%);
+    --panel-border: rgba(255, 255, 255, 0.11);
+    --panel-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+    --card-bg: rgba(255, 255, 255, 0.055);
+    --card-hover: rgba(255, 255, 255, 0.10);
+    --card-active: rgba(245, 158, 11, 0.14);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --text-main: #f8fafc;
+    --text-sub: #cbd5e1;
+    --text-muted: #94a3b8;
+    --accent: #f59e0b;
+    --accent-soft: rgba(245, 158, 11, 0.18);
+    --accent-fg: #0f172a;
+    --track-bg: rgba(255, 255, 255, 0.13);
+    --radius-lg: 20px;
+    --radius-md: 13px;
+    --radius-sm: 9px;
+  }
+
+  /* C: Spatial Floating Frameless HUD (80% open world, micro-pills only) */
+  .theme-spatial {
+    --panel-bg: transparent;
+    --panel-blur: none;
+    --panel-border: transparent;
+    --panel-shadow: none;
+    --card-bg: rgba(18, 23, 30, 0.62);
+    --card-hover: rgba(24, 30, 38, 0.78);
+    --card-active: rgba(248, 250, 252, 0.92);
+    --card-border: rgba(255, 255, 255, 0.14);
+    --text-main: #f8fafc;
+    --text-sub: #cbd5e1;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-soft: rgba(56, 189, 248, 0.18);
+    --accent-fg: #090d14;
+    --track-bg: rgba(255, 255, 255, 0.16);
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+  }
+
+  /* D: Nordic Matte Alabaster & Slate (Editorial architectural flat) */
+  .theme-nordic {
+    --panel-bg: rgba(242, 238, 229, 0.90);
+    --panel-blur: blur(14px);
+    --panel-border: rgba(30, 32, 34, 0.12);
+    --panel-shadow: 0 18px 42px rgba(15, 15, 15, 0.22);
+    --card-bg: rgba(255, 253, 249, 0.82);
+    --card-hover: rgba(255, 255, 255, 0.98);
+    --card-active: #ffffff;
+    --card-border: rgba(30, 32, 34, 0.10);
+    --text-main: #18191b;
+    --text-sub: #4a4d52;
+    --text-muted: #767a80;
+    --accent: #d96b43;
+    --accent-soft: rgba(217, 107, 67, 0.14);
+    --accent-fg: #ffffff;
+    --track-bg: rgba(24, 25, 27, 0.12);
+    --radius-lg: 12px;
+    --radius-md: 8px;
+    --radius-sm: 6px;
+  }
+
+  /* E: Zen Ultra-Thin Hairline Glass (Minimalist Monochrome + Forest Emerald) */
+  .theme-zen {
+    --panel-bg: rgba(20, 24, 26, 0.48);
+    --panel-blur: blur(18px) saturate(120%);
+    --panel-border: rgba(255, 255, 255, 0.15);
+    --panel-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+    --card-bg: rgba(255, 255, 255, 0.04);
+    --card-hover: rgba(255, 255, 255, 0.08);
+    --card-active: rgba(52, 211, 153, 0.14);
+    --card-border: rgba(255, 255, 255, 0.10);
+    --text-main: #f4f6f8;
+    --text-sub: rgba(244, 246, 248, 0.72);
+    --text-muted: rgba(244, 246, 248, 0.48);
+    --accent: #34d399;
+    --accent-soft: rgba(52, 211, 153, 0.16);
+    --accent-fg: #062016;
+    --track-bg: rgba(255, 255, 255, 0.12);
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    --radius-sm: 8px;
+  }
+
+  /* ============================================================================
+     MAIN WORKSPACE LAYOUT
+     ============================================================================ */
+  .workspace {
+    position: relative;
+    z-index: 10;
+    flex: 1;
+    max-width: 1760px;
+    width: calc(100% - 48px);
+    margin: 12px auto 16px;
+    display: grid;
+    grid-template-columns: 380px 1fr 390px;
+    gap: 20px;
+    align-items: stretch;
+    min-height: 0;
+  }
+
+  .panel {
+    background: var(--panel-bg);
+    backdrop-filter: var(--panel-blur);
+    -webkit-backdrop-filter: var(--panel-blur);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--panel-shadow);
+    color: var(--text-main);
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow: hidden;
+    transition: all 0.22s ease;
+  }
+
+  /* Spatial mode makes side columns floating islands without outer box */
+  .theme-spatial .panel {
+    padding: 6px;
+  }
+  .theme-spatial .spatial-island {
+    background: rgba(15, 20, 27, 0.64);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 18px;
+    padding: 16px 18px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.32);
+  }
+
+  /* Panel Headers */
+  .p-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .p-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+  }
+  .p-meta {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-sub);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Left Column: Inventory Grid */
+  .inv-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .inv-cell {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 98px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+  .theme-spatial .inv-cell {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .inv-cell:hover {
+    background: var(--card-hover);
+    transform: translateY(-1px);
+  }
+  .inv-cell.active {
+    background: var(--card-active);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1.5px var(--accent);
+  }
+  .theme-spatial .inv-cell.active {
+    color: #0f172a;
+  }
+  .theme-spatial .inv-cell.active .c-name,
+  .theme-spatial .inv-cell.active .c-vol {
+    color: #0f172a;
+  }
+  .c-badge {
+    position: absolute;
+    top: 7px; right: 8px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .c-tag {
+    position: absolute;
+    top: 7px; left: 8px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 6px;
+    border-radius: 99px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .c-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-top: 2px;
+  }
+  .c-vol {
+    font-size: 11px;
+    color: var(--text-sub);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Hands Row */
+  .section-lbl {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .hands-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .hand-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 11px 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .hand-card.equipped {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .h-top {
+    display: flex; justify-content: space-between;
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+  }
+  .h-item {
+    font-size: 13px; font-weight: 600; color: var(--text-main);
+  }
+  .h-sub {
+    font-size: 11.5px; color: var(--text-sub);
+  }
+
+  /* Center Column: 3D Tool Constructor */
+  .center-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  /* Template Preset Pills (1..7) */
+  .preset-bar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+  }
+  .preset-pill {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 8px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    color: var(--text-sub);
+    transition: all 0.15s ease;
+  }
+  .theme-spatial .preset-pill {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .preset-pill:hover {
+    background: var(--card-hover);
+    color: var(--text-main);
+  }
+  .preset-pill.active {
+    background: var(--accent);
+    color: var(--accent-fg);
+    border-color: var(--accent);
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.16);
+  }
+  .preset-name {
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* 3D Viewport Stage */
+  .viewport-3d {
+    flex: 1;
+    min-height: 250px;
+    border-radius: var(--radius-md);
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.04) 100%);
+    border: 1px solid var(--card-border);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+  }
+  .theme-spatial .viewport-3d {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  /* Geometry Sliders Grid */
+  .sliders-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+  }
+  .theme-spatial .sliders-box {
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+  }
+  .slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .slider-row.full {
+    grid-column: 1 / -1;
+  }
+  .s-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .s-lbl {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-sub);
+  }
+  .s-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .s-track {
+    height: 5px;
+    border-radius: 999px;
+    background: var(--track-bg);
+    position: relative;
+    cursor: pointer;
+  }
+  .s-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+  .s-knob {
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2.5px solid var(--accent);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Matter Conservation Bar */
+  .conservation-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--text-sub);
+  }
+  .conservation-bar strong {
+    color: var(--text-main);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Right Column: Material Parts & Physics Consequences */
+  .part-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 13px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .part-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .part-role {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+  }
+  .part-mat {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+  .part-nums {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-sub);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .split-meter {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--track-bg);
+    overflow: hidden;
+    display: flex;
+  }
+  .split-used {
+    background: var(--accent);
+    height: 100%;
+  }
+
+  /* Physics Stats */
+  .stats-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .stat-line {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .stat-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+  }
+  .stat-top span:first-child {
+    color: var(--text-sub);
+    font-weight: 500;
+  }
+  .stat-top span:last-child {
+    color: var(--text-main);
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .stat-bar {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--track-bg);
+    overflow: hidden;
+  }
+  .stat-bar > div {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+  }
+
+  .bite-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+  }
+  .bite-tag {
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--text-main);
+  }
+
+  /* Action Buttons */
+  .actions-col {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .btn-primary {
+    width: 100%;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--accent);
+    color: var(--accent-fg);
+    padding: 14px 18px;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    transition: transform 0.14s ease, filter 0.14s ease;
+    font-family: inherit;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+  }
+  .btn-secondary {
+    width: 100%;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    background: var(--card-bg);
+    color: var(--text-sub);
+    padding: 11px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: inherit;
+  }
+  .kbd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.16);
+    color: inherit;
+  }
+
+  /* Bottom Clean Hint Bar */
+  .bottom-bar {
+    position: relative;
+    z-index: 20;
+    margin: 0 auto 14px;
+    padding: 8px 20px;
+    border-radius: 999px;
+    background: var(--panel-bg);
+    backdrop-filter: var(--panel-blur);
+    -webkit-backdrop-filter: var(--panel-blur);
+    border: 1px solid var(--panel-border);
+    color: var(--text-sub);
+    font-size: 12px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .theme-spatial .bottom-bar {
+    background: rgba(15, 20, 27, 0.68);
+    backdrop-filter: blur(20px);
+    border-color: rgba(255,255,255,0.12);
+    color: #cbd5e1;
+  }
+  .bottom-bar b {
+    color: var(--text-main);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+  .theme-spatial .bottom-bar b {
+    color: #fff;
+  }
+</style>
+</head>
+<body class="theme-nordic">
+
+<div class="stage" id="stage">
+  <!-- Interactive Concept Switcher Header -->
+  <header class="concept-switcher">
+    <div class="sw-left">
+      <span class="sw-badge">POLUS UI · Без кожи и шума</span>
+      <span id="concept-desc">A · inZOI Светлое матовое стекло (Frosted Daylight)</span>
+    </div>
+    <div class="sw-tabs">
+      <button class="sw-tab " onclick="setTheme('light', 'A · inZOI Светлое матовое стекло (Frosted Daylight)', this)">A · inZOI Светлое стекло</button>
+      <button class="sw-tab " onclick="setTheme('dark', 'B · Тёмный дымчатый акрил (Smoked Obsidian)', this)">B · Тёмное матовое стекло</button>
+      <button class="sw-tab " onclick="setTheme('spatial', 'C · Без рамок в мире (Spatial Floating HUD)', this)">C · Парящий без окон</button>
+      <button class="sw-tab active" onclick="setTheme('nordic', 'D · Скандинавский матовый минимализм (Warm Alabaster)', this)">D · Сканди матовый</button>
+      <button class="sw-tab " onclick="setTheme('zen', 'E · Ультра-тонкий монохром (Zen Hairline Glass)', this)">E · Дзен тонкие линии</button>
+    </div>
+  </header>
+
+  <!-- 3-Column Clean Workspace -->
+  <main class="workspace">
+    <!-- LEFT COLUMN: BAG & HANDS -->
+    <section class="panel">
+      <div class="spatial-island" style="display:flex;flex-direction:column;gap:14px;height:100%">
+        <div class="p-head">
+          <span class="p-title">Инвентарь</span>
+          <span class="p-meta">7,12 / 38,5 кг · 9 кусков</span>
+        </div>
+
+        <div class="inv-grid" id="inv-grid"></div>
+
+        <div class="section-lbl">В руках и на поясе</div>
+        <div class="hands-row">
+          <div class="hand-card equipped">
+            <div class="h-top"><span>Правая рука</span><span>ЛКМ</span></div>
+            <div class="h-item">Топор · Гранит</div>
+            <div class="h-sub">дуб 68 см · 1,42 кг</div>
+          </div>
+          <div class="hand-card">
+            <div class="h-top"><span>Левая рука</span><span>ПКМ</span></div>
+            <div class="h-item">Подхват рукояти</div>
+            <div class="h-sub">двуручный замах ×1,8</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CENTER COLUMN: 3D TOOL & GEOMETRY SLIDERS -->
+    <section class="panel center-col">
+      <div class="spatial-island" style="padding:10px 12px">
+        <div class="preset-bar" id="preset-bar"></div>
+      </div>
+
+      <div class="viewport-3d" id="viewport-3d"></div>
+
+      <div class="spatial-island" style="display:flex;flex-direction:column;gap:12px">
+        <div class="sliders-box" id="sliders-box"></div>
+        <div class="conservation-bar">
+          <span>Закон сохранения объёма</span>
+          <span>Гранит <strong>410 см³</strong> &rarr; оголовок <strong>255 см³</strong> + скол в сумку <strong>155 см³</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: MATERIALS, PHYSICS CONSEQUENCES & CRAFT -->
+    <section class="panel">
+      <div class="spatial-island" style="display:flex;flex-direction:column;gap:14px;height:100%">
+        <div class="p-head">
+          <span class="p-title">Сборка инструмента</span>
+          <span class="p-meta">Топор · 2 детали</span>
+        </div>
+
+        <div class="part-card">
+          <div class="part-head">
+            <span class="part-role">1 · Оголовок (камень / металл)</span>
+            <span class="p-meta">ρ = 2,70 г/см³</span>
+          </div>
+          <div class="part-mat">Гранит (крупнозернистый)</div>
+          <div class="part-nums">
+            <span>В деталь: 255 см³ (0,69 кг)</span>
+            <span>Остаток: 155 см³</span>
+          </div>
+          <div class="split-meter"><div class="split-used" style="width:62%"></div></div>
+        </div>
+
+        <div class="part-card">
+          <div class="part-head">
+            <span class="part-role">2 · Рукоять (древесина)</span>
+            <span class="p-meta">ρ = 0,76 г/см³</span>
+          </div>
+          <div class="part-mat">Дуб (сухая ветвь Ø5 см)</div>
+          <div class="part-nums">
+            <span>В деталь: 500 см³ (0,38 кг)</span>
+            <span>Остаток: 1 000 см³</span>
+          </div>
+          <div class="split-meter"><div class="split-used" style="width:33%"></div></div>
+        </div>
+
+        <div class="stats-card">
+          <div class="section-lbl" style="margin-top:0">Физика удара от геометрии</div>
+          <div class="stat-line">
+            <div class="stat-top"><span>Общая масса</span><span>1,07 кг</span></div>
+            <div class="stat-bar"><div style="width:54%"></div></div>
+          </div>
+          <div class="stat-line">
+            <div class="stat-top"><span>Энергия маха (2 руки)</span><span>124 Дж</span></div>
+            <div class="stat-bar"><div style="width:76%"></div></div>
+          </div>
+          <div class="stat-line">
+            <div class="stat-top"><span>Плечо рычага / ЦМ</span><span>54 см от хвата</span></div>
+            <div class="stat-bar"><div style="width:68%"></div></div>
+          </div>
+          <div class="bite-tags">
+            <span class="bite-tag">Рубит древесину (клин 28°)</span>
+            <span class="bite-tag">Колет по волокнам</span>
+          </div>
+        </div>
+
+        <div class="actions-col">
+          <button class="btn-primary">
+            <span>Собрать инструмент</span>
+            <span class="kbd">Enter</span>
+          </button>
+          <button class="btn-secondary">
+            <span>Разобрать на куски без потерь</span>
+            <span class="kbd">Backspace</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Minimalist Bottom Shortcut Pill -->
+  <footer class="bottom-bar">
+    <span><b>1–7</b> пресет формы</span>
+    <span><b>Мышь</b> вращать 3D и тянуть размеры</span>
+    <span><b>H</b> весь кусок в оголовок</span>
+    <span><b>R</b> сброс размеров</span>
+    <span><b>E / Tab / Esc</b> закрыть</span>
+  </footer>
+</div>
+
+<script>
+
+const BAG_ITEMS = [
+  { id: 'granite', name: 'Гранит', sub: '2 куска', vol: '410 см³', mass: '1,11 кг', kind: 'head', active: true, color1: '#8b929a', color2: '#555b63', stroke: '#b8c0c8', shape: 'rock' },
+  { id: 'flint', name: 'Кремень', sub: 'скол', vol: '180 см³', mass: '0,47 кг', kind: 'head', active: false, color1: '#494e56', color2: '#272a30', stroke: '#7a828e', shape: 'flint' },
+  { id: 'quartz', name: 'Кварц', sub: 'жильный', vol: '150 см³', mass: '0,40 кг', kind: 'head', active: false, color1: '#e6eef6', color2: '#a8bacd', stroke: '#ffffff', shape: 'crystal' },
+  { id: 'steel', name: 'Крица', sub: 'поковка', vol: '320 см³', mass: '2,50 кг', kind: 'head', active: false, color1: '#9aa4b0', color2: '#4d5560', stroke: '#cad4e0', shape: 'ingot' },
+  { id: 'oak', name: 'Дуб', sub: 'ветвь Ø5 см', vol: '1,5 л', mass: '1,14 кг', kind: 'haft', active: true, color1: '#b88652', color2: '#7a5229', stroke: '#d8ab79', shape: 'wood' },
+  { id: 'ash', name: 'Ясень', sub: 'жердь Ø4 см', vol: '1,2 л', mass: '0,88 кг', kind: 'haft', active: false, color1: '#d9b589', color2: '#9c784c', stroke: '#eed2ad', shape: 'wood' },
+  { id: 'pine', name: 'Сосна', sub: 'полено', vol: '2,5 л', mass: '1,30 кг', kind: 'haft', active: false, color1: '#e2b878', color2: '#a87c42', stroke: '#f3d49c', shape: 'log' },
+  { id: 'birch', name: 'Берёза', sub: 'ветвь Ø4 см', vol: '0,9 л', mass: '0,58 кг', kind: 'haft', active: false, color1: '#e8dfd1', color2: '#b5a894', stroke: '#ffffff', shape: 'birch' },
+  { id: 'sandstone', name: 'Песчаник', sub: 'плитка', vol: '300 см³', mass: '0,72 кг', kind: 'head', active: false, color1: '#d4ab72', color2: '#9a713d', stroke: '#ecc996', shape: 'rock' },
+];
+
+const TEMPLATES = [
+  { num: 1, name: 'Топорик', blade: '7,0 см', h: '12,0 см', angle: '24°', haft: '42 см', type: 'hatchet' },
+  { num: 2, name: 'Топор', blade: '9,5 см', h: '16,0 см', angle: '28°', haft: '68 см', type: 'axe', active: true },
+  { num: 3, name: 'Двуручный', blade: '13,0 см', h: '19,0 см', angle: '26°', haft: '92 см', type: 'great_axe' },
+  { num: 4, name: 'Колун', blade: '8,0 см', h: '18,0 см', angle: '46°', haft: '80 см', type: 'maul' },
+  { num: 5, name: 'Кирка', blade: '2,2 см', h: '22,0 см', angle: '18°', haft: '74 см', type: 'pick' },
+  { num: 6, name: 'Кувалда', blade: '9,0 см', h: '15,0 см', angle: '85°', haft: '78 см', type: 'sledge' },
+  { num: 7, name: 'Лопата', blade: '21,0 см', h: '26,0 см', angle: '14°', haft: '110 см', type: 'shovel' },
+];
+
+const SLIDERS = [
+  { name: 'Длина кромки (X)', val: '9,5 см', min: '4 см', max: '16 см', pct: 58 },
+  { name: 'Высота оголовка (Y)', val: '16,0 см', min: '8 см', max: '24 см', pct: 64 },
+  { name: 'Толщина клина (Z)', val: '4,2 см', min: '2 см', max: '9 см', pct: 46 },
+  { name: 'Угол схождения (θ)', val: '28°', min: '15°', max: '60°', pct: 32 },
+  { name: 'Длина рукояти (L)', val: '68 см', min: '30 см', max: '110 см', pct: 60 },
+];
+
+function itemSvg(item, size=44) {
+  if (item.shape === 'wood' || item.shape === 'birch' || item.shape === 'log') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" fill="none">
+      <defs>
+        <linearGradient id="g_${item.id}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${item.color1}"/>
+          <stop offset="100%" stop-color="${item.color2}"/>
+        </linearGradient>
+      </defs>
+      <path d="M10 34 L32 10 C35 8 40 12 38 16 L16 40 C13 41 9 37 10 34 Z" fill="url(#g_${item.id})" stroke="${item.stroke}" stroke-width="1.2"/>
+      <ellipse cx="35" cy="13" rx="3.8" ry="2.6" transform="rotate(42 35 13)" fill="${item.color1}" stroke="${item.stroke}" stroke-width="1"/>
+    </svg>`;
+  }
+  if (item.shape === 'crystal') {
+    return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" fill="none">
+      <polygon points="24,6 35,15 31,38 16,38 13,17" fill="${item.color1}" fill-opacity="0.88" stroke="${item.stroke}" stroke-width="1.4"/>
+      <polyline points="24,6 22,24 31,38" stroke="${item.stroke}" stroke-width="1" opacity="0.7"/>
+      <polyline points="13,17 22,24 35,15" stroke="${item.stroke}" stroke-width="1" opacity="0.7"/>
+    </svg>`;
+  }
+  return `<svg width="${size}" height="${size}" viewBox="0 0 48 48" fill="none">
+    <defs>
+      <linearGradient id="g_${item.id}" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="${item.color1}"/>
+        <stop offset="100%" stop-color="${item.color2}"/>
+      </linearGradient>
+    </defs>
+    <polygon points="16,11 33,10 39,23 32,37 14,36 9,22" fill="url(#g_${item.id})" stroke="${item.stroke}" stroke-width="1.2" stroke-linejoin="round"/>
+    <polyline points="16,11 25,22 39,23" stroke="${item.stroke}" stroke-width="0.9" opacity="0.55"/>
+    <line x1="25" y1="22" x2="22" y2="36" stroke="${item.stroke}" stroke-width="0.9" opacity="0.45"/>
+  </svg>`;
+}
+
+function toolPresetSvg(type, active) {
+  const headCol = active ? 'currentColor' : 'currentColor';
+  return `<svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+    <line x1="9" y1="28" x2="26" y2="9" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.7"/>
+    ${type === 'hatchet' ? '<path d="M21 8 L30 13 L26 20 L18 13 Z" fill="currentColor"/>' : ''}
+    ${type === 'axe' ? '<path d="M19 6 L31 12 L26 22 L16 13 Z" fill="currentColor"/>' : ''}
+    ${type === 'great_axe' ? '<path d="M17 5 L32 12 L25 25 L14 14 Z" fill="currentColor"/>' : ''}
+    ${type === 'maul' ? '<polygon points="18,7 30,14 26,20 15,12" fill="currentColor"/>' : ''}
+    ${type === 'pick' ? '<path d="M14 7 Q24 10 31 19 L27 21 Q21 13 13 11 Z" fill="currentColor"/>' : ''}
+    ${type === 'sledge' ? '<rect x="17" y="7" width="12" height="8" rx="1.5" transform="rotate(42 23 11)" fill="currentColor"/>' : ''}
+    ${type === 'shovel' ? '<path d="M21 6 L31 11 L26 21 C23 23 18 19 18 15 Z" fill="currentColor"/>' : ''}
+  </svg>`;
+}
+
+function main3DToolSvg(theme) {
+  const lineCol = theme === 'light' || theme === 'nordic' ? 'rgba(20,26,34,0.68)' : 'rgba(248,250,252,0.78)';
+  const pillBg = theme === 'light' || theme === 'nordic' ? 'rgba(255,255,255,0.88)' : 'rgba(15,19,25,0.82)';
+  const pillFg = theme === 'light' || theme === 'nordic' ? '#12161c' : '#f8fafc';
+  const accent = theme === 'zen' ? '#34d399' : (theme === 'nordic' ? '#d96b43' : '#f59e0b');
+  return `
+  <svg width="100%" height="100%" viewBox="0 0 560 300" fill="none" style="overflow:visible">
+    <defs>
+      <radialGradient id="stageGlow" cx="50%" cy="52%" r="48%">
+        <stop offset="0%" stop-color="${accent}" stop-opacity="0.14"/>
+        <stop offset="100%" stop-color="${accent}" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="haftWood" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#d7a76e"/>
+        <stop offset="55%" stop-color="#b58046"/>
+        <stop offset="100%" stop-color="#7c5225"/>
+      </linearGradient>
+      <linearGradient id="graniteHead" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#adb5be"/>
+        <stop offset="48%" stop-color="#7c8590"/>
+        <stop offset="100%" stop-color="#484f57"/>
+      </linearGradient>
+      <linearGradient id="bladeBevel" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#e5ecf4"/>
+        <stop offset="100%" stop-color="#8b95a1"/>
+      </linearGradient>
+      <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#000" flood-opacity="0.32"/>
+      </filter>
+    </defs>
+
+    <!-- Subtle perspective grid floor -->
+    <ellipse cx="285" cy="242" rx="165" ry="28" fill="url(#stageGlow)"/>
+    <ellipse cx="285" cy="242" rx="135" ry="20" stroke="${lineCol}" stroke-opacity="0.22" stroke-dasharray="4 6"/>
+
+    <g filter="url(#softShadow)">
+      <!-- 3D Oak Haft (handle) -->
+      <path d="M116 232 L348 64 C355 59 366 66 361 74 L132 246 C124 251 112 240 116 232 Z" fill="url(#haftWood)" stroke="#5c3b18" stroke-width="1.2"/>
+      <ellipse cx="123" cy="239" rx="8" ry="5.5" transform="rotate(36 123 239)" fill="#9c6b36" stroke="#5c3b18" stroke-width="1"/>
+
+      <!-- 3D Granite Head (faceted low-poly granite head with sharpened bevel) -->
+      <polygon points="282,58 346,44 398,98 352,162 294,116 272,82" fill="url(#graniteHead)" stroke="#bfc8d2" stroke-width="1.2" stroke-linejoin="round"/>
+      <!-- Inner facet planes -->
+      <polygon points="282,58 346,44 334,92 294,116 272,82" fill="#959fa9" fill-opacity="0.55"/>
+      <polygon points="346,44 398,98 352,162 334,92" fill="url(#bladeBevel)"/>
+      <!-- Sharp cutting edge highlight -->
+      <path d="M398 98 L352 162" stroke="${accent}" stroke-width="2.6" stroke-linecap="round"/>
+      <!-- Haft eye socket -->
+      <ellipse cx="316" cy="82" rx="11" ry="6.5" transform="rotate(-35 316 82)" fill="#8d6030" stroke="#473016" stroke-width="1.2"/>
+    </g>
+
+    <!-- Clean CAD Dimension Callouts (Zero clutter) -->
+    <!-- Blade length X -->
+    <line x1="408" y1="96" x2="432" y2="96" stroke="${lineCol}" stroke-width="1.1"/>
+    <line x1="362" y1="164" x2="432" y2="164" stroke="${lineCol}" stroke-width="1.1"/>
+    <line x1="424" y1="96" x2="424" y2="164" stroke="${accent}" stroke-width="1.5"/>
+    <rect x="436" y="116" width="108" height="26" rx="13" fill="${pillBg}" stroke="${lineCol}" stroke-opacity="0.25"/>
+    <text x="490" y="133" text-anchor="middle" fill="${pillFg}" font-size="12" font-weight="600" font-family="Inter, system-ui, sans-serif">Кромка · 9,5 см</text>
+
+    <!-- Head height Y -->
+    <line x1="278" y1="36" x2="350" y2="22" stroke="${lineCol}" stroke-width="1.2" stroke-dasharray="3 3"/>
+    <rect x="228" y="8" width="124" height="26" rx="13" fill="${pillBg}" stroke="${lineCol}" stroke-opacity="0.25"/>
+    <text x="290" y="25" text-anchor="middle" fill="${pillFg}" font-size="12" font-weight="600" font-family="Inter, system-ui, sans-serif">Оголовок · 16,0 см</text>
+
+    <!-- Haft length L -->
+    <line x1="138" y1="258" x2="336" y2="114" stroke="${lineCol}" stroke-width="1.2" stroke-dasharray="4 4"/>
+    <rect x="150" y="196" width="118" height="26" rx="13" fill="${pillBg}" stroke="${lineCol}" stroke-opacity="0.25"/>
+    <text x="209" y="213" text-anchor="middle" fill="${pillFg}" font-size="12" font-weight="600" font-family="Inter, system-ui, sans-serif">Рукоять · 68 см</text>
+
+    <!-- Center of Mass / Balance indicator -->
+    <circle cx="292" cy="105" r="5" fill="${accent}" stroke="#fff" stroke-width="1.5"/>
+    <text x="268" y="100" text-anchor="end" fill="${pillFg}" font-size="11" font-weight="600" font-family="Inter, system-ui, sans-serif" opacity="0.9">ЦМ (у головы)</text>
+  </svg>`;
+}
+
+
+let currentTheme = 'nordic';
+
+function renderAll() {
+  const grid = document.getElementById('inv-grid');
+  grid.innerHTML = BAG_ITEMS.map(item => `
+    <div class="inv-cell ${item.active ? 'active' : ''}">
+      <span class="c-tag">${item.kind === 'head' ? 'Голова' : 'Ручка'}</span>
+      <span class="c-badge">${item.mass}</span>
+      <div style="margin-top:12px">${itemSvg(item, 42)}</div>
+      <div class="c-name">${item.name}</div>
+      <div class="c-vol">${item.vol}</div>
+    </div>
+  `).join('');
+
+  const pBar = document.getElementById('preset-bar');
+  pBar.innerHTML = TEMPLATES.map(t => `
+    <div class="preset-pill ${t.active ? 'active' : ''}">
+      ${toolPresetSvg(t.type, t.active)}
+      <span class="preset-name">${t.num} · ${t.name}</span>
+    </div>
+  `).join('');
+
+  const vp = document.getElementById('viewport-3d');
+  vp.innerHTML = main3DToolSvg(currentTheme);
+
+  const sBox = document.getElementById('sliders-box');
+  sBox.innerHTML = SLIDERS.map((s, idx) => `
+    <div class="slider-row ${idx === 4 ? 'full' : ''}">
+      <div class="s-top">
+        <span class="s-lbl">${s.name}</span>
+        <span class="s-val">${s.val}</span>
+      </div>
+      <div class="s-track">
+        <div class="s-fill" style="width:${s.pct}%"></div>
+        <div class="s-knob" style="left:${s.pct}%"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setTheme(theme, desc, btn) {
+  currentTheme = theme;
+  document.body.className = 'theme-' + theme;
+  document.getElementById('concept-desc').textContent = desc;
+  document.querySelectorAll('.sw-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderAll();
+}
+
+renderAll();
+</script>
+</body>
+</html>
