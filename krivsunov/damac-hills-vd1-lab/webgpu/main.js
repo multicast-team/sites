@@ -8,16 +8,31 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { WebGPUPathTracer, OIDNDenoiser } from 'three-gpu-pathtracer/webgpu';
 import { initUNetFromURL } from 'oidn-webgpu';
-import { MAIN, LAB, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, loadCams, loadModel, texturesReady, ptMaterials, setCam, compareUI, navUI, $ } from '../shared/lab.js';
+import { MAIN, LAB, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, PHONE, fitStart, shrinkTextures, loadCams, loadModel, texturesReady, ptMaterials, setCam, compareUI, navUI, $ } from '../shared/lab.js?v=vd1-ios-20261107';
 
 const style = document.createElement('style'); style.textContent = LAB_CSS; document.head.append(style);
 const status = $('#status'), stage = $('#stage');
 const say = (t) => { status.textContent = t; };
 
-if (!navigator.gpu) {
-  stage.innerHTML = '<div class="note">Этой странице нужен WebGPU: Chrome или Edge 113+ на компьютере с видеокартой.<br>На телефоне и в Firefox без WebGPU не запустится.</div>';
-  throw new Error('нет WebGPU');
+// без WebGPU (iPhone до iOS 26, Firefox) и после сбоя — та же трассировка на WebGL 2 (webgl.html). Сбой ловится и тогда,
+// когда вкладка падает целиком (на телефоне — от нехватки памяти): метка запуска снимается только после первых проходов
+const GUARD = 'vd1-webgpu-start', params = new URLSearchParams(location.search);
+let started = false;
+function toGL(why) {
+  localStorage.removeItem(GUARD);
+  location.replace(`./webgl.html?why=${encodeURIComponent(why)}`);
+  throw new Error(`WebGPU: ${why}`);
 }
+if (params.has('gl')) toGL('выбрано вручную');
+const crashed = +localStorage.getItem(GUARD);
+if (crashed && Date.now() - crashed < 15 * 60e3 && !params.has('gpu')) toGL('прошлый запуск оборвался');
+const adapter = navigator.gpu ? await navigator.gpu.requestAdapter().catch(() => null) : null;
+if (!adapter) toGL(navigator.gpu ? 'видеокарта не отдала адаптер' : 'в этом браузере его нет');
+localStorage.setItem(GUARD, String(Date.now()));
+const onFail = (e) => { if (!started) { console.error(e); toGL('ошибка запуска'); } };
+addEventListener('error', (e) => onFail(e.error || e.message));
+addEventListener('unhandledrejection', (e) => onFail(e.reason));
+addEventListener('pagehide', () => { if (!started) localStorage.removeItem(GUARD); });   // ушли сами — это не сбой
 
 // AgX Blender с look «Medium High Contrast» (как у рендеров Cycles): контраст 1,2 вокруг средне-серого (0,4 в 25-ступенчатом
 // AgX Log Blender = 0,606 в 16,5-ступенчатой шкале three.js)
@@ -38,7 +53,10 @@ const agxMHC = Fn(([color, exposure]) => {
 
 const renderer = new THREE.WebGPURenderer({ antialias: false, trackTimestamp: true });
 await renderer.init();
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+if (!renderer.backend.isWebGPUBackend) toGL('движок перешёл на WebGL');
+renderer.onDeviceLost = (info) => { if (info && info.reason !== 'destroyed') toGL('видеокарта сбросила WebGPU'); };
+// телефон: кадр трассировки в 1× пикселях — в 4–9 раз меньше работы и памяти шумодава, чем в 2–3×
+renderer.setPixelRatio(PHONE ? 1 : Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.library.addToneMapping(agxMHC, THREE.CustomToneMapping);
 renderer.toneMapping = THREE.CustomToneMapping;
@@ -46,16 +64,15 @@ stage.append(renderer.domElement);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.05, 3000);
-camera.position.set(-41, 15, -12);
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(-4, 3.4, 0.5);
 controls.enableDamping = true;
-controls.update();
+fitStart(camera, controls, [-41, 15, -12], [-4, 3.4, 0.5]);
 
 say('Собираю дом и жду фотосканы…');
-const model = await loadModel(THREE);
+const model = await loadModel(THREE, PHONE ? 'low' : 'high');
 const nTex = await texturesReady(model.root);
 ptMaterials(THREE, model.root);
+if (PHONE) shrinkTextures(model.root, 512);   // атлас текстур трассировщика на телефоне — в 4 раза меньше
 scene.add(model.root);
 const ground = new THREE.Mesh(new THREE.CircleGeometry(900, 48), new THREE.MeshStandardMaterial({ color: 0x9a9a6c, roughness: 1 }));
 ground.rotation.x = -Math.PI / 2; ground.position.y = -0.03;
@@ -75,13 +92,17 @@ async function setSky(key) {
 await setSky('day');
 
 const pt = new WebGPUPathTracer(renderer);
-Object.assign(pt, { maxBounces: 10, filterGlossyFactor: 0.5, renderScale: 1, minSamples: 2 });
-const denoiser = new OIDNDenoiser({ initUNetFromURL, auxWeightsUrl: new URL('vendor/oidn/rt_hdr_alb_nrm.tza', LAB).href });
-let maxSamples = 128;
+Object.assign(pt, { maxBounces: PHONE ? 6 : 10, filterGlossyFactor: 0.5, renderScale: 1, minSamples: 2, targetFrameTime: PHONE ? 30 : 16 });
+// на телефоне — малая сеть OIDN: втрое легче, разница на экране телефона не видна
+const denoiser = new OIDNDenoiser({ initUNetFromURL, auxWeightsUrl: new URL(`vendor/oidn/rt_hdr_alb_nrm${PHONE ? '_small' : ''}.tza`, LAB).href });
+let maxSamples = PHONE ? 64 : 128;
 pt.maxSamples = maxSamples;
 pt.setDenoiser(denoiser);
 let stageName = 'building', samples = 0;
-pt.addEventListener('progress', (e) => { stageName = e.stage; if (e.samples) samples = e.samples.avg ?? e.samples; });
+pt.addEventListener('progress', (e) => {
+  stageName = e.stage; if (e.samples) samples = e.samples.avg ?? e.samples;
+  if (!started && samples >= 2) { started = true; localStorage.removeItem(GUARD); }
+});
 say('Строю ускоряющую структуру (BVH)…');
 await new Promise((r) => setTimeout(r, 30));
 const t0 = performance.now();
@@ -152,8 +173,8 @@ function frame(now) {
   pt.renderSample();
   if (now - lastSay > 400) {
     lastSay = now;
-    const st = { building: 'строю сцену', compiling: 'компилирую шейдеры', rendering: 'трассирую', denoising: 'OIDN чистит шум' }[stageName] || stageName;
-    say(`${st} · проходов ${Math.round(samples)}${maxSamples ? ' из ' + maxSamples : ''} · ${(pt.getRenderTime() / 1000).toFixed(1)} с · сцена ${buildMs} мс · фотосканов ${nTex}${pt.complete ? ' · готово' : ''}`);
+    const st = pt.complete ? 'готово' : { building: 'строю сцену', compiling: 'компилирую шейдеры', rendering: 'трассирую', denoising: 'OIDN чистит шум' }[stageName] || stageName;
+    say(`${st} · проходов ${Math.round(samples)}${maxSamples ? ' из ' + maxSamples : ''} · ${(pt.getRenderTime() / 1000).toFixed(1)} с · сцена ${buildMs} мс · фотосканов ${nTex}${PHONE ? ' · режим телефона' : ''}`);
   }
 }
 renderer.setAnimationLoop(frame);

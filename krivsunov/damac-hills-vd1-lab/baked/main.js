@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
-import { MAIN, LAB, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, loadCams, loadModel, setCam, compareUI, navUI, $ } from '../shared/lab.js';
+import { MAIN, LAB, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, PHONE, dprFor, fitStart, loadCams, loadModel, setCam, compareUI, navUI, $ } from '../shared/lab.js?v=vd1-ios-20261107';
 
 const style = document.createElement('style'); style.textContent = LAB_CSS; document.head.append(style);
 const status = $('#status'), stage = $('#stage');
@@ -24,7 +24,7 @@ const say = (t) => { status.textContent = t; };
 }
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setPixelRatio(dprFor(2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.CustomToneMapping;
 renderer.shadowMap.enabled = true;
@@ -32,11 +32,9 @@ renderer.shadowMap.type = THREE.PCFShadowMap;
 stage.append(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.05, 3000);
-camera.position.set(-41, 15, -12);
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(-4, 3.4, 0.5);
 controls.enableDamping = true;
-controls.update();
+fitStart(camera, controls, [-41, 15, -12], [-4, 3.4, 0.5]);
 
 say('Собираю дом, участок и гольф…');
 const model = await loadModel(THREE);
@@ -49,9 +47,13 @@ scene.add(ground);
 // (солнце светит направленным светом с тенями), всё в единицах Blender
 const h = HDRI.day, k = hdriStrength(h), rot = hdriRotation(h);
 say('Загружаю небо…');
+// небо читается в 32 бита (обрезать солнце), а на видеокарту идёт в half-float: на iPhone нет линейной фильтрации
+// 32-битных текстур (OES_texture_float_linear), такое небо и отражения были бы чёрными
 const hdr = await new HDRLoader().setDataType(THREE.FloatType).loadAsync(h.url);
-hdr.mapping = THREE.EquirectangularReflectionMapping;
-scene.background = hdr;
+const toHalf = (f) => { const u = new Uint16Array(f.length); for (let i = 0; i < f.length; i++) u[i] = THREE.DataUtils.toHalfFloat(f[i]); return u; };
+const halfTex = (data) => Object.assign(new THREE.DataTexture(toHalf(data), hdr.image.width, hdr.image.height, THREE.RGBAFormat, THREE.HalfFloatType),
+  { mapping: THREE.EquirectangularReflectionMapping, colorSpace: THREE.LinearSRGBColorSpace, magFilter: THREE.LinearFilter, minFilter: THREE.LinearFilter, flipY: hdr.flipY, needsUpdate: true });
+scene.background = halfTex(hdr.image.data);
 scene.backgroundIntensity = k;
 scene.backgroundRotation.set(0, rot, 0);
 let noSun;
@@ -62,8 +64,7 @@ let noSun;
   const sorted = Float32Array.from(lum).sort();
   const cap = sorted[Math.floor(n * 0.995)] * 4;   // солнце и ореол — выше четырёх 99,5-х процентилей неба
   for (let i = 0; i < n; i++) if (lum[i] > cap) { const s = cap / lum[i]; d[i * 4] *= s; d[i * 4 + 1] *= s; d[i * 4 + 2] *= s; }
-  noSun = new THREE.DataTexture(d, hdr.image.width, hdr.image.height, THREE.RGBAFormat, THREE.FloatType);
-  Object.assign(noSun, { mapping: THREE.EquirectangularReflectionMapping, colorSpace: THREE.LinearSRGBColorSpace, magFilter: THREE.LinearFilter, minFilter: THREE.LinearFilter, flipY: hdr.flipY, needsUpdate: true });
+  noSun = halfTex(d);
 }
 const pmrem = new THREE.PMREMGenerator(renderer);
 const envSky = pmrem.fromEquirectangular(noSun).texture;
@@ -75,7 +76,7 @@ const sunDir = new THREE.Vector3();
 const sun = new THREE.DirectionalLight(new THREE.Color(1.054, 0.993, 0.909), h.sunY * k / h.scale);
 sun.position.copy(sunDir).multiplyScalar(90);
 sun.castShadow = true;
-sun.shadow.mapSize.set(4096, 4096);
+sun.shadow.mapSize.set(PHONE ? 2048 : 4096, PHONE ? 2048 : 4096);
 sun.shadow.bias = -0.00025; sun.shadow.normalBias = 0.025;
 Object.assign(sun.shadow.camera, { left: -60, right: 60, top: 60, bottom: -60, near: 20, far: 200 });
 scene.add(sun, sun.target);
@@ -152,7 +153,7 @@ gltf.scene.traverse((o) => {
 });
 scene.add(gltf.scene);
 await Promise.all(loads);
-const { texturesReady } = await import('../shared/lab.js');
+const { texturesReady } = await import('../shared/lab.js?v=vd1-ios-20261107');
 const nTex = await texturesReady(model.root);
 
 let evPreset = null, evShift = 0;

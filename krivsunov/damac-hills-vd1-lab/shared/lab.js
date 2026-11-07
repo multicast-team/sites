@@ -4,8 +4,39 @@
 const LOCAL = ['127.0.0.1', 'localhost'].includes(location.hostname);
 export const LAB = new URL('../', import.meta.url);
 export const MAIN = new URL(LOCAL ? '../villa-site-vd1/' : '../damac-hills-vd1/', LAB).href;
-export const REL = 'vd1-cy2-20261107';
+export const REL = 'vd1-ios-20261107';
 export const $ = (s, r = document) => r.querySelector(s);
+
+// телефон или планшет (палец вместо мыши): слабее видеокарта и меньше памяти вкладки — облегчённые настройки
+export const PHONE = new URLSearchParams(location.search).has('phone') || matchMedia('(pointer: coarse)').matches;
+export const dprFor = (max = 2) => Math.min(devicePixelRatio || 1, PHONE ? Math.min(max, 1.5) : max);
+// стартовый облёт: в портретном экране угол по горизонтали узкий — камера отходит дальше, чтобы дом влез
+export function fitStart(camera, controls, pos, target) {
+  camera.position.set(...pos);
+  controls.target.set(...target);
+  const k = camera.aspect < 1 ? Math.min(1.6, 0.9 / camera.aspect) : 1;
+  camera.position.sub(controls.target).multiplyScalar(k).add(controls.target);
+  controls.update();
+}
+// уменьшить фотосканы и нарисованные текстуры до size по большей стороне (для трассировки на телефоне:
+// трассировщик складывает все текстуры в атлас, на телефоне 1–2К не нужны, а память вкладки ограничена)
+export function shrinkTextures(root, size = 512) {
+  const done = new Map();
+  root.traverse((o) => {
+    if (!o.isMesh) return;
+    for (const m of [].concat(o.material)) for (const k of ['map', 'normalMap', 'roughnessMap', 'metalnessMap', 'emissiveMap', 'aoMap']) {
+      const t = m && m[k], img = t && t.image;
+      if (!img || !(img.width > size || img.height > size) || done.has(t.source)) continue;
+      const s = size / Math.max(img.width, img.height);
+      const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(img.width * s)); c.height = Math.max(1, Math.round(img.height * s));
+      try { c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); } catch { continue; }
+      done.set(t.source, c);
+    }
+  });
+  for (const [src, c] of done) { src.data = c; src.needsUpdate = true; }
+  return done.size;
+}
 
 // фотосканы Poly Haven (CC0) — те же, что на сайте виллы (app.js), с теми же множителями альбедо
 const T = MAIN + 'tex/';
@@ -134,8 +165,22 @@ export const LAB_CSS = `
   .cmp .bar { position: absolute; top: 0; bottom: 0; width: 2px; background: #f1d9a8; }
   .cmp .bar span { position: absolute; top: 12px; left: 6px; background: rgba(20,22,25,.82); padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
   .cmp input { position: absolute; left: 0; right: 0; bottom: 56px; width: 60%; margin: 0 auto; pointer-events: auto; }
-  .walk-stick { position: fixed; left: 24px; bottom: 24px; width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,.12); z-index: 6; }
+  .walk-stick { position: fixed; left: 24px; bottom: 24px; width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,.12); z-index: 6; pointer-events: none; }
   .walk-stick span { position: absolute; left: 35px; top: 35px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.35); }
+  #stage canvas { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  .panel { top: max(12px, env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); }
+  .status { bottom: max(12px, env(safe-area-inset-bottom)); max-width: calc(100vw - 24px); box-sizing: border-box; }
+  .note a { color: #f1d9a8; }
+  @media (max-width: 720px) {
+    html, body { font-size: 13px; }
+    .panel { gap: 4px; left: 8px; top: max(8px, env(safe-area-inset-top)); max-width: calc(100vw - 16px); }
+    .panel b { flex-basis: 100%; margin: 0 0 2px; font-size: 13px; }
+    .panel select, .panel button, .panel label { padding: 6px 8px; font-size: 13px; }
+    .panel select { max-width: 46vw; }
+    .status { left: 8px; bottom: max(8px, env(safe-area-inset-bottom)); font-size: 12px; padding: 5px 8px; }
+    .cmp input { width: 84%; bottom: calc(64px + env(safe-area-inset-bottom)); }
+    .cmp .bar span { top: auto; bottom: calc(100px + env(safe-area-inset-bottom)); }
+  }
 `;
 
 // панель: кнопки ракурсов Cycles, облёт/прогулка, время суток

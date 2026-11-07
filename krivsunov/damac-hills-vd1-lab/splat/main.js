@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { SparkRenderer, SplatMesh } from '@sparkjsdev/spark';
-import { LAB, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, loadCams, loadModel, setCam, compareUI, navUI, $ } from '../shared/lab.js';
+import { LAB, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, PHONE, fitStart, loadCams, loadModel, setCam, compareUI, navUI, $ } from '../shared/lab.js?v=vd1-ios-20261107';
 
 const style = document.createElement('style'); style.textContent = LAB_CSS; document.head.append(style);
 const status = $('#status'), stage = $('#stage');
@@ -15,16 +15,14 @@ const EV_DATA = 12.4;                       // экспозиция кадров
 const K_DATA = evToExposure(EV_DATA);
 
 const renderer = new THREE.WebGLRenderer({ antialias: false });
-renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.setPixelRatio(PHONE ? 1 : Math.min(devicePixelRatio, 1.5));   // цена сплата — число пикселей под мазками
 renderer.setSize(innerWidth, innerHeight);
 stage.append(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.05, 3000);
-camera.position.set(-30, 8, -14);
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(-6, 2.5, 0);
 controls.enableDamping = true;
-controls.update();
+fitStart(camera, controls, [-30, 8, -14], [-6, 2.5, 0]);
 
 // кадр сплата — в цель с плавающей точкой: там лог-кодировка, её раскодирует и покажет итоговый проход
 const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: true });
@@ -59,10 +57,12 @@ sky.renderOrder = -1;
 sky.frustumCulled = false;
 scene.add(sky);
 
-say('Загружаю сплат (≈39 МБ)…');
+// телефон: облегчённая копия (1,1 млн гауссиан, SH1, ≈ 16 МБ) — меньше памяти и сортировки, кадр плавнее
+const FILE = PHONE ? 'splat/vd1-m.sog' : 'splat/vd1.sog';
+say(PHONE ? 'Загружаю сплат для телефона (≈16 МБ)…' : 'Загружаю сплат (≈39 МБ)…');
 const spark = new SparkRenderer({ renderer });
 scene.add(spark);
-const splat = new SplatMesh({ url: new URL('splat/vd1.sog', LAB).href });
+const splat = new SplatMesh({ url: new URL(FILE, LAB).href });
 scene.add(splat);
 await splat.initialized;
 
@@ -100,7 +100,7 @@ const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 // прогулка: столкновения и комнаты — из процедурной модели (без фотосканов, в сцену не добавляется)
 say('Готовлю прогулку…');
 const model = await loadModel(THREE, 'low', false);
-const { Walker } = await import(`${(await import('../shared/lab.js')).MAIN}villa3d/walk.js?v=vd1-fix-20261106`);
+const { Walker } = await import(`${(await import('../shared/lab.js?v=vd1-ios-20261107')).MAIN}villa3d/walk.js?v=vd1-fix-20261106`);
 const walker = new Walker(camera, renderer.domElement, () => model.phys, {});
 let mode = 'orbit', evPreset = null, evShift = 0;
 const cmp = compareUI(stage);
