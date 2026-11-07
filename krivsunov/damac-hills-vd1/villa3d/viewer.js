@@ -515,17 +515,18 @@ export function mount(container, build, options = {}) {
   const ptCam = new THREE.Matrix4(), ptProj = new THREE.Matrix4();
   const ptNotify = (state, extra = {}) => { if (typeof options.onPathTracing === 'function') options.onPathTracing({ state, samples: pt ? pt.samples : 0, ...extra }); };
   const ptSources = () => ({ root: model.root, extra: [ground], camera, sun, points: nightLights, env: envScene, background: () => makeSky(sunDir, false), envIntensity: scene.environmentIntensity, hdri: sunState.hdri, sunAz: sunState.azimuth });
-  const ptScale = () => { const w = renderer.getDrawingBufferSize(new THREE.Vector2()).x; return Math.min(1, 2200 / Math.max(1, w)); };
+  // телефон: кадр трассировки ≈ 0,3 Мп (как 400×720) — иначе проходы идут по нескольку секунд
+  const ptScale = () => { const s = renderer.getDrawingBufferSize(new THREE.Vector2()); return coarse ? Math.min(1, Math.sqrt(3e5 / Math.max(1, s.x * s.y))) : Math.min(1, 2200 / Math.max(1, s.x)); };
   async function setPathTracing(on) {
     on = !!on;
     if (ptBusy) return ptOn;
     if (!on) { if (ptOn) { ptOn = false; modelTick(0, 0); ptNotify('off'); } return false; }
-    if (ptOn || quality !== 'high' || !webgl2) return ptOn;
+    if (ptOn || (quality !== 'high' && !coarse) || !webgl2) return ptOn;
     ptBusy = true;
     ptNotify('loading');
     try {
       if (!pt) {
-        const lib = await import('./vd1_pt.js?v=vd1-cy2-20261107');
+        const lib = await import('./vd1_pt.js?v=vd1-ios-20261107');
         pt = lib.createPathTracer(renderer, { rasterize: () => draw(), getSources: ptSources, getRaster: () => ({ scene, camera }), inside: () => inside(camera.position) });
       }
       ptOn = true;

@@ -176,17 +176,27 @@ function buildUI(v) {
   const fsBtn = el('button', 'tool', '⛶');
   fsBtn.title = 'На весь экран';
   qBtn.title = 'Качество графики';
-  // трассировка лучей: стоите — кадр дособирается до качества рендера Cycles (только компьютер)
+  // трассировка лучей: стоите — кадр дособирается до качества рендера Cycles (на телефоне — в меньшем разрешении)
+  const coarse = matchMedia('(pointer: coarse)').matches;
   const ptBtn = el('button', 'tool', '🌟 Как в Cycles');
   ptBtn.title = 'Трассировка лучей прямо в браузере: остановитесь — за несколько секунд кадр дособирается до качества рендера Cycles';
-  ptBtn.hidden = matchMedia('(pointer: coarse)').matches;
   tools.append(tseg, measureBtn, snapBtn, ptBtn, qBtn, fsBtn);
   ptBtn.addEventListener('click', () => {
-    if (v.quality !== 'high') { v.setQuality('high'); qBtn.textContent = '✨ Высокое'; }
+    if (v.quality !== 'high' && !coarse) { v.setQuality('high'); qBtn.textContent = '✨ Высокое'; }
     v.setPathTracing(!v.pathTracing.on);
   });
   qBtn.addEventListener('click', () => { v.setQuality(v.quality === 'high' ? 'low' : 'high'); qBtn.textContent = v.quality === 'high' ? '✨ Высокое' : '⚡ Быстрое'; });
-  fsBtn.addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen(); else stage.requestFullscreen && stage.requestFullscreen(); });
+  // на весь экран; в Safari на iPhone полноэкранный режим есть только у видео — там сцена растягивается на окно
+  fsBtn.addEventListener('click', () => {
+    if (document.fullscreenElement) return document.exitFullscreen();
+    if (stage.classList.contains('pseudo-fs') || !stage.requestFullscreen) {
+      const on = stage.classList.toggle('pseudo-fs');
+      document.documentElement.classList.toggle('no-scroll', on);
+      fsBtn.textContent = on ? '✕' : '⛶';
+      return;
+    }
+    stage.requestFullscreen().catch(() => { stage.classList.add('pseudo-fs'); document.documentElement.classList.add('no-scroll'); fsBtn.textContent = '✕'; });
+  });
   snapBtn.addEventListener('click', () => {
     const a = el('a');
     a.href = v.snapshot();

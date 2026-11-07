@@ -69,7 +69,7 @@ export function createPathTracer(renderer, opts) {
   const dn = new Denoiser(renderer);
   let needG = true;
   let gain = 1, gainShown = 1, metered = -1, firstMeter = true;
-  const meterRT = new THREE.WebGLRenderTarget(64, 36, { type: THREE.FloatType });
+  const meterRT = new THREE.WebGLRenderTarget(64, 36, { type: THREE.FloatType, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter });   // без линейной фильтрации float (её нет на iPhone)
   const meterQuad = new FullScreenQuad(new THREE.ShaderMaterial({
     uniforms: { map: { value: null } },
     vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }',
