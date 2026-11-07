@@ -7,8 +7,8 @@
 // Y — вверх, метры. Ориентация совпадает с планом Bayut: пилон и балкон спальни хозяина слева, если смотреть с гольфа.
 // Детализация: профили окон со штапиками и подоконниками, плинтусы, выключатели и розетки, фурнитура дверей,
 // подробные кухня и санузлы; двери открываются сами, когда к ним подходишь (прогулка, пролёт), и закрываются за спиной.
-import { makeTextures, parallax } from './vd1_tex.js?v=vd1-cy-20261106';
-import { makePlants } from './vd1_plants.js?v=vd1-cy-20261106';
+import { makeTextures, parallax } from './vd1_tex.js?v=vd1-cy2-20261107';
+import { makePlants } from './vd1_plants.js?v=vd1-cy2-20261107';
 
 export const info = {
   title: 'DAMAC Hills · вилла VD-1 у гольф-поля',

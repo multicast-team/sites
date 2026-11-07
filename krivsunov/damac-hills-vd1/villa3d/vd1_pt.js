@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { WebGLPathTracer } from 'three-gpu-pathtracer';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-import { Denoiser } from './vd1_denoise.js?v=vd1-cy-20261106';
+import { Denoiser } from './vd1_denoise.js?v=vd1-cy2-20261107';
 
 // своя копия геометрии для трассировки (исходную генератор не трогает): цвет вершин — всегда RGBA,
 // индекс, касательные и недостающие атрибуты генератор добавляет сам
@@ -77,13 +77,14 @@ export function createPathTracer(renderer, opts) {
     depthTest: false, depthWrite: false
   }));
   const meterBuf = new Float32Array(64 * 36 * 4);
-  // Экспозиция как у рендеров Cycles: постоянная в доме и на улице (сверено по шести ракурсам рендеров сайта,
-  // разброс ±0,5 ступени — как у ручных EV тех рендеров), к яркости кадра подстраивается лишь на четверть
-  // (логарифмическое среднее кадра), не больше чем на ступень в любую сторону
-  const EXPO = { inside: [1.86, 2.43], outside: [0.47, 2.05] };   // [множитель, типичная «полная» подстройка]
-  // утром света меньше, чем днём: как фотограф, открываем экспозицию на отношение освещённости (днём — 1)
-  const E_DAY = 6.34;   // освещённость горизонтали от солнца и неба HDRI дня (kloofendal, 42,9°) в единицах сцены
-  let evScale = 1;
+  // Экспозиция. Утро и день (HDRI рендеров Cycles в единицах Blender): как у тех рендеров — по EV100, снаружи 14,6, в доме
+  // 11,2 (у рендеров в среднем 10,4, но трассировка WebGL светит в комнатах на 0,8 ступени ярче — сверка cy3), утром на
+  // ступень светлее. Вечер и ночь (небо просмотрщика): постоянная в доме
+  // и на улице, к яркости кадра подстраивается на четверть (логарифмическое среднее), не больше чем на ступень.
+  const EXPO = { inside: [2.94, 2.43], outside: [0.74, 2.05] };   // [множитель, типичная «полная» подстройка]
+  const EV = { inside: 11.2, outside: 14.6 };
+  const evToExposure = (ev) => Math.pow(2, Math.log2(683 / 1.2) - ev);
+  let evShift = null;   // для HDRI — сдвиг EV пресета (утро −1), для неба просмотрщика — null
   function meter() {
     const og = renderer.getRenderTarget();
     meterQuad.material.uniforms.map.value = pt.target.texture;
@@ -98,8 +99,13 @@ export function createPathTracer(renderer, opts) {
     const avg = Math.exp(acc / n), base = renderer.toneMappingExposure || 1;
     const full = 0.2 / (avg * base);
     if (!Number.isFinite(full)) return;
-    const [g1, ref] = opts.inside && opts.inside() ? EXPO.inside : EXPO.outside, g0 = g1 * evScale;
-    const want = Math.min(g0 * 2, Math.max(g0 / 2, g0 * Math.pow(Math.max(full, 1e-3) / (ref * evScale), 0.25)));
+    const inside = opts.inside && opts.inside();
+    let want;
+    if (evShift !== null) want = evToExposure((inside ? EV.inside : EV.outside) + evShift) / base;
+    else {
+      const [g0, ref] = inside ? EXPO.inside : EXPO.outside;
+      want = Math.min(g0 * 2, Math.max(g0 / 2, g0 * Math.pow(Math.max(full, 1e-3) / ref, 0.25)));
+    }
     gain = firstMeter ? want : gain + (want - gain) * 0.6;
     if (firstMeter) gainShown = want;
     firstMeter = false;
@@ -163,8 +169,10 @@ export function createPathTracer(renderer, opts) {
     if (hdr) {
       // солнце HDRI — туда же, где солнце просмотрщика (азимут от +X к +Z), и той же силы, что направленный свет растра
       const h = src.hdri, c = src.sun.color, rot = THREE.MathUtils.degToRad(h.sunAz - src.sunAz);
-      const kReal = src.sun.intensity * (0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b) / h.sunY, k = (h.scale || 1) * kReal;
-      evScale = h.sunEl ? E_DAY / (kReal * (h.sunY * Math.sin(THREE.MathUtils.degToRad(h.sunEl)) + (h.skyY || 0))) : 1;
+      // сила — как strength у рендеров Cycles: освещённость горизонтали lux (солнце и небо HDRI), единицы Blender
+      const k = (h.scale || 1) * h.lux / ((h.sunY * Math.sin(THREE.MathUtils.degToRad(h.sunEl)) + h.skyY) * 683);
+      evShift = h.evShift || 0;
+      void c;
       scene.environment = hdr; scene.background = hdr;
       scene.environmentRotation.set(0, rot, 0); scene.backgroundRotation.set(0, rot, 0);
       scene.environmentIntensity = k; scene.backgroundIntensity = k;
@@ -175,7 +183,7 @@ export function createPathTracer(renderer, opts) {
       scene.environment = envRTs[0].texture; scene.background = envRTs[1].texture;
       scene.environmentRotation.set(0, 0, 0); scene.backgroundRotation.set(0, 0, 0);
       scene.environmentIntensity = src.envIntensity; scene.backgroundIntensity = 1;
-      evScale = 1;   // вечер и ночь: экспозицию поднимает сам просмотрщик (toneMappingExposure)
+      evShift = null;   // вечер и ночь: экспозицию поднимает сам просмотрщик (toneMappingExposure), подстройка по кадру
     }
     return true;
   }

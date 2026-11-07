@@ -106,10 +106,11 @@ const IMAGES = {
   wenge: { base: T + 'dark_wood', meters: 2.0, tint: [0.45, 1.2, 2.4] },
   palmBark: { base: T + 'palm_tree_bark', meters: 1.3, disp: 0.012, tint: [0.8, 0.76, 0.72] }
 };
-// небо рендеров Cycles для режима «как в Cycles» (Poly Haven, CC0): азимут и сила солнца в HDRI, делитель данных — hdri/hdri.json
+// небо рендеров Cycles для режима «как в Cycles» (Poly Haven, CC0): азимут и сила солнца в HDRI, делитель данных — hdri/hdri.json;
+// lux — освещённость горизонтали, как у рендеров Cycles (утром меньше, и экспозиция на ступень светлее)
 const HDRI = {
-  morning: { url: 'hdri/syferfontein_18d_clear_puresky-2048.hdr', sunAz: 35.87, sunEl: 18.36, sunY: 13.4203, skyY: 0.5744, scale: 32 },
-  day: { url: 'hdri/kloofendal_43d_clear_puresky-2048.hdr', sunAz: 36.15, sunEl: 42.9, sunY: 6.1884, skyY: 1.2561, scale: 8 }
+  morning: { url: 'hdri/syferfontein_18d_clear_puresky-2048.hdr', sunAz: 35.87, sunEl: 18.36, sunY: 13.4203, skyY: 0.5744, scale: 32, lux: 45000, evShift: -1 },
+  day: { url: 'hdri/kloofendal_43d_clear_puresky-2048.hdr', sunAz: 36.15, sunEl: 42.9, sunY: 6.1884, skyY: 1.2561, scale: 8, lux: 95000 }
 };
 const SUNS = { morning: { azimuth: 40, elevation: 18.4, lights: 0, hdri: HDRI.morning }, day: { azimuth: 145, elevation: 42.9, lights: 0, hdri: HDRI.day }, sunset: { azimuth: 160, elevation: 4, lights: 0.7 }, night: { azimuth: 168, elevation: -7, lights: 1 } };
 const VIEWS = [['start', 'Обзор'], ['golf', 'С гольфа'], ['street', 'С улицы'], ['back', 'Терраса'], ['top', 'Сверху'], ['gf', 'План 1 эт.'], ['ff', 'План 2 эт.']];

@@ -75,8 +75,8 @@ void main() {
   }
   gl_FragColor = vec4(wsum > 1e-6 ? sum / wsum : c0.rgb, 1.0);
 }`;
-// тонмаппинг рендеров Cycles: AgX Blender с look «Medium High Contrast» — контраст 1,2 в лог-пространстве AgX вокруг 0,4
-// (pivot −0,2 у OCIO GradingPrimary), остальное — как AgXToneMapping three.js
+// тонмаппинг рендеров Cycles: AgX Blender с look «Medium High Contrast» — контраст 1,2 вокруг средне-серого (pivot −0,2
+// у OCIO GradingPrimary = 0,4 в 25-ступенчатом AgX Log Blender = 0,606 в 16,5-ступенчатой шкале three.js), остальное — как AgXToneMapping
 const FINAL_FS = `
 uniform sampler2D tIn; uniform sampler2D tColor; uniform sampler2D tAlbedo; uniform sampler2D tDepth;
 uniform float gain; uniform float opacity; uniform float exposure;
@@ -88,7 +88,7 @@ vec3 agxMHC(vec3 color) {
   const mat3 OUTSET = mat3(vec3(1.1271005818144368, -0.1413297634984383, -0.14132976349843826), vec3(-0.11060664309660323, 1.157823702216272, -0.11060664309660294), vec3(-0.016493938717834573, -0.016493938717834257, 1.2519364065950405));
   color = INSET * (SRGB_TO_REC2020 * color);
   color = clamp((log2(max(color, 1e-10)) + 12.47393) / 16.499999, 0.0, 1.0);
-  color = clamp((color - 0.4) * 1.2 + 0.4, 0.0, 1.0);
+  color = clamp((color - 0.6060606) * 1.2 + 0.6060606, 0.0, 1.0);
   vec3 x2 = color * color, x4 = x2 * x2;
   color = 15.5 * x4 * x2 - 40.14 * x4 * color + 31.96 * x4 - 6.868 * x2 * color + 0.4298 * x2 + 0.1191 * color - 0.00232;
   color = pow(max(vec3(0.0), OUTSET * color), vec3(2.2));

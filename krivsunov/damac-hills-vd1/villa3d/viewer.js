@@ -525,7 +525,7 @@ export function mount(container, build, options = {}) {
     ptNotify('loading');
     try {
       if (!pt) {
-        const lib = await import('./vd1_pt.js?v=vd1-cy-20261106');
+        const lib = await import('./vd1_pt.js?v=vd1-cy2-20261107');
         pt = lib.createPathTracer(renderer, { rasterize: () => draw(), getSources: ptSources, getRaster: () => ({ scene, camera }), inside: () => inside(camera.position) });
       }
       ptOn = true;
