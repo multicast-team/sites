@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VD-1 · три способа «как в Cycles» в браузере</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #101214; color: #e8e6e1; font: 16px/1.5 system-ui, -apple-system, Segoe UI, sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 32px 20px 48px; }
+  h1 { font-size: 28px; margin: 0 0 6px; }
+  .lead { color: #b9b4aa; margin: 0 0 28px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .card { background: #1a1d20; border: 1px solid #2c3035; border-radius: 14px; padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .card h2 { font-size: 19px; margin: 0; }
+  .card .tag { font-size: 13px; color: #f1d9a8; }
+  .card ul { margin: 4px 0 8px; padding-left: 18px; color: #cfcac0; }
+  .card li { margin: 2px 0; }
+  .card a.go { margin-top: auto; align-self: flex-start; background: #f1d9a8; color: #1b1a17; text-decoration: none; font-weight: 600; padding: 9px 14px; border-radius: 10px; }
+  .how { margin-top: 28px; color: #b9b4aa; }
+  .how b { color: #e8e6e1; }
+  a { color: #f1d9a8; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Вилла VD-1 · три способа «как в Cycles» прямо в браузере</h1>
+  <p class="lead">Тестовые страницы к <a href="../damac-hills-vd1/">сайту виллы</a>. Везде одно небо (HDRI рендеров Cycles), одна экспозиция по EV и один тонмаппинг AgX «Medium High Contrast», как у рендеров. В каждой странице есть ракурсы рендеров Cycles со шторкой сравнения, облёт и прогулка (WASD, мышь).</p>
+  <div class="grid">
+    <section class="card">
+      <span class="tag">Вариант 1 · ближе всего к Cycles</span>
+      <h2>Трассировка путей на WebGPU</h2>
+      <ul>
+        <li>Тот же алгоритм, что у Cycles: свет считается лучами прямо в браузере, шумодав OIDN — тот же, что у Blender.</li>
+        <li>Пока камера движется — грубый кадр, остановились — за 20–60 секунд кадр чистый.</li>
+        <li>Двери, время суток (день, утро), любые точки обзора.</li>
+        <li>Нужен компьютер с видеокартой и Chrome или Edge с WebGPU; телефоны не тянут.</li>
+      </ul>
+      <a class="go" href="webgpu/">Открыть вариант 1</a>
+    </section>
+    <section class="card">
+      <span class="tag">Вариант 2 · самый «фотографичный» в движении</span>
+      <h2>Гауссов сплат из рендеров Cycles</h2>
+      <ul>
+        <li>2411 кадров Cycles превращены в облако из ≈4 млн «мазков» (Brush), браузер показывает их 60 кадров/с.</li>
+        <li>Картинка — как у рендеров, но только там, куда смотрели камеры обучения; вдали и в углах — размытие.</li>
+        <li>Свет запечён на день, двери открыты и не двигаются; зеркала и стекло — слабое место.</li>
+        <li>Работает и на телефоне (WebGL 2), файл ≈ 14–60 МБ.</li>
+      </ul>
+      <a class="go" href="splat/">Открыть вариант 2</a>
+    </section>
+    <section class="card">
+      <span class="tag">Вариант 3 · лёгкий и быстрый</span>
+      <h2>Запечённый свет Cycles</h2>
+      <ul>
+        <li>Свет дома, интерьера и участка посчитан в Cycles (384 прохода, шумодав OIDN для карт освещения) и наложен на фотосканы сайта.</li>
+        <li>60 кадров/с, чёткие текстуры, мягкие тени и отражённый свет как у Cycles; блики живые.</li>
+        <li>Одно освещение (день), двери открыты; соседи, деревья и трава — живой свет.</li>
+        <li>Работает везде, где есть WebGL 2, включая телефоны; карты освещения ≈ 1 МБ.</li>
+      </ul>
+      <a class="go" href="baked/">Открыть вариант 3</a>
+    </section>
+  </div>
+  <p class="how"><b>Как сравнивать.</b> В каждом варианте выберите «Ракурс рендера Cycles» — камера встанет туда же, где стояла камера рендера, а ползунок шторки покажет рендер Cycles справа. Клик по сцене возвращает облёт. «Экспозиция» сдвигает яркость на ступени.</p>
+</main>
+</body>
+</html>
