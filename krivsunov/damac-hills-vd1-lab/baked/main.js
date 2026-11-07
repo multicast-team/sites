@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
-import { MAIN, LAB, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, PHONE, dprFor, fitStart, loadCams, loadModel, setCam, compareUI, navUI, $ } from '../shared/lab.js?v=vd1-ios-20261107';
+import { MAIN, LAB, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, PHONE, dprFor, fitStart, loadCams, loadModel, setCam, compareUI, navUI, $ } from '../shared/lab.js?v=vd1-furn-20261107';
 
 const style = document.createElement('style'); style.textContent = LAB_CSS; document.head.append(style);
 const status = $('#status'), stage = $('#stage');
@@ -93,10 +93,14 @@ const roomScene = new THREE.Scene();
   }
 }
 const envRoom = pmrem.fromScene(roomScene, 0.03).texture;
+// мебель (живой свет, её нет в запечённой сцене): рассеянный свет и блики — от «комнаты», яркость — как у запечённого интерьера
+model.root.traverse((o) => {
+  if (o.isMesh) for (const m of [].concat(o.material)) if (/^f_/.test(m.name || '')) { m.envMap = envRoom; m.envMapIntensity = 3; }
+});
 
 // процедурные части, которые заменяет запечённая сцена: всё, что запекалось в Blender (участок, дом, интерьер, двери)
 const SKIP_MAT = /^(x_glass|x_glassFar|x_glassRefl|x_railGlass|i_glass|x_lamp|i_led|i_downlight|x_water|x_poolWater|p_|g_)/;
-const LIVE_OB = /^(neighbors_|env_|plants_)/;
+const LIVE_OB = /^(neighbors_|env_|plants_|furniture)/;   // мебели нет в запечённой сцене — у неё живой свет
 const HUGE = /^ground_x_(rough|fairway|lawn|sand|asphalt|green)$/;
 const mats = new Map();
 const box = new THREE.Box3(), c = new THREE.Vector3();
@@ -153,7 +157,7 @@ gltf.scene.traverse((o) => {
 });
 scene.add(gltf.scene);
 await Promise.all(loads);
-const { texturesReady } = await import('../shared/lab.js?v=vd1-ios-20261107');
+const { texturesReady } = await import('../shared/lab.js?v=vd1-furn-20261107');
 const nTex = await texturesReady(model.root);
 
 let evPreset = null, evShift = 0;

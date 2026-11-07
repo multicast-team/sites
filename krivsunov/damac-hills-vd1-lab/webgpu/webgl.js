@@ -6,7 +6,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { WebGLPathTracer } from 'three-gpu-pathtracer';
-import { MAIN, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, PHONE, dprFor, fitStart, shrinkTextures, loadCams, loadModel, texturesReady, ptMaterials, setCam, compareUI, navUI, $ } from '../shared/lab.js?v=vd1-ios-20261107';
+import { MAIN, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, PHONE, dprFor, fitStart, shrinkTextures, loadCams, loadModel, texturesReady, ptMaterials, setCam, compareUI, navUI, $ } from '../shared/lab.js?v=vd1-furn-20261107';
 
 const style = document.createElement('style'); style.textContent = LAB_CSS; document.head.append(style);
 const status = $('#status'), stage = $('#stage');

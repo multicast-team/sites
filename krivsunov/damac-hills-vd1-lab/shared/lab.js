@@ -4,7 +4,7 @@
 const LOCAL = ['127.0.0.1', 'localhost'].includes(location.hostname);
 export const LAB = new URL('../', import.meta.url);
 export const MAIN = new URL(LOCAL ? '../villa-site-vd1/' : '../damac-hills-vd1/', LAB).href;
-export const REL = 'vd1-ios-20261107';
+export const REL = 'vd1-furn2-20261107';
 export const $ = (s, r = document) => r.querySelector(s);
 
 // телефон или планшет (палец вместо мыши): слабее видеокарта и меньше памяти вкладки — облегчённые настройки
@@ -72,10 +72,12 @@ export const EV = { inside: 10.4, outside: 14.6 };
 
 export async function loadCams() { return (await fetch(new URL('shared/cams.json', LAB))).json(); }
 
-// модель с фотосканами; двери открыты: сцена неподвижна, по дому можно пройти
-export async function loadModel(THREE, quality = 'high', images = true) {
+// модель с фотосканами и мебелью; двери открыты: сцена неподвижна, по дому можно пройти.
+// furniture: false — без мебели (сплат: её нет в рендерах Cycles, по которым он обучен — не должно быть и препятствий)
+export async function loadModel(THREE, quality = 'high', images = true, { furniture = true } = {}) {
   const mod = await import(`${MAIN}villa3d/damac_hills_samantha_1558.js?v=${REL}`);
-  const model = mod.build(THREE, { quality, images: images ? IMAGES : undefined });
+  const model = mod.build(THREE, { quality, images: images ? IMAGES : undefined, furniture });
+  if (model.ready) await model.ready;
   model.update(10, 0, { mode: 'pt' });
   model.root.updateMatrixWorld(true);
   return model;

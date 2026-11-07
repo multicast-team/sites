@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { SparkRenderer, SplatMesh } from '@sparkjsdev/spark';
-import { LAB, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, PHONE, fitStart, loadCams, loadModel, setCam, compareUI, navUI, $ } from '../shared/lab.js?v=vd1-ios-20261107';
+import { LAB, LAB_CSS, HDRI, hdriStrength, hdriRotation, evToExposure, EV, PHONE, fitStart, loadCams, loadModel, setCam, compareUI, navUI, $ } from '../shared/lab.js?v=vd1-furn-20261107';
 
 const style = document.createElement('style'); style.textContent = LAB_CSS; document.head.append(style);
 const status = $('#status'), stage = $('#stage');
@@ -99,8 +99,8 @@ const postCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
 // прогулка: столкновения и комнаты — из процедурной модели (без фотосканов, в сцену не добавляется)
 say('Готовлю прогулку…');
-const model = await loadModel(THREE, 'low', false);
-const { Walker } = await import(`${(await import('../shared/lab.js?v=vd1-ios-20261107')).MAIN}villa3d/walk.js?v=vd1-fix-20261106`);
+const model = await loadModel(THREE, 'low', false, { furniture: false });
+const { Walker } = await import(`${(await import('../shared/lab.js?v=vd1-furn-20261107')).MAIN}villa3d/walk.js?v=vd1-fix-20261106`);
 const walker = new Walker(camera, renderer.domElement, () => model.phys, {});
 let mode = 'orbit', evPreset = null, evShift = 0;
 const cmp = compareUI(stage);
