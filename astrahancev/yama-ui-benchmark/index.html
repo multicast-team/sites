@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Одна Яма — Единый Белый UI + Автономный Визуальный Бенчмарк (Argon White v1)</title>
+<style>
+  :root {
+    --bg-app: #111522;
+    --bg-panel: #192034;
+    --border-panel: #2d3858;
+
+    /* Пол первой версии (v1 / t10s.png) — спокойный серо-лавандовый, НЕ слепяще-белый */
+    --v1-floor-a: #c9c4dc;
+    --v1-floor-b: #beb8d2;
+    --v1-floor-seam: #a9a2c0;
+
+    /* Старый слишком белый пол из v6o (для режима сравнения «Как сейчас») */
+    --bad-floor-a: #f5f2fb;
+    --bad-floor-b: #ebe5f7;
+    --bad-floor-seam: #d8d0ec;
+
+    /* ЕДИНЫЙ БЕЛЫЙ СТИЛЬ ИНТЕРФЕЙСА (Argon White) */
+    --ui-white: #ffffff;
+    --ui-surface-soft: #f5f3fc;
+    --ui-surface-pill: #ede9fa;
+    --ui-border: #d4cde8;
+    --ui-border-strong: #b8aed6;
+    --ui-shadow: 0 4px 0 #c5bddf, 0 8px 18px rgba(24, 18, 46, 0.16);
+    --ui-shadow-sm: 0 3px 0 #c5bddf, 0 4px 10px rgba(24, 18, 46, 0.12);
+
+    --text-ink: #1d1836;
+    --text-sub: #5e557d;
+    --text-muted: #8a94a6;
+
+    --green-top: #26d048;
+    --green-bot: #16a34a;
+    --green-border: #146c2e;
+
+    --gold-top: #ffe055;
+    --gold-bot: #f59e0b;
+    --gold-border: #b45309;
+    --gold-ink: #451a03;
+
+    --orange-top: #ff9824;
+    --orange-bot: #ea580c;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-app);
+    color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Fira Sans", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ================= ВЕРХНЯЯ ПАНЕЛЬ БЕНЧМАРКА ================= */
+  .top-nav {
+    width: 100%;
+    background: #151b2d;
+    border-bottom: 1px solid #2b3654;
+    padding: 10px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .nav-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: #fbbf24;
+    margin-right: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-btn {
+    background: #232d48;
+    color: #dbe4f5;
+    border: 1.5px solid #39486e;
+    border-radius: 10px;
+    padding: 6px 11px;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .nav-btn:hover {
+    background: #2e3b5e;
+  }
+  .nav-btn.active {
+    background: #ffffff;
+    color: #1d1836;
+    border-color: #fbbf24;
+    box-shadow: 0 2px 8px rgba(251, 191, 36, 0.35);
+  }
+  .nav-btn.mode-bad.active {
+    background: #ef4444;
+    color: #fff;
+    border-color: #fca5a5;
+  }
+  .nav-btn.mode-good.active {
+    background: #22c55e;
+    color: #fff;
+    border-color: #bbf7d0;
+  }
+
+  /* ================= РАБОЧАЯ ОБЛАСТЬ ================= */
+  .workspace {
+    width: 100%;
+    max-width: 1360px;
+    padding: 18px 14px 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  /* ================= ЭКРАН ТЕЛЕФОНА (390x844) ================= */
+  .phone-shell {
+    width: 390px;
+    height: 820px;
+    border-radius: 36px;
+    border: 6px solid #2b3550;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--v1-floor-a);
+  }
+
+  /* 3D ЗАЛ — СЕРО-ЛАВАНДОВЫЙ ПОЛ КАК В ПЕРВОЙ ВЕРСИИ (v1) */
+  .hall-floor {
+    position: absolute;
+    inset: 0;
+    background-color: var(--v1-floor-a);
+    background-image:
+      linear-gradient(to right, var(--v1-floor-seam) 1.5px, transparent 1.5px),
+      linear-gradient(to bottom, var(--v1-floor-seam) 1.5px, transparent 1.5px),
+      linear-gradient(45deg, var(--v1-floor-b) 25%, transparent 25%, transparent 75%, var(--v1-floor-b) 75%, var(--v1-floor-b)),
+      linear-gradient(45deg, var(--v1-floor-b) 25%, transparent 25%, transparent 75%, var(--v1-floor-b) 75%, var(--v1-floor-b));
+    background-size: 42px 42px, 42px 42px, 84px 84px, 84px 84px;
+    background-position: 0 0, 0 0, 0 0, 21px 21px;
+    transition: background-color 0.2s ease;
+  }
+
+  .phone-shell.legacy-bad .hall-floor {
+    background-color: var(--bad-floor-a);
+    background-image:
+      linear-gradient(to right, var(--bad-floor-seam) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--bad-floor-seam) 1px, transparent 1px),
+      linear-gradient(45deg, var(--bad-floor-b) 25%, transparent 25%, transparent 75%, var(--bad-floor-b) 75%, var(--bad-floor-b)),
+      linear-gradient(45deg, var(--bad-floor-b) 25%, transparent 25%, transparent 75%, var(--bad-floor-b) 75%, var(--bad-floor-b));
+    background-size: 42px 42px, 42px 42px, 84px 84px, 84px 84px;
+    background-position: 0 0, 0 0, 0 0, 21px 21px;
+  }
+
+  /* ================= 1. ВЕРХНИЙ HUD (ЕДИНЫЙ БЕЛЫЙ СТИЛЬ БЕЗ СКОШЕННЫХ УГЛОВ) ================= */
+  .hud-top {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    z-index: 15;
+  }
+
+  .money-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  /* Золотой бейдж x2 над деньгами (когда активен буст!) */
+  .money-x2-badge {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(180deg, var(--gold-top), var(--gold-bot));
+    border: 2px solid var(--gold-border);
+    color: var(--gold-ink);
+    font-size: 10px;
+    font-weight: 900;
+    padding: 2px 8px;
+    border-radius: 99px;
+    box-shadow: 0 2px 0 rgba(180, 83, 9, 0.45);
+    margin-bottom: -2px;
+    z-index: 3;
+  }
+  .phone-shell.boost-on:not(.legacy-bad) .money-x2-badge {
+    display: inline-flex;
+  }
+
+  .money-pill {
+    background: var(--ui-white);
+    border: 2px solid var(--ui-border-strong);
+    border-radius: 18px;
+    padding: 5px 12px 5px 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: var(--ui-shadow);
+    min-width: 98px;
+  }
+  .phone-shell.boost-on:not(.legacy-bad) .money-pill {
+    border-color: #f59e0b;
+    background: #fffdf5;
+    box-shadow: 0 4px 0 #d97706, 0 8px 16px rgba(245, 158, 11, 0.24);
+  }
+
+  .money-pill img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  .money-amount {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--text-ink);
+    letter-spacing: -0.02em;
+  }
+
+  .rpm-pill {
+    background: var(--ui-white);
+    border: 1.5px solid var(--ui-border);
+    border-radius: 99px;
+    padding: 2px 9px;
+    font-size: 11px;
+    font-weight: 900;
+    color: #15803d;
+    box-shadow: var(--ui-shadow-sm);
+  }
+  .phone-shell.boost-on:not(.legacy-bad) .rpm-pill {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #92400e;
+  }
+
+  /* КАРТОЧКА ЯМЫ СВЕРХУ: «Яма · Ур. 1 → 2» + иконка уточки в баре + золотой x2 с таймером */
+  .pit-goal-card {
+    flex: 1;
+    min-width: 0;
+    background: var(--ui-white);
+    border: 2px solid var(--ui-border-strong);
+    border-radius: 18px;
+    padding: 6px 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--ui-shadow);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  .pit-goal-card:active {
+    transform: scale(0.98);
+  }
+  .phone-shell.boost-on:not(.legacy-bad) .pit-goal-card {
+    border-color: #f59e0b;
+    background: #fffdf5;
+    box-shadow: 0 4px 0 #d97706, 0 8px 18px rgba(245, 158, 11, 0.22);
+  }
+
+  .pit-goal-main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pit-goal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+  }
+
+  .pit-goal-title {
+    font-size: 12px;
+    font-weight: 900;
+    color: var(--text-ink);
+    white-space: nowrap;
+  }
+
+  /* Золотой бейдж x2 прямо в шапке прогресса Ямы! */
+  .pit-goal-x2-pill {
+    display: none;
+    align-items: center;
+    gap: 3px;
+    background: linear-gradient(180deg, var(--gold-top), var(--gold-bot));
+    border: 1.5px solid var(--gold-border);
+    border-radius: 99px;
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 900;
+    color: var(--gold-ink);
+    white-space: nowrap;
+  }
+  .phone-shell.boost-on:not(.legacy-bad) .pit-goal-x2-pill {
+    display: inline-flex;
+  }
+
+  .pit-bar-wrap {
+    margin-top: 5px;
+    height: 22px;
+    background: #e9e4f5;
+    border: 1.5px solid #cbc3e3;
+    border-radius: 99px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .pit-bar-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 42%;
+    background: linear-gradient(90deg, #16a34a, #26d048);
+    border-radius: 99px;
+    transition: width 0.25s ease;
+  }
+  .phone-shell.boost-on:not(.legacy-bad) .pit-bar-fill {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  }
+
+  .pit-bar-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 900;
+    color: #1d1836;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85);
+  }
+  .pit-bar-content img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.25));
+  }
+
+  .pit-unlock-box {
+    border-left: 1.5px solid #e2dcf0;
+    padding-left: 7px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-width: 62px;
+  }
+  .pit-unlock-lbl {
+    font-size: 8px;
+    font-weight: 800;
+    color: var(--text-sub);
+    text-transform: uppercase;
+  }
+  .pit-unlock-box img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    margin: 1px 0;
+  }
+  .pit-unlock-name {
+    font-size: 9px;
+    font-weight: 900;
+    color: var(--text-ink);
+    text-align: center;
+    line-height: 1.05;
+  }
+
+  .gear-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    background: var(--ui-white);
+    border: 2px solid var(--ui-border-strong);
+    box-shadow: var(--ui-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 6px;
+  }
+  .gear-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  /* ======= РЕЖИМ СРАВНЕНИЯ «КАК СЕЙЧАС В v6o (ПЛОХО)» ДЛЯ ВЕРХНЕГО HUD ======= */
+  .phone-shell.legacy-bad .money-pill,
+  .phone-shell.legacy-bad .rpm-pill,
+  .phone-shell.legacy-bad .pit-goal-card,
+  .phone-shell.legacy-bad .gear-btn {
+    background: #162038;
+    border: 2px solid #4a6596;
+    border-bottom: 5px solid #0b101c; /* Скошенные углы! */
+    box-shadow: none;
+    color: #fff;
+  }
+  .phone-shell.legacy-bad .money-pill {
+    border-radius: 99px;
+  }
+  .phone-shell.legacy-bad .money-amount {
+    color: #fff;
+  }
+  .phone-shell.legacy-bad .rpm-pill {
+    color: #ffd84a;
+  }
+  .phone-shell.legacy-bad .pit-goal-title {
+    color: #f1f5f9;
+    font-size: 10px;
+  }
+  .phone-shell.legacy-bad .pit-bar-wrap {
+    background: #0b1120;
+    border-color: #334a73;
+    height: 16px;
+  }
+  .phone-shell.legacy-bad .pit-bar-content {
+    color: #fff;
+    text-shadow: none;
+    font-size: 10px;
+  }
+  .phone-shell.legacy-bad .pit-bar-content img {
+    display: none; /* В v6o забыли иконку утки! */
+  }
+  .phone-shell.legacy-bad .pit-unlock-lbl {
+    color: #93c5fd;
+  }
+  .phone-shell.legacy-bad .pit-unlock-name {
+    color: #ffd84a;
+  }
+
+  /* ================= 2. КВАДРАТНЫЙ ОФФЕР x2 СПРАВА (БЕЗ СТРЕЛКИ СНИЗУ!) ================= */
+  .offer-x2-square {
+    position: absolute;
+    top: 84px;
+    right: 12px;
+    width: 72px;
+    height: 74px;
+    background: var(--ui-white);
+    border: 2.5px solid #f59e0b;
+    border-radius: 18px;
+    box-shadow: 0 4px 0 #d97706, 0 8px 18px rgba(245, 158, 11, 0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 4px 4px;
+    cursor: pointer;
+    z-index: 14;
+    transition: transform 0.12s ease;
+  }
+  .offer-x2-square:active {
+    transform: scale(0.95);
+  }
+  .phone-shell.boost-on .offer-x2-square {
+    display: none;
+  }
+
+  .offer-x2-top {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .offer-x2-top img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
+  .offer-x2-big {
+    font-size: 16px;
+    font-weight: 900;
+    color: #b45309;
+    line-height: 1;
+  }
+  .offer-x2-sub {
+    font-size: 9px;
+    font-weight: 900;
+    color: var(--text-ink);
+    line-height: 1;
+  }
+  .offer-x2-cta {
+    width: 100%;
+    background: linear-gradient(180deg, var(--green-top), var(--green-bot));
+    border: 1.5px solid var(--green-border);
+    border-radius: 10px;
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 900;
+    color: #fff;
+  }
+  .offer-x2-cta img {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Старый стремный оффер со стрелкой и старая стремная зелёная плашка x2 (показываются только в режиме «Как сейчас в v6o») */
+  .legacy-rv-ugly {
+    display: none;
+    position: absolute;
+    top: 84px;
+    right: 10px;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    z-index: 14;
+    cursor: pointer;
+  }
+  .phone-shell.legacy-bad:not(.boost-on) .offer-x2-square {
+    display: none;
+  }
+  .phone-shell.legacy-bad:not(.boost-on) .legacy-rv-ugly {
+    display: flex;
+  }
+  .legacy-rv-pill {
+    background: #1ca638;
+    border: 2.5px solid #092c12;
+    border-radius: 14px;
+    padding: 6px 12px;
+    color: #fff;
+    font-weight: 900;
+    font-size: 13px;
+    text-align: center;
+    text-shadow: 0 1px 2px #000;
+  }
+  .legacy-rv-arrow-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(80, 85, 100, 0.72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #22c55e;
+    font-size: 20px;
+    font-weight: 900;
+  }
+
+  .legacy-active-boost-ugly {
+    display: none;
+    position: absolute;
+    top: 84px;
+    right: 10px;
+    background: #167a36;
+    border: 2.5px solid #0a2914;
+    border-radius: 14px;
+    padding: 6px 12px;
+    color: #fff;
+    font-weight: 900;
+    font-size: 13px;
+    line-height: 1.2;
+    text-align: center;
+    z-index: 14;
+  }
+  .phone-shell.legacy-bad.boost-on .legacy-active-boost-ugly {
+    display: block;
+  }
+
+  /* ================= 3. КОМПАКТНЫЙ «СРОЧНЫЙ ЗАКАЗ» В БЕЛОМ СТИЛЕ ================= */
+  .urgent-order-card {
+    position: absolute;
+    top: 84px;
+    left: 10px;
+    width: 232px;
+    background: var(--ui-white);
+    border: 2px solid #f97316;
+    border-radius: 16px;
+    box-shadow: 0 4px 0 #ea580c, 0 8px 18px rgba(234, 88, 12, 0.2);
+    padding: 6px 8px;
+    z-index: 14;
+    display: none;
+  }
+  .phone-shell.order-on .urgent-order-card {
+    display: block;
+  }
+
+  .urgent-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  .urgent-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(90deg, #ea580c, #f97316);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 2px 7px;
+    border-radius: 8px;
+    letter-spacing: 0.02em;
+  }
+  .urgent-badge img {
+    width: 13px;
+    height: 13px;
+  }
+  .urgent-reward {
+    background: #dcfce7;
+    border: 1.5px solid #86efac;
+    color: #15803d;
+    font-size: 12px;
+    font-weight: 900;
+    padding: 1px 7px;
+    border-radius: 8px;
+  }
+
+  .urgent-bars {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .urgent-slot {
+    background: var(--ui-surface-soft);
+    border: 1.5px solid var(--ui-border);
+    border-radius: 10px;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .urgent-slot img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  .urgent-slot-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .urgent-slot-txt {
+    font-size: 10px;
+    font-weight: 900;
+    color: var(--text-ink);
+    white-space: nowrap;
+  }
+  .urgent-mini-track {
+    margin-top: 2px;
+    height: 6px;
+    background: #e2dcf0;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .urgent-mini-fill {
+    height: 100%;
+    border-radius: 99px;
+  }
+  .urgent-mini-fill.ducks {
+    width: 50%;
+    background: #22c55e;
+  }
+  .urgent-mini-fill.timer {
+    width: 72%;
+    background: #f97316;
+  }
+
+  /* В режиме «Как сейчас в v6o (плохо)» — огромный тёмный гроб на весь экран! */
+  .phone-shell.legacy-bad.order-on .urgent-order-card {
+    top: 130px;
+    left: 28px;
+    width: 300px;
+    background: #192236;
+    border: 3px solid #4a6596;
+    border-radius: 18px;
+    padding: 12px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+  }
+  .phone-shell.legacy-bad.order-on .urgent-bars {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .phone-shell.legacy-bad.order-on .urgent-slot {
+    background: #131b2e;
+    border-color: #4a6596;
+    padding: 10px;
+  }
+  .phone-shell.legacy-bad.order-on .urgent-slot-txt {
+    color: #fff;
+    font-size: 14px;
+  }
+
+  /* ================= 4. ЯМА И КОМПАКТНОЕ БЕЛОЕ/ЗОЛОТОЕ КОМБО ================= */
+  .pit-zone {
+    position: absolute;
+    top: 175px;
+    right: 36px;
+    width: 164px;
+    height: 164px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+  }
+
+  .pit-hole-visual {
+    width: 142px;
+    height: 142px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #2e054e 0%, #581c87 46%, #7e22ce 72%, #1e1b4b 100%);
+    border: 5px solid #94a3b8;
+    box-shadow:
+      0 0 0 5px rgba(255, 255, 255, 0.32),
+      inset 0 0 26px #c084fc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* Комбо в едином бело-золотом стиле */
+  .combo-pill {
+    position: absolute;
+    top: -16px;
+    left: -34px;
+    background: var(--ui-white);
+    border: 2px solid #f59e0b;
+    border-radius: 14px;
+    padding: 4px 9px;
+    box-shadow: 0 3px 0 #d97706, 0 6px 12px rgba(0, 0, 0, 0.16);
+    min-width: 118px;
+    z-index: 6;
+  }
+  .combo-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 900;
+    color: #92400e;
+  }
+  .combo-bonus {
+    color: #15803d;
+    font-size: 10px;
+  }
+  .combo-bar-track {
+    margin-top: 3px;
+    height: 5px;
+    background: #fef3c7;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .combo-bar-fill {
+    width: 72%;
+    height: 100%;
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    border-radius: 99px;
+  }
+
+  .phone-shell.legacy-bad .combo-pill {
+    background: #162038;
+    color: #ffc82c;
+    border-bottom-width: 4px;
+  }
+  .phone-shell.legacy-bad .combo-row {
+    color: #ffc82c;
+  }
+
+  /* ================= 5. КОНВЕЙЕР И РАЗМОРОЗКА ФИЗИКИ УТОК НА КОНЦЕ ЛЕНТЫ ================= */
+  .factory-zone {
+    position: absolute;
+    bottom: 34px;
+    left: 26px;
+    right: 92px;
+    height: 390px;
+    border: 3.5px solid #eab308;
+    border-radius: 14px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Сам конвейер */
+  .belt-track {
+    position: absolute;
+    left: 144px;
+    bottom: 186px;
+    width: 48px;
+    height: 148px;
+    background: repeating-linear-gradient(
+      to top,
+      #475569,
+      #475569 12px,
+      #64748b 12px,
+      #64748b 18px
+    );
+    border-left: 4px solid #2563eb;
+    border-right: 4px solid #2563eb;
+    border-radius: 4px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  /* Утки, которые сходятся с КОНЦА конвейера по физике (ПРЯМО СВЕРХУ С КОНЦА ЛЕНТЫ, а не спавнятся справа!) */
+  .ducks-physics-pile {
+    position: absolute;
+    left: 136px;
+    bottom: 332px; /* Прямо на сходе с конца конвейера! */
+    width: 64px;
+    height: 52px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    z-index: 5;
+    transition: all 0.25s ease;
+  }
+  /* В режиме legacy-bad покажем, как они криво телепортировались справа от ленты */
+  .phone-shell.legacy-bad .ducks-physics-pile {
+    left: 198px;
+    bottom: 280px;
+  }
+  .pile-duck {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.28));
+    animation: duckRollOff 1.6s ease-in-out infinite alternate;
+  }
+  .pile-duck:nth-child(2) { animation-delay: 0.3s; transform: rotate(-14deg); }
+  .pile-duck:nth-child(3) { animation-delay: 0.6s; transform: rotate(18deg); }
+  .pile-duck:nth-child(4) { animation-delay: 0.9s; transform: rotate(-8deg); }
+
+  @keyframes duckRollOff {
+    0% { transform: translateY(4px) rotate(-6deg); }
+    100% { transform: translateY(-3px) rotate(10deg); }
+  }
+
+  .physics-callout {
+    position: absolute;
+    left: 16px;
+    bottom: 344px;
+    background: var(--ui-white);
+    border: 2px solid #16a34a;
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-ink);
+    box-shadow: var(--ui-shadow-sm);
+    max-width: 118px;
+    line-height: 1.2;
+    z-index: 6;
+  }
+  .phone-shell.legacy-bad .physics-callout {
+    background: #450a0a;
+    border-color: #ef4444;
+    color: #fecaca;
+  }
+
+  /* Чистый кружок покупки следующего сегмента ленты (в белом стиле, без громоздких налезающих плашек!) */
+  .floor-circle-clean {
+    position: absolute;
+    left: 52px;
+    bottom: 242px;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.55);
+    border: 3px solid #f59e0b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 6;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  }
+  .floor-circle-clean img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+  .floor-pill-clean {
+    margin-top: 2px;
+    background: var(--ui-white);
+    border: 1.5px solid var(--ui-border-strong);
+    border-radius: 10px;
+    padding: 2px 7px;
+    text-align: center;
+    box-shadow: var(--ui-shadow-sm);
+    white-space: nowrap;
+  }
+  .floor-pill-name {
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--text-sub);
+    display: block;
+  }
+  .floor-pill-price {
+    font-size: 11px;
+    font-weight: 900;
+    color: var(--text-ink);
+  }
+
+  /* Станок Сборщика 1 + чистый бейдж таймера */
+  .bench-unit {
+    position: absolute;
+    left: 126px;
+    bottom: 124px;
+    width: 84px;
+    height: 56px;
+    background: #94a3b8;
+    border: 3px solid #334155;
+    border-radius: 10px;
+    box-shadow: 0 5px 0 #475569;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+  }
+  .bench-unit img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+  }
+  .bench-clean-badge {
+    position: absolute;
+    bottom: -14px;
+    background: var(--ui-white);
+    border: 1.5px solid #22c55e;
+    border-radius: 99px;
+    padding: 1px 8px;
+    font-size: 10px;
+    font-weight: 900;
+    color: #15803d;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+  }
+
+  .hero-ring {
+    position: absolute;
+    left: 130px;
+    bottom: 42px;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.22);
+    border: 4px solid #22c55e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    z-index: 4;
+  }
+
+  /* ================= 6. ПРАВАЯ НИЖНЯЯ КНОПКА «ПРОКАЧКИ» В БЕЛОМ СТИЛЕ ================= */
+  .btn-upgrades-corner {
+    position: absolute;
+    bottom: 20px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    z-index: 15;
+  }
+  .btn-upgrades-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: var(--ui-white);
+    border: 2.5px solid #f59e0b;
+    box-shadow: 0 4px 0 #d97706, 0 8px 18px rgba(0, 0, 0, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .btn-upgrades-box img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+  }
+  .btn-upgrades-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ef4444;
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-upgrades-lbl {
+    margin-top: -5px;
+    background: var(--ui-white);
+    border: 1.5px solid var(--ui-border-strong);
+    border-radius: 99px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 900;
+    color: var(--text-ink);
+    box-shadow: var(--ui-shadow-sm);
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ================= 7. МОДАЛКА «ПОСЫЛКА! / ДОБИТЬ» В ЕДИНОМ БЕЛОМ СТИЛЕ ================= */
+  .overlay-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(22, 18, 38, 0.48);
+    backdrop-filter: blur(2px);
+    z-index: 30;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .overlay-backdrop.open {
+    display: flex;
+  }
+
+  .white-modal-card {
+    width: 100%;
+    max-width: 326px;
+    background: var(--ui-white);
+    border: 2.5px solid var(--ui-border-strong);
+    border-radius: 26px;
+    box-shadow: 0 8px 0 #c5bddf, 0 20px 44px rgba(18, 14, 36, 0.35);
+    padding: 18px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .parcel-icon-wrap {
+    width: 76px;
+    height: 76px;
+    border-radius: 22px;
+    background: linear-gradient(180deg, #fffbeb, #fef3c7);
+    border: 2px solid #fde68a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .parcel-icon-wrap img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+  }
+
+  .white-modal-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--text-ink);
+    margin: 0;
+  }
+  .parcel-amount-pill {
+    margin-top: 6px;
+    background: #dcfce7;
+    border: 1.5px solid #86efac;
+    border-radius: 99px;
+    padding: 3px 14px;
+    font-size: 16px;
+    font-weight: 900;
+    color: #15803d;
+  }
+  .white-modal-desc {
+    margin: 10px 0 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-sub);
+    line-height: 1.35;
+  }
+
+  .btn-primary-green {
+    width: 100%;
+    height: 48px;
+    border-radius: 14px;
+    border: 2px solid var(--green-border);
+    background: linear-gradient(180deg, var(--green-top), var(--green-bot));
+    box-shadow: 0 4px 0 var(--green-border);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .btn-primary-green img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .btn-secondary-light {
+    margin-top: 8px;
+    width: 100%;
+    height: 40px;
+    border-radius: 12px;
+    border: 2px solid var(--ui-border);
+    background: var(--ui-surface-soft);
+    color: var(--text-sub);
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  /* В режиме «Как сейчас в v6o (плохо)» — две одинаковые зелёные кнопки на пустом листе! */
+  .phone-shell.legacy-bad .parcel-icon-wrap,
+  .phone-shell.legacy-bad .parcel-amount-pill {
+    display: none;
+  }
+  .phone-shell.legacy-bad .btn-secondary-light {
+    background: #2ecc71;
+    border: 2.5px solid #1e293b;
+    color: #fff;
+    height: 48px;
+  }
+
+  /* ================= 8. ЛИСТ «ПРОКАЧКИ» И «ДЕРЕВО УРОВНЕЙ ЯМЫ» В ЕДИНОМ БЕЛОМ СТИЛЕ ================= */
+  .sheet-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(22, 18, 38, 0.45);
+    z-index: 25;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .sheet-backdrop.open {
+    display: flex;
+  }
+
+  .white-sheet {
+    width: 100%;
+    height: 78%;
+    background: var(--ui-surface-soft);
+    border-top-left-radius: 28px;
+    border-top-right-radius: 28px;
+    border-top: 3px solid var(--ui-border-strong);
+    box-shadow: 0 -10px 30px rgba(20, 14, 40, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .white-sheet-head {
+    background: var(--ui-white);
+    padding: 12px 14px 10px;
+    border-bottom: 1.5px solid var(--ui-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .white-sheet-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--text-ink);
+  }
+  .white-sheet-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sheet-wallet-pill {
+    background: #fffbeb;
+    border: 2px solid #f59e0b;
+    border-radius: 99px;
+    padding: 3px 10px 3px 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    font-weight: 900;
+    color: #78350f;
+  }
+  .sheet-wallet-pill img {
+    width: 18px;
+    height: 18px;
+  }
+  .sheet-close-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--ui-surface-pill);
+    border: 2px solid var(--ui-border-strong);
+    color: var(--text-ink);
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .white-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--ui-white);
+    border-bottom: 1.5px solid var(--ui-border);
+  }
+  .white-tab {
+    flex: 1;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--ui-surface-soft);
+    border: 2px solid var(--ui-border);
+    color: var(--text-sub);
+    font-size: 12px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    position: relative;
+  }
+  .white-tab.active {
+    background: linear-gradient(180deg, var(--gold-top), var(--gold-bot));
+    border-color: var(--gold-border);
+    color: var(--gold-ink);
+    box-shadow: 0 2px 0 var(--gold-border);
+  }
+  .tab-dot-badge {
+    position: absolute;
+    top: -5px;
+    right: -4px;
+    background: #ef4444;
+    color: #fff;
+    border: 1.5px solid #fff;
+    border-radius: 99px;
+    font-size: 9px;
+    padding: 0 5px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .white-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .upg-row-card {
+    background: var(--ui-white);
+    border: 2px solid var(--ui-border);
+    border-radius: 18px;
+    padding: 9px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--ui-shadow-sm);
+  }
+  .upg-row-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    background: var(--ui-surface-soft);
+    border: 1.5px solid var(--ui-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .upg-row-icon img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+  }
+  .upg-row-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .upg-row-top {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .upg-row-title {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--text-ink);
+  }
+  .upg-row-lvl {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-sub);
+  }
+  .upg-row-desc {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-sub);
+    margin-top: 1px;
+  }
+  .upg-row-diff {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .diff-old {
+    color: var(--text-muted);
+  }
+  .diff-arrow {
+    color: #16a34a;
+  }
+  .diff-new {
+    background: #dcfce7;
+    border: 1px solid #86efac;
+    color: #15803d;
+    padding: 1px 6px;
+    border-radius: 6px;
+  }
+  .upg-row-pills {
+    display: flex;
+    gap: 3px;
+    margin-top: 5px;
+  }
+  .upg-pill-seg {
+    width: 10px;
+    height: 5px;
+    border-radius: 3px;
+    background: #e2dcf0;
+  }
+  .upg-pill-seg.on {
+    background: #22c55e;
+  }
+
+  .upg-row-btn {
+    width: 96px;
+    min-height: 46px;
+    border-radius: 14px;
+    border: 2px solid var(--green-border);
+    background: linear-gradient(180deg, var(--green-top), var(--green-bot));
+    box-shadow: 0 3px 0 var(--green-border);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .upg-row-btn.locked {
+    background: var(--ui-surface-pill);
+    border-color: var(--ui-border-strong);
+    box-shadow: none;
+    color: var(--text-sub);
+    font-size: 10px;
+    line-height: 1.15;
+  }
+
+  /* ДЕРЕВО УРОВНЕЙ ЯМЫ — ТЕПЕРЬ ТОЖЕ В ЕДИНОМ БЕЛОМ СТИЛЕ! */
+  .white-tree-node {
+    width: 100%;
+    background: var(--ui-white);
+    border: 2px solid var(--ui-border);
+    border-radius: 16px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--ui-shadow-sm);
+  }
+  .white-tree-node.done {
+    background: #f0fdf4;
+    border-color: #22c55e;
+  }
+  .white-tree-node.current {
+    background: #fffbeb;
+    border: 2.5px solid #f59e0b;
+    box-shadow: 0 4px 0 #d97706;
+  }
+  .white-tree-node img.node-ico {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+  }
+  .white-tree-node img.state-ico {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+  }
+  .tree-arrow-pill {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--ui-surface-pill);
+    border: 1.5px solid var(--ui-border-strong);
+    color: var(--text-sub);
+    font-size: 12px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+  }
+  .tree-arrow-pill.done {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #92400e;
+  }
+
+  /* ================= ПРАВАЯ КОЛОНКА: РАЗБОР ВСЕХ 8 ПУНКТОВ МАКСИМА ================= */
+  .review-col {
+    flex: 1;
+    min-width: 340px;
+    max-width: 820px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .review-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-panel);
+    border-radius: 20px;
+    padding: 16px 18px;
+  }
+  .review-card h2 {
+    margin: 0 0 10px;
+    font-size: 17px;
+    color: #fbbf24;
+  }
+
+  .fix-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+  }
+  .fix-item {
+    background: #111728;
+    border: 1px solid #2b3758;
+    border-left: 4px solid #22c55e;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 1.38;
+    color: #dbe4f5;
+    cursor: pointer;
+    transition: border-color 0.15s ease, transform 0.12s ease;
+  }
+  .fix-item:hover {
+    transform: translateY(-1px);
+    border-color: #fbbf24;
+  }
+  .fix-item strong {
+    color: #fff;
+    display: block;
+    margin-bottom: 3px;
+    font-size: 13px;
+  }
+
+  /* ================= МАТРИЦА АВТОНОМНОГО БЕНЧМАРКА ВСЕХ ЭКРАНОВ ================= */
+  .benchmark-matrix {
+    width: 100%;
+    max-width: 1360px;
+    padding: 0 14px 48px;
+  }
+  .benchmark-header {
+    background: #192034;
+    border: 1px solid #2d3858;
+    border-radius: 18px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .benchmark-header h2 {
+    margin: 0;
+    font-size: 17px;
+    color: #4ade80;
+  }
+  .benchmark-header p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 14px;
+  }
+  .matrix-cell {
+    background: var(--v1-floor-a);
+    border: 3px solid #2e3a59;
+    border-radius: 22px;
+    padding: 12px;
+    color: var(--text-ink);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+  }
+  .matrix-cell-tag {
+    background: #1d1836;
+    color: #fbbf24;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 99px;
+    align-self: flex-start;
+  }
+</style>
+</head>
+<body>
+
+<!-- ВЕРХНЯЯ ПАНЕЛЬ ПЕРЕКЛЮЧЕНИЯ РЕЖИМОВ И ЭКРАНОВ -->
+<div class="top-nav">
+  <div class="nav-group">
+    <span class="nav-title">СТИЛЬ ИГРЫ:</span>
+    <button class="nav-btn mode-good active" id="btnStyleGood" onclick="setStyleMode(false)">✨ НОВЫЙ БЕЛЫЙ СТИЛЬ (Argon White)</button>
+    <button class="nav-btn mode-bad" id="btnStyleBad" onclick="setStyleMode(true)">❌ КАК СЕЙЧАС В ИГРЕ (v6o разнобой)</button>
+  </div>
+  <div class="nav-group">
+    <span class="nav-title">ЭКРАН / СОСТОЯНИЕ:</span>
+    <button class="nav-btn active" id="btnScrHud" onclick="showState('hud')">1. Зал + Оффер ×2</button>
+    <button class="nav-btn" id="btnScrBoost" onclick="showState('boost')">2. Активный ×2 (Деньги + Яма)</button>
+    <button class="nav-btn" id="btnScrOrder" onclick="showState('order')">3. Срочный заказ</button>
+    <button class="nav-btn" id="btnScrParcel" onclick="showState('parcel')">4. Посылка / Добить</button>
+    <button class="nav-btn" id="btnScrUpg" onclick="showState('upg')">5. Прокачки</button>
+    <button class="nav-btn" id="btnScrTree" onclick="showState('tree')">6. Дерево Ямы (Белое)</button>
+    <button class="nav-btn" id="btnScrDucks" onclick="showState('ducks')">7. Виды уток / Настройки</button>
+  </div>
+</div>
+
+<div class="workspace">
+  <!-- ИНТЕРАКТИВНЫЙ ТЕЛЕФОН (390x820) -->
+  <div class="phone-shell" id="phone">
+    <div class="hall-floor">
+
+      <!-- 1. ВЕРХНИЙ HUD В ЕДИНОМ БЕЛОМ СТИЛЕ -->
+      <div class="hud-top">
+        <!-- Кошелёк + Доход/мин + золотой x2 над деньгами -->
+        <div class="money-stack">
+          <div class="money-x2-badge">
+            <img src="icons/stopwatch.png" style="width:12px;height:12px;" alt="" />
+            <span>ДОХОД ×2 · 3:47</span>
+          </div>
+          <div class="money-pill">
+            <img src="icons/coin.png" alt="$" />
+            <span class="money-amount" id="moneyText">761</span>
+          </div>
+          <div class="rpm-pill" id="rpmText">+$640/мин</div>
+        </div>
+
+        <!-- Карточка Ямы: «Яма · Ур. 1 → 2» + иконка уточки в прогресс-баре + золотой x2 с таймером -->
+        <div class="pit-goal-card" onclick="showState('tree')" title="Нажми, чтобы открыть Дерево уровней Ямы">
+          <div class="pit-goal-main">
+            <div class="pit-goal-head">
+              <span class="pit-goal-title" id="goalTitleText">Яма · Ур. 1 → 2</span>
+              <span class="pit-goal-x2-pill">×2 · 3:47</span>
+            </div>
+            <div class="pit-bar-wrap">
+              <div class="pit-bar-fill" style="width: 42%;"></div>
+              <div class="pit-bar-content">
+                <img src="icons/duck_yellow.png" alt="Утки" />
+                <span>8 / 21</span>
+              </div>
+            </div>
+          </div>
+          <div class="pit-unlock-box">
+            <span class="pit-unlock-lbl">Откроется</span>
+            <img src="icons/collector.png" alt="" />
+            <span class="pit-unlock-name">Сборщик 4</span>
+          </div>
+        </div>
+
+        <!-- Шестерёнка настроек в белом стиле -->
+        <button class="gear-btn" onclick="showState('ducks')" title="Настройки и виды уток">
+          <img src="icons/gear.png" alt="Настройки" />
+        </button>
+      </div>
+
+      <!-- 2. КВАДРАТНЫЙ ОФФЕР ×2 СПРАВА БЕЗ СТРЕЛКИ СНИЗУ -->
+      <div class="offer-x2-square" onclick="showState('boost')" title="Квадратный оффер ×2 без уродливой серой стрелки снизу">
+        <div class="offer-x2-top">
+          <img src="icons/coin.png" alt="" />
+          <span class="offer-x2-big">×2</span>
+          <img src="icons/duck_yellow.png" alt="" />
+        </div>
+        <div class="offer-x2-sub">$ + Яма</div>
+        <div class="offer-x2-cta">
+          <img src="icons/play.png" alt="▶" />
+          <span>4:00</span>
+        </div>
+      </div>
+
+      <!-- Старый оффер со стрелкой и старая зелёная блямба (видны ТОЛЬКО при переключении в «Как сейчас в v6o») -->
+      <div class="legacy-rv-ugly" onclick="showState('boost')">
+        <div class="legacy-rv-pill">▶ ×2 $+ЯМА<br/>· 4:00</div>
+        <div class="legacy-rv-arrow-circle">⬆</div>
+      </div>
+      <div class="legacy-active-boost-ugly">
+        Яма ×2 3:47<br/>Доход ×2 3:47
+      </div>
+
+      <!-- 3. КОМПАКТНЫЙ СРОЧНЫЙ ЗАКАЗ В ЕДИНОМ БЕЛОМ СТИЛЕ (НЕ НА ВЕСЬ ЭКРАН!) -->
+      <div class="urgent-order-card">
+        <div class="urgent-head">
+          <span class="urgent-badge">
+            <img src="icons/fire.png" alt="🔥" />
+            <span>СРОЧНЫЙ ЗАКАЗ</span>
+          </span>
+          <span class="urgent-reward">+$360</span>
+        </div>
+        <div class="urgent-bars">
+          <div class="urgent-slot">
+            <img src="icons/duck_yellow.png" alt="Утки" />
+            <div class="urgent-slot-info">
+              <div class="urgent-slot-txt">Утки: 3 / 6</div>
+              <div class="urgent-mini-track"><div class="urgent-mini-fill ducks"></div></div>
+            </div>
+          </div>
+          <div class="urgent-slot">
+            <img src="icons/stopwatch.png" alt="Время" />
+            <div class="urgent-slot-info">
+              <div class="urgent-slot-txt">00:34</div>
+              <div class="urgent-mini-track"><div class="urgent-mini-fill timer"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. ЯМА + КОМПАКТНОЕ БЕЛО-ЗОЛОТОЕ КОМБО -->
+      <div class="pit-zone">
+        <div class="combo-pill">
+          <div class="combo-row">
+            <span>КОМБО ×3</span>
+            <span class="combo-bonus">+$80</span>
+          </div>
+          <div class="combo-bar-track">
+            <div class="combo-bar-fill"></div>
+          </div>
+        </div>
+        <div class="pit-hole-visual">
+          <img src="icons/pit.png" style="width:48px;height:48px;opacity:0.9;" alt="" />
+        </div>
+      </div>
+
+      <!-- 5. ЗОНА КОНВЕЙЕРА И СТАНКА НА СЕРО-ЛАВАНДОВОМ ПОЛУ v1 -->
+      <div class="factory-zone"></div>
+
+      <!-- Пояснение по физике схода уток с конца конвейера -->
+      <div class="physics-callout" id="physicsCallout">
+        ✅ Физика: утки падают прямо с конца ленты (без спавна справа!)
+      </div>
+
+      <!-- Кучка уток, упавших прямо с конца конвейера по физике -->
+      <div class="ducks-physics-pile">
+        <img class="pile-duck" src="icons/duck_yellow.png" alt="🦆" />
+        <img class="pile-duck" src="icons/duck_yellow.png" alt="🦆" />
+        <img class="pile-duck" src="icons/duck_yellow.png" alt="🦆" />
+        <img class="pile-duck" src="icons/duck_yellow.png" alt="🦆" />
+      </div>
+
+      <!-- Конвейер -->
+      <div class="belt-track">
+        <img src="icons/duck_yellow.png" style="width:20px;height:20px;margin-top:8px;" alt="🦆" />
+        <img src="icons/duck_yellow.png" style="width:20px;height:20px;margin-top:26px;" alt="🦆" />
+      </div>
+
+      <!-- Чистый кружок покупки следующего участка ленты (без налезающих тёмных плашек) -->
+      <div class="floor-circle-clean" onclick="showState('parcel')" title="Чистый кружок на полу без налезающих тёмных плашек">
+        <img src="icons/belt.png" alt="Лента" />
+        <div class="floor-pill-clean">
+          <span class="floor-pill-name">Лента 1/3</span>
+          <span class="floor-pill-price">$1,2K</span>
+        </div>
+      </div>
+
+      <!-- Станок Сборщика 1 с чистым белым бейджем скорости -->
+      <div class="bench-unit">
+        <img src="icons/collector.png" alt="Станок" />
+        <div class="bench-clean-badge">⚡ 1,5 с</div>
+      </div>
+
+      <div class="hero-ring">👷</div>
+
+      <!-- 6. ПРАВАЯ КНОПКА «ПРОКАЧКИ» В БЕЛОМ СТИЛЕ -->
+      <div class="btn-upgrades-corner" onclick="showState('upg')">
+        <div class="btn-upgrades-box">
+          <img src="icons/upgrades.png" alt="Прокачки" />
+          <div class="btn-upgrades-badge">2</div>
+        </div>
+        <div class="btn-upgrades-lbl">Прокачки</div>
+      </div>
+
+      <!-- 7. МОДАЛКА «ПОСЫЛКА!» В ЕДИНОМ БЕЛОМ СТИЛЕ -->
+      <div class="overlay-backdrop" id="modalParcel">
+        <div class="white-modal-card">
+          <div class="parcel-icon-wrap">
+            <img src="icons/vip_chest.png" alt="Посылка" />
+          </div>
+          <h3 class="white-modal-title">Посылка!</h3>
+          <div class="parcel-amount-pill">+$2 000</div>
+          <div class="white-modal-desc">
+            5 минут дохода зала за просмотр ролика.<br/>Сразу хватит на <strong>«Стопка»</strong>!
+          </div>
+          <button class="btn-primary-green" onclick="showState('hud')">
+            <img src="icons/play.png" alt="▶" />
+            <span>Забрать +$2K за ролик</span>
+          </button>
+          <button class="btn-secondary-light" onclick="showState('hud')">Позже</button>
+        </div>
+      </div>
+
+      <!-- 8. ЛИСТ «ПРОКАЧКИ» В ЕДИНОМ БЕЛОМ СТИЛЕ -->
+      <div class="sheet-backdrop" id="modalUpg">
+        <div class="white-sheet">
+          <div class="white-sheet-head">
+            <span class="white-sheet-title">Прокачки</span>
+            <div class="white-sheet-right">
+              <div class="sheet-wallet-pill">
+                <img src="icons/coin.png" alt="$" />
+                <span>$761</span>
+              </div>
+              <button class="sheet-close-btn" onclick="showState('hud')">×</button>
+            </div>
+          </div>
+          <div class="white-tabs">
+            <div class="white-tab active">Игрок <span class="tab-dot-badge">2</span></div>
+            <div class="white-tab">Утки <span class="tab-dot-badge">1</span></div>
+            <div class="white-tab">Цех</div>
+          </div>
+          <div class="white-scroll">
+            <div class="upg-row-card">
+              <div class="upg-row-icon"><img src="icons/collector.png" alt="" /></div>
+              <div class="upg-row-body">
+                <div class="upg-row-top">
+                  <span class="upg-row-title">Руки</span>
+                  <span class="upg-row-lvl">Ур. 0</span>
+                </div>
+                <div class="upg-row-desc">Сборка вручную</div>
+                <div class="upg-row-diff">
+                  <span class="diff-old">1,8с</span>
+                  <span class="diff-arrow">→</span>
+                  <span class="diff-new">1,64с (-0,16с)</span>
+                </div>
+                <div class="upg-row-pills">
+                  <span class="upg-pill-seg on"></span><span class="upg-pill-seg"></span><span class="upg-pill-seg"></span><span class="upg-pill-seg"></span><span class="upg-pill-seg"></span>
+                </div>
+              </div>
+              <button class="upg-row-btn">$190</button>
+            </div>
+
+            <div class="upg-row-card">
+              <div class="upg-row-icon"><img src="icons/cash.png" alt="" /></div>
+              <div class="upg-row-body">
+                <div class="upg-row-top">
+                  <span class="upg-row-title">Стопка</span>
+                  <span class="upg-row-lvl">Ур. 0</span>
+                </div>
+                <div class="upg-row-desc">Уток в руках героя</div>
+                <div class="upg-row-diff">
+                  <span class="diff-old">8 шт.</span>
+                  <span class="diff-arrow">→</span>
+                  <span class="diff-new">9 (+1)</span>
+                </div>
+                <div class="upg-row-pills">
+                  <span class="upg-pill-seg"></span><span class="upg-pill-seg"></span><span class="upg-pill-seg"></span><span class="upg-pill-seg"></span><span class="upg-pill-seg"></span><span class="upg-pill-seg"></span>
+                </div>
+              </div>
+              <button class="upg-row-btn locked">Сначала «Руки»<br/>$260</button>
+            </div>
+
+            <div class="upg-row-card">
+              <div class="upg-row-icon"><img src="icons/pit.png" alt="" /></div>
+              <div class="upg-row-body">
+                <div class="upg-row-top">
+                  <span class="upg-row-title">Кинуть в Яму</span>
+                  <span class="upg-row-lvl">Ур. 0</span>
+                </div>
+                <div class="upg-row-desc">Дальность броска в Яму</div>
+                <div class="upg-row-diff">
+                  <span class="diff-old">0 м</span>
+                  <span class="diff-arrow">→</span>
+                  <span class="diff-new">4,2 м (+4,2 м)</span>
+                </div>
+                <div class="upg-row-pills">
+                  <span class="upg-pill-seg on"></span><span class="upg-pill-seg"></span><span class="upg-pill-seg"></span><span class="upg-pill-seg"></span>
+                </div>
+              </div>
+              <button class="upg-row-btn">$370</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. ДЕРЕВО УРОВНЕЙ ЯМЫ — ТЕПЕРЬ ТОЖЕ В ЕДИНОМ БЕЛОМ СТИЛЕ -->
+      <div class="sheet-backdrop" id="modalTree">
+        <div class="white-sheet" style="height: 82%;">
+          <div class="white-sheet-head">
+            <div>
+              <div class="white-sheet-title">Дерево уровней Ямы</div>
+              <div style="font-size:11px;font-weight:800;color:#5e557d;">Глава I · Уровни снизу вверх ↑</div>
+            </div>
+            <button class="sheet-close-btn" onclick="showState('hud')">×</button>
+          </div>
+          <div class="white-scroll">
+            <div class="white-tree-node">
+              <img class="node-ico" src="icons/key.png" alt="" />
+              <div style="flex:1;">
+                <div class="upg-row-title">Эволюция Ямы</div>
+                <div class="upg-row-desc">Ключ во II главу</div>
+              </div>
+              <img class="state-ico" src="icons/lock.png" alt="🔒" />
+            </div>
+            <div class="tree-arrow-pill">↑</div>
+
+            <div class="white-tree-node">
+              <img class="node-ico" src="icons/paint.png" alt="" />
+              <div style="flex:1;">
+                <div class="upg-row-title">Ур. 5</div>
+                <div class="upg-row-desc">Покраска уток ×2 + Лента 3</div>
+              </div>
+              <img class="state-ico" src="icons/lock.png" alt="🔒" />
+            </div>
+            <div class="tree-arrow-pill">↑</div>
+
+            <div class="white-tree-node current">
+              <img class="node-ico" src="icons/collector.png" alt="" />
+              <div style="flex:1;">
+                <div class="upg-row-title">Ур. 2 · Текущая цель (8 / 21 🦆)</div>
+                <div class="upg-row-desc" style="color:#b45309;font-weight:900;">Откроется: Сборщик 2 + Мотор</div>
+              </div>
+              <img class="state-ico" src="icons/duck_yellow.png" alt="🦆" />
+            </div>
+            <div class="tree-arrow-pill done">↑</div>
+
+            <div class="white-tree-node done">
+              <img class="node-ico" src="icons/duck_yellow.png" alt="" />
+              <div style="flex:1;">
+                <div class="upg-row-title">Ур. 1 · Открыто</div>
+                <div class="upg-row-desc">Старт зала · Сборщик 1</div>
+              </div>
+              <img class="state-ico" src="icons/check.png" alt="✓" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. ВИДЫ УТОК И НАСТРОЙКИ — ТОЖЕ В ЕДИНОМ БЕЛОМ СТИЛЕ -->
+      <div class="overlay-backdrop" id="modalDucks">
+        <div class="white-modal-card">
+          <h3 class="white-modal-title" style="margin-bottom:10px;">Виды уток и Настройки</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-bottom:12px;">
+            <div class="urgent-slot" style="padding:7px;">
+              <img src="icons/duck_yellow.png" style="width:28px;height:28px;" alt="" />
+              <div class="urgent-slot-info" style="text-align:left;">
+                <div class="urgent-slot-txt">Обычная</div>
+                <div style="font-size:10px;color:#15803d;font-weight:900;">База ×1 ($20)</div>
+              </div>
+            </div>
+            <div class="urgent-slot" style="padding:7px;">
+              <img src="icons/duck_blue.png" style="width:28px;height:28px;" alt="" />
+              <div class="urgent-slot-info" style="text-align:left;">
+                <div class="urgent-slot-txt">Синяя</div>
+                <div style="font-size:10px;color:#2563eb;font-weight:900;">Цена ×2 ($40)</div>
+              </div>
+            </div>
+            <div class="urgent-slot" style="padding:7px;">
+              <img src="icons/duck_violet.png" style="width:28px;height:28px;" alt="" />
+              <div class="urgent-slot-info" style="text-align:left;">
+                <div class="urgent-slot-txt">Фиолетовая</div>
+                <div style="font-size:10px;color:#7c3aed;font-weight:900;">Цена ×5 ($100)</div>
+              </div>
+            </div>
+            <div class="urgent-slot" style="padding:7px;">
+              <img src="icons/duck_gold.png" style="width:28px;height:28px;" alt="" />
+              <div class="urgent-slot-info" style="text-align:left;">
+                <div class="urgent-slot-txt">Золотая</div>
+                <div style="font-size:10px;color:#b45309;font-weight:900;">Цена ×10 ($200)</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;width:100%;margin-bottom:12px;">
+            <div class="urgent-slot" style="flex:1;justify-content:center;padding:8px;">
+              <img src="icons/speaker.png" alt="" />
+              <span class="urgent-slot-txt">Звук: ВКЛ</span>
+            </div>
+            <div class="urgent-slot" style="flex:1;justify-content:center;padding:8px;">
+              <img src="icons/vibration.png" alt="" />
+              <span class="urgent-slot-txt">Вибро: ВКЛ</span>
+            </div>
+          </div>
+          <button class="btn-primary-green" onclick="showState('hud')">Понятно</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ПРАВАЯ КОЛОНКА: ПРОВЕРКА КАЖДОГО ЗАМЕЧАНИЯ МАКСИМА -->
+  <div class="review-col">
+    <div class="review-card">
+      <h2>Честная диагностика: почему в v6o была каша и что исправлено</h2>
+      <p style="margin:0 0 12px;font-size:13px;line-height:1.45;color:#cbd5e1;">
+        В <code>v6o</code> на UI Toolkit перевели только половину (лист «Прокачки» сделали белым, а верхний HUD и Дерево Ямы — тёмно-синими со скошенными углами <code>border-bottom-width: 4px</code>), а «Срочный заказ», «Посылку», оффер <code>×2</code> со стрелкой и плашку <code>Яма ×2 / Доход ×2</code> вообще оставили на старом <code>uGUI</code>. Ниже — <strong>единый Белый стиль (Argon White) для 100% экранов игры</strong>. Нажми на любой пункт, чтобы переключить телефон слева:
+      </p>
+      <div class="fix-grid">
+        <div class="fix-item" onclick="showState('hud')">
+          <strong>1. Чистые белые углы + единый Белый стиль</strong>
+          Убраны тёмно-синие плашки и кривые скошенные углы (<code>border-bottom-width</code>). Весь HUD, кнопки, дерево и попапы — в едином белом стиле <code>#FFFFFF</code> с мягкой тенью.
+        </div>
+        <div class="fix-item" onclick="showState('hud')">
+          <strong>2. «Яма · Ур. 1 → 2» + иконка уточки 🦆</strong>
+          Убран капс «ЯМЕ НУЖНО» — теперь лаконично <code>Яма · Ур. 1 → 2</code>, а прямо внутри прогресс-бара стоит 3D-иконка уточки <code>🦆 8 / 21</code>.
+        </div>
+        <div class="fix-item" onclick="showState('hud')">
+          <strong>3. Квадратный оффер ×2 БЕЗ стрелки снизу</strong>
+          Справа аккуратная квадратная карточка <code>72×74px</code> в белом стиле с золотой рамкой. Серая круглая зелёная стрелка под ней удалена.
+        </div>
+        <div class="fix-item" onclick="showState('boost')">
+          <strong>4. Активный ×2: над деньгами + в прогрессе Ямы</strong>
+          Зелёная блямба <code>Яма ×2 / Доход ×2</code> удалена. Вместо неё — золотой бейдж <code>ДОХОД ×2 · 3:47</code> прямо над деньгами и золотой <code>×2 · 3:47</code> + золотая полоска в карточке Ямы!
+        </div>
+        <div class="fix-item" onclick="showState('order')">
+          <strong>5. Компактный «Срочный заказ»</strong>
+          Вместо огромного тёмного щита на пол-экрана (<code>432px</code> высотой) — компактная белая плашка под HUD в 2,5 раза меньше, не перекрывающая Яму.
+        </div>
+        <div class="fix-item" onclick="showState('parcel')">
+          <strong>6. «Посылка!» и попапы в белом стиле</strong>
+          Никаких двух одинаковых зелёных кнопок на пустом поле: компактное белое окно с 3D-сундуком, зелёной кнопкой <code>▶ Забрать +$2K</code> и светло-серой кнопкой <code>Позже</code>.
+        </div>
+        <div class="fix-item" onclick="showState('hud')">
+          <strong>7. Спокойный серо-лавандовый пол из v1</strong>
+          Слепяще-белый пол <code>#F3F1FA</code> заменён обратно на спокойную серо-лавандовую плитку из первой версии (<code>#C9C4DC / #BEB8D2</code>).
+        </div>
+        <div class="fix-item" onclick="showState('hud')">
+          <strong>8. Утки падают с конца конвейера по физике</strong>
+          На конце ленты утки больше не телепортируются справа от конвейера — у них просто размораживается физика, и они падают с переднего края ленты.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- АВТОНОМНЫЙ ВИЗУАЛЬНЫЙ БЕНЧМАРК ВСЕХ ЭКРАНОВ СЕТКОЙ (ДЛЯ ПРОВЕРКИ ПЕРЕД КАЖДОЙ СБОРКОЙ) -->
+<div class="benchmark-matrix">
+  <div class="benchmark-header">
+    <div>
+      <h2>📸 Автономный Визуальный Бенчмарк (Все ключевые компоненты UI на одном листе)</h2>
+      <p>Этот стенд рендерится автоматически для визуальной приёмки Argon и Максима, чтобы ни один экран не остался в старом стиле.</p>
+    </div>
+  </div>
+
+  <div class="matrix-grid">
+    <!-- Карточка 1: Верхний HUD в обычном режиме + Квадратный оффер x2 -->
+    <div class="matrix-cell">
+      <span class="matrix-cell-tag">1. Верхний HUD + Квадратный оффер ×2 (без стрелки)</span>
+      <div style="display:flex;align-items:flex-start;gap:6px;width:100%;">
+        <div class="money-stack">
+          <div class="money-pill"><img src="icons/coin.png" alt="" /><span class="money-amount">761</span></div>
+          <div class="rpm-pill">+$640/мин</div>
+        </div>
+        <div class="pit-goal-card" style="flex:1;">
+          <div class="pit-goal-main">
+            <div class="pit-goal-head"><span class="pit-goal-title">Яма · Ур. 1 → 2</span></div>
+            <div class="pit-bar-wrap">
+              <div class="pit-bar-fill" style="width:45%;"></div>
+              <div class="pit-bar-content"><img src="icons/duck_yellow.png" alt="" /><span>8 / 21</span></div>
+            </div>
+          </div>
+          <div class="pit-unlock-box">
+            <span class="pit-unlock-lbl">Откроется</span>
+            <img src="icons/collector.png" alt="" />
+            <span class="pit-unlock-name">Сборщик 4</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+        <span style="font-size:11px;font-weight:800;color:#475569;">Квадратный оффер ×2 справа (стрелка снизу убрана):</span>
+        <div class="offer-x2-square" style="position:static;">
+          <div class="offer-x2-top"><img src="icons/coin.png" alt="" /><span class="offer-x2-big">×2</span><img src="icons/duck_yellow.png" alt="" /></div>
+          <div class="offer-x2-sub">$ + Яма</div>
+          <div class="offer-x2-cta"><img src="icons/play.png" alt="" /><span>4:00</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Карточка 2: Верхний HUD с активным x2 (Золотой x2 над деньгами и в прогрессе Ямы) -->
+    <div class="matrix-cell">
+      <span class="matrix-cell-tag">2. Активный ×2: золотой таймер у денег и в Яме</span>
+      <div style="display:flex;align-items:flex-start;gap:6px;width:100%;">
+        <div class="money-stack">
+          <div class="money-x2-badge" style="display:inline-flex;">
+            <img src="icons/stopwatch.png" style="width:12px;height:12px;" alt="" />
+            <span>×2 · 3:47</span>
+          </div>
+          <div class="money-pill" style="border-color:#f59e0b;background:#fffdf5;">
+            <img src="icons/coin.png" alt="" /><span class="money-amount">1 520</span>
+          </div>
+          <div class="rpm-pill" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;">+$1 280/мин</div>
+        </div>
+        <div class="pit-goal-card" style="flex:1;border-color:#f59e0b;background:#fffdf5;">
+          <div class="pit-goal-main">
+            <div class="pit-goal-head">
+              <span class="pit-goal-title">Яма · Ур. 1 → 2</span>
+              <span class="pit-goal-x2-pill" style="display:inline-flex;">×2 · 3:47</span>
+            </div>
+            <div class="pit-bar-wrap">
+              <div class="pit-bar-fill" style="width:68%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div>
+              <div class="pit-bar-content"><img src="icons/duck_yellow.png" alt="" /><span>14 / 21</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11px;font-weight:800;color:#15803d;margin-top:4px;">
+        ✅ Зелёная блямба «Яма ×2 / Доход ×2» справа полностью убрана!
+      </div>
+    </div>
+
+    <!-- Карточка 3: Компактный Срочный заказ + Комбо -->
+    <div class="matrix-cell">
+      <span class="matrix-cell-tag">3. Компактный «Срочный заказ» + Комбо (в белом стиле)</span>
+      <div class="urgent-order-card" style="position:static;display:block;width:100%;">
+        <div class="urgent-head">
+          <span class="urgent-badge"><img src="icons/fire.png" alt="" /><span>СРОЧНЫЙ ЗАКАЗ</span></span>
+          <span class="urgent-reward">+$360</span>
+        </div>
+        <div class="urgent-bars">
+          <div class="urgent-slot">
+            <img src="icons/duck_yellow.png" alt="" />
+            <div class="urgent-slot-info">
+              <div class="urgent-slot-txt">Утки: 3 / 6</div>
+              <div class="urgent-mini-track"><div class="urgent-mini-fill ducks"></div></div>
+            </div>
+          </div>
+          <div class="urgent-slot">
+            <img src="icons/stopwatch.png" alt="" />
+            <div class="urgent-slot-info">
+              <div class="urgent-slot-txt">00:34</div>
+              <div class="urgent-mini-track"><div class="urgent-mini-fill timer"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px;">
+        <div class="combo-pill" style="position:static;">
+          <div class="combo-row"><span>КОМБО ×3</span><span class="combo-bonus">+$80</span></div>
+          <div class="combo-bar-track"><div class="combo-bar-fill"></div></div>
+        </div>
+        <span style="font-size:11px;font-weight:800;color:#475569;">В 2,5 раза компактнее!</span>
+      </div>
+    </div>
+
+    <!-- Карточка 4: Посылка / Добить в едином белом стиле -->
+    <div class="matrix-cell">
+      <span class="matrix-cell-tag">4. Модалка «Посылка!» (единый белый стиль)</span>
+      <div class="white-modal-card" style="padding:12px 14px;box-shadow:var(--ui-shadow-sm);">
+        <div style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;margin-bottom:8px;">
+          <div class="parcel-icon-wrap" style="width:52px;height:52px;margin:0;flex-shrink:0;">
+            <img src="icons/vip_chest.png" style="width:38px;height:38px;" alt="" />
+          </div>
+          <div>
+            <div class="white-modal-title" style="font-size:17px;">Посылка! · +$2 000</div>
+            <div style="font-size:11px;font-weight:700;color:#5e557d;">5 мин дохода зала · хватит на «Стопка»</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;width:100%;">
+          <button class="btn-primary-green" style="height:38px;font-size:13px;flex:1.4;">
+            <img src="icons/play.png" alt="" /><span>Забрать +$2K</span>
+          </button>
+          <button class="btn-secondary-light" style="margin:0;height:38px;font-size:12px;flex:0.8;">Позже</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let isLegacyBad = false;
+  let currentState = 'hud';
+
+  function setStyleMode(bad) {
+    isLegacyBad = bad;
+    const phone = document.getElementById('phone');
+    phone.classList.toggle('legacy-bad', bad);
+    document.getElementById('btnStyleGood').classList.toggle('active', !bad);
+    document.getElementById('btnStyleBad').classList.toggle('active', bad);
+
+    document.getElementById('goalTitleText').textContent = bad
+      ? 'ЯМЕ НУЖНО · УР. 1 → 2'
+      : 'Яма · Ур. 1 → 2';
+
+    document.getElementById('physicsCallout').innerHTML = bad
+      ? '❌ Баг v6o: утки резко спавнятся справа от ленты'
+      : '✅ Физика: утки падают прямо с конца ленты (без спавна справа!)';
+  }
+
+  function showState(st) {
+    currentState = st;
+    const phone = document.getElementById('phone');
+    phone.classList.toggle('boost-on', st === 'boost');
+    phone.classList.toggle('order-on', st === 'order');
+
+    document.getElementById('modalParcel').classList.toggle('open', st === 'parcel');
+    document.getElementById('modalUpg').classList.toggle('open', st === 'upg');
+    document.getElementById('modalTree').classList.toggle('open', st === 'tree');
+    document.getElementById('modalDucks').classList.toggle('open', st === 'ducks');
+
+    document.getElementById('moneyText').textContent = st === 'boost' ? '1 520' : '761';
+    document.getElementById('rpmText').textContent = st === 'boost' ? '+$1 280/мин' : '+$640/мин';
+
+    const map = {
+      hud: 'btnScrHud',
+      boost: 'btnScrBoost',
+      order: 'btnScrOrder',
+      parcel: 'btnScrParcel',
+      upg: 'btnScrUpg',
+      tree: 'btnScrTree',
+      ducks: 'btnScrDucks'
+    };
+    Object.keys(map).forEach(k => {
+      document.getElementById(map[k]).classList.toggle('active', k === st);
+    });
+  }
+</script>
+</body>
+</html>
