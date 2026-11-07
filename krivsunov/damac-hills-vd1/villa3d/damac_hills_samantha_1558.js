@@ -1638,17 +1638,27 @@ export function build(THREE, opts = {}) {
   const inside = (p) => p.x > XB - 0.3 && p.x < 13.9 && p.z > ZN - 0.3 && p.z < ZS + 0.3 && p.y < PARA;
 
   // ---------- кадр: двери, ветер, рябь воды ----------
+  // ---------- мебель и аксессуары (vd1_furniture.js): грузятся после дома; ready — когда всё расставлено ----------
+  let furniture = null, furnFresh = false;
+  const ready = opts.furniture === false ? Promise.resolve(null)
+    : import('./vd1_furniture.js?v=vd1-furn2-20261107')
+      .then((m) => m.addFurniture(THREE, root, { quality, F0, F1, phys: physData, colliders: opts.furnitureColliders !== false }))
+      .then((f) => { furniture = f; furnFresh = true; return f; })
+      .catch((e) => { console.warn('мебель не загрузилась', e); return null; });
   function update(dt, time, ctx = {}) {
     plants.update(time);
     M.water.normalMap.offset.set(time * 0.006, time * 0.004);
     M.poolWater.normalMap.offset.set(time * 0.01, -time * 0.007);
-    return updateDoors(Math.min(dt, 10), ctx);
+    const moved = updateDoors(Math.min(dt, 10), ctx);
+    if (furnFresh) { furnFresh = false; return true; }   // мебель встала — пересчитать тени
+    return moved;
   }
   const glow = { down: MI.downlight.emissiveIntensity, led: MI.led.emissiveIntensity, lamp: M.lamp.emissiveIntensity };
   function setLights(k) {
     MI.downlight.emissiveIntensity = glow.down * (0.5 + 5 * k);
     MI.led.emissiveIntensity = glow.led * (0.5 + 4 * k);
     M.lamp.emissiveIntensity = glow.lamp * (0.3 + 8 * k);
+    if (furniture) furniture.setLights(k);
   }
   const nightLights = rooms.filter((r) => r.box[3] <= C1_TOP + 0.1 && r.box[0] > XB - 0.5 && r.box[1] < 14 && r.box[4] > ZN - 0.5 && r.box[5] < ZS + 0.5)
     .map((r) => { const [x0, x1, y0, y1, z0, z1] = r.box; const a = (x1 - x0) * (z1 - z0); return [(x0 + x1) / 2, Math.min(y1, y0 + 3.2) - 0.35, (z0 + z1) / 2, Math.min(2.2, 0.5 + a / 25)]; });
@@ -1662,7 +1672,7 @@ export function build(THREE, opts = {}) {
     for (const m of reflMeshes) m.visible = !low;
   }
   return {
-    root, views, tour, phys: physData, spawns, rooms, inside, update, setQuality, extraMaterials, setLights, nightLights,
+    root, views, tour, phys: physData, spawns, rooms, inside, update, setQuality, extraMaterials, setLights, nightLights, ready,
     sun: { azimuth: 145, elevation: 42.9 },
     doorsAuto: doors.map((d) => ({ label: d.label, kind: d.kind, center: d.center, box: d.collider, n: d.n, along: d.along, ah: d.ah, tm: d.tm, W: d.W, dirA: d.dirA, y0: d.y0, sides: d.sides, plan: d.plan })),
     exportInfo: { grass: grassPoints, sun: { azimuth: 145, elevation: 42.9 } },

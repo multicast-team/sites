@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="release" content="vd1-ios-20261107">
+<meta name="release" content="vd1-furn2-20261107">
 <title>Вилла VD-1 у гольф-поля · DAMAC Hills — 3D-модель, рендеры, планы</title>
 <meta name="description" content="DAMAC Hills, тип VD-1 «Golf View 1»: 5 спален, комнаты прислуги и водителя, 8 санузлов, дом ≈485 м². Подробная 3D-модель с прогулкой от первого лица, фотореалистичные рендеры, планы этажей, фото и видео.">
 <meta name="theme-color" content="#0e1013">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1013'/%3E%3Cpath d='M12 44V26l20-12 20 12v18H38V32H26v12z' fill='%23d2b277'/%3E%3C/svg%3E">
-<link rel="stylesheet" href="styles.css?v=vd1-ios-20261107">
+<link rel="stylesheet" href="styles.css?v=vd1-furn2-20261107">
 <script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js","three/addons/":"./vendor/three/addons/","three/examples/jsm/":"./vendor/three/addons/","three-mesh-bvh":"./vendor/three-mesh-bvh/index.module.js","three-gpu-pathtracer":"./vendor/three-gpu-pathtracer/index.module.js"}}</script>
 </head>
 <body>
@@ -59,6 +59,7 @@
     <div><b>Компьютер.</b> Вращать — мышью, приближать — колесом, сдвигать — правой кнопкой. Прогулка: мышь — взгляд, W A S D — шаги, Shift — быстрее, Esc — выйти.</div>
     <div><b>Телефон.</b> Вращать и приближать — пальцами. Прогулка: слева джойстик, правым пальцем смотреть по сторонам.</div>
     <div><b>Инструменты.</b> Время суток меняет солнце и тени; «Рулетка» меряет расстояния двумя щелчками; на плане этажа видны подписи комнат; мини-карта при прогулке — щёлкните по ней, чтобы перейти.</div>
+    <div><b>Мебель.</b> Обстановка в стиле «киберпанк / геймер»: модели реальных вещей — игровые ПК и кресла, PS5 и Xbox, игровой и японский торговый автоматы, музыкальный автомат, неоновые вывески, RGB-подсветка. Авторы — в разделе «Источники».</div>
     <div><b>Как в Cycles.</b> Кнопка «🌟 Как в Cycles» считает кадр трассировкой путей, когда камера стоит. Три других способа получить картинку уровня Cycles в браузере — трассировка на WebGPU, сплат из рендеров и запечённый свет — <a href="../damac-hills-vd1-lab/">на отдельной тестовой странице</a>.</div>
   </div>
 </section>
@@ -72,7 +73,7 @@
 
 <section class="block" id="renders">
   <h2>Фотореалистичные рендеры</h2>
-  <p class="sub">Та же модель в Blender Cycles: физическое небо (HDRI Poly Haven, откалибровано в люксах), солнце как в 3D-модели, фотоскан-текстуры, настоящая сухая трава рафа. Мебели нет — дом сдаётся пустым, как на видео.</p>
+  <p class="sub">Та же модель в Blender Cycles: физическое небо (HDRI Poly Haven, откалибровано в люксах), солнце как в 3D-модели, фотоскан-текстуры, настоящая сухая трава рафа. Рендеры — пустого дома, как на видео; мебель — в 3D-модели.</p>
   <div class="tabs seg" id="render-tabs"><button class="on" data-f="all">Все</button><button data-f="ext">Снаружи</button><button data-f="int">Внутри</button><button data-f="dusk">Вечер</button></div>
   <div class="grid wide" id="render-grid"></div>
 </section>
@@ -137,6 +138,36 @@
         <li><a href="https://www.propertyfinder.ae/en/plp/rent/villa-for-rent-dubai-damac-hills-whitefield-162320538.html" target="_blank" rel="noopener">Property Finder: Whitefield VD1</a></li>
       </ul>
       <p class="caveat">Текстуры и небо — Poly Haven (CC0). 3D — three.js, рендеры — Blender Cycles.</p>
+      <details class="credits">
+        <summary>Мебель в 3D-модели: модели реальных вещей и их авторы</summary>
+        <p>Sketchfab, лицензия <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a> (для сайта уменьшены до реального размера, упрощены и пережаты):</p>
+        <ul>
+          <li><a href="https://sketchfab.com/3d-models/c4e40934bb764f93b1d0ed42a0579fa2" target="_blank" rel="noopener">Final Fight Arcade</a> — brysew, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/64d111cec3d842f09cbb8c68b1e49c8d" target="_blank" rel="noopener">Simple Bean Bag</a> — AleixoAlonso, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/16070c2e6faa405391ab7ada8bb0aed6" target="_blank" rel="noopener">Poliform_Bed</a> — Alexis Ramos, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/fc73e8d591ba45f8a3b369596593dcf5" target="_blank" rel="noopener">Modern Dining Room Table Set</a> — Akshat, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/bcb13eb7ef9e4c3c9499aacff6c79757" target="_blank" rel="noopener">Gaming Chair [FREE DOWNLOAD]</a> — Karlos, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/fb58a6772ac447a588404892cf20fed8" target="_blank" rel="noopener">&quot;Color Pop&quot; Razer Kraken Headset</a> — tacocrepe, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/53363aaabb4c4c2dbbe0e1e8b2020737" target="_blank" rel="noopener">Retro Jukebox</a> — Maxwell McCurry, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/f2377c043ec1447d8e5e9cab0b9db20e" target="_blank" rel="noopener">Groovy Lava Lamp</a> — thelaughingdingo, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/f4fb7741b2a94ae3938355c1c34554a8" target="_blank" rel="noopener">Neon Signs Billboard Japanese Vaporwave Shibuya</a> — freshlybaked, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/1698da3aa0c94ac2bdbc0f38ad178e04" target="_blank" rel="noopener">Game Ready Cocktails Neon Sign</a> — jQueary, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/6173640f57c344008f4e2941bed573bb" target="_blank" rel="noopener">Neon Gaming Light Poster</a> — Michinata, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/00a256cc8f6b44038f718a78a6fd4cbc" target="_blank" rel="noopener">Neon heart (wall decoration)</a> — SusanKing, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/5849c107ecb7472bb1eef028f5b97f0d" target="_blank" rel="noopener">Game Ready Japanese Small Vertical Neon Sign</a> — Alex Bes, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/f8366d37c75b4a92b784ffbb72f3900a" target="_blank" rel="noopener">Neon Palm Tree Sign</a> — Kirkieb, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/c91524e74c8c463ca3ddf71bc73911db" target="_blank" rel="noopener">Japanese Neon Street Sign</a> — McManus Media, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/5b149cbbabaf4aefbbd06e4153aaf2f3" target="_blank" rel="noopener">Neon Sushi Sign</a> — Lilian Milam, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/ad00f460c13743a8bd1f91c230c7142c" target="_blank" rel="noopener">Gaming PC with Curved Monitor</a> — SINNIK, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/d1d8282c9916438091f11aeb28787b66" target="_blank" rel="noopener">Gaming Desktop PC</a> — Yolala3D | Y3D, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/d788de3735964151a3e24fd59c0f1956" target="_blank" rel="noopener">PS5</a> — rtql8d, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/c91f9ac4de274b5aad362e0f19c3f16b" target="_blank" rel="noopener">Flat Screen Television</a> — abdillaamy, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/a8a6874f62da478f8572554959d3c62e" target="_blank" rel="noopener">Red Japanese Vending Machine</a> — Watanuki_San, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/51b8dbff65e247979f068914f6197909" target="_blank" rel="noopener">VR Headset Free Model</a> — Vitamin, CC BY 4.0</li>
+          <li><a href="https://sketchfab.com/3d-models/29460c063c7b4046aea8be633f90210e" target="_blank" rel="noopener">XBOX SERIES X</a> — Abdurhman Aljagthami, CC BY 4.0</li>
+        </ul>
+        <p>Poly Haven, CC0: <a href="https://polyhaven.com/a/Ottoman_01" target="_blank" rel="noopener">Ottoman 01</a>, <a href="https://polyhaven.com/a/antique_katana_01" target="_blank" rel="noopener">Antique Katana 01</a>, <a href="https://polyhaven.com/a/ceramic_vase_01" target="_blank" rel="noopener">Ceramic Vase 01</a>, <a href="https://polyhaven.com/a/coffee_table_round_01" target="_blank" rel="noopener">Coffee Table Round 01</a>, <a href="https://polyhaven.com/a/gamepad" target="_blank" rel="noopener">Gamepad</a>, <a href="https://polyhaven.com/a/gaming_console" target="_blank" rel="noopener">Gaming Console</a>, <a href="https://polyhaven.com/a/katana_stand_01" target="_blank" rel="noopener">Katana Stand 01</a>, <a href="https://polyhaven.com/a/modern_arm_chair_01" target="_blank" rel="noopener">Modern Arm Chair 01</a>, <a href="https://polyhaven.com/a/modern_ceiling_lamp_01" target="_blank" rel="noopener">Modern Ceiling Lamp 01</a>, <a href="https://polyhaven.com/a/modern_coffee_table_01" target="_blank" rel="noopener">Modern Coffee Table 01</a>, <a href="https://polyhaven.com/a/modern_wooden_cabinet" target="_blank" rel="noopener">Modern Wooden Cabinet</a>, <a href="https://polyhaven.com/a/potted_plant_02" target="_blank" rel="noopener">Potted Plant 02</a>, <a href="https://polyhaven.com/a/potted_plant_04" target="_blank" rel="noopener">Potted Plant 04</a>, <a href="https://polyhaven.com/a/side_table_01" target="_blank" rel="noopener">Side Table 01</a>, <a href="https://polyhaven.com/a/sofa_02" target="_blank" rel="noopener">Sofa 02</a>, <a href="https://polyhaven.com/a/steel_frame_shelves_02" target="_blank" rel="noopener">Steel Frame Shelves 02</a>.</p>
+      </details>
     </div>
   </div>
 </section>
@@ -151,6 +182,6 @@
   <button class="lb-prev" aria-label="Назад">‹</button>
   <button class="lb-next" aria-label="Вперёд">›</button>
 </dialog>
-<script type="module" src="app.js?v=vd1-ios-20261107"></script>
+<script type="module" src="app.js?v=vd1-furn2-20261107"></script>
 </body>
 </html>

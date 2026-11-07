@@ -238,7 +238,9 @@ export function mount(container, build, options = {}) {
   const clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 1e6);
   renderer.localClippingEnabled = true;
   const depthMats = new Map();
-  model.root.traverse((node) => {
+  // настройка сеток модели: тени, «комнатные» отражения, разрез для планов, анизотропия, тени листвы по альфе.
+  // Мебель приходит позже дома (model.ready) — для неё то же самое
+  const prepare = (node) => {
     if (!node.isMesh) return;
     node.castShadow = !node.userData.noCast;
     node.receiveShadow = !node.userData.noReceive;
@@ -254,10 +256,12 @@ export function mount(container, build, options = {}) {
       if (!depthMats.has(m)) depthMats.set(m, new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking, map: m.map, alphaMap: m.alphaMap, alphaTest: m.alphaTest, side: THREE.DoubleSide, clippingPlanes: [clipPlane], clipShadows: true }));
       node.customDepthMaterial = depthMats.get(m);
     }
-  });
+  };
+  model.root.traverse(prepare);
   for (const m of model.extraMaterials || []) { m.clippingPlanes = [clipPlane]; m.clipShadows = true; }
   scene.add(model.root);
   let shadowDirty = true;
+  if (model.ready) model.ready.then(() => { model.root.traverse(prepare); shadowDirty = true; });
   let planView = false;  // открыт поэтажный план (разрез): двери показываются открытыми, как на плане
   const feet = new THREE.Vector3();
   // состояние для модели: где наблюдатель (ступни) и что сейчас — обход, план, пролёт или прогулка
@@ -529,6 +533,7 @@ export function mount(container, build, options = {}) {
         const lib = await import('./vd1_pt.js?v=vd1-ios-20261107');
         pt = lib.createPathTracer(renderer, { rasterize: () => draw(), getSources: ptSources, getRaster: () => ({ scene, camera }), inside: () => inside(camera.position) });
       }
+      if (model.ready) await model.ready;                 // мебель — в сцене трассировки
       ptOn = true;
       modelTick(10, 0);                                   // двери открыты, пока идёт трассировка
       await new Promise((r) => setTimeout(r, 40));

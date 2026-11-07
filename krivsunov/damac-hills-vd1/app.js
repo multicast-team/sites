@@ -132,7 +132,7 @@ async function open3d(then) {
     const [lib, model] = await Promise.all([import(`./villa3d/viewer.js?v=${REL}`), import(`./villa3d/damac_hills_samantha_1558.js?v=${REL}`)]);
     status.textContent = 'Собираю дом, участок и гольф…';
     await new Promise((r) => setTimeout(r, 30));
-    viewer = lib.mount(stage, model.build, { onTour: onTour, onWalk: onWalk, onPathTracing: onPathTracing, sun: SUNS.day, buildOptions: { images: IMAGES } });
+    viewer = lib.mount(stage, model.build, { onTour: onTour, onWalk: onWalk, onPathTracing: onPathTracing, sun: SUNS.day, buildOptions: { images: IMAGES, furniture: !new URLSearchParams(location.search).has('nofurn') } });   // ?nofurn — без мебели (для проверок)
     buildUI(viewer);
     window.__vd1 = viewer;   // для проверок
     act(then);

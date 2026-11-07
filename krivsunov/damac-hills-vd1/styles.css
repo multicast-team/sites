@@ -122,6 +122,11 @@ html.no-scroll, html.no-scroll body { overflow: hidden; }
 .plan-rooms ul { margin: 0 0 16px; padding-left: 18px; color: #d9d2c5; }
 .sources li { margin-bottom: 6px; }
 .caveat { color: var(--muted); font-size: 14px; border-left: 2px solid var(--accent); padding-left: 14px; }
+.credits { margin-top: 14px; color: var(--muted); font-size: 13px; }
+.credits summary { cursor: pointer; color: var(--text); }
+.credits ul { columns: 2 280px; margin: 8px 0; padding-left: 18px; }
+.credits li { break-inside: avoid; margin: 2px 0; }
+.credits a { color: inherit; }
 footer { padding: 40px clamp(16px, 5vw, 64px); color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); text-align: center; }
 
 /* ---------- просмотр фото ---------- */
