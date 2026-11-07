@@ -1451,7 +1451,7 @@
     color: #92400e;
   }
 
-  /* ================= ПРАВАЯ КОЛОНКА: РАЗБОР ВСЕХ 8 ПУНКТОВ МАКСИМА ================= */
+  /* ================= ПРАВАЯ КОЛОНКА: ТЕКСТОВИК МАКСИМА + РАЗБОР ================= */
   .review-col {
     flex: 1;
     min-width: 340px;
@@ -1459,6 +1459,146 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
+  }
+
+  .notepad-card {
+    background: linear-gradient(180deg, #1e2942 0%, #172034 100%);
+    border: 2px solid #fbbf24;
+    border-radius: 20px;
+    padding: 16px 18px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+  .notepad-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .notepad-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .notepad-status {
+    font-size: 12px;
+    font-weight: 800;
+    color: #4ade80;
+    background: rgba(34, 197, 94, 0.14);
+    border: 1px solid rgba(74, 222, 128, 0.35);
+    padding: 4px 10px;
+    border-radius: 99px;
+  }
+
+  .tag-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .tag-chip {
+    background: #263354;
+    border: 1px solid #3f5284;
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 5px 9px;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+  .tag-chip:hover {
+    background: #334470;
+    border-color: #fbbf24;
+    color: #fff;
+  }
+  .tag-chip.current-scr {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #78350f;
+  }
+
+  .maxim-textarea {
+    width: 100%;
+    min-height: 230px;
+    background: #0d1322;
+    color: #ffffff;
+    border: 2px solid #3b4c76;
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.48;
+    resize: vertical;
+    outline: none;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+  }
+  .maxim-textarea:focus {
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.22);
+  }
+  .maxim-textarea::placeholder {
+    color: #64748b;
+  }
+
+  .notepad-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .btn-copy-big {
+    flex: 1;
+    min-width: 220px;
+    height: 48px;
+    border-radius: 14px;
+    border: 2px solid #146c2e;
+    background: linear-gradient(180deg, #26d048, #16a34a);
+    box-shadow: 0 4px 0 #146c2e, 0 8px 20px rgba(34, 197, 94, 0.3);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.1s ease, filter 0.12s ease;
+  }
+  .btn-copy-big:hover {
+    filter: brightness(1.06);
+  }
+  .btn-copy-big:active {
+    transform: translateY(2px);
+  }
+  .btn-copy-big.copied {
+    background: linear-gradient(180deg, #fbbf24, #d97706);
+    border-color: #92400e;
+    box-shadow: 0 4px 0 #92400e;
+    color: #1d1836;
+  }
+
+  .btn-clear-notes {
+    height: 48px;
+    padding: 0 14px;
+    border-radius: 14px;
+    border: 1.5px solid #39486e;
+    background: #1b243b;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .btn-clear-notes:hover {
+    color: #f87171;
+    border-color: #ef4444;
   }
 
   .review-card {
@@ -1945,8 +2085,40 @@
     </div>
   </div>
 
-  <!-- ПРАВАЯ КОЛОНКА: ПРОВЕРКА КАЖДОГО ЗАМЕЧАНИЯ МАКСИМА -->
+  <!-- ПРАВАЯ КОЛОНКА: ТЕКСТОВИК МАКСИМА + ПРОВЕРКА КАЖДОГО ЗАМЕЧАНИЯ -->
   <div class="review-col">
+    <div class="notepad-card">
+      <div class="notepad-head">
+        <h2 class="notepad-title">📝 Текстовик для твоих правок (сохраняется сам)</h2>
+        <span class="notepad-status" id="saveStatus">💾 Автосохранение включено</span>
+      </div>
+      <p style="margin:0 0 8px;font-size:12px;color:#cbd5e1;line-height:1.4;">
+        Переключай экраны слева и пиши сюда всё подряд. Можно тыкать на плашки ниже, чтобы сразу открыть нужный экран и вставить его метку в текст:
+      </p>
+      <div class="tag-chips">
+        <button class="tag-chip current-scr" onclick="insertCurrentScreenTag()">+ Метка текущего экрана</button>
+        <button class="tag-chip" onclick="showState('hud'); insertTag('[1. Верхний HUD / Яма / Оффер ×2]: ')">1. HUD + Оффер ×2</button>
+        <button class="tag-chip" onclick="showState('boost'); insertTag('[2. Активный ×2 (Деньги + Яма)]: ')">2. Активный ×2</button>
+        <button class="tag-chip" onclick="showState('order'); insertTag('[3. Срочный заказ]: ')">3. Срочный заказ</button>
+        <button class="tag-chip" onclick="showState('parcel'); insertTag('[4. Посылка / Добить]: ')">4. Посылка</button>
+        <button class="tag-chip" onclick="showState('upg'); insertTag('[5. Прокачки]: ')">5. Прокачки</button>
+        <button class="tag-chip" onclick="showState('tree'); insertTag('[6. Дерево Ямы]: ')">6. Дерево Ямы</button>
+        <button class="tag-chip" onclick="showState('ducks'); insertTag('[7. Виды уток / Настройки]: ')">7. Утки / Настройки</button>
+        <button class="tag-chip" onclick="showState('hud'); insertTag('[Пол / Конвейер / Физика]: ')">Пол / Конвейер</button>
+      </div>
+      <textarea
+        id="maximNotes"
+        class="maxim-textarea"
+        placeholder="Пиши сюда любые замечания по экранам, размерам, цветам, текстам или кнопкам — потом нажми зелёную кнопку ниже, чтобы скопировать всё одним кликом в буфер и скинуть в чат..."
+      ></textarea>
+      <div class="notepad-actions">
+        <button class="btn-copy-big" id="btnCopyNotes" onclick="copyNotesToClipboard()">
+          <span>📋 СКОПИРОВАТЬ ВСЁ В БУФЕР</span>
+        </button>
+        <button class="btn-clear-notes" onclick="clearMaximNotes()" title="Очистить поле">🧹 Очистить</button>
+      </div>
+    </div>
+
     <div class="review-card">
       <h2>Честная диагностика: почему в v6o была каша и что исправлено</h2>
       <p style="margin:0 0 12px;font-size:13px;line-height:1.45;color:#cbd5e1;">
@@ -2169,6 +2341,98 @@
     Object.keys(map).forEach(k => {
       document.getElementById(map[k]).classList.toggle('active', k === st);
     });
+  }
+
+  const STORAGE_KEY = 'yama_ui_maxim_notes_v1';
+  const notesEl = document.getElementById('maximNotes');
+  const saveStatusEl = document.getElementById('saveStatus');
+
+  const screenNames = {
+    hud: '[1. Зал + HUD + Оффер ×2]: ',
+    boost: '[2. Активный ×2 (Деньги + Яма)]: ',
+    order: '[3. Срочный заказ]: ',
+    parcel: '[4. Посылка / Добить]: ',
+    upg: '[5. Прокачки]: ',
+    tree: '[6. Дерево Ямы]: ',
+    ducks: '[7. Виды уток / Настройки]: '
+  };
+
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) notesEl.value = saved;
+  } catch (e) {}
+
+  notesEl.addEventListener('input', () => {
+    try {
+      localStorage.setItem(STORAGE_KEY, notesEl.value);
+      const now = new Date();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mm = String(now.getMinutes()).padStart(2, '0');
+      const ss = String(now.getSeconds()).padStart(2, '0');
+      saveStatusEl.textContent = '💾 Сохранено в ' + hh + ':' + mm + ':' + ss;
+    } catch (e) {}
+  });
+
+  function insertTag(tagText) {
+    const val = notesEl.value;
+    const prefix = val.length > 0 && !val.endsWith('\n') ? '\n' : '';
+    notesEl.value = val + prefix + tagText;
+    notesEl.focus();
+    notesEl.selectionStart = notesEl.selectionEnd = notesEl.value.length;
+    try {
+      localStorage.setItem(STORAGE_KEY, notesEl.value);
+    } catch (e) {}
+  }
+
+  function insertCurrentScreenTag() {
+    insertTag(screenNames[currentState] || '[Экран]: ');
+  }
+
+  async function copyNotesToClipboard() {
+    const text = notesEl.value.trim();
+    const btn = document.getElementById('btnCopyNotes');
+    if (!text) {
+      notesEl.focus();
+      btn.innerHTML = '<span>⚠️ Сначала напиши текст выше</span>';
+      setTimeout(() => {
+        btn.innerHTML = '<span>📋 СКОПИРОВАТЬ ВСЁ В БУФЕР</span>';
+      }, 1800);
+      return;
+    }
+
+    let ok = false;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        ok = true;
+      } catch (e) {}
+    }
+    if (!ok) {
+      notesEl.select();
+      notesEl.setSelectionRange(0, 999999);
+      try {
+        ok = document.execCommand('copy');
+      } catch (e) {}
+    }
+
+    btn.classList.add('copied');
+    btn.innerHTML = '<span>✅ СКОПИРОВАНО! ВСТАВЛЯЙ В ЧАТ</span>';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<span>📋 СКОПИРОВАТЬ ВСЁ В БУФЕР</span>';
+    }, 2400);
+  }
+
+  function clearMaximNotes() {
+    if (!notesEl.value.trim()) return;
+    if (confirm('Очистить весь написанный текст?')) {
+      notesEl.value = '';
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {}
+      saveStatusEl.textContent = '💾 Очищено';
+      notesEl.focus();
+    }
   }
 </script>
 </body>
