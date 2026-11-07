@@ -203,3 +203,54 @@ button { cursor: pointer; }
   .credits { display: none; }
   .pin { font-size: 11px; padding: 2px 6px 2px 2px; }
 }
+
+/* 3D-квартира в панели Dorra Bay */
+.aptcard { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
+.atitle { display: flex; align-items: center; gap: 8px; font-size: 16px; }
+.atitle span { background: linear-gradient(135deg, var(--blue), #3fb1ff); color: #fff; border-radius: 6px; padding: 1px 7px; font-size: 11px; font-weight: 700; letter-spacing: .2px; }
+.asub { color: var(--ink2); font-size: 12px; margin-top: 2px; }
+.aspec { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0; }
+.aspec span { background: var(--bg); border-radius: 6px; padding: 2px 8px; font-size: 12px; font-weight: 600; }
+.aphotos { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+.aphotos img { width: 112px; height: 74px; object-fit: cover; border-radius: 7px; display: block; background: var(--bg); }
+.aenter { width: 100%; margin-top: 8px; border: 0; border-radius: 9px; padding: 10px 12px; background: var(--blue); color: #fff; font-weight: 700; font-size: 14px; }
+.aenter:hover { background: var(--blue-d); }
+.aenter:disabled { opacity: .75; cursor: progress; }
+.anote { margin-top: 7px; font-size: 11.5px; color: var(--ink2); line-height: 1.35; }
+.anote a { color: var(--blue); }
+
+/* прогулка по квартире */
+body.walking .top, body.walking .panel, body.walking #pins, body.walking .listbtn, body.walking .credits, body.walking .tip { display: none !important; }
+.walkhud { position: absolute; inset: 0; pointer-events: none; }
+.walkhud > * { pointer-events: auto; }
+.wtop { position: absolute; left: 16px; right: 16px; top: 14px; display: flex; align-items: center; gap: 12px; pointer-events: none; }
+.wtop > * { pointer-events: auto; }
+.wtitle { background: rgba(255,255,255,.94); border-radius: 11px; padding: 7px 12px; box-shadow: var(--sh); display: flex; gap: 10px; align-items: baseline; }
+.wtitle b { font-size: 15px; }
+.wtitle span { color: var(--ink2); font-size: 13px; }
+.wexit { margin-left: auto; border: 0; border-radius: 10px; padding: 9px 14px; background: #fff; color: #e2465a; font-weight: 700; box-shadow: var(--sh); }
+.whint { position: absolute; left: 50%; bottom: 92px; transform: translateX(-50%); background: rgba(21,34,66,.78); color: #fff; border-radius: 10px; padding: 8px 14px; font-size: 13px; pointer-events: none; white-space: nowrap; }
+.wmap { position: absolute; left: 16px; bottom: 28px; background: rgba(255,255,255,.94); border-radius: 12px; box-shadow: var(--sh); padding: 6px; }
+.wmapbtn { border: 0; background: var(--bg); border-radius: 7px; padding: 4px 10px; font-size: 12px; font-weight: 600; display: block; }
+.plansvg { display: block; width: 300px; height: auto; margin-top: 6px; }
+.plansvg .pr { fill: #f3efe6; stroke: #cfc6b4; stroke-width: .03; cursor: pointer; }
+.plansvg .pr.bal { fill: #e9f1f5; }
+.plansvg .pr:hover { fill: #e6eefc; }
+.plansvg .pr.cur { fill: #dbe7ff; }
+.plansvg .pw { fill: #2b3448; }
+.plansvg .pt { font-size: .38px; fill: #5a6a85; text-anchor: middle; dominant-baseline: middle; pointer-events: none; font-weight: 600; }
+.plansvg .pp { fill: var(--blue); stroke: #fff; stroke-width: .06; }
+.plansvg .pd { fill: rgba(4,104,255,.35); }
+.joy { position: absolute; right: 26px; bottom: 120px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,.28); border: 2px solid rgba(255,255,255,.7); touch-action: none; }
+.joy i { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; background: rgba(255,255,255,.9); box-shadow: var(--sh); }
+@media (max-width: 860px) {
+  .wtop { left: 8px; right: 8px; top: 8px; }
+  .wtitle { padding: 6px 10px; flex-direction: column; gap: 0; }
+  .wexit { padding: 8px 10px; font-size: 13px; }
+  .whint { white-space: normal; width: 86%; text-align: center; bottom: 250px; }
+  .wmap { left: 8px; bottom: 132px; }
+  .plansvg { width: 190px; }
+}
+.tour { display: flex; gap: 10px; align-items: center; width: 100%; text-align: left; margin: 10px 0 4px; border: 1px solid #cfe0ff; background: #f2f7ff; border-radius: 10px; padding: 9px 12px; font-size: 13px; color: var(--ink); }
+.tour b { background: var(--blue); color: #fff; border-radius: 6px; padding: 2px 8px; font-size: 12px; white-space: nowrap; }
+.tour:hover { border-color: var(--blue); }
