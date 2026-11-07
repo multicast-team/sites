@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Frontlines</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #10141a; overflow: hidden; touch-action: none; }
+  #wrap { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  #unity-canvas { width: 100%; height: 100%; display: block; background: #1b222b; outline: none; }
+  #load { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+          font: 600 18px system-ui, sans-serif; color: #e8eef5; gap: 14px; pointer-events: none; }
+  #bar { width: 60%; height: 12px; border-radius: 6px; background: #2b3542; overflow: hidden; }
+  #fill { width: 0; height: 100%; background: linear-gradient(90deg, #f0b23a, #ffd76a); }
+  #warn { position: absolute; left: 0; right: 0; top: 0; font: 14px system-ui, sans-serif; color: #111; }
+  #warn div { padding: 8px 12px; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="unity-canvas" tabindex="-1"></canvas>
+  <div id="load"><div>FRONTLINES</div><div id="bar"><div id="fill"></div></div><div id="pct">0%</div></div>
+  <div id="warn"></div>
+</div>
+<script>
+  var wrap = document.getElementById('wrap');
+  // Портрет 9:16, вписан в окно браузера целиком.
+  function fit() {
+    var w = window.innerWidth, h = window.innerHeight;
+    var mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (mobile && w / h < 0.75) { wrap.style.width = w + 'px'; wrap.style.height = h + 'px'; return; }
+    var ch = Math.min(h, w * 16 / 9), cw = ch * 9 / 16;
+    wrap.style.width = Math.floor(cw) + 'px'; wrap.style.height = Math.floor(ch) + 'px';
+  }
+  window.addEventListener('resize', fit); fit();
+
+  function banner(msg, type) {
+    var d = document.createElement('div'); d.innerHTML = msg;
+    d.style.background = type == 'error' ? '#e55' : '#fd5';
+    document.getElementById('warn').appendChild(d);
+    if (type != 'error') setTimeout(function () { d.remove(); }, 5000);
+  }
+
+  var b = 'Build';
+  var config = {
+    dataUrl: b + '/w1.data.unityweb',
+    frameworkUrl: b + '/w1.framework.js.unityweb',
+    codeUrl: b + '/w1.wasm.unityweb',
+    streamingAssetsUrl: 'StreamingAssets',
+    companyName: 'Multicast Games', productName: 'Frontlines', productVersion: 'w1',
+    showBanner: banner
+  };
+  var s = document.createElement('script');
+  s.src = b + '/w1.loader.js';
+  s.onload = function () {
+    createUnityInstance(document.getElementById('unity-canvas'), config, function (p) {
+      document.getElementById('fill').style.width = (100 * p) + '%';
+      document.getElementById('pct').textContent = Math.round(100 * p) + '%';
+    }).then(function () {
+      document.getElementById('load').style.display = 'none';
+    }).catch(function (m) { banner(m, 'error'); });
+  };
+  document.body.appendChild(s);
+</script>
+</body>
+</html>
