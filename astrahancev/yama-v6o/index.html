@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <meta name="pitt-release" content="d016c15fc5d8">
+    <meta name="pitt-release" content="v6o-argon2">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no, shrink-to-fit=yes">
     <title>DuckPit — Одна Яма v6o</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
     <style>
-      html, body { margin: 0; height: 100%; background: #1d1838; overflow: hidden; }
+      html, body { margin: 0; height: 100%; background: #1d1838; overflow: hidden; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+      #unity-container, #unity-fullscreen-container, #unity-canvas { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; outline: none; }
       #unity-footer { display: none; }
       #unity-container.unity-desktop { left: 50%; top: 50%; transform: translate(-50%, -50%); }
     </style>
@@ -63,12 +65,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/out.loader.js?v=d016c15fc5d8";
+      var loaderUrl = buildUrl + "/out.loader.js?v=v6o-argon2";
       var config = {
         arguments: ["-pittOnePit", "-pittSkipIntro"],
-        dataUrl: buildUrl + "/out.data.unityweb?v=d016c15fc5d8",
-        frameworkUrl: buildUrl + "/out.framework.js.unityweb?v=d016c15fc5d8",
-        codeUrl: buildUrl + "/out.wasm.unityweb?v=d016c15fc5d8",
+        dataUrl: buildUrl + "/out.data.unityweb?v=v6o-argon2",
+        frameworkUrl: buildUrl + "/out.framework.js.unityweb?v=v6o-argon2",
+        codeUrl: buildUrl + "/out.wasm.unityweb?v=v6o-argon2",
         streamingAssetsUrl: "StreamingAssets",
 
         // If you have a custom web site structure, or want to place multiple Unity build instances on the same page,
@@ -80,9 +82,8 @@
         productName: "DuckPit",
         productVersion: "0.1.0",
         showBanner: unityShowBanner,
-        // smooth play: discrete GPU on laptops; render at most 1.5x CSS pixels (a 2x/3x retina canvas quadruples fill cost)
-        webglContextAttributes: { powerPreference: "high-performance", antialias: false },
-        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+        webglContextAttributes: { powerPreference: "high-performance", antialias: true },
+        devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2.5),
         // errorHandler: function(err, url, line) {
         //    alert("error " + err + " occurred at line " + line);
         //    // Return 'true' if you handled this error and don't want Unity
